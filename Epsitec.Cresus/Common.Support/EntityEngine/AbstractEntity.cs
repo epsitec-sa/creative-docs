@@ -114,27 +114,27 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public bool IsEmpty
+		public bool IsEntityEmpty
 		{
 			get
 			{
-				return this.Status == EntityStatus.Empty;
+				return this.EntityStatus == EntityStatus.Empty;
 			}
 		}
 
-		public bool IsValid
+		public bool IsEntityValid
 		{
 			get
 			{
-				return this.Status == EntityStatus.Valid;
+				return this.EntityStatus == EntityStatus.Valid;
 			}
 		}
 
-		public virtual EntityStatus Status
+		public virtual EntityStatus EntityStatus
 		{
 			get
 			{
-				return EntityStatus.Empty;
+				return EntityStatus.Unknown;
 			}
 		}
 

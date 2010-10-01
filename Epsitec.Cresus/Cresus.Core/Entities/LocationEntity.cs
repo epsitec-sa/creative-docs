@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Country.Code, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus Status
+		public override EntityStatus EntityStatus
 		{
 			get
 			{

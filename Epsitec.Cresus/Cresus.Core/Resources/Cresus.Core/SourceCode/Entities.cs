@@ -78,6 +78,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUI]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A5J]", typeof (Epsitec.Cresus.Core.Entities.WorkflowNodeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A6J]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowStepEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -10656,6 +10657,103 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 614);	// [L0A6J]
 		public static readonly new string EntityStructuredTypeKey = "[L0A6J]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.WorkflowStep Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>WorkflowStep</c> entity.
+	///	designer:cap/L0AHJ
+	///	</summary>
+	public partial class WorkflowStepEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Id</c> field.
+		///	designer:fld/L0AHJ/L0AJJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJJ]")]
+		public long Id
+		{
+			get
+			{
+				return this.GetField<long> ("[L0AJJ]");
+			}
+			set
+			{
+				long oldValue = this.Id;
+				if (oldValue != value)
+				{
+					this.OnIdChanging (oldValue, value);
+					this.SetField<long> ("[L0AJJ]", oldValue, value);
+					this.OnIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PreviousId</c> field.
+		///	designer:fld/L0AHJ/L0AKJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AKJ]")]
+		public long PreviousId
+		{
+			get
+			{
+				return this.GetField<long> ("[L0AKJ]");
+			}
+			set
+			{
+				long oldValue = this.PreviousId;
+				if (oldValue != value)
+				{
+					this.OnPreviousIdChanging (oldValue, value);
+					this.SetField<long> ("[L0AKJ]", oldValue, value);
+					this.OnPreviousIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Edge</c> field.
+		///	designer:fld/L0AHJ/L0AIJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIJ]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity Edge
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0AIJ]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue = this.Edge;
+				if (oldValue != value)
+				{
+					this.OnEdgeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0AIJ]", oldValue, value);
+					this.OnEdgeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnIdChanging(long oldValue, long newValue);
+		partial void OnIdChanged(long oldValue, long newValue);
+		partial void OnPreviousIdChanging(long oldValue, long newValue);
+		partial void OnPreviousIdChanged(long oldValue, long newValue);
+		partial void OnEdgeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
+		partial void OnEdgeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 625);	// [L0AHJ]
+		public static readonly new string EntityStructuredTypeKey = "[L0AHJ]";
 	}
 }
 #endregion
