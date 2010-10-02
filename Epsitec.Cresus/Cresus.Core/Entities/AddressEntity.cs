@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +36,11 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return Helpers.EntityStatusHelper.CombineStatus (this.Street, this.PostBox, this.Location);
+				var s1 = this.Street.EntityStatus;
+				var s2 = EntityStatusHelper.Optional (this.PostBox.EntityStatus);
+				var s3 = this.Location.EntityStatus;
+
+				return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
 			}
 		}
 	}

@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,20 +34,10 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				//	We consider a location to be empty if it has neither postal code, nor
 				//	location name; a location with just a coutry or region is still empty.
-				bool ok1 = !this.PostalCode.IsNullOrWhiteSpace;
-				bool ok2 = !this.Name.IsNullOrWhiteSpace;
+				var s1 = EntityStatusHelper.GetStatus (this.PostalCode);
+				var s2 = EntityStatusHelper.GetStatus (this.Name);
 
-				if (!ok1 && !ok2)
-				{
-					return EntityStatus.Empty;
-				}
-
-				if (ok1 && ok2)
-				{
-					return EntityStatus.Valid;
-				}
-
-				return EntityStatus.Invalid;
+				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 			}
 		}
 	}

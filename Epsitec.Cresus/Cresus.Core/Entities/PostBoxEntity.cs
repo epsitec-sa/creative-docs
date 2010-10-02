@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,14 +17,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				bool ok1 = !this.Number.IsNullOrWhiteSpace;
-
-				if (ok1)
-				{
-					return EntityStatus.Valid;
-				}
-
-				return EntityStatus.Empty;
+				return EntityStatusHelper.GetStatus (this.Number);
 			}
 		}
 	}
