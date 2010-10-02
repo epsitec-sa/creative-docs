@@ -9,6 +9,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		Unknown = -1,
 		Empty,
+		EmptyAndValid,
 		Valid,
 		Invalid,
 	}

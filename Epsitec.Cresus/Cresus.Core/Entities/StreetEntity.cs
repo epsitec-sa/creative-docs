@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,20 +17,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				bool ok1 = !this.StreetName.IsNullOrWhiteSpace;
-				bool ok2 = !this.Complement.IsNullOrWhiteSpace;
+				var s1 = EntityStatusHelper.GetStatus (this.StreetName);
+				var s2 = EntityStatusHelper.Optional (EntityStatusHelper.GetStatus (this.Complement));
 
-				if (!ok1 && !ok2)
-				{
-					return EntityStatus.Empty;
-				}
-
-				if (ok1)
-				{
-					return EntityStatus.Valid;
-				}
-
-				return EntityStatus.Invalid;
+				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 			}
 		}
 	}
