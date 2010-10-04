@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var workflowThread = this.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
 			var workflowStep   = this.BusinessContext.CreateEntity<WorkflowStepEntity> ();
 			var document       = this.BusinessContext.CreateEntity<BusinessDocumentEntity> ();
+			var documentMeta   = this.BusinessContext.CreateEntity<DocumentMetadataEntity> ();
 			
 			var now = System.DateTime.Now;
 
@@ -130,8 +131,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//	TODO: clean up horrible hack
 
+			documentMeta.IdA = document.IdA;
+			documentMeta.DocumentSource = Business.DocumentSource.Generated;
+			documentMeta.DocumentType = Business.DocumentType.SalesQuote;
+			documentMeta.BusinessDocument = document;
+
 			workflowStep.Date      = now;
-			workflowThread.Documents.Add (document);
+			workflowThread.ActiveDocuments.Add (documentMeta);
 			workflowThread.History.Add (workflowStep);
 
 			this.DataContext.UpdateEmptyEntityStatus (workflow, false);
@@ -139,7 +145,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.DataContext.UpdateEmptyEntityStatus (workflowStep, false);
 
 			this.Entity.Workflows.Add (workflow);
-			this.Entity.Relation.Workflows.Add (workflow);
 
 			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
 		}
@@ -173,7 +178,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private string GetOfferTileName(BusinessDocumentEntity doc)
 		{
-			return EditionAffairViewController.GetOfferTileName (this.Entity.Documents.IndexOf (doc));
+			return EditionAffairViewController.GetOfferTileName (this.Entity.WorkflowDocuments.IndexOf (doc));
 		}
 
 	}

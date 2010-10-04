@@ -22,8 +22,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIAffair (data);
+				this.CreateUIDocuments (data);
 				this.CreateUIDocumentWorkflows (data);
 				this.CreateUIEvents (data);
+				this.CreateUIComments (data);
 			}
 		}
 
@@ -40,6 +42,30 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
+		}
+
+		private void CreateUIDocuments(SummaryDataItems data)
+		{
+			var summaryData =
+				new SummaryData
+				{
+					AutoGroup    = false,
+					Name		 = "DocMetadata",
+					IconUri		 = "Data.Document",
+					Title		 = TextFormatter.FormatText ("Document lié"),
+					CompactTitle = TextFormatter.FormatText ("Documents liés"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				};
+
+			data.Add (summaryData);
+
+			var template = new CollectionTemplate<DocumentMetadataEntity> ("DocMetadata", this.BusinessContext);
+
+			template.DefineTitle       (x => x.GetCompactSummary ());
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
 		}
 
 		private void CreateUIDocumentWorkflows(SummaryDataItems data)
@@ -91,6 +117,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
 #endif
+		}
+		private void CreateUIComments(TileContainerController.TileContainerControllerInitializer data)
+		{
+			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 	}
 }

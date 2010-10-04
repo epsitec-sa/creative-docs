@@ -22,14 +22,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public IList<BusinessDocumentEntity> Documents
+		public IList<BusinessDocumentEntity> WorkflowDocuments
 		{
 			get
 			{
 				if (this.documents == null)
                 {
 					this.documents = new ObservableList<BusinessDocumentEntity> ();
-					this.documents.AddRange (this.Workflows.SelectMany (workflow => workflow.Threads).SelectMany (thread => thread.Documents).Distinct ());
+					this.documents.AddRange (this.Workflows.SelectMany (workflow => workflow.Threads).SelectMany (thread => thread.ActiveDocuments).Select (x => x.BusinessDocument).Where (x => x.IsNotNull ()).Distinct ());
                 }
 
 				//	TODO : refresh this list when changes happen
