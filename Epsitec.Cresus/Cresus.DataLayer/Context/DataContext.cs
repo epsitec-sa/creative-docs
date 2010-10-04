@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.Saver;
@@ -36,12 +37,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> that will be used to talk to the database.</param>
 		/// <param name="enableNullVirtualization">Tells whether to enable the virtualization of null <see cref="AbstractEntity"/> or not.</param>
-		public DataContext(DbInfrastructure infrastructure, bool enableNullVirtualization = false)
+		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false)
 		{
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.IsDisposed = false;
-			this.DbInfrastructure = infrastructure;
-			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure);
+			this.DataInfrastructure = infrastructure;
+			this.SchemaEngine = SchemaEngine.GetSchemaEngine (infrastructure.DbInfrastructure);
 			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
@@ -133,13 +134,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Gets the <see cref="DbInfrastructure"/> associated with this instance.
+		/// Gets the <see cref="DataInfrastructure"/> associated with this instance.
 		/// </summary>
-		internal DbInfrastructure DbInfrastructure
+		internal DataInfrastructure DataInfrastructure
 		{
 			get;
 			private set;
 		}
+
+
+		private DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return this.DataInfrastructure.DbInfrastructure;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the <see cref="SchemaEngine"/> associated with this instance.

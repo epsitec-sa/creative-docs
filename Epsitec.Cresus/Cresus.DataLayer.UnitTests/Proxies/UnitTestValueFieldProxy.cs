@@ -6,6 +6,7 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
@@ -29,9 +30,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -46,16 +50,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 		[TestMethod]
 		public void ValueFieldProxyConstructorTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				Druid fieldId = Druid.Parse ("[L0AV]");
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					Druid fieldId = Druid.Parse ("[L0AV]");
 
-				var proxy = new ValueFieldProxy_Accessor (dataContext, person, fieldId);
+					var proxy = new ValueFieldProxy_Accessor (dataContext, person, fieldId);
 
-				Assert.AreSame (dataContext, proxy.DataContext);
-				Assert.AreSame (person, proxy.Entity);
-				Assert.AreEqual (fieldId, proxy.FieldId);
+					Assert.AreSame (dataContext, proxy.DataContext);
+					Assert.AreSame (person, proxy.Entity);
+					Assert.AreEqual (fieldId, proxy.FieldId);
+				}
 			}
 		}
 
@@ -63,9 +70,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 		[TestMethod]
 		public void ValueFieldProxyConstructorArgumentCheck()
 		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
+				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					Druid fieldId = Druid.Parse ("[L0AV]");
@@ -107,21 +115,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 		[TestMethod]
 		public void GetValueTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-				var proxy1 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0AV]"));
-				var proxy2 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A01]"));
-				var proxy3 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A61]"));
+					var proxy1 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0AV]"));
+					var proxy2 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A01]"));
+					var proxy3 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A61]"));
 
-				object value1 = proxy1.GetValue ();
-				object value2 = proxy2.GetValue ();
-				object value3 = proxy3.GetValue ();
+					object value1 = proxy1.GetValue ();
+					object value2 = proxy2.GetValue ();
+					object value3 = proxy3.GetValue ();
 
-				Assert.AreEqual ("Alfred", value1);
-				Assert.AreEqual ("Dupond", value2);
-				Assert.AreEqual (new Date (1950, 12, 31), value3);
+					Assert.AreEqual ("Alfred", value1);
+					Assert.AreEqual ("Dupond", value2);
+					Assert.AreEqual (new Date (1950, 12, 31), value3);
+				}
 			}
 		}
 

@@ -1,4 +1,5 @@
 ﻿using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,9 +21,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -37,9 +41,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void DataContextEventArgsConstructorTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				new DataContextEventArgs (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					new DataContextEventArgs (dataContext);
+				}
 			}
 		}
 
@@ -47,11 +54,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void DataContextTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);
 
-				Assert.AreSame (dataContext, eventArg.DataContext);
+					Assert.AreSame (dataContext, eventArg.DataContext);
+				}
 			}
 		}
 

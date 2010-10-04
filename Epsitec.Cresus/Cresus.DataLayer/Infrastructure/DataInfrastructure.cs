@@ -6,9 +6,11 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using System.Collections.Generic;
+using Epsitec.Common.Support.EntityEngine;
 
 [assembly: DependencyClass (typeof (DataInfrastructure))]
 
@@ -247,10 +249,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 
+		public DataContext CreateDataContext(bool enableNullVirtualization = false)
+		{
+			return new DataContext (this, enableNullVirtualization);
+		}
+
 		/// <summary>
 		/// Does the real job of disposing this instance.
 		/// </summary>
-		/// <param name="disposing">Tells wheteher this method is called by the Dispose() method or by the destructor.</param>
+		/// <param name="disposing">Tells whether this method is called by the Dispose() method or by the destructor.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)

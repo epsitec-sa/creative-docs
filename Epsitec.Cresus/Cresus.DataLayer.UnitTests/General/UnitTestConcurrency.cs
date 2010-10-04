@@ -1,6 +1,7 @@
 ﻿using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
@@ -34,12 +35,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				dataContext.CreateSchema<NaturalPersonEntity> ();
-				dataContext.CreateSchema<UriContactEntity> ();
-				dataContext.CreateSchema<MailContactEntity> ();
-				dataContext.CreateSchema<TelecomContactEntity> ();
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					dataContext.CreateSchema<NaturalPersonEntity> ();
+					dataContext.CreateSchema<UriContactEntity> ();
+					dataContext.CreateSchema<MailContactEntity> ();
+					dataContext.CreateSchema<TelecomContactEntity> ();
+				}
 			}
 
 			DatabaseHelper.DisconnectFromDatabase ();
@@ -188,9 +192,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
+						}
 					}
 				}
 			}
@@ -249,9 +256,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
+						}
 					}
 				}
 			}
@@ -292,13 +302,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				DbAccess access = TestHelper.CreateDbAccess ();
 				dbInfrastructure.AttachToDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 				{
-					List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
 
-					persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
+						persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
 
-					Assert.IsTrue (persons.Count == nbTotalInsertions);
+						Assert.IsTrue (persons.Count == nbTotalInsertions);
+					}
 				}
 			}
 		}
@@ -330,13 +343,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			DatabaseHelper.ConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-				person.Firstname = "name";
+					person.Firstname = "name";
 
-				dataContext.SaveChanges ();
+					dataContext.SaveChanges ();
+				}
 			}
 
 			DatabaseHelper.DisconnectFromDatabase ();
@@ -354,9 +370,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
+						}
 					}
 				}
 			}
@@ -411,13 +430,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			DatabaseHelper.ConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-				PersonGenderEntity gender1 = dataContext.CreateEntity<PersonGenderEntity> ();
-				PersonGenderEntity gender2 = dataContext.CreateEntity<PersonGenderEntity> ();
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+					PersonGenderEntity gender1 = dataContext.CreateEntity<PersonGenderEntity> ();
+					PersonGenderEntity gender2 = dataContext.CreateEntity<PersonGenderEntity> ();
 
-				dataContext.SaveChanges ();
+					dataContext.SaveChanges ();
+				}
 			}
 
 			DatabaseHelper.DisconnectFromDatabase ();
@@ -435,9 +457,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
+						}
 					}
 				}
 			}
@@ -455,10 +480,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 			List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
-                {
-                    dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
-                    dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
-                };
+            {
+                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
+                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
+            };
 
 			System.Random dice = new System.Random ();
 
@@ -531,16 +556,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			DatabaseHelper.ConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-				for (int i = 0; i < nbContacts; i++)
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
-				}
+					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-				dataContext.SaveChanges ();
+					for (int i = 0; i < nbContacts; i++)
+					{
+						UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
+					}
+
+					dataContext.SaveChanges ();
+				}
 			}
 
 			DatabaseHelper.DisconnectFromDatabase ();
@@ -558,9 +586,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
+						}
 					}
 				}
 			}
@@ -609,11 +640,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				DbAccess access = TestHelper.CreateDbAccess ();
 				dbInfrastructure.AttachToDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-					Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
+						Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
+					}
 				}
 			}
 		}
@@ -662,9 +696,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DbAccess access = TestHelper.CreateDbAccess ();
 					dbInfrastructure.AttachToDatabase (access);
 
-					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
-						this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
+						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+						{
+							this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
+						}
 					}
 				}
 			}

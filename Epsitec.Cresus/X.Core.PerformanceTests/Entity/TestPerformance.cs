@@ -5,6 +5,7 @@
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.PerformanceTests;
 
 using System.Linq;
@@ -49,40 +50,46 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 
 		public void RetrieveNaturalPerson()
 		{
-			using (DataContext context =  new DataContext(this.dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				System.Diagnostics.Trace.WriteLine ("About to retrieve a natural person entity");
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					System.Diagnostics.Trace.WriteLine ("About to retrieve a natural person entity");
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
-				watch.Start ();
+					watch.Start ();
 
-				var key    = new DbKey (new DbId (1000000000040));
-				var person = context.ResolveEntity<NaturalPersonEntity> (key);
+					var key    = new DbKey (new DbId (1000000000040));
+					var person = dataContext.ResolveEntity<NaturalPersonEntity> (key);
 
-				string.Concat (
-					person.Firstname,
-					person.Lastname);
+					string.Concat (
+						person.Firstname,
+						person.Lastname);
 
-				watch.Stop ();
-				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+					watch.Stop ();
+					System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+				}
 			}
 		}
 
 
 		public void RetrieveLocation()
 		{
-			using (DataContext context =  new DataContext(this.dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				System.Diagnostics.Trace.WriteLine ("About to retrieve a location entity");
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					System.Diagnostics.Trace.WriteLine ("About to retrieve a location entity");
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
-				watch.Start ();
+					watch.Start ();
 
-				var key    = new DbKey (new DbId (1000000000040));
-				var person = context.ResolveEntity<LocationEntity> (key);
+					var key    = new DbKey (new DbId (1000000000040));
+					var person = dataContext.ResolveEntity<LocationEntity> (key);
 
-				watch.Stop ();
-				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+					watch.Stop ();
+					System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+				}
 			}
 		}
 
@@ -114,10 +121,13 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 
 		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new ()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
-			};
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
+				}
+			}
 		}
 
 
@@ -145,196 +155,232 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 
 		public void GetUriContactWithGivenUriSchemeReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				UriContactEntity example = new UriContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001))),
-				};
+					UriContactEntity example = new UriContactEntity ()
+					{
+						UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001))),
+					};
 
-				dataContext.GetByExample<UriContactEntity> (example).Count ();
+					dataContext.GetByExample<UriContactEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetUriContactWithGivenUriSchemeValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				UriContactEntity example = new UriContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriScheme = new UriSchemeEntity ()
+					UriContactEntity example = new UriContactEntity ()
 					{
-						Name = "name1",
-					},
-				};
+						UriScheme = new UriSchemeEntity ()
+						{
+							Name = "name1",
+						},
+					};
 
-				dataContext.GetByExample<UriContactEntity> (example).Count ();
+					dataContext.GetByExample<UriContactEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetLocationsGivenCountryReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				LocationEntity example = new LocationEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001))),
-				};
+					LocationEntity example = new LocationEntity ()
+					{
+						Country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001))),
+					};
 
-				dataContext.GetByExample<LocationEntity> (example).Count ();
+					dataContext.GetByExample<LocationEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetLocationsGivenCountryValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				LocationEntity example = new LocationEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Country = new CountryEntity ()
+					LocationEntity example = new LocationEntity ()
 					{
-						Name = "name1",
-					},
-				};
+						Country = new CountryEntity ()
+						{
+							Name = "name1",
+						},
+					};
 
-				dataContext.GetByExample<LocationEntity> (example).Count ();
+					dataContext.GetByExample<LocationEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetLegalPersonsGivenTypeReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				LegalPersonEntity example = new LegalPersonEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001))),
-				};
+					LegalPersonEntity example = new LegalPersonEntity ()
+					{
+						LegalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001))),
+					};
 
-				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
+					dataContext.GetByExample<LegalPersonEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetLegalPersonsGivenTypeValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				LegalPersonEntity example = new LegalPersonEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPersonType = new LegalPersonTypeEntity ()
+					LegalPersonEntity example = new LegalPersonEntity ()
 					{
-						Name = "name1",
-					},
-				};
+						LegalPersonType = new LegalPersonTypeEntity ()
+						{
+							Name = "name1",
+						},
+					};
 
-				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
+					dataContext.GetByExample<LegalPersonEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetContactsGivenPersonReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				AbstractContactEntity example = new AbstractContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001))),
-				};
+					AbstractContactEntity example = new AbstractContactEntity ()
+					{
+						NaturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001))),
+					};
 
-				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
+					dataContext.GetByExample<AbstractContactEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetContactsGivenPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				AbstractContactEntity example = new AbstractContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPerson = new NaturalPersonEntity ()
+					AbstractContactEntity example = new AbstractContactEntity ()
 					{
-						Lastname = "lastname1",
-					}
-				};
+						NaturalPerson = new NaturalPersonEntity ()
+						{
+							Lastname = "lastname1",
+						}
+					};
 
-				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
+					dataContext.GetByExample<AbstractContactEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetPersonGivenLocationReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-				example.Contacts.Add (new MailContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Address = new AddressEntity ()
-					{
-						Location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001))),
-					}
-				}
-				);
+					NaturalPersonEntity example = new NaturalPersonEntity ();
+					example.Contacts.Add (new MailContactEntity ()
+						{
+							Address = new AddressEntity ()
+							{
+								Location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001))),
+							}
+						}
+					);
 
-				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
+					dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetPersonGivenLocationValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-				example.Contacts.Add (new MailContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Address = new AddressEntity ()
-					{
-						Location = new LocationEntity ()
+					NaturalPersonEntity example = new NaturalPersonEntity ();
+					example.Contacts.Add (new MailContactEntity ()
 						{
-							Name = "name1",
+							Address = new AddressEntity ()
+							{
+								Location = new LocationEntity ()
+								{
+									Name = "name1",
+								}
+							}
 						}
-					}
-				}
-				);
+					);
 
-				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
+					dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
+				}
 			}
 		}
 
 
 		public void GetAddressGivenLegalPersonReference()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				MailContactEntity example = new MailContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001))),
-				};
+					MailContactEntity example = new MailContactEntity ()
+					{
+						LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001))),
+					};
 
-				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+					dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+				}
 			}
 		}
 
 
 		public void GetAddressGivenLegalPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				MailContactEntity example = new MailContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPerson = new LegalPersonEntity ()
+					MailContactEntity example = new MailContactEntity ()
 					{
-						Name = "name1",
-					}
-				};
+						LegalPerson = new LegalPersonEntity ()
+						{
+							Name = "name1",
+						}
+					};
 
-				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+					dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+				}
 			}
 		}
 
@@ -353,7 +399,6 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 
 
 		#endregion
-
 
 
 		private DbInfrastructure dbInfrastructure;

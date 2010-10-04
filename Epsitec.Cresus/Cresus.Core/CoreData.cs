@@ -259,10 +259,8 @@ namespace Epsitec.Cresus.Core
 		
 		public DataContext CreateDataContext(string name)
 		{
-			var context = new DataContext (this.dbInfrastructure, true)
-			{
-				Name = name,
-			};
+			var context = this.dataInfrastructure.CreateDataContext (true);
+			context.Name = name;
 
 			DataContextPool.Instance.Add (context);
 

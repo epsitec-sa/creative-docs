@@ -3,6 +3,7 @@
 using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
@@ -113,19 +114,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 			var comparison = new ComparisonFieldField (leftField, op, rightField);
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => comparison.CreateDbCondition (converter, null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => comparison.CreateDbCondition (converter, null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => comparison.CreateDbCondition (null, id => null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => comparison.CreateDbCondition (null, id => null)
+					);
+				}
 			}
 		}
 

@@ -8,6 +8,7 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Serialization;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
@@ -38,9 +39,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -55,9 +59,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void EntitySerializationManagerConstructorTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				new EntitySerializationManager (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					new EntitySerializationManager (dataContext);
+				}
 			}
 		}
 
@@ -75,12 +82,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void SerializeArgumentCheck()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new EntitySerializationManager (dataContext).Serialize (null)
-				);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					ExceptionAssert.Throw<System.ArgumentNullException>
+						(
+					   () => new EntitySerializationManager (dataContext).Serialize (null)
+						);
+				}
 			}
 		}
 
@@ -88,12 +98,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void DeserializeArgumentCheck()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new EntitySerializationManager (dataContext).Deserialize (null)
-				);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					ExceptionAssert.Throw<System.ArgumentNullException>
+						(
+					   () => new EntitySerializationManager (dataContext).Deserialize (null)
+						);
+				}
 			}
 		}
 
@@ -101,19 +114,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void SimpleTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
-
-				foreach (AbstractEntity entity in this.GetSampleEntities (dataContext))
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					EntityData serializedEntity = serializer.Serialize (entity);
-					AbstractEntity deserializedEntity = serializer.Deserialize (serializedEntity);
+					EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
 
-					this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
+					foreach (AbstractEntity entity in this.GetSampleEntities (dataContext))
+					{
+						EntityData serializedEntity = serializer.Serialize (entity);
+						AbstractEntity deserializedEntity = serializer.Deserialize (serializedEntity);
+
+						this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
+					}
 				}
 			}
-
 		}
 
 

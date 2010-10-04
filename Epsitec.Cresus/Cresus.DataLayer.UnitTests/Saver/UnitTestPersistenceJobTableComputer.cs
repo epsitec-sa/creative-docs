@@ -6,6 +6,7 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
@@ -34,9 +35,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -51,9 +55,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					new PersistenceJobTableComputer (dataContext);
+				}
 			}
 		}
 
@@ -71,29 +78,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void GetAffectedTablesArgumentCheck()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => computer.GetAffectedTables ((DeletePersistenceJob) null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => computer.GetAffectedTables ((DeletePersistenceJob) null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => computer.GetAffectedTables ((ValuePersistenceJob) null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => computer.GetAffectedTables ((ValuePersistenceJob) null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-				  () => computer.GetAffectedTables ((ReferencePersistenceJob) null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+					  () => computer.GetAffectedTables ((ReferencePersistenceJob) null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => computer.GetAffectedTables ((CollectionPersistenceJob) null)
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => computer.GetAffectedTables ((CollectionPersistenceJob) null)
+					);
+				}
 			}
 		}
 
@@ -103,13 +113,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
-				DeletePersistenceJob job = new DeletePersistenceJob (entity);
+					DeletePersistenceJob job = new DeletePersistenceJob (entity);
 
-				List<DbTable> tables1 = new List<DbTable> ()
+					List<DbTable> tables1 = new List<DbTable> ()
                 {
                     dataContext.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AM]")),
                     dataContext.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AN]")),
@@ -120,10 +132,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
                     dataContext.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A71]")),
                 };
 
-				List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
+					List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
 
-				CollectionAssert.IsSubsetOf (tables1, tables2);
-				CollectionAssert.IsSubsetOf (tables2, tables1);
+					CollectionAssert.IsSubsetOf (tables1, tables2);
+					CollectionAssert.IsSubsetOf (tables2, tables1);
+				}
 			}
 		}
 
@@ -141,17 +154,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
-				ValuePersistenceJob job = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, false, jobType);
+					ValuePersistenceJob job = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, false, jobType);
 
-				DbTable table = dataContext.SchemaEngine.GetEntityTableDefinition (localEntityId);
-				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
+					DbTable table = dataContext.SchemaEngine.GetEntityTableDefinition (localEntityId);
+					List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
-				Assert.IsTrue (tables.Count == 1);
-				Assert.AreSame (table, tables.First ());
+					Assert.IsTrue (tables.Count == 1);
+					Assert.AreSame (table, tables.First ());
+				}
 			}
 		}
 
@@ -167,17 +183,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
-				ReferencePersistenceJob job = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+					ReferencePersistenceJob job = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
 
-				DbTable table = dataContext.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
-				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
+					DbTable table = dataContext.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+					List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
-				Assert.IsTrue (tables.Count == 1);
-				Assert.AreSame (table, tables.First ());
+					Assert.IsTrue (tables.Count == 1);
+					Assert.AreSame (table, tables.First ());
+				}
 			}
 		}
 
@@ -198,17 +217,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
-				CollectionPersistenceJob job = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
+					CollectionPersistenceJob job = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
 
-				DbTable table = dataContext.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
-				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
+					DbTable table = dataContext.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+					List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
-				Assert.IsTrue (tables.Count == 1);
-				Assert.AreSame (table, tables.First ());
+					Assert.IsTrue (tables.Count == 1);
+					Assert.AreSame (table, tables.First ());
+				}
 			}
 		}
 

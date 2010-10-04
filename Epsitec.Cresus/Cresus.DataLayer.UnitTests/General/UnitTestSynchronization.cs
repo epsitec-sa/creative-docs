@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
@@ -40,9 +41,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -50,49 +54,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateValue()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			string firstName1 = "Alfred";
-			string firstName2 = "Albert";
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (firstName1, naturalPersons[i].Firstname);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			naturalPersons.First ().Firstname = firstName2;
-			dataContexts.First ().SaveChanges ();
+				string firstName1 = "Alfred";
+				string firstName2 = "Albert";
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (firstName2, naturalPersons[i].Firstname);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (firstName1, naturalPersons[i].Firstname);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Firstname = firstName2;
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (firstName2, naturalPersons[i].Firstname);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -100,52 +107,55 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateReference()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			string gender1 = "Male";
-			string gender2 = "Female";
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (gender1, naturalPersons[i].Gender.Name);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			DbKey newGenderKey = new DbKey (new DbId (2));
-			PersonGenderEntity newGender = dataContexts.First ().ResolveEntity<PersonGenderEntity> (newGenderKey);
+				string gender1 = "Male";
+				string gender2 = "Female";
 
-			naturalPersons.First ().Gender = newGender;
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (gender1, naturalPersons[i].Gender.Name);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (gender2, naturalPersons[i].Gender.Name);
-			}
+				DbKey newGenderKey = new DbKey (new DbId (2));
+				PersonGenderEntity newGender = dataContexts.First ().ResolveEntity<PersonGenderEntity> (newGenderKey);
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Gender = newGender;
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (gender2, naturalPersons[i].Gender.Name);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -153,55 +163,58 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateCollection()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			string contact1 = "alfred@coucou.com";
-			string contact2 = "alfred@blabla.com";
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (contact1, ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri);
-				Assert.AreEqual (contact2, ((UriContactEntity) naturalPersons[i].Contacts[1]).Uri);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			NaturalPersonEntity naturalPerson1 = naturalPersons.First ();
-			UriContactEntity tmpContact = ((UriContactEntity) naturalPerson1.Contacts[0]);
-			naturalPerson1.Contacts[0] = naturalPerson1.Contacts[1];
-			naturalPerson1.Contacts[1] = tmpContact;
+				string contact1 = "alfred@coucou.com";
+				string contact2 = "alfred@blabla.com";
 
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (contact1, ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri);
+					Assert.AreEqual (contact2, ((UriContactEntity) naturalPersons[i].Contacts[1]).Uri);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (contact1, ((UriContactEntity) naturalPersons[i].Contacts[1]).Uri);
-				Assert.AreEqual (contact2, ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri);
-			}
+				NaturalPersonEntity naturalPerson1 = naturalPersons.First ();
+				UriContactEntity tmpContact = ((UriContactEntity) naturalPerson1.Contacts[0]);
+				naturalPerson1.Contacts[0] = naturalPerson1.Contacts[1];
+				naturalPerson1.Contacts[1] = tmpContact;
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (contact1, ((UriContactEntity) naturalPersons[i].Contacts[1]).Uri);
+					Assert.AreEqual (contact2, ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -209,46 +222,49 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestDeleteEntityReference()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			dataContexts.First ().DeleteEntity (naturalPersons.First ().Gender);
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.IsNull (naturalPersons[i].Gender);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				dataContexts.First ().DeleteEntity (naturalPersons.First ().Gender);
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.IsNull (naturalPersons[i].Gender);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -256,51 +272,54 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestDeleteEntityCollection()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
-
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
-
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
-
-				if (i < 5)
+				for (int i = 0; i < nbDataContexts; i++)
 				{
-					string tmp = ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri;
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
 				}
-			}
 
-			dataContexts.First ().DeleteEntity (naturalPersons.First ().Contacts.First ());
-			dataContexts.First ().SaveChanges ();
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
+
+					if (i < 5)
+					{
+						string tmp = ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri;
+					}
+				}
+
+				dataContexts.First ().DeleteEntity (naturalPersons.First ().Contacts.First ());
+				dataContexts.First ().SaveChanges ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -308,46 +327,49 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveValue()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (new Date (1950, 12, 31), naturalPersons[i].BirthDate);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			naturalPersons.First ().BirthDate = null;
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.IsNull (naturalPersons[i].BirthDate);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (new Date (1950, 12, 31), naturalPersons[i].BirthDate);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().BirthDate = null;
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.IsNull (naturalPersons[i].BirthDate);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -355,46 +377,49 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveReference()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			naturalPersons.First ().Gender = null;
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.IsNull (naturalPersons[i].Gender);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Gender = null;
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.IsNull (naturalPersons[i].Gender);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -402,46 +427,49 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveCollectionItem()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			naturalPersons.First ().Contacts.RemoveAt (1);
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
-			}
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Contacts.RemoveAt (1);
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -449,49 +477,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateReferenceWithNewEntity()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			PersonGenderEntity newGender = dataContexts.First ().CreateEntity<PersonGenderEntity> ();
-			newGender.Name = "E.T.";
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			naturalPersons.First ().Gender = newGender;
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual ("Male", naturalPersons[i].Gender.Name);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual ("E.T.", naturalPersons[i].Gender.Name);
-			}
+				PersonGenderEntity newGender = dataContexts.First ().CreateEntity<PersonGenderEntity> ();
+				newGender.Name = "E.T.";
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Gender = newGender;
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual ("E.T.", naturalPersons[i].Gender.Name);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 
@@ -499,49 +530,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateCollectionWithNewEntity()
 		{
-			int nbDataContexts = 10;
-
-			List<DataContext> dataContexts = new List<DataContext> ();
-
-			for (int i = 0; i < nbDataContexts; i++)
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure);
+				int nbDataContexts = 10;
 
-				dataContexts.Add (dataContext);
-				DataContextPool.Instance.Add (dataContext);
-			}
+				List<DataContext> dataContexts = new List<DataContext> ();
 
-			DbKey dbKey = new DbKey (new DbId (1));
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
-			List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+					dataContexts.Add (dataContext);
+					DataContextPool.Instance.Add (dataContext);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
-			}
+				DbKey dbKey = new DbKey (new DbId (1));
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
-			}
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
-			UriContactEntity newContact = dataContexts.First ().CreateEntity<UriContactEntity> ();
-			newContact.Uri = "new@uri.com";
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
 
-			naturalPersons.First ().Contacts.Add (newContact);
-			dataContexts.First ().SaveChanges ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
+				}
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				Assert.AreEqual ("new@uri.com", ((UriContactEntity) naturalPersons[i].Contacts[2]).Uri);
-			}
+				UriContactEntity newContact = dataContexts.First ().CreateEntity<UriContactEntity> ();
+				newContact.Uri = "new@uri.com";
 
-			for (int i = 0; i < nbDataContexts; i++)
-			{
-				DataContext dataContext = dataContexts[i];
+				naturalPersons.First ().Contacts.Add (newContact);
+				dataContexts.First ().SaveChanges ();
 
-				DataContextPool.Instance.Remove (dataContext);
-				dataContext.Dispose ();
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual ("new@uri.com", ((UriContactEntity) naturalPersons[i].Contacts[2]).Uri);
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataContexts[i];
+
+					DataContextPool.Instance.Remove (dataContext);
+					dataContext.Dispose ();
+				}
 			}
 		}
 

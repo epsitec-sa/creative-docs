@@ -1,8 +1,9 @@
 ﻿using Epsitec.Common.IO;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using Epsitec.Cresus.PerformanceTests;
 using Epsitec.Cresus.PerformanceTests.Entities;
@@ -68,12 +69,15 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 				DbAccess access = TestHelper.CreateDbAccess ();
 				dbInfrastructure.CreateDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 				{
-					dataContext.CreateSchema<NaturalPersonEntity> ();
-					dataContext.CreateSchema<UriContactEntity> ();
-					dataContext.CreateSchema<MailContactEntity> ();
-					dataContext.CreateSchema<TelecomContactEntity> ();
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						dataContext.CreateSchema<NaturalPersonEntity> ();
+						dataContext.CreateSchema<UriContactEntity> ();
+						dataContext.CreateSchema<MailContactEntity> ();
+						dataContext.CreateSchema<TelecomContactEntity> ();
+					}
 				}
 			}
 
@@ -91,17 +95,20 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 				DbAccess access = ConcurrencyProgram.GetAccess (host);
 				dbInfrastructure.AttachToDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 				{
-					for (int i = indexNumber; i < indexNumber + 1000; i++)
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+						for (int i = indexNumber; i < indexNumber + 1000; i++)
+						{
+							NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-						person.Firstname = "FirstName" + i;
+							person.Firstname = "FirstName" + i;
 
-						dataContext.SaveChanges ();
+							dataContext.SaveChanges ();
 
-						Logger.LogToConsole ("Created person " + i);
+							Logger.LogToConsole ("Created person " + i);
+						}
 					}
 				}
 			}
@@ -120,7 +127,9 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 				DbAccess access = ConcurrencyProgram.GetAccess (host);
 				dbInfrastructure.AttachToDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					for (int i = indexNumber; i < indexNumber + 1000; i++)
 					{
@@ -140,6 +149,7 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 							Logger.LogToConsole ("Person " + i + " found");
 						}
 					}
+				}
 				}
 			}
 			Logger.LogToConsole ("Data check done");

@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			get
 			{
-				return this.DataContext.DbInfrastructure;
+				return this.DataContext.DataInfrastructure.DbInfrastructure;
 			}
 		}
 
