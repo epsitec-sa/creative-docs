@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override EntityStatus GetEntityStatus()
 		{
 			var s1 = this.StreetName.GetEntityStatus ();
-			var s2 = EntityStatusHelper.TreatAsOptional (this.Complement.GetEntityStatus ());
+			var s2 = this.Complement.GetEntityStatus ().TreatAsOptional ();
 
 			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}

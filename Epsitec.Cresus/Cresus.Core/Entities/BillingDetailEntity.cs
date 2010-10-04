@@ -32,8 +32,8 @@ namespace Epsitec.Cresus.Core.Entities
 		public override EntityStatus GetEntityStatus ()
 		{
 			var s1 = this.Title.GetEntityStatus ();
-			var s2 = EntityStatusHelper.TreatAsOptional (this.TransactionId.GetEntityStatus ());
-			var s3 = EntityStatusHelper.TreatAsOptional (this.InstalmentName.GetEntityStatus ());
+			var s2 = this.TransactionId.GetEntityStatus ().TreatAsOptional ();
+			var s3 = this.InstalmentName.GetEntityStatus ().TreatAsOptional ();
 
 			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
 		}
