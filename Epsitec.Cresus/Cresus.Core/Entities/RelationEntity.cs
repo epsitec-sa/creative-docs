@@ -35,16 +35,20 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override EntityStatus GetEntityStatus()
 		{
-			var s1 = this.IdA.GetEntityStatus ();
-			var s2 = this.IdB.GetEntityStatus ().TreatAsOptional ();
-			var s3 = this.IdC.GetEntityStatus ().TreatAsOptional ();
-			var s4 = this.Person.GetEntityStatus ();
-			var s5 = this.Affairs.Select (x => x.GetEntityStatus ()).ToArray ();
-			var s6 = this.Comments.Select (x => x.GetEntityStatus ()).ToArray ();
-			var s7 = this.DefaultAddress.GetEntityStatus ().TreatAsOptional ();
-			var s8 = this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ();
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.IdA.GetEntityStatus ());
+				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6, s7, s8);
+				a.Accumulate (this.Person.GetEntityStatus ());
+				a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.DefaultAddress.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
+
+				return a.EntityStatus;
+			}
 		}
 	}
 }

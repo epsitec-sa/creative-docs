@@ -25,15 +25,18 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override EntityStatus GetEntityStatus()
 		{
-			var s1 = this.SubscriberNumber.GetEntityStatus ();
-			var s2 = this.SubscriberAddress.GetEntityStatus ();
-			var s3 = this.BankReferenceNumberPrefix.GetEntityStatus ().TreatAsOptional ();
-			var s4 = this.BankAddressLine1.GetEntityStatus ().TreatAsOptional ();
-			var s5 = this.BankAddressLine2.GetEntityStatus ().TreatAsOptional ();
-			var s6 = this.BankAccount.GetEntityStatus ().TreatAsOptional ();
-			var s7 = this.IncomingBookAccount.GetEntityStatus ().TreatAsOptional ();
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.SubscriberNumber.GetEntityStatus ());
+				a.Accumulate (this.SubscriberAddress.GetEntityStatus ());
+				a.Accumulate (this.BankReferenceNumberPrefix.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.BankAddressLine1.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.BankAddressLine2.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.BankAccount.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.IncomingBookAccount.GetEntityStatus ().TreatAsOptional ());
 
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6, s7);
+				return a.EntityStatus;
+			}
 		}
 	}
 }

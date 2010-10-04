@@ -42,11 +42,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override EntityStatus GetEntityStatus ()
 		{
-			var s1 = this.ArticleDefinition.GetEntityStatus ();
-			var s2 = this.ArticleParameters.GetEntityStatus ().TreatAsOptional ();
-			var s3 = this.ArticleQuantities.Select (x => x.GetEntityStatus ()).ToArray ();
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.ArticleDefinition.GetEntityStatus ());
+				a.Accumulate (this.ArticleParameters.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.ArticleQuantities.Select (x => x.GetEntityStatus ()));
 
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
+				return a.EntityStatus;
+			}
 		}
 	}
 }

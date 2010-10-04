@@ -15,10 +15,13 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override EntityStatus GetEntityStatus()
 		{
-			var s1 = this.StreetName.GetEntityStatus ();
-			var s2 = this.Complement.GetEntityStatus ().TreatAsOptional ();
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.StreetName.GetEntityStatus ());
+				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
 
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
+				return a.EntityStatus;
+			}
 		}
 	}
 }
