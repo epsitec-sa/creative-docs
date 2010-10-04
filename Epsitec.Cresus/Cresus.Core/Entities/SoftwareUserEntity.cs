@@ -76,31 +76,6 @@ namespace Epsitec.Cresus.Core.Entities
 			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6);
 		}
 		
-#if false
-		public Controllers.EditionStatus CurrentStatus
-		{
-			get
-			{
-				bool b1 = string.IsNullOrWhiteSpace (this.LoginName);
-				bool b2 = this.DisplayName.IsNullOrWhiteSpace;
-				bool b3 = this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash);
-				bool b4 = this.UserGroups.Count == 0;
-
-				if (b1 && b2 && b3 && b4)
-				{
-					return Controllers.EditionStatus.Empty;
-				}
-
-				if (b1 || b2 || b3 || b4)
-				{
-					return Controllers.EditionStatus.Invalid;
-				}
-
-				return Controllers.EditionStatus.Valid;
-			}
-		}
-#endif
-
 
 		public bool CheckPassword(string plaintextPassword)
 		{

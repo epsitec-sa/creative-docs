@@ -83,11 +83,13 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			EntityStatus[] collection = collectionMix.SelectMany (x => x.Items).ToArray ();
 
+			//	S'il existe un seul invalide, tout est considéré comme invalide.
 			if (collection.Any (x => (x & EntityStatus.Empty) == 0 && (x & EntityStatus.Valid) == 0))
 			{
 				return EntityStatus.None;  // invalide
 			}
 
+			//	Si tout est vide, on dit que c'est vide.
 			if (collection.All (x => (x & EntityStatus.Empty) != 0))
 			{
 				return EntityStatus.Empty;
@@ -95,6 +97,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (cardinality == StatusHelperCardinality.AtLeastOne)
 			{
+				//	Si un seul est valide, on dit que c'est valide.
 				if (collection.Any (x => (x & EntityStatus.Valid) != 0))
 				{
 					return EntityStatus.Valid;
@@ -102,13 +105,14 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
+				//	Si tout est valide, on dit que c'est valide.
 				if (collection.All (x => (x & EntityStatus.Valid) != 0))
 				{
 					return EntityStatus.Valid;
 				}
 			}
 
-			return EntityStatus.None;
+			return EntityStatus.None;  // invalide
 		}
 	}
 }
