@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryInvoiceDocumentViewController : SummaryViewController<Entities.InvoiceDocumentEntity>
+	public class SummaryBusinessDocumentViewController : SummaryViewController<BusinessDocumentEntity>
 	{
-		public SummaryInvoiceDocumentViewController(string name, Entities.InvoiceDocumentEntity entity)
+		public SummaryBusinessDocumentViewController(string name, BusinessDocumentEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => x.GetCompactSummary ());
 			template.DefineCreateItem (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
-			template.Filter = SummaryInvoiceDocumentViewController.ArticleLineFilter;
+			template.Filter = SummaryBusinessDocumentViewController.ArticleLineFilter;
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
@@ -200,8 +200,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var article = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
 			article.Visibility = true;
-			article.BeginDate  = this.Entity.CreationDate;
-			article.EndDate    = this.Entity.CreationDate;
+			article.BeginDate  = this.Entity.BillingDate;
+			article.EndDate    = this.Entity.BillingDate;
 
 			return article;
 		}
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private static FormattedText GetTotalSummary(InvoiceDocumentEntity invoiceDocument)
+		private static FormattedText GetTotalSummary(BusinessDocumentEntity invoiceDocument)
 		{
 			string ht  = Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceHT  (invoiceDocument));
 			string vat = Misc.PriceToString (InvoiceDocumentHelper.GetVatTotal        (invoiceDocument));

@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class BillingDetailEntity
 	{
-		public FormattedText GetCompactSummary(InvoiceDocumentEntity invoiceDocument)
+		public FormattedText GetCompactSummary(BusinessDocumentEntity invoiceDocument)
 		{
 			string amount = Misc.PriceToString (this.AmountDue.Amount);
 			FormattedText title = Misc.FirstLine (this.Title);

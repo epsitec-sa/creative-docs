@@ -11,15 +11,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class InvoiceDocumentEntity
+	public partial class BusinessDocumentEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			string date = Misc.GetDateTimeShortDescription (this.LastModificationDate);
+			string date = Misc.GetDateShortDescription (this.BillingDate);
 			string total = Misc.PriceToString (Helpers.InvoiceDocumentHelper.GetTotalPriceTTC (this));
 
-			FormattedText billing  = InvoiceDocumentEntity.GetShortMailContactSummary (this.BillingMailContact);
-			FormattedText shipping = InvoiceDocumentEntity.GetShortMailContactSummary (this.ShippingMailContact);
+			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillingMailContact);
+			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShippingMailContact);
 
 			FormattedText addresses;
 			if (this.BillingMailContact == this.ShippingMailContact || (!this.BillingMailContact.IsNotNull () && !this.ShippingMailContact.IsNotNull ()))
@@ -61,11 +61,10 @@ namespace Epsitec.Cresus.Core.Entities
 			var s2 = this.IdB.GetEntityStatus ().TreatAsOptional ();
 			var s3 = this.IdC.GetEntityStatus ().TreatAsOptional ();
 			var s4 = this.DocumentTitle.GetEntityStatus ();
-			var s5 = this.Description.GetEntityStatus ();
+			var s5 = EntityStatus.Empty | EntityStatus.Valid; // this.Description.GetEntityStatus ();
 			var s6 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Lines.Select (x => x.GetEntityStatus ()).ToArray ());
-			var s7 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Comments.Select (x => x.GetEntityStatus ()).ToArray ());
-
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6, s7);
+//			var s7 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Comments.Select (x => x.GetEntityStatus ()).ToArray ());
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6);
 		}
 	}
 }

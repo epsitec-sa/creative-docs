@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class InvoiceDocumentPrinter : AbstractDocumentPrinter
 	{
-		public InvoiceDocumentPrinter(AbstractEntityPrinter entityPrinter, InvoiceDocumentEntity entity)
+		public InvoiceDocumentPrinter(AbstractEntityPrinter entityPrinter, BusinessDocumentEntity entity)
 			: base (entityPrinter, entity)
 		{
 		}
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Core.Printers
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.RequiredPageSize.Height-82, 90, 10));
 
-			string date = Misc.GetDateTimeDescription (this.Entity.LastModificationDate);
+			string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
 			var dateBand = new TextBand ();
 			dateBand.Text = FormattedText.Concat (InvoiceDocumentPrinter.GetDefaultLocation (), ", le ", date);
 			dateBand.Font = font;
@@ -1450,11 +1450,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private InvoiceDocumentEntity Entity
+		private BusinessDocumentEntity Entity
 		{
 			get
 			{
-				return this.entity as InvoiceDocumentEntity;
+				return this.entity as BusinessDocumentEntity;
 			}
 		}
 

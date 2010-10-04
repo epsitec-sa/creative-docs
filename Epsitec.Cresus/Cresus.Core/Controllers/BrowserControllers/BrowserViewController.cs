@@ -218,11 +218,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					break;
 
 				case "Documents":
-					this.SetContents (context => this.data.GetAllEntities<DocumentEntity> (dataContext: context));
-					break;
-
 				case "InvoiceDocuments":
-					this.SetContents (context => this.data.GetAllEntities<InvoiceDocumentEntity> (dataContext: context));
+					this.SetContents (context => this.data.GetAllEntities<BusinessDocumentEntity> (dataContext: context));
 					break;
 
 				case "BusinessSettings":
@@ -254,7 +251,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				case "Documents":
 				case "InvoiceDocuments":
-					return EntityInfo<InvoiceDocumentEntity>.GetTypeId ();
+					return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
 			}
 
 			throw new System.NotImplementedException ();

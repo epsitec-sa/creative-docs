@@ -142,7 +142,7 @@
     <Compile Include="Entities\PersonGenderEntity.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />
-    <Compile Include="Entities\InvoiceDocumentEntity.cs" />
+    <Compile Include="Entities\BusinessDocumentEntity.cs" />
     <Compile Include="Entities\LocationEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
     <Compile Include="Entities\RelationEntity.cs" />
@@ -212,7 +212,7 @@
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionTotalInvoiceDocumentViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTotalBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
@@ -304,7 +304,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionInvoiceDocumentViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
@@ -348,7 +348,7 @@
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentModeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryInvoiceDocumentViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryRelationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
@@ -369,7 +369,7 @@
     <Compile Include="Repositories\CurrencyRepository.cs" />
     <Compile Include="Repositories\PaymentModeRepository.cs" />
     <Compile Include="Repositories\UnitOfMeasureRepository.cs" />
-    <Compile Include="Repositories\InvoiceDocumentRepository.cs" />
+    <Compile Include="Repositories\BusinessDocumentRepository.cs" />
     <Compile Include="Dialogs\IAttachedDialog.cs" />
     <Compile Include="Dialogs\DocumentTypeDialog.cs" />
     <Compile Include="Dialogs\PreviewDialog.cs" />

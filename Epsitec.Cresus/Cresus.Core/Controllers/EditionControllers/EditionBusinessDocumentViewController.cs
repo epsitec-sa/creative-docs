@@ -22,9 +22,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionInvoiceDocumentViewController : EditionViewController<Entities.InvoiceDocumentEntity>
+	public class EditionBusinessDocumentViewController : EditionViewController<BusinessDocumentEntity>
 	{
-		public EditionInvoiceDocumentViewController(string name, Entities.InvoiceDocumentEntity entity)
+		public EditionBusinessDocumentViewController(string name, BusinessDocumentEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -110,8 +110,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateTextFieldMulti (tile, 36, "Texte <i>Concerne</i> imprimé", Marshaler.Create (() => this.Entity.DocumentTitle, x => this.Entity.DocumentTitle = x));
-			builder.CreateTextField      (tile,  0, "Description interne",           Marshaler.Create (() => this.Entity.Description,   x => this.Entity.Description = x));
+//-			builder.CreateTextFieldMulti (tile, 36, "Texte <i>Concerne</i> imprimé", Marshaler.Create (() => this.Entity.DocumentTitle, x => this.Entity.DocumentTitle = x));
+//-			builder.CreateTextField      (tile,  0, "Description interne",           Marshaler.Create (() => this.Entity.Description,   x => this.Entity.Description = x));
 
 #if true
 			// TODO: à supprimer un jour...

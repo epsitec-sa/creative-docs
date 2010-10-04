@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var workflow       = this.BusinessContext.CreateEntity<WorkflowEntity> ();
 			var workflowThread = this.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
 			var workflowStep   = this.BusinessContext.CreateEntity<WorkflowStepEntity> ();
-			var document       = this.BusinessContext.CreateEntity<InvoiceDocumentEntity> ();
+			var document       = this.BusinessContext.CreateEntity<BusinessDocumentEntity> ();
 			
 			var now = System.DateTime.Now;
 
@@ -111,11 +111,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			document.IdA                   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1}", this.Entity.IdA, this.Entity.Documents.Count + 1);
 			document.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
 			document.OtherPartyTaxMode     = Business.Finance.TaxMode.LiableForVat;
-			document.CurrencyCode          = Business.Finance.CurrencyCode.Chf;
+			document.BillingCurrencyCode   = Business.Finance.CurrencyCode.Chf;
 			document.BillingStatus         = Business.Finance.BillingStatus.None;
-			document.CreationDate          = now;
-			document.LastModificationDate  = now;
-			document.Description           = FormattedText.FromSimpleText ("Offre");
+			document.BillingDate           = new Date (now);
+//-			document.Description           = FormattedText.FromSimpleText ("Offre");
 
 			var relation = this.Orchestrator.MainViewController.GetVisibleEntities ().Select (x => x as RelationEntity).Where (x => x.IsNull () == false).FirstOrDefault ();
 
@@ -172,7 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private string GetOfferTileName(InvoiceDocumentEntity doc)
+		private string GetOfferTileName(BusinessDocumentEntity doc)
 		{
 			return EditionAffairViewController.GetOfferTileName (this.Entity.Documents.IndexOf (doc));
 		}

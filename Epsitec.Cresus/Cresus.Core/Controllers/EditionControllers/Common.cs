@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntitiesOfType<GenericArticleDocumentEntity> (x => x.Lines.Contains (entity)).Single ();
+			var invoiceDocument = dataContext.GetEntitiesOfType<BusinessDocumentEntity> (x => x.Lines.Contains (entity)).Single ();
 			var navigator       = controller.Navigator;
 
 			navigator.PreserveNavigation (
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
 						var article = newEntity as ArticleDocumentItemEntity;
-						article.BeginDate = invoiceDocument.CreationDate;
-						article.EndDate   = invoiceDocument.CreationDate;
+						article.BeginDate = invoiceDocument.BillingDate;
+						article.EndDate   = invoiceDocument.BillingDate;
 					}
 					else if (id == DocumentItemTabId.Price)
 					{

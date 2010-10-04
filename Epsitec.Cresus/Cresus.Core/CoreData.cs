@@ -339,11 +339,12 @@ namespace Epsitec.Cresus.Core
 
 			try
 			{
-				this.dbInfrastructure.AttachToDatabase (access);
-
-				System.Diagnostics.Trace.WriteLine ("Connected to database");
-
-				connected = true;
+				if (DbInfrastructure.CheckForDatabaseFiles (access))
+				{
+					this.dbInfrastructure.AttachToDatabase (access);
+					System.Diagnostics.Trace.WriteLine ("Connected to database");
+					connected = true;
+				}
 			}
 			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
 			{
@@ -394,31 +395,7 @@ namespace Epsitec.Cresus.Core
 
 		private void DeleteDatabase(DbAccess access)
 		{
-			string path = DbFactory.GetDatabaseFilePaths (access).First ();
-
-			try
-			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-				}
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
-				System.Threading.Thread.Sleep (5000);
-
-				try
-				{
-					System.IO.File.Delete (path);
-					System.Console.Out.WriteLine ("Finally succeeded");
-				}
-				catch
-				{
-					System.Console.Out.WriteLine ("Failed again, giving up");
-					throw;
-				}
-			}
+			DbInfrastructure.DeleteDatabaseFiles (access);
 		}
 
 		private void SetupDatabase(bool createNewDatabase)
@@ -468,7 +445,7 @@ namespace Epsitec.Cresus.Core
 			dataContext.CreateSchema<UriContactEntity> ();
 			dataContext.CreateSchema<ArticleDefinitionEntity> ();
 			dataContext.CreateSchema<VatDefinitionEntity> ();
-			dataContext.CreateSchema<InvoiceDocumentEntity> ();
+			dataContext.CreateSchema<BusinessDocumentEntity> ();
 
 			dataContext.CreateSchema<ArticleDocumentItemEntity> ();
 			dataContext.CreateSchema<TextDocumentItemEntity> ();

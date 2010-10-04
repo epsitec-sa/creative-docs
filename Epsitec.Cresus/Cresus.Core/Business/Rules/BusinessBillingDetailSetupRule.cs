@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var dueDate      = Date.Today;
 			var settings     = Logic.Current.BusinessSettings;
-			var invoice      = Logic.Current.BusinessContext.GetMasterEntity<InvoiceDocumentEntity> ();
+			var invoice      = Logic.Current.BusinessContext.GetMasterEntity<BusinessDocumentEntity> ();
 			var currencyCode = CurrencyCode.Chf;
 			int paymentTerm  = 0;
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					dueDate = invoice.BillingDate.Value;
 				}
 
-				currencyCode = invoice.CurrencyCode;
+				currencyCode = invoice.BillingCurrencyCode;
 			}
 
 
