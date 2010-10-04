@@ -62,8 +62,9 @@ namespace Epsitec.Cresus.Core.Entities
 			var s3 = this.IdC.GetEntityStatus ().TreatAsOptional ();
 			var s4 = this.DocumentTitle.GetEntityStatus ();
 			var s5 = EntityStatus.Empty | EntityStatus.Valid; // this.Description.GetEntityStatus ();
-			var s6 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Lines.Select (x => x.GetEntityStatus ()).ToArray ());
-//			var s7 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Comments.Select (x => x.GetEntityStatus ()).ToArray ());
+			var s6 = this.Lines.Select (x => x.GetEntityStatus ()).ToArray ();
+			var s7 = this.Comments.Select (x => x.GetEntityStatus ()).ToArray ();
+
 			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6);
 		}
 	}

@@ -134,6 +134,7 @@
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
     <Compile Include="Entities\PostBoxEntity.cs" />
     <Compile Include="Entities\StreetEntity.cs" />
