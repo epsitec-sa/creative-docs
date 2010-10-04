@@ -32,16 +32,13 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Street.StreetName.ToSimpleText (), this.Location.Country.Code, this.Location.PostalCode.ToSimpleText (), this.Location.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				var s1 = this.Street.EntityStatus;
-				var s2 = EntityStatusHelper.Optional (this.PostBox.EntityStatus);
-				var s3 = this.Location.EntityStatus;
+			var s1 = this.Street.GetEntityStatus ();
+			var s2 = EntityStatusHelper.TreatAsOptional (this.PostBox.GetEntityStatus ());
+			var s3 = this.Location.GetEntityStatus ();
 
-				return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
-			}
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
 		}
 	}
 }

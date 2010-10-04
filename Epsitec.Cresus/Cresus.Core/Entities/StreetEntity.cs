@@ -13,15 +13,12 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class StreetEntity
 	{
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				var s1 = EntityStatusHelper.GetStatus (this.StreetName);
-				var s2 = EntityStatusHelper.Optional (EntityStatusHelper.GetStatus (this.Complement));
+			var s1 = this.StreetName.GetEntityStatus ();
+			var s2 = EntityStatusHelper.TreatAsOptional (this.Complement.GetEntityStatus ());
 
-				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
-			}
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 	}
 }

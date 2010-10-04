@@ -23,15 +23,12 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Code, "~:", this.Name);
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				var s1 = EntityStatusHelper.GetStatus (this.Code);
-				var s2 = EntityStatusHelper.GetStatus (this.Name);
+			var s1 = this.Code.GetEntityStatus ();
+			var s2 = this.Name.GetEntityStatus ();
 
-				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
-			}
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 	}
 }

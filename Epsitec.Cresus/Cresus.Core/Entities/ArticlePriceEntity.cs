@@ -41,12 +41,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToFormattedText ();
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				return EntityStatus.Valid;
-			}
+			return EntityStatus.Valid;
 		}
 	}
 }

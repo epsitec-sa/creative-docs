@@ -28,12 +28,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus ()
 		{
-			get
-			{
-				return Helpers.EntityStatusHelper.GetStatus (this.Name);
-			}
+			return this.Name.GetEntityStatus ();
 		}
 	}
 }
