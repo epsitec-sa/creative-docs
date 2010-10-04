@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static EntityStatus CombineStatus(StatusHelperCardinality cardinality, params EntityStatusCollection[] collectionMix)
 		{
-			if (collectionMix != null)
+			if (collectionMix == null)
 			{
 				return EntityStatus.Empty;
 			}

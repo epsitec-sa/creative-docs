@@ -15,11 +15,12 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override EntityStatus GetEntityStatus()
 		{
-			var s1 = this.Name.GetEntityStatus ();
-			var s2 = this.Description.GetEntityStatus ().TreatAsOptional ();
-			var s3 = this.Roles.Select (x => x.GetEntityStatus ()).ToArray ();
+			var s1 = this.Code.GetEntityStatus ();
+			var s2 = this.Name.GetEntityStatus ();
+			var s3 = this.Description.GetEntityStatus ().TreatAsOptional ();
+			var s4 = this.Roles.Select (x => x.GetEntityStatus ()).ToArray ();
 
-			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4);
 		}
 	}
 }

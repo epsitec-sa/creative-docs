@@ -472,15 +472,20 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateUsers()
 		{
+			var role = this.DataContext.CreateEntity<SoftwareUserRoleEntity> ();
+
+			role.Code = "?";
+			role.Name = "Principal";
+
 			var logicUser  = new Logic (typeof (SoftwareUserEntity), null);
 			var logicGroup = new Logic (typeof (SoftwareUserGroupEntity), null);
 
-			var groupSystem     = this.CreateUserGroup (logicGroup, "Système",                   Business.UserManagement.UserPowerLevel.System);
-			var groupDev        = this.CreateUserGroup (logicGroup, "Développeurs",              Business.UserManagement.UserPowerLevel.Developer);
-			var groupAdmin      = this.CreateUserGroup (logicGroup, "Administrateurs",           Business.UserManagement.UserPowerLevel.Administrator);
-			var groupPowerUser  = this.CreateUserGroup (logicGroup, "Utilisateurs avec pouvoir", Business.UserManagement.UserPowerLevel.PowerUser);
-			var groupStandard   = this.CreateUserGroup (logicGroup, "Utilisateurs standards",    Business.UserManagement.UserPowerLevel.Standard);
-			var groupRestricted = this.CreateUserGroup (logicGroup, "Utilisateurs restreints",   Business.UserManagement.UserPowerLevel.Restricted);
+			var groupSystem     = this.CreateUserGroup (logicGroup, role, "Système",                   Business.UserManagement.UserPowerLevel.System);
+			var groupDev        = this.CreateUserGroup (logicGroup, role, "Développeurs",              Business.UserManagement.UserPowerLevel.Developer);
+			var groupAdmin      = this.CreateUserGroup (logicGroup, role, "Administrateurs",           Business.UserManagement.UserPowerLevel.Administrator);
+			var groupPowerUser  = this.CreateUserGroup (logicGroup, role, "Utilisateurs avec pouvoir", Business.UserManagement.UserPowerLevel.PowerUser);
+			var groupStandard   = this.CreateUserGroup (logicGroup, role, "Utilisateurs standards",    Business.UserManagement.UserPowerLevel.Standard);
+			var groupRestricted = this.CreateUserGroup (logicGroup, role, "Utilisateurs restreints",   Business.UserManagement.UserPowerLevel.Restricted);
 
 #if false
 			this.CreateUserGroup (logicGroup, "Utilisateurs restreints 1", Business.UserManagement.UserPowerLevel.Restricted);
@@ -506,14 +511,16 @@ namespace Epsitec.Cresus.Core
 			this.DataContext.SaveChanges ();
 		}
 
-		private SoftwareUserGroupEntity CreateUserGroup(Logic logicGroup, string name, Business.UserManagement.UserPowerLevel level)
+		private SoftwareUserGroupEntity CreateUserGroup(Logic logicGroup, SoftwareUserRoleEntity role, string name, Business.UserManagement.UserPowerLevel level)
 		{
 			var group = this.DataContext.CreateEntity<SoftwareUserGroupEntity> ();
 			
 			logicGroup.ApplyRules (RuleType.Setup, group);
-			
+
+			group.Code           = "?";
 			group.Name           = name;
 			group.UserPowerLevel = level;
+			group.Roles.Add (role);
 			
 			return group;
 		}
