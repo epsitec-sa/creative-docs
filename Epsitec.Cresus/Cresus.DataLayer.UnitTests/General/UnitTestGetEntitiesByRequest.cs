@@ -3,6 +3,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
@@ -29,18 +30,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
-
-				for (int i = 0; i < 5; i++)
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					int? rank = (i % 2 == 0) ? (int?) null : i;
+					DatabaseCreator2.PupulateDatabase (dataContext);
 
-					DatabaseHelper.CreateContactRole (dataContext, "role" + i, rank);
+					for (int i = 0; i < 5; i++)
+					{
+						int? rank = (i % 2 == 0) ? (int?) null : i;
+
+						DatabaseHelper.CreateContactRole (dataContext, "role" + i, rank);
+					}
+
+					dataContext.SaveChanges ();
 				}
-
-				dataContext.SaveChanges ();
 			}
 		}
 
@@ -55,29 +59,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void UnaryComparisonTest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new UnaryComparison (
-						new Field (new Druid ("[L0A01]")),
-						UnaryComparator.IsNotNull
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new UnaryComparison (
+							new Field (new Druid ("[L0A01]")),
+							UnaryComparator.IsNotNull
+						)
+					);
 
-				Assert.IsTrue (persons.Count () == 3);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+					Assert.IsTrue (persons.Count () == 3);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
+				}
 			}
 		}
 
@@ -85,28 +92,31 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void BinaryComparisonFieldWithValueTest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AV]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Alfred")
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Alfred")
+						)
+					);
 
-				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+					Assert.IsTrue (persons.Count () == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
@@ -114,27 +124,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void BinaryComparisonFieldWithFieldTest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldField (
-						new Field (new Druid ("[L0AV]")),
-						BinaryComparator.IsEqual,
-						new Field (new Druid ("[L0A01]"))
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldField (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsEqual,
+							new Field (new Druid ("[L0A01]"))
+						)
+					);
 
-				Assert.IsTrue (persons.Count () == 0);
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+					Assert.IsTrue (persons.Count () == 0);
+				}
 			}
 		}
 
@@ -142,32 +155,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void UnaryOperationTest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new UnaryOperation (
-						UnaryOperator.Not,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0AV]")),
-							BinaryComparator.IsEqual,
-							new Constant ("Hans")
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
+
+					request.AddLocalConstraint (example,
+						new UnaryOperation (
+							UnaryOperator.Not,
+							new ComparisonFieldValue (
+								new Field (new Druid ("[L0AV]")),
+								BinaryComparator.IsEqual,
+								new Constant ("Hans")
+							)
 						)
-					)
-				);
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Count () == 2);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					Assert.IsTrue (persons.Count () == 2);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				}
 			}
 		}
 
@@ -175,36 +191,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void BinaryOperationTest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new BinaryOperation (
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0AV]")),
-							BinaryComparator.IsNotEqual,
-							new Constant ("Hans")
-						),
-						BinaryOperator.And,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0AV]")),
-							BinaryComparator.IsNotEqual,
-							new Constant ("Gertrude")
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
+
+					request.AddLocalConstraint (example,
+						new BinaryOperation (
+							new ComparisonFieldValue (
+								new Field (new Druid ("[L0AV]")),
+								BinaryComparator.IsNotEqual,
+								new Constant ("Hans")
+							),
+							BinaryOperator.And,
+							new ComparisonFieldValue (
+								new Field (new Druid ("[L0AV]")),
+								BinaryComparator.IsNotEqual,
+								new Constant ("Gertrude")
+							)
 						)
-					)
-				);
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Count () == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
@@ -212,75 +231,81 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DoubleRequest1()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AV]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Alfred")
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A01]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Dupond")
-					)
-				);
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Alfred")
+						)
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A01]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Dupond")
+						)
+					);
 
-				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+					Assert.IsTrue (persons.Count () == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
 		[TestMethod]
 		public void DoubleRequest2()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Gender = new PersonGenderEntity (),
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ()
+						{
+							Gender = new PersonGenderEntity (),
+						};
 
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AV]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Alfred")
-					)
-				);
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Alfred")
+						)
+					);
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AC1]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Male")
-					)
-				);
+					request.AddLocalConstraint (example.Gender,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AC1]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Male")
+						)
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Count () == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
@@ -288,31 +313,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void InnerRequest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Gender = new PersonGenderEntity (),
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ()
+						{
+							Gender = new PersonGenderEntity (),
+						};
 
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AC1]")),
-						BinaryComparator.IsEqual,
-						new Constant ("Male")
-					)
-				);
+					request.AddLocalConstraint (example.Gender,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AC1]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Male")
+						)
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Count () == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
@@ -320,32 +348,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void LikeRequest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					Gender = new PersonGenderEntity (),
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ()
+						{
+							Gender = new PersonGenderEntity (),
+						};
 
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0AC1]")),
-						BinaryComparator.IsLike,
-						new Constant ("%ale")
-					)
-				);
+					request.AddLocalConstraint (example.Gender,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0AC1]")),
+							BinaryComparator.IsLike,
+							new Constant ("%ale")
+						)
+					);
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Count () == 2);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					Assert.IsTrue (persons.Count () == 2);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				}
 			}
 		}
 
@@ -353,145 +384,148 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void LikeEscapeRequest()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				CountryEntity country1 = DatabaseHelper.CreateCountry (dataContext, "c1", "test%test");
-				CountryEntity country2 = DatabaseHelper.CreateCountry (dataContext, "c2", "test_test");
-				CountryEntity country3 = DatabaseHelper.CreateCountry (dataContext, "c2", "test#test");
-				CountryEntity country4 = DatabaseHelper.CreateCountry (dataContext, "c3", "testxxtest");
-
-				dataContext.SaveChanges ();
-			}
-
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				CountryEntity example = new CountryEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					CountryEntity country1 = DatabaseHelper.CreateCountry (dataContext, "c1", "test%test");
+					CountryEntity country2 = DatabaseHelper.CreateCountry (dataContext, "c2", "test_test");
+					CountryEntity country3 = DatabaseHelper.CreateCountry (dataContext, "c2", "test#test");
+					CountryEntity country4 = DatabaseHelper.CreateCountry (dataContext, "c3", "testxxtest");
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A3]")),
-						BinaryComparator.IsLike,
-						new Constant ("test%test")
-					)
-				);
+					dataContext.SaveChanges ();
+				}
 
-				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
-
-				Assert.IsTrue (countries.Count () == 4);
-				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
-				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
-				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
-				Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
-			}
-
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				CountryEntity example = new CountryEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					CountryEntity example = new CountryEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A3]")),
-						BinaryComparator.IsLike,
-						new Constant ("test_test")
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A3]")),
+							BinaryComparator.IsLike,
+							new Constant ("test%test")
+						)
+					);
 
-				Assert.IsTrue (countries.Count () == 3);
-				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
-				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
-				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
-			}
+					CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				CountryEntity example = new CountryEntity ();
+					Assert.IsTrue (countries.Count () == 4);
+					Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+					Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+					Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+					Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
+				}
 
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					CountryEntity example = new CountryEntity ();
 
-				string value = ComparisonFieldValue.Escape ("test%test");
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A3]")),
-						BinaryComparator.IsLikeEscape,
-						new Constant (value)
-					)
-				);
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A3]")),
+							BinaryComparator.IsLike,
+							new Constant ("test_test")
+						)
+					);
 
-				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+					CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
-				Assert.IsTrue (countries.Count () == 1);
-				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
-			}
+					Assert.IsTrue (countries.Count () == 3);
+					Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+					Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+					Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+				}
 
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				CountryEntity example = new CountryEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					CountryEntity example = new CountryEntity ();
 
-				string value = ComparisonFieldValue.Escape ("test_test");
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A3]")),
-						BinaryComparator.IsLikeEscape,
-						new Constant (value)
-					)
-				);
+					string value = ComparisonFieldValue.Escape ("test%test");
 
-				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A3]")),
+							BinaryComparator.IsLikeEscape,
+							new Constant (value)
+						)
+					);
 
-				Assert.IsTrue (countries.Count () == 1);
-				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
-			}
+					CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				CountryEntity example = new CountryEntity ();
+					Assert.IsTrue (countries.Count () == 1);
+					Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+				}
 
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					CountryEntity example = new CountryEntity ();
 
-				string value = ComparisonFieldValue.Escape ("test#test");
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A3]")),
-						BinaryComparator.IsLikeEscape,
-						new Constant (value)
-					)
-				);
+					string value = ComparisonFieldValue.Escape ("test_test");
 
-				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A3]")),
+							BinaryComparator.IsLikeEscape,
+							new Constant (value)
+						)
+					);
 
-				Assert.IsTrue (countries.Count () == 1);
-				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+					CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+
+					Assert.IsTrue (countries.Count () == 1);
+					Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+				}
+
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					CountryEntity example = new CountryEntity ();
+
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
+
+					string value = ComparisonFieldValue.Escape ("test#test");
+
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A3]")),
+							BinaryComparator.IsLikeEscape,
+							new Constant (value)
+						)
+					);
+
+					CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
+
+					Assert.IsTrue (countries.Count () == 1);
+					Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+				}
 			}
 		}
 
@@ -499,21 +533,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RequestedEntityRequest1()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-				};
+					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					Request request = new Request ()
+					{
+						RootEntity = example,
+					};
 
-				Assert.IsTrue (persons.Length == 2);
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					Assert.IsTrue (persons.Length == 2);
+
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				}
 			}
 		}
 
@@ -521,23 +558,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RequestedEntityRequest2()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example.Contacts[0],
-				};
+					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
-				UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example.Contacts[0],
+					};
 
-				Assert.IsTrue (contacts.Length == 3);
+					UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
 
-				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+					Assert.IsTrue (contacts.Length == 3);
+
+					Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+					Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+					Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+				}
 			}
 		}
 
@@ -545,21 +585,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RequestedEntityRequest3()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = (example.Contacts[0] as UriContactEntity).UriScheme,
-				};
+					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
-				UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = (example.Contacts[0] as UriContactEntity).UriScheme,
+					};
 
-				Assert.IsTrue (uriSchemes.Length == 1);
+					UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
 
-				Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+					Assert.IsTrue (uriSchemes.Length == 1);
+
+					Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+				}
 			}
 		}
 
@@ -567,22 +610,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RootEntityReferenceRequest1()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1();
-				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (example).First ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = new NaturalPersonEntity(),
-					RootEntityKey = dataContext.GetNormalizedEntityKey(alfred).Value.RowKey,
-				};
+					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();
+					NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (example).First ();
 
-				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+					Request request = new Request ()
+					{
+						RootEntity = new NaturalPersonEntity (),
+						RootEntityKey = dataContext.GetNormalizedEntityKey (alfred).Value.RowKey,
+					};
 
-				Assert.IsTrue (persons.Length == 1);
+					NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Length == 1);
+
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				}
 			}
 		}
 
@@ -590,29 +636,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RootEntityReferenceRequest2()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
-
-				NaturalPersonEntity example2 = new NaturalPersonEntity ();
-				example2.Contacts.Add (new UriContactEntity ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriScheme = new UriSchemeEntity ()
-				});
+					NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
+					NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
-				Request request = new Request ()
-				{
-					RootEntity = example2,
-					RootEntityKey = dataContext.GetNormalizedEntityKey(alfred1).Value.RowKey,
-					RequestedEntity = (example2.Contacts[0] as UriContactEntity).UriScheme,
-				};
+					NaturalPersonEntity example2 = new NaturalPersonEntity ();
+					example2.Contacts.Add (new UriContactEntity ()
+					{
+						UriScheme = new UriSchemeEntity ()
+					});
 
-				UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
+					Request request = new Request ()
+					{
+						RootEntity = example2,
+						RootEntityKey = dataContext.GetNormalizedEntityKey (alfred1).Value.RowKey,
+						RequestedEntity = (example2.Contacts[0] as UriContactEntity).UriScheme,
+					};
 
-				Assert.IsTrue (uriSchemes.Length == 1);
+					UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
 
-				Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+					Assert.IsTrue (uriSchemes.Length == 1);
+
+					Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+				}
 			}
 		}
 
@@ -620,27 +669,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RootEntityReferenceRequest3()
 		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
-
-				NaturalPersonEntity example2 = new NaturalPersonEntity ();
-				example2.Contacts.Add (new AbstractContactEntity ());
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example2,
-					RootEntityKey = dataContext.GetNormalizedEntityKey (alfred1).Value.RowKey,
-					RequestedEntity = example2.Contacts[0],
-				};
+					NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
+					NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
-				UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
+					NaturalPersonEntity example2 = new NaturalPersonEntity ();
+					example2.Contacts.Add (new AbstractContactEntity ());
 
-				Assert.IsTrue (contacts.Length == 2);
+					Request request = new Request ()
+					{
+						RootEntity = example2,
+						RootEntityKey = dataContext.GetNormalizedEntityKey (alfred1).Value.RowKey,
+						RequestedEntity = example2.Contacts[0],
+					};
 
-				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+					UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
+
+					Assert.IsTrue (contacts.Length == 2);
+
+					Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+					Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				}
 			}
 		}
 
@@ -648,28 +700,31 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IntRequest1()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ContactRoleEntity example = new ContactRoleEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					ContactRoleEntity example = new ContactRoleEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A03]")),
-						BinaryComparator.IsEqual,
-						new Constant (1)
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A03]")),
+							BinaryComparator.IsEqual,
+							new Constant (1)
+						)
+					);
 
-				Assert.IsTrue (roles.Count == 1);
-				Assert.AreEqual (1, roles.First ().Rank);
+					var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+
+					Assert.IsTrue (roles.Count == 1);
+					Assert.AreEqual (1, roles.First ().Rank);
+				}
 			}
 		}
 
@@ -677,36 +732,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IntRequest2()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ContactRoleEntity example = new ContactRoleEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					ContactRoleEntity example = new ContactRoleEntity ();
 
-				request.AddLocalConstraint (example,
-					new BinaryOperation(
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0A03]")),
-							BinaryComparator.IsLower,
-							new Constant (4)
-						),
-						BinaryOperator.And,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0A03]")),
-							BinaryComparator.IsGreaterOrEqual,
-							new Constant (3)
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
+
+					request.AddLocalConstraint (example,
+						new BinaryOperation (
+							new ComparisonFieldValue (
+								new Field (new Druid ("[L0A03]")),
+								BinaryComparator.IsLower,
+								new Constant (4)
+							),
+							BinaryOperator.And,
+							new ComparisonFieldValue (
+								new Field (new Druid ("[L0A03]")),
+								BinaryComparator.IsGreaterOrEqual,
+								new Constant (3)
+							)
 						)
-					)
-				);
+					);
 
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+					var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
 
-				Assert.IsTrue (roles.Count == 1);
-				Assert.AreEqual (3, roles.First ().Rank);
+					Assert.IsTrue (roles.Count == 1);
+					Assert.AreEqual (3, roles.First ().Rank);
+				}
 			}
 		}
 
@@ -714,27 +772,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IntRequest3()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				ContactRoleEntity example = new ContactRoleEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					ContactRoleEntity example = new ContactRoleEntity ();
 
-				request.AddLocalConstraint (example,
-					new UnaryComparison(
-						new Field (new Druid ("[L0A03]")),
-						UnaryComparator.IsNull
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+					request.AddLocalConstraint (example,
+						new UnaryComparison (
+							new Field (new Druid ("[L0A03]")),
+							UnaryComparator.IsNull
+						)
+					);
 
-				Assert.IsTrue (roles.Count == 3);
-				Assert.IsTrue (roles.All (r => r.Rank == null));
+					var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+
+					Assert.IsTrue (roles.Count == 3);
+					Assert.IsTrue (roles.All (r => r.Rank == null));
+				}
 			}
 		}
 
@@ -742,29 +803,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DateRequest1()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new UnaryComparison (
-						new Field (new Druid ("[L0A61]")),
-						UnaryComparator.IsNotNull
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+					request.AddLocalConstraint (example,
+						new UnaryComparison (
+							new Field (new Druid ("[L0A61]")),
+							UnaryComparator.IsNotNull
+						)
+					);
 
-				Assert.IsTrue (persons.Count == 3);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
+					var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+					Assert.IsTrue (persons.Count == 3);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
+				}
 			}
 		}
 
@@ -772,28 +836,31 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DateRequest2()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A61]")),
-						BinaryComparator.IsEqual,
-						new Constant(new Date (1965, 5, 3))
-					)
-				);
+					Request request = new Request ()
+					{
+						RootEntity = example,
+						RequestedEntity = example,
+					};
 
-				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+					request.AddLocalConstraint (example,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A61]")),
+							BinaryComparator.IsEqual,
+							new Constant (new Date (1965, 5, 3))
+						)
+					);
 
-				Assert.IsTrue (persons.Count == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+					var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+					Assert.IsTrue (persons.Count == 1);
+					Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				}
 			}
 		}
 

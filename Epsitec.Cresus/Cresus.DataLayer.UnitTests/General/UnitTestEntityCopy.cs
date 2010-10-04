@@ -8,6 +8,7 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
@@ -48,9 +49,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -58,9 +62,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void CopyEntityArgumentCheck()
 		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
+
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
+				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity entity1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity entity2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -98,13 +104,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void CopyToSelfTest()
 		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-				NaturalPersonEntity copy = DataContext.CopyEntity (dataContext, entity, dataContext);
+					NaturalPersonEntity copy = DataContext.CopyEntity (dataContext, entity, dataContext);
 
-				Assert.AreSame (entity, copy);
+					Assert.AreSame (entity, copy);
+				}
 			}
 		}
 
@@ -112,9 +121,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SimlpeCopyTest()
 		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
+
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
+				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
 					foreach (AbstractEntity entity in this.GetSampleEntities (dataContext1))
 					{

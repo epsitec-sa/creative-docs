@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
@@ -27,9 +28,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -48,9 +52,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					DatabaseCreator2.PupulateDatabase (dataContext);
+				}
 			}
 		}
 
@@ -58,53 +65,56 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ModifyNullReferenceData1()
 		{
-			using (DataContext dataContext = this.CreateDataContext ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				Assert.IsNotNull (gertrude);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-				LanguageEntity language = gertrude.PreferredLanguage;
+					LanguageEntity language = gertrude.PreferredLanguage;
 
-				Assert.IsNotNull (language);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
-				language.Code = "1337";
-				language.Name = "1337 5|*34|<";
+					language.Code = "1337";
+					language.Name = "1337 5|*34|<";
 
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-				dataContext.SaveChanges ();
-			}
+					dataContext.SaveChanges ();
+				}
 
-			using (DataContext dataContext = this.CreateDataContext ())
-			{
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				Assert.IsNotNull (gertrude);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
-								
-				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-				Assert.IsNotNull (language);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
 
-				Assert.AreSame (gertrude.PreferredLanguage, language);
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
+
+					Assert.AreSame (gertrude.PreferredLanguage, language);
+				}
 			}
 		}
 
@@ -112,69 +122,72 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ModifyNullReferenceData2()
 		{
-			using (DataContext dataContext = this.CreateDataContext ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
-				
-				Assert.IsNotNull (contact);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
 
-				NaturalPersonEntity person = contact.NaturalPerson;
+					Assert.IsNotNull (contact);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
 
-				Assert.IsNotNull (person);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					NaturalPersonEntity person = contact.NaturalPerson;
 
-				LanguageEntity language = person.PreferredLanguage;
+					Assert.IsNotNull (person);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
 
-				Assert.IsNotNull (person);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					LanguageEntity language = person.PreferredLanguage;
 
-				Assert.IsNotNull (language);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsNotNull (person);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
 
-				language.Code = "1337";
-				language.Name = "1337 5|*34|<";
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					language.Code = "1337";
+					language.Name = "1337 5|*34|<";
 
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
 
-				dataContext.SaveChanges ();
-			}
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-			using (DataContext dataContext = this.CreateDataContext ())
-			{
-				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+					dataContext.SaveChanges ();
+				}
 
-				Assert.IsNotNull (contact);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
 
-				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					Assert.IsNotNull (contact);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
 
-				Assert.IsNotNull (language);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
 
-				Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
+
+					Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
+				}
 			}
 		}
 
@@ -182,58 +195,61 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReplaceNullReferenceEntity1()
 		{
-			using (DataContext dataContext = this.CreateDataContext ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				Assert.IsNotNull (gertrude);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-				LanguageEntity language1 = gertrude.PreferredLanguage;
+					LanguageEntity language1 = gertrude.PreferredLanguage;
 
-				Assert.IsNotNull (language1);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language1));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language1));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language1));
+					Assert.IsNotNull (language1);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language1));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language1));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language1));
 
-				LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
+					LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
 
-				language2.Code = "1337";
-				language2.Name = "1337 5|*34|<";
+					language2.Code = "1337";
+					language2.Name = "1337 5|*34|<";
 
-				Assert.IsNotNull (language2);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
-				Assert.AreEqual ("1337", language2.Code);
-				Assert.AreEqual ("1337 5|*34|<", language2.Name);
+					Assert.IsNotNull (language2);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+					Assert.AreEqual ("1337", language2.Code);
+					Assert.AreEqual ("1337 5|*34|<", language2.Name);
 
-				gertrude.PreferredLanguage = language2;
+					gertrude.PreferredLanguage = language2;
 
-				dataContext.SaveChanges ();
-			}
+					dataContext.SaveChanges ();
+				}
 
-			using (DataContext dataContext = this.CreateDataContext ())
-			{
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				Assert.IsNotNull (gertrude);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
 
-				Assert.IsNotNull (language);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-				Assert.AreSame (gertrude.PreferredLanguage, language);
+					Assert.AreSame (gertrude.PreferredLanguage, language);
+				}
 			}
 		}
 
@@ -241,86 +257,83 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReplaceNullReferenceData2()
 		{
-			using (DataContext dataContext = this.CreateDataContext ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
 
-				Assert.IsNotNull (contact);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
+					Assert.IsNotNull (contact);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
 
-				NaturalPersonEntity person = contact.NaturalPerson;
+					NaturalPersonEntity person = contact.NaturalPerson;
 
-				Assert.IsNotNull (person);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsNotNull (person);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
 
-				LanguageEntity language = person.PreferredLanguage;
+					LanguageEntity language = person.PreferredLanguage;
 
-				Assert.IsNotNull (person);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsNotNull (person);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
 
-				Assert.IsNotNull (language);
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
 
-				LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
+					LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
 
-				language2.Code = "1337";
-				language2.Name = "1337 5|*34|<";
+					language2.Code = "1337";
+					language2.Name = "1337 5|*34|<";
 
-				Assert.IsNotNull (language2);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
-				Assert.AreEqual ("1337", language2.Code);
-				Assert.AreEqual ("1337 5|*34|<", language2.Name);
+					Assert.IsNotNull (language2);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+					Assert.AreEqual ("1337", language2.Code);
+					Assert.AreEqual ("1337 5|*34|<", language2.Name);
 
-				person.PreferredLanguage = language2;
+					person.PreferredLanguage = language2;
 
-				Assert.IsNotNull (person);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsNotNull (person);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
 
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
 
-				dataContext.SaveChanges ();
+					dataContext.SaveChanges ();
+				}
+
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				{
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+
+					Assert.IsNotNull (contact);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
+
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
+
+					Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
+				}
 			}
-
-			using (DataContext dataContext = this.CreateDataContext ())
-			{
-				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
-
-				Assert.IsNotNull (contact);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
-
-				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
-
-				Assert.IsNotNull (language);
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				Assert.AreEqual ("1337", language.Code);
-				Assert.AreEqual ("1337 5|*34|<", language.Name);
-
-				Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
-			}
-		}
-
-
-		private DataContext CreateDataContext()
-		{
-			return new DataContext (DatabaseHelper.DbInfrastructure, true);
 		}
 
 

@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DbInfrastructure;
+				return this.DataContext.DataInfrastructure.DbInfrastructure;
 			}
 		}
 

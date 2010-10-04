@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			get
 			{
-				return this.DataContext.DbInfrastructure;
+				return this.DataContext.DataInfrastructure.DbInfrastructure;
 			}
 		}
 
