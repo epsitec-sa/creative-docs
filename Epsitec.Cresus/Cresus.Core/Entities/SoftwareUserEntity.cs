@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +53,7 @@ namespace Epsitec.Cresus.Core.Entities
 					text = TextFormatter.FormatText (text, "*");
 				}
 
-				if (this.CurrentStatus != Controllers.EditionStatus.Valid)
+				if (this.IsEntityValid == false)
 				{
 					//	Affiche en italique les comptes qui ont une erreur.
 					text = TextFormatter.FormatText ("<i>", text, "</i>");
@@ -60,6 +63,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		public override EntityStatus GetEntityStatus()
+		{
+			var s1 = this.LoginName.GetEntityStatus ();
+			var s2 = this.DisplayName.GetEntityStatus ();
+			var s3 = (this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid;
+			var s4 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.UserGroups.Select (x => x.GetEntityStatus ()).ToArray ());
+
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4);
+		}
+		
+#if false
 		public Controllers.EditionStatus CurrentStatus
 		{
 			get
@@ -82,6 +97,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return Controllers.EditionStatus.Valid;
 			}
 		}
+#endif
 
 
 		public bool CheckPassword(string plaintextPassword)

@@ -2,7 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -31,6 +33,14 @@ namespace Epsitec.Cresus.Core.Entities
 		public override string[] GetEntityKeywords()
 		{
 			return new string[] { this.Name.ToSimpleText (), this.Code };
+		}
+
+		public override EntityStatus GetEntityStatus()
+		{
+			var s1 = this.Code.GetEntityStatus ();
+			var s2 = this.Name.GetEntityStatus ();
+
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 
 
