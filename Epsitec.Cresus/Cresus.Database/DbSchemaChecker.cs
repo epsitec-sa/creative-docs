@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbSchemaChecker</c> class provides some functions used to compare schemas and
 	/// <see cref="DbTable"/>.
 	/// </summary>
-	internal static class DbSchemaChecker
+	public static class DbSchemaChecker
 	{
 
 
