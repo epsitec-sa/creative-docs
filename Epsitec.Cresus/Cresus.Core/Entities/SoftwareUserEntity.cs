@@ -66,12 +66,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override EntityStatus GetEntityStatus()
 		{
-			var s1 = this.LoginName.GetEntityStatus ();
-			var s2 = this.DisplayName.GetEntityStatus ();
-			var s3 = (this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid;
-			var s4 = this.UserGroups.Select (x => x.GetEntityStatus ()).ToArray ();
+			var s1 = this.Code.GetEntityStatus ();
+			var s2 = this.Person.GetEntityStatus ().TreatAsOptional ();
+			var s3 = this.LoginName.GetEntityStatus ();
+			var s4 = this.DisplayName.GetEntityStatus ();
+			var s5 = (this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid;
+			var s6 = this.UserGroups.Select (x => x.GetEntityStatus ()).ToArray ();
 
-			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4);
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6);
 		}
 		
 #if false
