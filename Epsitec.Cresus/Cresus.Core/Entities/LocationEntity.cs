@@ -32,10 +32,13 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			//	We consider a location to be empty if it has neither postal code, nor
 			//	location name; a location with just a coutry or region is still empty.
-			var s1 = this.PostalCode.GetEntityStatus ();
-			var s2 = this.Name.GetEntityStatus ();
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.PostalCode.GetEntityStatus ());
+				a.Accumulate (this.Name.GetEntityStatus ());
 
-			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
+				return a.EntityStatus;
+			}
 		}
 	}
 }

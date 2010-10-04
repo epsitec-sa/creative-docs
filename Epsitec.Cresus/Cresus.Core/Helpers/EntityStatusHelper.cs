@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
+#if false
 		public static EntityStatus CombineStatus(StatusHelperCardinality cardinality, IEnumerable<AbstractEntity> entities)
 		{
 			return EntityStatusHelper.CombineStatus (cardinality, entities.ToArray ());
@@ -114,5 +115,6 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return EntityStatus.None;  // invalide
 		}
+#endif
 	}
 }
