@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					DbTypeDef typeDef = builder.BuildTypeDef (transaction, type, FieldOptions.None);
+					DbTypeDef typeDef = builder.BuildTypeDef (transaction, type);
 
 					Assert.IsNotNull (typeDef);
 
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetOrCreateTypeDefTest1()
+		public void GetOrCreateTypeDefTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type1 = builder.GetOrCreateTypeDef (transaction, type, FieldOptions.None);
+					type1 = builder.GetOrCreateTypeDef (transaction, type);
 
 					Assert.IsNotNull (type1);
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type2 =  builder.GetOrCreateTypeDef (transaction, type, FieldOptions.None);
+					type2 =  builder.GetOrCreateTypeDef (transaction, type);
 
 					Assert.IsNotNull (type2);
 
@@ -238,42 +238,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 				}
 
 				Assert.AreEqual (type1, type2);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetOrCreateTypeDefTest2()
-		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			var builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-			foreach (INamedType type in this.GetSampleNonNullableTypes ())
-			{
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					DbTypeDef dbType = builder.GetOrCreateTypeDef (transaction, type, FieldOptions.None);
-
-					Assert.IsNotNull (dbType);
-					Assert.IsFalse (dbType.IsNullable);
-
-					transaction.Commit ();
-				}
-			}
-
-			foreach (INamedType type in this.GetSampleNonNullableTypes ())
-			{
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					DbTypeDef dbType = builder.GetOrCreateTypeDef (transaction, type, FieldOptions.Nullable);
-
-					Assert.IsNotNull (dbType);
-					Assert.IsTrue (dbType.IsNullable);
-
-					transaction.Commit ();
-				}
 			}
 		}
 
@@ -381,7 +345,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type1 = builder.BuildTypeDef (transaction, type, FieldOptions.None);
+					type1 = builder.BuildTypeDef (transaction, type);
 
 					Assert.IsNotNull (type1);
 
@@ -390,7 +354,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type2 = builder.LookForTypeDefInCache (type, FieldOptions.None);
+					type2 = builder.LookForTypeDefInCache (type);
 
 					Assert.IsNotNull (type2);
 
@@ -413,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type1 = builder.LookForTypeDefInDatabase (transaction, type, FieldOptions.None);
+					type1 = builder.LookForTypeDefInDatabase (transaction, type);
 
 					Assert.IsNotNull (type1);
 
@@ -422,7 +386,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type2 = builder.LookForTypeDefInCache (type, FieldOptions.None);
+					type2 = builder.LookForTypeDefInCache (type);
 
 					Assert.IsNotNull (type2);
 
@@ -449,7 +413,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					DbTypeDef typeDef = new DbTypeDef (type, false);
+					DbTypeDef typeDef = new DbTypeDef (type);
 
 					dbInfrastructure.RegisterNewDbType (transaction, typeDef);
 
@@ -469,7 +433,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					DbTypeDef typeDef = builder.LookForTypeDefInDatabase (transaction, type, FieldOptions.None);
+					DbTypeDef typeDef = builder.LookForTypeDefInDatabase (transaction, type);
 
 					Assert.IsNotNull (typeDef);
 
@@ -480,35 +444,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			}
 
 			CollectionAssert.AreEquivalent (types1, types2);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateNewTypeDefTestIfNecessary()
-		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaBuilder_Accessor builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-			foreach (INamedType type in this.GetSampleNonNullableTypes ())
-			{
-				DbTypeDef typeDef1 = new DbTypeDef (type);
-				Assert.IsFalse (typeDef1.IsNullable);
-
-				DbTypeDef typeDef2 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.None, typeDef1);
-				Assert.AreSame (typeDef1, typeDef2);
-
-				DbTypeDef typeDef3 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.Nullable, typeDef2);
-				Assert.AreNotSame (typeDef2, typeDef3);
-				Assert.IsTrue (typeDef3.IsNullable);
-
-				DbTypeDef typeDef4 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.Nullable, typeDef3);
-				Assert.AreSame (typeDef3, typeDef4);
-
-				DbTypeDef typeDef5 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.None, typeDef4);
-				Assert.AreNotSame (typeDef4, typeDef5);
-				Assert.IsFalse (typeDef5.IsNullable);
-			}
 		}
 
 
@@ -556,28 +491,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 
 		private IEnumerable<INamedType> GetSampleTypes()
-		{
-			return this.GetSampleNullableTypes ().Concat (this.GetSampleNonNullableTypes ());
-		}
-
-
-		private IEnumerable<INamedType> GetSampleNullableTypes()
-		{
-			// TODO Find another nullable type for the example otherwise the test will not be
-			// as complete.
-			// Marc
-
-			yield break;
-			
-			// Don't try with the following ones, because they are already added by DbInfrastructure
-			// for the uid counters.
-			// Marc
-			
-			//yield return StringType.Default;
-		}
-
-
-		private IEnumerable<INamedType> GetSampleNonNullableTypes()
 		{
 			yield return BooleanType.Default;
 			yield return DateTimeType.Default;

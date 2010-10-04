@@ -221,6 +221,7 @@ namespace Epsitec.Cresus.Database
 				&& a.ColumnClass == b.ColumnClass
 				&& a.Cardinality == b.Cardinality
 				&& a.Localization == b.Localization
+				&& a.IsNullable == b.IsNullable
 				&& a.IsPrimaryKey == b.IsPrimaryKey
 				&& a.IsForeignKey == b.IsForeignKey
 				&& a.IsAutoIncremented == b.IsAutoIncremented

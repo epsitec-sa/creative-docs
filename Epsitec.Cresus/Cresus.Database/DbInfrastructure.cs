@@ -2959,7 +2959,10 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefTarget,	  types.KeyId, DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsNullable = true,
+					},
 				};
 
 				table.DefineCategory (DbElementCat.Internal);

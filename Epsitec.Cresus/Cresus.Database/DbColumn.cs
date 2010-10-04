@@ -417,6 +417,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public bool IsNullable
+		{
+			get;
+			set;
+		}
+
 
 		/// <summary>
 		/// Defines the column category. A column category may not be changed
@@ -807,7 +813,7 @@ namespace Epsitec.Cresus.Database
 
 			column.Name = this.MakeLocalizedSqlName (localizationSuffix);
 			column.Comment = this.Comment;
-			column.IsNullable = this.Type.IsNullable;
+			column.IsNullable = this.IsNullable || this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
 			column.IsAutoIncremented = this.IsAutoIncremented;
 	
@@ -913,6 +919,7 @@ namespace Epsitec.Cresus.Database
 				column.targetTableName   = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
 				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				column.isAutoIncremented = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("inc"));
+				column.IsNullable		 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
 
 				if (!isEmptyElement)
 				{
@@ -947,6 +954,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "ttab", DbTools.StringToString (this.TargetTableName));
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
 			DbTools.WriteAttribute (xmlWriter, "inc", DbTools.BoolDefaultingToFalseToString (this.isAutoIncremented));
+			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.IsNullable));
 			
 			xmlWriter.WriteEndElement ();
 		}
