@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.data = data;
 			this.commandContext = commandContext;
+			this.workflowController = new WorkflowController (this);
 			this.mainViewController = new MainViewController (this, commandContext);
 			this.dataViewController = new DataViewController (this);
 			this.navigator = new NavigationOrchestrator (this.mainViewController);
@@ -216,10 +217,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				if (oldContext != null)
 				{
 					oldContext.ContainsChangesChanged -= this.HandleBusinessContextContainsChangesChanged;
+					this.workflowController.DetachBusinessContext (oldContext);
 				}
 				if (newContext != null)
 				{
 					newContext.ContainsChangesChanged += this.HandleBusinessContextContainsChangesChanged;
+					this.workflowController.AttachBusinessContext (newContext);
 				}
 
 				this.UpdateBusinessContextContainsChanges ();
@@ -249,9 +252,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		
 		private readonly CoreData				data;
 		private readonly CommandContext			commandContext;
+		private readonly WorkflowController		workflowController;
 		private readonly MainViewController		mainViewController;
 		private readonly DataViewController		dataViewController;
 		private readonly NavigationOrchestrator navigator;
+
 
 		private BusinessContext					businessContext;
 	}

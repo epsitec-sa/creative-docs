@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return contextChain.Contexts.Select (x => x.GetCommandHandler<MainViewController> ()).Where (x => x != null).FirstOrDefault ();
 		}
 
-		public void SetActionActionVisibility(bool visibility)
+		public void SetActionPanelVisibility(bool visibility)
 		{
 			this.rightActionPanel.Visibility = visibility;
 			this.rightSplitter.Visibility = this.rightActionPanel.Visibility | this.rightPreviewPanel.Visibility;

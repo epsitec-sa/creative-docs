@@ -24,6 +24,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public static FormattedText FormatContent(FormattedText subtitle, FormattedText text)
+		{
+			//	Formate un texte pour le bouton.
+			//	La première partie contient le titre en gros caractère.
+			//	La deuxième partie contient le texte explicatif en taille standard.
+			return FormattedText.Concat (new FormattedText ("<font size=\"150%\">"), subtitle, new FormattedText ("</font><br/>"), text);
+		}
+
 		public static string FormatContent(string subtitle, string text)
 		{
 			//	Formate un texte pour le bouton.
