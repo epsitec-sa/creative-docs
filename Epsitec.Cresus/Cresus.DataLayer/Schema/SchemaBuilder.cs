@@ -236,10 +236,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
 		private void CreateDataColumn(DbTransaction transaction, DbTable table, StructuredTypeField field)
 		{
-			DbTypeDef typeDef = this.GetOrCreateTypeDef (transaction, field.Type, field.Options);
+			DbTypeDef typeDef = this.GetOrCreateTypeDef (transaction, field.Type);
 			DbColumn column = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			column.Comment = column.DisplayName;
+			column.IsNullable = field.IsNullable;
 
 			table.Columns.Add (column);
 		}
@@ -272,9 +273,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="type">The type whose <see cref="DbTypeDef"/> to get or create.</param>
-		/// <param name="options">The <see cref="FieldOptions"/> of the type.</param>
 		/// <returns>The <see cref="DbTypeDef"/>.</returns>
-		private DbTypeDef GetOrCreateTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
+		private DbTypeDef GetOrCreateTypeDef(DbTransaction transaction, INamedType type)
 		{
 			type.ThrowIfNull ("type");
 			type.ThrowIf (t => t is IStructuredType, "Cannot create type definition for structure");
@@ -283,9 +283,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			// GetOrCreateTable method.
 			// Marc
 
-			DbTypeDef typeDef = this.LookForTypeDefInCache (type, options)
-				?? this.LookForTypeDefInDatabase (transaction, type, options)
-				?? this.BuildTypeDef (transaction, type, options);
+			DbTypeDef typeDef = this.LookForTypeDefInCache (type)
+				?? this.LookForTypeDefInDatabase (transaction, type)
+				?? this.BuildTypeDef (transaction, type);
 
 			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!typeDef.Key.IsEmpty);
@@ -299,15 +299,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// local cache.
 		/// </summary>
 		/// <param name="type">The <see cref="INamedType"/> to look for.</param>
-		/// <param name="options">The <see cref="FieldOptions"/> of the type.</param>
 		/// <returns>The <see cref="DbTypeDef"/> if it is in the cache, or null.</returns>
-		private DbTypeDef LookForTypeDefInCache(INamedType type, FieldOptions options)
+		private DbTypeDef LookForTypeDefInCache(INamedType type)
 		{
 			DbTypeDef typeDef;
 
 			this.typeCache.TryGetValue (type.CaptionId, out typeDef);
 
-			return this.CreateNewTypeDefIfNecessary (type, options, typeDef);
+			return typeDef;
 		}
 
 
@@ -317,9 +316,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="type">The <see cref="INamedType"/> to look for.</param>
-		/// <param name="options">The <see cref="FieldOptions"/> of the type.</param>
 		/// <returns>The <see cref="DbTypeDef"/> if it is in the cache, or null.</returns>
-		private DbTypeDef LookForTypeDefInDatabase(DbTransaction transaction, INamedType type, FieldOptions options)
+		private DbTypeDef LookForTypeDefInDatabase(DbTransaction transaction, INamedType type)
 		{
 			DbTypeDef typeDef = this.DbInfrastructure.ResolveDbType (transaction, type);
 
@@ -328,7 +326,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				this.typeCache[type.CaptionId] = typeDef;
 			}
 
-			return this.CreateNewTypeDefIfNecessary (type, options, typeDef);
+			return typeDef;
 		}
 
 
@@ -338,47 +336,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="type">The <see cref="INamedType"/> to create.</param>
-		/// <param name="options">The <see cref="FieldOptions"/> to use.</param>
 		/// <returns>The new <see cref="DbTypeDef"/>.</returns>
-		private DbTypeDef BuildTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
+		private DbTypeDef BuildTypeDef(DbTransaction transaction, INamedType type)
 		{
-			DbTypeDef typeDef = new DbTypeDef (type, options == FieldOptions.Nullable);
+			DbTypeDef typeDef = new DbTypeDef (type);
 
 			this.DbInfrastructure.RegisterNewDbType (transaction, typeDef);
 
 			this.typeCache[type.CaptionId] = typeDef;
 
 			return typeDef;
-		}
-
-
-
-		/// <summary>
-		/// Checks that the given <see cref="DbTypeDef"/> has the proper value for its property
-		/// <see cref="DbTypeDef.IsNullable"/> and creates a new one with the proper value if this
-		/// is not the case.
-		/// </summary>
-		/// <param name="type">The <see cref="INamedType"/> of the <see cref="DbTypeDef"/>.</param>
-		/// <param name="options">The <see cref="FieldOptions"/> that the <see cref="DbTypeDef"/> should match.</param>
-		/// <param name="typeDef">The <see cref="DbTypeDef"/> to check.</param>
-		/// <returns>The given <see cref="DbTypeDef"/> or a new one.</returns>
-		private DbTypeDef CreateNewTypeDefIfNecessary(INamedType type, FieldOptions options, DbTypeDef typeDef)
-		{
-			DbTypeDef newTypeDef = typeDef;
-
-			if (typeDef != null)
-			{
-				if (options == FieldOptions.Nullable && !typeDef.IsNullable)
-				{
-					newTypeDef = new DbTypeDef (type, typeDef.Key, true);
-				}
-				else if (options == FieldOptions.None && typeDef.IsNullable)
-				{
-					newTypeDef = new DbTypeDef (type, typeDef.Key, false);
-				}
-			}
-
-			return newTypeDef;
 		}
 
 

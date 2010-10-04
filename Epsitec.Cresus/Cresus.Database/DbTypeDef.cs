@@ -24,13 +24,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="namedType">The named type.</param>
 		public DbTypeDef(INamedType namedType)
-			: this (namedType, DbKey.Empty, false)
-		{
-		}
-
-
-		public DbTypeDef(INamedType namedType, bool forceNullable)
-			: this (namedType, DbKey.Empty, forceNullable)
+			: this (namedType, DbKey.Empty)
 		{
 		}
 
@@ -41,14 +35,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="namedType">The named type.</param>
 		/// <param name="typeName">Name of the type to use in place of <c>INamedType.Name</c>.</param>
 		public DbTypeDef(INamedType namedType, string typeName)
-			: this (namedType, DbKey.Empty, false)
-		{
-			this.name = typeName;
-		}
-
-
-		public DbTypeDef(INamedType namedType, string typeName, bool forceNullable)
-			: this (namedType, DbKey.Empty, forceNullable)
+			: this (namedType, DbKey.Empty)
 		{
 			this.name = typeName;
 		}
@@ -58,8 +45,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="namedType">The named type.</param>
 		/// <param name="key">The key.</param>
-		/// <param name="forceNullable">If true, forces the type to be nullable.</param>
-		public DbTypeDef(INamedType namedType, DbKey key, bool forceNullable)
+		public DbTypeDef(INamedType namedType, DbKey key)
 		{
 			this.key        = key;
 			this.name       = namedType.Name;
@@ -84,7 +70,7 @@ namespace Epsitec.Cresus.Database
 
 			INullableType nullableType = namedType as INullableType;
 
-			this.isNullable = forceNullable || (nullableType != null && nullableType.IsNullable);
+			this.isNullable = (nullableType != null && nullableType.IsNullable);
 		}
 
 		/// <summary>
@@ -378,6 +364,7 @@ namespace Epsitec.Cresus.Database
 				&& (a.simpleType == b.simpleType)
 				&& (a.numDef == b.numDef)
 				&& (a.length == b.length)
+				&& (a.isNullable == b.isNullable)
 				&& (a.isFixedLength == b.isFixedLength)
 				&& (a.isMultilingual == b.isMultilingual)
 				&& (a.key == b.key);
