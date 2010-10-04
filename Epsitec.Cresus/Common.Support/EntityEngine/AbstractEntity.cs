@@ -126,7 +126,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.EntityStatus == EntityStatus.Valid;
+				return (this.EntityStatus == EntityStatus.Valid)
+					|| (this.EntityStatus == EntityStatus.Empty && this.IsValidWhenEmpty);
 			}
 		}
 
@@ -138,6 +139,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+
+		protected virtual bool IsValidWhenEmpty
+		{
+			get
+			{
+				return true;
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.
