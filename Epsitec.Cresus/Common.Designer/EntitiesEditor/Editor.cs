@@ -1688,9 +1688,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			while (reader.ReadToFollowing(Xml.Box))
 			{
-				ObjectBox box = new ObjectBox(this);
-				box.ReadXml(reader);
-				this.boxes.Add(box);
+				ObjectBox box = new ObjectBox (this);
+				box.ReadXml (reader);
+				
+				if (box.CultureMap == null)
+				{
+					//	Somebody deleted the referenced entity; simply discard the box from
+					//	the entity graph and let the user clean up the mess (there might be
+					//	visible comments and other entities pointed to by the missing one).
+
+					continue;
+				}
+				
+				this.boxes.Add (box);
 			}
 
 			foreach (ObjectBox box in this.boxes)
