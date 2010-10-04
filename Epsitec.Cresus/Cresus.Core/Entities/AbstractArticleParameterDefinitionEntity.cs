@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Controllers.TabIds;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,6 +12,15 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AbstractArticleParameterDefinitionEntity
 	{
+		public virtual ArticleParameterTabId TabId
+		{
+			get
+			{
+				return ArticleParameterTabId.None;
+			}
+		}
+
+	
 		/// <summary>
 		/// Some article parameter definitions store several values in a single
 		/// text field; the values are separated by the special '∙' character.
