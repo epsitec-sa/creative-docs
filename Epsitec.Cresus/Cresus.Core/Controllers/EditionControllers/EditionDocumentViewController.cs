@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionDocumentViewController : EditionViewController<Entities.DocumentEntity>
+	public class EditionDocumentViewController : EditionViewController<Entities.DocumentMetadataEntity>
 	{
-		public EditionDocumentViewController(string name, Entities.DocumentEntity entity)
+		public EditionDocumentViewController(string name, Entities.DocumentMetadataEntity entity)
 			: base (name, entity)
 		{
 			this.InitializeDefaultValues ();

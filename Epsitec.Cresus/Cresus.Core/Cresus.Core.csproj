@@ -140,7 +140,7 @@
     <Compile Include="Entities\TotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\PersonGenderEntity.cs" />
-    <Compile Include="Entities\DocumentEntity.cs" />
+    <Compile Include="Entities\DocumentMetadataEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\BusinessDocumentEntity.cs" />
     <Compile Include="Entities\LocationEntity.cs" />

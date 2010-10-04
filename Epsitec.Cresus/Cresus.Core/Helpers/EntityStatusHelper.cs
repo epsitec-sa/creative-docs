@@ -42,12 +42,46 @@ namespace Epsitec.Cresus.Core.Helpers
 			return EntityStatusHelper.CombineStatus (cardinality, statusCollection.ToArray ());
 		}
 
-		public static EntityStatus CombineStatus(StatusHelperCardinality cardinality, params EntityStatus[] collection)
+		public struct EntityStatusCollection
 		{
-			if (collection == null || collection.Length == 0)
+			public EntityStatusCollection(EntityStatus status)
+			{
+				this.collection = new EntityStatus[] { status };
+			}
+
+			public EntityStatusCollection(EntityStatus[] collection)
+			{
+				this.collection = collection;
+			}
+
+			public static implicit operator EntityStatusCollection(EntityStatus status)
+			{
+				return new EntityStatusCollection (status);
+			}
+			public static implicit operator EntityStatusCollection(EntityStatus[] collection)
+			{
+				return new EntityStatusCollection (collection);
+			}
+
+			public EntityStatus[] Items
+			{
+				get
+				{
+					return this.collection;
+				}
+			}
+
+			private readonly EntityStatus[] collection;
+		}
+
+		public static EntityStatus CombineStatus(StatusHelperCardinality cardinality, params EntityStatusCollection[] collectionMix)
+		{
+			if (collectionMix != null)
 			{
 				return EntityStatus.Empty;
 			}
+
+			EntityStatus[] collection = collectionMix.SelectMany (x => x.Items).ToArray ();
 
 			if (collection.Any (x => (x & EntityStatus.Valid) == 0))
 			{
