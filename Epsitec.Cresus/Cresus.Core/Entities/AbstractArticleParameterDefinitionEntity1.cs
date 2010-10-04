@@ -10,12 +10,5 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AbstractArticleParameterDefinitionEntity
 	{
-		public virtual ArticleParameterTabId TabId
-		{
-			get
-			{
-				return ArticleParameterTabId.None;
-			}
-		}
 	}
 }
