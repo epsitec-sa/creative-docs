@@ -119,6 +119,7 @@
     <Compile Include="Controllers\EditionControllers\EditionBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
+    <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
+    <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />

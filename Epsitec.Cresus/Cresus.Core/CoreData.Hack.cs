@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
 			BusinessDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
+			var workflowDefinitions = this.InsertWorkflowDefinitionsInDatabase ().ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -1073,17 +1074,22 @@ namespace Epsitec.Cresus.Core
 			var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 			var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 
-			def.Rank = 0;
 			def.Code = "CUST-ORDER";
+			def.EnableCondition = "MasterEntity=[L0AB2]";
 			def.Name = FormattedText.FromSimpleText ("Commande client");
 			def.Description = FormattedText.FromSimpleText ("Workflow pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
+			def.StartingEdges.Add (edgeAB);
 
 			nodeA.Code = "SALES-QUOTE(1)";
 			nodeA.Name = FormattedText.FromSimpleText ("Préparation de l'offre");
 			nodeA.Edges.Add (edgeAB);
 			nodeA.Edges.Add (edgeAC);
 
+			edgeAB.Name = FormattedText.FromSimpleText ("Créer une nouvelle offre");
+			edgeAB.Description = FormattedText.FromSimpleText ("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
+			edgeAB.TransitionAction = "WorkflowAction.NewAffair";
 			edgeAB.NextNode = nodeB;
+
 			edgeAC.NextNode = nodeC;
 			edgeCA.NextNode = nodeA;
 

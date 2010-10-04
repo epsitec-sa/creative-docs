@@ -9285,26 +9285,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>WorkflowDefinition</c> entity.
 	///	designer:cap/L0AII
 	///	</summary>
-	public partial class WorkflowDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class WorkflowDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
-		#region IItemRank Members
-		///	<summary>
-		///	The <c>Rank</c> field.
-		///	designer:fld/L0AII/L0A03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
-		public int? Rank
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
-			}
-		}
-		#endregion
 		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
@@ -9379,11 +9361,35 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0A9J]");
 			}
 		}
+		///	<summary>
+		///	The <c>EnableCondition</c> field.
+		///	designer:fld/L0AII/L0A0L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0L]")]
+		public string EnableCondition
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A0L]");
+			}
+			set
+			{
+				string oldValue = this.EnableCondition;
+				if (oldValue != value)
+				{
+					this.OnEnableConditionChanging (oldValue, value);
+					this.SetField<string> ("[L0A0L]", oldValue, value);
+					this.OnEnableConditionChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnEnableConditionChanging(string oldValue, string newValue);
+		partial void OnEnableConditionChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

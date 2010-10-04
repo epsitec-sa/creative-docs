@@ -1,11 +1,9 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Layouts;
 
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
@@ -48,14 +46,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void AddButton(string id, string title, string description, System.Action callback)
+		public void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
 		{
 			var button = new ConfirmationButton
 			{
 				Parent = this.buttonFrame,
 				Name = id,
 				Dock = DockStyle.Top,
-				Text = ConfirmationButton.FormatContent (title, description),
+				FormattedText = ConfirmationButton.FormatContent (title, description),
 				PreferredHeight = 52,
 			};
 
@@ -64,12 +62,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void RemoveButton(string id)
 		{
-			var widget = this.buttonFrame.FindChild (id);
+			var button = this.buttonFrame.FindChild (id);
 
-			if (widget != null)
+			if (button != null)
 			{
-				widget.Parent = null;
+				button.Dispose ();
 			}
+		}
+
+		public void ClearButtons()
+		{
+			var buttons = this.buttonFrame.Children.OfType<ConfirmationButton> ().ToArray ();
+
+			buttons.ForEach (button => button.Dispose ());
 		}
 
 

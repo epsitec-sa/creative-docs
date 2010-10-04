@@ -158,6 +158,7 @@ namespace Epsitec.Cresus.Core.Business
 		public void AddMasterEntity(AbstractEntity masterEntity)
 		{
 			this.masterEntities.Add (masterEntity);
+			this.OnMasterEntitiesChanged ();
 		}
 
 		/// <summary>
@@ -167,6 +168,7 @@ namespace Epsitec.Cresus.Core.Business
 		public void RemoveMasterEntity(AbstractEntity masterEntity)
 		{
 			this.masterEntities.Remove (masterEntity);
+			this.OnMasterEntitiesChanged ();
 		}
 
 		/// <summary>
@@ -196,6 +198,11 @@ namespace Epsitec.Cresus.Core.Business
 			}
 
 			return master.WrapNullEntity ();
+		}
+
+		public IEnumerable<AbstractEntity> GetMasterEntities()
+		{
+			return this.masterEntities;
 		}
 		
 		public void Discard()
@@ -468,8 +475,18 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		private void OnMasterEntitiesChanged()
+		{
+			var handler = this.MasterEntitiesChanged;
+
+			if (handler != null)
+            {
+				handler (this);
+            }
+		}
 
 		public event EventHandler ContainsChangesChanged;
+		public event EventHandler MasterEntitiesChanged;
 
 		private static int nextUniqueId;
 
