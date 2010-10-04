@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			get
 			{
-				return this.DataContext.SchemaEngine;
+				return this.DataContext.DataInfrastructure.SchemaEngine;
 			}
 		}
 
