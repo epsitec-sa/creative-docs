@@ -77,6 +77,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowStepEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AMJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowThreadEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowCallEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0ADK]", typeof (Epsitec.Cresus.Core.Entities.BusinessDocumentEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -10406,6 +10407,259 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 638);	// [L0AUJ]
 		public static readonly new string EntityStructuredTypeKey = "[L0AUJ]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.BusinessDocument Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>BusinessDocument</c> entity.
+	///	designer:cap/L0ADK
+	///	</summary>
+	public partial class BusinessDocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>BillingRelation</c> field.
+		///	designer:fld/L0ADK/L0AFK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AFK]")]
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity BillingRelation
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AFK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.BillingRelation;
+				if (oldValue != value)
+				{
+					this.OnBillingRelationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AFK]", oldValue, value);
+					this.OnBillingRelationChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BillingMailContact</c> field.
+		///	designer:fld/L0ADK/L0AGK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AGK]")]
+		public global::Epsitec.Cresus.Core.Entities.MailContactEntity BillingMailContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AGK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue = this.BillingMailContact;
+				if (oldValue != value)
+				{
+					this.OnBillingMailContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AGK]", oldValue, value);
+					this.OnBillingMailContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ShippingMailContact</c> field.
+		///	designer:fld/L0ADK/L0AHK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHK]")]
+		public global::Epsitec.Cresus.Core.Entities.MailContactEntity ShippingMailContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AHK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue = this.ShippingMailContact;
+				if (oldValue != value)
+				{
+					this.OnShippingMailContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AHK]", oldValue, value);
+					this.OnShippingMailContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>OtherPartyBillingMode</c> field.
+		///	designer:fld/L0ADK/L0AIK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIK]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode OtherPartyBillingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[L0AIK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.OtherPartyBillingMode;
+				if (oldValue != value)
+				{
+					this.OnOtherPartyBillingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[L0AIK]", oldValue, value);
+					this.OnOtherPartyBillingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>OtherPartyTaxMode</c> field.
+		///	designer:fld/L0ADK/L0AJK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJK]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.TaxMode OtherPartyTaxMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[L0AJK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue = this.OtherPartyTaxMode;
+				if (oldValue != value)
+				{
+					this.OnOtherPartyTaxModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[L0AJK]", oldValue, value);
+					this.OnOtherPartyTaxModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BillingCurrencyCode</c> field.
+		///	designer:fld/L0ADK/L0AKK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AKK]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode BillingCurrencyCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[L0AKK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.BillingCurrencyCode;
+				if (oldValue != value)
+				{
+					this.OnBillingCurrencyCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[L0AKK]", oldValue, value);
+					this.OnBillingCurrencyCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Lines</c> field.
+		///	designer:fld/L0ADK/L0ALK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ALK]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity> Lines
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity> ("[L0ALK]");
+			}
+		}
+		///	<summary>
+		///	The <c>BillingDetails</c> field.
+		///	designer:fld/L0ADK/L0AEK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AEK]")]
+		public global::Epsitec.Cresus.Core.Entities.BillingDetailEntity BillingDetails
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0AEK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue = this.BillingDetails;
+				if (oldValue != value)
+				{
+					this.OnBillingDetailsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0AEK]", oldValue, value);
+					this.OnBillingDetailsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BillingStatus</c> field.
+		///	designer:fld/L0ADK/L0AMK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMK]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.BillingStatus BillingStatus
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingStatus> ("[L0AMK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.BillingStatus oldValue = this.BillingStatus;
+				if (oldValue != value)
+				{
+					this.OnBillingStatusChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingStatus> ("[L0AMK]", oldValue, value);
+					this.OnBillingStatusChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BillingDate</c> field.
+		///	designer:fld/L0ADK/L0ANK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANK]")]
+		public global::Epsitec.Common.Types.Date? BillingDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[L0ANK]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.BillingDate;
+				if (oldValue != value)
+				{
+					this.OnBillingDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0ANK]", oldValue, value);
+					this.OnBillingDateChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnBillingRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnBillingRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnBillingMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnBillingMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnShippingMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnShippingMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnOtherPartyBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnOtherPartyBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnOtherPartyTaxModeChanging(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
+		partial void OnOtherPartyTaxModeChanged(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
+		partial void OnBillingCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnBillingCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnBillingDetailsChanging(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
+		partial void OnBillingDetailsChanged(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
+		partial void OnBillingStatusChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingStatus oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingStatus newValue);
+		partial void OnBillingStatusChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingStatus oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingStatus newValue);
+		partial void OnBillingDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnBillingDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 653);	// [L0ADK]
+		public static readonly new string EntityStructuredTypeKey = "[L0ADK]";
 	}
 }
 #endregion
