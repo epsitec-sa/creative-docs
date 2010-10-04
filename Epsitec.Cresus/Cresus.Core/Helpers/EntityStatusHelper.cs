@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			if ((status & EntityStatus.Empty) != 0)
 			{
-				status &= EntityStatus.Valid;
+				status |= EntityStatus.Valid;
 			}
 
 			return status;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			EntityStatus[] collection = collectionMix.SelectMany (x => x.Items).ToArray ();
 
-			if (collection.Any (x => (x & EntityStatus.Valid) == 0))
+			if (collection.Any (x => (x & EntityStatus.Empty) == 0 && (x & EntityStatus.Valid) == 0))
 			{
 				return EntityStatus.None;  // invalide
 			}

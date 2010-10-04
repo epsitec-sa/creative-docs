@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Entities
 			var s1 = this.LoginName.GetEntityStatus ();
 			var s2 = this.DisplayName.GetEntityStatus ();
 			var s3 = (this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid;
-			var s4 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.UserGroups.Select (x => x.GetEntityStatus ()).ToArray ());
+			var s4 = this.UserGroups.Select (x => x.GetEntityStatus ()).ToArray ();
 
 			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4);
 		}

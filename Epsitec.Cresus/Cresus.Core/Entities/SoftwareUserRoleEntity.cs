@@ -11,15 +11,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class SoftwareUserGroupEntity
+	public partial class SoftwareUserRoleEntity
 	{
 		public override EntityStatus GetEntityStatus()
 		{
 			var s1 = this.Name.GetEntityStatus ();
 			var s2 = this.Description.GetEntityStatus ().TreatAsOptional ();
-			var s3 = this.Roles.Select (x => x.GetEntityStatus ()).ToArray ();
 
-			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 	}
 }
