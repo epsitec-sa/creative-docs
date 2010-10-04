@@ -981,14 +981,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			for (int i = 0; i < this.users.Count; i++)
 			{
-				var status = this.users[i].CurrentStatus;
-
-				if (status == Controllers.EditionStatus.Empty)
+				if (this.users[i].IsEntityEmpty)
 				{
 					return string.Format ("Le compte en position {0} n'est pas défini.", (i+1).ToString ());
 				}
 
-				if (status == Controllers.EditionStatus.Invalid)
+				if (this.users[i].IsEntityValid == false)
 				{
 					return string.Format ("Le compte en position {0} n'est pas complètement défini.", (i+1).ToString ());
 				}
