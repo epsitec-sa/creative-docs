@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.IsDisposed = false;
 			this.DataInfrastructure = infrastructure;
-			this.SchemaEngine = SchemaEngine.GetSchemaEngine (infrastructure.DbInfrastructure);
 			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
@@ -155,10 +154,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
 		/// </summary>
-		internal SchemaEngine SchemaEngine
+		private SchemaEngine SchemaEngine
 		{
-			get;
-			private set;
+			get
+			{
+				return this.DataInfrastructure.SchemaEngine;
+			}
 		}
 
 		/// <summary>

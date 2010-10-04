@@ -23,15 +23,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	internal sealed class SchemaEngine
 	{
 
-
-		/// <summary>
-		/// Initializes the static data of <see cref="SchemaEngine"/>.
-		/// </summary>
-		static SchemaEngine()
-		{
-			SchemaEngine.instances = new Dictionary<DbInfrastructure, SchemaEngine> ();
-		}
-
 		
 		/// <summary>
 		/// Builds a new <see cref="SchemaEngine"/> which will be associated with a given
@@ -39,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> that will be used by the new instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is null.</exception>
-		private SchemaEngine(DbInfrastructure dbInfrastructure)
+		public SchemaEngine(DbInfrastructure dbInfrastructure)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
@@ -276,47 +267,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
-		
-		
-		/// <summary>
-		/// Associates a <see cref="SchemaEngine"/> with a <see cref="DbInfrastructure"/>.
-		/// </summary>
-		/// <param name="schemaEngine">The <see cref="SchemaEngine"/> to associate.</param>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> to associate.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is null.</exception>
-		private static void SetSchemaEngine(SchemaEngine schemaEngine, DbInfrastructure dbInfrastructure)
-		{
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			
-			if (schemaEngine == null)
-			{
-				SchemaEngine.instances.Remove (dbInfrastructure);
-			}
-			else
-			{
-				SchemaEngine.instances[dbInfrastructure] = schemaEngine;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="SchemaEngine"/> associated with a <see cref="DbInfrastructure"/>. If
-		/// there is no such <see cref="SchemaEngine"/>, one is created on the fly.
-		/// </summary>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> whose <see cref="SchemaEngine"/> to get.</param>
-		/// <returns>The associated <see cref="SchemaEngine"/>.</returns>
-		public static SchemaEngine GetSchemaEngine(DbInfrastructure dbInfrastructure)
-		{
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			
-			if (!SchemaEngine.instances.ContainsKey (dbInfrastructure))
-			{
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
-				SchemaEngine.SetSchemaEngine (schemaEngine, dbInfrastructure);
-			}
-			
-			return SchemaEngine.instances[dbInfrastructure];
-		}
 
 
 		/// <summary>
@@ -324,13 +274,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// instance.
 		/// </summary>
 		private readonly Dictionary<Druid, DbTable> tableDefinitionCache;
-
-
-		/// <summary>
-		/// Stores the associations between the <see cref="DbInfrastructure"/> and their
-		/// <see cref="SchemaEngine"/>.
-		/// </summary>
-		private readonly static Dictionary<DbInfrastructure, SchemaEngine> instances;
 
 
 	}

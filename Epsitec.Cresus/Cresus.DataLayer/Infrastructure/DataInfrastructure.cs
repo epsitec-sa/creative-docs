@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -8,9 +9,9 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
-using Epsitec.Common.Support.EntityEngine;
 
 [assembly: DependencyClass (typeof (DataInfrastructure))]
 
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
+			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure);
 		}
 		
 		/// <summary>
@@ -60,6 +62,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				return this.connectionInformation;
 			}
+		}		
+		
+		/// <summary>
+		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
+		/// </summary>
+		internal SchemaEngine SchemaEngine
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>

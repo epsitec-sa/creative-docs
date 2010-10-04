@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 
-			new SchemaEngine_Accessor (dbInfrastructure);
+			new SchemaEngine (dbInfrastructure);
 		}
 
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SchemaEngine_Accessor (dbInfrastructure)
+				() => new SchemaEngine (dbInfrastructure)
 			);
 		}
 
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		public void CreateSchemaTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaEngine_Accessor engine = new SchemaEngine_Accessor (dbInfrastructure);
+			SchemaEngine engine = new SchemaEngine (dbInfrastructure);
 
 			engine.CreateSchema<NaturalPersonEntity> ();
 
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			DatabaseHelper.ConnectToDatabase ();
 
 			dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			engine = new SchemaEngine_Accessor (dbInfrastructure);
+			engine = new SchemaEngine (dbInfrastructure);
 
 			foreach (Druid entityId in entityIds)
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			};
 
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaEngine_Accessor engine = new SchemaEngine_Accessor (dbInfrastructure);
+			SchemaEngine engine = new SchemaEngine (dbInfrastructure);
 
 			foreach (var d in data)
 			{
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		public void GetEntityTableNameTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaEngine_Accessor engine = new SchemaEngine_Accessor (dbInfrastructure);
+			SchemaEngine engine = new SchemaEngine (dbInfrastructure);
 
 			List<System.Tuple<Druid,string>> data = new List<System.Tuple<Druid, string>> ()
 			{
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			DatabaseHelper.ConnectToDatabase ();
 
 			dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			engine = new SchemaEngine_Accessor (dbInfrastructure);
+			engine = new SchemaEngine (dbInfrastructure);
 
 			foreach (var d in data)
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		public void GetRelationTableNameTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaEngine_Accessor engine = new SchemaEngine_Accessor (dbInfrastructure);
+			SchemaEngine engine = new SchemaEngine (dbInfrastructure);
 
 			List<System.Tuple<Druid,Druid,string>> data = new List<System.Tuple<Druid, Druid, string>> ()
 			{
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		public void LoadSchemaTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			SchemaEngine_Accessor engine = new SchemaEngine_Accessor (dbInfrastructure);
+			SchemaEngine engine = new SchemaEngine (dbInfrastructure);
 
 			engine.CreateSchema<NaturalPersonEntity> ();
 
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			DatabaseHelper.ConnectToDatabase ();
 
 			dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			engine = new SchemaEngine_Accessor (dbInfrastructure);
+			engine = new SchemaEngine (dbInfrastructure);
 
 			engine.LoadSchema (Druid.Parse ("[L0AN]"));
 
@@ -274,50 +274,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				Assert.IsNotNull (engine.GetRelationTableDefinition (relationId.Item1, relationId.Item2));
 			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetAndSetSchemaEngineTest()
-		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			SchemaEngine_Accessor engine1 = SchemaEngine_Accessor.GetSchemaEngine (dbInfrastructure);
-			Assert.IsNotNull (engine1);
-
-			SchemaEngine_Accessor engine2 = SchemaEngine_Accessor.GetSchemaEngine (dbInfrastructure);
-			Assert.IsNotNull (engine2);
-
-			SchemaEngine_Accessor.SetSchemaEngine (null, dbInfrastructure);
-
-			SchemaEngine_Accessor engine3 = SchemaEngine_Accessor.GetSchemaEngine (dbInfrastructure);
-			Assert.IsNotNull (engine3);
-
-			Assert.AreSame (engine1.Target, engine2.Target);
-			Assert.AreNotSame (engine1.Target, engine3.Target);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void SetSchemaEngineArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => SchemaEngine_Accessor.SetSchemaEngine (null, null)
-			);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetSchemaEngineArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => SchemaEngine_Accessor.GetSchemaEngine (null)
-			);
 		}
 
 
