@@ -155,10 +155,8 @@
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\SoftwareUserEntity.cs" />
-    <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
-    <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
@@ -286,7 +284,6 @@
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Repositories\ArticleGroupRepository.cs" />
     <Compile Include="Repositories\ArticleCategoryRepository.cs" />
-    <Compile Include="Entities\AbstractArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\AbstractDocumentItemEntity.cs" />
     <Compile Include="Entities\ArticleDocumentItemEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity.cs" />
