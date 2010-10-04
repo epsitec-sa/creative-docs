@@ -3,6 +3,9 @@
 
 using Epsitec.Cresus.Core.Controllers.TabIds;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +37,18 @@ namespace Epsitec.Cresus.Core.Entities
 			else
 			{
 				return text;
+			}
+		}
+
+		public override EntityStatus EntityStatus
+		{
+			get
+			{
+				var s1 = this.ArticleDefinition.EntityStatus;
+				var s2 = EntityStatusHelper.Optional (EntityStatusHelper.GetStatus (this.ArticleParameters));
+				var s3 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.ArticleQuantities.Select (x => x.EntityStatus).ToArray ());
+
+				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3);
 			}
 		}
 	}

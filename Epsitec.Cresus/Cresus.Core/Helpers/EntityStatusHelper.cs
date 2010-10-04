@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Core.Helpers
 				return EntityStatus.Invalid;
 			}
 
+			if (collection.All (x => x == EntityStatus.EmptyAndValid))
+			{
+				return EntityStatus.EmptyAndValid;
+			}
+
 			if (collection.All (x => x == EntityStatus.Empty || x == EntityStatus.EmptyAndValid))
 			{
 				return EntityStatus.Empty;
