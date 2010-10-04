@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ComputeAmontDue()
 		{
-			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as InvoiceDocumentEntity;
+			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as BusinessDocumentEntity;
 
 			if (invoiceDocument != null)
 			{

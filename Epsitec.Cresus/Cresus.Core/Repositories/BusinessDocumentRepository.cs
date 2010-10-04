@@ -11,9 +11,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class InvoiceDocumentRepository : Repository<InvoiceDocumentEntity>
+	public class BusinessDocumentRepository : Repository<BusinessDocumentEntity>
 	{
-		public InvoiceDocumentRepository(CoreData data, DataContext context = null)
+		public BusinessDocumentRepository(CoreData data, DataContext context = null)
 			: base (data, context)
 		{
 		}

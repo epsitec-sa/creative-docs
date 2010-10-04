@@ -213,19 +213,8 @@ namespace Epsitec.Cresus.Database
 		/// to any database.
 		/// </summary>
 		/// <param name="access">The database access.</param>
-		public bool CreateDatabase(DbAccess access)
-		{
-			return this.CreateDatabase (access, false);
-		}
-
-		/// <summary>
-		/// Creates a new database using the specified database access. This
-		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
-		/// to any database.
-		/// </summary>
-		/// <param name="access">The database access.</param>
 		/// <param name="isServer">If set to <c>true</c> creates the database for a server.</param>
-		public bool CreateDatabase(DbAccess access, bool isServer)
+		public bool CreateDatabase(DbAccess access, bool isServer = false)
 		{
 			if (this.access.IsValid)
 			{
@@ -288,6 +277,39 @@ namespace Epsitec.Cresus.Database
 			this.Dispose ();
 			
 			abstraction.DropDatabase ();
+		}
+
+		public static bool DeleteDatabaseFiles(DbAccess access, int recursion = 0)
+		{
+			string path = DbFactory.GetDatabaseFilePaths (access).First ();
+
+			try
+			{
+				if (System.IO.File.Exists (path))
+				{
+					System.IO.File.Delete (path);
+					return true;
+				}
+
+				return false;
+			}
+			catch (System.IO.IOException ex)
+			{
+				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}", ex.ToString ());
+
+				if (recursion < 5)
+				{
+					System.Threading.Thread.Sleep (1000);
+					return DbInfrastructure.DeleteDatabaseFiles (access, ++recursion);
+				}
+			}
+
+			return false;
+		}
+
+		public static bool CheckForDatabaseFiles(DbAccess access)
+		{
+			return DbFactory.GetDatabaseFilePaths (access).Any (path => System.IO.File.Exists (path));
 		}
 
 		public void AttachToDatabase(DbAccess access)

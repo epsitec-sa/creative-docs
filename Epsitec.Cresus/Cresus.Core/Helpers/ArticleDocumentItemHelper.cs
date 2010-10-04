@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class ArticleDocumentItemHelper
 	{
-		public static decimal? GetArticleVatRate(GenericArticleDocumentEntity document, ArticleDocumentItemEntity article)
+		public static decimal? GetArticleVatRate(BusinessDocumentEntity document, ArticleDocumentItemEntity article)
 		{
 			//	Retourne le taux de tva auquel un article est soumi.
 			// TODO: Il faudra probablement modifier cela pour chercher les informations dans une table !
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static void UpdatePrices(GenericArticleDocumentEntity document, ArticleDocumentItemEntity article)
+		public static void UpdatePrices(BusinessDocumentEntity document, ArticleDocumentItemEntity article)
 		{
 			//	Recalcule une ligne d'une facture.
 			var vatRate  = ArticleDocumentItemHelper.GetArticleVatRate (document, article).GetValueOrDefault (0);

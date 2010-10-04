@@ -21,9 +21,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class InvoiceDocumentEntityPrinter : AbstractEntityPrinter<InvoiceDocumentEntity>
+	public class InvoiceDocumentEntityPrinter : AbstractEntityPrinter<BusinessDocumentEntity>
 	{
-		public InvoiceDocumentEntityPrinter(InvoiceDocumentEntity entity)
+		public InvoiceDocumentEntityPrinter(BusinessDocumentEntity entity)
 			: base (entity)
 		{
 			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, this.entity));

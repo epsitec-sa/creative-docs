@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
-			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
+			BusinessDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -778,26 +778,25 @@ namespace Epsitec.Cresus.Core
 			yield return business;
 		}
 
-		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
+		private IEnumerable<BusinessDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
 		{
 			var decimalType = DecimalType.Default;
 			decimal vatRate = vatDefs.Where (x => x.Code == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
 
 			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
-			var invoiceA = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
+			var invoiceA = this.DataContext.CreateEntity<BusinessDocumentEntity> ();
 
 			invoiceA.IdA = "1000-00";
-			invoiceA.DocumentSource = Business.DocumentSource.Generated;
+//-			invoiceA.DocumentSource = Business.DocumentSource.Generated;
 			invoiceA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
-			invoiceA.Description = "Facture de test #1000";
-			invoiceA.CreationDate = new System.DateTime (2010, 7, 8);
-			invoiceA.LastModificationDate = System.DateTime.Now;
+//-			invoiceA.Description = "Facture de test #1000";
+			invoiceA.BillingDate = new Date (2010, 7, 8);
 			invoiceA.BillingMailContact = billingAddress;
 			invoiceA.ShippingMailContact = billingAddress;
 			invoiceA.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
 			invoiceA.OtherPartyTaxMode = Business.Finance.TaxMode.LiableForVat;
-			invoiceA.CurrencyCode = Business.Finance.CurrencyCode.Chf;
+			invoiceA.BillingCurrencyCode = Business.Finance.CurrencyCode.Chf;
 			invoiceA.BillingStatus = Business.Finance.BillingStatus.DebtorBillOpen;
 			invoiceA.BillingDetails.Add (billingA1);
 			invoiceA.BillingDetails.Add (billingA2);
@@ -813,8 +812,8 @@ namespace Epsitec.Cresus.Core
 
 			lineA1.Visibility = true;
 			lineA1.IndentationLevel = 0;
-			lineA1.BeginDate = invoiceA.CreationDate;
-			lineA1.EndDate = invoiceA.CreationDate;
+			lineA1.BeginDate = invoiceA.BillingDate;
+			lineA1.EndDate = invoiceA.BillingDate;
 			lineA1.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-CP").FirstOrDefault ();
 			lineA1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
@@ -839,8 +838,8 @@ namespace Epsitec.Cresus.Core
 
 			lineA2.Visibility = true;
 			lineA2.IndentationLevel = 0;
-			lineA2.BeginDate = invoiceA.CreationDate;
-			lineA2.EndDate = invoiceA.CreationDate;
+			lineA2.BeginDate = invoiceA.BillingDate;
+			lineA2.EndDate = invoiceA.BillingDate;
 			lineA2.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-FL").FirstOrDefault ();
 			lineA2.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
@@ -872,8 +871,8 @@ namespace Epsitec.Cresus.Core
 
 			lineA3.Visibility = true;
 			lineA3.IndentationLevel = 0;
-			lineA3.BeginDate = invoiceA.CreationDate;
-			lineA3.EndDate = invoiceA.CreationDate;
+			lineA3.BeginDate = invoiceA.BillingDate;
+			lineA3.EndDate = invoiceA.BillingDate;
 			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
 			lineA3.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
@@ -904,8 +903,8 @@ namespace Epsitec.Cresus.Core
 
 			lineA4.Visibility = true;
 			lineA4.IndentationLevel = 0;
-			lineA4.BeginDate = invoiceA.CreationDate;
-			lineA4.EndDate = invoiceA.CreationDate;
+			lineA4.BeginDate = invoiceA.BillingDate;
+			lineA4.EndDate = invoiceA.BillingDate;
 			lineA4.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
 			lineA4.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA4.PrimaryUnitPriceBeforeTax = lineA4.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;

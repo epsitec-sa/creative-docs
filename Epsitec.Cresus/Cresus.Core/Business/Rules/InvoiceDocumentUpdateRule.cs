@@ -9,9 +9,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule (RuleType.Update)]
-	internal class InvoiceDocumentUpdateRule : GenericBusinessRule<InvoiceDocumentEntity>
+	internal class BusinessDocumentUpdateRule : GenericBusinessRule<BusinessDocumentEntity>
 	{
-		protected override void Apply(InvoiceDocumentEntity entity)
+		protected override void Apply(BusinessDocumentEntity entity)
 		{
 			var dataContext = Logic.Current.DataContext;
 

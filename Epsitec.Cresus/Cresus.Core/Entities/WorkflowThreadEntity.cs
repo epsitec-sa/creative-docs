@@ -39,8 +39,9 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				DocumentEntity doc = this.Documents.First ();
-				name = TextFormatter.FormatText (doc.Description, doc.IdA);
+				BusinessDocumentEntity doc = this.Documents.First ();
+				name = TextFormatter.FormatText ("Document", doc.IdA);
+				//	TODO: faire mieux ici
 			}
 
 			return name;
