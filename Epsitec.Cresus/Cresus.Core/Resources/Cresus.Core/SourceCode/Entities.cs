@@ -2063,18 +2063,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Workflows</c> field.
-		///	designer:fld/L0AB2/L0AAK
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AAK]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> Workflows
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0AAK]");
-			}
-		}
-		///	<summary>
 		///	The <c>VatNumber</c> field.
 		///	designer:fld/L0AB2/L0AC5
 		///	</summary>
@@ -2237,7 +2225,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>DocumentMetadata</c> entity.
 	///	designer:cap/L0AO2
 	///	</summary>
-	public partial class DocumentMetadataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class DocumentMetadataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -2517,6 +2505,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>BusinessDocument</c> field.
+		///	designer:fld/L0AO2/L0AUK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUK]")]
+		public global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity BusinessDocument
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> ("[L0AUK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue = this.BusinessDocument;
+				if (oldValue != value)
+				{
+					this.OnBusinessDocumentChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> ("[L0AUK]", oldValue, value);
+					this.OnBusinessDocumentChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDocumentTypeChanging(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
 		partial void OnDocumentTypeChanged(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
@@ -2536,6 +2546,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCreationDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastModificationDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastModificationDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnBusinessDocumentChanging(global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity newValue);
+		partial void OnBusinessDocumentChanged(global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4421,6 +4433,18 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0A4F]");
+			}
+		}
+		///	<summary>
+		///	The <c>Documents</c> field.
+		///	designer:fld/L0AD5/L0AVK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVK]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> Documents
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> ("[L0AVK]");
 			}
 		}
 		///	<summary>
@@ -9344,15 +9368,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>StartingNodes</c> field.
+		///	The <c>StartingEdges</c> field.
 		///	designer:fld/L0AII/L0A9J
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A9J]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> StartingNodes
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> StartingEdges
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0A9J]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0A9J]");
 			}
 		}
 		
@@ -9959,15 +9983,15 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowThreadEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Documents</c> field.
+		///	The <c>ActiveDocuments</c> field.
 		///	designer:fld/L0AMJ/L0A5K
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A5K]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> Documents
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> ActiveDocuments
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> ("[L0A5K]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> ("[L0A5K]");
 			}
 		}
 		///	<summary>

@@ -33,13 +33,13 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			FormattedText name;
 
-			if (this.Documents.Count == 0)
+			if (this.ActiveDocuments.Count == 0)
 			{
 				name = FormattedText.FromSimpleText ("Aucun document");
 			}
 			else
 			{
-				BusinessDocumentEntity doc = this.Documents.First ();
+				BusinessDocumentEntity doc = this.ActiveDocuments.First ().BusinessDocument;
 				name = TextFormatter.FormatText ("Document", doc.IdA);
 				//	TODO: faire mieux ici
 			}

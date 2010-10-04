@@ -454,7 +454,10 @@ namespace Epsitec.Cresus.Core
 
 			dataContext.CreateSchema<EnumValueArticleParameterDefinitionEntity> ();
 			dataContext.CreateSchema<NumericValueArticleParameterDefinitionEntity> ();
-			
+
+			dataContext.CreateSchema<AffairEntity> ();
+			dataContext.CreateSchema<DocumentMetadataEntity> ();
+			dataContext.CreateSchema<WorkflowEntity> ();
 //-			dataContext.CreateSchema<PaymentDetailEventEntity> ();
 			dataContext.CreateSchema<TotalDocumentItemEntity> ();
 
