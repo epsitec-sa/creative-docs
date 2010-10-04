@@ -11,10 +11,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class CaseEventTypeRepository : Repository<WorkflowEventTypeEntity>
+	public class WorkflowRepository : Repository<WorkflowEntity>
 	{
-		public CaseEventTypeRepository(CoreData data, DataContext context = null)
-			: base (data, context, Data.DataLifetimeExpectancy.Immutable)
+		public WorkflowRepository(CoreData data, DataContext context = null)
+			: base (data, context)
 		{
 		}
 	}

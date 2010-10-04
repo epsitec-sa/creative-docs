@@ -11,5 +11,6 @@ namespace Epsitec.Cresus.Core.Business
 		Setup,
 		Bind,
 		Update,
+		Validate,
 	}
 }

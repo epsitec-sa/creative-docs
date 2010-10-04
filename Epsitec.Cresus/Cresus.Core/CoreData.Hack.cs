@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Core
 		{
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
-			WorkflowEventTypeEntity[] eventTypes = this.InsertCaseEventTypesInDatabase ().ToArray ();
 			ContactRoleEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
 			UriSchemeEntity[] uriSchemes = this.InsertUriSchemesInDatabase ().ToArray ();
 			TelecomTypeEntity[] telecomTypes = this.InsertTelecomTypesInDatabase ().ToArray ();
@@ -91,29 +90,6 @@ namespace Epsitec.Cresus.Core
 				location.Name       = CoreData.frenchLocations[i + 1];
 
 				yield return location;
-			}
-		}
-
-		private IEnumerable<WorkflowEventTypeEntity> InsertCaseEventTypesInDatabase()
-		{
-			string[] names = new string[]
-			{
-				"Réception d'une demande",
-				"Envoi d'une offre",
-				"Envoi d'un bulletin de livraison",
-				"Envoi d'une facture",
-				"Réception d'un courrier",
-				"Téléphone entrant",
-				"Téléphone sortant"
-			};
-
-			foreach (string name in names)
-			{
-				WorkflowEventTypeEntity eventType = this.DataContext.CreateEntity<WorkflowEventTypeEntity> ();
-
-				eventType.Code = name;
-
-				yield return eventType;
 			}
 		}
 

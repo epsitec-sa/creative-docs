@@ -16,14 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var affair = Logic.Current.BusinessContext.GetMasterEntity<AffairEntity> ();
 
-			if (affair.Workflows.Count == 0)
-			{
-				workflow.Id = 0;
-			}
-			else
-			{
-				workflow.Id = affair.Workflows.Max (x => x.Id) + 1;
-			}
+			workflow.Affair = affair;
 		}
 	}
 }

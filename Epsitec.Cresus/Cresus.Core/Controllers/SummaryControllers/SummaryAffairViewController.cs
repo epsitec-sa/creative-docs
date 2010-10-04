@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIDocumentWorkflows(SummaryDataItems data)
 		{
+#if false
 			var summaryData =
 				new SummaryData
 				{
@@ -66,10 +67,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));
+#endif
 		}
 
 		private void CreateUIEvents(SummaryDataItems data)
 		{
+#if false
 			data.Add (
 				new SummaryData
 				{
@@ -87,6 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => x.GetSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
+#endif
 		}
 	}
 }
