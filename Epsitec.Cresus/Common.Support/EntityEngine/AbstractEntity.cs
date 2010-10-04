@@ -114,41 +114,22 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		/// <summary>
-		/// Gets a value indicating whether this entity is empty.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this entity is empty; otherwise, <c>false</c>.
-		/// </value>
 		public bool IsEntityEmpty
 		{
 			get
 			{
-				return this.EntityStatus == EntityStatus.Empty;
+				return this.EntityStatus == EntityStatus.Empty || this.EntityStatus == EntityStatus.EmptyAndValid;
 			}
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this entity is valid. An empty
-		/// entity might or might not be considered as valid, depending on
-		/// the <see cref="IsValidWhenEmpty"/> property.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this entity is valid; otherwise, <c>false</c>.
-		/// </value>
 		public bool IsEntityValid
 		{
 			get
 			{
-				return (this.EntityStatus == EntityStatus.Valid)
-					|| (this.EntityStatus == EntityStatus.Empty && this.IsValidWhenEmpty);
+				return this.EntityStatus == EntityStatus.Valid || this.EntityStatus == EntityStatus.EmptyAndValid;
 			}
 		}
 
-		/// <summary>
-		/// Gets the entity status.
-		/// </summary>
-		/// <value>The entity status.</value>
 		public virtual EntityStatus EntityStatus
 		{
 			get
@@ -157,21 +138,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
-		/// <summary>
-		/// Gets a value indicating whether this instance is valid when it is empty.
-		/// See also <see cref="IsEntityValid"/>.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is valid when it is empty; otherwise, <c>false</c>.
-		/// </value>
-		protected virtual bool IsValidWhenEmpty
-		{
-			get
-			{
-				return true;
-			}
-		}
 
 		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.

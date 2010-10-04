@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +33,14 @@ namespace Epsitec.Cresus.Core.Entities
 			string unit = Misc.FormatUnit (this.Quantity, this.Unit.Code);
 
 			return FormattedText.Concat (type, " ", unit);
+		}
+
+		public override EntityStatus EntityStatus
+		{
+			get
+			{
+				return EntityStatus.Valid;
+			}
 		}
 	}
 }
