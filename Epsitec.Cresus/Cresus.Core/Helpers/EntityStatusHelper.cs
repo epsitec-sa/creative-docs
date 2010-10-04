@@ -13,40 +13,14 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class EntityStatusHelper
 	{
-		public static EntityStatus Optional(EntityStatus status)
+		public static EntityStatus TreatAsOptional(this EntityStatus status)
 		{
-			if (status == EntityStatus.Empty)
+			if ((status & EntityStatus.Empty) != 0)
 			{
-				//	Un champ optionnel vide est à la fois vide et valide !
-				return EntityStatus.EmptyAndValid;
+				status &= EntityStatus.Valid;
 			}
 
 			return status;
-		}
-
-
-		public static EntityStatus GetStatus(string s)
-		{
-			if (string.IsNullOrWhiteSpace (s))
-			{
-				return EntityStatus.Empty;
-			}
-			else
-			{
-				return EntityStatus.Valid;
-			}
-		}
-
-		public static EntityStatus GetStatus(FormattedText s)
-		{
-			if (s.IsNullOrWhiteSpace)
-			{
-				return EntityStatus.Empty;
-			}
-			else
-			{
-				return EntityStatus.Valid;
-			}
 		}
 
 
@@ -63,7 +37,7 @@ namespace Epsitec.Cresus.Core.Helpers
             }
 
 			var nonNullEntities  = entities.Where (x => x.IsNotNull ());
-			var statusCollection = nonNullEntities.Select (x => x.EntityStatus);
+			var statusCollection = nonNullEntities.Select (x => x.GetEntityStatus ());
 
 			return EntityStatusHelper.CombineStatus (cardinality, statusCollection.ToArray ());
 		}
@@ -75,37 +49,32 @@ namespace Epsitec.Cresus.Core.Helpers
 				return EntityStatus.Empty;
 			}
 
-			if (collection.Any (x => x == EntityStatus.Invalid))
+			if (collection.Any (x => (x & EntityStatus.Valid) == 0))
 			{
-				return EntityStatus.Invalid;
+				return EntityStatus.None;  // invalide
 			}
 
-			if (collection.All (x => x == EntityStatus.EmptyAndValid))
-			{
-				return EntityStatus.EmptyAndValid;
-			}
-
-			if (collection.All (x => x == EntityStatus.Empty || x == EntityStatus.EmptyAndValid))
+			if (collection.All (x => (x & EntityStatus.Empty) != 0))
 			{
 				return EntityStatus.Empty;
 			}
 
 			if (cardinality == StatusHelperCardinality.AtLeastOne)
 			{
-				if (collection.Any (x => x == EntityStatus.Valid || x == EntityStatus.EmptyAndValid))
+				if (collection.Any (x => (x & EntityStatus.Valid) != 0))
 				{
 					return EntityStatus.Valid;
 				}
 			}
 			else
 			{
-				if (collection.All (x => x == EntityStatus.Valid || x == EntityStatus.EmptyAndValid))
+				if (collection.All (x => (x & EntityStatus.Valid) != 0))
 				{
 					return EntityStatus.Valid;
 				}
 			}
 
-			return EntityStatus.Unknown;
+			return EntityStatus.None;
 		}
 	}
 }

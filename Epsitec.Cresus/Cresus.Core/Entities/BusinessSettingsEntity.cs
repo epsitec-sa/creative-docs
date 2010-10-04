@@ -23,12 +23,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Company.Person.GetCompactSummary ());
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				return EntityStatus.Valid;
-			}
+			return EntityStatus.Valid;
 		}
 	}
 }

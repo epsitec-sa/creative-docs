@@ -55,20 +55,17 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				var s1 = EntityStatusHelper.GetStatus (this.IdA);
-				var s2 = EntityStatusHelper.Optional (EntityStatusHelper.GetStatus (this.IdB));
-				var s3 = EntityStatusHelper.Optional (EntityStatusHelper.GetStatus (this.IdC));
-				var s4 = EntityStatusHelper.GetStatus (this.DocumentTitle);
-				var s5 = EntityStatusHelper.GetStatus (this.Description);
-				var s6 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Lines.Select (x => x.EntityStatus).ToArray ());
-				var s7 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Comments.Select (x => x.EntityStatus).ToArray ());
+			var s1 = this.IdA.GetEntityStatus ();
+			var s2 = EntityStatusHelper.TreatAsOptional (this.IdB.GetEntityStatus ());
+			var s3 = EntityStatusHelper.TreatAsOptional (this.IdC.GetEntityStatus ());
+			var s4 = this.DocumentTitle.GetEntityStatus ();
+			var s5 = this.Description.GetEntityStatus ();
+			var s6 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Lines.Select (x => x.GetEntityStatus ()).ToArray ());
+			var s7 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, this.Comments.Select (x => x.GetEntityStatus ()).ToArray ());
 
-				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6, s7);
-			}
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2, s3, s4, s5, s6, s7);
 		}
 	}
 }

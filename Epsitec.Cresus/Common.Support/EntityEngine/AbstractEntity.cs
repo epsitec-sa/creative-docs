@@ -118,7 +118,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.EntityStatus == EntityStatus.Empty || this.EntityStatus == EntityStatus.EmptyAndValid;
+				return (this.GetEntityStatus () & EntityStatus.Empty) != 0;
 			}
 		}
 
@@ -126,16 +126,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.EntityStatus == EntityStatus.Valid || this.EntityStatus == EntityStatus.EmptyAndValid;
+				return (this.GetEntityStatus () & EntityStatus.Valid) != 0;
 			}
 		}
 
-		public virtual EntityStatus EntityStatus
+		public virtual EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				return EntityStatus.Unknown;
-			}
+			return EntityStatus.None;
 		}
 
 

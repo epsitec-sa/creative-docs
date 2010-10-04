@@ -33,17 +33,14 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Firstname.ToSimpleText (), this.Lastname.ToSimpleText () };
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus()
 		{
-			get
-			{
-				var s1 = EntityStatusHelper.GetStatus (this.Firstname);
-				var s2 = EntityStatusHelper.GetStatus (this.Lastname);
-				var s3 = EntityStatusHelper.Optional (this.Title.EntityStatus);
+			var s1 = this.Firstname.GetEntityStatus ();
+			var s2 = this.Lastname.GetEntityStatus ();
+			var s3 = this.Title.GetEntityStatus ().TreatAsOptional ();
 
-				var s12 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.AtLeastOne, s1, s2);
-				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s12, s3);
-			}
+			var s12 = EntityStatusHelper.CombineStatus (StatusHelperCardinality.AtLeastOne, s1, s2);
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s12, s3);
 		}
 	}
 }

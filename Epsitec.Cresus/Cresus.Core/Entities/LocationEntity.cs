@@ -28,17 +28,14 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Country.Code, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus EntityStatus
+		public override EntityStatus GetEntityStatus ()
 		{
-			get
-			{
-				//	We consider a location to be empty if it has neither postal code, nor
-				//	location name; a location with just a coutry or region is still empty.
-				var s1 = EntityStatusHelper.GetStatus (this.PostalCode);
-				var s2 = EntityStatusHelper.GetStatus (this.Name);
+			//	We consider a location to be empty if it has neither postal code, nor
+			//	location name; a location with just a coutry or region is still empty.
+			var s1 = this.PostalCode.GetEntityStatus ();
+			var s2 = this.Name.GetEntityStatus ();
 
-				return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
-			}
+			return EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 	}
 }

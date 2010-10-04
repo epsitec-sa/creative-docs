@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +56,14 @@ namespace Epsitec.Cresus.Core.Entities
 				this.Address.Location.PostalCode.ToSimpleText (),
 				this.Address.Location.Name.ToSimpleText ()
 			};
+		}
+
+		public override EntityStatus GetEntityStatus()
+		{
+			var s1 = this.Address.GetEntityStatus ();
+			var s2 = this.Complement.GetEntityStatus ().TreatAsOptional ();
+
+			return Helpers.EntityStatusHelper.CombineStatus (StatusHelperCardinality.All, s1, s2);
 		}
 	}
 }

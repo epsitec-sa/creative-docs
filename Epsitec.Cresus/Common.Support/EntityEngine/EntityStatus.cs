@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	[System.Flags]
 	public enum EntityStatus
 	{
-		Unknown = -1,
-		Empty,
-		EmptyAndValid,		// un champ optionnel vide est à la fois vide et valide
-		Valid,
-		Invalid,
+		None = 0,
+
+		Empty = 0x01,
+		Valid = 0x02,
 	}
 }
