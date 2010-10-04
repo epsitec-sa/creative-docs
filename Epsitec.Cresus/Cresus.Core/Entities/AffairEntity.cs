@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Entities
 				if (this.documents == null)
                 {
 					this.documents = new ObservableList<DocumentEntity> ();
-					this.documents.AddRange (this.Workflows.SelectMany (w => w.Events).Where (e => e.HasDocument).Select (e => e.Document).Distinct ());
+					this.documents.AddRange (this.Workflows.SelectMany (workflow => workflow.Threads).SelectMany (thread => thread.Documents).Distinct ());
                 }
 
 				//	TODO : refresh this list when changes happen
@@ -41,13 +41,13 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var root = this.RootWorkflow;
 
-			if (root.IsNull () || root.CreationEvent.IsNull ())
+			if (root.IsNull ())
 			{
 				return TextFormatter.FormatText (this.IdA);
 			}
 			else
 			{
-				var date = Misc.GetDateTimeShortDescription (root.CreationEvent.Date);
+				var date = Misc.GetDateTimeShortDescription (root.Threads[0].History[0].Date);
 				return TextFormatter.FormatText (this.IdA, " - ", date, "(", this.Documents.Count, "doc.)");
 			}
 		}

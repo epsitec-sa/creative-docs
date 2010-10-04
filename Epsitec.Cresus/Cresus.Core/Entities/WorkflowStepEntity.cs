@@ -9,20 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class WorkflowEventEntity
+	public partial class WorkflowStepEntity
 	{
-		public bool HasDocument
-		{
-			get
-			{
-				return this.Document.IsNull () == false;
-			}
-		}
-
 		public override FormattedText GetSummary()
 		{
 			string date = Misc.GetDateTimeShortDescription (this.Date);
-			return TextFormatter.FormatText (date, this.EventType.Code);
+			return TextFormatter.FormatText (date);
 		}
 	}
 }

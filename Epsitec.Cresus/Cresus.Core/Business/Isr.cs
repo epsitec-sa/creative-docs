@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Business
 			string[] parts     = cleanNumber.Split ('-');
 
 			if ((parts.Length != 3) ||
-				(parts[0].Length > 2) || (parts[0].Length < 1) ||
+				(parts[0].Length != 2) ||
 				(parts[1].Length > 6) || (parts[1].Length < 1) ||
 				(parts[2].Length != 1) ||
 				(parts.Any (x => !Isr.IsNumber (x))))
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Business
 				return false;
 			}
 
-			string s1 = Isr.InsertLeadingZeroes (parts[0], 2);
+			string s1 = parts[0];
 			string s2 = Isr.InsertLeadingZeroes (parts[1], 6);
 			string s3 = parts[2];
 			

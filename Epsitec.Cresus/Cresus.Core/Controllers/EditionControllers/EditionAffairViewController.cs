@@ -100,9 +100,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ExecuteNewOffer()
 		{
-			var workflow      = this.BusinessContext.CreateEntity<WorkflowEntity> ();
-			var businessEvent = this.BusinessContext.CreateEntity<WorkflowEventEntity> ();
-			var document      = this.BusinessContext.CreateEntity<InvoiceDocumentEntity> ();
+			var workflow       = this.BusinessContext.CreateEntity<WorkflowEntity> ();
+			var workflowThread = this.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
+			var workflowStep   = this.BusinessContext.CreateEntity<WorkflowStepEntity> ();
+			var document       = this.BusinessContext.CreateEntity<InvoiceDocumentEntity> ();
 			
 			var now = System.DateTime.Now;
 
@@ -130,17 +131,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//	TODO: clean up horrible hack
 
-			businessEvent.EventType = this.BusinessContext.GetLocalEntity (this.BusinessContext.Data.GetAllEntities<WorkflowEventTypeEntity> ().Where (x => x.Code.Contains ("offre")).First ());
-			businessEvent.Date      = now;
-			businessEvent.Document  = document;
+			workflowStep.Date      = now;
+			workflowThread.Documents.Add (document);
+			workflowThread.History.Add (workflowStep);
 
-			workflow.Events.Add (businessEvent);
-			workflow.ActiveDocument = document;
-
-			this.DataContext.UpdateEmptyEntityStatus (businessEvent, false);
 			this.DataContext.UpdateEmptyEntityStatus (workflow, false);
+			this.DataContext.UpdateEmptyEntityStatus (workflowThread, false);
+			this.DataContext.UpdateEmptyEntityStatus (workflowStep, false);
 
 			this.Entity.Workflows.Add (workflow);
+			this.Entity.Relation.Workflows.Add (workflow);
 
 			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
 		}

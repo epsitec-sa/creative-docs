@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class WorkflowEntity
+	public partial class WorkflowThreadEntity
 	{
-		public WorkflowEventEntity CreationEvent
+		public WorkflowStepEntity CreationEvent
 		{
 			get
 			{
-				return this.Events.FirstOrDefault ().WrapNullEntity ();
+				return this.History.FirstOrDefault ().WrapNullEntity ();
 			}
 		}
 
@@ -26,23 +26,21 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			FormattedText version  = this.Id == 0 ? FormattedText.Empty : TextFormatter.FormatText ("Variante", this.Id);
-			FormattedText creation = this.ActiveDocument.IsNull () ? FormattedText.Empty : TextFormatter.FormatText ("Créé le ", this.ActiveDocument.CreationDate);
-
-			return TextFormatter.FormatText (version, "\n", creation);
+			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
 		}
-		
+
 		private FormattedText GetDocumentName()
 		{
 			FormattedText name;
 
-			if (this.ActiveDocument.IsNull ())
+			if (this.Documents.Count == 0)
 			{
 				name = FormattedText.FromSimpleText ("Aucun document");
 			}
 			else
 			{
-				name = TextFormatter.FormatText (this.ActiveDocument.Description, this.ActiveDocument.IdA);
+				DocumentEntity doc = this.Documents.First ();
+				name = TextFormatter.FormatText (doc.Description, doc.IdA);
 			}
 
 			return name;

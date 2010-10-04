@@ -26,7 +26,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A52]", typeof (Epsitec.Cresus.Core.Entities.UriContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A62]", typeof (Epsitec.Cresus.Core.Entities.UriSchemeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AB2]", typeof (Epsitec.Cresus.Core.Entities.RelationEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AG2]", typeof (Epsitec.Cresus.Core.Entities.CaseEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AO2]", typeof (Epsitec.Cresus.Core.Entities.DocumentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A63]", typeof (Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AA3]", typeof (Epsitec.Cresus.Core.Entities.ArticleGroupEntity))]
@@ -38,8 +37,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AC4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AJ4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AP4]", typeof (Epsitec.Cresus.Core.Entities.CurrencyEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A05]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEventEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A75]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AD5]", typeof (Epsitec.Cresus.Core.Entities.AffairEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AM5]", typeof (Epsitec.Cresus.Core.Entities.ArticleQuantityEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQ5]", typeof (Epsitec.Cresus.Core.Entities.ArticleSupplyEntity))]
@@ -59,7 +56,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A8B]", typeof (Epsitec.Cresus.Core.Entities.TextDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAB]", typeof (Epsitec.Cresus.Core.Entities.PriceDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQB]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A0C]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQC]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGD]", typeof (Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AFE]", typeof (Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity))]
@@ -80,6 +76,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A6J]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowStepEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AMJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowThreadEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowCallEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2067,6 +2064,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Workflows</c> field.
+		///	designer:fld/L0AB2/L0AAK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAK]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> Workflows
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0AAK]");
+			}
+		}
+		///	<summary>
 		///	The <c>VatNumber</c> field.
 		///	designer:fld/L0AB2/L0AC5
 		///	</summary>
@@ -2218,195 +2227,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 75);	// [L0AB2]
 		public static readonly new string EntityStructuredTypeKey = "[L0AB2]";
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.Case Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>Case</c> entity.
-	///	designer:cap/L0AG2
-	///	</summary>
-	public partial class CaseEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber
-	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/L0AG2/L0AB5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		#region IReferenceNumber Members
-		///	<summary>
-		///	The <c>IdA</c> field.
-		///	designer:fld/L0AG2/L0AH5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string IdA
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>IdB</c> field.
-		///	designer:fld/L0AG2/L0AI5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string IdB
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>IdC</c> field.
-		///	designer:fld/L0AG2/L0AJ5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string IdC
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>Comments</c> field.
-		///	designer:fld/L0AG2/L0AT8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AT8]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0AT8]");
-			}
-		}
-		///	<summary>
-		///	The <c>DefaultDebtorBookAccount</c> field.
-		///	designer:fld/L0AG2/L0AO7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AO7]")]
-		public string DefaultDebtorBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[L0AO7]");
-			}
-			set
-			{
-				string oldValue = this.DefaultDebtorBookAccount;
-				if (oldValue != value)
-				{
-					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[L0AO7]", oldValue, value);
-					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ActiveSalesRepresentative</c> field.
-		///	designer:fld/L0AG2/L0AM2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AM2]")]
-		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity ActiveSalesRepresentative
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AM2]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.ActiveSalesRepresentative;
-				if (oldValue != value)
-				{
-					this.OnActiveSalesRepresentativeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AM2]", oldValue, value);
-					this.OnActiveSalesRepresentativeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ActiveOwner</c> field.
-		///	designer:fld/L0AG2/L0AN2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AN2]")]
-		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity ActiveOwner
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AN2]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.ActiveOwner;
-				if (oldValue != value)
-				{
-					this.OnActiveOwnerChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AN2]", oldValue, value);
-					this.OnActiveOwnerChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Events</c> field.
-		///	designer:fld/L0AG2/L0A95
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A95]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> Events
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> ("[L0A95]");
-			}
-		}
-		
-		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
-		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
-		partial void OnActiveSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnActiveSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnActiveOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnActiveOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.CaseEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.CaseEntity.EntityStructuredTypeKey;
-		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 80);	// [L0AG2]
-		public static readonly new string EntityStructuredTypeKey = "[L0AG2]";
 	}
 }
 #endregion
@@ -4590,356 +4410,6 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.WorkflowEvent Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>WorkflowEvent</c> entity.
-	///	designer:cap/L0A05
-	///	</summary>
-	public partial class WorkflowEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
-	{
-		#region IItemCode Members
-		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/L0A05/L0AD3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
-		public string Code
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>EventType</c> field.
-		///	designer:fld/L0A05/L0A85
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A85]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity EventType
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity> ("[L0A85]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity oldValue = this.EventType;
-				if (oldValue != value)
-				{
-					this.OnEventTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity> ("[L0A85]", oldValue, value);
-					this.OnEventTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/L0A05/L0A55
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A55]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A55]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
-				if (oldValue != value)
-				{
-					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A55]", oldValue, value);
-					this.OnDescriptionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Date</c> field.
-		///	designer:fld/L0A05/L0A15
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A15]")]
-		public global::System.DateTime Date
-		{
-			get
-			{
-				return this.GetField<global::System.DateTime> ("[L0A15]");
-			}
-			set
-			{
-				global::System.DateTime oldValue = this.Date;
-				if (oldValue != value)
-				{
-					this.OnDateChanging (oldValue, value);
-					this.SetField<global::System.DateTime> ("[L0A15]", oldValue, value);
-					this.OnDateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Document</c> field.
-		///	designer:fld/L0A05/L0A25
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A25]")]
-		public global::Epsitec.Cresus.Core.Entities.DocumentEntity Document
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0A25]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue = this.Document;
-				if (oldValue != value)
-				{
-					this.OnDocumentChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0A25]", oldValue, value);
-					this.OnDocumentChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SoftwareUser</c> field.
-		///	designer:fld/L0A05/L0AUF
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AUF]")]
-		public global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity SoftwareUser
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0AUF]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue = this.SoftwareUser;
-				if (oldValue != value)
-				{
-					this.OnSoftwareUserChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0AUF]", oldValue, value);
-					this.OnSoftwareUserChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Owner</c> field.
-		///	designer:fld/L0A05/L0A35
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A35]")]
-		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity Owner
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A35]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Owner;
-				if (oldValue != value)
-				{
-					this.OnOwnerChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A35]", oldValue, value);
-					this.OnOwnerChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>RelationContact</c> field.
-		///	designer:fld/L0A05/L0A65
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A65]")]
-		public global::Epsitec.Cresus.Core.Entities.AbstractContactEntity RelationContact
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractContactEntity> ("[L0A65]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue = this.RelationContact;
-				if (oldValue != value)
-				{
-					this.OnRelationContactChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractContactEntity> ("[L0A65]", oldValue, value);
-					this.OnRelationContactChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>RelationContactPerson</c> field.
-		///	designer:fld/L0A05/L0A45
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A45]")]
-		public global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity RelationContactPerson
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0A45]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.RelationContactPerson;
-				if (oldValue != value)
-				{
-					this.OnRelationContactPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0A45]", oldValue, value);
-					this.OnRelationContactPersonChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnEventTypeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity newValue);
-		partial void OnEventTypeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity newValue);
-		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
-		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
-		partial void OnDocumentChanging(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
-		partial void OnDocumentChanged(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
-		partial void OnSoftwareUserChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
-		partial void OnSoftwareUserChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
-		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnRelationContactChanging(global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractContactEntity newValue);
-		partial void OnRelationContactChanged(global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractContactEntity newValue);
-		partial void OnRelationContactPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
-		partial void OnRelationContactPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity.EntityStructuredTypeKey;
-		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 160);	// [L0A05]
-		public static readonly new string EntityStructuredTypeKey = "[L0A05]";
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.WorkflowEventType Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>WorkflowEventType</c> entity.
-	///	designer:cap/L0A75
-	///	</summary>
-	public partial class WorkflowEventTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
-	{
-		#region IItemCode Members
-		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/L0A75/L0AD3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
-		public string Code
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/L0A75/L0AHH
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AHH]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHH]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
-				if (oldValue != value)
-				{
-					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHH]", oldValue, value);
-					this.OnDescriptionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DocumentType</c> field.
-		///	designer:fld/L0A75/L0ABI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ABI]")]
-		public global::Epsitec.Cresus.Core.Business.DocumentType DocumentType
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentType> ("[L0ABI]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.DocumentType oldValue = this.DocumentType;
-				if (oldValue != value)
-				{
-					this.OnDocumentTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentType> ("[L0ABI]", oldValue, value);
-					this.OnDocumentTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DocumentFlowDirection</c> field.
-		///	designer:fld/L0A75/L0AAI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AAI]")]
-		public global::Epsitec.Cresus.Core.Business.DocumentFlowDirection DocumentFlowDirection
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0AAI]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue = this.DocumentFlowDirection;
-				if (oldValue != value)
-				{
-					this.OnDocumentFlowDirectionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0AAI]", oldValue, value);
-					this.OnDocumentFlowDirectionChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDocumentTypeChanging(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
-		partial void OnDocumentTypeChanged(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
-		partial void OnDocumentFlowDirectionChanging(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
-		partial void OnDocumentFlowDirectionChanged(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.WorkflowEventTypeEntity.EntityStructuredTypeKey;
-		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 167);	// [L0A75]
-		public static readonly new string EntityStructuredTypeKey = "[L0A75]";
-	}
-}
-#endregion
-
 #region Epsitec.Cresus.Core.ILifetime Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -5062,28 +4532,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Relation</c> field.
-		///	designer:fld/L0AD5/L0AOC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AOC]")]
-		public global::Epsitec.Cresus.Core.Entities.RelationEntity Relation
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AOC]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Relation;
-				if (oldValue != value)
-				{
-					this.OnRelationChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AOC]", oldValue, value);
-					this.OnRelationChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/L0AD5/L0ANC
 		///	</summary>
@@ -5102,6 +4550,28 @@ namespace Epsitec.Cresus.Core.Entities
 					this.OnDescriptionChanging (oldValue, value);
 					this.SetField<string> ("[L0ANC]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Relation</c> field.
+		///	designer:fld/L0AD5/L0AOC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AOC]")]
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity Relation
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AOC]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Relation;
+				if (oldValue != value)
+				{
+					this.OnRelationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AOC]", oldValue, value);
+					this.OnRelationChanged (oldValue, value);
 				}
 			}
 		}
@@ -5197,21 +4667,21 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>Workflows</c> field.
-		///	designer:fld/L0AD5/L0AKI
+		///	designer:fld/L0AD5/L0ACK
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AKI]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0ACK]")]
 		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> Workflows
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0AKI]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0ACK]");
 			}
 		}
 		
-		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
-		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		partial void OnActiveSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
@@ -8169,79 +7639,6 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.PaymentDetailEvent Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>PaymentDetailEvent</c> entity.
-	///	designer:cap/L0A0C
-	///	</summary>
-	public partial class PaymentDetailEventEntity : global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity
-	{
-		///	<summary>
-		///	The <c>Payment</c> field.
-		///	designer:fld/L0A0C/L0A1C
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A1C]")]
-		public global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity Payment
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity> ("[L0A1C]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue = this.Payment;
-				if (oldValue != value)
-				{
-					this.OnPaymentChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity> ("[L0A1C]", oldValue, value);
-					this.OnPaymentChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>BillingDetail</c> field.
-		///	designer:fld/L0A0C/L0A2E
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A2E]")]
-		public global::Epsitec.Cresus.Core.Entities.BillingDetailEntity BillingDetail
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0A2E]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue = this.BillingDetail;
-				if (oldValue != value)
-				{
-					this.OnBillingDetailChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0A2E]", oldValue, value);
-					this.OnBillingDetailChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnPaymentChanging(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
-		partial void OnPaymentChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
-		partial void OnBillingDetailChanging(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
-		partial void OnBillingDetailChanged(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity.EntityStructuredTypeKey;
-		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 384);	// [L0A0C]
-		public static readonly new string EntityStructuredTypeKey = "[L0A0C]";
-	}
-}
-#endregion
-
 #region Epsitec.Cresus.Core.ExchangeRateSource Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -10097,150 +9494,42 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Id</c> field.
-		///	designer:fld/L0ACI/L0A4J
+		///	The <c>Affair</c> field.
+		///	designer:fld/L0ACI/L0A9K
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A4J]")]
-		public int Id
+		[global::Epsitec.Common.Support.EntityField ("[L0A9K]")]
+		public global::Epsitec.Cresus.Core.Entities.AffairEntity Affair
 		{
 			get
 			{
-				return this.GetField<int> ("[L0A4J]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0A9K]");
 			}
 			set
 			{
-				int oldValue = this.Id;
+				global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue = this.Affair;
 				if (oldValue != value)
 				{
-					this.OnIdChanging (oldValue, value);
-					this.SetField<int> ("[L0A4J]", oldValue, value);
-					this.OnIdChanged (oldValue, value);
+					this.OnAffairChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0A9K]", oldValue, value);
+					this.OnAffairChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>Status</c> field.
-		///	designer:fld/L0ACI/L0AFI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AFI]")]
-		public global::Epsitec.Cresus.Core.Business.WorkflowStatus Status
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0AFI]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
-				if (oldValue != value)
-				{
-					this.OnStatusChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0AFI]", oldValue, value);
-					this.OnStatusChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>WorkflowDef</c> field.
-		///	designer:fld/L0ACI/L0AEI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AEI]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity WorkflowDef
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0AEI]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue = this.WorkflowDef;
-				if (oldValue != value)
-				{
-					this.OnWorkflowDefChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0AEI]", oldValue, value);
-					this.OnWorkflowDefChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SerializedState</c> field.
-		///	designer:fld/L0ACI/L0AGI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AGI]")]
-		public string SerializedState
-		{
-			get
-			{
-				return this.GetField<string> ("[L0AGI]");
-			}
-			set
-			{
-				string oldValue = this.SerializedState;
-				if (oldValue != value)
-				{
-					this.OnSerializedStateChanging (oldValue, value);
-					this.SetField<string> ("[L0AGI]", oldValue, value);
-					this.OnSerializedStateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Events</c> field.
-		///	designer:fld/L0ACI/L0AHI
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AHI]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> Events
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> ("[L0AHI]");
-			}
-		}
-		///	<summary>
-		///	The <c>ActiveThreads</c> field.
+		///	The <c>Threads</c> field.
 		///	designer:fld/L0ACI/L0A7J
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A7J]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowThreadEntity> ActiveThreads
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowThreadEntity> Threads
 		{
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowThreadEntity> ("[L0A7J]");
 			}
 		}
-		///	<summary>
-		///	The <c>ActiveDocument</c> field.
-		///	designer:fld/L0ACI/L0AGJ
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AGJ]")]
-		public global::Epsitec.Cresus.Core.Entities.DocumentEntity ActiveDocument
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0AGJ]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue = this.ActiveDocument;
-				if (oldValue != value)
-				{
-					this.OnActiveDocumentChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0AGJ]", oldValue, value);
-					this.OnActiveDocumentChanged (oldValue, value);
-				}
-			}
-		}
 		
-		partial void OnIdChanging(int oldValue, int newValue);
-		partial void OnIdChanged(int oldValue, int newValue);
-		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
-		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
-		partial void OnWorkflowDefChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
-		partial void OnWorkflowDefChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
-		partial void OnSerializedStateChanging(string oldValue, string newValue);
-		partial void OnSerializedStateChanged(string oldValue, string newValue);
-		partial void OnActiveDocumentChanging(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
-		partial void OnActiveDocumentChanged(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
+		partial void OnAffairChanging(global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue, global::Epsitec.Cresus.Core.Entities.AffairEntity newValue);
+		partial void OnAffairChanged(global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue, global::Epsitec.Cresus.Core.Entities.AffairEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10623,6 +9912,50 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowEdgeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0A6J/L0AQJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQJ]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AQJ]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AQJ]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0A6J/L0ARJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARJ]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARJ]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARJ]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>NextNode</c> field.
 		///	designer:fld/L0A6J/L0AAJ
 		///	</summary>
@@ -10644,9 +9977,85 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>TransitionMode</c> field.
+		///	designer:fld/L0A6J/L0ASJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASJ]")]
+		public int TransitionMode
+		{
+			get
+			{
+				return this.GetField<int> ("[L0ASJ]");
+			}
+			set
+			{
+				int oldValue = this.TransitionMode;
+				if (oldValue != value)
+				{
+					this.OnTransitionModeChanging (oldValue, value);
+					this.SetField<int> ("[L0ASJ]", oldValue, value);
+					this.OnTransitionModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TransitionType</c> field.
+		///	designer:fld/L0A6J/L0ABK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ABK]")]
+		public int TransitionType
+		{
+			get
+			{
+				return this.GetField<int> ("[L0ABK]");
+			}
+			set
+			{
+				int oldValue = this.TransitionType;
+				if (oldValue != value)
+				{
+					this.OnTransitionTypeChanging (oldValue, value);
+					this.SetField<int> ("[L0ABK]", oldValue, value);
+					this.OnTransitionTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TransitionAction</c> field.
+		///	designer:fld/L0A6J/L0ATJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATJ]")]
+		public string TransitionAction
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ATJ]");
+			}
+			set
+			{
+				string oldValue = this.TransitionAction;
+				if (oldValue != value)
+				{
+					this.OnTransitionActionChanging (oldValue, value);
+					this.SetField<string> ("[L0ATJ]", oldValue, value);
+					this.OnTransitionActionChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnTransitionModeChanging(int oldValue, int newValue);
+		partial void OnTransitionModeChanged(int oldValue, int newValue);
+		partial void OnTransitionTypeChanging(int oldValue, int newValue);
+		partial void OnTransitionTypeChanged(int oldValue, int newValue);
+		partial void OnTransitionActionChanging(string oldValue, string newValue);
+		partial void OnTransitionActionChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10672,50 +10081,6 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowStepEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Id</c> field.
-		///	designer:fld/L0AHJ/L0AJJ
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AJJ]")]
-		public long Id
-		{
-			get
-			{
-				return this.GetField<long> ("[L0AJJ]");
-			}
-			set
-			{
-				long oldValue = this.Id;
-				if (oldValue != value)
-				{
-					this.OnIdChanging (oldValue, value);
-					this.SetField<long> ("[L0AJJ]", oldValue, value);
-					this.OnIdChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PreviousId</c> field.
-		///	designer:fld/L0AHJ/L0AKJ
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AKJ]")]
-		public long PreviousId
-		{
-			get
-			{
-				return this.GetField<long> ("[L0AKJ]");
-			}
-			set
-			{
-				long oldValue = this.PreviousId;
-				if (oldValue != value)
-				{
-					this.OnPreviousIdChanging (oldValue, value);
-					this.SetField<long> ("[L0AKJ]", oldValue, value);
-					this.OnPreviousIdChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Edge</c> field.
 		///	designer:fld/L0AHJ/L0AIJ
 		///	</summary>
@@ -10737,13 +10102,129 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Date</c> field.
+		///	designer:fld/L0AHJ/L0A0K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0K]")]
+		public global::System.DateTime Date
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime> ("[L0A0K]");
+			}
+			set
+			{
+				global::System.DateTime oldValue = this.Date;
+				if (oldValue != value)
+				{
+					this.OnDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime> ("[L0A0K]", oldValue, value);
+					this.OnDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>User</c> field.
+		///	designer:fld/L0AHJ/L0A1K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A1K]")]
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity User
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0A1K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue = this.User;
+				if (oldValue != value)
+				{
+					this.OnUserChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0A1K]", oldValue, value);
+					this.OnUserChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Owner</c> field.
+		///	designer:fld/L0AHJ/L0A2K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2K]")]
+		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity Owner
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A2K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Owner;
+				if (oldValue != value)
+				{
+					this.OnOwnerChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A2K]", oldValue, value);
+					this.OnOwnerChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RelationContact</c> field.
+		///	designer:fld/L0AHJ/L0A3K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A3K]")]
+		public global::Epsitec.Cresus.Core.Entities.AbstractContactEntity RelationContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractContactEntity> ("[L0A3K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue = this.RelationContact;
+				if (oldValue != value)
+				{
+					this.OnRelationContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractContactEntity> ("[L0A3K]", oldValue, value);
+					this.OnRelationContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RelationPerson</c> field.
+		///	designer:fld/L0AHJ/L0A4K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A4K]")]
+		public global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity RelationPerson
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0A4K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.RelationPerson;
+				if (oldValue != value)
+				{
+					this.OnRelationPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0A4K]", oldValue, value);
+					this.OnRelationPersonChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnIdChanging(long oldValue, long newValue);
-		partial void OnIdChanged(long oldValue, long newValue);
-		partial void OnPreviousIdChanging(long oldValue, long newValue);
-		partial void OnPreviousIdChanged(long oldValue, long newValue);
 		partial void OnEdgeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
 		partial void OnEdgeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
+		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnUserChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
+		partial void OnUserChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
+		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnRelationContactChanging(global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractContactEntity newValue);
+		partial void OnRelationContactChanged(global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractContactEntity newValue);
+		partial void OnRelationPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
+		partial void OnRelationPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10769,6 +10250,84 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowThreadEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
+		///	The <c>Documents</c> field.
+		///	designer:fld/L0AMJ/L0A5K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A5K]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentEntity> Documents
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0A5K]");
+			}
+		}
+		///	<summary>
+		///	The <c>Status</c> field.
+		///	designer:fld/L0AMJ/L0A8K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A8K]")]
+		public global::Epsitec.Cresus.Core.Business.WorkflowStatus Status
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0A8K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
+				if (oldValue != value)
+				{
+					this.OnStatusChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0A8K]", oldValue, value);
+					this.OnStatusChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Definition</c> field.
+		///	designer:fld/L0AMJ/L0A6K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A6K]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity Definition
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0A6K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue = this.Definition;
+				if (oldValue != value)
+				{
+					this.OnDefinitionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0A6K]", oldValue, value);
+					this.OnDefinitionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LaunchStep</c> field.
+		///	designer:fld/L0AMJ/L0A7K
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7K]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity LaunchStep
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity> ("[L0A7K]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue = this.LaunchStep;
+				if (oldValue != value)
+				{
+					this.OnLaunchStepChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity> ("[L0A7K]", oldValue, value);
+					this.OnLaunchStepChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>History</c> field.
 		///	designer:fld/L0AMJ/L0ANJ
 		///	</summary>
@@ -10781,42 +10340,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ActiveNode</c> field.
-		///	designer:fld/L0AMJ/L0AOJ
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AOJ]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity ActiveNode
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AOJ]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.ActiveNode;
-				if (oldValue != value)
-				{
-					this.OnActiveNodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AOJ]", oldValue, value);
-					this.OnActiveNodeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>CallGraph</c> field.
 		///	designer:fld/L0AMJ/L0APJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0APJ]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> CallGraph
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity> CallGraph
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0APJ]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity> ("[L0APJ]");
 			}
 		}
 		
-		partial void OnActiveNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
-		partial void OnActiveNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnLaunchStepChanging(global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity newValue);
+		partial void OnLaunchStepChanged(global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10828,6 +10369,43 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 630);	// [L0AMJ]
 		public static readonly new string EntityStructuredTypeKey = "[L0AMJ]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.WorkflowCall Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>WorkflowCall</c> entity.
+	///	designer:cap/L0AUJ
+	///	</summary>
+	public partial class WorkflowCallEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>ReturnEdges</c> field.
+		///	designer:fld/L0AUJ/L0AVJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVJ]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ReturnEdges
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0AVJ]");
+			}
+		}
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 638);	// [L0AUJ]
+		public static readonly new string EntityStructuredTypeKey = "[L0AUJ]";
 	}
 }
 #endregion

@@ -158,8 +158,8 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
-    <Compile Include="Entities\WorkflowEntity.cs" />
-    <Compile Include="Entities\WorkflowEventEntity.cs" />
+    <Compile Include="Entities\WorkflowThreadEntity.cs" />
+    <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\EntityStatusHelper.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
@@ -307,7 +307,6 @@
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionInvoiceDocumentViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionBusinessEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
@@ -399,7 +398,7 @@
     <Compile Include="Printers\TextBand.cs" />
     <Compile Include="Printers\RelationEntityPrinter.cs" />
     <Compile Include="Printers\PrintEngine.cs" />
-    <Compile Include="Repositories\CaseEventTypeRepository.cs" />
+    <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
     <Compile Include="Painter.cs" />
