@@ -26,7 +26,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A52]", typeof (Epsitec.Cresus.Core.Entities.UriContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A62]", typeof (Epsitec.Cresus.Core.Entities.UriSchemeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AB2]", typeof (Epsitec.Cresus.Core.Entities.RelationEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AO2]", typeof (Epsitec.Cresus.Core.Entities.DocumentEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AO2]", typeof (Epsitec.Cresus.Core.Entities.DocumentMetadataEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A63]", typeof (Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AA3]", typeof (Epsitec.Cresus.Core.Entities.ArticleGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AF3]", typeof (Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity))]
@@ -2230,14 +2230,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.Document Entity
+#region Epsitec.Cresus.Core.DocumentMetadata Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>Document</c> entity.
+	///	The <c>DocumentMetadata</c> entity.
 	///	designer:cap/L0AO2
 	///	</summary>
-	public partial class DocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class DocumentMetadataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -2539,11 +2539,11 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.DocumentEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.DocumentEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 88);	// [L0AO2]
 		public static readonly new string EntityStructuredTypeKey = "[L0AO2]";
