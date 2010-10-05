@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ExecuteNewOffer()
 		{
-			var workflow       = this.BusinessContext.CreateEntity<WorkflowEntity> ();
+			var workflow       = this.Entity.Workflow.UnwrapNullEntity () ?? this.BusinessContext.CreateEntity<WorkflowEntity> ();
 			var workflowThread = this.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
 			var workflowStep   = this.BusinessContext.CreateEntity<WorkflowStepEntity> ();
 			var document       = this.BusinessContext.CreateEntity<BusinessDocumentEntity> ();
@@ -123,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.DataContext.UpdateEmptyEntityStatus (workflowThread, false);
 			this.DataContext.UpdateEmptyEntityStatus (workflowStep, false);
 
-			this.Entity.Workflows.Add (workflow);
+			this.Entity.Workflow = workflow;
 
 			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
 		}

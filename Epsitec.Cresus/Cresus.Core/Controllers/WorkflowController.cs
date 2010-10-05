@@ -144,29 +144,56 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<WorkflowEdge> GetBusinessContextStartingEdges(BusinessContext context)
 		{
-			return from def in this.GetBusinessContextWorkflowDefs (context).Distinct ()
-				   from edge in def.StartingEdges
-				   select new WorkflowEdge (context, def, edge);
+			return from workflow in this.GetBusinessContextWorkflows (context).Distinct ()
+				   from thread in workflow.Threads
+				   from edge in this.GetPossibleEdges (thread)
+				   select new WorkflowEdge (context, workflow, thread, edge);
 		}
 
-		private IEnumerable<WorkflowDefinitionEntity> GetBusinessContextWorkflowDefs(BusinessContext context)
+		private IEnumerable<WorkflowEntity> GetBusinessContextWorkflows(BusinessContext context)
 		{
 			if (context ==  null)
 			{
 				yield break;
 			}
 
-			foreach (var masterEntity in context.GetMasterEntities ())
+			foreach (var masterEntity in context.GetMasterEntities ().OfType <IWorkflowHost> ())
 			{
-				string typeKey = string.Concat ("MasterEntity=", masterEntity.GetEntityStructuredTypeKey ());
+				var workflow = masterEntity.Workflow;
 
-				foreach (var workflowDef in this.workflowDefs)
-				{
-					if (workflowDef.CheckEnableCondition (typeKey))
-                    {
-						yield return workflowDef;
-                    }
-				}
+				if (workflow.IsNull ())
+                {
+					continue;
+                }
+
+				yield return workflow;
+			}
+		}
+
+		private IEnumerable<WorkflowEdgeEntity> GetPossibleEdges(WorkflowThreadEntity thread)
+		{
+			int lastIndex = thread.History.Count - 1;
+
+			if (lastIndex < 0)
+			{
+				return thread.Definition.StartingEdges;
+			}
+			else
+			{
+				return this.GetPossibleEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.StartingEdges;
+			}
+		}
+
+		private IEnumerable<WorkflowEdgeEntity> GetPossibleEdges(WorkflowNodeEntity node)
+		{
+			if ((node.IsNull ()) ||
+				(node.Edges.Count == 0))
+			{
+				return null;
+			}
+			else
+			{
+				return node.Edges;
 			}
 		}
 

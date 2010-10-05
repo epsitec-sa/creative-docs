@@ -14,14 +14,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AffairEntity
 	{
-		public WorkflowEntity RootWorkflow
-		{
-			get
-			{
-				return this.Workflows.FirstOrDefault ().WrapNullEntity ();
-			}
-		}
-
 		public IList<BusinessDocumentEntity> WorkflowDocuments
 		{
 			get
@@ -29,7 +21,7 @@ namespace Epsitec.Cresus.Core.Entities
 				if (this.documents == null)
                 {
 					this.documents = new ObservableList<BusinessDocumentEntity> ();
-					this.documents.AddRange (this.Workflows.SelectMany (workflow => workflow.Threads).SelectMany (thread => thread.ActiveDocuments).Select (x => x.BusinessDocument).Where (x => x.IsNotNull ()).Distinct ());
+					this.documents.AddRange (this.Workflow.Threads.SelectMany (thread => thread.ActiveDocuments).Select (x => x.BusinessDocument).Where (x => x.IsNotNull ()).Distinct ());
                 }
 
 				//	TODO : refresh this list when changes happen
@@ -41,15 +33,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			var root = this.RootWorkflow;
-
-			if (root.IsNull ())
+			if (this.Workflow.IsNull ())
 			{
 				return TextFormatter.FormatText (this.IdA);
 			}
 			else
 			{
-				var date = Misc.GetDateTimeShortDescription (root.Threads[0].History[0].Date);
+				var date = Misc.GetDateTimeShortDescription (this.Workflow.Threads[0].History[0].Date);
 				return TextFormatter.FormatText (this.IdA, " - ", date, "(", this.Documents.Count, "doc.)");
 			}
 		}
