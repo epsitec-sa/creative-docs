@@ -463,12 +463,15 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.GenerateTiles ();
 				};
 
-				tile.RemoveClicked += sender =>
+				if (item.DeleteItem != null)
 				{
-					this.controller.Orchestrator.CloseSubViews (this.controller);
-					item.DeleteItem ();
-					this.GenerateTiles ();
-				};
+					tile.RemoveClicked += sender =>
+					{
+						this.controller.Orchestrator.CloseSubViews (this.controller);
+						item.DeleteItem ();
+						this.GenerateTiles ();
+					};
+				}
 
 				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
 				item.SummaryTile = tile;
