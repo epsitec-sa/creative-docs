@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
 			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
-			this.optionsContainer.Visibility = false;
+			this.optionsContainer.Visibility = FileSaveImageDialog.showOptions;
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 
@@ -175,7 +175,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.optionsExtend.GlyphShape = this.optionsContainer.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 			}
 
-
 			this.UpdateZoom ();
 		}
 
@@ -194,6 +193,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
+			FileSaveImageDialog.showOptions = this.optionsContainer.Visibility;
+
 			this.UpdateOptions();
 		}
 
@@ -267,6 +268,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private static string initialDirectory = null;
 		private static string initialFilename = null;
 		private static double zoom = 1;
+		private static bool showOptions = true;
 
 		private readonly DesignerApplication designerApplication;
 
