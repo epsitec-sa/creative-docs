@@ -80,6 +80,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\FileSaveImageDialog.cs" />
     <Compile Include="Dialogs\LabelReplacement.cs" />
     <Compile Include="Dialogs\EntityField.cs" />
     <Compile Include="Dialogs\InitialMessage.cs" />
