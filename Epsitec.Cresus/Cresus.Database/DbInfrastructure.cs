@@ -980,6 +980,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbTable ResolveDbTable(Druid tableId)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadOnly))
+			{
+				DbTable table = this.ResolveDbTable (transaction, tableId);
+
+				transaction.Commit ();
+
+				return table;
+			}
+		}
+		
 		/// <summary>
 		/// Resolves the database table definition with the specified id. This
 		/// will return the same object when called multiple times with the same
@@ -1064,6 +1076,16 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public void RegisterColumnRelations(DbTable table)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadWrite))
+			{
+				this.RegisterColumnRelations (transaction, table);
+
+				transaction.Commit ();
+			}
+		}
+
 		/// <summary>
 		/// Registers the column relations by generating the associated database
 		/// metadata. Every foreign key found in the table generates one relation.
@@ -1130,6 +1152,7 @@ namespace Epsitec.Cresus.Database
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.RegisterNewDbType (transaction, typeDef);
+
 				transaction.Commit ();
 			}
 		}
@@ -1239,6 +1262,18 @@ namespace Epsitec.Cresus.Database
 			value = this.ResolveDbType (transaction, key);
 			
 			return value;
+		}
+
+		public DbTypeDef ResolveDbType(INamedType type)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef typeDef = this.ResolveDbType (transaction, type);
+
+				transaction.Commit ();
+
+				return typeDef;
+			}
 		}
 
 		/// <summary>
