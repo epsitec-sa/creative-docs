@@ -37,6 +37,16 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public static EntityStatus TreatAsOptional(this EntityStatus status)
+		{
+			if ((status & EntityStatus.Empty) != 0)
+			{
+				status |= EntityStatus.Valid;
+			}
+
+			return status;
+		}
+
 
 		public static bool IsEmpty(this AddressEntity entity)
 		{

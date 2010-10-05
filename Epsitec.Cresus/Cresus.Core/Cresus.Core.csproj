@@ -163,7 +163,6 @@
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
-    <Compile Include="Helpers\EntityStatusHelper.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
