@@ -76,30 +76,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (createTable)
 			{
-				IEnumerable<DbTable> newTables;
-
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					newTables = this.SchemaBuilder.CreateSchema (transaction, entityId);
+					this.SchemaBuilder.RegisterSchema (entityId);
 
 					transaction.Commit ();
 				}
 
-				foreach (DbTable table in newTables)
-				{
-					Druid id = table.CaptionId;
-
-					this.AddTableDefinitionToCache (id, table);
-				}
-
-				//using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-				//{
-				//    this.SchemaBuilder.CreateSchema (entityId);
-
-				//    transaction.Commit ();
-				//}
-
-				//this.LoadSchema (entityId);
+				this.LoadSchema (entityId);
 			}
 
 			return createTable;
