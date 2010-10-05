@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Collections
 	/// <c>IEnumerable</c> interfaces for an empty collection.
 	/// </summary>
 	/// <typeparam name="T">Item type</typeparam>
-	public sealed class EmptyEnumerable<T> : IEnumerable<T>, IEnumerator<T>
+	public sealed class EmptyEnumerable<T> : IEnumerable<T>
 	{
 		private EmptyEnumerable()
 		{
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return this;
+			return EmptyEnumerator<T>.Instance;
 		}
 
 		#endregion
@@ -29,48 +29,7 @@ namespace Epsitec.Common.Types.Collections
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this;
-		}
-
-		#endregion
-
-		#region IEnumerator<T> Members
-
-		public T Current
-		{
-			get
-			{
-				throw new System.InvalidOperationException ("No current value exists");
-			}
-		}
-
-		#endregion
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-		}
-
-		#endregion
-
-		#region IEnumerator Members
-
-		object System.Collections.IEnumerator.Current
-		{
-			get
-			{
-				return this.Current;
-			}
-		}
-
-		public bool MoveNext()
-		{
-			return false;
-		}
-
-		public void Reset()
-		{
+			return EmptyEnumerator<T>.Instance;
 		}
 
 		#endregion

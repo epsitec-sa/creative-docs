@@ -1,17 +1,17 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Update()
 		{
 			this.MakeReady ();
-			this.UpdateActiveEdges ();
+			this.UpdateEnabledEdges ();
 			this.isDirty = false;
 		}
 
@@ -83,10 +83,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreApplication.QueueTasklets ("WorkflowController.Update", new TaskletJob (() => this.Update (), TaskletRunMode.Async));
 		}
 
-		private void UpdateActiveEdges()
+		private void UpdateEnabledEdges()
 		{
 			this.activeEdges.Clear ();
-			this.activeEdges.AddRange (this.GetStartingEdges ());
+			this.activeEdges.AddRange (this.GetEnabledEdges ());
 
 			var mainViewController   = this.orchestrator.MainViewController;
 			var actionViewController = mainViewController.ActionViewController;
@@ -122,6 +122,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var engine = new WorkflowExecutionEngine (this, edge);
 			engine.Execute ();
+			
+			orchestrator.Navigator.PreserveNavigation (() => orchestrator.ClearActiveEntity ());
 		}
 		
 		private void UpdateWorkflowDefs()
@@ -135,42 +137,36 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.MakeDirty ();
 		}
 
-		private IEnumerable<WorkflowEdge> GetStartingEdges()
+		private IEnumerable<WorkflowEdge> GetEnabledEdges()
 		{
 			return from context in this.businessContexts
-				   from edge in this.GetBusinessContextStartingEdges (context)
+				   from edge in WorkflowController.GetEnabledEdges (context)
 				   select edge;
 		}
 
-		private IEnumerable<WorkflowEdge> GetBusinessContextStartingEdges(BusinessContext context)
+		
+		private static IEnumerable<WorkflowEdge> GetEnabledEdges(BusinessContext context)
 		{
-			return from workflow in this.GetBusinessContextWorkflows (context).Distinct ()
+			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
 				   from thread in workflow.Threads
-				   from edge in this.GetPossibleEdges (thread)
+				   from edge in WorkflowController.GetEnabledEdges (thread)
 				   select new WorkflowEdge (context, workflow, thread, edge);
 		}
 
-		private IEnumerable<WorkflowEntity> GetBusinessContextWorkflows(BusinessContext context)
+		private static IEnumerable<WorkflowEntity> GetEnabledWorkflows(BusinessContext context)
 		{
-			if (context ==  null)
+			if (context == null)
 			{
-				yield break;
+				return EmptyEnumerable<WorkflowEntity>.Instance;
 			}
 
-			foreach (var masterEntity in context.GetMasterEntities ().OfType <IWorkflowHost> ())
-			{
-				var workflow = masterEntity.Workflow;
-
-				if (workflow.IsNull ())
-                {
-					continue;
-                }
-
-				yield return workflow;
-			}
+			return from workflowHost in context.GetMasterEntities ().OfType<IWorkflowHost> ()
+				   let workflow = workflowHost.Workflow
+				   where workflow.IsNotNull ()
+				   select workflow;
 		}
 
-		private IEnumerable<WorkflowEdgeEntity> GetPossibleEdges(WorkflowThreadEntity thread)
+		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowThreadEntity thread)
 		{
 			int lastIndex = thread.History.Count - 1;
 
@@ -180,11 +176,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				return this.GetPossibleEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.StartingEdges;
+				return WorkflowController.GetEnabledEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.StartingEdges;
 			}
 		}
 
-		private IEnumerable<WorkflowEdgeEntity> GetPossibleEdges(WorkflowNodeEntity node)
+		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowNodeEntity node)
 		{
 			if ((node.IsNull ()) ||
 				(node.Edges.Count == 0))

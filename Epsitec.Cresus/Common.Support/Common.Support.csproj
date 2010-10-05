@@ -252,7 +252,6 @@
     <Compile Include="Data\ITextArrayStore.cs" />
     <Compile Include="Data\NullStore.cs" />
     <Compile Include="Data\StringArrayStore.cs" />
-    <Compile Include="EmptyEnumerator.cs" />
     <Compile Include="FileInfoIconSize.cs" />
     <Compile Include="FileInfoIconSelection.cs" />
     <Compile Include="FileManager.cs" />
