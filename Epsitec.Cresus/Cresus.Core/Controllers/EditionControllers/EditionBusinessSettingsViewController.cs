@@ -38,11 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Valid;
-		}
-
 		private void CreateUITax(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();

@@ -34,20 +34,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			var entity = this.Entity;
-			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
-		}
-
-		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
-		{
-			var entity = this.Entity;
-			
-			context.UpdateEmptyEntityStatus (entity, isEmpty);
-			context.UpdateEmptyEntityStatus (entity.Person, isEmpty);
-		}
-
 		private void CreateUIRelation(SummaryDataItems data)
 		{
 			data.Add (

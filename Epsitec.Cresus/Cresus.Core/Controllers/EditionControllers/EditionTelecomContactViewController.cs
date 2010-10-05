@@ -80,25 +80,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (string.IsNullOrEmpty (this.Entity.Number) &&
-				string.IsNullOrEmpty (this.Entity.Extension))
-			{
-				return EditionStatus.Empty;
-			}
-
-			if (string.IsNullOrEmpty (this.Entity.Number) &&
-				!string.IsNullOrEmpty (this.Entity.Extension))
-			{
-				return EditionStatus.Invalid;
-			}
-
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-			return EditionStatus.Valid;
-		}
 	}
 }

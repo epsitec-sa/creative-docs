@@ -50,11 +50,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 80, "Montant de base HT", Marshaler.Create (() => this.Entity.BaseAmount, x => this.Entity.BaseAmount = x));
 			builder.CreateTextField (tile, 80, "TVA due",            Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Valid;
-		}
 	}
 }

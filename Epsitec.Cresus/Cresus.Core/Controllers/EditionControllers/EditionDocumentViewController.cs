@@ -38,19 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (this.Entity.Description.IsNullOrEmpty)
-			{
-				return EditionStatus.Empty;
-			}
-
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-			return EditionStatus.Valid;
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

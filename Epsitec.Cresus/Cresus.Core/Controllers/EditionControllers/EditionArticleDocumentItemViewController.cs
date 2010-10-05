@@ -388,13 +388,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Valid;
-		}
-
-
-
 		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.

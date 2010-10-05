@@ -55,17 +55,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile, 150, "Compte entrant pour la comptabilisation", Marshaler.Create (() => this.Entity.IncomingBookAccount, x => this.Entity.IncomingBookAccount = x));
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (string.IsNullOrWhiteSpace (this.Entity.SubscriberNumber) ||
-				string.IsNullOrWhiteSpace (this.Entity.BankReferenceNumberPrefix))
-			{
-				return EditionStatus.Empty;
-			}
-
-			return EditionStatus.Valid;
-		}
 	}
 }

@@ -34,18 +34,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (this.Entity.IsEmpty ())
-			{
-				return EditionStatus.Empty;
-			}
-			else
-			{
-				return EditionStatus.Valid;
-			}
-		}
-
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
