@@ -1,3 +1,6 @@
+//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
