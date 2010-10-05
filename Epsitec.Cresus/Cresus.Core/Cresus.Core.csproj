@@ -138,6 +138,8 @@
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\ArticlePriceGroupEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
