@@ -47,7 +47,73 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
-		
+
+		[TestMethod]
+		public void TmpCheck1()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+
+			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+			Druid entityId = Druid.Parse ("[L0A62]");
+			
+			Assert.IsFalse (builder.CheckSchema (entityId));
+
+			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				builder.CreateSchema (transaction, entityId);
+
+				transaction.Commit ();
+			}
+
+			Assert.IsTrue (builder.CheckSchema (entityId));
+		}
+
+
+		[TestMethod]
+		public void TmpCheck2()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+
+			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+			Druid entityId = Druid.Parse ("[L0A5]");
+			
+			Assert.IsFalse (builder.CheckSchema (entityId));
+
+			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				builder.CreateSchema (transaction, entityId);
+
+				transaction.Commit ();
+			}
+
+			Assert.IsTrue (builder.CheckSchema (entityId));
+		}
+
+
+		[TestMethod]
+		public void TmpCheck3()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+
+			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+			Druid entityId = Druid.Parse ("[L0AQ]");
+
+			Assert.IsFalse (builder.CheckSchema (entityId));
+
+			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				builder.CreateSchema (transaction, entityId);
+
+				transaction.Commit ();
+			}
+
+			Assert.IsTrue (builder.CheckSchema (entityId));
+		}
+
+
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void SchemaBuilderConstructorTest()
@@ -322,7 +388,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 					transaction.Commit ();
 				}
 
-				Assert.IsTrue (tables1 .Except (tables2).Count () == 0);
+				Assert.IsTrue (tables1.Except (tables2).Count () == 0);
 				Assert.IsTrue (tables2.Except (tables1).Count () == 0);
 
 				DatabaseHelper.CreateAndConnectToDatabase ();

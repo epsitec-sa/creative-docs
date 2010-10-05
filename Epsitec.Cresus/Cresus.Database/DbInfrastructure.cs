@@ -1423,8 +1423,8 @@ namespace Epsitec.Cresus.Database
 			{
 				IsAutoIncremented = autoIncrementedId,
 			};
-			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
-			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
+			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
 
 			table.DefineCategory (category);
 			table.DefineRevisionMode (revisionMode);
@@ -1434,6 +1434,7 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (colLog);
 
 			table.PrimaryKeys.Add (colId);
+			table.UpdatePrimaryKeyInfo ();
 		}
 
 		/// <summary>

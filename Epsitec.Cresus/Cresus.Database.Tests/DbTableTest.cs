@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable  sourceTable = new DbTable ("A");
 			DbTable  targetTable = new DbTable ("B");
-			DbColumn sourceColumn = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), targetTable, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn sourceColumn = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), targetTable, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 
 			Assert.AreEqual ("1234", sourceColumn.Name);
 

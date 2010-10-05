@@ -10,6 +10,8 @@ using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Schema
 {
@@ -44,6 +46,147 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			get;
 			set;
+		}
+
+
+		public void CreateSchema(Druid entityId)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+
+		public bool CheckSchema(Druid entityId)
+		{
+			IDictionary<Druid, DbTable> newTables;
+			IDictionary<Druid, DbTypeDef> newTypes;
+
+			this.BuildDbTable (entityId, out newTables, out newTypes);
+
+			return this.CheckSchema (newTables.Values.ToList ());
+		}
+
+
+		private DbTable BuildDbTable(Druid entityId, out IDictionary<Druid, DbTable> newTables, out IDictionary<Druid, DbTypeDef> newTypes)
+		{
+			newTables = new Dictionary<Druid, DbTable> ();
+			newTypes = new Dictionary<Druid, DbTypeDef> ();
+
+			return this.BuildDbTable (entityId, newTables, newTypes);
+		}
+
+
+		private DbTable BuildDbTable(Druid entityId, IDictionary<Druid, DbTable> newTables, IDictionary<Druid,DbTypeDef> newTypes)
+		{
+			if (!newTables.ContainsKey (entityId))
+			{
+				ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
+				StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
+
+				if (entityType == null)
+				{
+					throw new System.ArgumentException ("Invalid entity ID", "entityId");
+				}
+
+				bool isRootTable = entityType.BaseTypeId.IsEmpty;
+
+				DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges, isRootTable);
+				table.Comment = table.DisplayName;
+
+				newTables[entityId] = table;
+
+				if (isRootTable)
+				{
+					//	If this entity has no parent in the class hierarchy, then we
+					//	need to add a special identification column, which can be used
+					//	to map a row to its proper derived entity class.
+
+					DbTypeDef typeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
+					DbColumn column = new DbColumn (Tags.ColumnInstanceType, typeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
+
+					table.Columns.Add (column);
+				}
+				else
+				{
+					this.BuildDbTable (entityType.BaseTypeId, newTables, newTypes);
+				}
+
+				//	For every locally defined field (this includes field inserted
+				//	through an interface, possibly locally overridden), create a
+				//	column in the table.
+
+				foreach (StructuredTypeField field in entityType.Fields.Values)
+				{
+					if (field.Membership == FieldMembership.Local || field.Membership == FieldMembership.LocalOverride)
+					{
+						if (field.Source == FieldSource.Value)
+						{
+							DbColumn column = this.BuildColumn (newTables, newTypes, field);
+
+							table.Columns.Add (column);
+						}
+					}
+				}
+			}
+
+			return newTables[entityId];
+		}
+
+
+		private DbColumn BuildColumn(IDictionary<Druid, DbTable> newTables, IDictionary<Druid, DbTypeDef> newTypes, StructuredTypeField field)
+		{
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+					return this.BuildDataColumn (newTypes, field);
+
+				case FieldRelation.Reference:
+					return this.BuildRelationColumn (newTables, newTypes, field, DbCardinality.Reference);
+
+				case FieldRelation.Collection:
+					return this.BuildRelationColumn (newTables, newTypes, field, DbCardinality.Collection);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private DbColumn BuildDataColumn(IDictionary<Druid,DbTypeDef> newTypes, StructuredTypeField field)
+		{
+			DbTypeDef typeDef = this.BuildDbTypeDef (newTypes, field.Type);
+			DbColumn column = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+
+			column.Comment = column.DisplayName;
+			column.IsNullable = field.IsNullable;
+
+			return column;
+		}
+
+
+		private DbColumn BuildRelationColumn(IDictionary<Druid, DbTable> newTables, IDictionary<Druid, DbTypeDef> newTypes, StructuredTypeField field, DbCardinality cardinality)
+		{
+			DbTable target = this.BuildDbTable (field.TypeId, newTables, newTypes);
+
+			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
+
+			return column;
+		}
+
+
+		private DbTypeDef BuildDbTypeDef(IDictionary<Druid,DbTypeDef> newTypes, INamedType type)
+		{
+			if (!newTypes.ContainsKey (type.CaptionId))
+			{
+				newTypes[type.CaptionId] = new DbTypeDef (type);
+			}
+
+			return newTypes[type.CaptionId];
+		}
+
+
+		private bool CheckSchema(List<DbTable> schema)
+		{
+			return DbSchemaChecker.CheckSchema (this.DbInfrastructure, schema);
 		}
 
 
@@ -94,10 +237,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			// look in the database. Again, if we have nothing in the database, we go on and create
 			// the DbTable.
 			// Marc
-			
+
 			return this.LookForTableInCache (entityId)
-				?? this.LookForTableInDatabase (transaction, entityId)
-				?? this.BuildTable (transaction, newTables, entityId);
+		        ?? this.LookForTableInDatabase (transaction, entityId)
+		        ?? this.BuildTable (transaction, newTables, entityId);
 		}
 
 
@@ -112,7 +255,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbTable table;
 
 			this.tableCache.TryGetValue (entityId, out table);
-			
+
 			return table;
 		}
 
@@ -154,9 +297,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				throw new System.ArgumentException ("Invalid entity ID", "entityId");
 			}
-			
+
 			bool isRootTable = entityType.BaseTypeId.IsEmpty;
-			
+
 			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges, isRootTable);
 			table.Comment = table.DisplayName;
 
@@ -213,11 +356,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				case FieldRelation.None:
 					this.CreateDataColumn (transaction, table, field);
 					break;
-				
+
 				case FieldRelation.Reference:
 					this.CreateRelationColumn (transaction, newTables, table, field, DbCardinality.Reference);
 					break;
-				
+
 				case FieldRelation.Collection:
 					this.CreateRelationColumn (transaction, newTables, table, field, DbCardinality.Collection);
 					break;
@@ -259,9 +402,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			cardinality.ThrowIf (c => c == DbCardinality.None, "cardinality cannot be 'none'");
 			field.ThrowIf (f => !f.CaptionId.IsValid, "field caption must be valid");
 			field.ThrowIf (f => !(f.Type is StructuredType), "field must be of type StructuredType");
-			
+
 			DbTable target = this.GetOrCreateTable (transaction, newTables, field.TypeId);
-			DbColumn column = DbTable.CreateRelationColumn (transaction, this.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
+			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 
 			table.Columns.Add (column);
 		}
@@ -284,8 +427,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			// Marc
 
 			DbTypeDef typeDef = this.LookForTypeDefInCache (type)
-				?? this.LookForTypeDefInDatabase (transaction, type)
-				?? this.BuildTypeDef (transaction, type);
+		        ?? this.LookForTypeDefInDatabase (transaction, type)
+		        ?? this.BuildTypeDef (transaction, type);
 
 			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!typeDef.Key.IsEmpty);

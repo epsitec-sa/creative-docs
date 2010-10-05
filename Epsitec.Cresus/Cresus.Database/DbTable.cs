@@ -827,6 +827,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
 			DbTools.WriteAttribute (xmlWriter, "rstn", DbTools.StringToString (this.relationSourceTableName));
 			DbTools.WriteAttribute (xmlWriter, "rttn", DbTools.StringToString (this.relationTargetTableName));
+			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.Comment));
 
 			xmlWriter.WriteEndElement ();
 		}
@@ -966,6 +967,7 @@ namespace Epsitec.Cresus.Database
 				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
 				table.relationTargetTableName = DbTools.ParseString (xmlReader.GetAttribute ("rttn"));
 				table.serializedIndexTuples   = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
+				table.Comment				  = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				
 				if (!isEmptyElement)
 				{
@@ -1006,14 +1008,12 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Creates the relation column.
 		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="infrastructure">The database infrastructure.</param>
 		/// <param name="columnCaptionId">The column caption id.</param>
 		/// <param name="targetTable">The target table.</param>
 		/// <param name="revisionMode">The revision mode.</param>
 		/// <param name="cardinality">The cardinality.</param>
 		/// <returns>The column.</returns>
-		public static DbColumn CreateRelationColumn(DbTransaction transaction, DbInfrastructure infrastructure, Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality)
+		public static DbColumn CreateRelationColumn(Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality)
 		{
 			System.Diagnostics.Debug.Assert (targetTable != null);
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
