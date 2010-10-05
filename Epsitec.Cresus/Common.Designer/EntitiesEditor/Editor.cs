@@ -1587,47 +1587,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color colorOver = Color.FromAlphaColor(0.3, adorner.ColorBorder);
 			graphics.RenderSolid(colorOver);
 
-			//	Dessine l'arrière-plan de tous les objets.
-			foreach (AbstractObject obj in this.boxes)
-			{
-				obj.DrawBackground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.connections)
-			{
-				obj.DrawBackground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.infos)
-			{
-				obj.DrawBackground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.comments)
-			{
-				obj.DrawBackground(graphics);
-			}
-
-			//	Dessine l'avant plan tous les objets.
-			foreach (AbstractObject obj in this.boxes)
-			{
-				obj.DrawForeground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.connections)
-			{
-				obj.DrawForeground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.infos)
-			{
-				obj.DrawForeground(graphics);
-			}
-
-			foreach (AbstractObject obj in this.comments)
-			{
-				obj.DrawForeground(graphics);
-			}
+			this.Paint (graphics);
 
 			graphics.Transform = initialTransform;
 
@@ -1636,6 +1596,51 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
+		}
+
+		public void Paint(Graphics graphics)
+		{
+			//	Dessine l'arrière-plan de tous les objets.
+			foreach (AbstractObject obj in this.boxes)
+			{
+				obj.DrawBackground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.connections)
+			{
+				obj.DrawBackground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.infos)
+			{
+				obj.DrawBackground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.comments)
+			{
+				obj.DrawBackground (graphics);
+			}
+
+			//	Dessine l'avant plan tous les objets.
+			foreach (AbstractObject obj in this.boxes)
+			{
+				obj.DrawForeground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.connections)
+			{
+				obj.DrawForeground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.infos)
+			{
+				obj.DrawForeground (graphics);
+			}
+
+			foreach (AbstractObject obj in this.comments)
+			{
+				obj.DrawForeground (graphics);
+			}
 		}
 
 
