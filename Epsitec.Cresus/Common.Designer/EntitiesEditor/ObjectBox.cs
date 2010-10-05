@@ -850,6 +850,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.BackgroundMainColor = MainColor.Grey;
 				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor5)
+				{
+					this.BackgroundMainColor = MainColor.Yellow;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor6)
+				{
+					this.BackgroundMainColor = MainColor.Orange;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor7)
+				{
+					this.BackgroundMainColor = MainColor.Lilac;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor8)
+				{
+					this.BackgroundMainColor = MainColor.Purple;
+				}
 			}
 		}
 
@@ -935,13 +955,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Souris dans le bouton des couleurs ?
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
 				{
-					element = ActiveElement.BoxColor1;
+					element = ActiveElement.BoxColor5;
 					return true;
 				}
 
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
 				{
-					element = ActiveElement.BoxColor2;
+					element = ActiveElement.BoxColor6;
 					return true;
 				}
 
@@ -952,6 +972,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
+				{
+					element = ActiveElement.BoxColor7;
+					return true;
+				}
+
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
+				{
+					element = ActiveElement.BoxColor8;
+					return true;
+				}
+
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
+				{
+					element = ActiveElement.BoxColor1;
+					return true;
+				}
+
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
+				{
+					element = ActiveElement.BoxColor2;
+					return true;
+				}
+
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
 				{
 					element = ActiveElement.BoxColor4;
 					return true;
@@ -2983,20 +3027,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des couleurs.
 			if (this.hilitedElement == ActiveElement.BoxColor1)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Blue, this.boxColor == MainColor.Blue, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Blue, this.boxColor == MainColor.Blue, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.BoxColor2)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Green, this.boxColor == MainColor.Green, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Green, this.boxColor == MainColor.Green, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.BoxColor3)
@@ -3010,11 +3054,47 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.hilitedElement == ActiveElement.BoxColor4)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Grey, this.boxColor == MainColor.Grey, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Grey, this.boxColor == MainColor.Grey, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor5)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor6)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor7)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor8)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
 			}
 
 			if (this.isExtended)
@@ -3065,6 +3145,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.BoxColor2 ||
 						this.hilitedElement == ActiveElement.BoxColor3 ||
 						this.hilitedElement == ActiveElement.BoxColor4 ||
+						this.hilitedElement == ActiveElement.BoxColor5 ||
+						this.hilitedElement == ActiveElement.BoxColor6 ||
+						this.hilitedElement == ActiveElement.BoxColor7 ||
+						this.hilitedElement == ActiveElement.BoxColor8 ||
 						this.hilitedElement == ActiveElement.BoxExtend ||
 						this.hilitedElement == ActiveElement.BoxClose);
 			}

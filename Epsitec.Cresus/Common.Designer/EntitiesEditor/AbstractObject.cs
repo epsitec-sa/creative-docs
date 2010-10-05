@@ -41,6 +41,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxColor2,
 			BoxColor3,
 			BoxColor4,
+			BoxColor5,
+			BoxColor6,
+			BoxColor7,
+			BoxColor8,
 
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
@@ -239,6 +243,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxColor4:
 					return Res.Strings.Entities.Action.BoxColor4;
+
+				case AbstractObject.ActiveElement.BoxColor5:
+					return Res.Strings.Entities.Action.BoxColor5;
+
+				case AbstractObject.ActiveElement.BoxColor6:
+					return Res.Strings.Entities.Action.BoxColor6;
+
+				case AbstractObject.ActiveElement.BoxColor7:
+					return Res.Strings.Entities.Action.BoxColor7;
+
+				case AbstractObject.ActiveElement.BoxColor8:
+					return Res.Strings.Entities.Action.BoxColor8;
 
 				case AbstractObject.ActiveElement.BoxExtend:
 					return Res.Strings.Entities.Action.BoxExtend;
