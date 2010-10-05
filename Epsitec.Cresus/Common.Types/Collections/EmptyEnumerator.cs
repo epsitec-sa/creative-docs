@@ -1,7 +1,7 @@
-//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Support
+namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// La classe EmptyEnumerator implémente un énumérateur par défaut pour

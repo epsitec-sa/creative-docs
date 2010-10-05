@@ -125,6 +125,7 @@
     <Compile Include="Caption.cs" />
     <Compile Include="Collections\AbstractObservableList.cs" />
     <Compile Include="Collections\CircularList.cs" />
+    <Compile Include="Collections\EmptyEnumerator.cs" />
     <Compile Include="Collections\ReadOnlyDictionary.cs" />
     <Compile Include="Collections\Mapper.cs" />
     <Compile Include="Collections\WeakList.cs" />
