@@ -577,4 +577,9 @@
   <data name="Viewers.Types.Summary.Formatted" id="KT2">Formaté</data>
   <data name="Undo.Action.LabelReplacement" id="KU2">Texte de remplacement</data>
   <data name="Undo.Action.Verbosity" id="KV2">Mode de l&amp;apos;étiquette</data>
+  <data name="Entities.Action.SaveBitmap" id="K03">Exporter la vue dans un fichier image bitmap</data>
+  <data name="Entities.Action.BoxColor8" id="K13">Entité violette</data>
+  <data name="Entities.Action.BoxColor5" id="K23">Entité jaune</data>
+  <data name="Entities.Action.BoxColor6" id="K33">Entité orange</data>
+  <data name="Entities.Action.BoxColor7" id="K43">Entité lilas</data>
 </bundle>
