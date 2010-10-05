@@ -223,10 +223,17 @@ namespace Epsitec.Cresus.Core.Business
 		public void SaveChanges()
 		{
 			if (this.ContainsChanges ())
-            {
+			{
+				IEnumerable<AbstractEntity> notYetPersistedEntities = this.dataContext.GetEntities ().Where (x => !this.dataContext.IsPersistent (x));
+
+				foreach (var entity in notYetPersistedEntities)
+				{
+					this.dataContext.UpdateEmptyEntityStatus (entity, entity.IsEntityEmpty);
+				}
+				
 				this.dataContext.SaveChanges ();
 				this.OnContainsChangesChanged ();
-            }
+			}
 		}
 
 		/// <summary>
