@@ -11,30 +11,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ArticleCategoryEntity
+	public partial class ArticlePriceGroupEntity
 	{
-		public override FormattedText GetSummary()
-		{
-			return TextFormatter.FormatText (this.Name);
-		}
-
-		public override FormattedText GetCompactSummary()
-		{
-			return TextFormatter.FormatText (this.Name);
-		}
-
-		public override string[] GetEntityKeywords()
-		{
-			return new string[] { this.Name };
-		}
-
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
+				a.Accumulate (this.Code.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
-				a.Accumulate (this.VatNumber.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.DefaultAccounting.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
 			}
