@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="Ascii85.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="MachineFilePath.cs" />
     <Compile Include="SettingsReader.cs" />
     <Compile Include="CsvFormat.cs" />
     <Compile Include="CsvReader.cs" />
