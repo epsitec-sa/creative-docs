@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Orchestrators;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -26,6 +27,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.businessContexts = new List<BusinessContext> ();
 			this.workflowDefs = new List<WorkflowDefinitionEntity> ();
 			this.activeEdges = new List<WorkflowEdge> ();
+			this.dataContext = this.orchestrator.Data.CreateDataContext ("WorkflowController");
+		}
+
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.orchestrator.Data;
+			}
 		}
 
 
@@ -164,6 +175,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly List<BusinessContext> businessContexts;
 		private readonly List<WorkflowDefinitionEntity> workflowDefs;
 		private readonly List<WorkflowEdge> activeEdges;
+		private readonly DataContext dataContext;
 
 		private bool isReady;
 		private bool isDirty;

@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Business
 			return false;
 		}
 		
-		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
+		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement = null)
 		{
 			System.Diagnostics.Debug.Assert (this.activeEntity == null);
 			System.Diagnostics.Debug.Assert (this.activeNavigationPathElement == null);
@@ -252,20 +252,7 @@ namespace Epsitec.Cresus.Core.Business
 				return entity.WrapNullEntity ();
             }
 
-			if (entity.IsNull ())
-			{
-				return entity;
-			}
-			if (this.dataContext.Contains (entity))
-			{
-				return entity;
-			}
-
-			var key = DataContextPool.Instance.FindEntityKey (entity);
-
-			System.Diagnostics.Debug.Assert (key.HasValue);
-
-			return this.dataContext.ResolveEntity (key) as T;
+			return this.dataContext.GetLocalEntity (entity);
 		}
 
 
@@ -475,7 +462,6 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
 			}
-//-			return this.entityRecords.Select (x => CoreDataLocker.GetLockName (x.DataContext, x.Entity));
 		}
 
 

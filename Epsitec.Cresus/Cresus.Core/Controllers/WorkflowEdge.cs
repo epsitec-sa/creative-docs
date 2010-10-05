@@ -9,35 +9,61 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class WorkflowEdge : System.Tuple<BusinessContext, WorkflowDefinitionEntity, WorkflowEdgeEntity>
+	public class WorkflowEdge
 	{
-		public WorkflowEdge(BusinessContext context, WorkflowDefinitionEntity workflowDef, WorkflowEdgeEntity workflowEdge)
-			: base (context, workflowDef, workflowEdge)
+		public WorkflowEdge(BusinessContext businessContext, WorkflowDefinitionEntity workflowDefinition, WorkflowEdgeEntity workflowEdge)
 		{
+			this.businessContext = businessContext;
+			this.definition = workflowDefinition;
+			this.edge = workflowEdge;
+			this.thread = null;
 		}
 
-		public BusinessContext BusinessContext
+		public WorkflowEdge(BusinessContext businessContext, WorkflowThreadEntity workflowThread, WorkflowEdgeEntity workflowEdge)
+		{
+			this.businessContext = businessContext;
+			this.definition = null;
+			this.edge = workflowEdge;
+			this.thread = workflowThread;
+		}
+
+		
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
-				return base.Item1;
+				return this.businessContext;
 			}
 		}
 
-		public WorkflowDefinitionEntity Definition
+		public WorkflowDefinitionEntity			Definition
 		{
 			get
 			{
-				return base.Item2;
+				return this.definition;
 			}
 		}
 
-		public WorkflowEdgeEntity Edge
+		public WorkflowEdgeEntity				Edge
 		{
 			get
 			{
-				return base.Item3;
+				return this.edge;
 			}
 		}
+
+		public WorkflowThreadEntity				Thread
+		{
+			get
+			{
+				return this.thread;
+			}
+		}
+
+
+		private readonly BusinessContext businessContext;
+		private readonly WorkflowDefinitionEntity definition;
+		private readonly WorkflowEdgeEntity edge;
+		private readonly WorkflowThreadEntity thread;
 	}
 }

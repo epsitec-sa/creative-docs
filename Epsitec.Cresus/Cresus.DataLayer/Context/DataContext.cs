@@ -304,6 +304,33 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
+		/// Gets the local copy of the specified entity. If it already belongs to this <c>DataContext</c>,
+		/// the entity will be returned unchanged. Otherwise, it will be loaded into the context.
+		/// </summary>
+		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The entity, as loaded in the current context.</returns>
+		public T GetLocalEntity<T>(T entity)
+			where T : AbstractEntity, new ()
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return entity;
+			}
+
+			if (this.Contains (entity))
+			{
+				return entity;
+			}
+
+			var key = DataContextPool.Instance.FindEntityKey (entity);
+
+			System.Diagnostics.Debug.Assert (key.HasValue);
+
+			return this.ResolveEntity (key) as T;
+		}
+
+        /// <summary>
 		/// Gets the normalized <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
 		/// Normalized means that the <see cref="Druid"/> of the type is the root type of the
 		/// <see cref="AbstractEntity"/>.

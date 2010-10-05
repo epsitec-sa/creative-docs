@@ -284,6 +284,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public BusinessContext CreateBusinessContext()
+		{
+			return this.businessContextPool.CreateBusinessContext ();
+		}
+
 
 		public AbstractEntity CreateDummyEntity(Druid entityId)
 		{
@@ -592,11 +597,6 @@ namespace Epsitec.Cresus.Core
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;
 		private DataContext activeDataContext;
-
-		public BusinessContext CreateBusinessContext()
-		{
-			return this.businessContextPool.CreateBusinessContext ();
-		}
 	}
 
 	[System.Flags]

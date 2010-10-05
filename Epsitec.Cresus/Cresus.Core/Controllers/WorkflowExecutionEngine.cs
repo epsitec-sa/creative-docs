@@ -50,12 +50,61 @@ namespace Epsitec.Cresus.Core.Controllers
 			try
 			{
 				WorkflowExecutionEngine.current = this;
-				System.Diagnostics.Debug.WriteLine ("Executed " + edge.Edge.TransitionAction);
+				this.ExecuteInContext ();
 			}
 			finally
 			{
 				WorkflowExecutionEngine.current = previousExecutionEngine;
 			}
+		}
+
+		private void ExecuteInContext()
+		{
+			if (this.FollowWorkflowEdge ())
+			{
+				WorkflowEdgeEntity edge = this.edge.Edge;
+				System.Diagnostics.Debug.WriteLine ("Executed " + edge.TransitionAction);
+			}
+		}
+
+		private bool FollowWorkflowEdge()
+		{
+			if (this.edge.Thread != null)
+            {
+				return this.FollowThreadWorkflowEdge (this.edge.Thread, this.edge.Edge);
+            }
+			return false;
+		}
+
+		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, WorkflowEdgeEntity edge)
+		{
+			using (var bc = this.controller.Data.CreateBusinessContext ())
+			{
+				var threadKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (thread);
+
+				bc.SetActiveEntity (threadKey);
+
+				if (bc.AcquireLock ())
+				{
+					thread = bc.GetLocalEntity (thread);
+					edge   = bc.GetLocalEntity (edge);
+
+					var step = bc.CreateEntity<WorkflowStepEntity> ();
+
+					step.Edge  = edge;
+					step.Date  = System.DateTime.UtcNow;
+					step.User  = null; // TODO: ...
+					step.Owner = null; // TODO: ...
+					step.RelationContact = null; // TODO: ...
+					step.RelationPerson  = null; // TODO: ...
+
+					thread.History.Add (step);
+					
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		[System.ThreadStatic]
