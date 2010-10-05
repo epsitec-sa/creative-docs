@@ -14,9 +14,13 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>WorkflowController</c> handles the interaction between a workflow and
+	/// the other view controllers.
+	/// </summary>
 	public class WorkflowController
 	{
-		public WorkflowController(DataViewOrchestrator orchestrator)
+		internal WorkflowController(DataViewOrchestrator orchestrator)
 		{
 			this.orchestrator = orchestrator;
 			this.businessContexts = new List<BusinessContext> ();
@@ -32,13 +36,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.isDirty = false;
 		}
 
-		public void AttachBusinessContext(BusinessContext context)
+		internal void AttachBusinessContext(BusinessContext context)
 		{
 			this.businessContexts.Add (context);
 			context.MasterEntitiesChanged += this.HandleBusinessContextMasterEntitiesChanged;
 		}
 
-		public void DetachBusinessContext(BusinessContext context)
+		internal void DetachBusinessContext(BusinessContext context)
 		{
 			context.MasterEntitiesChanged -= this.HandleBusinessContextMasterEntitiesChanged;
 			this.businessContexts.Remove (context);
@@ -65,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.isDirty = true;
 
-			CoreApplication.QueueTasklets ("Refresh WorkflowController", new TaskletJob (() => this.Update (), TaskletRunMode.Async));
+			CoreApplication.QueueTasklets ("WorkflowController.Update", new TaskletJob (() => this.Update (), TaskletRunMode.Async));
 		}
 
 		private void UpdateActiveEdges()
@@ -73,7 +77,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeEdges.Clear ();
 			this.activeEdges.AddRange (this.GetStartingEdges ());
 
-			var actionViewController = this.orchestrator.MainViewController.ActionViewController;
+			var mainViewController   = this.orchestrator.MainViewController;
+			var actionViewController = mainViewController.ActionViewController;
 
 			actionViewController.ClearButtons ();
 
@@ -81,15 +86,27 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var edge in this.activeEdges)
 			{
-				string id = string.Format ("WorkflowEdge.{0}", index++);
-				var title = edge.Name;
-				var description = edge.Description;
-				actionViewController.AddButton (id, title, description, () => System.Diagnostics.Debug.WriteLine ("Executed " + id));
+				this.CreateActionButton (actionViewController, edge, index++);
 			}
 
-			this.orchestrator.MainViewController.SetActionPanelVisibility (index > 0);
+			mainViewController.SetActionPanelVisibility (index > 0);
 		}
 
+		private void CreateActionButton(ActionViewController actionViewController, WorkflowEdgeEntity edge, int index)
+		{
+			var buttonId    = string.Format ("WorkflowEdge.{0}", index++);
+			var title       = edge.Name;
+			var description = edge.Description;
+			var action      = this.CreateActionCallback (edge);
+
+			actionViewController.AddButton (buttonId, title, description, action);
+		}
+
+		private System.Action CreateActionCallback(WorkflowEdgeEntity edge)
+		{
+			return () => System.Diagnostics.Debug.WriteLine ("Executed " + edge.TransitionAction);
+		}
+		
 		private void UpdateWorkflowDefs()
 		{
 			this.workflowDefs.Clear ();

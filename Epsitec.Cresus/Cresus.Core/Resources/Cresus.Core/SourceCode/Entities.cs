@@ -76,6 +76,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AMJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowThreadEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUJ]", typeof (Epsitec.Cresus.Core.Entities.WorkflowCallEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ADK]", typeof (Epsitec.Cresus.Core.Entities.BusinessDocumentEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A1L]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -8951,11 +8952,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FinanceSettings</c> field.
+		///	The <c>Finance</c> field.
 		///	designer:fld/L0A6H/L0A9H
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A9H]")]
-		public global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity FinanceSettings
+		public global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity Finance
 		{
 			get
 			{
@@ -8963,21 +8964,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue = this.FinanceSettings;
+				global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue = this.Finance;
 				if (oldValue != value)
 				{
-					this.OnFinanceSettingsChanging (oldValue, value);
+					this.OnFinanceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity> ("[L0A9H]", oldValue, value);
-					this.OnFinanceSettingsChanged (oldValue, value);
+					this.OnFinanceChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>TaxSettings</c> field.
+		///	The <c>Tax</c> field.
 		///	designer:fld/L0A6H/L0ACH
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ACH]")]
-		public global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity TaxSettings
+		public global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity Tax
 		{
 			get
 			{
@@ -8985,22 +8986,22 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue = this.TaxSettings;
+				global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue = this.Tax;
 				if (oldValue != value)
 				{
-					this.OnTaxSettingsChanging (oldValue, value);
+					this.OnTaxChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity> ("[L0ACH]", oldValue, value);
-					this.OnTaxSettingsChanged (oldValue, value);
+					this.OnTaxChanged (oldValue, value);
 				}
 			}
 		}
 		
 		partial void OnCompanyChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnCompanyChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
-		partial void OnFinanceSettingsChanging(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
-		partial void OnFinanceSettingsChanged(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
-		partial void OnTaxSettingsChanging(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
-		partial void OnTaxSettingsChanged(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
+		partial void OnFinanceChanging(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
+		partial void OnFinanceChanged(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
+		partial void OnTaxChanging(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
+		partial void OnTaxChanged(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -9059,6 +9060,18 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[L0ATI]");
+			}
+		}
+		///	<summary>
+		///	The <c>SerializedChartsOfAccounts</c> field.
+		///	designer:fld/L0A8H/L0A3L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A3L]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> SerializedChartsOfAccounts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[L0A3L]");
 			}
 		}
 		
@@ -10568,6 +10581,79 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnEndDateChanged(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		static partial void OnEndDateChanging(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.XmlBlob Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>XmlBlob</c> entity.
+	///	designer:cap/L0A1L
+	///	</summary>
+	public partial class XmlBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Id</c> field.
+		///	designer:fld/L0A1L/L0A4L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A4L]")]
+		public string Id
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A4L]");
+			}
+			set
+			{
+				string oldValue = this.Id;
+				if (oldValue != value)
+				{
+					this.OnIdChanging (oldValue, value);
+					this.SetField<string> ("[L0A4L]", oldValue, value);
+					this.OnIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Data</c> field.
+		///	designer:fld/L0A1L/L0A2L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2L]")]
+		public string Data
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A2L]");
+			}
+			set
+			{
+				string oldValue = this.Data;
+				if (oldValue != value)
+				{
+					this.OnDataChanging (oldValue, value);
+					this.SetField<string> ("[L0A2L]", oldValue, value);
+					this.OnDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnIdChanging(string oldValue, string newValue);
+		partial void OnIdChanged(string oldValue, string newValue);
+		partial void OnDataChanging(string oldValue, string newValue);
+		partial void OnDataChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.XmlBlobEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.XmlBlobEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 673);	// [L0A1L]
+		public static readonly new string EntityStructuredTypeKey = "[L0A1L]";
 	}
 }
 #endregion

@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-
 		public void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
 		{
 			var button = new ConfirmationButton

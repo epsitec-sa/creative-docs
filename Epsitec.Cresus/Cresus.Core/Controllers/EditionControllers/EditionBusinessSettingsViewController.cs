@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin                (tile, horizontalSeparator: true);
-			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                   Marshaler.Create (() => this.Entity.TaxSettings.VatNumber, x => this.Entity.TaxSettings.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.TaxSettings.TaxMode, x => this.Entity.TaxSettings.TaxMode = x), Business.Enumerations.GetAllPossibleTaxModes (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                   Marshaler.Create (() => this.Entity.Tax.VatNumber, x => this.Entity.Tax.VatNumber = x));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.Tax.TaxMode, x => this.Entity.Tax.TaxMode = x), Business.Enumerations.GetAllPossibleTaxModes (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
 		private void CreateUIRelation(UIBuilder builder)

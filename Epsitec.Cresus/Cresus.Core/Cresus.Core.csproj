@@ -91,6 +91,9 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
     <Compile Include="Entities\PostBoxEntity.cs" />
@@ -518,6 +522,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
+      <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
       <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
       <Name>Common.Debug</Name>
