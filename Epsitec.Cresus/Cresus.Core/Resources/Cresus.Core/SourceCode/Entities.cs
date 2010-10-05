@@ -1881,8 +1881,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Relation</c> entity.
 	///	designer:cap/L0AB2
 	///	</summary>
-	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber
+	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
 	{
+		#region IWorkflowHost Members
+		///	<summary>
+		///	The <c>Workflow</c> field.
+		///	designer:fld/L0AB2/L0A7L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7L]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowEntity Workflow
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.GetWorkflow (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.SetWorkflow (this, value);
+			}
+		}
+		#endregion
 		#region ILifetime Members
 		///	<summary>
 		///	The <c>IsArchive</c> field.
@@ -4232,8 +4250,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Affair</c> entity.
 	///	designer:cap/L0AD5
 	///	</summary>
-	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber
+	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
 	{
+		#region IWorkflowHost Members
+		///	<summary>
+		///	The <c>Workflow</c> field.
+		///	designer:fld/L0AD5/L0A7L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7L]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowEntity Workflow
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.GetWorkflow (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.SetWorkflow (this, value);
+			}
+		}
+		#endregion
 		#region ILifetime Members
 		///	<summary>
 		///	The <c>IsArchive</c> field.
@@ -4446,18 +4482,6 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> ("[L0AVK]");
-			}
-		}
-		///	<summary>
-		///	The <c>Workflows</c> field.
-		///	designer:fld/L0AD5/L0ACK
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ACK]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> Workflows
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0ACK]");
 			}
 		}
 		
@@ -10654,6 +10678,50 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 673);	// [L0A1L]
 		public static readonly new string EntityStructuredTypeKey = "[L0A1L]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IWorkflowHost Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IWorkflowHost</c> entity.
+	///	designer:cap/L0A6L
+	///	</summary>
+	public interface IWorkflowHost
+	{
+		///	<summary>
+		///	The <c>Workflow</c> field.
+		///	designer:fld/L0A6L/L0A7L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7L]")]
+		global::Epsitec.Cresus.Core.Entities.WorkflowEntity Workflow
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IWorkflowHostInterfaceImplementation
+	{
+		public static global::Epsitec.Cresus.Core.Entities.WorkflowEntity GetWorkflow(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0A7L]");
+		}
+		public static void SetWorkflow(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue = obj.Workflow;
+			if (oldValue != value)
+			{
+				IWorkflowHostInterfaceImplementation.OnWorkflowChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0A7L]", oldValue, value);
+				IWorkflowHostInterfaceImplementation.OnWorkflowChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWorkflowChanged(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEntity newValue);
+		static partial void OnWorkflowChanging(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEntity newValue);
 	}
 }
 #endregion

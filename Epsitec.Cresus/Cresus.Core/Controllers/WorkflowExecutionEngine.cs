@@ -69,16 +69,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool FollowWorkflowEdge()
 		{
-			if (this.edge.Thread != null)
-            {
-				return this.FollowThreadWorkflowEdge (this.edge.Thread, this.edge.Edge);
-            }
-			return false;
+			return WorkflowExecutionEngine.FollowThreadWorkflowEdge (this.controller.Data, this.edge.Thread, this.edge.Edge);
 		}
 
-		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, WorkflowEdgeEntity edge)
+		private static bool FollowThreadWorkflowEdge(CoreData data, WorkflowThreadEntity thread, WorkflowEdgeEntity edge)
 		{
-			using (var bc = this.controller.Data.CreateBusinessContext ())
+			using (var bc = data.CreateBusinessContext ())
 			{
 				var threadKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (thread);
 

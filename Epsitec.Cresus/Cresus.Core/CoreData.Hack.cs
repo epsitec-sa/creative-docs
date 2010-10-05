@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateDatabaseHack()
 		{
+			var workflowDefinitions = this.InsertWorkflowDefinitionsInDatabase ().ToArray ();
+			
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
 			ContactRoleEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
@@ -46,7 +48,6 @@ namespace Epsitec.Cresus.Core
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
 			BusinessDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
-			var workflowDefinitions = this.InsertWorkflowDefinitionsInDatabase ().ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -321,7 +322,7 @@ namespace Epsitec.Cresus.Core
 
 			UriContactEntity uriPA2 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriPA2.NaturalPerson = personPA;
-			uriPA2.Uri = "perre.arnaud@opac.ch";
+			uriPA2.Uri = "pierre.arnaud@opac.ch";
 			uriPA2.UriScheme = uriSchemeMailto;
 			uriPA2.Roles.Add (rolePrive);
 
@@ -360,6 +361,7 @@ namespace Epsitec.Cresus.Core
 				relation.IdA = (id++).ToString ();
 				relation.Person = person;
 				relation.FirstContactDate = Common.Types.Date.Today;
+				relation.Workflow = this.CreateRelationWorkflow ();
 
 				yield return relation;
 			}

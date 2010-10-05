@@ -19,6 +19,19 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData
 	{
+		private WorkflowEntity CreateRelationWorkflow()
+		{
+			var workflow = this.DataContext.CreateEntity<WorkflowEntity> ();
+			var thread   = this.DataContext.CreateEntity<WorkflowThreadEntity> ();
+
+			workflow.Threads.Add (thread);
+
+			thread.Status = WorkflowStatus.Pending;
+			thread.Definition = this.DataContext.GetEntitiesOfType<WorkflowDefinitionEntity> (x => x.EnableCondition == "MasterEntity=[L0AB2]").First ();
+			
+			return workflow;
+		}
+
 		private IEnumerable<WorkflowDefinitionEntity> InsertWorkflowDefinitionsInDatabase()
 		{
 			var def = this.DataContext.CreateEntity<WorkflowDefinitionEntity> ();
@@ -36,6 +49,7 @@ namespace Epsitec.Cresus.Core
 			def.Name = FormattedText.FromSimpleText ("Commande client");
 			def.Description = FormattedText.FromSimpleText ("Workflow pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
 			def.StartingEdges.Add (edgeAB);
+			def.StartingEdges.Add (edgeAC);
 
 			nodeA.Code = "SALES-QUOTE(1)";
 			nodeA.Name = FormattedText.FromSimpleText ("Préparation de l'offre");
@@ -44,10 +58,17 @@ namespace Epsitec.Cresus.Core
 
 			edgeAB.Name = FormattedText.FromSimpleText ("Créer une nouvelle offre");
 			edgeAB.Description = FormattedText.FromSimpleText ("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
-			edgeAB.TransitionAction = "WorkflowAction.NewAffair";
+			edgeAB.TransitionAction = "WorkflowAction.NewAffair WorkflowAction.NewOffer";
 			edgeAB.NextNode = nodeB;
 
+			edgeAC.Name = FormattedText.FromSimpleText ("Créer une variante");
+			edgeAC.Description = FormattedText.FromSimpleText ("Crée une variante d'une offre existante");
+			edgeAC.TransitionAction = "WorkflowAction.NewOfferVariant";
 			edgeAC.NextNode = nodeC;
+
+			edgeCA.Name = FormattedText.FromSimpleText ("Editer la variante");
+			edgeCA.Description = FormattedText.FromSimpleText ("...");
+			edgeCA.TransitionAction = "...";
 			edgeCA.NextNode = nodeA;
 
 			nodeB.Code = "SALES-QUOTE(2)";
