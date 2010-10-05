@@ -29,19 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-
-		/// <summary>
-		/// Gets the edition status of the entity.
-		/// </summary>
-		/// <value>The edition status.</value>
-		public EditionStatus EditionStatus
-		{
-			get
-			{
-				return this.GetEditionStatus ();
-			}
-		}
-
 		public TileContainer TileContainer
 		{
 			get;
@@ -55,9 +42,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public abstract AbstractEntity GetEntity();
 
-		protected virtual EditionStatus GetEditionStatus()
+		protected virtual EntityStatus GetEditionStatus()
 		{
-			return EditionStatus.Unknown;
+			return EntityStatus.None;
 		}
 
 		protected abstract void CreateUI();
@@ -67,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return entity;
 		}
-
+		
 		public void NotifyChildItemDeleted<T>(T entity)
 			where T : AbstractEntity
 		{

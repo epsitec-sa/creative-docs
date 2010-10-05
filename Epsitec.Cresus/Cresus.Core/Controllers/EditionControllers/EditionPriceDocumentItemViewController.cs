@@ -150,11 +150,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			this.TileContainer.UpdateAllWidgets ();
 		}
-
-	
-		protected override EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Valid;
-		}
 	}
 }

@@ -253,13 +253,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			var entity = this.Entity;
-			return EditionStatus.Valid;
-		}
-
-
 		private Printers.PreviewerController		previewerController;
 	}
 }

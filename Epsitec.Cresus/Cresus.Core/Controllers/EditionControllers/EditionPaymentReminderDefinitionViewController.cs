@@ -71,18 +71,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
 			return article;
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (string.IsNullOrWhiteSpace (this.Entity.Code) ||
-				this.Entity.Name.IsNullOrWhiteSpace ||
-				this.Entity.Description.IsNullOrWhiteSpace)
-			{
-				return EditionStatus.Empty;
-			}
-
-			return EditionStatus.Valid;
-		}
 	}
 }

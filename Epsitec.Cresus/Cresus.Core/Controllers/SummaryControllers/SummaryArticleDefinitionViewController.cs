@@ -95,12 +95,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			var entity = this.Entity;
-			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
-		}
 	}
 }

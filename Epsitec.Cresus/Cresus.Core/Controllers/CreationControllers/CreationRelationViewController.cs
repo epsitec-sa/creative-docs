@@ -52,18 +52,5 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 			relation.Person = context.CreateEntity<LegalPersonEntity> ();
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (this.Entity.Person.IsNull ())
-			{
-				return EditionStatus.Empty;
-			}
-			else
-			{
-				return EditionStatus.Valid;
-			}
-		}
 	}
 }

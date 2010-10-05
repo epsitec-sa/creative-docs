@@ -116,6 +116,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		protected override sealed EntityStatus GetEditionStatus()
+		{
+			return this.Entity.GetEntityStatus ();
+		}
+
+	
 		/// <summary>
 		/// If the current entity was registered in the <see cref="DataContext"/> as an empty
 		/// entity, upgrade it to a real entity if its content is valid.
@@ -125,12 +131,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			var entity  = this.Entity;
 			var context = DataContextPool.Instance.FindDataContext (entity);
 
-			bool isEmpty = this.EditionStatus == EditionStatus.Empty;
+			bool isEmpty = (this.GetEditionStatus () & EntityStatus.Empty) != 0;
 
 			this.UpdateEmptyEntityStatus (context, isEmpty);
 		}
 
-		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
+		protected void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 

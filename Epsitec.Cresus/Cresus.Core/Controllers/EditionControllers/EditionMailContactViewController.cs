@@ -81,38 +81,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			if ((this.Entity.Complement.IsNullOrWhiteSpace) &&
-				(this.Entity.NaturalPerson.IsNull () || this.Entity.LegalPerson.IsNull ()) &&
-				(this.Entity.Roles.Count == 0) &&
-				(this.Entity.Comments.Count == 0) &&
-				(this.Entity.Address.IsEmpty ()))
-			{
-				return EditionStatus.Empty;
-			}
-			else
-			{
-				return EditionStatus.Valid;
-			}
-		}
-
-		protected override void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
-		{
-			var contact = this.Entity;
-
-			context.UpdateEmptyEntityStatus (contact, isEmpty);
-
-			bool emptyStreet = contact.Address.Street.IsEmpty ();
-			bool emptyPostBox = contact.Address.PostBox.IsEmpty ();
-			bool emptyLocation = contact.Address.Location.IsEmpty ();
-			bool emptyAddress = emptyStreet && emptyPostBox && emptyLocation;
-
-			context.UpdateEmptyEntityStatus (contact.Address.Street, emptyStreet);
-			context.UpdateEmptyEntityStatus (contact.Address.PostBox, emptyPostBox);
-			context.UpdateEmptyEntityStatus (contact.Address, emptyAddress);
-		}
-
 		private void CreateUIRoles(UIBuilder builder)
 		{
 			var controller = new SelectionController<ContactRoleEntity> (this.BusinessContext)

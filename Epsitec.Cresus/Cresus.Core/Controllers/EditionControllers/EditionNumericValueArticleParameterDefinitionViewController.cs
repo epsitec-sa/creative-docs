@@ -117,12 +117,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected override EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Valid;
-		}
-
-
 		private ArticleParameterControllers.ArticleParameterListPreferredValuesController		parameterController;
 	}
 }

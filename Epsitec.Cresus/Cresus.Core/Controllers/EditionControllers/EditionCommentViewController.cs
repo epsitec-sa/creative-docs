@@ -42,18 +42,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextFieldMulti (tile, 120, "Texte", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (this.Entity.Text.IsNullOrWhiteSpace)
-			{
-				return EditionStatus.Empty;
-			}
-
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-			return EditionStatus.Valid;
-		}
 	}
 }
