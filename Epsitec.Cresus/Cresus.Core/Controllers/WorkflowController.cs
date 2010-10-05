@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.orchestrator = orchestrator;
 			this.businessContexts = new List<BusinessContext> ();
 			this.workflowDefs = new List<WorkflowDefinitionEntity> ();
-			this.activeEdges = new List<WorkflowEdgeEntity> ();
+			this.activeEdges = new List<WorkflowEdge> ();
 		}
 
 
@@ -92,19 +92,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			mainViewController.SetActionPanelVisibility (index > 0);
 		}
 
-		private void CreateActionButton(ActionViewController actionViewController, WorkflowEdgeEntity edge, int index)
+		private void CreateActionButton(ActionViewController actionViewController, WorkflowEdge edge, int index)
 		{
 			var buttonId    = string.Format ("WorkflowEdge.{0}", index++);
-			var title       = edge.Name;
-			var description = edge.Description;
+			var title       = edge.Edge.Name;
+			var description = edge.Edge.Description;
 			var action      = this.CreateActionCallback (edge);
 
 			actionViewController.AddButton (buttonId, title, description, action);
 		}
 
-		private System.Action CreateActionCallback(WorkflowEdgeEntity edge)
+		private System.Action CreateActionCallback(WorkflowEdge edge)
 		{
-			return () => System.Diagnostics.Debug.WriteLine ("Executed " + edge.TransitionAction);
+			return () => this.ExecuteAction (edge);
+		}
+
+		private void ExecuteAction(WorkflowEdge edge)
+		{
+			var engine = new WorkflowExecutionEngine (this, edge);
+			engine.Execute ();
 		}
 		
 		private void UpdateWorkflowDefs()
@@ -118,14 +124,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.MakeDirty ();
 		}
 
-		private IEnumerable<WorkflowEdgeEntity> GetStartingEdges()
+		private IEnumerable<WorkflowEdge> GetStartingEdges()
 		{
-			return this.businessContexts.SelectMany (x => this.GetBusinessContextStartingEdges (x));
+			return from context in this.businessContexts
+				   from edge in this.GetBusinessContextStartingEdges (context)
+				   select edge;
 		}
 
-		private IEnumerable<WorkflowEdgeEntity> GetBusinessContextStartingEdges(BusinessContext context)
+		private IEnumerable<WorkflowEdge> GetBusinessContextStartingEdges(BusinessContext context)
 		{
-			return this.GetBusinessContextWorkflowDefs (context).Distinct ().SelectMany (x => x.StartingEdges);
+			return from def in this.GetBusinessContextWorkflowDefs (context).Distinct ()
+				   from edge in def.StartingEdges
+				   select new WorkflowEdge (context, def, edge);
 		}
 
 		private IEnumerable<WorkflowDefinitionEntity> GetBusinessContextWorkflowDefs(BusinessContext context)
@@ -149,10 +159,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
 		private readonly DataViewOrchestrator orchestrator;
 		private readonly List<BusinessContext> businessContexts;
 		private readonly List<WorkflowDefinitionEntity> workflowDefs;
-		private readonly List<WorkflowEdgeEntity> activeEdges;
+		private readonly List<WorkflowEdge> activeEdges;
 
 		private bool isReady;
 		private bool isDirty;
