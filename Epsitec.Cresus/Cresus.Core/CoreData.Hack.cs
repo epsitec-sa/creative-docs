@@ -763,8 +763,8 @@ namespace Epsitec.Cresus.Core
 			var isrDef1 = this.DataContext.CreateEntity<IsrDefinitionEntity> ();
 
 			business.Company = this.DataContext.GetEntitiesOfType<RelationEntity> (x => x.Person is LegalPersonEntity && (x.Person as LegalPersonEntity).Name == "Epsitec SA").FirstOrDefault ();
-			business.FinanceSettings = finance;
-			business.TaxSettings = tax;
+			business.Finance = finance;
+			business.Tax = tax;
 
 			tax.VatNumber = "199160";
 			tax.TaxMode = Business.Finance.TaxMode.LiableForVat;
@@ -1023,7 +1023,7 @@ namespace Epsitec.Cresus.Core
 			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == Business.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA2.Date = new Date (2010, 09, 05);
 
-			var isrDefiniton = settings.First ().FinanceSettings.IsrDefs.First ();
+			var isrDefiniton = settings.First ().Finance.IsrDefs.First ();
 
 			var isrSubscriber = isrDefiniton.SubscriberNumber;
 			var isrRef1 = Isr.GetNewReferenceNumber (this, isrSubscriber);

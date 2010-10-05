@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 
@@ -203,6 +204,12 @@ namespace Epsitec.Cresus.Core.Business
 		public IEnumerable<AbstractEntity> GetMasterEntities()
 		{
 			return this.masterEntities;
+		}
+
+		public Date GetReferenceDate()
+		{
+			//	TODO: use real reference date, based on the active master entities...
+			return Date.Today;
 		}
 		
 		public void Discard()

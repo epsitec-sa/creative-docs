@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 
-			data.Add (this.CreateCollectionAccessor (template, x => x.FinanceSettings.IsrDefs));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Finance.IsrDefs));
 		}
 
 		private void CreateUIPaymentReminderDefinitions(SummaryDataItems data)
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 
-			data.Add (this.CreateCollectionAccessor (template, x => x.FinanceSettings.PaymentReminderDefs));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Finance.PaymentReminderDefs));
 		}
 
 	}
