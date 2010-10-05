@@ -92,6 +92,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					this.AddTableDefinitionToCache (id, table);
 				}
 
+				//using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				//{
+				//    this.SchemaBuilder.CreateSchema (entityId);
+
+				//    transaction.Commit ();
+				//}
+
+				//this.LoadSchema (entityId);
 			}
 
 			return createTable;

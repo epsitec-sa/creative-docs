@@ -302,9 +302,9 @@ namespace Cresus.Database.UnitTests
 
 			tableTarget.DefineDisplayName ("targetA");
 
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 
 			DbTable relationTable1 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource1, columnSource1);
 			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource2, columnSource2);
@@ -330,9 +330,9 @@ namespace Cresus.Database.UnitTests
 			tableTarget2.DefineDisplayName ("targetA");
 			tableTarget3.DefineDisplayName ("targetB");
 
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget1, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget2, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), tableTarget3, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget1, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget2, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget3, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 
 			DbTable relationTable1 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource1);
 			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource2);

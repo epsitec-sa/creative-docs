@@ -211,10 +211,13 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if both <see cref="DbColumn"/> are equal, <c>false</c> if they are not.</returns>
 		private static bool AreDbColumnEqual(DbColumn a, DbColumn b)
 		{
-			return a.CaptionId == b.CaptionId
+			return (a == null && b == null) ||
+			(
+				   a != null && b != null
+				&& a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
 				&& string.Equals (a.Comment, b.Comment)
-				&& ((a.Table == null && b.Table == null) || (string.Equals(a.Table.Name, b.Table.Name) && a.Table.CaptionId == b.Table.CaptionId))
+				&& ((a.Table == null && b.Table == null) || (string.Equals (a.Table.Name, b.Table.Name) && a.Table.CaptionId == b.Table.CaptionId))
 				&& string.Equals (a.TargetTableName, b.TargetTableName)
 				&& string.Equals (a.TargetColumnName, b.TargetColumnName)
 				&& a.Category == b.Category
@@ -226,7 +229,32 @@ namespace Epsitec.Cresus.Database
 				&& a.IsForeignKey == b.IsForeignKey
 				&& a.IsAutoIncremented == b.IsAutoIncremented
 				&& a.RevisionMode == b.RevisionMode
-				&& a.Type == b.Type;
+				&& DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
+			);
+		}
+
+
+		/// <summary>
+		/// Checks that both <see cref="DbTypeDef"/> are equal. The comparison is made by value.
+		/// </summary>
+		/// <param name="a">The first <see cref="DbTypeDef"/> to compare.</param>
+		/// <param name="b">The second <see cref="DbTypeDef"/> to compare.</param>
+		/// <returns><c>true</c> if both <see cref="DbTypeDef"/> are equal, <c>false</c> if they are not.</returns>
+		private static bool AreDbTypeDefEqual(DbTypeDef a, DbTypeDef b)
+		{
+			return (a == null && b == null ||
+			(
+				   a != null && b != null)
+				&& a.Name == b.Name
+				&& a.TypeId == b.TypeId
+				&& a.RawType == b.RawType
+				&& a.SimpleType == b.SimpleType
+				&& a.NumDef == b.NumDef
+				&& a.Length == b.Length
+				&& a.IsNullable == b.IsNullable
+				&& a.IsFixedLength == b.IsFixedLength
+				&& a.IsMultilingual == b.IsMultilingual
+			);
 		}
 
 
