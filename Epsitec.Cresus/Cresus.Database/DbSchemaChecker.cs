@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="schema"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="schema"/> is contains <c>null</c> items.</exception>
-		public static bool CheckSchema(DbInfrastructure dbInfrastructure, List<DbTable> schema)
+		public static bool CheckSchema(DbInfrastructure dbInfrastructure, IList<DbTable> schema)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			schema.ThrowIfNull ("schema");
