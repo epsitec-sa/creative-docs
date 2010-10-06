@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Binders
 			}
 			else
 			{
-				return new ValidationResult (ValidationState.Error, FormattedText.FromSimpleText ("Le n° ne respecte pas le format n-nnn-n ou est incorrect"));
+				return new ValidationResult (ValidationState.Error, FormattedText.FromSimpleText ("Le n° ne respecte pas le format nn-nnn-n ou est incorrect"));
 			}
 		}
 

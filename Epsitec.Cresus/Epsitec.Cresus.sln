@@ -153,7 +153,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphConnector.Win32", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphConnector", "Cresus.Graph\GraphConnector\GraphConnector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
 EndProject
@@ -191,6 +191,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting.UnitTests", "Common.UnitTesting.UnitTests\Common.UnitTesting.UnitTests.csproj", "{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{48CFC75E-EAA8-46CE-860F-871511583AE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.WorkflowDesigner", "Cresus.WorkflowDesigner\Cresus.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -1093,6 +1095,18 @@ Global
 		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Win32.ActiveCfg = Release|Any CPU
 		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|x86.ActiveCfg = Release|Any CPU
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|Win32.ActiveCfg = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|x86.ActiveCfg = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Debug|x86.Build.0 = Debug|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|Any CPU.ActiveCfg = Release|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|Mixed Platforms.Build.0 = Release|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|Win32.ActiveCfg = Release|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|x86.ActiveCfg = Release|x86
+		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
