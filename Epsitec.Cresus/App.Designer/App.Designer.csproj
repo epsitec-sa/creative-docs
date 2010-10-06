@@ -10,7 +10,8 @@
     <RootNamespace>Epsitec.Designer</RootNamespace>
     <AssemblyName>App.Designer</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -135,7 +136,7 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="App.ico" />
+    <Content Include="app.ico" />
     <Content Include="default.identities" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
