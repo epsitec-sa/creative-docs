@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #else
 						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
 						Rectangle bounds;
-						double posv = src.GetConnectionSrcVerticalPosition(this.field.Index) - (Editor.connectionDetour+2);
+						double posv = src.GetConnectionSrcVerticalPosition(this.field.Index) - (Editor.connectionDetour+12);
 
 						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 						{
@@ -250,6 +250,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							bounds.Deflate(50, Editor.pushMargin);
 						}
 #endif
+						bounds = this.editor.BoxGridAlign (bounds);
 						box.SetBounds(bounds);
 					}
 					else

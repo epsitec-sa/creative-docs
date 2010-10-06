@@ -753,6 +753,7 @@
     <EmbeddedResource Include="Images\Redo.icon" />
     <EmbeddedResource Include="Images\Undo.icon" />
     <EmbeddedResource Include="Images\FormDeltaShowed.icon" />
+    <EmbeddedResource Include="Images\Grid.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
