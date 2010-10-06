@@ -15,19 +15,30 @@ namespace Epsitec.Common.Support
 		/// as the Common.Support assembly.
 		/// </summary>
 		/// <param name="name">The assembly name (without the file path nor the file extension).</param>
-		/// <returns>The assembly if it could be found; otherwise, <c>null</c>.</returns>
-		public static System.Reflection.Assembly Load(string name)
+		/// <param name="subfolder">The optional sub-folder.</param>
+		/// <returns>
+		/// The assembly if it could be found; otherwise, <c>null</c>.
+		/// </returns>
+		public static System.Reflection.Assembly Load(string name, string subfolder = null)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
-			
-			foreach (string ext in new string[] { ".dll", ".exe" })
-			{
-				string fileName = string.Concat (name, ext);
-				string fullName = System.IO.Path.Combine (loadPath, fileName);
 
-				if (System.IO.File.Exists (fullName))
+			if (subfolder != null)
+            {
+				loadPath = System.IO.Path.Combine (loadPath, subfolder);
+            }
+
+			if (System.IO.Directory.Exists (loadPath))
+			{
+				foreach (string ext in new string[] { ".dll", ".exe" })
 				{
-					return System.Reflection.Assembly.LoadFrom (fullName);
+					string fileName = string.Concat (name, ext);
+					string fullName = System.IO.Path.Combine (loadPath, fileName);
+
+					if (System.IO.File.Exists (fullName))
+					{
+						return System.Reflection.Assembly.LoadFrom (fullName);
+					}
 				}
 			}
 
@@ -40,22 +51,31 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="pattern">The assembly name pattern.</param>
 		/// <param name="searchOption">The search option.</param>
+		/// <param name="subfolder">The optional sub-folder.</param>
 		/// <returns>The assemblies which could be found.</returns>
-		public static IList<System.Reflection.Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption)
+		public static IList<System.Reflection.Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption, string subfolder = null)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 
+			if (subfolder != null)
+			{
+				loadPath = System.IO.Path.Combine (loadPath, subfolder);
+			}
+
 			List<System.Reflection.Assembly> assemblies = new List<System.Reflection.Assembly> ();
 
-			foreach (string ext in new string[] { ".dll", ".exe" })
+			if (System.IO.Directory.Exists (loadPath))
 			{
-				string filePattern = string.Concat (pattern, ext);
-
-				foreach (string path in System.IO.Directory.GetFiles (loadPath, filePattern, searchOption))
+				foreach (string ext in new string[] { ".dll", ".exe" })
 				{
-					assemblies.Add (System.Reflection.Assembly.LoadFrom (path));
+					string filePattern = string.Concat (pattern, ext);
+
+					foreach (string path in System.IO.Directory.GetFiles (loadPath, filePattern, searchOption))
+					{
+						assemblies.Add (System.Reflection.Assembly.LoadFrom (path));
+					}
 				}
-			}
+			}			
 			
 			return assemblies;
 		}

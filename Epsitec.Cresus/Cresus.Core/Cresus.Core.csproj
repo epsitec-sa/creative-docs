@@ -173,6 +173,9 @@
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
+    <Compile Include="PlugIns\ICorePlugIn.cs" />
+    <Compile Include="PlugIns\PlugInAttribute.cs" />
+    <Compile Include="PlugIns\PlugInFactory.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />

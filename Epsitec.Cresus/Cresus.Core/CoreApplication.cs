@@ -316,6 +316,11 @@ namespace Epsitec.Cresus.Core
 			this.data.SetupDatabase ();
 		}
 
+		internal void DiscoverPlugIns()
+		{
+			this.plugInFactory = new PlugIns.PlugInFactory (this);
+		}
+
 		internal void Shutdown()
 		{
 		}
@@ -419,5 +424,6 @@ namespace Epsitec.Cresus.Core
 		private MainWindowController					mainWindowController;
 		private List<Dialogs.IAttachedDialog>			attachedDialogs;
 		private BusinessSettingsEntity					businessSettings;
+		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }

@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.Assert (CoreProgram.application.ResourceManagerPool.PoolName == "Core");
 
 			CoreApplication.LoadSettings ();
+			CoreProgram.application.DiscoverPlugIns ();
 			CoreProgram.application.SetupData ();
 			CoreProgram.application.CreateUI ();
 
