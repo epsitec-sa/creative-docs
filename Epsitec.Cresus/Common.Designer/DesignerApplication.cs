@@ -55,9 +55,12 @@ namespace Epsitec.Common.Designer
 			//	Crée et montre la fenêtre de l'éditeur.
 			if (this.Window == null)
 			{
-				Window window = new Window();
+				string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
+
+				Window window = new Window ();
 				this.Window = window;
 				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+				window.Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48);
 
 				Point parentCenter;
 				Rectangle windowBounds;
