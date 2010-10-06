@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			CoreProgram.Application = this;
+			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.persistenceManager = new PersistenceManager ();
 

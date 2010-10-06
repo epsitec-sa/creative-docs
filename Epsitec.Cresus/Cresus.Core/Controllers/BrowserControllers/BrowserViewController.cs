@@ -225,6 +225,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				case "BusinessSettings":
 					this.SetContents (context => this.data.GetAllEntities<BusinessSettingsEntity> (dataContext: context));
 					break;
+
+				case "WorkflowDefinitions":
+					this.SetContents (context => this.data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context));
+					break;
 			}
 		}
 

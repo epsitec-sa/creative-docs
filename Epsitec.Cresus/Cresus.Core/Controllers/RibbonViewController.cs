@@ -196,6 +196,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowDocuments));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowBusinessSettings));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowWorkflowDefinitions));
 			//?section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowInvoiceDocuments));
 		}
 
