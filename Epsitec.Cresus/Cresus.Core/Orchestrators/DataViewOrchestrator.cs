@@ -284,41 +284,4 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private BusinessContext					businessContext;
 	}
-
-	public class ActiveEntityCancelEventArgs : CancelEventArgs
-	{
-		public ActiveEntityCancelEventArgs(EntityKey? entityKey, NavigationPathElement navigationPathElement)
-		{
-			this.entityKey = entityKey;
-			this.NavigationPathElement = navigationPathElement;
-		}
-
-
-		public EntityKey? EntityKey
-		{
-			get
-			{
-				return this.entityKey;
-			}
-			set
-			{
-				this.entityKey = value;
-			}
-		}
-
-		public NavigationPathElement NavigationPathElement
-		{
-			get
-			{
-				return this.navigationPathElement;
-			}
-			set
-			{
-				this.navigationPathElement = value;
-			}
-		}
-		
-		private EntityKey? entityKey;
-		private NavigationPathElement navigationPathElement;
-	}
 }
