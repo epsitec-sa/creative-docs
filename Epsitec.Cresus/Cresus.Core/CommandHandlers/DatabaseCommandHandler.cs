@@ -38,41 +38,20 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 
 		[Command (Core.Res.CommandIds.Base.ShowCustomers)]
-		public void ProcessBaseShowCustomers(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.SelectDatabase (e);
-		}
-
 		[Command (Core.Res.CommandIds.Base.ShowArticleDefinitions)]
-		public void ProcessBaseShowArticleDefinitions(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.SelectDatabase (e);
-		}
-
 		[Command (Core.Res.CommandIds.Base.ShowDocuments)]
-		public void ProcessBaseShowDocuments(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.SelectDatabase (e);
-		}
-
 		[Command (Core.Res.CommandIds.Base.ShowInvoiceDocuments)]
-		public void ProcessBaseShowInvoiceDocuments(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.SelectDatabase (e);
-		}
-
 		[Command (Core.Res.CommandIds.Base.ShowBusinessSettings)]
-		public void ProcessBaseShowBusinessSettings(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.SelectDatabase (e);
-		}
-
 		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
-		public void ProcessBaseShowWorkflowDefinitions(CommandDispatcher dispatcher, CommandEventArgs e)
+		public void ProcessBaseGenericShow(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	The generic Base.Show command handler uses the name of the command to
+			//	select the matching database (e.g. ShowCustomers => selects "Customers").
+
 			this.SelectDatabase (e);
 		}
 
+		
 
 		private void SetupDatabaseCommands()
 		{
