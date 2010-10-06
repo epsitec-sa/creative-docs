@@ -15,6 +15,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public WorkflowDesignerPlugIn(PlugInFactory factory)
 		{
 			this.factory = factory;
+			this.application = this.factory.Application;
+
+			this.application.CreatedUI       += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application finished creating the UI");
+			this.application.ShutdownStarted += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application shutting down");
 		}
 
 		#region IDisposable Members
@@ -33,5 +37,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		private readonly PlugInFactory factory;
+		private readonly CoreApplication application;
 	}
 }
