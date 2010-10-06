@@ -407,6 +407,9 @@ namespace Epsitec.Common.Drawing
 					return null;
 				}
 
+				//	Supprimé l'appel à FreeImage pour le format PNG, car il plante (version du 06.10.10).
+				//	Reste à espérer que Windows fasse mieux le travail que les versions précédentes de .NET,
+				//	notamment au niveau de la gestion de la transparence !
 #if false
 				if (format == ImageFormat.Png)
 				{
