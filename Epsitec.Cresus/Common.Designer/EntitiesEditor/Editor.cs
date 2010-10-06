@@ -2011,6 +2011,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public static readonly double defaultWidth = 200;
 		public static readonly double connectionDetour = 30;
+		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;
 
 		protected Module module;
