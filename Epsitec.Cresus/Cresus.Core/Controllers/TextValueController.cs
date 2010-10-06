@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 
 			this.SetupFieldBinder ();
-			this.AttachFieldBinder (validator);			
+			this.AttachFieldBinder (validator);
 			
 			this.UpdateTextField ();
 
@@ -257,6 +257,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (textField != null)
 				{
+					//	TODO: faire en sorte que si on utilise une source multilingue, le menu contextuel
+					//	de la ligne éditable contienne la commande "voir toutes les langues"; les langues
+					//	peuvent être accédées en s'inspirant de ce que font les méthodes GetMarshalerText
+					//	et SetMarshalerText. La classe MultilingualText offre les services d'accès.
+
 					if (this.CheckIfMarshalerIsUsingFormattedText ())
 					{
 						textField.IsFormattedText    = true;

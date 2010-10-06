@@ -89,6 +89,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the collection of language ids contained in this text.
+		/// </summary>
+		/// <returns>The collection of language ids.</returns>
+		public IEnumerable<string> GetContainedLanguageIds()
+		{
+			return this.texts.Keys.OrderBy (x => x);
+		}
+
 
 		/// <summary>
 		/// Gets the formatted text for the specified language, or the
