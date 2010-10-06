@@ -22,6 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
+				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("BindingSelector", 500, 400, true);

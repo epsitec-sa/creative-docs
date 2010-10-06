@@ -20,7 +20,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Icon", 400, 400, true);
 				this.window.Text = Res.Strings.Dialog.Icon.Title;
@@ -527,20 +528,20 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 
-		protected ResourceManager			manager;
-		protected string					moduleName;
-		protected List<string>				modules;
-		protected List<string>				icons;
-		protected string					icon;
-		protected bool						compactMode = false;
+		protected ResourceManager				manager;
+		protected string						moduleName;
+		protected List<string>					modules;
+		protected List<string>					icons;
+		protected string						icon;
+		protected bool							compactMode = false;
 
-		protected TextFieldCombo			fieldSearch;
-		protected TextFieldCombo			fieldFilter;
-		protected IconButton				searchPrev;
-		protected IconButton				searchNext;
-		protected MyWidgets.StringArray		arrayDetail;
-		protected MyWidgets.IconArray		arrayCompact;
-		protected HSlider					slider;
-		protected IconButton				buttonMode;
+		protected TextFieldCombo				fieldSearch;
+		protected TextFieldCombo				fieldFilter;
+		protected IconButton					searchPrev;
+		protected IconButton					searchNext;
+		protected MyWidgets.StringArray			arrayDetail;
+		protected MyWidgets.IconArray			arrayCompact;
+		protected HSlider						slider;
+		protected IconButton					buttonMode;
 	}
 }

@@ -19,7 +19,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
 				this.window.PreventAutoClose = true;
