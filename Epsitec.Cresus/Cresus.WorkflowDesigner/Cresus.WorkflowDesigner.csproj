@@ -57,6 +57,7 @@
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="WorkflowDesigner.cs" />
     <Compile Include="WorkflowDesignerPlugIn.cs" />
   </ItemGroup>
   <ItemGroup>

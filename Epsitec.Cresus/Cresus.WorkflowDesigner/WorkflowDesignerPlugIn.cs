@@ -15,8 +15,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner
 {
+	/// <summary>
+	/// The <c>WorkflowDesignerPlugIn</c> class implements the plug-in interface to
+	/// communicate with <c>Cresus.Core</c>. It provides an editor for entities of
+	/// type <see cref="WorkflowDefinitionEntity"/>.
+	/// </summary>
 	[PlugIn ("WorkflowDesigner", "1.0")]
-	public class WorkflowDesignerPlugIn : ICorePlugIn
+	public sealed class WorkflowDesignerPlugIn : ICorePlugIn
 	{
 		public WorkflowDesignerPlugIn(PlugInFactory factory)
 		{
@@ -34,16 +39,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion
 
-		protected virtual void Dispose(bool disposing)
-		{
-		}
-
+		
 		private void HandleOrchestratorSettingActiveEntity(object sender, ActiveEntityCancelEventArgs e)
 		{
 			var entityKey = e.EntityKey;
@@ -60,47 +60,33 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					businessContext.SetActiveEntity (entityKey, navigationPathElement);
 
 					var workflow = businessContext.ActiveEntity as WorkflowDefinitionEntity;
-					this.EditWorkflowDefinition (businessContext, workflow);
+					
+					System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflow.Name + ">");
+					
+					this.CreateWorkflowDesigner (businessContext, workflow);
 					e.Cancel = true;
 				}
 			}
 		}
 
-		private void EditWorkflowDefinition(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
+		private void CreateWorkflowDesigner(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
 		{
-			System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflow.Name + ">");
-
-			if (this.editorUI != null)
+			if (this.activeDesigner != null)
             {
-				this.editorUI.Dispose ();
-				this.editorUI = null;
+				this.activeDesigner.Dispose ();
+				this.activeDesigner = null;
             }
 
-			//	TODO: créer le vrai widget d'édition; pour le moment, on crée simplement une zone
-			//	vert limette avec le nom du workflow pris dans l'entité...
+			this.activeDesigner = new WorkflowDesigner (businessContext, workflow);
 
-			this.editorUI = this.CreateWorkflowEditorUI (workflow);
-			
-			this.orchestrator.DataViewController.SetCustomUI (this.editorUI);
+			this.orchestrator.DataViewController.SetCustomUI (this.activeDesigner.CreateUI ());
 		}
 
+		
+		private readonly PlugInFactory			factory;
+		private readonly CoreApplication		application;
+		private readonly DataViewOrchestrator	orchestrator;
 
-		private Widget CreateWorkflowEditorUI(WorkflowDefinitionEntity workflow)
-		{
-			StaticText customUI = new StaticText ()
-			{
-				BackColor = Color.FromName ("Lime"),
-				Dock = DockStyle.Fill,
-				FormattedText = TextFormatter.FormatText ("Workflow <b>", workflow.Name, "</b>"),
-			};
-
-			return customUI;
-		}
-
-		private readonly PlugInFactory factory;
-		private readonly CoreApplication application;
-		private readonly DataViewOrchestrator orchestrator;
-
-		private Widget editorUI;
+		private WorkflowDesigner				activeDesigner;
 	}
 }
