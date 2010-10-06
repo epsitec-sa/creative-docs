@@ -53,8 +53,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.connections = new List<ObjectConnection>();
 			this.comments = new List<ObjectComment>();
 			this.infos = new List<ObjectInfo>();
+
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
+			this.gridStep = 20;
+			this.gridSubdiv = 5;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -207,6 +210,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public bool Grid
+		{
+			get
+			{
+				return this.grid;
+			}
+			set
+			{
+				if (this.grid != value)
+				{
+					this.grid = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public Size AreaSize
 		{
 			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
@@ -294,7 +313,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateBoxes();  // adapte la taille selon compact/étendu
-			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.UpdateConnections();
@@ -306,7 +325,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateAfterMoving(ObjectBox box)
 		{
 			//	Appelé lorsqu'une boîte a été bougée.
-			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.UpdateConnections();
@@ -317,7 +336,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
 			this.UpdateBoxes();
-			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.CreateConnections();
@@ -1104,6 +1123,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
 			rect.Inflate(Editor.frameMargin);
+
+			bool iGrid = this.grid;
+			this.grid = true;
+			rect = this.AreaGridAlign (rect);
+			this.grid = iGrid;
+
 			this.MoveObjects(-rect.Left, -rect.Bottom);
 
 			this.AreaSize = rect.Size;
@@ -1141,6 +1166,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MoveObjects(double dx, double dy)
 		{
 			//	Déplace tous les objets.
+			if (dx == 0 && dy == 0)  // immobile ?
+			{
+				return;
+			}
+
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.Move(dx, dy);
@@ -1160,17 +1190,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				info.Move(dx, dy);
 			}
-		
-#if false
-			for (int i=0; i<this.boxes.Count; i++)
-			{
-				ObjectBox box = this.boxes[i];
-
-				Rectangle bounds = box.Bounds;
-				bounds.Offset(dx, dy);
-				box.SetBounds(bounds);
-			}
-#endif
 		}
 
 
@@ -1463,6 +1482,56 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public Rectangle BoxGridAlign(Rectangle rect)
+		{
+			//	Aligne un rectangle d'une boîte (ObjectBox) sur son coin supérieur/gauche,
+			//	en ajustant également sa largeur, mais pas sa hauteur.
+			if (this.grid)
+			{
+				Point topLeft = this.GridAlign (rect.TopLeft);
+				double width  = this.GridAlign (rect.Width);
+
+				rect = new Rectangle (topLeft.X, topLeft.Y-rect.Height, width, rect.Height);
+			}
+
+			return rect;
+		}
+
+		private Rectangle AreaGridAlign(Rectangle rect)
+		{
+			if (this.grid)
+			{
+				Point bottomLeft = this.GridAlign (rect.BottomLeft);
+				double width     = this.GridAlign (rect.Width);
+				double height    = this.GridAlign (rect.Height);
+
+				rect = new Rectangle (bottomLeft.X, bottomLeft.Y, width, height);
+			}
+
+			return rect;
+		}
+
+		public Point GridAlign(Point pos)
+		{
+			if (this.grid)
+			{
+				pos = Point.GridAlign (pos, 0, this.gridStep);
+			}
+
+			return pos;
+		}
+
+		public double GridAlign(double value)
+		{
+			if (this.grid)
+			{
+				value = Point.GridAlign (new Point (value, 0), 0, this.gridStep).X;
+			}
+
+			return value;
+		}
+
+
 		public bool IsLocateAction(Message message)
 		{
 			//	Indique si l'action débouche sur une opération de navigation.
@@ -1568,6 +1637,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddFilledRectangle(rect);  // surface de dessin
 			graphics.RenderSolid(Color.FromBrightness(1));
 
+			//	Dessine la grille.
+			if (this.grid)
+			{
+				this.PaintGrid (graphics, clipRect);
+			}
+
 			//	Dessine les surfaces hors de la zone utile.
 			Point bl = this.ConvWidgetToEditor(this.Client.Bounds.BottomLeft);
 			Point tr = this.ConvWidgetToEditor(this.Client.Bounds.TopRight);
@@ -1587,7 +1662,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color colorOver = Color.FromAlphaColor(0.3, adorner.ColorBorder);
 			graphics.RenderSolid(colorOver);
 
-			this.Paint (graphics);
+			this.PaintObjects (graphics);
 
 			graphics.Transform = initialTransform;
 
@@ -1598,7 +1673,71 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
-		public void Paint(Graphics graphics)
+		private void PaintGrid(Graphics graphics, Rectangle clipRect)
+		{
+			//	Dessine la grille magnétique.
+			double initialWidth = graphics.LineWidth;
+			graphics.LineWidth = 1.0/this.zoom;
+
+			double ix = 0.5/this.zoom;
+			double iy = 0.5/this.zoom;
+
+			int mul = (int) System.Math.Max (10.0/(this.gridStep*this.zoom), 1.0);
+
+			//	Dessine les traits verticaux.
+			double step = this.gridStep*mul;
+			int subdiv = (int) this.gridSubdiv;
+			int rank = 0;
+			for (double pos=0; pos<=this.AreaSize.Width; pos+=step)
+			{
+				double x = pos;
+				double y = 0;
+				graphics.Align (ref x, ref y);
+				x += ix;
+				y += iy;
+				graphics.AddLine (x, y, x, this.AreaSize.Height);
+
+				if (rank%subdiv == 0)
+				{
+					graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.6, 0.6, 0.6));  // gris
+				}
+				else
+				{
+					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.6, 0.6, 0.6));  // gris
+				}
+
+				rank++;
+			}
+
+			//	Dessine les traits horizontaux.
+			step = this.gridStep*mul;
+			subdiv = (int) this.gridSubdiv;
+			rank = 0;
+			for (double pos=0; pos<=this.AreaSize.Height; pos+=step)
+			{
+				double x = 0;
+				double y = pos;
+				graphics.Align (ref x, ref y);
+				x += ix;
+				y += iy;
+				graphics.AddLine (x, y, this.AreaSize.Width, y);
+
+				if (rank%subdiv == 0)
+				{
+					graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.6, 0.6, 0.6));  // gris
+				}
+				else
+				{
+					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.6, 0.6, 0.6));  // gris
+				}
+
+				rank++;
+			}
+
+			graphics.LineWidth = initialWidth;
+		}
+
+		public void PaintObjects(Graphics graphics)
 		{
 			//	Dessine l'arrière-plan de tous les objets.
 			foreach (AbstractObject obj in this.boxes)
@@ -1872,7 +2011,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public static readonly double defaultWidth = 200;
 		public static readonly double connectionDetour = 30;
-		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;
 
 		protected Module module;
@@ -1900,5 +2038,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected VScroller vscroller;
 		protected AbstractObject hilitedObject;
 		protected bool dirtySerialization;
+		protected bool grid;
+		protected double gridStep;
+		protected double gridSubdiv;
 	}
 }

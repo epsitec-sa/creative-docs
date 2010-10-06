@@ -262,7 +262,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-
+		//	Tous les réglages sont conservés dans des variables statiques,
+		//	ce qui est une solution rapide et provisoire !
 		private static Settings settings = new Settings ();
 		private static string initialDirectory = null;
 		private static string initialFilename = null;

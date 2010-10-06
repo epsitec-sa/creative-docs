@@ -579,11 +579,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Si la souris est dans cette boîte, retourne true.
 			if (this.isDragging)
 			{
-				Rectangle bounds = this.Bounds;
-
-				bounds.Offset(pos-this.draggingPos);
-				this.draggingPos = pos;
-
+				Rectangle bounds = this.editor.BoxGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
 				this.SetBounds(bounds);
 				this.editor.UpdateConnections();
 				return true;
@@ -595,7 +591,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.isChangeWidth)
 			{
 				Rectangle bounds = this.Bounds;
-				bounds.Width = System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120);
+				bounds.Width = this.editor.GridAlign(System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
 				this.SetBounds(bounds);
 				this.editor.UpdateConnections();
 				return true;
@@ -651,7 +647,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !this.editor.IsLocateActionHeader(message))
 			{
 				this.isDragging = true;
-				this.draggingPos = pos;
+				this.draggingOffset = pos-this.bounds.BottomLeft;
 				this.editor.Invalidate();
 				this.editor.LockObject(this);
 			}
@@ -831,26 +827,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.AddInfo();
 				}
 
-				if (this.hilitedElement == ActiveElement.BoxColor1)
-				{
-					this.BackgroundMainColor = MainColor.Blue;
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxColor2)
-				{
-					this.BackgroundMainColor = MainColor.Green;
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxColor3)
-				{
-					this.BackgroundMainColor = MainColor.Red;
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxColor4)
-				{
-					this.BackgroundMainColor = MainColor.Grey;
-				}
-
 				if (this.hilitedElement == ActiveElement.BoxColor5)
 				{
 					this.BackgroundMainColor = MainColor.Yellow;
@@ -859,6 +835,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.BoxColor6)
 				{
 					this.BackgroundMainColor = MainColor.Orange;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor3)
+				{
+					this.BackgroundMainColor = MainColor.Red;
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxColor7)
@@ -870,6 +851,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.BackgroundMainColor = MainColor.Purple;
 				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor1)
+				{
+					this.BackgroundMainColor = MainColor.Blue;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor2)
+				{
+					this.BackgroundMainColor = MainColor.Green;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColor4)
+				{
+					this.BackgroundMainColor = MainColor.Grey;
+				}
+
 			}
 		}
 
@@ -3025,42 +3022,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton des couleurs.
-			if (this.hilitedElement == ActiveElement.BoxColor1)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.BoxColor2)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.BoxColor3)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.BoxColor4)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
-			}
-
 			if (this.hilitedElement == ActiveElement.BoxColor5)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
@@ -3079,6 +3040,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
 			}
 
+			if (this.hilitedElement == ActiveElement.BoxColor3)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, false);
+			}
+
 			if (this.hilitedElement == ActiveElement.BoxColor7)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
@@ -3095,6 +3065,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
+			}
+			
+			if (this.hilitedElement == ActiveElement.BoxColor1)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor2)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColor4)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
 			}
 
 			if (this.isExtended)
@@ -3731,7 +3728,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectBox> parents;
 
 		protected bool isDragging;
-		protected Point draggingPos;
+		protected Point draggingOffset;
 
 		protected bool isFieldMoving;
 		protected int fieldInitialRank;
