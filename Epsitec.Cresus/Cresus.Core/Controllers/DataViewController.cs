@@ -73,6 +73,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		/// <summary>
+		/// Sets a custom UI in the data view. This is only possible if no
+		/// view controllers are currently active.
+		/// </summary>
+		/// <param name="customUI">The custom UI.</param>
+		public void SetCustomUI(Widget customUI)
+		{
+			if (this.viewControllers.Count > 0)
+			{
+				throw new System.InvalidOperationException ("Cannot set custom UI while view controllers are active");
+			}
+
+			this.frame.Children.Clear ();
+			this.frame.Children.Add (customUI);
+		}
+
+
+		/// <summary>
 		/// Adds a new view controller to the data view. The default is to add a new column
 		/// on the rightmost side of the data view.
 		/// </summary>

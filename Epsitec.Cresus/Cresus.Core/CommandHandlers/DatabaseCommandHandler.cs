@@ -67,6 +67,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.SelectDatabase (e);
 		}
 
+		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
+		public void ProcessBaseShowWorkflowDefinitions(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectDatabase (e);
+		}
+
 
 		private void SetupDatabaseCommands()
 		{

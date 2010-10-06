@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
@@ -126,6 +127,15 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="navigationPathElement">The navigation path element.</param>
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
+			var e = new ActiveEntityCancelEventArgs (entityKey, navigationPathElement);
+			
+			this.OnSettingActiveEntity (e);
+			
+			if (e.Cancel)
+			{
+				return;
+			}
+
 			this.ClearActiveEntity ();
 
 			if (entityKey.HasValue)
@@ -249,6 +259,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+
+		private void OnSettingActiveEntity(ActiveEntityCancelEventArgs e)
+		{
+			var handler = this.SettingActiveEntity;
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+
+		public event EventHandler<ActiveEntityCancelEventArgs> SettingActiveEntity;
+
 		
 		private readonly CoreData				data;
 		private readonly CommandContext			commandContext;
@@ -259,5 +283,42 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private BusinessContext					businessContext;
+	}
+
+	public class ActiveEntityCancelEventArgs : CancelEventArgs
+	{
+		public ActiveEntityCancelEventArgs(EntityKey? entityKey, NavigationPathElement navigationPathElement)
+		{
+			this.entityKey = entityKey;
+			this.NavigationPathElement = navigationPathElement;
+		}
+
+
+		public EntityKey? EntityKey
+		{
+			get
+			{
+				return this.entityKey;
+			}
+			set
+			{
+				this.entityKey = value;
+			}
+		}
+
+		public NavigationPathElement NavigationPathElement
+		{
+			get
+			{
+				return this.navigationPathElement;
+			}
+			set
+			{
+				this.navigationPathElement = value;
+			}
+		}
+		
+		private EntityKey? entityKey;
+		private NavigationPathElement navigationPathElement;
 	}
 }
