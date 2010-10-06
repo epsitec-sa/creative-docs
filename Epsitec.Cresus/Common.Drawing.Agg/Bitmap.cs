@@ -407,6 +407,7 @@ namespace Epsitec.Common.Drawing
 					return null;
 				}
 
+#if false
 				if (format == ImageFormat.Png)
 				{
 					//	FreeImage does a better job than Windows for the PNG compression.
@@ -436,6 +437,7 @@ namespace Epsitec.Common.Drawing
 						}
 					}
 				}
+#endif
 				
 				return data;
 			}

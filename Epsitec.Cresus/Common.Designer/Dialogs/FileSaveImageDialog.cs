@@ -21,8 +21,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.InitialDirectory = FileSaveImageDialog.initialDirectory;
 			this.InitialFileName  = FileSaveImageDialog.initialFilename;
-			this.FileFilterPattern = "*.png|*.tif|*.bmp|*.gif";
-			//?this.FileFilterPattern = "*.tif|*.bmp";
+			this.FileFilterPattern = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}
@@ -85,10 +84,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
 		{
-			settings.Add (".png", "Image PNG");  // TODO: Pourquoi ça plante ?
+			settings.Add (".png", "Image PNG");
 			settings.Add (".tif", "Image TIFF");
 			settings.Add (".bmp", "Image BMP");
-			settings.Add (".gif", "Image GIF");  // TODO: Pourquoi ça plante ?
+			settings.Add (".jpg", "Image JPEG");
 		}
 
 		protected override void FavoritesAddApplicationFolders()
