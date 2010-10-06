@@ -56,11 +56,12 @@ namespace Epsitec.Common.Designer
 			if (this.Window == null)
 			{
 				string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
+				this.icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48);
 
 				Window window = new Window ();
 				this.Window = window;
 				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
-				window.Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48);
+				window.Icon = this.icon;
 
 				Point parentCenter;
 				Rectangle windowBounds;
@@ -216,6 +217,14 @@ namespace Epsitec.Common.Designer
 			set
 			{
 				this.moveVertical = value;
+			}
+		}
+
+		public Image Icon
+		{
+			get
+			{
+				return this.icon;
 			}
 		}
 
@@ -1263,6 +1272,7 @@ namespace Epsitec.Common.Designer
 							bounds.Inflate(640/2, 480/2);  // fenêtre initiale de 640x480
 
 							this.viewersWindow = new Window();
+							this.viewersWindow.Icon = this.icon;
 							this.viewersWindow.MakeSecondaryWindow();
 							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);  // fond blanc
 							this.viewersWindow.WindowBounds = bounds;
@@ -2691,6 +2701,7 @@ namespace Epsitec.Common.Designer
 		protected PanelsContext					context;
 		protected DisplayMode					displayMode;
 		protected Window						viewersWindow;
+		protected Image							icon;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;

@@ -31,7 +31,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Open", 600, 440, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
@@ -533,7 +534,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Open owner;
 		}
 
-		
+
 		protected string						resourcePrefix;
 		protected IList<ResourceModuleInfo>		moduleInfosAll;
 		protected CollectionView				moduleInfosShowed;

@@ -21,7 +21,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("EntityExpression", 400, 250, true);
 				this.window.Text = "Expression";  // Res.Strings.Dialog.EntityExpression.Title;

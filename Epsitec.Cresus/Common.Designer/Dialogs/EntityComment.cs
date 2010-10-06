@@ -21,7 +21,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("EntityComment", 350, 250, true);
 				this.window.Text = "Commentaire";  // Res.Strings.Dialog.EntityComment.Title;

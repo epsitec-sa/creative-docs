@@ -23,7 +23,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( this.window == null )
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Glyphs", 300, 260, true);
 				this.window.Text = Res.Strings.Dialog.Glyphs.Title;
@@ -167,11 +168,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected string					fontFace;
-		protected string					fontStyle;
+		protected string						fontFace;
+		protected string						fontStyle;
 
-		protected MyWidgets.GlyphArray		array;
-		protected TextField					status;
-		protected HSlider					slider;
+		protected MyWidgets.GlyphArray			array;
+		protected TextField						status;
+		protected HSlider						slider;
 	}
 }

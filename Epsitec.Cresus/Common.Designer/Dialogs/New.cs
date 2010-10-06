@@ -21,7 +21,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.window == null)
 			{
 				this.window = new Window();
-				this.window.MakeSecondaryWindow();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("New", 500, 230, true);
 				this.window.Text = Res.Strings.Dialog.New.Title;
