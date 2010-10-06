@@ -29,9 +29,10 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			CoreProgram.Application = this;
+			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.persistenceManager = new PersistenceManager ();
 
-			this.data = new CoreData (forceDatabaseCreation: true);
+			this.data = new CoreData (forceDatabaseCreation: false);
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
@@ -298,10 +299,11 @@ namespace Epsitec.Cresus.Core
 
 		internal void CreateUI()
 		{
+			this.OnCreatingUI ();
 			this.CreateUIMainWindow ();
 			this.CreateUIControllers ();
-			
 			this.RestoreApplicationState ();
+			this.OnCreatedUI ();
 
 			this.IsReady = true;
 		}
@@ -314,6 +316,7 @@ namespace Epsitec.Cresus.Core
 		internal void SetupData()
 		{
 			this.data.SetupDatabase ();
+			this.OnSetupDataDone ();
 		}
 
 		internal void DiscoverPlugIns()
@@ -321,8 +324,20 @@ namespace Epsitec.Cresus.Core
 			this.plugInFactory = new PlugIns.PlugInFactory (this);
 		}
 
+		internal void CreatePlugIns()
+		{
+			foreach (var attribute in this.plugInFactory.GetPlugInAttributeList ())
+			{
+				this.plugIns.Add (this.plugInFactory.CreatePlugIn (attribute.Name));
+			}
+		}
+
 		internal void Shutdown()
 		{
+			this.OnShutdownStarted ();
+
+			this.plugIns.ForEach (x => x.Dispose ());
+			this.plugIns.Clear ();
 		}
 
 		
@@ -413,7 +428,57 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+
+		private void OnSetupDataDone()
+		{
+			var handler = this.SetupDataDone;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		private void OnCreatingUI()
+		{
+			var handler = this.CreatingUI;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		private void OnCreatedUI()
+		{
+			var handler = this.CreatedUI;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		
+		private void OnShutdownStarted()
+		{
+			var handler = this.ShutdownStarted;
+			
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler						SetupDataDone;
+		public event EventHandler						CreatingUI;
+		public event EventHandler						CreatedUI;
+		public event EventHandler						ShutdownStarted;
+
+
 		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
+
+		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;

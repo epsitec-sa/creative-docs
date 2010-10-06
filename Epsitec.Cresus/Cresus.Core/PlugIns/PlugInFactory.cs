@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 			}
 		}
 
+		
 		public IEnumerable<PlugInAttribute> GetPlugInAttributeList()
 		{
 			return this.records.Select (record => record.Attribute);
@@ -69,7 +70,9 @@ namespace Epsitec.Cresus.Core.PlugIns
 
 		}
 
-		private class PlugInRecord
+		#region PlugInRecord Class
+
+		private sealed class PlugInRecord
 		{
 			public PlugInRecord (System.Type type)
 			{
@@ -96,8 +99,10 @@ namespace Epsitec.Cresus.Core.PlugIns
 			private readonly PlugInAttribute attribute;
 		}
 
-		private readonly List<PlugInRecord> records;
-		private readonly CoreApplication application;
-		private bool loaded;
+		#endregion
+
+		private readonly List<PlugInRecord>		records;
+		private readonly CoreApplication		application;
+		private bool							loaded;
 	}
 }
