@@ -8,6 +8,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.WorkflowDesigner.Objects;
+
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 	/// <summary>
 	/// Widget permettant d'éditer graphiquement des entités.
 	/// </summary>
-	public class Editor : Widget  //, Epsitec.Common.Widgets.Helpers.IToolTipHost
+	public class Editor : Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public enum ModifyMode
 		{
@@ -56,17 +58,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 
-#if false
-			this.boxes = new List<ObjectBox>();
-			this.connections = new List<ObjectConnection>();
-			this.comments = new List<ObjectComment>();
-			this.infos = new List<ObjectInfo>();
+			this.boxes = new List<Objects.ObjectBox>();
+			this.connections = new List<Objects.ObjectConnection> ();
+			this.comments = new List<Objects.ObjectComment> ();
+			this.infos = new List<Objects.ObjectInfo> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
 			this.gridStep = 20;
 			this.gridSubdiv = 5;
-#endif
 		}
 
 		public Editor(Widget embedder) : this()
@@ -91,7 +91,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			set;
 		}
 
-#if false
+		public void SetLocalDirty()
+		{
+		}
+
 		public VScroller VScroller
 		{
 			get
@@ -108,7 +111,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public bool EditExpression(Druid fieldId)
 		{
 			//	Edite l'expression d'un champ.
-			ObjectBox root = this.RootBox;
+			Objects.ObjectBox root = this.RootBox;
 			if (root == null)
 			{
 				return false;
@@ -118,7 +121,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public void AddBox(ObjectBox box)
+		public void AddBox(Objects.ObjectBox box)
 		{
 			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
 			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateBoxes().
@@ -141,7 +144,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public List<ObjectBox> Boxes
+		public List<Objects.ObjectBox> Boxes
 		{
 			//	Retourne la liste des boîtes.
 			get
@@ -150,7 +153,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public ObjectBox RootBox
+		public Objects.ObjectBox RootBox
 		{
 			//	Retourne la boîte racine.
 			get
@@ -159,10 +162,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public ObjectBox SearchBox(string title)
+		public Objects.ObjectBox SearchBox(string title)
 		{
 			//	Cherche une boîte d'après son titre.
-			foreach (ObjectBox box in this.boxes)
+			foreach (Objects.ObjectBox box in this.boxes)
 			{
 				if (box.Title == title)
 				{
@@ -173,13 +176,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
-		public void AddConnection(ObjectConnection connection)
+		public void AddConnection(Objects.ObjectConnection connection)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
 			this.connections.Add(connection);
 		}
 
-		public void AddComment(ObjectComment comment)
+		public void AddComment(Objects.ObjectComment comment)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
 			this.comments.Add(comment);
@@ -803,10 +806,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
+#if false
 					Module dstModule = this.module.DesignerApplication.SearchModule(connection.Field.Destination);
 					Module currentModule = this.module.DesignerApplication.CurrentModule;
 
 					connection.IsDimmed = (dstModule != currentModule);
+#endif
 				}
 
 				if (connection.Comment != null)
@@ -942,7 +947,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			if (dirty)
 			{
-				this.module.AccessEntities.SetLocalDirty();
+				this.SetLocalDirty();
 			}
 		}
 
@@ -1228,8 +1233,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						double zoom = this.zoom;
 						if (message.Wheel < 0)  zoom -= 0.1;
 						if (message.Wheel > 0)  zoom += 0.1;
-						zoom = System.Math.Max(zoom, Viewers.Entities.zoomMin);
-						zoom = System.Math.Min(zoom, Viewers.Entities.zoomMax);
+						zoom = System.Math.Max (zoom, MainController.zoomMin);
+						zoom = System.Math.Min (zoom, MainController.zoomMax);
 						if (this.zoom != zoom)
 						{
 							this.Zoom = zoom;
@@ -1541,21 +1546,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Retourne le mode de travail courant.
 			get
 			{
-				if (this.module.DesignerApplication.IsReadonly)
-				{
-					if (this.entities.SubView == 3)  // sous-vue T ?
-					{
-						return ModifyMode.Partial;
-					}
-					else
-					{
-						return ModifyMode.Locked;
-					}
-				}
-				else
-				{
-					return ModifyMode.Unlocked;
-				}
+				return ModifyMode.Unlocked;
 			}
 		}
 
@@ -1804,6 +1795,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		protected void WriteXml(XmlWriter writer)
 		{
+#if false
 			//	Sérialise toutes les boîtes.
 			writer.WriteStartDocument();
 
@@ -1815,10 +1807,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			writer.WriteEndElement();
 			
 			writer.WriteEndDocument();
+#endif
 		}
 
 		protected void ReadXml(XmlReader reader)
 		{
+#if false
 			//	Désérialise toutes les boîtes.
 			this.Clear();
 
@@ -1847,6 +1841,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.CloseBox(null);  // voir ObjectBox.AdjustAfterRead, commentaire (*)
 			this.UpdateAfterAddOrRemoveConnection(null);
 			this.UpdateAfterOpenOrCloseBox();
+#endif
 		}
 		#endregion
 
@@ -1943,7 +1938,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public event Support.EventHandler AreaSizeChanged
+		public event Epsitec.Common.Support.EventHandler AreaSizeChanged
 		{
 			add
 			{
@@ -1965,7 +1960,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public event Support.EventHandler AreaOffsetChanged
+		public event Epsitec.Common.Support.EventHandler AreaOffsetChanged
 		{
 			add
 			{
@@ -1987,7 +1982,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public event Support.EventHandler ZoomChanged
+		public event Epsitec.Common.Support.EventHandler ZoomChanged
 		{
 			add
 			{
@@ -2006,12 +2001,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;
 
-		protected Module module;
-		protected Viewers.Entities entities;
-		protected List<ObjectBox> boxes;
-		protected List<ObjectConnection> connections;
-		protected List<ObjectComment> comments;
-		protected List<ObjectInfo> infos;
+		protected List<Objects.ObjectBox> boxes;
+		protected List<Objects.ObjectConnection> connections;
+		protected List<Objects.ObjectComment> comments;
+		protected List<Objects.ObjectInfo> infos;
 		protected Size areaSize;
 		protected double zoom;
 		protected Point areaOffset;
@@ -2034,6 +2027,5 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		protected bool grid;
 		protected double gridStep;
 		protected double gridSubdiv;
-#endif
 	}
 }
