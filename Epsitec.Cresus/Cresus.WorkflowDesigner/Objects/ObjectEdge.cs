@@ -3,8 +3,11 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+
+using Epsitec.Cresus.Core.Entities;
 
 using System.Xml;
 using System.Xml.Serialization;
@@ -14,14 +17,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	/// <summary>
-	/// Boîte pour représenter un lien entre des entités.
-	/// </summary>
-	public class ObjectConnection : AbstractObject
+	public class ObjectEdge : AbstractObject
 	{
-		public ObjectConnection(Editor editor) : base(editor)
+		public ObjectEdge(Editor editor, AbstractEntity entity)
+			: base (editor, entity)
 		{
-			this.points = new List<Point>();
+			System.Diagnostics.Debug.Assert (this.Entity != null);
+
+			this.points = new List<Point> ();
 		}
 
 
@@ -266,7 +269,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.ConnectionClose)
 			{
-				ObjectBox dst = this.field.DstBox;
+				ObjectNode dst = this.field.DstBox;
 				this.field.IsExplored = false;
 				this.field.DstBox = null;
 				this.editor.CloseBox(null);
@@ -380,7 +383,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute un commentaire à la connection.
 			if (this.comment == null)
 			{
-				this.comment = new ObjectComment(this.editor);
+				this.comment = new ObjectComment(this.editor, null);
 				this.comment.AttachObject = this;
 				this.comment.BackgroundMainColor = this.field.CommentMainColor;
 				this.comment.Text = this.field.CommentText;
@@ -883,7 +886,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					d2 -= d;
 					if (d2 > 0)
 					{
-						d2 = System.Math.Max(d2, ObjectConnection.arrowMinimalLength);
+						d2 = System.Math.Max(d2, ObjectEdge.arrowMinimalLength);
 						if (d2 > d1)
 						{
 							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
@@ -892,7 +895,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else
 					{
-						d2 = -System.Math.Max(-d2, ObjectConnection.arrowMinimalLength);
+						d2 = -System.Math.Max(-d2, ObjectEdge.arrowMinimalLength);
 						if (d2 < d1)
 						{
 							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
@@ -937,11 +940,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					d1 -= d;
 					if (d1 > 0)
 					{
-						d1 = System.Math.Max(d1, ObjectConnection.arrowMinimalLength);
+						d1 = System.Math.Max(d1, ObjectEdge.arrowMinimalLength);
 					}
 					else
 					{
-						d1 = -System.Math.Max(-d1, ObjectConnection.arrowMinimalLength);
+						d1 = -System.Math.Max(-d1, ObjectEdge.arrowMinimalLength);
 					}
 					d1 += d;
 
@@ -962,11 +965,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				d1 -= d;
 				if (d1 > 0)
 				{
-					d1 = System.Math.Max(d1, ObjectConnection.arrowMinimalLength);
+					d1 = System.Math.Max(d1, ObjectEdge.arrowMinimalLength);
 				}
 				else
 				{
-					d1 = -System.Math.Max(-d1, ObjectConnection.arrowMinimalLength);
+					d1 = -System.Math.Max(-d1, ObjectEdge.arrowMinimalLength);
 				}
 				d1 += d;
 
@@ -994,12 +997,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		private WorkflowEdgeEntity Entity
+		{
+			get
+			{
+				return this.entity as WorkflowEdgeEntity;
+			}
+		}
+
+	
 		protected static readonly double arrowMinimalLength = 25;
 
-		protected Field field;
-		protected List<Point> points;
-		protected bool isSrcHilited;
-		protected bool isDraggingRoute;
-		protected ObjectComment comment;
+		private Field field;
+		private List<Point> points;
+		private bool isSrcHilited;
+		private bool isDraggingRoute;
+		private ObjectComment comment;
 	}
 }

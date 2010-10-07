@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
@@ -33,7 +34,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public ObjectInfo(Editor editor) : base(editor)
+		public ObjectInfo(Editor editor, AbstractEntity entity)
+			: base (editor, entity)
 		{
 			this.isVisible = true;
 			this.boxColor = MainColor.Yellow;
@@ -169,7 +171,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else if (this.isDraggingAttach)
 			{
-				ObjectConnection connection = this.attachObject as ObjectConnection;
+				ObjectEdge connection = this.attachObject as ObjectEdge;
 
 				double attach = connection.PointToAttach(pos);
 				if (attach != 0)
@@ -239,7 +241,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.IsVisible = false;
 
-					ObjectConnection connection = this.attachObject as ObjectConnection;
+					ObjectEdge connection = this.attachObject as ObjectEdge;
 					if (connection != null)
 					{
 						connection.Field.HasComment = false;
@@ -451,10 +453,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
 
-			double d = Point.Distance(himself, other) - ObjectBox.roundFrameRadius - ObjectInfo.roundFrameRadius;
+			double d = Point.Distance(himself, other) - ObjectNode.roundFrameRadius - ObjectInfo.roundFrameRadius;
 
 			himself = Point.Move(himself, other, ObjectInfo.roundFrameRadius);
-			other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
+			other = Point.Move(other, himself, ObjectNode.roundFrameRadius);
 
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
@@ -512,11 +514,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					pos = bounds.TopRight;
 				}
 
-				if (pos.IsZero && this.attachObject is ObjectBox)
+				if (pos.IsZero && this.attachObject is ObjectNode)
 				{
-					ObjectBox box = this.attachObject as ObjectBox;
+					ObjectNode box = this.attachObject as ObjectNode;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate(ObjectBox.roundFrameRadius);
+					boxBounds.Deflate(ObjectNode.roundFrameRadius);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -568,11 +570,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				bounds.Inflate(0.5);
 				bounds.Deflate(ObjectInfo.roundFrameRadius);
 
-				if (this.attachObject is ObjectBox)
+				if (this.attachObject is ObjectNode)
 				{
-					ObjectBox box = this.attachObject as ObjectBox;
+					ObjectNode box = this.attachObject as ObjectNode;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate(ObjectBox.roundFrameRadius);
+					boxBounds.Deflate(ObjectNode.roundFrameRadius);
 
 					if (mode == AttachMode.BottomLeft)
 					{
@@ -640,15 +642,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected AttachMode GetAttachMode()
 		{
 			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
-			if (this.attachObject is ObjectBox)
+			if (this.attachObject is ObjectNode)
 			{
 				Rectangle bounds = this.bounds;
 				bounds.Inflate(0.5);
 				bounds.Deflate(ObjectInfo.roundFrameRadius);
 
-				ObjectBox box = this.attachObject as ObjectBox;
+				ObjectNode box = this.attachObject as ObjectNode;
 				Rectangle boxBounds = box.Bounds;
-				boxBounds.Deflate(ObjectBox.roundFrameRadius);
+				boxBounds.Deflate(ObjectNode.roundFrameRadius);
 
 				if (!bounds.IntersectsWith(boxBounds))
 				{
@@ -733,9 +735,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier l'attache à la connection.
 			get
 			{
-				if (this.attachObject != null && this.attachObject is ObjectConnection)
+				if (this.attachObject != null && this.attachObject is ObjectEdge)
 				{
-					ObjectConnection connection = this.attachObject as ObjectConnection;
+					ObjectEdge connection = this.attachObject as ObjectEdge;
 					return connection.PositionConnectionComment;
 				}
 				else
@@ -783,9 +785,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected void UpdateFieldColor()
 		{
 			//	Met à jour l'information de couleur dans le champ associé.
-			if (this.attachObject is ObjectConnection)
+			if (this.attachObject is ObjectEdge)
 			{
-				ObjectConnection connection = this.attachObject as ObjectConnection;
+				ObjectEdge connection = this.attachObject as ObjectEdge;
 				connection.Field.CommentMainColor = this.BackgroundMainColor;
 			}
 		}

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
@@ -94,10 +95,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public AbstractObject(Editor editor)
+		public AbstractObject(Editor editor, AbstractEntity entity)
 		{
 			//	Constructeur.
 			this.editor = editor;
+			this.entity = entity;
+
 			this.boxColor = MainColor.Blue;
 			this.isDimmed = false;
 			this.hilitedElement = ActiveElement.None;
@@ -897,6 +900,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		public static readonly double minAttach = 20;
+
+		protected readonly Editor editor;
+		protected readonly AbstractEntity entity;
+
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 16;
 		protected static readonly double buttonRadius = 10;
@@ -908,7 +915,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double commentMinWidth = 50;
 		protected static readonly double infoMinWidth = 50;
 
-		protected Editor editor;
 		protected ActiveElement hilitedElement;
 		protected MainColor boxColor;
 		protected bool isDimmed;

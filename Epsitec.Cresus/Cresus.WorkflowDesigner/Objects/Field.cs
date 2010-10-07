@@ -129,10 +129,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public void Initialize(AbstractObject obj, StructuredData dataField)
 		{
 			//	Met à jour selon le StructuredData du champ.
-			System.Diagnostics.Debug.Assert(obj is ObjectBox);
+			System.Diagnostics.Debug.Assert(obj is ObjectNode);
 			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
 
-			this.srcBox = obj as ObjectBox;
+			this.srcBox = obj as ObjectNode;
 		}
 
 		public bool IsReadOnly
@@ -548,7 +548,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ObjectBox SrcBox
+		public ObjectNode SrcBox
 		{
 			//	Objet source de la connection
 			get
@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ObjectBox DstBox
+		public ObjectNode DstBox
 		{
 			//	Objet destination de la connection (si la relation est explorée).
 			get
@@ -570,7 +570,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ObjectConnection Connection
+		public ObjectEdge Connection
 		{
 			//	Objet connection.
 			get
@@ -1125,9 +1125,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected CultureMapSource cultureMapSource;
 		protected int rank;
 		protected int index;
-		protected ObjectBox srcBox;
-		protected ObjectBox dstBox;
-		protected ObjectConnection connection;
+		protected ObjectNode srcBox;
+		protected ObjectNode dstBox;
+		protected ObjectEdge connection;
 		protected bool isExplored;
 		protected bool isSourceExpanded;
 		protected bool isAttachToRight;
