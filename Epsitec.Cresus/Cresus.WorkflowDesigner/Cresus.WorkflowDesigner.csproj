@@ -53,12 +53,18 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Editor.cs" />
+    <Compile Include="MainController.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="Widgets\EntitySubView.cs" />
+    <Compile Include="Widgets\ResetBox.cs" />
     <Compile Include="WorkflowDesigner.cs" />
     <Compile Include="WorkflowDesignerPlugIn.cs" />
+    <Compile Include="ZoomMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
@@ -118,6 +124,30 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\CursorArrow.icon" />
+    <EmbeddedResource Include="Images\CursorZoom.icon" />
+    <EmbeddedResource Include="Images\CursorArrowPlus.icon" />
+    <EmbeddedResource Include="Images\CursorEdit.icon" />
+    <EmbeddedResource Include="Images\CursorFinger.icon" />
+    <EmbeddedResource Include="Images\CursorGlobal.icon" />
+    <EmbeddedResource Include="Images\CursorGrid.icon" />
+    <EmbeddedResource Include="Images\CursorGridPlus.icon" />
+    <EmbeddedResource Include="Images\CursorHand.icon" />
+    <EmbeddedResource Include="Images\CursorLocate.icon" />
+    <EmbeddedResource Include="Images\CursorPen.icon" />
+    <EmbeddedResource Include="Images\ZoomDefault.icon" />
+    <EmbeddedResource Include="Images\ZoomPage.icon" />
+    <EmbeddedResource Include="Images\ZoomMax.icon" />
+    <EmbeddedResource Include="Images\ZoomMin.icon" />
+    <EmbeddedResource Include="Images\Save.icon" />
+    <EmbeddedResource Include="Images\Grid.icon" />
+    <EmbeddedResource Include="Images\Reset.icon" />
+    <EmbeddedResource Include="Images\RadioNo.icon" />
+    <EmbeddedResource Include="Images\RadioYes.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+    <Folder Include="Objects\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

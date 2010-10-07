@@ -33,14 +33,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private Widget CreateWorkflowEditorUI(WorkflowDefinitionEntity workflow)
 		{
-			StaticText customUI = new StaticText ()
+			var box = new FrameBox
 			{
-				BackColor = Color.FromName ("Lime"),
 				Dock = DockStyle.Fill,
-				FormattedText = TextFormatter.FormatText ("Workflow <b>", workflow.Name, "</b>"),
+				Padding = new Margins (5),
 			};
 
-			return customUI;
+			var controller = new MainController (workflow);
+			controller.CreateUI (box);
+
+			return box;
 		}
 
 
