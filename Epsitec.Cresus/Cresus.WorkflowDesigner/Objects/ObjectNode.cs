@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
@@ -16,10 +17,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	/// <summary>
-	/// Boîte pour représenter une entité.
-	/// </summary>
-	public class ObjectBox : AbstractObject
+	public class ObjectNode : AbstractObject
 	{
 		public enum ConnectionAnchor
 		{
@@ -30,8 +28,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public ObjectBox(Editor editor) : base(editor)
+		public ObjectNode(Editor editor, AbstractEntity entity)
+			: base (editor, entity)
 		{
+			System.Diagnostics.Debug.Assert (this.Entity != null);
+
 			this.title = new TextLayout();
 			this.title.DefaultFontSize = 12;
 			this.title.Alignment = ContentAlignment.MiddleCenter;
@@ -48,21 +49,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.isRoot = false;
 			this.isExtended = false;
 
-			this.connectionListBt = new List<ObjectConnection>();
-			this.connectionListBb = new List<ObjectConnection>();
-			this.connectionListC = new List<ObjectConnection>();
-			this.connectionListD = new List<ObjectConnection>();
+			this.connectionListBt = new List<ObjectEdge>();
+			this.connectionListBb = new List<ObjectEdge>();
+			this.connectionListC  = new List<ObjectEdge>();
+			this.connectionListD  = new List<ObjectEdge>();
 
-			this.parents = new List<ObjectBox>();
-		}
+			this.parents = new List<ObjectNode>();
 
-
-		public WorkflowNodeEntity WorkflowNodeEntity
-		{
-			get
-			{
-				return this.workflowNodeEntity;
-			}
+			this.UpdateTitle ();
+			this.UpdateSubtitle ();
 		}
 
 
@@ -107,21 +102,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 			}
-		}
-
-		public void SetContent(WorkflowNodeEntity workflowNodeEntity)
-		{
-			//	Initialise le contenu de la boîte.
-			this.workflowNodeEntity = workflowNodeEntity;
-
-			this.Title = this.workflowNodeEntity.Name.ToString ();
-			this.UpdateSubtitle();
-
-			this.fields.Clear();
-			// TODO: remplir les champs
-
-			this.UpdateFieldsContent();
-			this.UpdateSources();
 		}
 
 		public ObjectComment Comment
@@ -289,11 +269,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public void UpdateTitle()
 		{
 			//	Met à jour le titre de la boîte.
-			this.Title = this.workflowNodeEntity.Name.ToString ();
+			this.Title = this.Entity.Name.ToString ();
 		}
 
 
-		public List<ObjectConnection> ConnectionListBt
+		public List<ObjectEdge> ConnectionListBt
 		{
 			get
 			{
@@ -301,7 +281,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public List<ObjectConnection> ConnectionListBb
+		public List<ObjectEdge> ConnectionListBb
 		{
 			get
 			{
@@ -309,7 +289,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public List<ObjectConnection> ConnectionListC
+		public List<ObjectEdge> ConnectionListC
 		{
 			get
 			{
@@ -317,7 +297,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public List<ObjectConnection> ConnectionListD
+		public List<ObjectEdge> ConnectionListD
 		{
 			get
 			{
@@ -325,7 +305,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public List<ObjectBox> Parents
+		public List<ObjectNode> Parents
 		{
 			get
 			{
@@ -339,7 +319,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return AbstractObject.headerHeight + ObjectBox.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
+				return AbstractObject.headerHeight + ObjectNode.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
 			}
 			else
 			{
@@ -369,8 +349,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			switch (anchor)
 			{
 				case ConnectionAnchor.Left:
-					if (posv >= this.bounds.Bottom+ObjectBox.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectBox.roundFrameRadius &&
+					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
+						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
 						this.IsVerticalPositionFree(posv, false))
 					{
 						return new Point(this.bounds.Left, posv);
@@ -388,8 +368,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 				case ConnectionAnchor.Right:
-					if (posv >= this.bounds.Bottom+ObjectBox.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectBox.roundFrameRadius &&
+					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
+						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
 						this.IsVerticalPositionFree(posv, true))
 					{
 						return new Point(this.bounds.Right, posv);
@@ -413,7 +393,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (!right && this.isExtended && this.sourcesClosedCount > 0)
 			{
 				double y = this.bounds.Top-AbstractObject.headerHeight;
-				if (posv >= y-ObjectBox.fieldHeight/2 && posv <= y+ObjectBox.fieldHeight/2)  // sur le moignon "source" ?
+				if (posv >= y-ObjectNode.fieldHeight/2 && posv <= y+ObjectNode.fieldHeight/2)  // sur le moignon "source" ?
 				{
 					return false;
 				}
@@ -422,7 +402,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (!right && this.isExtended && this.IsInterface)
 			{
 				double y = this.bounds.Top-AbstractObject.headerHeight*0.5;
-				if (posv >= y-ObjectBox.fieldHeight/2 && posv <= y+ObjectBox.fieldHeight/2)  // sur le glyph 'o--' ?
+				if (posv >= y-ObjectNode.fieldHeight/2 && posv <= y+ObjectNode.fieldHeight/2)  // sur le glyph 'o--' ?
 				{
 					return false;
 				}
@@ -431,7 +411,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				Field field = this.fields[i];
-				ObjectConnection connection = field.Connection;
+				ObjectEdge connection = field.Connection;
 
 				if (field.Relation != FieldRelation.None && connection != null)
 				{
@@ -597,7 +577,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else if (this.isMoveColumnsSeparator1)
 			{
 				Rectangle rect = this.Bounds;
-				rect.Deflate(ObjectBox.textMargin, 0);
+				rect.Deflate(ObjectNode.textMargin, 0);
 				pos.X = System.Math.Min(pos.X, this.ColumnsSeparatorAbsolute(1));
 				this.columnsSeparatorRelative1 = (pos.X-rect.Left)/rect.Width;
 				this.columnsSeparatorRelative1 = System.Math.Max(this.columnsSeparatorRelative1, 0.2);
@@ -610,7 +590,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				int sel = -1;
 				if (rect.Contains(pos))
 				{
-					sel = (int) ((pos.Y-rect.Bottom)/ObjectBox.sourcesMenuHeight);
+					sel = (int) ((pos.Y-rect.Bottom)/ObjectNode.sourcesMenuHeight);
 					sel = this.sourcesList.Count-sel-1;
 				}
 
@@ -1261,8 +1241,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
-			rect.Bottom -= ObjectBox.fieldHeight/2;
-			rect.Height = ObjectBox.fieldHeight;
+			rect.Bottom -= ObjectNode.fieldHeight/2;
+			rect.Height = ObjectNode.fieldHeight;
 
 			return rect;
 		}
@@ -1284,7 +1264,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne le rectangle occupé par le nom d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
-			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Deflate(ObjectNode.textMargin, 0);
 			rect.Right = this.ColumnsSeparatorAbsolute(0);
 
 			return rect;
@@ -1295,7 +1275,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne le rectangle occupé par le type d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
-			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Deflate(ObjectNode.textMargin, 0);
 			rect.Left = this.ColumnsSeparatorAbsolute(0)+1;
 			rect.Right = this.ColumnsSeparatorAbsolute(1);
 
@@ -1356,12 +1336,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne le rectangle occupé par un champ, en tenant compte du niveau.
 			Rectangle rect = this.bounds;
 			rect.Deflate(2, 0);
-			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
-			rect.Height = ObjectBox.fieldHeight;
+			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectNode.fieldHeight*(rank+1) - 12;
+			rect.Height = ObjectNode.fieldHeight;
 
 			if (rank >= 0 && rank < this.fields.Count)  // rang d'un champ existant ?
 			{
-				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);  // plus étroit si Level > 0
+				rect.Deflate(ObjectNode.indentWidth*this.fields[rank].Level, 0);  // plus étroit si Level > 0
 			}
 
 			return rect;
@@ -1489,7 +1469,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
 			{
-				this.comment = new ObjectComment(this.editor);
+				this.comment = new ObjectComment (this.editor, null);
 				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
@@ -1516,7 +1496,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute une information à la boîte.
 			if (this.info == null)
 			{
-				this.info = new ObjectInfo(this.editor);
+				this.info = new ObjectInfo (this.editor, null);
 				this.info.AttachObject = this;
 				this.info.BackgroundMainColor = this.BackgroundMainColor;
 
@@ -1618,13 +1598,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				rect.Inflate(2);
 			}
-			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+			rect.Offset(ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
+			this.DrawShadow(graphics, rect, ObjectNode.roundFrameRadius+ObjectNode.shadowOffset, (int)ObjectNode.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, ObjectBox.roundFrameRadius);
+			Path path = this.PathRoundRectangle(rect, ObjectNode.roundFrameRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -1790,14 +1770,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							rect.Top -= 1.0;
 						}
-						Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, true, false);
+						Path roundedPath = this.PathRoundRectangle(rect, ObjectNode.roundInsideRadius, true, false);
 						graphics.Rasterizer.AddSurface(roundedPath);
 						Color ci1 = this.GetColorMain(hilite ? 0.5 : (dragging ? 0.2 : 0.1));
 						Color ci2 = this.GetColorMain(hilite ? 0.3 : (dragging ? 0.1 : 0.0));
 						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
 						rect = this.GetFieldBounds(i);
-						rect.Deflate(ObjectBox.textMargin, 2);
+						rect.Deflate(ObjectNode.textMargin, 2);
 						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
 						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, hilite ? this.GetColor(1) : this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
@@ -1907,7 +1887,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
 						rect.Top += 1.0;
-						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
+						Path dashedPath = this.PathRoundRectangle(rect, ObjectNode.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -1937,11 +1917,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					else if (this.fields[i].IsSubtitle)
 					{
 						int j = i + this.SubgroupLineCount(i);
-						double indent = ObjectBox.indentWidth*this.fields[i].Level;
+						double indent = ObjectNode.indentWidth*this.fields[i].Level;
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
-						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
+						Path dashedPath = this.PathRoundRectangle(rect, ObjectNode.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -2004,7 +1984,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					rect = this.GetFieldGroupBounds(this.hilitedFieldRank);
 					rect.Deflate(1.5);
 					rect.Bottom += 1.0;
-					Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, false, true);
+					Path roundedPath = this.PathRoundRectangle(rect, ObjectNode.roundInsideRadius, false, true);
 
 					graphics.Rasterizer.AddSurface(roundedPath);
 					graphics.RenderSolid(this.GetColorMain(0.1));
@@ -2256,7 +2236,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine le menu pour choisir une entité source.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			double h = ObjectBox.sourcesMenuHeight;
+			double h = ObjectNode.sourcesMenuHeight;
 			Rectangle box = this.RectangleSourcesMenu;
 
 			//	Dessine la boîte vide ombrée.
@@ -2381,7 +2361,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
 			//	Dessine une flèche pendant le déplacement d'un champ.
-			if (System.Math.Abs(p1.Y-p2.Y) < ObjectBox.fieldHeight)
+			if (System.Math.Abs(p1.Y-p2.Y) < ObjectNode.fieldHeight)
 			{
 				return;
 			}
@@ -2495,7 +2475,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				Point pos = this.PositionSourcesMenu;
-				double h = ObjectBox.sourcesMenuHeight*(this.sourcesList.Count+1);
+				double h = ObjectNode.sourcesMenuHeight*(this.sourcesList.Count+1);
 				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
 				rect.Inflate(0.5);
 				return rect;
@@ -2557,9 +2537,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Retourne la position absolue du séparateur des colonnes.
 			Rectangle rect = this.bounds;
-			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Deflate(ObjectNode.textMargin, 0);
 
-			double max = rect.Left + System.Math.Floor(rect.Width-ObjectBox.expressionWidth);
+			double max = rect.Left + System.Math.Floor(rect.Width-ObjectNode.expressionWidth);
 
 			if (rank == 0)
 			{
@@ -2578,6 +2558,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Met à jour le sous-titre de l'entité (nom du module).
 			this.Subtitle = null;
 			this.isDimmed = false;
+		}
+
+
+		private WorkflowNodeEntity Entity
+		{
+			get
+			{
+				return this.entity as WorkflowNodeEntity;
+			}
 		}
 
 
@@ -2737,41 +2726,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double sourcesMenuHeight = 20;
 		protected static readonly double indentWidth = 2;
 
-		protected WorkflowNodeEntity workflowNodeEntity;
-		protected ObjectComment comment;
-		protected ObjectInfo info;
-		protected Rectangle bounds;
-		protected double columnsSeparatorRelative1;
-		protected bool isRoot;
-		protected bool isExtended;
-		protected bool isConnectedToRoot;
-		protected string titleString;
-		protected string subtitleString;
-		protected TextLayout title;
-		protected TextLayout subtitle;
-		protected List<Field> fields;
-		protected int skippedField;
-		protected List<SourceInfo> sourcesList;
-		protected int sourcesClosedCount;
-		protected List<ObjectConnection> connectionListBt;
-		protected List<ObjectConnection> connectionListBb;
-		protected List<ObjectConnection> connectionListC;
-		protected List<ObjectConnection> connectionListD;
-		protected List<ObjectBox> parents;
+		private ObjectComment comment;
+		private ObjectInfo info;
+		private Rectangle bounds;
+		private double columnsSeparatorRelative1;
+		private bool isRoot;
+		private bool isExtended;
+		private bool isConnectedToRoot;
+		private string titleString;
+		private string subtitleString;
+		private TextLayout title;
+		private TextLayout subtitle;
+		private List<Field> fields;
+		private int skippedField;
+		private List<SourceInfo> sourcesList;
+		private int sourcesClosedCount;
+		private List<ObjectEdge> connectionListBt;
+		private List<ObjectEdge> connectionListBb;
+		private List<ObjectEdge> connectionListC;
+		private List<ObjectEdge> connectionListD;
+		private List<ObjectNode> parents;
 
-		protected bool isDragging;
-		protected Point draggingOffset;
+		private bool isDragging;
+		private Point draggingOffset;
 
-		protected bool isFieldMoving;
-		protected int fieldInitialRank;
+		private bool isFieldMoving;
+		private int fieldInitialRank;
 
-		protected bool isChangeWidth;
-		protected double changeWidthPos;
-		protected double changeWidthInitial;
+		private bool isChangeWidth;
+		private double changeWidthPos;
+		private double changeWidthInitial;
 
-		protected bool isMoveColumnsSeparator1;
+		private bool isMoveColumnsSeparator1;
 
-		protected bool isSourcesMenu;
-		protected int sourcesMenuSelected;
+		private bool isSourcesMenu;
+		private int sourcesMenuSelected;
 	}
 }

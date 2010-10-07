@@ -60,9 +60,9 @@
     <Compile Include="Misc.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\Field.cs" />
-    <Compile Include="Objects\ObjectBox.cs" />
+    <Compile Include="Objects\ObjectNode.cs" />
     <Compile Include="Objects\ObjectComment.cs" />
-    <Compile Include="Objects\ObjectConnection.cs" />
+    <Compile Include="Objects\ObjectEdge.cs" />
     <Compile Include="Objects\ObjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>

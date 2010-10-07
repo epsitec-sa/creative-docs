@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 	/// <summary>
 	///	Compare deux connections pour minimiser les croisements.
 	/// </summary>
-	public class Connection : IComparer<Objects.ObjectConnection>
+	public class Connection : IComparer<Objects.ObjectEdge>
 	{
-		public int Compare(Objects.ObjectConnection obj1, Objects.ObjectConnection obj2)
+		public int Compare(Objects.ObjectEdge obj1, Objects.ObjectEdge obj2)
 		{
 			if (obj1.Field.Route == Objects.Field.RouteType.Bb)
 			{
