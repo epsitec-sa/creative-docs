@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateInitialWorkflow()
 		{
-			var n = this.workflowDefinitionEntity.StartingEdges[1].NextNode.Edges[0].NextNode;  // TODO: très provisoire !
+			var n = this.workflowDefinitionEntity.Edges[1].NextNode.Edges[0].NextNode;  // TODO: très provisoire !
 
 			var node = new ObjectNode(this, n);
 			node.IsRoot = true;

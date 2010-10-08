@@ -172,11 +172,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (lastIndex < 0)
 			{
-				return thread.Definition.StartingEdges;
+				return thread.Definition.Edges;
 			}
 			else
 			{
-				return WorkflowController.GetEnabledEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.StartingEdges;
+				return WorkflowController.GetEnabledEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.Edges;
 			}
 		}
 

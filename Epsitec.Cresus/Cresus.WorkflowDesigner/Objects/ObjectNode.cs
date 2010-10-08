@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				return this.Entity.Code;
+				return ""; //@PA				this.Entity.Code;
 			}
 		}
 

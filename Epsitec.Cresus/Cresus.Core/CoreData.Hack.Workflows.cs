@@ -44,14 +44,12 @@ namespace Epsitec.Cresus.Core
 			var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 			var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 
-			def.Code = "CUST-ORDER";
 			def.EnableCondition = "MasterEntity=[L0AB2]";
 			def.Name = FormattedText.FromSimpleText ("Commande client");
 			def.Description = FormattedText.FromSimpleText ("Workflow pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
-			def.StartingEdges.Add (edgeAB);
-			def.StartingEdges.Add (edgeAC);
+			def.Edges.Add (edgeAB);
+			def.Edges.Add (edgeAC);
 
-			nodeA.Code = "SALES-QUOTE(1)";
 			nodeA.Name = FormattedText.FromSimpleText ("Préparation de l'offre");
 			nodeA.Edges.Add (edgeAB);
 			nodeA.Edges.Add (edgeAC);
@@ -71,10 +69,8 @@ namespace Epsitec.Cresus.Core
 			edgeCA.TransitionAction = "...";
 			edgeCA.NextNode = nodeA;
 
-			nodeB.Code = "SALES-QUOTE(2)";
 			nodeB.Name = "Offre envoyée";
 
-			nodeC.Code = "SALES-QUOTE(3)";
 			nodeC.Name = "Variante de l'offre";
 			nodeC.Edges.Add (edgeCA);
 
