@@ -85,14 +85,26 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public void SetBusinessContext(Core.Business.BusinessContext businessContext)
+		{
+			this.businessContext = businessContext;
+		}
+
 		public void SetWorkflowDefinitionEntity(WorkflowDefinitionEntity entity)
 		{
 			this.workflowDefinitionEntity = entity;
-			this.CreateInitialWorkflow ();
 		}
 
 		public void SetLocalDirty()
 		{
+		}
+
+		public Core.Business.BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
 		}
 
 		public VScroller VScroller
@@ -108,15 +120,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		private void CreateInitialWorkflow()
+		public void CreateInitialWorkflow()
 		{
-			var n = this.workflowDefinitionEntity.StartingEdges[0].NextNode;  // TODO: provisoire !
+			var n = this.workflowDefinitionEntity.StartingEdges[1].NextNode.Edges[0].NextNode;  // TODO: très provisoire !
 
 			var node = new ObjectNode(this, n);
 			node.IsRoot = true;
 			this.AddNode (node);
 
-			this.UpdateAfterGeometryChanged (node);
+			this.CreateEdges ();
+			this.UpdateAfterGeometryChanged (null);
 		}
 
 
@@ -145,6 +158,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				return this.nodes[0];
 			}
+		}
+
+
+		public ObjectNode SearchNode(string code)
+		{
+			//	Cherche un noeud d'après son code.
+			foreach (ObjectNode node in this.nodes)
+			{
+				if (node.Code == code)
+				{
+					return node;
+				}
+			}
+
+			return null;
 		}
 
 
@@ -354,27 +382,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					Edge edge = node.Edges[i];
 
-					if (edge.Relation != FieldRelation.None)
+					ObjectEdge objectEdge = edge.ObjectEdge;
+					if (objectEdge != null)
 					{
-						ObjectEdge objectEdge = edge.ObjectEdge;
-						if (objectEdge != null)
+						objectEdge.Points.Clear();
+
+						if (edge.IsExplored)
 						{
-							objectEdge.Points.Clear();
+							this.UpdateEdge(objectEdge, node, edge.Index, edge.DstNode);
+						}
+						else
+						{
+							edge.RouteClear();
 
-							if (edge.IsExplored)
-							{
-								this.UpdateEdge(objectEdge, node, edge.Index, edge.DstNode);
-							}
-							else
-							{
-								edge.RouteClear();
-
-								//	Important: toujours le point droite en premier !
-								double posv = node.GetEdgeSrcVerticalPosition(i);
-								objectEdge.Points.Add(new Point(node.Bounds.Right-1, posv));
-								objectEdge.Points.Add(new Point(node.Bounds.Left+1, posv));
-								objectEdge.Edge.Route = Edge.RouteType.Close;
-							}
+							//	Important: toujours le point droite en premier !
+							double posv = node.GetEdgeSrcVerticalPosition(i);
+							objectEdge.Points.Add(new Point(node.Bounds.Right-1, posv));
+							objectEdge.Points.Add(new Point(node.Bounds.Left+1, posv));
+							objectEdge.Edge.Route = Edge.RouteType.Close;
 						}
 					}
 				}
@@ -698,24 +723,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					Edge edge = node.Edges[i];
 
-					if (edge.Relation != FieldRelation.None)
+					//	Si la liaison est ouverte sur une boîte qui n'existe plus,
+					//	considère la liaison comme fermée !
+					if (edge.IsExplored)
 					{
-						//	Si la liaison est ouverte sur une boîte qui n'existe plus,
-						//	considère la liaison comme fermée !
-						if (edge.IsExplored)
+						if (!this.nodes.Contains(edge.DstNode))
 						{
-							if (!this.nodes.Contains(edge.DstNode))
-							{
-								edge.IsExplored = false;
-							}
+							edge.IsExplored = false;
 						}
-
-						ObjectEdge objectEdge = new ObjectEdge(this, null);
-						objectEdge.Edge = edge;
-						objectEdge.BackgroundMainColor = node.BackgroundMainColor;
-						edge.ObjectEdge = objectEdge;
-						this.AddEdge(objectEdge);
 					}
+
+					ObjectEdge objectEdge = new ObjectEdge(this, edge.WorkflowEdgeEntity);
+					objectEdge.Edge = edge;
+					objectEdge.BackgroundMainColor = node.BackgroundMainColor;
+					edge.ObjectEdge = objectEdge;
+					this.AddEdge(objectEdge);
 				}
 			}
 
@@ -724,7 +746,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (objectEdge.Edge.HasComment && objectEdge.Edge.IsExplored)
 				{
-					objectEdge.Comment = new ObjectComment (this, null);
+					objectEdge.Comment = new ObjectComment (this, objectEdge.AbstractEntity);
 					objectEdge.Comment.AttachObject = objectEdge;
 					objectEdge.Comment.Text = objectEdge.Edge.CommentText;
 					objectEdge.Comment.BackgroundMainColor = objectEdge.Edge.CommentMainColor;
@@ -1329,7 +1351,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
-					if (fly.HilitedElement == AbstractObject.ActiveElement.NodeHeader)
+					if (fly.HilitedElement == ActiveElement.NodeHeader)
 					{
 						if (this.IsLocateActionHeader(message))
 						{
@@ -1355,16 +1377,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							}
 						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.NodeInside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.EdgeHilited ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeGroup)
+					else if (fly.HilitedElement == ActiveElement.None ||
+							 fly.HilitedElement == ActiveElement.NodeInside ||
+							 fly.HilitedElement == ActiveElement.EdgeHilited)
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeName ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeType ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeExpression)
+					else if (fly.HilitedElement == ActiveElement.NodeEdgeName ||
+							 fly.HilitedElement == ActiveElement.NodeEdgeType ||
+							 fly.HilitedElement == ActiveElement.NodeEdgeExpression)
 					{
 						if (this.IsLocateAction(message))
 						{
@@ -1382,7 +1403,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							}
 						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeTitle)
+					else if (fly.HilitedElement == ActiveElement.NodeEdgeTitle)
 					{
 						if (this.IsLocateAction(message))
 						{
@@ -1393,16 +1414,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							type = MouseCursorType.Arrow;
 						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
+					else if (fly.HilitedElement == ActiveElement.CommentEdit)
 					{
 						type = MouseCursorType.IBeam;
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.InfoMove)
+					else if (fly.HilitedElement == ActiveElement.CommentMove ||
+							 fly.HilitedElement == ActiveElement.InfoMove)
 					{
 						type = MouseCursorType.Move;
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.InfoEdit)
+					else if (fly.HilitedElement == ActiveElement.InfoEdit)
 					{
 						type = MouseCursorType.Arrow;
 					}
@@ -1976,6 +1997,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public static readonly double pushMargin = 10;
 		private static readonly double frameMargin = 40;
 
+		private Core.Business.BusinessContext businessContext;
 		private WorkflowDefinitionEntity workflowDefinitionEntity;
 		private List<ObjectNode> nodes;
 		private List<ObjectEdge> edges;

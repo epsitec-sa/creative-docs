@@ -7,6 +7,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -44,12 +46,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutTitle.DefaultFontSize = 14;
 			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
 			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
-			this.textLayoutTitle.Text = "Titre";  //Res.Strings.Entities.Comment.Title;
+			this.textLayoutTitle.Text = "Commentaires";  //Res.Strings.Entities.Comment.Title;
 
 			this.textLayoutComment = new TextLayout();
 			this.textLayoutComment.DefaultFontSize = 10;
 			this.textLayoutComment.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-			this.textLayoutComment.Text = "Tralala...";  //Res.Strings.Entities.Comment.DefaultText;
+
+			if (this.entity is WorkflowNodeEntity)
+			{
+				var node = this.entity as WorkflowNodeEntity;
+
+				this.textLayoutComment.Text = node.Name.ToString ();  // TODO: provisoire
+			}
+
+			if (this.entity is WorkflowEdgeEntity)
+			{
+				var edge = this.entity as WorkflowEdgeEntity;
+
+				this.textLayoutComment.Text = edge.Description.ToString ();  // TODO: provisoire
+			}
 		}
 
 
@@ -473,7 +488,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			rect.Inflate(2);
 			rect.Offset(8, -8);
-			this.DrawShadow(graphics, rect, 8, 8, 0.2);
+			this.DrawRoundShadow(graphics, rect, 8, 8, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
@@ -545,11 +560,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", true, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
 				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", false, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
 				}
 			}
 		}
