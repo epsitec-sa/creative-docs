@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public class ObjectNode : AbstractObject
 	{
-		public enum ConnectionAnchor
+		public enum EdgeAnchor
 		{
 			Left,
 			Right,
@@ -49,10 +49,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.isRoot = false;
 			this.isExtended = false;
 
-			this.connectionListBt = new List<ObjectEdge>();
-			this.connectionListBb = new List<ObjectEdge>();
-			this.connectionListC  = new List<ObjectEdge>();
-			this.connectionListD  = new List<ObjectEdge>();
+			this.edgeListBt = new List<ObjectEdge>();
+			this.edgeListBb = new List<ObjectEdge>();
+			this.edgeListC  = new List<ObjectEdge>();
+			this.edgeListD  = new List<ObjectEdge>();
 
 			this.parents = new List<ObjectNode>();
 
@@ -192,9 +192,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					//	Change la couleur de toutes les connections liées.
 					foreach (Edge edge in this.edges)
 					{
-						if (edge.Connection != null)
+						if (edge.ObjectEdge != null)
 						{
-							edge.Connection.BackgroundMainColor = this.boxColor;
+							edge.ObjectEdge.BackgroundMainColor = this.boxColor;
 						}
 					}
 
@@ -279,35 +279,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public List<ObjectEdge> ConnectionListBt
+		public List<ObjectEdge> EdgeListBt
 		{
 			get
 			{
-				return this.connectionListBt;
+				return this.edgeListBt;
 			}
 		}
 
-		public List<ObjectEdge> ConnectionListBb
+		public List<ObjectEdge> EdgeListBb
 		{
 			get
 			{
-				return this.connectionListBb;
+				return this.edgeListBb;
 			}
 		}
 
-		public List<ObjectEdge> ConnectionListC
+		public List<ObjectEdge> EdgeListC
 		{
 			get
 			{
-				return this.connectionListC;
+				return this.edgeListC;
 			}
 		}
 
-		public List<ObjectEdge> ConnectionListD
+		public List<ObjectEdge> EdgeListD
 		{
 			get
 			{
-				return this.connectionListD;
+				return this.edgeListD;
 			}
 		}
 
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public double GetConnectionSrcVerticalPosition(int rank)
+		public double GetEdgeSrcVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
 			//	Il s'agit toujours de la position de départ d'une liaison.
@@ -348,13 +348,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public Point GetConnectionDstPosition(double posv, ConnectionAnchor anchor)
+		public Point GetEdgeDstPosition(double posv, EdgeAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
 			//	Il s'agit toujours de la position d'arrivée d'une liaison.
 			switch (anchor)
 			{
-				case ConnectionAnchor.Left:
+				case EdgeAnchor.Left:
 					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
 						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
 						this.IsVerticalPositionFree(posv, false))
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 
-				case ConnectionAnchor.Right:
+				case EdgeAnchor.Right:
 					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
 						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
 						this.IsVerticalPositionFree(posv, true))
@@ -383,10 +383,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					return new Point(this.bounds.Right, this.bounds.Top-AbstractObject.headerHeight*0.5);
 
-				case ConnectionAnchor.Bottom:
+				case EdgeAnchor.Bottom:
 					return new Point(this.bounds.Center.X, this.bounds.Bottom);
 
-				case ConnectionAnchor.Top:
+				case EdgeAnchor.Top:
 					return new Point(this.bounds.Center.X, this.bounds.Top);
 			}
 
@@ -417,9 +417,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			for (int i=0; i<this.edges.Count; i++)
 			{
 				Edge edge = this.edges[i];
-				ObjectEdge connection = edge.Connection;
+				ObjectEdge objectEdge = edge.ObjectEdge;
 
-				if (edge.Relation != FieldRelation.None && connection != null)
+				if (edge.Relation != FieldRelation.None && objectEdge != null)
 				{
 					Rectangle rect = this.GetFieldBounds(i);
 					if (posv >= rect.Bottom && posv <= rect.Top)
@@ -565,7 +565,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
 				this.SetBounds(bounds);
-				this.editor.UpdateConnections();
+				this.editor.UpdateEdges();
 				return true;
 			}
 			else if (this.isEdgeMoving)
@@ -577,7 +577,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle bounds = this.Bounds;
 				bounds.Width = this.editor.GridAlign(System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
 				this.SetBounds(bounds);
-				this.editor.UpdateConnections();
+				this.editor.UpdateEdges();
 				return true;
 			}
 			else if (this.isMoveColumnsSeparator1)
@@ -680,7 +680,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					if (!this.isRoot)
 					{
 						this.editor.CloseNode(this);
-						this.editor.UpdateAfterAddOrRemoveConnection(null);
+						this.editor.UpdateAfterAddOrRemoveEdge(null);
 					}
 				}
 
@@ -800,15 +800,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
-			this.SetConnectionsHilited(false);
+			this.SetEdgesHilited(false);
 
 			if (pos.IsZero)
 			{
-				//	Si l'une des connection est dans l'état ConnectionOpen*, il faut afficher
+				//	Si l'une des connection est dans l'état EdgeOpen*, il faut afficher
 				//	aussi les petits cercles de gauche.
-				if (this.IsConnectionReadyForOpen())
+				if (this.IsEdgeReadyForOpen())
 				{
-					this.SetConnectionsHilited(true);
+					this.SetEdgesHilited(true);
 				}
 				return false;
 			}
@@ -939,7 +939,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						 pos.Y <= this.bounds.Bottom+AbstractObject.footerHeight))
 					{
 						element = ActiveElement.NodeHeader;
-						this.SetConnectionsHilited(true);
+						this.SetEdgesHilited(true);
 						return true;
 					}
 
@@ -953,7 +953,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 							{
 								element = ActiveElement.NodeEdgeAdd;
 								fieldRank = i;
-								this.SetConnectionsHilited(true);
+								this.SetEdgesHilited(true);
 								return true;
 							}
 						}
@@ -967,7 +967,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
 					{
 						element = ActiveElement.NodeMoveColumnsSeparator1;
-						this.SetConnectionsHilited(true);
+						this.SetEdgesHilited(true);
 						return true;
 					}
 
@@ -979,7 +979,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							element = ActiveElement.NodeEdgeRemove;
 							fieldRank = i;
-							this.SetConnectionsHilited(true);
+							this.SetEdgesHilited(true);
 							return true;
 						}
 
@@ -988,7 +988,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							element = ActiveElement.NodeEdgeMovable;
 							fieldRank = i;
-							this.SetConnectionsHilited(true);
+							this.SetEdgesHilited(true);
 							return true;
 						}
 
@@ -997,7 +997,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							element = ActiveElement.NodeEdgeName;
 							fieldRank = i;
-							this.SetConnectionsHilited(true);
+							this.SetEdgesHilited(true);
 							return true;
 						}
 
@@ -1006,7 +1006,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							element = ActiveElement.NodeEdgeType;
 							fieldRank = i;
-							this.SetConnectionsHilited(true);
+							this.SetEdgesHilited(true);
 							return true;
 						}
 
@@ -1015,7 +1015,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							element = ActiveElement.NodeEdgeExpression;
 							fieldRank = i;
-							this.SetConnectionsHilited(true);
+							this.SetEdgesHilited(true);
 							return true;
 						}
 					}
@@ -1047,7 +1047,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			element = ActiveElement.NodeInside;
-			this.SetConnectionsHilited(true);
+			this.SetEdgesHilited(true);
 			return true;
 		}
 
@@ -1057,7 +1057,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return true;
 		}
 
-		protected void SetConnectionsHilited(bool isHilited)
+		protected void SetEdgesHilited(bool isHilited)
 		{
 			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
 			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
@@ -1068,23 +1068,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			foreach (Edge edge in this.edges)
 			{
-				if (edge.Connection != null)
+				if (edge.ObjectEdge != null)
 				{
-					edge.Connection.IsSrcHilited = isHilited;
+					edge.ObjectEdge.IsSrcHilited = isHilited;
 				}
 			}
 		}
 
-		protected bool IsConnectionReadyForOpen()
+		protected bool IsEdgeReadyForOpen()
 		{
-			//	Indique si l'une des connections qui partent de l'objet est en mode ConnectionOpen*.
+			//	Indique si l'une des connections qui partent de l'objet est en mode EdgeOpen*.
 			foreach (Edge edge in this.edges)
 			{
-				if (edge.Connection != null)
+				if (edge.ObjectEdge != null)
 				{
-					ActiveElement ae = edge.Connection.HilitedElement;
-					if (ae == ActiveElement.ConnectionOpenLeft ||
-						ae == ActiveElement.ConnectionOpenRight)
+					ActiveElement ae = edge.ObjectEdge.HilitedElement;
+					if (ae == ActiveElement.EdgeOpenLeft ||
+						ae == ActiveElement.EdgeOpenRight)
 					{
 						return true;
 					}
@@ -1338,46 +1338,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		/// <summary>
-		/// Informations sur une entité source, ouverte ou fermée.
-		/// </summary>
-		protected class SourceInfo
-		{
-			public string ModuleName;
-			public string FieldName;
-			public CultureMap CultureMap;
-			public int Rank;
-			public bool Opened;
-		}
-
-		public void UpdateAfterOpenOrCloseNode()
-		{
-			//	Appelé après avoir ajouté ou supprimé une boîte.
-#if false
-			this.sourcesClosedCount = 0;
-			for (int i=0; i<this.sourcesList.Count; i++)
-			{
-				SourceInfo info = this.sourcesList[i];
-
-				info.Opened = false;
-				foreach (ObjectBox box in this.editor.Boxes)
-				{
-					if (box.cultureMap == info.CultureMap)
-					{
-						info.Opened = true;
-						break;
-					}
-				}
-
-				if (!info.Opened)
-				{
-					this.sourcesClosedCount++;  // màj le nombre de sources fermées
-				}
-			}
-#endif
-		}
-
-
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
@@ -1512,21 +1472,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le bouton des commentaires.
 			if (this.hilitedElement == ActiveElement.NodeComment)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", true, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", false, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
 			}
 
 			//	Dessine le bouton des informations.
 			if (this.hilitedElement == ActiveElement.NodeInfo)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxInfo", true, false);
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxInfo", false, false);
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
 			}
 
 			//	Dessine les noms des champs.
@@ -1655,7 +1615,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					!this.IsHeaderHilite && !this.isEdgeMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(0).Center;
+					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.edges.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.NodeEdgeAdd || this.hilitedElement == ActiveElement.NodeEdgeRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
@@ -1709,7 +1669,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeEdgeTitle)
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedEdgeRank);
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxFieldRemoveInterface", this.hilitedElement == ActiveElement.NodeEdgeRemoveInterface, true);
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-", this.hilitedElement == ActiveElement.NodeEdgeRemoveInterface, true);
 					}
 
 #if false
@@ -2223,10 +2183,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout title;
 		private TextLayout subtitle;
 		private List<Edge> edges;
-		private List<ObjectEdge> connectionListBt;
-		private List<ObjectEdge> connectionListBb;
-		private List<ObjectEdge> connectionListC;
-		private List<ObjectEdge> connectionListD;
+		private List<ObjectEdge> edgeListBt;
+		private List<ObjectEdge> edgeListBb;
+		private List<ObjectEdge> edgeListC;
+		private List<ObjectEdge> edgeListD;
 		private List<ObjectNode> parents;
 
 		private bool isDragging;

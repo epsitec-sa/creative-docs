@@ -189,16 +189,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ObjectEdge Connection
+		public ObjectEdge ObjectEdge
 		{
 			//	Objet connection.
 			get
 			{
-				return this.connection;
+				return this.objectEdge;
 			}
 			set
 			{
-				this.connection = value;
+				this.objectEdge = value;
 			}
 		}
 
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.routeType != value)
 				{
 					this.routeType = value;
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 				}
 			}
 		}
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeRelativeAX1 = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeRelativeAX2 = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeAbsoluteAY = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeRelativeBX = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeRelativeBY = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeRelativeCX = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -507,7 +507,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.routeAbsoluteDX = value;
 
-					this.connection.UpdateRoute();
+					this.objectEdge.UpdateRoute();
 					this.editor.Invalidate();
 				}
 			}
@@ -714,7 +714,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private int index;
 		private ObjectNode srcNode;
 		private ObjectNode dstNode;
-		private ObjectEdge connection;
+		private ObjectEdge objectEdge;
 		private bool isExplored;
 		private bool isSourceExpanded;
 		private bool isAttachToRight;

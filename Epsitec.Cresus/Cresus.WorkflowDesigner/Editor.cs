@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.InternalState |= InternalState.Engageable;
 
 			this.nodes       = new List<ObjectNode>();
-			this.connections = new List<ObjectEdge> ();
+			this.edges = new List<ObjectEdge> ();
 			this.comments    = new List<ObjectComment> ();
 			this.infos       = new List<ObjectInfo> ();
 
@@ -85,17 +85,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public WorkflowDefinitionEntity WorkflowDefinitionEntity
+		public void SetWorkflowDefinitionEntity(WorkflowDefinitionEntity entity)
 		{
-			get
-			{
-				return this.workflowDefinitionEntity;
-			}
-			set
-			{
-				this.workflowDefinitionEntity = value;
-				this.CreateInitialWorkflow ();
-			}
+			this.workflowDefinitionEntity = entity;
+			this.CreateInitialWorkflow ();
 		}
 
 		public void SetLocalDirty()
@@ -117,25 +110,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void CreateInitialWorkflow()
 		{
-			var n = this.workflowDefinitionEntity.StartingEdges[0].NextNode;
+			var n = this.workflowDefinitionEntity.StartingEdges[0].NextNode;  // TODO: provisoire !
+
 			var node = new ObjectNode(this, n);
+			node.IsRoot = true;
 			this.AddNode (node);
+
+			this.UpdateAfterGeometryChanged (node);
 		}
 
-
-		public void AddNode(ObjectNode node)
-		{
-			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
-			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateNodes().
-			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
-			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
-			//	fonction de la boîte parent.
-			node.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
-			node.IsExtended = true;
-
-			this.nodes.Add(node);
-			this.UpdateAfterOpenOrCloseNode();
-		}
 
 		public int NodeCount
 		{
@@ -164,24 +147,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public ObjectNode SearchNode(string title)
-		{
-			//	Cherche une boîte d'après son titre.
-			foreach (ObjectNode node in this.nodes)
-			{
-				if (node.Title == title)
-				{
-					return node;
-				}
-			}
 
-			return null;
+		public void AddNode(ObjectNode node)
+		{
+			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
+			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateNodes().
+			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
+			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
+			//	fonction de la boîte parent.
+			node.SetBounds (new Rectangle (0, 0, Editor.defaultWidth, 0));
+			node.IsExtended = true;
+
+			this.nodes.Add (node);
 		}
 
-		public void AddConnection(ObjectEdge connection)
+		public void AddEdge(ObjectEdge edge)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
-			this.connections.Add(connection);
+			this.edges.Add(edge);
 		}
 
 		public void AddComment(ObjectComment comment)
@@ -196,11 +179,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.infos.Add(info);
 		}
 
+
 		public void Clear()
 		{
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.nodes.Clear();
-			this.connections.Clear();
+			this.edges.Clear();
 			this.comments.Clear();
 			this.infos.Clear();
 			this.LockObject(null);
@@ -292,7 +276,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
 			this.UpdateNodes();
-			this.UpdateConnections();
+			this.UpdateEdges();
 		}
 
 		public void UpdateAfterCommentChanged()
@@ -300,7 +284,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Appelé lorsqu'un commentaire ou une information a changé.
 			this.RedimArea();
 
-			this.UpdateConnections();
+			this.UpdateEdges();
 			this.RedimArea();
 
 			this.UpdateDimmed();
@@ -313,7 +297,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
-			this.UpdateConnections();
+			this.UpdateEdges();
 			this.RedimArea();
 
 			this.UpdateDimmed();
@@ -325,21 +309,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
-			this.UpdateConnections();
+			this.UpdateEdges();
 			this.RedimArea();
 		}
 
-		public void UpdateAfterAddOrRemoveConnection(ObjectNode node)
+		public void UpdateAfterAddOrRemoveEdge(ObjectNode node)
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
 			this.UpdateNodes();
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
-			this.CreateConnections();
+			this.CreateEdges();
 			this.RedimArea();
 
-			this.UpdateConnections();
+			this.UpdateEdges();
 			this.RedimArea();
 
 			this.UpdateDimmed();
@@ -359,7 +343,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public void UpdateConnections()
+		public void UpdateEdges()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
 			this.CommentsMemorize();
@@ -372,24 +356,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 					if (edge.Relation != FieldRelation.None)
 					{
-						ObjectEdge connection = edge.Connection;
-						if (connection != null)
+						ObjectEdge objectEdge = edge.ObjectEdge;
+						if (objectEdge != null)
 						{
-							connection.Points.Clear();
+							objectEdge.Points.Clear();
 
 							if (edge.IsExplored)
 							{
-								this.UpdateConnection(connection, node, edge.Index, edge.DstNode);
+								this.UpdateEdge(objectEdge, node, edge.Index, edge.DstNode);
 							}
 							else
 							{
 								edge.RouteClear();
 
 								//	Important: toujours le point droite en premier !
-								double posv = node.GetConnectionSrcVerticalPosition(i);
-								connection.Points.Add(new Point(node.Bounds.Right-1, posv));
-								connection.Points.Add(new Point(node.Bounds.Left+1, posv));
-								connection.Edge.Route = Edge.RouteType.Close;
+								double posv = node.GetEdgeSrcVerticalPosition(i);
+								objectEdge.Points.Add(new Point(node.Bounds.Right-1, posv));
+								objectEdge.Points.Add(new Point(node.Bounds.Left+1, posv));
+								objectEdge.Edge.Route = Edge.RouteType.Close;
 							}
 						}
 					}
@@ -401,49 +385,49 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Les croisements sont minimisés.
 			foreach (ObjectNode node in this.nodes)
 			{
-				node.ConnectionListBt.Clear();
-				node.ConnectionListBb.Clear();
-				node.ConnectionListC.Clear();
-				node.ConnectionListD.Clear();
+				node.EdgeListBt.Clear();
+				node.EdgeListBb.Clear();
+				node.EdgeListC.Clear();
+				node.EdgeListD.Clear();
 			}
 
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge edge in this.edges)
 			{
-				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.Bt)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.Bt)
 				{
-					connection.Edge.DstNode.ConnectionListBt.Add(connection);
+					edge.Edge.DstNode.EdgeListBt.Add(edge);
 				}
 
-				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.Bb)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.Bb)
 				{
-					connection.Edge.DstNode.ConnectionListBb.Add(connection);
+					edge.Edge.DstNode.EdgeListBb.Add(edge);
 				}
 
-				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.C)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.C)
 				{
-					connection.Edge.DstNode.ConnectionListC.Add(connection);
+					edge.Edge.DstNode.EdgeListC.Add(edge);
 				}
 
-				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.D)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.D)
 				{
-					connection.Edge.DstNode.ConnectionListD.Add(connection);
+					edge.Edge.DstNode.EdgeListD.Add(edge);
 				}
-			}
-
-			foreach (ObjectNode node in this.nodes)
-			{
-				this.ShiftConnectionsB(node, node.ConnectionListBt);
-				this.ShiftConnectionsB(node, node.ConnectionListBb);
-				this.ShiftConnectionsC(node, node.ConnectionListC);
-				this.ShiftConnectionsD(node, node.ConnectionListD);
 			}
 
 			foreach (ObjectNode node in this.nodes)
 			{
-				node.ConnectionListBt.Clear();
-				node.ConnectionListBb.Clear();
-				node.ConnectionListC.Clear();
-				node.ConnectionListD.Clear();
+				this.ShiftEdgesB(node, node.EdgeListBt);
+				this.ShiftEdgesB(node, node.EdgeListBb);
+				this.ShiftEdgesC(node, node.EdgeListC);
+				this.ShiftEdgesD(node, node.EdgeListD);
+			}
+
+			foreach (ObjectNode node in this.nodes)
+			{
+				node.EdgeListBt.Clear();
+				node.EdgeListBb.Clear();
+				node.EdgeListC.Clear();
+				node.EdgeListD.Clear();
 			}
 
 			//	Adapte tous les commentaires.
@@ -451,14 +435,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (comment.AttachObject is ObjectEdge)
 				{
-					ObjectEdge connection = comment.AttachObject as ObjectEdge;
+					ObjectEdge edge = comment.AttachObject as ObjectEdge;
 
-					Point oldPos = connection.Edge.CommentPosition;
-					Point newPos = connection.PositionConnectionComment;
+					Point oldPos = edge.Edge.CommentPosition;
+					Point newPos = edge.PositionEdgeComment;
 
 					if (!oldPos.IsZero && !newPos.IsZero)
 					{
-						Rectangle rect = connection.Edge.CommentBounds;
+						Rectangle rect = edge.Edge.CommentBounds;
 						rect.Offset(newPos-oldPos);
 						comment.SetBounds(rect);  // déplace le commentaire
 					}
@@ -468,7 +452,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.Invalidate();
 		}
 
-		protected void UpdateConnection(ObjectEdge connection, ObjectNode src, int srcRank, ObjectNode dst)
+		protected void UpdateEdge(ObjectEdge edge, ObjectNode src, int srcRank, ObjectNode dst)
 		{
 			//	Met à jour la géométrie d'une liaison.
 			Rectangle srcBounds = src.Bounds;
@@ -480,212 +464,212 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			srcBoundsLittle.Deflate(2);
 			dstBoundsLittle.Deflate(2);
 
-			connection.Points.Clear();
-			connection.Edge.RouteClear();
+			edge.Points.Clear();
+			edge.Edge.RouteClear();
 
-			double v = src.GetConnectionSrcVerticalPosition(srcRank);
+			double v = src.GetEdgeSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
 			{
 				Point p = new Point(srcBounds.Right-1, v);
-				connection.Points.Add(p);
+				edge.Points.Add(p);
 
 				p.X += 30;
-				connection.Points.Add(p);
+				edge.Points.Add(p);
 
 				p.Y -= 10;
-				connection.Points.Add(p);
+				edge.Points.Add(p);
 
 				p.X -= 30;
-				connection.Points.Add(p);
+				edge.Points.Add(p);
 
-				connection.Edge.Route = Edge.RouteType.Himself;
+				edge.Edge.Route = Edge.RouteType.Himself;
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
 				Point p = new Point(0, v);
 
-				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
+				if (dstBounds.Center.X > srcBounds.Right+Editor.edgeDetour/3)  // destination à droite ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
-					connection.Points.Add(start);
+					edge.Points.Add(start);
 
-					if (dstBounds.Top < start.Y-Editor.connectionDetour)  // destination plus basse ?
+					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Top);
-						connection.Points.Add(new Point(end.X, start.Y));
-						connection.Points.Add(end);
-						connection.Edge.Route = Edge.RouteType.Bb;
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
+						edge.Points.Add(new Point(end.X, start.Y));
+						edge.Points.Add(end);
+						edge.Edge.Route = Edge.RouteType.Bb;
 					}
-					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
+					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Bottom);
-						connection.Points.Add(new Point(end.X, start.Y));
-						connection.Points.Add(end);
-						connection.Edge.Route = Edge.RouteType.Bt;
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
+						edge.Points.Add(new Point(end.X, start.Y));
+						edge.Points.Add(end);
+						edge.Edge.Route = Edge.RouteType.Bt;
 					}
 					else
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Left);
-						if (start.Y != end.Y && end.X-start.X > Editor.connectionDetour)
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Left);
+						if (start.Y != end.Y && end.X-start.X > Editor.edgeDetour)
 						{
-							connection.Points.Add(Point.Zero);  // (*)
-							connection.Points.Add(Point.Zero);  // (*)
-							connection.Points.Add(end);
-							connection.Edge.Route = Edge.RouteType.C;
+							edge.Points.Add(Point.Zero);  // (*)
+							edge.Points.Add(Point.Zero);  // (*)
+							edge.Points.Add(end);
+							edge.Edge.Route = Edge.RouteType.C;
 						}
 						else
 						{
-							connection.Points.Add(end);
-							connection.Edge.Route = Edge.RouteType.A;
+							edge.Points.Add(end);
+							edge.Edge.Route = Edge.RouteType.A;
 						}
 					}
 				}
-				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
+				else if (dstBounds.Center.X < srcBounds.Left-Editor.edgeDetour/3)  // destination à gauche ?
 				{
 					Point start = new Point(srcBounds.Left+1, p.Y);
-					connection.Points.Add(start);
+					edge.Points.Add(start);
 
-					if (dstBounds.Top < start.Y-Editor.connectionDetour)  // destination plus basse ?
+					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Top);
-						connection.Points.Add(new Point(end.X, start.Y));
-						connection.Points.Add(end);
-						connection.Edge.Route = Edge.RouteType.Bb;
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
+						edge.Points.Add(new Point(end.X, start.Y));
+						edge.Points.Add(end);
+						edge.Edge.Route = Edge.RouteType.Bb;
 					}
-					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
+					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Bottom);
-						connection.Points.Add(new Point(end.X, start.Y));
-						connection.Points.Add(end);
-						connection.Edge.Route = Edge.RouteType.Bt;
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
+						edge.Points.Add(new Point(end.X, start.Y));
+						edge.Points.Add(end);
+						edge.Edge.Route = Edge.RouteType.Bt;
 					}
 					else
 					{
-						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Right);
-						if (start.Y != end.Y && start.X-end.X > Editor.connectionDetour)
+						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Right);
+						if (start.Y != end.Y && start.X-end.X > Editor.edgeDetour)
 						{
-							connection.Points.Add(Point.Zero);  // (*)
-							connection.Points.Add(Point.Zero);  // (*)
-							connection.Points.Add(end);
-							connection.Edge.Route = Edge.RouteType.C;
+							edge.Points.Add(Point.Zero);  // (*)
+							edge.Points.Add(Point.Zero);  // (*)
+							edge.Points.Add(end);
+							edge.Edge.Route = Edge.RouteType.C;
 						}
 						else
 						{
-							connection.Points.Add(end);
-							connection.Edge.Route = Edge.RouteType.A;
+							edge.Points.Add(end);
+							edge.Edge.Route = Edge.RouteType.A;
 						}
 					}
 				}
-				else if (connection.Edge.IsAttachToRight)  // destination à droite à cheval ?
+				else if (edge.Edge.IsAttachToRight)  // destination à droite à cheval ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
-					Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Right);
+					Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Right);
 
-					connection.Points.Add(start);
-					connection.Points.Add(Point.Zero);  // (*)
-					connection.Points.Add(Point.Zero);  // (*)
-					connection.Points.Add(end);
-					connection.Edge.Route = Edge.RouteType.D;
+					edge.Points.Add(start);
+					edge.Points.Add(Point.Zero);  // (*)
+					edge.Points.Add(Point.Zero);  // (*)
+					edge.Points.Add(end);
+					edge.Edge.Route = Edge.RouteType.D;
 				}
 				else  // destination à gauche à cheval ?
 				{
 					Point start = new Point(srcBounds.Left+1, p.Y);
-					Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Left);
+					Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Left);
 
-					connection.Points.Add(start);
-					connection.Points.Add(Point.Zero);  // (*)
-					connection.Points.Add(Point.Zero);  // (*)
-					connection.Points.Add(end);
-					connection.Edge.Route = Edge.RouteType.D;
+					edge.Points.Add(start);
+					edge.Points.Add(Point.Zero);  // (*)
+					edge.Points.Add(Point.Zero);  // (*)
+					edge.Points.Add(end);
+					edge.Edge.Route = Edge.RouteType.D;
 				}
 			}
 		}
 
-		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
+		// (*)	Sera calculé par ObjectEdge.UpdateRoute !
 
-		protected void ShiftConnectionsB(ObjectNode node, List<ObjectEdge> connections)
+		protected void ShiftEdgesB(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	n'arrive au même endroit.
-			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
+			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
-			double space = (node.Bounds.Width/(connections.Count+1.0))*0.75;
+			double space = (node.Bounds.Width/(edges.Count+1.0))*0.75;
 
-			for (int i=0; i<connections.Count; i++)
+			for (int i=0; i<edges.Count; i++)
 			{
-				ObjectEdge connection = connections[i];
+				ObjectEdge edge = edges[i];
 
-				int count = connection.Points.Count;
+				int count = edge.Points.Count;
 				if (count > 2)
 				{
-					double dx = space * (i-(connections.Count-1.0)/2);
-					double px = connection.Points[count-1].X+dx;
+					double dx = space * (i-(edges.Count-1.0)/2);
+					double px = edge.Points[count-1].X+dx;
 
-					if (connection.IsRightDirection)
+					if (edge.IsRightDirection)
 					{
-						px = System.Math.Max(px, connection.Points[0].X+8);
+						px = System.Math.Max(px, edge.Points[0].X+8);
 					}
 					else
 					{
-						px = System.Math.Min(px, connection.Points[0].X-8);
+						px = System.Math.Min(px, edge.Points[0].X-8);
 					}
 
-					connection.Points[count-1] = new Point(px, connection.Points[count-1].Y);
-					connection.Points[count-2] = new Point(px, connection.Points[count-2].Y);
-					connection.UpdateRoute();
+					edge.Points[count-1] = new Point(px, edge.Points[count-1].Y);
+					edge.Points[count-2] = new Point(px, edge.Points[count-2].Y);
+					edge.UpdateRoute();
 				}
 			}
 		}
 
-		protected void ShiftConnectionsC(ObjectNode node, List<ObjectEdge> connections)
+		protected void ShiftEdgesC(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type C, afin qu'aucune connection
 			//	n'arrive au même endroit.
-			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
+			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
 			double spaceX = 5;
 			double spaceY = 12;
 
-			for (int i=0; i<connections.Count; i++)
+			for (int i=0; i<edges.Count; i++)
 			{
-				ObjectEdge connection = connections[i];
+				ObjectEdge edge = edges[i];
 
-				if (connection.Points.Count == 4)
+				if (edge.Points.Count == 4)
 				{
-					double dx = node.IsExtended ? (connection.IsRightDirection ^ connection.Points[0].Y > connection.Points[connection.Points.Count-1].Y ? spaceX*i : -spaceX*i) : 0;
+					double dx = node.IsExtended ? (edge.IsRightDirection ^ edge.Points[0].Y > edge.Points[edge.Points.Count-1].Y ? spaceX*i : -spaceX*i) : 0;
 					double dy = node.IsExtended ? spaceY*i : 0;
-					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
-					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
-					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
+					edge.Points[1] = new Point(edge.Points[1].X+dx, edge.Points[1].Y   );
+					edge.Points[2] = new Point(edge.Points[2].X+dx, edge.Points[2].Y-dy);
+					edge.Points[3] = new Point(edge.Points[3].X,    edge.Points[3].Y-dy);
 				}
 			}
 		}
 
-		protected void ShiftConnectionsD(ObjectNode node, List<ObjectEdge> connections)
+		protected void ShiftEdgesD(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type D, afin qu'aucune connection
 			//	n'arrive au même endroit.
-			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
+			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
 			double spaceX = 5;
 			double spaceY = 12;
 
-			for (int i=0; i<connections.Count; i++)
+			for (int i=0; i<edges.Count; i++)
 			{
-				ObjectEdge connection = connections[i];
+				ObjectEdge edge = edges[i];
 
-				if (connection.Points.Count == 4)
+				if (edge.Points.Count == 4)
 				{
-					double dx = connection.IsRightDirection ? spaceX*i : -spaceX*i;
+					double dx = edge.IsRightDirection ? spaceX*i : -spaceX*i;
 					double dy = node.IsExtended ? spaceY*i : 0;
-					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
-					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
-					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
+					edge.Points[1] = new Point(edge.Points[1].X+dx, edge.Points[1].Y   );
+					edge.Points[2] = new Point(edge.Points[2].X+dx, edge.Points[2].Y-dy);
+					edge.Points[3] = new Point(edge.Points[3].X,    edge.Points[3].Y-dy);
 				}
 			}
 		}
 
-		public void CreateConnections()
+		public void CreateEdges()
 		{
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
 			this.CommentsMemorize();
@@ -706,7 +690,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 			
-			this.connections.Clear();  // supprime toutes les connections existantes
+			this.edges.Clear();  // supprime toutes les connections existantes
 
 			foreach (ObjectNode node in this.nodes)
 			{
@@ -726,27 +710,27 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							}
 						}
 
-						ObjectEdge connection = new ObjectEdge(this, null);
-						connection.Edge = edge;
-						connection.BackgroundMainColor = node.BackgroundMainColor;
-						edge.Connection = connection;
-						this.AddConnection(connection);
+						ObjectEdge objectEdge = new ObjectEdge(this, null);
+						objectEdge.Edge = edge;
+						objectEdge.BackgroundMainColor = node.BackgroundMainColor;
+						edge.ObjectEdge = objectEdge;
+						this.AddEdge(objectEdge);
 					}
 				}
 			}
 
 			//	Recrée tous les commentaires liés aux connections.
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge objectEdge in this.edges)
 			{
-				if (connection.Edge.HasComment && connection.Edge.IsExplored)
+				if (objectEdge.Edge.HasComment && objectEdge.Edge.IsExplored)
 				{
-					connection.Comment = new ObjectComment (this, null);
-					connection.Comment.AttachObject = connection;
-					connection.Comment.Text = connection.Edge.CommentText;
-					connection.Comment.BackgroundMainColor = connection.Edge.CommentMainColor;
-					connection.Comment.SetBounds(connection.Edge.CommentBounds);
+					objectEdge.Comment = new ObjectComment (this, null);
+					objectEdge.Comment.AttachObject = objectEdge;
+					objectEdge.Comment.Text = objectEdge.Edge.CommentText;
+					objectEdge.Comment.BackgroundMainColor = objectEdge.Edge.CommentMainColor;
+					objectEdge.Comment.SetBounds(objectEdge.Edge.CommentBounds);
 
-					this.AddComment(connection.Comment);
+					this.AddComment(objectEdge.Comment);
 				}
 			}
 
@@ -756,30 +740,30 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		protected void CommentsMemorize()
 		{
 			//	Mémorise l'état de tous les commentaires liés à des connections.
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge objectEdge in this.edges)
 			{
-				connection.Edge.HasComment = false;
+				objectEdge.Edge.HasComment = false;
 			}
 
 			foreach (ObjectComment comment in this.comments)
 			{
 				if (comment.AttachObject is ObjectEdge)
 				{
-					ObjectEdge connection = comment.AttachObject as ObjectEdge;
+					ObjectEdge objectEdge = comment.AttachObject as ObjectEdge;
 
-					connection.Edge.HasComment = true;
-					connection.Edge.CommentText = comment.Text;
-					connection.Edge.CommentMainColor = comment.BackgroundMainColor;
+					objectEdge.Edge.HasComment = true;
+					objectEdge.Edge.CommentText = comment.Text;
+					objectEdge.Edge.CommentMainColor = comment.BackgroundMainColor;
 
-					Point pos = connection.PositionConnectionComment;
+					Point pos = objectEdge.PositionEdgeComment;
 					if (!pos.IsZero)
 					{
-						connection.Edge.CommentPosition = pos;
+						objectEdge.Edge.CommentPosition = pos;
 					}
 
 					if (!comment.Bounds.IsEmpty)
 					{
-						connection.Edge.CommentBounds = comment.Bounds;
+						objectEdge.Edge.CommentBounds = comment.Bounds;
 					}
 				}
 			}
@@ -788,22 +772,22 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		protected void UpdateDimmed()
 		{
 			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge objectEdge in this.edges)
 			{
-				connection.IsDimmed = false;
+				objectEdge.IsDimmed = false;
 			}
 
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge objectEdge in this.edges)
 			{
-				if (connection.Edge.IsExplored)
+				if (objectEdge.Edge.IsExplored)
 				{
-					if (connection.Edge.SrcNode != null && connection.Edge.SrcNode.IsDimmed)
+					if (objectEdge.Edge.SrcNode != null && objectEdge.Edge.SrcNode.IsDimmed)
 					{
-						connection.IsDimmed = true;
+						objectEdge.IsDimmed = true;
 					}
-					else if (connection.Edge.DstNode != null && connection.Edge.DstNode.IsDimmed)
+					else if (objectEdge.Edge.DstNode != null && objectEdge.Edge.DstNode.IsDimmed)
 					{
-						connection.IsDimmed = true;
+						objectEdge.IsDimmed = true;
 					}
 				}
 				else
@@ -816,9 +800,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 #endif
 				}
 
-				if (connection.Comment != null)
+				if (objectEdge.Comment != null)
 				{
-					connection.Comment.IsDimmed = connection.IsDimmed;
+					objectEdge.Comment.IsDimmed = objectEdge.IsDimmed;
 				}
 			}
 
@@ -869,7 +853,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			if (node != null)
 			{
 				this.CloseOneNode(node);  // supprime la boîte demandée
-				this.CloseConnections(node);  // supprime ses connections
+				this.CloseEdges(node);  // supprime ses connections
 				dirty = true;
 			}
 
@@ -931,7 +915,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					else  // boîte isolée ?
 					{
 						this.CloseOneNode(node);  // supprime la boîte isolée
-						this.CloseConnections(node);  // supprime ses connections
+						this.CloseEdges(node);  // supprime ses connections
 						removed = true;
 						dirty = true;
 					}
@@ -944,8 +928,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				anode.IsConnectedToRoot = false;
 				anode.Parents.Clear();
 			}
-
-			this.UpdateAfterOpenOrCloseNode();
 
 			if (dirty)
 			{
@@ -996,7 +978,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void CloseConnections(ObjectNode removedNode)
+		protected void CloseEdges(ObjectNode removedNode)
 		{
 			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
 			//	les connections sur la boîte supprimée.
@@ -1010,15 +992,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						edge.IsExplored = false;
 					}
 				}
-			}
-		}
-
-		protected void UpdateAfterOpenOrCloseNode()
-		{
-			//	Appelé après avoir ajouté ou supprimé une boîte.
-			foreach (ObjectNode node in this.nodes)
-			{
-				node.UpdateAfterOpenOrCloseNode();
 			}
 		}
 
@@ -1144,9 +1117,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				bounds = Rectangle.Union(bounds, node.Bounds);
 			}
 
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge edge in this.edges)
 			{
-				bounds = Rectangle.Union(bounds, connection.Bounds);
+				bounds = Rectangle.Union(bounds, edge.Bounds);
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -1175,9 +1148,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				node.Move(dx, dy);
 			}
 
-			foreach (ObjectEdge connection in this.connections)
+			foreach (ObjectEdge edge in this.edges)
 			{
-				connection.Move(dx, dy);
+				edge.Move(dx, dy);
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -1321,9 +1294,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 				}
 
-				for (int i=this.connections.Count-1; i>=0; i--)
+				for (int i=this.edges.Count-1; i>=0; i--)
 				{
-					AbstractObject obj = this.connections[i];
+					AbstractObject obj = this.edges[i];
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
@@ -1384,7 +1357,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.NodeInside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.EdgeHilited ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeGroup)
 					{
 						type = MouseCursorType.Arrow;
@@ -1583,13 +1556,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			for (int i=this.connections.Count-1; i>=0; i--)
+			for (int i=this.edges.Count-1; i>=0; i--)
 			{
-				ObjectEdge connection = this.connections[i];
+				ObjectEdge edge = this.edges[i];
 
-				if (connection.IsReadyForAction)
+				if (edge.IsReadyForAction)
 				{
-					return connection;
+					return edge;
 				}
 			}
 
@@ -1730,7 +1703,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.DrawBackground (graphics);
 			}
 
-			foreach (AbstractObject obj in this.connections)
+			foreach (AbstractObject obj in this.edges)
 			{
 				obj.DrawBackground (graphics);
 			}
@@ -1751,7 +1724,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.DrawForeground (graphics);
 			}
 
-			foreach (AbstractObject obj in this.connections)
+			foreach (AbstractObject obj in this.edges)
 			{
 				obj.DrawForeground (graphics);
 			}
@@ -1999,13 +1972,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		public static readonly double defaultWidth = 200;
-		public static readonly double connectionDetour = 30;
+		public static readonly double edgeDetour = 30;
 		public static readonly double pushMargin = 10;
 		private static readonly double frameMargin = 40;
 
 		private WorkflowDefinitionEntity workflowDefinitionEntity;
 		private List<ObjectNode> nodes;
-		private List<ObjectEdge> connections;
+		private List<ObjectEdge> edges;
 		private List<ObjectComment> comments;
 		private List<ObjectInfo> infos;
 		private Size areaSize;

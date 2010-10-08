@@ -175,9 +175,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				double attach = connection.PointToAttach(pos);
 				if (attach != 0)
 				{
-					Point oldPos = connection.PositionConnectionComment;
+					Point oldPos = connection.PositionEdgeComment;
 					connection.Edge.CommentAttach = attach;
-					Point newPos = connection.PositionConnectionComment;
+					Point newPos = connection.PositionEdgeComment;
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+			if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
 			{
 				this.isDraggingAttach = true;
 				this.editor.LockObject(this);
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Souris dans le bouton de déplacer l'attache ?
 			if (this.DetectRoundButton(this.PositionAttachToConnectionButton, pos))
 			{
-				element = ActiveElement.CommentAttachToConnection;
+				element = ActiveElement.CommentAttachToEdge;
 				return true;
 			}
 
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point p = this.PositionAttachToConnectionButton;
 			if (!p.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+				if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
 				{
 					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", true, false);
 				}
@@ -586,7 +586,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.CommentColor6 ||
 						this.hilitedElement == ActiveElement.CommentColor7 ||
 						this.hilitedElement == ActiveElement.CommentColor8 ||
-						this.hilitedElement == ActiveElement.CommentAttachToConnection);
+						this.hilitedElement == ActiveElement.CommentAttachToEdge);
 			}
 		}
 
@@ -873,7 +873,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (pos.IsZero && this.attachObject is ObjectEdge)
 				{
 					ObjectEdge connection = this.attachObject as ObjectEdge;
-					Point attach = connection.PositionConnectionComment;
+					Point attach = connection.PositionEdgeComment;
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -994,7 +994,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.attachObject is ObjectEdge)
 				{
 					ObjectEdge connection = this.attachObject as ObjectEdge;
-					pos = connection.PositionConnectionComment;
+					pos = connection.PositionEdgeComment;
 
 					if (mode == AttachMode.Bottom || mode == AttachMode.BottomLeft || mode == AttachMode.BottomRight)
 					{
@@ -1077,7 +1077,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.attachObject is ObjectEdge)
 			{
 				ObjectEdge connection = this.attachObject as ObjectEdge;
-				Point attach = connection.PositionConnectionComment;
+				Point attach = connection.PositionEdgeComment;
 				if (!attach.IsZero && !this.bounds.Contains(attach))
 				{
 					if (this.bounds.Top <= attach.Y && this.bounds.Right <= attach.X)
@@ -1164,7 +1164,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.attachObject != null && this.attachObject is ObjectEdge)
 				{
 					ObjectEdge connection = this.attachObject as ObjectEdge;
-					return connection.PositionConnectionComment;
+					return connection.PositionEdgeComment;
 				}
 				else
 				{
