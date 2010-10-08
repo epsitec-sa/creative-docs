@@ -28,16 +28,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public Field Field
+		public Edge Edge
 		{
 			//	Champ de référence pour la connection.
 			get
 			{
-				return this.field;
+				return this.edge;
 			}
 			set
 			{
-				this.field = value;
+				this.edge = value;
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Rectangle bounds = Rectangle.Empty;
 
-				if (this.field.IsSourceExpanded)
+				if (this.edge.IsSourceExpanded)
 				{
 					foreach (Point p in this.points)
 					{
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public bool IsRightDirection
 		{
 			//	Retourne la direction effective dans laquelle part la connection.
-			//	A ne pas confondre avec Field.IsAttachToRight !
+			//	A ne pas confondre avec Edge.IsAttachToRight !
 			get
 			{
 				if (this.points.Count < 2)
@@ -269,10 +269,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.ConnectionClose)
 			{
-				ObjectNode dst = this.field.DstBox;
-				this.field.IsExplored = false;
-				this.field.DstBox = null;
-				this.editor.CloseBox(null);
+				ObjectNode dst = this.edge.DstNode;
+				this.edge.IsExplored = false;
+				this.edge.DstNode = null;
+				this.editor.CloseNode(null);
 				this.editor.UpdateAfterAddOrRemoveConnection(null);
 			}
 
@@ -294,9 +294,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans la pastille ronde du départ de la connection ?
-			if (this.field.IsSourceExpanded)
+			if (this.edge.IsSourceExpanded)
 			{
-				if (this.field.IsExplored)
+				if (this.edge.IsExplored)
 				{
 					if (this.DetectRoundButton(pos, this.points[0]))
 					{
@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connection.
-			if (this.points.Count >= 2 && this.field.IsExplored)
+			if (this.points.Count >= 2 && this.edge.IsExplored)
 			{
 				for (int i=0; i<this.points.Count-1; i++)
 				{
@@ -385,13 +385,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.comment = new ObjectComment(this.editor, null);
 				this.comment.AttachObject = this;
-				this.comment.BackgroundMainColor = this.field.CommentMainColor;
-				this.comment.Text = this.field.CommentText;
+				this.comment.BackgroundMainColor = this.edge.CommentMainColor;
+				this.comment.Text = this.edge.CommentText;
 
 				Point attach = this.PositionConnectionComment;
 				Rectangle rect;
 
-				if (attach.X > this.field.SrcBox.Bounds.Right)  // connection sur la droite ?
+				if (attach.X > this.edge.SrcNode.Bounds.Right)  // connection sur la droite ?
 				{
 					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
@@ -422,10 +422,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			if (this.points.Count >= 2 && this.field.IsExplored && (this.field.Route != Field.RouteType.Himself || this.field.IsSourceExpanded))
+			if (this.points.Count >= 2 && this.edge.IsExplored && (this.edge.Route != Edge.RouteType.Himself || this.edge.IsSourceExpanded))
 			{
 				Point start = this.points[0];
-				if (this.field.IsSourceExpanded)
+				if (this.edge.IsSourceExpanded)
 				{
 					start = Point.Move(start, this.points[1], AbstractObject.bulletRadius);
 				}
@@ -438,14 +438,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (i == 0)
 					{
-						AbstractObject.DrawStartingArrow(graphics, p1, p2, this.field.Relation);
+						AbstractObject.DrawStartingArrow(graphics, p1, p2, this.edge.Relation);
 					}
 
 					graphics.AddLine(p1, p2);
 
 					if (i == this.points.Count-2)
 					{
-						AbstractObject.DrawEndingArrow(graphics, p1, p2, this.field.Relation, this.field.IsPrivateRelation);
+						AbstractObject.DrawEndingArrow(graphics, p1, p2, this.edge.Relation, false);
 					}
 				}
 				graphics.LineWidth = 1;
@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid(color);
 			}
 
-			if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
+			if (this.points.Count == 2 && !this.edge.IsExplored && this.edge.IsSourceExpanded)
 			{
 				//	Dessine le moignon de liaison.
 				Point start = this.points[0];
@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				graphics.LineWidth = 2;
 				graphics.AddLine(start, end);
-				AbstractObject.DrawEndingArrow(graphics, start, end, this.field.Relation, this.field.IsPrivateRelation);
+				AbstractObject.DrawEndingArrow(graphics, start, end, this.edge.Relation, false);
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);
@@ -477,7 +477,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid(color);
 			}
 
-			if (this.points.Count != 0 && this.field.IsSourceExpanded)
+			if (this.points.Count != 0 && this.edge.IsSourceExpanded)
 			{
 				//	Dessine les cercles aux points de départ.
 				for (int i=0; i<this.points.Count; i++)
@@ -504,7 +504,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else
 					{
-						if (this.field.IsExplored && i != 0)  break;
+						if (this.edge.IsExplored && i != 0)  break;
 						if (!this.isSrcHilited && i != 0)  break;
 					}
 
@@ -586,9 +586,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
-				if (this.field.IsSourceExpanded && this.field.IsExplored && this.points.Count >= 2)
+				if (this.edge.IsSourceExpanded && this.edge.IsExplored && this.points.Count >= 2)
 				{
-					return this.AttachToPoint(this.field.CommentAttach);
+					return this.AttachToPoint(this.edge.CommentAttach);
 				}
 
 				return Point.Zero;
@@ -713,7 +713,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.field.Route == Field.RouteType.A)
+				if (this.edge.Route == Edge.RouteType.A)
 				{
 					if (this.points.Count == 6)
 					{
@@ -724,12 +724,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					{
 						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
-							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX1);
+							return Point.Scale(this.points[0], this.points[1], this.edge.RouteRelativeAX1);
 						}
 					}
 				}
 
-				if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+				if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
 				{
 					if (this.points.Count == 5)
 					{
@@ -745,7 +745,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.field.Route == Field.RouteType.C)
+				if (this.edge.Route == Edge.RouteType.C)
 				{
 					if (this.points.Count == 4)
 					{
@@ -756,7 +756,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.field.Route == Field.RouteType.D)
+				if (this.edge.Route == Edge.RouteType.D)
 				{
 					if (this.points.Count == 4)
 					{
@@ -773,7 +773,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.field.Route == Field.RouteType.A)
+				if (this.edge.Route == Edge.RouteType.A)
 				{
 					if (this.points.Count == 6)
 					{
@@ -784,7 +784,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					{
 						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
-							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX2);
+							return Point.Scale(this.points[0], this.points[1], this.edge.RouteRelativeAX2);
 						}
 					}
 				}
@@ -803,42 +803,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Point oldPos = this.PositionConnectionComment;  // point d'attache avant re-routage
 
-			if (this.field.Route == Field.RouteType.A)
+			if (this.edge.Route == Edge.RouteType.A)
 			{
 				if (this.hilitedElement == ActiveElement.ConnectionMove1)
 				{
-					this.field.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
+					this.edge.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
 				}
 				else
 				{
-					this.field.RouteRelativeAX2 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
+					this.edge.RouteRelativeAX2 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
 				}
 
-				this.field.RouteAbsoluteAY = pos.Y-this.points[0].Y;
+				this.edge.RouteAbsoluteAY = pos.Y-this.points[0].Y;
 			}
 
-			if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+			if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
 			{
-				this.field.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
-				this.field.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
+				this.edge.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
+				this.edge.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
 			}
 
-			if (this.field.Route == Field.RouteType.C)
+			if (this.edge.Route == Edge.RouteType.C)
 			{
-				this.field.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+				this.edge.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 			}
 
-			if (this.field.Route == Field.RouteType.D)
+			if (this.edge.Route == Edge.RouteType.D)
 			{
-				if (this.field.IsAttachToRight)
+				if (this.edge.IsAttachToRight)
 				{
 					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					this.field.RouteAbsoluteDX = pos.X-px;
+					this.edge.RouteAbsoluteDX = pos.X-px;
 				}
 				else
 				{
 					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					this.field.RouteAbsoluteDX = px-pos.X;
+					this.edge.RouteAbsoluteDX = px-pos.X;
 				}
 			}
 
@@ -856,9 +856,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
 			retry:
-			if (this.field.Route == Field.RouteType.A)
+			if (this.edge.Route == Edge.RouteType.A)
 			{
-				if (this.field.RouteAbsoluteAY == 0)
+				if (this.edge.RouteAbsoluteAY == 0)
 				{
 					if (this.points.Count == 6)
 					{
@@ -879,8 +879,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 					double d = this.points[5].X-this.points[0].X;
-					double d1 = d*this.field.RouteRelativeAX1;
-					double d2 = d*this.field.RouteRelativeAX2;
+					double d1 = d*this.edge.RouteRelativeAX1;
+					double d2 = d*this.edge.RouteRelativeAX2;
 
 					d1 -= d;
 					d2 -= d;
@@ -889,7 +889,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						d2 = System.Math.Max(d2, ObjectEdge.arrowMinimalLength);
 						if (d2 > d1)
 						{
-							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							this.edge.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
 							goto retry;
 						}
 					}
@@ -898,7 +898,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						d2 = -System.Math.Max(-d2, ObjectEdge.arrowMinimalLength);
 						if (d2 < d1)
 						{
-							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							this.edge.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
 							goto retry;
 						}
 					}
@@ -907,7 +907,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					double px1 = this.points[0].X + d1;
 					double px2 = this.points[0].X + d2;
-					double py = this.points[0].Y + this.field.RouteAbsoluteAY;
+					double py = this.points[0].Y + this.edge.RouteAbsoluteAY;
 					this.points[1] = new Point(px1, this.points[0].Y);
 					this.points[2] = new Point(px1, py);
 					this.points[3] = new Point(px2, py);
@@ -915,9 +915,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+			if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
 			{
-				if (this.field.RouteRelativeBX == 0 || this.field.RouteRelativeBY == 0)
+				if (this.edge.RouteRelativeBX == 0 || this.edge.RouteRelativeBY == 0)
 				{
 					if (this.points.Count == 5)
 					{
@@ -935,7 +935,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 					double d = this.points[4].Y-this.points[0].Y;
-					double d1 = d*this.field.RouteRelativeBY;
+					double d1 = d*this.edge.RouteRelativeBY;
 
 					d1 -= d;
 					if (d1 > 0)
@@ -948,7 +948,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					d1 += d;
 
-					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.field.RouteRelativeBX;
+					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.edge.RouteRelativeBX;
 					double py = this.points[0].Y + d1;
 					this.points[1] = new Point(px, this.points[0].Y);
 					this.points[2] = new Point(px, py);
@@ -956,11 +956,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.field.Route == Field.RouteType.C)
+			if (this.edge.Route == Edge.RouteType.C)
 			{
 				//	Met à jour les points milieu de la connection.
 				double d = this.points[3].X-this.points[0].X;
-				double d1 = d*this.field.RouteRelativeCX;
+				double d1 = d*this.edge.RouteRelativeCX;
 
 				d1 -= d;
 				if (d1 > 0)
@@ -978,18 +978,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
 
-			if (this.field.Route == Field.RouteType.D)
+			if (this.edge.Route == Edge.RouteType.D)
 			{
 				double px;
-				if (this.field.IsAttachToRight)
+				if (this.edge.IsAttachToRight)
 				{
 					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					px += this.field.RouteAbsoluteDX;
+					px += this.edge.RouteAbsoluteDX;
 				}
 				else
 				{
 					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					px -= this.field.RouteAbsoluteDX;
+					px -= this.edge.RouteAbsoluteDX;
 				}
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
@@ -1008,7 +1008,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	
 		protected static readonly double arrowMinimalLength = 25;
 
-		private Field field;
+		private Edge edge;
 		private List<Point> points;
 		private bool isSrcHilited;
 		private bool isDraggingRoute;

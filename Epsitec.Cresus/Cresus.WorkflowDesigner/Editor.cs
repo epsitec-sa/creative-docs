@@ -58,10 +58,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 
-			this.boxes = new List<Objects.ObjectNode>();
-			this.connections = new List<Objects.ObjectEdge> ();
-			this.comments = new List<Objects.ObjectComment> ();
-			this.infos = new List<Objects.ObjectInfo> ();
+			this.nodes       = new List<ObjectNode>();
+			this.connections = new List<ObjectEdge> ();
+			this.comments    = new List<ObjectComment> ();
+			this.infos       = new List<ObjectInfo> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
@@ -85,10 +85,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public WorkflowDefinitionEntity Workflow
+		public WorkflowDefinitionEntity WorkflowDefinitionEntity
 		{
-			get;
-			set;
+			get
+			{
+				return this.workflowDefinitionEntity;
+			}
+			set
+			{
+				this.workflowDefinitionEntity = value;
+				this.CreateInitialWorkflow ();
+			}
 		}
 
 		public void SetLocalDirty()
@@ -108,81 +115,76 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool EditExpression(Druid fieldId)
+		private void CreateInitialWorkflow()
 		{
-			//	Edite l'expression d'un champ.
-			Objects.ObjectNode root = this.RootBox;
-			if (root == null)
-			{
-				return false;
-			}
-
-			return root.EditExpression(fieldId);
+			var n = this.workflowDefinitionEntity.StartingEdges[0].NextNode;
+			var node = new ObjectNode(this, n);
+			this.AddNode (node);
 		}
 
 
-		public void AddBox(Objects.ObjectNode box)
+		public void AddNode(ObjectNode node)
 		{
 			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
-			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateBoxes().
+			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateNodes().
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
-			box.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
-			box.IsExtended = true;
+			node.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
+			node.IsExtended = true;
 
-			this.boxes.Add(box);
-			this.UpdateAfterOpenOrCloseBox();
+			this.nodes.Add(node);
+			this.UpdateAfterOpenOrCloseNode();
 		}
 
-		public int BoxCount
+		public int NodeCount
 		{
 			//	Retourne le nombre de boîtes existantes.
 			get
 			{
-				return this.boxes.Count;
+				return this.nodes.Count;
 			}
 		}
 
-		public List<Objects.ObjectNode> Boxes
+		public List<ObjectNode> Nodes
 		{
 			//	Retourne la liste des boîtes.
 			get
 			{
-				return this.boxes;
+				return this.nodes;
 			}
 		}
 
-		public Objects.ObjectNode RootBox
+		public ObjectNode RootNode
 		{
 			//	Retourne la boîte racine.
 			get
 			{
-				return this.boxes[0];
+				return this.nodes[0];
 			}
 		}
 
-		public Objects.ObjectNode SearchBox(string title)
+		public ObjectNode SearchNode(string title)
 		{
 			//	Cherche une boîte d'après son titre.
-			foreach (Objects.ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				if (box.Title == title)
+				if (node.Title == title)
 				{
-					return box;
+					return node;
 				}
 			}
 
 			return null;
 		}
 
-		public void AddConnection(Objects.ObjectEdge connection)
+		public void AddConnection(ObjectEdge connection)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
 			this.connections.Add(connection);
 		}
 
-		public void AddComment(Objects.ObjectComment comment)
+		public void AddComment(ObjectComment comment)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
 			this.comments.Add(comment);
@@ -197,7 +199,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void Clear()
 		{
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
-			this.boxes.Clear();
+			this.nodes.Clear();
 			this.connections.Clear();
 			this.comments.Clear();
 			this.infos.Clear();
@@ -289,7 +291,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
-			this.UpdateBoxes();
+			this.UpdateNodes();
 			this.UpdateConnections();
 		}
 
@@ -304,11 +306,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateDimmed();
 		}
 
-		public void UpdateAfterGeometryChanged(ObjectNode box)
+		public void UpdateAfterGeometryChanged(ObjectNode node)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateBoxes();  // adapte la taille selon compact/étendu
-			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
+			this.UpdateNodes();  // adapte la taille selon compact/étendu
+			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.UpdateConnections();
@@ -317,21 +319,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateDimmed();
 		}
 
-		public void UpdateAfterMoving(ObjectNode box)
+		public void UpdateAfterMoving(ObjectNode node)
 		{
 			//	Appelé lorsqu'une boîte a été bougée.
-			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
+			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.UpdateConnections();
 			this.RedimArea();
 		}
 
-		public void UpdateAfterAddOrRemoveConnection(ObjectNode box)
+		public void UpdateAfterAddOrRemoveConnection(ObjectNode node)
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
-			this.UpdateBoxes();
-			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
+			this.UpdateNodes();
+			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
 			this.CreateConnections();
@@ -343,17 +345,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateDimmed();
 		}
 
-		protected void UpdateBoxes()
+		protected void UpdateNodes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				Rectangle bounds = box.Bounds;
+				Rectangle bounds = node.Bounds;
 				double top = bounds.Top;
-				double h = box.GetBestHeight();
+				double h = node.GetBestHeight();
 				bounds.Bottom = top-h;
 				bounds.Height = h;
-				box.SetBounds(bounds);
+				node.SetBounds(bounds);
 			}
 		}
 
@@ -362,32 +364,32 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Met à jour la géométrie de toutes les liaisons.
 			this.CommentsMemorize();
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				for (int i=0; i<box.Fields.Count; i++)
+				for (int i=0; i<node.Edges.Count; i++)
 				{
-					Field field = box.Fields[i];
+					Edge edge = node.Edges[i];
 
-					if (field.Relation != FieldRelation.None)
+					if (edge.Relation != FieldRelation.None)
 					{
-						ObjectEdge connection = field.Connection;
+						ObjectEdge connection = edge.Connection;
 						if (connection != null)
 						{
 							connection.Points.Clear();
 
-							if (field.IsExplored)
+							if (edge.IsExplored)
 							{
-								this.UpdateConnection(connection, box, field.Index, field.DstBox);
+								this.UpdateConnection(connection, node, edge.Index, edge.DstNode);
 							}
 							else
 							{
-								field.RouteClear();
+								edge.RouteClear();
 
 								//	Important: toujours le point droite en premier !
-								double posv = box.GetConnectionSrcVerticalPosition(i);
-								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
-								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
-								connection.Field.Route = Field.RouteType.Close;
+								double posv = node.GetConnectionSrcVerticalPosition(i);
+								connection.Points.Add(new Point(node.Bounds.Right-1, posv));
+								connection.Points.Add(new Point(node.Bounds.Left+1, posv));
+								connection.Edge.Route = Edge.RouteType.Close;
 							}
 						}
 					}
@@ -397,51 +399,51 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Réparti astucieusement le point d'arrivé en haut ou en bas d'une boîte de toutes les
 			//	connections de type Bt ou Bb, pour éviter que deux connections n'arrivent sur le même point.
 			//	Les croisements sont minimisés.
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				box.ConnectionListBt.Clear();
-				box.ConnectionListBb.Clear();
-				box.ConnectionListC.Clear();
-				box.ConnectionListD.Clear();
+				node.ConnectionListBt.Clear();
+				node.ConnectionListBb.Clear();
+				node.ConnectionListC.Clear();
+				node.ConnectionListD.Clear();
 			}
 
 			foreach (ObjectEdge connection in this.connections)
 			{
-				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.Bt)
+				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.Bt)
 				{
-					connection.Field.DstBox.ConnectionListBt.Add(connection);
+					connection.Edge.DstNode.ConnectionListBt.Add(connection);
 				}
 
-				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.Bb)
+				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.Bb)
 				{
-					connection.Field.DstBox.ConnectionListBb.Add(connection);
+					connection.Edge.DstNode.ConnectionListBb.Add(connection);
 				}
 
-				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.C)
+				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.C)
 				{
-					connection.Field.DstBox.ConnectionListC.Add(connection);
+					connection.Edge.DstNode.ConnectionListC.Add(connection);
 				}
 
-				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.D)
+				if (connection.Edge.DstNode != null && connection.Edge.Route == Edge.RouteType.D)
 				{
-					connection.Field.DstBox.ConnectionListD.Add(connection);
+					connection.Edge.DstNode.ConnectionListD.Add(connection);
 				}
 			}
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				this.ShiftConnectionsB(box, box.ConnectionListBt);
-				this.ShiftConnectionsB(box, box.ConnectionListBb);
-				this.ShiftConnectionsC(box, box.ConnectionListC);
-				this.ShiftConnectionsD(box, box.ConnectionListD);
+				this.ShiftConnectionsB(node, node.ConnectionListBt);
+				this.ShiftConnectionsB(node, node.ConnectionListBb);
+				this.ShiftConnectionsC(node, node.ConnectionListC);
+				this.ShiftConnectionsD(node, node.ConnectionListD);
 			}
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				box.ConnectionListBt.Clear();
-				box.ConnectionListBb.Clear();
-				box.ConnectionListC.Clear();
-				box.ConnectionListD.Clear();
+				node.ConnectionListBt.Clear();
+				node.ConnectionListBb.Clear();
+				node.ConnectionListC.Clear();
+				node.ConnectionListD.Clear();
 			}
 
 			//	Adapte tous les commentaires.
@@ -451,12 +453,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					ObjectEdge connection = comment.AttachObject as ObjectEdge;
 
-					Point oldPos = connection.Field.CommentPosition;
+					Point oldPos = connection.Edge.CommentPosition;
 					Point newPos = connection.PositionConnectionComment;
 
 					if (!oldPos.IsZero && !newPos.IsZero)
 					{
-						Rectangle rect = connection.Field.CommentBounds;
+						Rectangle rect = connection.Edge.CommentBounds;
 						rect.Offset(newPos-oldPos);
 						comment.SetBounds(rect);  // déplace le commentaire
 					}
@@ -479,7 +481,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			dstBoundsLittle.Deflate(2);
 
 			connection.Points.Clear();
-			connection.Field.RouteClear();
+			connection.Edge.RouteClear();
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
@@ -496,7 +498,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				p.X -= 30;
 				connection.Points.Add(p);
 
-				connection.Field.Route = Field.RouteType.Himself;
+				connection.Edge.Route = Edge.RouteType.Himself;
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
@@ -512,14 +514,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Field.Route = Field.RouteType.Bb;
+						connection.Edge.Route = Edge.RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Field.Route = Field.RouteType.Bt;
+						connection.Edge.Route = Edge.RouteType.Bt;
 					}
 					else
 					{
@@ -529,12 +531,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Field.Route = Field.RouteType.C;
+							connection.Edge.Route = Edge.RouteType.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
-							connection.Field.Route = Field.RouteType.A;
+							connection.Edge.Route = Edge.RouteType.A;
 						}
 					}
 				}
@@ -548,14 +550,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Field.Route = Field.RouteType.Bb;
+						connection.Edge.Route = Edge.RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Field.Route = Field.RouteType.Bt;
+						connection.Edge.Route = Edge.RouteType.Bt;
 					}
 					else
 					{
@@ -565,16 +567,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Field.Route = Field.RouteType.C;
+							connection.Edge.Route = Edge.RouteType.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
-							connection.Field.Route = Field.RouteType.A;
+							connection.Edge.Route = Edge.RouteType.A;
 						}
 					}
 				}
-				else if (connection.Field.IsAttachToRight)  // destination à droite à cheval ?
+				else if (connection.Edge.IsAttachToRight)  // destination à droite à cheval ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectNode.ConnectionAnchor.Right);
@@ -583,7 +585,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Field.Route = Field.RouteType.D;
+					connection.Edge.Route = Edge.RouteType.D;
 				}
 				else  // destination à gauche à cheval ?
 				{
@@ -594,20 +596,20 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Field.Route = Field.RouteType.D;
+					connection.Edge.Route = Edge.RouteType.D;
 				}
 			}
 		}
 
 		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
 
-		protected void ShiftConnectionsB(ObjectNode box, List<ObjectEdge> connections)
+		protected void ShiftConnectionsB(ObjectNode node, List<ObjectEdge> connections)
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	n'arrive au même endroit.
 			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
-			double space = (box.Bounds.Width/(connections.Count+1.0))*0.75;
+			double space = (node.Bounds.Width/(connections.Count+1.0))*0.75;
 
 			for (int i=0; i<connections.Count; i++)
 			{
@@ -635,7 +637,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void ShiftConnectionsC(ObjectNode box, List<ObjectEdge> connections)
+		protected void ShiftConnectionsC(ObjectNode node, List<ObjectEdge> connections)
 		{
 			//	Met à jour une liste de connections de type C, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -650,8 +652,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (connection.Points.Count == 4)
 				{
-					double dx = box.IsExtended ? (connection.IsRightDirection ^ connection.Points[0].Y > connection.Points[connection.Points.Count-1].Y ? spaceX*i : -spaceX*i) : 0;
-					double dy = box.IsExtended ? spaceY*i : 0;
+					double dx = node.IsExtended ? (connection.IsRightDirection ^ connection.Points[0].Y > connection.Points[connection.Points.Count-1].Y ? spaceX*i : -spaceX*i) : 0;
+					double dy = node.IsExtended ? spaceY*i : 0;
 					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
 					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
 					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
@@ -659,7 +661,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void ShiftConnectionsD(ObjectNode box, List<ObjectEdge> connections)
+		protected void ShiftConnectionsD(ObjectNode node, List<ObjectEdge> connections)
 		{
 			//	Met à jour une liste de connections de type D, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -675,7 +677,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				if (connection.Points.Count == 4)
 				{
 					double dx = connection.IsRightDirection ? spaceX*i : -spaceX*i;
-					double dy = box.IsExtended ? spaceY*i : 0;
+					double dy = node.IsExtended ? spaceY*i : 0;
 					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
 					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
 					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
@@ -706,28 +708,28 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			
 			this.connections.Clear();  // supprime toutes les connections existantes
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				for (int i=0; i<box.Fields.Count; i++)
+				for (int i=0; i<node.Edges.Count; i++)
 				{
-					Field field = box.Fields[i];
+					Edge edge = node.Edges[i];
 
-					if (field.Relation != FieldRelation.None)
+					if (edge.Relation != FieldRelation.None)
 					{
 						//	Si la liaison est ouverte sur une boîte qui n'existe plus,
 						//	considère la liaison comme fermée !
-						if (field.IsExplored)
+						if (edge.IsExplored)
 						{
-							if (!this.boxes.Contains(field.DstBox))
+							if (!this.nodes.Contains(edge.DstNode))
 							{
-								field.IsExplored = false;
+								edge.IsExplored = false;
 							}
 						}
 
 						ObjectEdge connection = new ObjectEdge(this, null);
-						connection.Field = field;
-						connection.BackgroundMainColor = box.BackgroundMainColor;
-						field.Connection = connection;
+						connection.Edge = edge;
+						connection.BackgroundMainColor = node.BackgroundMainColor;
+						edge.Connection = connection;
 						this.AddConnection(connection);
 					}
 				}
@@ -736,13 +738,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Recrée tous les commentaires liés aux connections.
 			foreach (ObjectEdge connection in this.connections)
 			{
-				if (connection.Field.HasComment && connection.Field.IsExplored)
+				if (connection.Edge.HasComment && connection.Edge.IsExplored)
 				{
 					connection.Comment = new ObjectComment (this, null);
 					connection.Comment.AttachObject = connection;
-					connection.Comment.Text = connection.Field.CommentText;
-					connection.Comment.BackgroundMainColor = connection.Field.CommentMainColor;
-					connection.Comment.SetBounds(connection.Field.CommentBounds);
+					connection.Comment.Text = connection.Edge.CommentText;
+					connection.Comment.BackgroundMainColor = connection.Edge.CommentMainColor;
+					connection.Comment.SetBounds(connection.Edge.CommentBounds);
 
 					this.AddComment(connection.Comment);
 				}
@@ -756,7 +758,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectEdge connection in this.connections)
 			{
-				connection.Field.HasComment = false;
+				connection.Edge.HasComment = false;
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -765,19 +767,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					ObjectEdge connection = comment.AttachObject as ObjectEdge;
 
-					connection.Field.HasComment = true;
-					connection.Field.CommentText = comment.Text;
-					connection.Field.CommentMainColor = comment.BackgroundMainColor;
+					connection.Edge.HasComment = true;
+					connection.Edge.CommentText = comment.Text;
+					connection.Edge.CommentMainColor = comment.BackgroundMainColor;
 
 					Point pos = connection.PositionConnectionComment;
 					if (!pos.IsZero)
 					{
-						connection.Field.CommentPosition = pos;
+						connection.Edge.CommentPosition = pos;
 					}
 
 					if (!comment.Bounds.IsEmpty)
 					{
-						connection.Field.CommentBounds = comment.Bounds;
+						connection.Edge.CommentBounds = comment.Bounds;
 					}
 				}
 			}
@@ -793,13 +795,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			foreach (ObjectEdge connection in this.connections)
 			{
-				if (connection.Field.IsExplored)
+				if (connection.Edge.IsExplored)
 				{
-					if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+					if (connection.Edge.SrcNode != null && connection.Edge.SrcNode.IsDimmed)
 					{
 						connection.IsDimmed = true;
 					}
-					else if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+					else if (connection.Edge.DstNode != null && connection.Edge.DstNode.IsDimmed)
 					{
 						connection.IsDimmed = true;
 					}
@@ -820,16 +822,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				if (box.Comment != null)
+				if (node.Comment != null)
 				{
-					box.Comment.IsDimmed = box.IsDimmed;
+					node.Comment.IsDimmed = node.IsDimmed;
 				}
 
-				if (box.Info != null)
+				if (node.Info != null)
 				{
-					box.Info.IsDimmed = box.IsDimmed;
+					node.Info.IsDimmed = node.IsDimmed;
 				}
 			}
 		}
@@ -838,9 +840,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public bool IsEmptyArea(Rectangle area)
 		{
 			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connections).
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				if (box.Bounds.IntersectsWith(area))
+				if (node.Bounds.IntersectsWith(area))
 				{
 					return false;
 				}
@@ -849,7 +851,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return true;
 		}
 
-		public void CloseBox(ObjectNode box)
+		public void CloseNode(ObjectNode node)
 		{
 			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
 			//	La stratégie utilisée est la suivante:
@@ -857,48 +859,48 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
 			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
 			//	3. Tant qu'on a détruit au moins une boîte, on recommence au point 2.
-			if (box != null && box.IsRoot)
+			if (node != null && node.IsRoot)
 			{
 				return;  // on ne détruit jamais la boîte racine
 			}
 
 			bool dirty = false;
 
-			if (box != null)
+			if (node != null)
 			{
-				this.CloseOneBox(box);  // supprime la boîte demandée
-				this.CloseConnections(box);  // supprime ses connections
+				this.CloseOneNode(node);  // supprime la boîte demandée
+				this.CloseConnections(node);  // supprime ses connections
 				dirty = true;
 			}
 
-			foreach (ObjectNode abox in this.boxes)
+			foreach (ObjectNode anode in this.nodes)
 			{
-				abox.IsConnectedToRoot = false;
-				abox.Parents.Clear();
+				anode.IsConnectedToRoot = false;
+				anode.Parents.Clear();
 			}
 
-			foreach (ObjectNode abox in this.boxes)
+			foreach (ObjectNode anode in this.nodes)
 			{
-				foreach (Field field in abox.Fields)
+				foreach (Edge edge in anode.Edges)
 				{
-					ObjectNode dstBox = field.DstBox;
-					if (dstBox != null)
+					ObjectNode dstNode = edge.DstNode;
+					if (dstNode != null)
 					{
-						dstBox.Parents.Add(abox);
+						dstNode.Parents.Add(anode);
 					}
 				}
 			}
 
-			foreach (ObjectNode abox in this.boxes)
+			foreach (ObjectNode anode in this.nodes)
 			{
 				List<ObjectNode> visited = new List<ObjectNode>();
-				visited.Add(abox);
-				this.ExploreConnectedToRoot(visited, abox);
+				visited.Add(anode);
+				this.ExploreConnectedToRoot(visited, anode);
 
 				bool toRoot = false;
-				foreach (ObjectNode vbox in visited)
+				foreach (ObjectNode vnode in visited)
 				{
-					if (vbox == this.boxes[0])
+					if (vnode == this.nodes[0])
 					{
 						toRoot = true;
 						break;
@@ -907,9 +909,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (toRoot)
 				{
-					foreach (ObjectNode vbox in visited)
+					foreach (ObjectNode vnode in visited)
 					{
-						vbox.IsConnectedToRoot = true;
+						vnode.IsConnectedToRoot = true;
 					}
 				}
 			}
@@ -919,17 +921,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				removed = false;
 				int i = 1;  // on saute toujours la boîte racine
-				while (i < this.boxes.Count)
+				while (i < this.nodes.Count)
 				{
-					box = this.boxes[i];
-					if (box.IsConnectedToRoot)  // boîte liée à la racine ?
+					node = this.nodes[i];
+					if (node.IsConnectedToRoot)  // boîte liée à la racine ?
 					{
 						i++;
 					}
 					else  // boîte isolée ?
 					{
-						this.CloseOneBox(box);  // supprime la boîte isolée
-						this.CloseConnections(box);  // supprime ses connections
+						this.CloseOneNode(node);  // supprime la boîte isolée
+						this.CloseConnections(node);  // supprime ses connections
 						removed = true;
 						dirty = true;
 					}
@@ -937,13 +939,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			while (removed);  // recommence tant qu'on a détruit quelque chose
 
-			foreach (ObjectNode abox in this.boxes)
+			foreach (ObjectNode anode in this.nodes)
 			{
-				abox.IsConnectedToRoot = false;
-				abox.Parents.Clear();
+				anode.IsConnectedToRoot = false;
+				anode.Parents.Clear();
 			}
 
-			this.UpdateAfterOpenOrCloseBox();
+			this.UpdateAfterOpenOrCloseNode();
 
 			if (dirty)
 			{
@@ -951,72 +953,72 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void CloseOneBox(ObjectNode box)
+		protected void CloseOneNode(ObjectNode node)
 		{
-			if (box.Comment != null)
+			if (node.Comment != null)
 			{
-				this.comments.Remove(box.Comment);
-				box.Comment = null;
+				this.comments.Remove(node.Comment);
+				node.Comment = null;
 			}
 
-			if (box.Info != null)
+			if (node.Info != null)
 			{
-				this.infos.Remove(box.Info);
-				box.Info = null;
+				this.infos.Remove(node.Info);
+				node.Info = null;
 			}
 
-			this.boxes.Remove(box);  // supprime la boîte demandée
+			this.nodes.Remove(node);  // supprime la boîte demandée
 		}
 
 		protected void ExploreConnectedToRoot(List<ObjectNode> visited, ObjectNode root)
 		{
 			//	Cherche récursivement tous les objets depuis 'root'.
-			foreach (Field field in root.Fields)
+			foreach (Edge edge in root.Edges)
 			{
-				ObjectNode dstBox = field.DstBox;
-				if (dstBox != null)
+				ObjectNode dstNode = edge.DstNode;
+				if (dstNode != null)
 				{
-					if (!visited.Contains(dstBox))
+					if (!visited.Contains(dstNode))
 					{
-						visited.Add(dstBox);
-						this.ExploreConnectedToRoot(visited, dstBox);
+						visited.Add(dstNode);
+						this.ExploreConnectedToRoot(visited, dstNode);
 					}
 				}
 			}
 
-			foreach (ObjectNode srcBox in root.Parents)
+			foreach (ObjectNode srcNode in root.Parents)
 			{
-				if (!visited.Contains(srcBox))
+				if (!visited.Contains(srcNode))
 				{
-					visited.Add(srcBox);
-					this.ExploreConnectedToRoot(visited, srcBox);
+					visited.Add(srcNode);
+					this.ExploreConnectedToRoot(visited, srcNode);
 				}
 			}
 		}
 
-		protected void CloseConnections(ObjectNode removedBox)
+		protected void CloseConnections(ObjectNode removedNode)
 		{
 			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
 			//	les connections sur la boîte supprimée.
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				foreach (Field field in box.Fields)
+				foreach (Edge edge in node.Edges)
 				{
-					if (field.DstBox == removedBox)
+					if (edge.DstNode == removedNode)
 					{
-						field.DstBox = null;
-						field.IsExplored = false;
+						edge.DstNode = null;
+						edge.IsExplored = false;
 					}
 				}
 			}
 		}
 
-		protected void UpdateAfterOpenOrCloseBox()
+		protected void UpdateAfterOpenOrCloseNode()
 		{
 			//	Appelé après avoir ajouté ou supprimé une boîte.
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				box.UpdateAfterOpenOrCloseBox();
+				node.UpdateAfterOpenOrCloseNode();
 			}
 		}
 
@@ -1029,15 +1031,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				bool push = false;
 
-				for (int i=0; i<this.boxes.Count; i++)
+				for (int i=0; i<this.nodes.Count; i++)
 				{
-					ObjectNode box = this.boxes[i];
+					ObjectNode node = this.nodes[i];
 
-					ObjectNode inter = this.PushSearch(box, exclude, margin);
+					ObjectNode inter = this.PushSearch(node, exclude, margin);
 					if (inter != null)
 					{
 						push = true;
-						this.PushAction(box, inter, direction, margin);
+						this.PushAction(node, inter, direction, margin);
 						this.PushLayout(inter, direction, margin);
 					}
 				}
@@ -1049,17 +1051,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected ObjectNode PushSearch(ObjectNode box, ObjectNode exclude, double margin)
+		protected ObjectNode PushSearch(ObjectNode node, ObjectNode exclude, double margin)
 		{
-			//	Cherche une boîte qui chevauche 'box'.
-			Rectangle rect = box.Bounds;
+			//	Cherche une boîte qui chevauche 'node'.
+			Rectangle rect = node.Bounds;
 			rect.Inflate(margin);
 
-			for (int i=0; i<this.boxes.Count; i++)
+			for (int i=0; i<this.nodes.Count; i++)
 			{
-				ObjectNode obj = this.boxes[i];
+				ObjectNode obj = this.nodes[i];
 
-				if (obj != box && obj != exclude)
+				if (obj != node && obj != exclude)
 				{
 					if (obj.Bounds.IntersectsWith(rect))
 					{
@@ -1071,15 +1073,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
-		protected void PushAction(ObjectNode box, ObjectNode inter, PushDirection direction, double margin)
+		protected void PushAction(ObjectNode node, ObjectNode inter, PushDirection direction, double margin)
 		{
-			//	Pousse 'inter' pour venir après 'box' selon la direction choisie.
+			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
 
-			double dr = box.Bounds.Right - rect.Left + margin;
-			double dl = rect.Right - box.Bounds.Left + margin;
-			double dt = box.Bounds.Top - rect.Bottom + margin;
-			double db = rect.Top - box.Bounds.Bottom + margin;
+			double dr = node.Bounds.Right - rect.Left + margin;
+			double dl = rect.Right - node.Bounds.Left + margin;
+			double dt = node.Bounds.Top - rect.Bottom + margin;
+			double db = rect.Top - node.Bounds.Bottom + margin;
 
 			if (direction == PushDirection.Automatic)
 			{
@@ -1137,9 +1139,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				bounds = Rectangle.Union(bounds, box.Bounds);
+				bounds = Rectangle.Union(bounds, node.Bounds);
 			}
 
 			foreach (ObjectEdge connection in this.connections)
@@ -1168,9 +1170,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return;
 			}
 
-			foreach (ObjectNode box in this.boxes)
+			foreach (ObjectNode node in this.nodes)
 			{
-				box.Move(dx, dy);
+				node.Move(dx, dy);
 			}
 
 			foreach (ObjectEdge connection in this.connections)
@@ -1329,9 +1331,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 				}
 
-				for (int i=this.boxes.Count-1; i>=0; i--)
+				for (int i=this.nodes.Count-1; i>=0; i--)
 				{
-					AbstractObject obj = this.boxes[i];
+					AbstractObject obj = this.nodes[i];
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
@@ -1354,12 +1356,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
-					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader)
+					if (fly.HilitedElement == AbstractObject.ActiveElement.NodeHeader)
 					{
 						if (this.IsLocateActionHeader(message))
 						{
-							ObjectNode box = fly as ObjectNode;
-							if (box != null && !box.IsRoot)
+							ObjectNode node = fly as ObjectNode;
+							if (node != null && !node.IsRoot)
 							{
 								type = MouseCursorType.Locate;
 							}
@@ -1370,7 +1372,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						}
 						else
 						{
-							if (this.BoxCount > 1)
+							if (this.NodeCount > 1)
 							{
 								type = MouseCursorType.Move;
 							}
@@ -1381,15 +1383,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						}
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.NodeInside ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldGroup)
+							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeGroup)
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldExpression)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeName ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeType ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeExpression)
 					{
 						if (this.IsLocateAction(message))
 						{
@@ -1397,7 +1399,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						}
 						else
 						{
-							if (fly.IsMousePossible(fly.HilitedElement, fly.HilitedFieldRank))
+							if (fly.IsMousePossible(fly.HilitedElement, fly.HilitedEdgeRank))
 							{
 								type = MouseCursorType.Grid;
 							}
@@ -1407,7 +1409,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							}
 						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldTitle)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.NodeEdgeTitle)
 					{
 						if (this.IsLocateAction(message))
 						{
@@ -1479,9 +1481,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public Rectangle BoxGridAlign(Rectangle rect)
+		public Rectangle NodeGridAlign(Rectangle rect)
 		{
-			//	Aligne un rectangle d'une boîte (ObjectBox) sur son coin supérieur/gauche,
+			//	Aligne un rectangle d'une boîte (ObjectNode) sur son coin supérieur/gauche,
 			//	en ajustant également sa largeur, mais pas sa hauteur.
 			if (this.grid)
 			{
@@ -1537,7 +1539,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public bool IsLocateActionHeader(Message message)
 		{
-			//	Indique si l'action débouche sur une opération de navigation (pour BoxHeader).
+			//	Indique si l'action débouche sur une opération de navigation (pour NodeHeader).
 			return (message.IsControlPressed || this.CurrentModifyMode == ModifyMode.Locked);
 		}
 
@@ -1591,13 +1593,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			for (int i=this.boxes.Count-1; i>=0; i--)
+			for (int i=this.nodes.Count-1; i>=0; i--)
 			{
-				ObjectNode box = this.boxes[i];
+				ObjectNode node = this.nodes[i];
 
-				if (box.IsReadyForAction)
+				if (node.IsReadyForAction)
 				{
-					return box;
+					return node;
 				}
 			}
 
@@ -1723,7 +1725,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void PaintObjects(Graphics graphics)
 		{
 			//	Dessine l'arrière-plan de tous les objets.
-			foreach (AbstractObject obj in this.boxes)
+			foreach (AbstractObject obj in this.nodes)
 			{
 				obj.DrawBackground (graphics);
 			}
@@ -1744,7 +1746,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Dessine l'avant plan tous les objets.
-			foreach (AbstractObject obj in this.boxes)
+			foreach (AbstractObject obj in this.nodes)
 			{
 				obj.DrawForeground (graphics);
 			}
@@ -1999,33 +2001,34 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public static readonly double defaultWidth = 200;
 		public static readonly double connectionDetour = 30;
 		public static readonly double pushMargin = 10;
-		protected static readonly double frameMargin = 40;
+		private static readonly double frameMargin = 40;
 
-		protected List<Objects.ObjectNode> boxes;
-		protected List<Objects.ObjectEdge> connections;
-		protected List<Objects.ObjectComment> comments;
-		protected List<Objects.ObjectInfo> infos;
-		protected Size areaSize;
-		protected double zoom;
-		protected Point areaOffset;
-		protected AbstractObject lockObject;
-		protected bool isScrollerEnable;
-		protected Point brutPos;
-		protected MessageType lastMessageType;
-		protected Point lastMessagePos;
-		protected bool isAreaMoving;
-		protected Point areaMovingInitialPos;
-		protected Point areaMovingInitialOffset;
-		protected MouseCursorType lastCursor = MouseCursorType.Unknown;
-		protected Image mouseCursorFinger;
-		protected Image mouseCursorHand;
-		protected Image mouseCursorGrid;
-		protected Image mouseCursorLocate;
-		protected VScroller vscroller;
-		protected AbstractObject hilitedObject;
-		protected bool dirtySerialization;
-		protected bool grid;
-		protected double gridStep;
-		protected double gridSubdiv;
+		private WorkflowDefinitionEntity workflowDefinitionEntity;
+		private List<ObjectNode> nodes;
+		private List<ObjectEdge> connections;
+		private List<ObjectComment> comments;
+		private List<ObjectInfo> infos;
+		private Size areaSize;
+		private double zoom;
+		private Point areaOffset;
+		private AbstractObject lockObject;
+		private bool isScrollerEnable;
+		private Point brutPos;
+		private MessageType lastMessageType;
+		private Point lastMessagePos;
+		private bool isAreaMoving;
+		private Point areaMovingInitialPos;
+		private Point areaMovingInitialOffset;
+		private MouseCursorType lastCursor = MouseCursorType.Unknown;
+		private Image mouseCursorFinger;
+		private Image mouseCursorHand;
+		private Image mouseCursorGrid;
+		private Image mouseCursorLocate;
+		private VScroller vscroller;
+		private AbstractObject hilitedObject;
+		private bool dirtySerialization;
+		private bool grid;
+		private double gridStep;
+		private double gridSubdiv;
 	}
 }

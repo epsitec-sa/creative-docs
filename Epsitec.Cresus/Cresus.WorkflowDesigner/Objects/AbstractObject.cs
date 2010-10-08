@@ -24,34 +24,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			None,
 
-			BoxInside,
-			BoxSources,
-			BoxComment,
-			BoxInfo,
-			BoxExtend,
-			BoxClose,
-			BoxHeader,
-			BoxFieldName,
-			BoxFieldType,
-			BoxFieldExpression,
-			BoxFieldAdd,
-			BoxFieldRemove,
-			BoxFieldMovable,
-			BoxFieldMoving,
-			BoxFieldTitle,
-			BoxFieldAddInterface,
-			BoxFieldRemoveInterface,
-			BoxFieldGroup,
-			BoxChangeWidth,
-			BoxMoveColumnsSeparator1,
-			BoxColor1,
-			BoxColor2,
-			BoxColor3,
-			BoxColor4,
-			BoxColor5,
-			BoxColor6,
-			BoxColor7,
-			BoxColor8,
+			NodeInside,
+			NodeSources,
+			NodeComment,
+			NodeInfo,
+			NodeExtend,
+			NodeClose,
+			NodeHeader,
+			NodeEdgeName,
+			NodeEdgeType,
+			NodeEdgeExpression,
+			NodeEdgeAdd,
+			NodeEdgeRemove,
+			NodeEdgeMovable,
+			NodeEdgeMoving,
+			NodeEdgeTitle,
+			NodeEdgeAddInterface,
+			NodeEdgeRemoveInterface,
+			NodeEdgeGroup,
+			NodeChangeWidth,
+			NodeMoveColumnsSeparator1,
+			NodeColor1,
+			NodeColor2,
+			NodeColor3,
+			NodeColor4,
+			NodeColor5,
+			NodeColor6,
+			NodeColor7,
+			NodeColor8,
 
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
@@ -200,11 +200,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public int HilitedFieldRank
+		public int HilitedEdgeRank
 		{
 			get
 			{
-				return this.hilitedFieldRank;
+				return this.hilitedEdgeRank;
 			}
 		}
 
@@ -212,12 +212,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Retourne le texte pour le tooltip.
 			ActiveElement element;
-			int fieldRank;
-			this.MouseDetect(pos, out element, out fieldRank);
-			return this.GetToolTipText(element, fieldRank);
+			int edgeRank;
+			this.MouseDetect(pos, out element, out edgeRank);
+			return this.GetToolTipText(element, edgeRank);
 		}
 
-		protected virtual string GetToolTipText(ActiveElement element, int fieldRank)
+		protected virtual string GetToolTipText(ActiveElement element, int edgeRank)
 		{
 #if false
 			switch (element)
@@ -406,13 +406,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
 			ActiveElement element;
-			int fieldRank;
-			this.MouseDetect(pos, out element, out fieldRank);
+			int edgeRank;
+			this.MouseDetect(pos, out element, out edgeRank);
 
-			if (this.hilitedElement != element || this.hilitedFieldRank != fieldRank)
+			if (this.hilitedElement != element || this.hilitedEdgeRank != edgeRank)
 			{
 				this.hilitedElement = element;
-				this.hilitedFieldRank = fieldRank;
+				this.hilitedEdgeRank = edgeRank;
 				this.editor.Invalidate();
 			}
 
@@ -429,15 +429,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 		}
 
-		protected virtual bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		protected virtual bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;
-			fieldRank = -1;
+			edgeRank = -1;
 			return false;
 		}
 
-		public virtual bool IsMousePossible(ActiveElement element, int fieldRank)
+		public virtual bool IsMousePossible(ActiveElement element, int edgeRank)
 		{
 			//	Indique si l'opération est possible.
 			return true;
@@ -918,6 +918,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected ActiveElement hilitedElement;
 		protected MainColor boxColor;
 		protected bool isDimmed;
-		protected int hilitedFieldRank;
+		protected int hilitedEdgeRank;
 	}
 }
