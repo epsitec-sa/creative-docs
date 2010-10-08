@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				Padding = new Margins (5),
 			};
 
-			var controller = new MainController (workflow);
+			var controller = new MainController (this.businessContext, workflow);
 			controller.CreateUI (box);
 
 			return box;

@@ -59,7 +59,9 @@
     <Compile Include="MainController.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
+    <Compile Include="Objects\ActiveElement.cs" />
     <Compile Include="Objects\Edge.cs" />
+    <Compile Include="Objects\MainColor.cs" />
     <Compile Include="Objects\ObjectNode.cs" />
     <Compile Include="Objects\ObjectComment.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />

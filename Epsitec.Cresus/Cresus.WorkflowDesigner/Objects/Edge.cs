@@ -80,13 +80,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public Edge(Editor editor, WorkflowEdgeEntity edgeEntity)
+		public Edge(Editor editor, WorkflowEdgeEntity workflowEdgeEntity, ObjectNode srcNode)
 		{
 			System.Diagnostics.Debug.Assert (editor != null);
-			System.Diagnostics.Debug.Assert (edgeEntity != null);
+			System.Diagnostics.Debug.Assert (workflowEdgeEntity != null);
 
 			this.editor = editor;
-			this.edgeEntity = edgeEntity;
+			this.workflowEdgeEntity = workflowEdgeEntity;
+			this.srcNode = srcNode;
 
 			this.textLayoutField = new TextLayout();
 			this.textLayoutField.DefaultFontSize = 10;
@@ -98,9 +99,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutType.Alignment = ContentAlignment.MiddleLeft;
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.relation = FieldRelation.None;
-			this.isNullable = false;
-			this.isPrivateRelation = false;
 			this.index = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
@@ -115,11 +113,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.routeAbsoluteDX = 0.0;
 
 			this.commentAttach = AbstractObject.minAttach;
-			this.commentMainColor = AbstractObject.MainColor.Yellow;
-			this.commentText = "Bonjour !";  //Res.Strings.Entities.Comment.DefaultText;
+			this.commentMainColor = MainColor.Yellow;
+			this.commentText = this.workflowEdgeEntity.Description.ToString ();
 
-			this.textLayoutField.Text = this.edgeEntity.Name.ToString ();
-			this.textLayoutType.Text = this.edgeEntity.Description.ToString ();
+			this.textLayoutField.Text = this.workflowEdgeEntity.Name.ToString ();
+			//?this.textLayoutType.Text = this.edgeEntity.Description.ToString ();
+		}
+
+
+		public WorkflowEdgeEntity WorkflowEdgeEntity
+		{
+			get
+			{
+				return this.workflowEdgeEntity;
+			}
 		}
 
 		public TextLayout TextLayoutField
@@ -137,19 +144,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.textLayoutType;
-			}
-		}
-
-		public FieldRelation Relation
-		{
-			//	Type de la relation éventuelle du champ.
-			get
-			{
-				return this.relation;
-			}
-			set
-			{
-				this.relation = value;
 			}
 		}
 
@@ -178,7 +172,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public ObjectNode DstNode
 		{
-			//	Objet destination de la connection (si la relation est explorée).
+			//	Objet destination de la connection (si la connection débouche sur un noeud).
 			get
 			{
 				return this.dstNode;
@@ -204,7 +198,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsExplored
 		{
-			//	Indique si une relation est explorée, c'est-à-dire si l'entité destination est visible.
+			//	Indique si une connection est explorée, c'est-à-dire si le noeud destination est visible.
 			get
 			{
 				return this.isExplored;
@@ -217,7 +211,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsSourceExpanded
 		{
-			//	Indique si la boîte source d'une relation est étendue.
+			//	Indique si la boîte source d'une connection est étendue.
 			get
 			{
 				return this.isSourceExpanded;
@@ -313,7 +307,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public AbstractObject.MainColor CommentMainColor
+		public MainColor CommentMainColor
 		{
 			//	Couleur du commentaire.
 			get
@@ -703,14 +697,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private readonly WorkflowEdgeEntity edgeEntity;
+		private readonly WorkflowEdgeEntity workflowEdgeEntity;
 
 		private Editor editor;
 		private TextLayout textLayoutField;
 		private TextLayout textLayoutType;
-		private FieldRelation relation;
-		private bool isNullable;
-		private bool isPrivateRelation;
 		private int index;
 		private ObjectNode srcNode;
 		private ObjectNode dstNode;
@@ -731,6 +722,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Rectangle commentBounds;
 		private string commentText;
 		private double commentAttach;
-		private AbstractObject.MainColor commentMainColor;
+		private MainColor commentMainColor;
 	}
 }

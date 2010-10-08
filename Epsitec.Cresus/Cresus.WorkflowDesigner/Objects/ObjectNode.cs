@@ -59,13 +59,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
 
-			foreach (var entityEdge in this.Entity.Edges)
-			{
-				var edge = new Edge (this.editor, entityEdge);
-				this.edges.Add (edge);
-			}
+			this.UpdateEdges ();
 		}
 
+
+		public string Code
+		{
+			get
+			{
+				return this.Entity.Code;
+			}
+		}
 
 		public string Title
 		{
@@ -339,7 +343,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Il s'agit toujours de la position de départ d'une liaison.
 			if (this.isExtended && rank < this.edges.Count)
 			{
-				Rectangle rect = this.GetFieldBounds(rank);
+				Rectangle rect = this.GetEdgeBounds(rank);
 				return rect.Center.Y;
 			}
 			else
@@ -419,9 +423,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Edge edge = this.edges[i];
 				ObjectEdge objectEdge = edge.ObjectEdge;
 
-				if (edge.Relation != FieldRelation.None && objectEdge != null)
+				if (objectEdge != null)
 				{
-					Rectangle rect = this.GetFieldBounds(i);
+					Rectangle rect = this.GetEdgeBounds(i);
 					if (posv >= rect.Bottom && posv <= rect.Top)
 					{
 						if (edge.IsExplored)
@@ -447,7 +451,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element, int fieldRank)
+		protected override string GetToolTipText(ActiveElement element, int edgeRank)
 		{
 			//	Retourne le texte pour le tooltip.
 			if (this.isDragging || this.isEdgeMoving || this.isChangeWidth || this.isMoveColumnsSeparator1)
@@ -554,7 +558,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 #endif
 
-			return base.GetToolTipText(element, fieldRank);
+			return base.GetToolTipText(element, edgeRank);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
@@ -643,7 +647,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
 				{
-					this.MoveField(this.edgeInitialRank, this.hilitedEdgeRank);
+					this.MoveEdge(this.edgeInitialRank, this.hilitedEdgeRank);
 				}
 				this.isEdgeMoving = false;
 				this.editor.LockObject(null);
@@ -686,35 +690,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
 				{
-					this.RemoveField(this.hilitedEdgeRank);
+					this.RemoveEdge(this.hilitedEdgeRank);
 				}
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
 				{
-					this.AddField(this.hilitedEdgeRank);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeAddInterface)
-				{
-					this.AddInterface();
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeRemoveInterface)
-				{
-					this.RemoveInterface(this.hilitedEdgeRank);
+					this.AddEdge(this.hilitedEdgeRank);
 				}
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeName)
 				{
 					if (this.editor.IsLocateAction(message))
 					{
-						this.LocateField(this.hilitedEdgeRank);
+						this.LocateEdge(this.hilitedEdgeRank);
 					}
 					else
 					{
 						if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
 						{
-							this.ChangeFieldType(this.hilitedEdgeRank);
+							this.ChangeEdgeType(this.hilitedEdgeRank);
 						}
 					}
 				}
@@ -729,7 +723,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					{
 						if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
 						{
-							this.ChangeFieldType(this.hilitedEdgeRank);
+							this.ChangeEdgeType(this.hilitedEdgeRank);
 						}
 					}
 				}
@@ -795,11 +789,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		protected override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;
-			fieldRank = -1;
+			edgeRank = -1;
 			this.SetEdgesHilited(false);
 
 			if (pos.IsZero)
@@ -820,11 +814,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				//	Souris entre deux champs ?
 				for (int i=-1; i<this.edges.Count; i++)
 				{
-					rect = this.GetFieldMovingBounds(i);
+					rect = this.GetEdgeMovingBounds(i);
 					if (rect.Contains(pos))
 					{
 						element = ActiveElement.NodeEdgeMoving;
-						fieldRank = i;
+						edgeRank = i;
 						return true;
 					}
 				}
@@ -948,11 +942,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					{
 						for (int i=-1; i<this.edges.Count; i++)
 						{
-							rect = this.GetFieldAddBounds(i);
+							rect = this.GetEdgeAddBounds(i);
 							if (rect.Contains(pos))
 							{
 								element = ActiveElement.NodeEdgeAdd;
-								fieldRank = i;
+								edgeRank = i;
 								this.SetEdgesHilited(true);
 								return true;
 							}
@@ -974,59 +968,48 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					//	Souris dans un champ ?
 					for (int i=0; i<this.edges.Count; i++)
 					{
-						rect = this.GetFieldRemoveBounds(i);
+						rect = this.GetEdgeRemoveBounds(i);
 						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && rect.Contains(pos))
 						{
 							element = ActiveElement.NodeEdgeRemove;
-							fieldRank = i;
+							edgeRank = i;
 							this.SetEdgesHilited(true);
 							return true;
 						}
 
-						rect = this.GetFieldMovableBounds(i);
+						rect = this.GetEdgeMovableBounds(i);
 						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && rect.Contains(pos))
 						{
 							element = ActiveElement.NodeEdgeMovable;
-							fieldRank = i;
+							edgeRank = i;
 							this.SetEdgesHilited(true);
 							return true;
 						}
 
-						rect = this.GetFieldNameBounds(i);
+						rect = this.GetEdgeNameBounds(i);
 						if (rect.Contains(pos))
 						{
 							element = ActiveElement.NodeEdgeName;
-							fieldRank = i;
+							edgeRank = i;
 							this.SetEdgesHilited(true);
 							return true;
 						}
 
-						rect = this.GetFieldTypeBounds(i);
+						rect = this.GetEdgeTypeBounds(i);
 						if (rect.Contains(pos))
 						{
 							element = ActiveElement.NodeEdgeType;
-							fieldRank = i;
+							edgeRank = i;
 							this.SetEdgesHilited(true);
 							return true;
 						}
 
-						rect = this.GetFieldExpressionBounds(i);
+						rect = this.GetEdgeExpressionBounds(i);
 						if (rect.Contains(pos))
 						{
 							element = ActiveElement.NodeEdgeExpression;
-							fieldRank = i;
+							edgeRank = i;
 							this.SetEdgesHilited(true);
-							return true;
-						}
-					}
-
-					for (int i=0; i<this.edges.Count; i++)
-					{
-						rect = this.GetFieldGroupBounds(i);
-						if (rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeGroup;
-							fieldRank = i;
 							return true;
 						}
 					}
@@ -1051,7 +1034,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return true;
 		}
 
-		public override bool IsMousePossible(ActiveElement element, int fieldRank)
+		public override bool IsMousePossible(ActiveElement element, int edgeRank)
 		{
 			//	Indique si l'opération est possible.
 			return true;
@@ -1094,20 +1077,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return false;
 		}
 
-		protected Rectangle GetFieldRemoveBounds(int rank)
+		protected Rectangle GetEdgeRemoveBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 
 			rect.Width = rect.Height;
 			
 			return rect;
 		}
 
-		protected Rectangle GetFieldAddBounds(int rank)
+		protected Rectangle GetEdgeAddBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 			
 			rect.Width = rect.Height;
 			rect.Bottom -= 6;
@@ -1116,20 +1099,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return rect;
 		}
 
-		protected Rectangle GetFieldMovableBounds(int rank)
+		protected Rectangle GetEdgeMovableBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 
 			rect.Left = rect.Right-rect.Height;
 			
 			return rect;
 		}
 
-		protected Rectangle GetFieldMovingBounds(int rank)
+		protected Rectangle GetEdgeMovingBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 			
 			rect.Bottom -= ObjectNode.edgeHeight/2;
 			rect.Height = ObjectNode.edgeHeight;
@@ -1137,10 +1120,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return rect;
 		}
 
-		protected Rectangle GetFieldNameBounds(int rank)
+		protected Rectangle GetEdgeNameBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le nom d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 
 			rect.Deflate(ObjectNode.textMargin, 0);
 			rect.Right = this.ColumnsSeparatorAbsolute(0);
@@ -1148,10 +1131,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return rect;
 		}
 
-		protected Rectangle GetFieldTypeBounds(int rank)
+		protected Rectangle GetEdgeTypeBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le type d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 			
 			rect.Deflate(ObjectNode.textMargin, 0);
 			rect.Left = this.ColumnsSeparatorAbsolute(0)+1;
@@ -1160,10 +1143,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return rect;
 		}
 
-		protected Rectangle GetFieldExpressionBounds(int rank)
+		protected Rectangle GetEdgeExpressionBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par l'expression d'un champ.
-			Rectangle rect = this.GetFieldBounds(rank);
+			Rectangle rect = this.GetEdgeBounds(rank);
 			
 			rect.Deflate(9.5, 0);
 			rect.Left = this.ColumnsSeparatorAbsolute(1)+1;
@@ -1171,22 +1154,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return rect;
 		}
 
-		protected Rectangle GetFieldGroupBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par un groupe, c'est-à-dire un ensemble de champs IsReadOnly
-			//	ayant le même DeepDefiningTypeId.
-			Rectangle rect = this.GetFieldBounds(rank);
-
-			for (int i=rank+1; i<this.edges.Count; i++)
-			{
-				rect = Rectangle.Union(rect, this.GetFieldBounds(i));
-			}
-
-			rect.Deflate(9.0, 0.0);
-			return rect;
-		}
-
-		protected Rectangle GetFieldBounds(int rank)
+		protected Rectangle GetEdgeBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par un champ.
 			Rectangle rect = this.bounds;
@@ -1208,7 +1176,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Montre l'entité héritée ou l'interface cliquée avec le bouton de droite.
 		}
 
-		protected void LocateField(int rank)
+		protected void LocateEdge(int rank)
 		{
 			//	Montre le champ cliqué avec le bouton de droite.
 		}
@@ -1219,39 +1187,38 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void MoveField(int srcRank, int dstRank)
+		protected void MoveEdge(int srcRank, int dstRank)
 		{
 			//	Déplace un champ.
 		}
 
-		protected void RemoveField(int rank)
+		protected void RemoveEdge(int rank)
 		{
 			//	Supprime un champ.
 		}
 
-		protected void AddField(int rank)
+		protected void AddEdge(int rank)
 		{
 			//	Ajoute un nouveau champ.
+			var newEdge = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
+
+			newEdge.Name = "Nouveau";
+			newEdge.Description = "Nouveau";
+			newEdge.TransitionAction = "xxx";
+			//?newEdge.NextNode = "";
+
+			this.Entity.Edges.Add (newEdge);
+
+			this.UpdateEdges ();
+			this.UpdateEdgesLink ();
+			this.editor.UpdateAfterAddOrRemoveEdge (this);
+			this.editor.SetLocalDirty ();
+			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected void AddInterface()
-		{
-			//	Ajoute une interface à l'entité.
-		}
-
-		protected void RemoveInterface(int rank)
-		{
-			//	Supprime une interface de l'entité.
-		}
-
-		protected void ChangeFieldType(int rank)
+		protected void ChangeEdgeType(int rank)
 		{
 			//	Choix du type pour un champ.
-		}
-
-		protected void UpdateFieldsContent()
-		{
-			//	Crée tous les champs de titrage.
 		}
 
 		protected void UpdateInformations()
@@ -1267,7 +1234,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected string GetInformations(bool resume)
 		{
 			//	Retourne les informations pour l'ObjectInfo lié.
-			return null;
+			return this.Entity.Name.ToString ();  // TODO: provisoire
+		}
+
+		protected void UpdateEdges()
+		{
+			this.edges.Clear ();
+
+			foreach (var entityEdge in this.Entity.Edges)
+			{
+				var edge = new Edge (this.editor, entityEdge, this);
+				this.edges.Add (edge);
+			}
+
+			// TODO: remettre les connections !
 		}
 
 		protected void UpdateEdgesLink()
@@ -1286,7 +1266,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
 			{
-				this.comment = new ObjectComment (this.editor, null);
+				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
@@ -1313,7 +1293,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute une information à la boîte.
 			if (this.info == null)
 			{
-				this.info = new ObjectInfo (this.editor, null);
+				this.info = new ObjectInfo (this.editor, this.Entity);
 				this.info.AttachObject = this;
 				this.info.BackgroundMainColor = this.BackgroundMainColor;
 
@@ -1354,12 +1334,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect.Inflate(2);
 			}
 			rect.Offset(ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectNode.roundFrameRadius+ObjectNode.shadowOffset, (int)ObjectNode.shadowOffset, 0.2);
+			this.DrawNodeShadow(graphics, rect, ObjectNode.roundFrameRadius+ObjectNode.shadowOffset, (int)ObjectNode.shadowOffset, 0.2);
 
-			//	Construit le chemin du cadre arrondi.
+			//	Construit le chemin du cadre.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, ObjectNode.roundFrameRadius);
+			Path path = this.PathNodeRectangle (rect, ObjectNode.roundFrameRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -1433,62 +1413,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
 
-			//	Dessine le bouton compact/étendu.
-			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			if (this.hilitedElement == ActiveElement.NodeExtend)
-			{
-				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
-			}
-
-			//	Dessine le bouton de fermeture.
-			if (this.hilitedElement == ActiveElement.NodeClose)
-			{
-				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
-			}
-
-			//	Dessine le moignon pour les sources à gauche.
-			if (this.hilitedElement != ActiveElement.None)
-			{
-				Point p1 = this.PositionSourcesButton;
-				p1.Y = this.bounds.Top-AbstractObject.headerHeight;
-				Point p2 = p1;
-				p1.X = this.bounds.Left-1-AbstractObject.lengthClose;
-				p2.X = this.bounds.Left-1;
-				graphics.LineWidth = 2;
-				graphics.AddLine(p1, p2);
-				AbstractObject.DrawEndingArrow(graphics, p1, p2, FieldRelation.Reference, false);
-				graphics.LineWidth = 1;
-				graphics.RenderSolid(colorFrame);
-			}
-
-			//	Dessine le bouton des commentaires.
-			if (this.hilitedElement == ActiveElement.NodeComment)
-			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
-			}
-
-			//	Dessine le bouton des informations.
-			if (this.hilitedElement == ActiveElement.NodeInfo)
-			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
-			}
-
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
@@ -1505,7 +1429,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (this.hilitedElement == ActiveElement.NodeEdgeName && this.hilitedEdgeRank == i)
 					{
-						rect = this.GetFieldNameBounds(i);
+						rect = this.GetEdgeNameBounds(i);
 
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain());
@@ -1515,7 +1439,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (this.hilitedElement == ActiveElement.NodeEdgeType && this.hilitedEdgeRank == i)
 					{
-						rect = this.GetFieldTypeBounds(i);
+						rect = this.GetEdgeTypeBounds(i);
 
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain());
@@ -1525,7 +1449,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (this.hilitedElement == ActiveElement.NodeEdgeExpression && this.hilitedEdgeRank == i)
 					{
-						rect = this.GetFieldExpressionBounds(i);
+						rect = this.GetEdgeExpressionBounds(i);
 
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain());
@@ -1535,7 +1459,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if ((this.hilitedElement == ActiveElement.NodeEdgeRemove || this.hilitedElement == ActiveElement.NodeEdgeMovable) && this.hilitedEdgeRank == i)
 					{
-						rect = this.GetFieldBounds(i);
+						rect = this.GetEdgeBounds(i);
 
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain(0.3));
@@ -1543,20 +1467,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (this.isEdgeMoving && this.edgeInitialRank == i)
 					{
-						rect = this.GetFieldBounds(i);
+						rect = this.GetEdgeBounds(i);
 
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain(0.3));
 					}
 
 					//	Affiche le nom du champ.
-					rect = this.GetFieldNameBounds(i);
+					rect = this.GetEdgeNameBounds(i);
 					rect.Right -= 2;
 					this.edges[i].TextLayoutField.LayoutSize = rect.Size;
 					this.edges[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
 
 					//	Affiche le type du champ.
-					rect = this.GetFieldTypeBounds(i);
+					rect = this.GetEdgeTypeBounds(i);
 					rect.Left += 1;
 					if (rect.Width > 10)
 					{
@@ -1564,47 +1488,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.edges[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
 					}
 
-					rect = this.GetFieldBounds(i);
+					rect = this.GetEdgeBounds(i);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.RenderSolid(colorLine);
 				}
 
-				//	Dessine tous les cadres liés aux titres.
-				for (int i=0; i<this.edges.Count; i++)
-				{
-					if (i < this.edges.Count-1)
-					{
-						rect = this.GetFieldBounds(i);
-						rect.Deflate(9.5, 0.5);
-						Path dashedPath = new Path();
-
-						dashedPath.MoveTo(rect.Left, rect.Bottom);
-						dashedPath.LineTo(rect.Right, rect.Bottom);
-						graphics.Rasterizer.AddOutline(dashedPath);
-						graphics.RenderSolid(this.GetColorMain(0.8));
-					}
-				}
-
-				//	Met en évidence le groupe survolé.
-				if (this.hilitedElement == ActiveElement.NodeEdgeGroup)
-				{
-					rect = this.GetFieldGroupBounds(this.hilitedEdgeRank);
-					rect.Deflate(1.5);
-					rect.Bottom += 1.0;
-					Path roundedPath = this.PathRoundRectangle(rect, ObjectNode.roundInsideRadius, false, true);
-
-					graphics.Rasterizer.AddSurface(roundedPath);
-					graphics.RenderSolid(this.GetColorMain(0.1));
-
-					graphics.Rasterizer.AddOutline(roundedPath, 3);
-					graphics.RenderSolid(this.GetColorMain(0.5));
-				}
-
 				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
 				{
-					Point p1 = this.GetFieldBounds(this.edgeInitialRank).Center;
-					Point p2 = this.GetFieldMovingBounds(this.hilitedEdgeRank).Center;
-					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
+					Point p1 = this.GetEdgeBounds(this.edgeInitialRank).Center;
+					Point p2 = this.GetEdgeMovingBounds(this.hilitedEdgeRank).Center;
+					p1.X = p2.X = this.GetEdgeMovableBounds(0).Center.X;
 					this.DrawMovingArrow(graphics, p1, p2);
 				}
 
@@ -1615,82 +1508,99 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					!this.IsHeaderHilite && !this.isEdgeMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(-1).Center;
-					Point p2 = this.GetFieldAddBounds(this.edges.Count-1).Center;
+					Point p1 = this.GetEdgeAddBounds(-1).Center;
+					Point p2 = this.GetEdgeAddBounds(this.edges.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.NodeEdgeAdd || this.hilitedElement == ActiveElement.NodeEdgeRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
+					p1.X = p2.X = this.GetEdgeMovableBounds(0).Center.X;
 					hilited = this.hilitedElement == ActiveElement.NodeEdgeMovable;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 				}
 			}
 
 			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-			graphics.RenderSolid(colorFrame);
+			graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
+			graphics.RenderSolid (colorFrame);
+
+			//	Dessine le bouton compact/étendu.
+			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			if (this.hilitedElement == ActiveElement.NodeExtend)
+			{
+				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
+			}
+
+			//	Dessine le bouton de fermeture.
+			if (this.hilitedElement == ActiveElement.NodeClose)
+			{
+				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
+			}
+
+			//	Dessine le bouton des commentaires.
+			if (this.hilitedElement == ActiveElement.NodeComment)
+			{
+				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
+			}
+
+			//	Dessine le bouton des informations.
+			if (this.hilitedElement == ActiveElement.NodeInfo)
+			{
+				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
+			}
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
 			{
 				if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
 				{
-					rect = this.GetFieldRemoveBounds(this.hilitedEdgeRank);
+					rect = this.GetEdgeRemoveBounds(this.hilitedEdgeRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Minus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
 				{
-					rect = this.GetFieldBounds(this.hilitedEdgeRank);
+					rect = this.GetEdgeBounds(this.hilitedEdgeRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
 					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 
-					rect = this.GetFieldAddBounds(this.hilitedEdgeRank);
+					rect = this.GetEdgeAddBounds(this.hilitedEdgeRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeMovable)
 				{
-					rect = this.GetFieldMovableBounds(this.hilitedEdgeRank);
+					rect = this.GetEdgeMovableBounds(this.hilitedEdgeRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.VerticalMove, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
 				{
-					rect = this.GetFieldBounds(this.hilitedEdgeRank);
+					rect = this.GetEdgeBounds(this.hilitedEdgeRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
 					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 				}
 
-				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+				if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
 				{
-					if (this.hilitedElement == ActiveElement.NodeEdgeRemoveInterface ||
-						this.hilitedElement == ActiveElement.NodeEdgeTitle)
-					{
-						rect = this.GetFieldMovableBounds(this.hilitedEdgeRank);
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-", this.hilitedElement == ActiveElement.NodeEdgeRemoveInterface, true);
-					}
-
-#if false
-					//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
-					if (this.IsHeaderHilite)
-					{
-						for (int i=0; i<this.fields.Count; i++)
-						{
-							if (this.fields[i].IsTitle &&
-								this.fields[i].IsInterface &&
-								(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule))
-							{
-								rect = this.GetFieldMovableBounds(i);
-								this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, false, true);
-							}
-						}
-
-						rect = this.GetFieldInterfaceBounds();
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldAddInterface, false, true);
-					}
-#endif
+					rect = this.GetEdgeMovableBounds(this.hilitedEdgeRank);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-", true, true);
 				}
 			}
 
@@ -1828,24 +1738,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le dessus de l'objet.
 		}
 
-		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
-		{
-			//	Dessine le glyph 'o--' d'une interface.
-			double y = System.Math.Floor(rect.Center.Y)+(lineWidth%2)/2;
-			double radius = rect.Height/2;
-
-			graphics.LineWidth = lineWidth;
-
-			graphics.AddFilledCircle(rect.Left+radius, y, radius);
-			graphics.RenderSolid(this.GetColor(1));
-
-			graphics.AddCircle(rect.Left+radius, y, radius);
-			graphics.AddLine(rect.Left+radius*2, y, rect.Right, y);
-			graphics.RenderSolid(color);
-
-			graphics.LineWidth = 1;
-		}
-
 		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
 		{
 			//	Dessine un large traitillé.
@@ -1860,7 +1752,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
 			Rectangle rect = new Rectangle(p1, p2);
 			rect.Inflate(2.5+6);
-			this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
+			this.DrawRoundShadow(graphics, rect, rect.Width/2, 6, 0.2);
 			rect.Deflate(6);
 			Path path = this.PathRoundRectangle(rect, rect.Width/2);
 
@@ -1937,21 +1829,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return new Point(this.ColumnsSeparatorAbsolute(rank), this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 		}
 
-		protected Point PositionSourcesButton
-		{
-			//	Retourne la position du bouton pour montrer les sources.
-			get
-			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
-			}
-		}
-
 		protected Point PositionCommentButton
 		{
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point(this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -1960,7 +1843,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer les informations.
 			get
 			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius*5+10, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -1974,18 +1857,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else
 			{
 				return Point.Zero;
-			}
-		}
-
-		protected Point PositionSourcesMenu
-		{
-			//	Retourne la position du menu pour montrer les sources.
-			get
-			{
-				Point pos = this.PositionSourcesButton;
-				pos.X -= AbstractObject.buttonRadius;
-				pos.Y += AbstractObject.buttonRadius;
-				return pos;
 			}
 		}
 
@@ -2162,8 +2033,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double roundFrameRadius = 12;
-		protected static readonly double roundInsideRadius = 8;
+		public static readonly double roundFrameRadius = 15;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double textMargin = 13;
 		protected static readonly double expressionWidth = 20;

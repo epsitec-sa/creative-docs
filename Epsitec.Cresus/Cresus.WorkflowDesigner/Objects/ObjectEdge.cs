@@ -193,78 +193,70 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeOpenLeft ||
 				this.hilitedElement == ActiveElement.EdgeOpenRight)
 			{
-#if false
-				Module module = this.editor.Module.DesignerApplication.SearchModule(this.field.Destination);
-				CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
-				if (item != null)
+				this.edge.IsExplored = true;
+
+				var node = this.editor.SearchNode (this.Entity.NextNode.Code);
+				if (node == null)
 				{
-					this.field.IsExplored = true;
+					//	Ouvre la connection sur une nouvelle boîte.
+					node = new ObjectNode (this.editor, this.Entity.NextNode);
+					node.BackgroundMainColor = this.boxColor;
 
-					ObjectBox box = this.editor.SearchBox(item.Name);
-					if (box == null)
+					this.edge.DstNode = node;
+					this.edge.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
+
+					this.editor.AddNode (node);
+					this.editor.UpdateGeometry ();
+
+					ObjectNode src = this.edge.SrcNode;
+					//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+					Rectangle bounds;
+					double posv = src.GetEdgeSrcVerticalPosition (this.edge.Index) - (Editor.edgeDetour+12);
+
+					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
 					{
-						//	Ouvre la connection sur une nouvelle boîte.
-						box = new ObjectBox(this.editor);
-						box.BackgroundMainColor = this.boxColor;
-						box.SetContent(item);
+						bounds = new Rectangle (src.Bounds.Left-50-node.Bounds.Width, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
+						bounds.Inflate (50, Editor.pushMargin);
 
-						this.field.DstBox = box;
-						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
-
-						this.editor.AddBox(box);
-						this.editor.UpdateGeometry();
-
-						ObjectBox src = this.field.SrcBox;
-						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-						Rectangle bounds;
-						double posv = src.GetConnectionSrcVerticalPosition(this.field.Index) - (Editor.connectionDetour+12);
-
-						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
+						for (int i=0; i<1000; i++)
 						{
-							bounds = new Rectangle(src.Bounds.Left-50-box.Bounds.Width, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
-							bounds.Inflate(50, Editor.pushMargin);
-
-							for (int i=0; i<1000; i++)
+							if (this.editor.IsEmptyArea (bounds))
 							{
-								if (this.editor.IsEmptyArea(bounds))
-								{
-									break;
-								}
-								bounds.Offset(-1, 0);
+								break;
 							}
-
-							bounds.Deflate(50, Editor.pushMargin);
+							bounds.Offset (-1, 0);
 						}
-						else
-						{
-							bounds = new Rectangle(src.Bounds.Right+50, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
-							bounds.Inflate(50, Editor.pushMargin);
 
-							for (int i=0; i<1000; i++)
-							{
-								if (this.editor.IsEmptyArea(bounds))
-								{
-									break;
-								}
-								bounds.Offset(1, 0);
-							}
-
-							bounds.Deflate(50, Editor.pushMargin);
-						}
-						bounds = this.editor.BoxGridAlign (bounds);
-						box.SetBounds(bounds);
+						bounds.Deflate (50, Editor.pushMargin);
 					}
 					else
 					{
-						//	Ouvre la connection sur une boîte existante.
-						this.field.DstBox = box;
-						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
-					}
+						bounds = new Rectangle (src.Bounds.Right+50, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
+						bounds.Inflate (50, Editor.pushMargin);
 
-					this.editor.UpdateAfterAddOrRemoveConnection(box);
-					this.editor.SetLocalDirty ();
+						for (int i=0; i<1000; i++)
+						{
+							if (this.editor.IsEmptyArea (bounds))
+							{
+								break;
+							}
+							bounds.Offset (1, 0);
+						}
+
+						bounds.Deflate (50, Editor.pushMargin);
+					}
+					bounds = this.editor.NodeGridAlign (bounds);
+					node.SetBounds (bounds);
 				}
-#endif
+				else
+				{
+					//	Ouvre la connection sur une boîte existante.
+					this.edge.DstNode = node;
+					this.edge.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
+				}
+
+				this.editor.UpdateAfterAddOrRemoveEdge (node);
+				this.editor.SetLocalDirty ();
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeClose)
@@ -383,7 +375,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Ajoute un commentaire à la connection.
 			if (this.comment == null)
 			{
-				this.comment = new ObjectComment(this.editor, null);
+				this.comment = new ObjectComment(this.editor, this.Entity);
 				this.comment.AttachObject = this;
 				this.comment.BackgroundMainColor = this.edge.CommentMainColor;
 				this.comment.Text = this.edge.CommentText;
@@ -438,14 +430,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (i == 0)
 					{
-						AbstractObject.DrawStartingArrow(graphics, p1, p2, this.edge.Relation);
+						AbstractObject.DrawStartingArrow(graphics, p1, p2);
 					}
 
 					graphics.AddLine(p1, p2);
 
 					if (i == this.points.Count-2)
 					{
-						AbstractObject.DrawEndingArrow(graphics, p1, p2, this.edge.Relation, false);
+						AbstractObject.DrawEndingArrow(graphics, p1, p2);
 					}
 				}
 				graphics.LineWidth = 1;
@@ -466,7 +458,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				graphics.LineWidth = 2;
 				graphics.AddLine(start, end);
-				AbstractObject.DrawEndingArrow(graphics, start, end, this.edge.Relation, false);
+				AbstractObject.DrawEndingArrow(graphics, start, end);
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);

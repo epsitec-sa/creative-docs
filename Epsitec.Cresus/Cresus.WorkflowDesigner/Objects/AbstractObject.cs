@@ -20,81 +20,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	/// </summary>
 	public abstract class AbstractObject
 	{
-		public enum ActiveElement
-		{
-			None,
-
-			NodeInside,
-			NodeSources,
-			NodeComment,
-			NodeInfo,
-			NodeExtend,
-			NodeClose,
-			NodeHeader,
-			NodeEdgeName,
-			NodeEdgeType,
-			NodeEdgeExpression,
-			NodeEdgeAdd,
-			NodeEdgeRemove,
-			NodeEdgeMovable,
-			NodeEdgeMoving,
-			NodeEdgeTitle,
-			NodeEdgeAddInterface,
-			NodeEdgeRemoveInterface,
-			NodeEdgeGroup,
-			NodeChangeWidth,
-			NodeMoveColumnsSeparator1,
-			NodeColor1,
-			NodeColor2,
-			NodeColor3,
-			NodeColor4,
-			NodeColor5,
-			NodeColor6,
-			NodeColor7,
-			NodeColor8,
-
-			EdgeOpenLeft,
-			EdgeOpenRight,
-			EdgeClose,
-			EdgeHilited,
-			EdgeMove1,
-			EdgeMove2,
-			EdgeComment,
-
-			CommentEdit,
-			CommentMove,
-			CommentWidth,
-			CommentClose,
-			CommentColor1,
-			CommentColor2,
-			CommentColor3,
-			CommentColor4,
-			CommentColor5,
-			CommentColor6,
-			CommentColor7,
-			CommentColor8,
-			CommentAttachToEdge,
-
-			InfoEdit,
-			InfoMove,
-			InfoWidth,
-			InfoClose,
-		}
-
-		public enum MainColor
-		{
-			Blue,
-			Green,
-			Red,
-			Grey,
-			DarkGrey,
-			Yellow,
-			Orange,
-			Lilac,
-			Purple,
-		}
-
-
 		public AbstractObject(Editor editor, AbstractEntity entity)
 		{
 			//	Constructeur.
@@ -112,6 +37,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.editor;
+			}
+		}
+
+		public AbstractEntity AbstractEntity
+		{
+			get
+			{
+				return this.entity;
 			}
 		}
 
@@ -597,7 +530,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 				rect.Inflate(radius*0.2);
 				rect.Offset(0, -radius*0.7);
-				this.DrawShadow(graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
+				this.DrawRoundShadow(graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
 			}
 
 			Color colorSurface;
@@ -624,8 +557,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid(colorFrame);
 		}
 
-		
-		protected void DrawShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
+
+		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
+		{
+			//	Dessine une ombre douce.
+			alpha /= smooth;
+
+			for (int i=0; i<smooth; i++)
+			{
+				Path path = this.PathNodeRectangle (rect, radius);
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0, 0, 0));
+
+				rect.Deflate (1);
+				radius -= 1;
+			}
+		}
+
+		protected void DrawRoundShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce.
 			alpha /= smooth;
@@ -641,7 +590,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public static void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
+		public static void DrawStartingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
 //-			if (relation == FieldRelation.Inclusion)
@@ -650,19 +599,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 //-			}
 		}
 
-		public static void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation, bool isPrivateRelation)
+		public static void DrawEndingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
 			AbstractObject.DrawArrowBase(graphics, start, end);
 
-			if (relation == FieldRelation.Collection)
+			if (false)
 			{
 				Point p1 = Point.Move(end, start, AbstractObject.arrowLength);
 				Point p2 = Point.Move(end, start, AbstractObject.arrowLength*0.75);
 				AbstractObject.DrawArrowBase(graphics, p1, p2);
 			}
 
-			if (!isPrivateRelation)
+			if (false)
 			{
 				AbstractObject.DrawArrowStar(graphics, start, end);
 			}
@@ -849,6 +798,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.GradientRenderer.Transform = ot;
 		}
 
+		protected Path PathNodeRectangle(Rectangle rect, double radius)
+		{
+			//	Retourne le chemin d'un rectangle pour un ObjectNode.
+			//?return this.PathBevelRectangle (rect, radius*0.5, radius, radius*0.5, radius, true, true);  // coins biseautés
+			return this.PathBevelRectangle (rect, AbstractObject.headerHeight*0.25, AbstractObject.headerHeight, 0.5, 0.5, true, true);  // coins biseautés seulement en haut
+		}
+
 		protected Path PathRoundRectangle(Rectangle rect, double radius)
 		{
 			//	Retourne le chemin d'un rectangle à coins arrondis.
@@ -894,6 +850,62 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			path.Close();
+
+			return path;
+		}
+
+		protected Path PathBevelRectangle(Rectangle rect, double topBevelX, double topBevelY, double bottomBevelX, double bottomBevelY, bool isTopBevel, bool isBottomBevel)
+		{
+			//	Retourne le chemin d'un rectangle, avec des coins biseautés en haut et/ou en bas.
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			double hopeTopBevelX = System.Math.Min (topBevelX, dx/2);
+			double hopeTopBevelY = System.Math.Min (topBevelY, dy/2);
+
+			double hopeBottomBevelX = System.Math.Min (bottomBevelX, dx/2);
+			double hopeBottomBevelY = System.Math.Min (bottomBevelY, dy/2);
+
+			double scale = System.Math.Min (System.Math.Min (hopeTopBevelX/topBevelX, hopeTopBevelY/topBevelY),
+											System.Math.Min (hopeBottomBevelX/bottomBevelX, hopeBottomBevelY/bottomBevelY));
+
+			topBevelX *= scale;
+			topBevelY *= scale;
+
+			bottomBevelX *= scale;
+			bottomBevelY *= scale;
+
+			Path path = new Path ();
+
+			if (isBottomBevel)  // coins bas/gauche et bas/droite biseautés ?
+			{
+				path.MoveTo (ox, oy+bottomBevelY);
+				path.LineTo (ox+bottomBevelX, oy);
+				path.LineTo (ox+dx-bottomBevelX, oy);
+				path.LineTo (ox+dx, oy+bottomBevelY);
+			}
+			else  // coins bas/gauche et bas/droite droits ?
+			{
+				path.MoveTo (ox, oy);
+				path.LineTo (ox+dx, oy);
+			}
+
+			if (isTopBevel)  // coins haut/gauche et haut/droite biseautés ?
+			{
+				path.LineTo (ox+dx, oy+dy-topBevelY);
+				path.LineTo (ox+dx-topBevelX, oy+dy);
+				path.LineTo (ox+topBevelX, oy+dy);
+				path.LineTo (ox, oy+dy-topBevelY);
+			}
+			else  // coins haut/gauche et haut/droite droits ?
+			{
+				path.LineTo (ox+dx, oy+dy);
+				path.LineTo (ox, oy+dy);
+			}
+
+			path.Close ();
 
 			return path;
 		}

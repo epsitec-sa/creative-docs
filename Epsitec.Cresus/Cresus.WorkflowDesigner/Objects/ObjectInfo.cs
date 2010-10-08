@@ -7,6 +7,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -37,6 +39,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ObjectInfo(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
+			System.Diagnostics.Debug.Assert (this.Entity != null);
+
 			this.isVisible = true;
 			this.boxColor = MainColor.Yellow;
 
@@ -44,12 +48,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutTitle.DefaultFontSize = 14;
 			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
 			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
-			this.textLayoutTitle.Text = "Titre";  //Res.Strings.Entities.Info.Title;
+			this.textLayoutTitle.Text = "Informations";  //Res.Strings.Entities.Info.Title;
 
 			this.textLayoutInfo = new TextLayout();
 			this.textLayoutInfo.DefaultFontSize = 10;
 			this.textLayoutInfo.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-			this.textLayoutInfo.Text = "";
 		}
 
 
@@ -359,7 +362,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			rect.Inflate(2);
 			rect.Offset(ObjectInfo.shadowOffset, -(ObjectInfo.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int)ObjectInfo.shadowOffset, 0.2);
+			this.DrawRoundShadow(graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int)ObjectInfo.shadowOffset, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
@@ -789,6 +792,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				ObjectEdge connection = this.attachObject as ObjectEdge;
 				connection.Edge.CommentMainColor = this.BackgroundMainColor;
+			}
+		}
+
+
+		private WorkflowNodeEntity Entity
+		{
+			get
+			{
+				return this.entity as WorkflowNodeEntity;
 			}
 		}
 
