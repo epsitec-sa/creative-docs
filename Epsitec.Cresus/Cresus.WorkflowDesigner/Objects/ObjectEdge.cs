@@ -171,8 +171,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
-				this.hilitedElement == ActiveElement.ConnectionMove2)
+			if (this.hilitedElement == ActiveElement.EdgeMove1 ||
+				this.hilitedElement == ActiveElement.EdgeMove2)
 			{
 				this.isDraggingRoute = true;
 				this.editor.LockObject(this);
@@ -190,8 +190,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.SetLocalDirty ();
 			}
 
-			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
-				this.hilitedElement == ActiveElement.ConnectionOpenRight)
+			if (this.hilitedElement == ActiveElement.EdgeOpenLeft ||
+				this.hilitedElement == ActiveElement.EdgeOpenRight)
 			{
 #if false
 				Module module = this.editor.Module.DesignerApplication.SearchModule(this.field.Destination);
@@ -267,16 +267,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 #endif
 			}
 
-			if (this.hilitedElement == ActiveElement.ConnectionClose)
+			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				ObjectNode dst = this.edge.DstNode;
 				this.edge.IsExplored = false;
 				this.edge.DstNode = null;
 				this.editor.CloseNode(null);
-				this.editor.UpdateAfterAddOrRemoveConnection(null);
+				this.editor.UpdateAfterAddOrRemoveEdge(null);
 			}
 
-			if (this.hilitedElement == ActiveElement.ConnectionComment)
+			if (this.hilitedElement == ActiveElement.EdgeComment)
 			{
 				this.AddComment();
 			}
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.DetectRoundButton(pos, this.points[0]))
 					{
-						element = ActiveElement.ConnectionClose;
+						element = ActiveElement.EdgeClose;
 						return true;
 					}
 				}
@@ -308,42 +308,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.DetectRoundButton(pos, this.points[0]))
 					{
-						element = ActiveElement.ConnectionOpenRight;
+						element = ActiveElement.EdgeOpenRight;
 						return true;
 					}
 
 					if (this.DetectRoundButton(pos, this.points[1]))
 					{
-						element = ActiveElement.ConnectionOpenLeft;
+						element = ActiveElement.EdgeOpenLeft;
 						return true;
 					}
 				}
 			}
 
 			//	Souris dans le bouton pour commenter la connection.
-			if (this.IsConnectionCommentButton && this.DetectRoundButton(pos, this.PositionConnectionComment))
+			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionEdgeComment))
 			{
-				element = ActiveElement.ConnectionComment;
+				element = ActiveElement.EdgeComment;
 				return true;
 			}
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
 			if (this.DetectRoundButton(pos, this.PositionRouteMove1))
 			{
-				element = ActiveElement.ConnectionMove1;
+				element = ActiveElement.EdgeMove1;
 				return true;
 			}
 
 			if (this.DetectRoundButton(pos, this.PositionRouteMove2))
 			{
-				element = ActiveElement.ConnectionMove2;
+				element = ActiveElement.EdgeMove2;
 				return true;
 			}
 
 			//	Souris le long de la connection ?
 			if (DetectOver(pos, 4))
 			{
-				element = ActiveElement.ConnectionHilited;
+				element = ActiveElement.EdgeHilited;
 				return true;
 			}
 
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.BackgroundMainColor = this.edge.CommentMainColor;
 				this.comment.Text = this.edge.CommentText;
 
-				Point attach = this.PositionConnectionComment;
+				Point attach = this.PositionEdgeComment;
 				Rectangle rect;
 
 				if (attach.X > this.edge.SrcNode.Bounds.Right)  // connection sur la droite ?
@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
 					color = this.GetColorMain();
 				}
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
 					color = this.GetColorMain();
 				}
@@ -486,17 +486,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					GlyphShape shape = GlyphShape.None;
 
 					bool hilite = false;
-					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
+					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
 					{
 						hilite = (i == 1);
 						shape = GlyphShape.ArrowLeft;
 					}
-					else if (this.hilitedElement == ActiveElement.ConnectionOpenRight)
+					else if (this.hilitedElement == ActiveElement.EdgeOpenRight)
 					{
 						hilite = (i == 0);
 						shape = GlyphShape.ArrowRight;
 					}
-					else if (this.hilitedElement == ActiveElement.ConnectionClose)
+					else if (this.hilitedElement == ActiveElement.EdgeClose)
 					{
 						if (i != 0)  break;
 						hilite = true;
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else
 					{
-						if (this.hilitedElement == ActiveElement.ConnectionHilited)
+						if (this.hilitedElement == ActiveElement.EdgeHilited)
 						{
 							this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
 						}
@@ -527,16 +527,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour commenter la connection.
-			Point p = this.PositionConnectionComment;
-			if (!p.IsZero && this.IsConnectionCommentButton)
+			Point p = this.PositionEdgeComment;
+			if (!p.IsZero && this.IsEdgeCommentButton)
 			{
-				if (this.hilitedElement == ActiveElement.ConnectionComment)
+				if (this.hilitedElement == ActiveElement.EdgeComment)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", true, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
-				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "Res.Strings.Entities.Button.BoxComment", false, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
 				}
 			}
 
@@ -544,11 +544,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point m = this.PositionRouteMove1;
 			if (!m.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.ConnectionMove1)
+				if (this.hilitedElement == ActiveElement.EdgeMove1)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -557,11 +557,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			m = this.PositionRouteMove2;
 			if (!m.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.ConnectionMove2)
+				if (this.hilitedElement == ActiveElement.EdgeMove2)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -569,18 +569,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected bool IsConnectionCommentButton
+		protected bool IsEdgeCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
-			//	le bouton CommentAttachToConnection pour déplacer le point d'attache.
+			//	le bouton CommentAttachToEdge pour déplacer le point d'attache.
 			get
 			{
 				return (this.comment == null || !this.comment.IsVisible);
 			}
 		}
 
-		public Point PositionConnectionComment
+		public Point PositionEdgeComment
 		{
 			//	Retourne la position du bouton pour commenter la connection, ou pour déplacer
 			//	le point d'attache lorsque le commentaire existe.
@@ -801,11 +801,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			Point oldPos = this.PositionConnectionComment;  // point d'attache avant re-routage
+			Point oldPos = this.PositionEdgeComment;  // point d'attache avant re-routage
 
 			if (this.edge.Route == Edge.RouteType.A)
 			{
-				if (this.hilitedElement == ActiveElement.ConnectionMove1)
+				if (this.hilitedElement == ActiveElement.EdgeMove1)
 				{
 					this.edge.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
 				}
@@ -832,17 +832,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.edge.IsAttachToRight)
 				{
-					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
+					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
 					this.edge.RouteAbsoluteDX = pos.X-px;
 				}
 				else
 				{
-					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
+					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
 					this.edge.RouteAbsoluteDX = px-pos.X;
 				}
 			}
 
-			Point newPos = this.PositionConnectionComment;  // point d'attache après re-routage
+			Point newPos = this.PositionEdgeComment;  // point d'attache après re-routage
 
 			if (this.comment != null)
 			{
@@ -983,12 +983,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				double px;
 				if (this.edge.IsAttachToRight)
 				{
-					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
+					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
 					px += this.edge.RouteAbsoluteDX;
 				}
 				else
 				{
-					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
+					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
 					px -= this.edge.RouteAbsoluteDX;
 				}
 				this.points[1] = new Point(px, this.points[0].Y);

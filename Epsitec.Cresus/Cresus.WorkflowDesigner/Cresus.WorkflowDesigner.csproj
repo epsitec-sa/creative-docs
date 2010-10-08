@@ -53,7 +53,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Comparers\Connection.cs" />
+    <Compile Include="Comparers\EdgeComparer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="MainController.cs" />

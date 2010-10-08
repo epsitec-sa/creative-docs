@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 	/// <summary>
 	///	Compare deux connections pour minimiser les croisements.
 	/// </summary>
-	public class Connection : IComparer<Objects.ObjectEdge>
+	public class EdgeComparer : IComparer<Objects.ObjectEdge>
 	{
 		public int Compare(Objects.ObjectEdge obj1, Objects.ObjectEdge obj2)
 		{
