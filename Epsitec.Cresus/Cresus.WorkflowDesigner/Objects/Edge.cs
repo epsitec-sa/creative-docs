@@ -3,8 +3,11 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+
+using Epsitec.Cresus.Core.Entities;
 
 using System.Xml;
 using System.Xml.Serialization;
@@ -17,7 +20,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	/// <summary>
 	/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
 	/// </summary>
-	public class Field
+	public class Edge
 	{
 		public enum RouteType
 		{
@@ -76,12 +79,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			D,			// connection de type D
 		}
 
-		
-		public Field(Editor editor)
+
+		public Edge(Editor editor, WorkflowEdgeEntity edgeEntity)
 		{
-			System.Diagnostics.Debug.Assert(editor != null);
+			System.Diagnostics.Debug.Assert (editor != null);
+			System.Diagnostics.Debug.Assert (edgeEntity != null);
 
 			this.editor = editor;
+			this.edgeEntity = edgeEntity;
 
 			this.textLayoutField = new TextLayout();
 			this.textLayoutField.DefaultFontSize = 10;
@@ -94,23 +99,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 			this.relation = FieldRelation.None;
-			this.membership = FieldMembership.Local;
-			this.captionId = Druid.Empty;
-			this.definingEntityId = Druid.Empty;
-			this.definingRootEntityId = Druid.Empty;
-			this.destination = Druid.Empty;
 			this.isNullable = false;
 			this.isPrivateRelation = false;
-			this.cultureMapSource = CultureMapSource.Invalid;
-			this.rank = -1;
 			this.index = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
-			this.definingEntityName = null;
-			this.definingEntityClass = StructuredTypeClass.None;
-			this.level = 0;
-			this.isGroupTop = false;
-			this.isGroupBottom = false;
 			
 			this.routeType = RouteType.Close;
 			this.routeRelativeAX1 = 0.2;
@@ -124,292 +117,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.commentAttach = AbstractObject.minAttach;
 			this.commentMainColor = AbstractObject.MainColor.Yellow;
 			this.commentText = "Bonjour !";  //Res.Strings.Entities.Comment.DefaultText;
-		}
 
-		public void Initialize(AbstractObject obj, StructuredData dataField)
-		{
-			//	Met à jour selon le StructuredData du champ.
-			System.Diagnostics.Debug.Assert(obj is ObjectNode);
-			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
-
-			this.srcBox = obj as ObjectNode;
-		}
-
-		public bool IsReadOnly
-		{
-			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
-			//	- Un titre
-			//	- Un champ hérité
-			//	- Un champ d'une interface
-			get
-			{
-				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterfaceOrInterfaceTitle;
-			}
-		}
-
-		public bool IsStrictlyReadOnly
-		{
-			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
-			//	- Un titre
-			//	- Un champ hérité
-			//	- Un champ d'une interface
-			//	- Un champ d'un module de patch
-			get
-			{
-				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterfaceOrInterfaceTitle;
-			}
-		}
-
-		public bool IsTitle
-		{
-			//	Indique si le champ est un titre d'héritage ou d'interface.
-			get
-			{
-				return this.isTitle;
-			}
-			set
-			{
-				if (this.isTitle != value)
-				{
-					this.isTitle = value;
-					this.textLayoutField.Alignment = (this.isTitle || this.isSubtitle) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
-				}
-			}
-		}
-
-		public bool IsSubtitle
-		{
-			//	Indique si le champ est un sous-titre d'héritage ou d'interface.
-			get
-			{
-				return this.isSubtitle;
-			}
-			set
-			{
-				if (this.isSubtitle != value)
-				{
-					this.isSubtitle = value;
-					this.textLayoutField.Alignment = (this.isTitle || this.isSubtitle) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
-				}
-			}
-		}
-
-		public bool IsInherited
-		{
-			//	Indique s'il s'agit d'un champ hérité.
-			get
-			{
-				if (this.IsTitle || this.IsSubtitle)
-				{
-					return this.isInherited;
-				}
-				else
-				{
-					return this.membership != FieldMembership.Local;
-				}
-			}
-			set
-			{
-				this.isInherited = value;
-			}
-		}
-
-		public bool IsInterfaceOrInterfaceTitle
-		{
-			//	Indique s'il s'agit d'un champ d'une interface ou d'un
-			//	titre appartenant à une interface.
-			get
-			{
-				if (this.IsTitle || this.IsSubtitle)
-				{
-					return this.isInterfaceTitle;
-				}
-				else
-				{
-					return this.definingEntityClass == StructuredTypeClass.Interface;
-				}
-			}
-			set
-			{
-				//	Si c'est un titre, on doit pouvoir spécifier s'il appartient
-				//	à une interface. Cf. ObjectBox.UpdateFieldsContent.
-				this.isInterfaceTitle = value;
-			}
-		}
-
-		public bool IsInterfaceLocal
-		{
-			//	Indique s'il s'agit d'un champ d'une interface importée
-			//	directement dans cette entité (un champ provenant d'une
-			//	interface qui serait héritée d'un parent retourne false).
-			get
-			{
-				return this.definingEntityClass == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
-			}
-		}
-
-		public bool IsUnchangedInterfaceField
-		{
-			//	Indique si le champ provient d'une interface et qu'il n'a
-			//	pas été modifié localement.
-			get
-			{
-				return this.isUnchangedInterfaceField;
-			}
-			set
-			{
-				this.isUnchangedInterfaceField = value;
-			}
-		}
-
-		public bool IsEditExpressionEnabled
-		{
-			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
-			//	A savoir : si une expression est définie localement ou dans un des
-			//	parents, si c'est un champ appartenant à une interface importée
-			//	localement ou si c'est un champ local.
-			get
-			{
-				if (!string.IsNullOrEmpty(this.localExpression))
-				{
-					return true;
-				}
-				if (!string.IsNullOrEmpty(this.inheritedExpression))
-				{
-					return true;
-				}
-				if (this.IsInterfaceLocal)
-				{
-					return true;
-				}
-				
-				return this.membership == FieldMembership.Local;
-			}
-		}
-
-		public string DefiningEntityName
-		{
-			get
-			{
-				return this.definingEntityName;
-			}
-		}
-
-		public StructuredTypeClass DefiningEntityClass
-		{
-			get
-			{
-				return this.definingEntityClass;
-			}
-		}
-
-		public Druid DefiningEntityId
-		{
-			//	Druid définissant l'interface.
-			get
-			{
-				return this.definingEntityId;
-			}
-		}
-
-		public Druid DefiningRootEntityId
-		{
-			//	Druid du parent définissant l'interface.
-			get
-			{
-				return this.definingRootEntityId;
-			}
-		}
-
-		public int Level
-		{
-			//	Niveau d'indentation (0..n).
-			get
-			{
-				return this.level;
-			}
-			set
-			{
-				this.level = value;
-			}
-		}
-
-		public bool IsGroupTop
-		{
-			//	Case supérieure d'un groupe ?
-			get
-			{
-				return this.isGroupTop;
-			}
-			set
-			{
-				this.isGroupTop = value;
-			}
-		}
-
-		public bool IsGroupBottom
-		{
-			//	Case inférieure d'un groupe ?
-			get
-			{
-				return this.isGroupBottom;
-			}
-			set
-			{
-				this.isGroupBottom = value;
-			}
-		}
-
-		public string FieldName
-		{
-			//	Nom du champ ou du titre.
-			get
-			{
-				return this.textLayoutField.Text;
-			}
-			set
-			{
-				this.textLayoutField.Text = value;
-			}
-		}
-
-		public string FieldTypeName
-		{
-			//	Nom du type du champ.
-			get
-			{
-				return this.fieldTypeName;
-			}
-			set
-			{
-				if (this.fieldTypeName != value)
-				{
-					this.fieldTypeName = value;
-					this.UpdateTypeName();
-				}
-			}
-		}
-
-		public string InheritedExpression
-		{
-			//	Eventuelle expression lambda calculant le champ.
-			get
-			{
-				return this.inheritedExpression;
-			}
-		}
-
-		public string LocalExpression
-		{
-			//	Eventuelle expression lambda calculant le champ.
-			get
-			{
-				return this.localExpression;
-			}
-			set
-			{
-				this.localExpression = value;
-			}
+			this.textLayoutField.Text = this.edgeEntity.Name.ToString ();
+			this.textLayoutType.Text = this.edgeEntity.Description.ToString ();
 		}
 
 		public TextLayout TextLayoutField
@@ -443,97 +153,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public FieldMembership Membership
-		{
-			//	Type de l'héritage du champ.
-			get
-			{
-				return this.membership;
-			}
-		}
-
-		public Druid CaptionId
-		{
-			//	Druid du champ.
-			get
-			{
-				return this.captionId;
-			}
-			set
-			{
-				this.captionId = value;
-			}
-		}
-
-		public Druid Destination
-		{
-			//	Destination de la relation éventuelle du champ.
-			get
-			{
-				return this.destination;
-			}
-		}
-
-		public bool IsNullable
-		{
-			//	Indique si le champ peut prendre la valeur "null".
-			get
-			{
-				return this.isNullable;
-			}
-			set
-			{
-				if (this.isNullable != value)
-				{
-					this.isNullable = value;
-					this.UpdateTypeName();
-				}
-			}
-		}
-
-		public bool IsPrivateRelation
-		{
-			//	Indique si la relation du champ est privée.
-			get
-			{
-				return this.isPrivateRelation;
-			}
-			set
-			{
-				if (this.isPrivateRelation != value)
-				{
-					this.isPrivateRelation = value;
-					this.UpdateTypeName();
-				}
-			}
-		}
-
-		public CultureMapSource CultureMapSource
-		{
-			get
-			{
-				return this.cultureMapSource;
-			}
-			set
-			{
-				this.cultureMapSource = value;
-			}
-		}
-
-		public int Rank
-		{
-			//	Rang du champ dans le tableau, sans tenir compte des titres.
-			//	Un titre a un rang qui vaut -1.
-			get
-			{
-				return this.rank;
-			}
-			set
-			{
-				this.rank = value;
-			}
-		}
-
 		public int Index
 		{
 			//	Index de la ligne dans le tableau, en tenant compte des titres.
@@ -548,25 +167,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ObjectNode SrcBox
+		public ObjectNode SrcNode
 		{
 			//	Objet source de la connection
 			get
 			{
-				return this.srcBox;
+				return this.srcNode;
 			}
 		}
 
-		public ObjectNode DstBox
+		public ObjectNode DstNode
 		{
 			//	Objet destination de la connection (si la relation est explorée).
 			get
 			{
-				return this.dstBox;
+				return this.dstNode;
 			}
 			set
 			{
-				this.dstBox = value;
+				this.dstNode = value;
 			}
 		}
 
@@ -895,20 +514,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void UpdateTypeName()
-		{
-			//	Met à jour le nom du type.
-			if (this.isNullable)
-			{
-				this.textLayoutType.Text = string.Concat("(", this.fieldTypeName, ")");
-			}
-			else
-			{
-				this.textLayoutType.Text = this.fieldTypeName;
-			}
-		}
-
-		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
@@ -1077,7 +682,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 #endif
 		}
 
-		public void DeserializeCopyTo(Field dst)
+		public void DeserializeCopyTo(Edge dst)
 		{
 			dst.isAttachToRight = this.isAttachToRight;
 			dst.routeType = this.routeType;
@@ -1098,52 +703,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		protected Editor editor;
-		protected bool isTitle;
-		protected bool isSubtitle;
-		protected bool isInherited;
-		protected bool isInterfaceTitle;
-		protected bool isUnchangedInterfaceField;
-		protected string definingEntityName;
-		protected StructuredTypeClass definingEntityClass;
-		protected int level;
-		protected bool isGroupTop;
-		protected bool isGroupBottom;
-		protected TextLayout textLayoutField;
-		protected TextLayout textLayoutType;
-		protected string fieldTypeName;
-		protected string inheritedExpression;
-		protected string localExpression;
-		protected FieldRelation relation;
-		protected FieldMembership membership;
-		protected Druid captionId;
-		protected Druid definingEntityId;
-		protected Druid definingRootEntityId;
-		protected Druid destination;
-		protected bool isNullable;
-		protected bool isPrivateRelation;
-		protected CultureMapSource cultureMapSource;
-		protected int rank;
-		protected int index;
-		protected ObjectNode srcBox;
-		protected ObjectNode dstBox;
-		protected ObjectEdge connection;
-		protected bool isExplored;
-		protected bool isSourceExpanded;
-		protected bool isAttachToRight;
-		protected RouteType routeType;
-		protected double routeRelativeAX1;
-		protected double routeRelativeAX2;
-		protected double routeAbsoluteAY;
-		protected double routeRelativeBX;
-		protected double routeRelativeBY;
-		protected double routeRelativeCX;
-		protected double routeAbsoluteDX;
-		protected bool hasComment;
-		protected Point commentPosition;
-		protected Rectangle commentBounds;
-		protected string commentText;
-		protected double commentAttach;
-		protected AbstractObject.MainColor commentMainColor;
+		private readonly WorkflowEdgeEntity edgeEntity;
+
+		private Editor editor;
+		private TextLayout textLayoutField;
+		private TextLayout textLayoutType;
+		private FieldRelation relation;
+		private bool isNullable;
+		private bool isPrivateRelation;
+		private int index;
+		private ObjectNode srcNode;
+		private ObjectNode dstNode;
+		private ObjectEdge connection;
+		private bool isExplored;
+		private bool isSourceExpanded;
+		private bool isAttachToRight;
+		private RouteType routeType;
+		private double routeRelativeAX1;
+		private double routeRelativeAX2;
+		private double routeAbsoluteAY;
+		private double routeRelativeBX;
+		private double routeRelativeBY;
+		private double routeRelativeCX;
+		private double routeAbsoluteDX;
+		private bool hasComment;
+		private Point commentPosition;
+		private Rectangle commentBounds;
+		private string commentText;
+		private double commentAttach;
+		private AbstractObject.MainColor commentMainColor;
 	}
 }

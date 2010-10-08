@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (attach != 0)
 				{
 					Point oldPos = connection.PositionConnectionComment;
-					connection.Field.CommentAttach = attach;
+					connection.Edge.CommentAttach = attach;
 					Point newPos = connection.PositionConnectionComment;
 
 					Rectangle bounds = this.bounds;
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					ObjectEdge connection = this.attachObject as ObjectEdge;
 					if (connection != null)
 					{
-						connection.Field.HasComment = false;
+						connection.Edge.HasComment = false;
 					}
 				}
 
@@ -1214,7 +1214,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.attachObject is ObjectEdge)
 			{
 				ObjectEdge connection = this.attachObject as ObjectEdge;
-				connection.Field.CommentMainColor = this.BackgroundMainColor;
+				connection.Edge.CommentMainColor = this.BackgroundMainColor;
 			}
 		}
 
