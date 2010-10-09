@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							double posv = node.GetEdgeSrcVerticalPosition(i);
 							objectEdge.Points.Add(new Point(node.Bounds.Right-1, posv));
 							objectEdge.Points.Add(new Point(node.Bounds.Left+1, posv));
-							objectEdge.Edge.Route = Edge.RouteType.Close;
+							objectEdge.Edge.Route = RouteType.Close;
 						}
 					}
 				}
@@ -418,22 +418,22 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			foreach (ObjectEdge edge in this.edges)
 			{
-				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.Bt)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.Bt)
 				{
 					edge.Edge.DstNode.EdgeListBt.Add(edge);
 				}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.Bb)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.Bb)
 				{
 					edge.Edge.DstNode.EdgeListBb.Add(edge);
 				}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.C)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.C)
 				{
 					edge.Edge.DstNode.EdgeListC.Add(edge);
 				}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == Edge.RouteType.D)
+				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.D)
 				{
 					edge.Edge.DstNode.EdgeListD.Add(edge);
 				}
@@ -507,7 +507,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				p.X -= 30;
 				edge.Points.Add(p);
 
-				edge.Edge.Route = Edge.RouteType.Himself;
+				edge.Edge.Route = RouteType.Himself;
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
@@ -523,14 +523,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
 						edge.Points.Add(new Point(end.X, start.Y));
 						edge.Points.Add(end);
-						edge.Edge.Route = Edge.RouteType.Bb;
+						edge.Edge.Route = RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
 						edge.Points.Add(new Point(end.X, start.Y));
 						edge.Points.Add(end);
-						edge.Edge.Route = Edge.RouteType.Bt;
+						edge.Edge.Route = RouteType.Bt;
 					}
 					else
 					{
@@ -540,12 +540,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							edge.Points.Add(Point.Zero);  // (*)
 							edge.Points.Add(Point.Zero);  // (*)
 							edge.Points.Add(end);
-							edge.Edge.Route = Edge.RouteType.C;
+							edge.Edge.Route = RouteType.C;
 						}
 						else
 						{
 							edge.Points.Add(end);
-							edge.Edge.Route = Edge.RouteType.A;
+							edge.Edge.Route = RouteType.A;
 						}
 					}
 				}
@@ -559,14 +559,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
 						edge.Points.Add(new Point(end.X, start.Y));
 						edge.Points.Add(end);
-						edge.Edge.Route = Edge.RouteType.Bb;
+						edge.Edge.Route = RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetEdgeDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
 						edge.Points.Add(new Point(end.X, start.Y));
 						edge.Points.Add(end);
-						edge.Edge.Route = Edge.RouteType.Bt;
+						edge.Edge.Route = RouteType.Bt;
 					}
 					else
 					{
@@ -576,12 +576,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							edge.Points.Add(Point.Zero);  // (*)
 							edge.Points.Add(Point.Zero);  // (*)
 							edge.Points.Add(end);
-							edge.Edge.Route = Edge.RouteType.C;
+							edge.Edge.Route = RouteType.C;
 						}
 						else
 						{
 							edge.Points.Add(end);
-							edge.Edge.Route = Edge.RouteType.A;
+							edge.Edge.Route = RouteType.A;
 						}
 					}
 				}
@@ -594,7 +594,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					edge.Points.Add(Point.Zero);  // (*)
 					edge.Points.Add(Point.Zero);  // (*)
 					edge.Points.Add(end);
-					edge.Edge.Route = Edge.RouteType.D;
+					edge.Edge.Route = RouteType.D;
 				}
 				else  // destination à gauche à cheval ?
 				{
@@ -605,7 +605,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					edge.Points.Add(Point.Zero);  // (*)
 					edge.Points.Add(Point.Zero);  // (*)
 					edge.Points.Add(end);
-					edge.Edge.Route = Edge.RouteType.D;
+					edge.Edge.Route = RouteType.D;
 				}
 			}
 		}
