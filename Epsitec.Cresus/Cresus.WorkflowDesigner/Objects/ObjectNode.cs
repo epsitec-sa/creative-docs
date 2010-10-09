@@ -216,8 +216,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsRoot
 		{
-			//	Indique s'il s'agit de la boîte racine, c'est-à-dire de la boîte sélectionnée
-			//	dans la liste de gauche.
+			//	Indique s'il s'agit de la boîte racine, c'est-à-dire de la boîte affichée avec un cadre gras.
 			get
 			{
 				return this.isRoot;
