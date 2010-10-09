@@ -63,14 +63,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public string Code
-		{
-			get
-			{
-				return ""; //@PA				this.Entity.Code;
-			}
-		}
-
 		public string Title
 		{
 			//	Titre au sommet de la boîte (nom de l'entité).

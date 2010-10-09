@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.edge.IsExplored = true;
 
-				ObjectNode node = null; //@PA	this.editor.SearchNode (this.Entity.NextNode.Code);
+				ObjectNode node = this.editor.SearchNode (this.Entity.NextNode);
 				if (node == null)
 				{
 					//	Ouvre la connection sur une nouvelle boîte.
