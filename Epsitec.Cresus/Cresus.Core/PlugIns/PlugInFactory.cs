@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (PlugInFactory) };
 			var assemblies = AssemblyLoader.LoadMatching ("*", System.IO.SearchOption.TopDirectoryOnly, "plugins");
 
-			if (assemblies.Count == null)
+			if (assemblies.Count == 0)
 			{
 				return;
 			}
