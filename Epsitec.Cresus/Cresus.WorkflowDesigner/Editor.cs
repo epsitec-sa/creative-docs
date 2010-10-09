@@ -1998,38 +1998,40 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#endregion
 
 
-		public static readonly double defaultWidth = 200;
-		public static readonly double edgeDetour = 30;
-		public static readonly double pushMargin = 10;
-		private static readonly double frameMargin = 40;
+		public static readonly double			defaultWidth = 200;
+		public static readonly double			edgeDetour = 30;
+		public static readonly double			pushMargin = 10;
+		private static readonly double			frameMargin = 40;
 
-		private Core.Business.BusinessContext businessContext;
-		private WorkflowDefinitionEntity workflowDefinitionEntity;
-		private List<ObjectNode> nodes;
-		private List<ObjectEdge> edges;
-		private List<ObjectComment> comments;
-		private List<ObjectInfo> infos;
-		private Size areaSize;
-		private double zoom;
-		private Point areaOffset;
-		private AbstractObject lockObject;
-		private bool isScrollerEnable;
-		private Point brutPos;
-		private MessageType lastMessageType;
-		private Point lastMessagePos;
-		private bool isAreaMoving;
-		private Point areaMovingInitialPos;
-		private Point areaMovingInitialOffset;
-		private MouseCursorType lastCursor = MouseCursorType.Unknown;
-		private Image mouseCursorFinger;
-		private Image mouseCursorHand;
-		private Image mouseCursorGrid;
-		private Image mouseCursorLocate;
-		private VScroller vscroller;
-		private AbstractObject hilitedObject;
-		private bool dirtySerialization;
-		private bool grid;
-		private double gridStep;
-		private double gridSubdiv;
+		private Core.Business.BusinessContext	businessContext;
+
+		private WorkflowDefinitionEntity		workflowDefinitionEntity;
+		private List<ObjectNode>				nodes;
+		private List<ObjectEdge>				edges;
+		private List<ObjectComment>				comments;
+		private List<ObjectInfo>				infos;
+
+		private Size							areaSize;
+		private double							zoom;
+		private Point							areaOffset;
+		private AbstractObject					lockObject;
+		private bool							isScrollerEnable;
+		private Point							brutPos;
+		private MessageType						lastMessageType;
+		private Point							lastMessagePos;
+		private bool							isAreaMoving;
+		private Point							areaMovingInitialPos;
+		private Point							areaMovingInitialOffset;
+		private MouseCursorType					lastCursor = MouseCursorType.Unknown;
+		private Image							mouseCursorFinger;
+		private Image							mouseCursorHand;
+		private Image							mouseCursorGrid;
+		private Image							mouseCursorLocate;
+		private VScroller						vscroller;
+		private AbstractObject					hilitedObject;
+		private bool							dirtySerialization;
+		private bool							grid;
+		private double							gridStep;
+		private double							gridSubdiv;
 	}
 }

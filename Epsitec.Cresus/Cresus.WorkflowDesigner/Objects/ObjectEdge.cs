@@ -1000,10 +1000,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	
 		protected static readonly double arrowMinimalLength = 25;
 
-		private Edge edge;
-		private List<Point> points;
-		private bool isSrcHilited;
-		private bool isDraggingRoute;
-		private ObjectComment comment;
+		private Edge						edge;
+		private List<Point>					points;
+		private bool						isSrcHilited;
+		private bool						isDraggingRoute;
+		private ObjectComment				comment;
 	}
 }

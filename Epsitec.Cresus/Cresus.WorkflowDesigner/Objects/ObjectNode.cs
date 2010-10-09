@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public string Title
 		{
-			//	Titre au sommet de la boîte (nom de l'entité).
+			//	Titre au sommet de la boîte (nom du noeud).
 			get
 			{
 				return this.titleString;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected string Subtitle
 		{
-			//	Sous-titre au sommet de la boîte, juste sous le titre (nom du module).
+			//	Sous-titre au sommet de la boîte, juste sous le titre (description du noeud).
 			get
 			{
 				return this.subtitleString;
@@ -265,13 +265,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isConnectedToRoot = value;
 			}
-		}
-
-
-		public void UpdateTitle()
-		{
-			//	Met à jour le titre de la boîte.
-			this.Title = this.Entity.Name.ToString ();
 		}
 
 
@@ -1878,11 +1871,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void UpdateSubtitle()
+		private void UpdateTitle()
 		{
-			//	Met à jour le sous-titre de l'entité (nom du module).
-			this.Subtitle = null;
-			this.isDimmed = false;
+			//	Met à jour le titre du noeud.
+			this.Title = this.Entity.Name.ToString ();
+		}
+
+		private void UpdateSubtitle()
+		{
+			//	Met à jour le sous-titre du noeud.
+			this.Subtitle = this.Entity.Description.ToString ();
 		}
 
 
@@ -2025,42 +2023,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double roundFrameRadius = 15;
-		protected static readonly double shadowOffset = 6;
-		protected static readonly double textMargin = 13;
-		protected static readonly double expressionWidth = 20;
-		protected static readonly double edgeHeight = 20;
-		protected static readonly double sourcesMenuHeight = 20;
-		protected static readonly double indentWidth = 2;
+		public static readonly double			roundFrameRadius = 15;
+		protected static readonly double		shadowOffset = 6;
+		protected static readonly double		textMargin = 13;
+		protected static readonly double		expressionWidth = 20;
+		protected static readonly double		edgeHeight = 20;
+		protected static readonly double		sourcesMenuHeight = 20;
+		protected static readonly double		indentWidth = 2;
 
-		private ObjectComment comment;
-		private ObjectInfo info;
-		private Rectangle bounds;
-		private double columnsSeparatorRelative1;
-		private bool isRoot;
-		private bool isExtended;
-		private bool isConnectedToRoot;
-		private string titleString;
-		private string subtitleString;
-		private TextLayout title;
-		private TextLayout subtitle;
-		private List<Edge> edges;
-		private List<ObjectEdge> edgeListBt;
-		private List<ObjectEdge> edgeListBb;
-		private List<ObjectEdge> edgeListC;
-		private List<ObjectEdge> edgeListD;
-		private List<ObjectNode> parents;
+		private ObjectComment					comment;
+		private ObjectInfo						info;
+		private Rectangle						bounds;
+		private double							columnsSeparatorRelative1;
+		private bool							isRoot;
+		private bool							isExtended;
+		private bool							isConnectedToRoot;
+		private string							titleString;
+		private string							subtitleString;
+		private TextLayout						title;
+		private TextLayout						subtitle;
+		private List<Edge>						edges;
+		private List<ObjectEdge>				edgeListBt;
+		private List<ObjectEdge>				edgeListBb;
+		private List<ObjectEdge>				edgeListC;
+		private List<ObjectEdge>				edgeListD;
+		private List<ObjectNode>				parents;
 
-		private bool isDragging;
-		private Point draggingOffset;
+		private bool							isDragging;
+		private Point							draggingOffset;
 
-		private bool isEdgeMoving;
-		private int edgeInitialRank;
+		private bool							isEdgeMoving;
+		private int								edgeInitialRank;
 
-		private bool isChangeWidth;
-		private double changeWidthPos;
-		private double changeWidthInitial;
+		private bool							isChangeWidth;
+		private double							changeWidthPos;
+		private double							changeWidthInitial;
 
-		private bool isMoveColumnsSeparator1;
+		private bool							isMoveColumnsSeparator1;
 	}
 }
