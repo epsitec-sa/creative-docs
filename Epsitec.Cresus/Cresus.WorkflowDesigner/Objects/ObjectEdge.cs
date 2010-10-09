@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			if (this.points.Count >= 2 && this.edge.IsExplored && (this.edge.Route != Edge.RouteType.Himself || this.edge.IsSourceExpanded))
+			if (this.points.Count >= 2 && this.edge.IsExplored && (this.edge.Route != RouteType.Himself || this.edge.IsSourceExpanded))
 			{
 				Point start = this.points[0];
 				if (this.edge.IsSourceExpanded)
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.edge.Route == Edge.RouteType.A)
+				if (this.edge.Route == RouteType.A)
 				{
 					if (this.points.Count == 6)
 					{
@@ -721,7 +721,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
+				if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
 				{
 					if (this.points.Count == 5)
 					{
@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.edge.Route == Edge.RouteType.C)
+				if (this.edge.Route == RouteType.C)
 				{
 					if (this.points.Count == 4)
 					{
@@ -748,7 +748,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.edge.Route == Edge.RouteType.D)
+				if (this.edge.Route == RouteType.D)
 				{
 					if (this.points.Count == 4)
 					{
@@ -765,7 +765,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.edge.Route == Edge.RouteType.A)
+				if (this.edge.Route == RouteType.A)
 				{
 					if (this.points.Count == 6)
 					{
@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Point oldPos = this.PositionEdgeComment;  // point d'attache avant re-routage
 
-			if (this.edge.Route == Edge.RouteType.A)
+			if (this.edge.Route == RouteType.A)
 			{
 				if (this.hilitedElement == ActiveElement.EdgeMove1)
 				{
@@ -809,18 +809,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.edge.RouteAbsoluteAY = pos.Y-this.points[0].Y;
 			}
 
-			if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
+			if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
 			{
 				this.edge.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
 				this.edge.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
 			}
 
-			if (this.edge.Route == Edge.RouteType.C)
+			if (this.edge.Route == RouteType.C)
 			{
 				this.edge.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 			}
 
-			if (this.edge.Route == Edge.RouteType.D)
+			if (this.edge.Route == RouteType.D)
 			{
 				if (this.edge.IsAttachToRight)
 				{
@@ -848,7 +848,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
 			retry:
-			if (this.edge.Route == Edge.RouteType.A)
+			if (this.edge.Route == RouteType.A)
 			{
 				if (this.edge.RouteAbsoluteAY == 0)
 				{
@@ -907,7 +907,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.edge.Route == Edge.RouteType.Bt || this.edge.Route == Edge.RouteType.Bb)
+			if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
 			{
 				if (this.edge.RouteRelativeBX == 0 || this.edge.RouteRelativeBY == 0)
 				{
@@ -948,7 +948,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.edge.Route == Edge.RouteType.C)
+			if (this.edge.Route == RouteType.C)
 			{
 				//	Met à jour les points milieu de la connection.
 				double d = this.points[3].X-this.points[0].X;
@@ -970,7 +970,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
 
-			if (this.edge.Route == Edge.RouteType.D)
+			if (this.edge.Route == RouteType.D)
 			{
 				double px;
 				if (this.edge.IsAttachToRight)

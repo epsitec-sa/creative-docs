@@ -604,6 +604,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine une flèche selon le type de la relation.
 			AbstractObject.DrawArrowBase(graphics, start, end);
 
+#if false
 			if (false)
 			{
 				Point p1 = Point.Move(end, start, AbstractObject.arrowLength);
@@ -615,6 +616,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				AbstractObject.DrawArrowStar(graphics, start, end);
 			}
+#endif
 		}
 
 		protected static void DrawArrowBase(Graphics graphics, Point start, Point end)

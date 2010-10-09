@@ -66,6 +66,7 @@
     <Compile Include="Objects\ObjectComment.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />
     <Compile Include="Objects\ObjectInfo.cs" />
+    <Compile Include="Objects\RouteType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>
       </SubType>

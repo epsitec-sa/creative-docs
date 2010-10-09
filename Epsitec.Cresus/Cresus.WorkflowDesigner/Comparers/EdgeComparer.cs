@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 	{
 		public int Compare(Objects.ObjectEdge obj1, Objects.ObjectEdge obj2)
 		{
-			if (obj1.Edge.Route == Objects.Edge.RouteType.Bb)
+			if (obj1.Edge.Route == Objects.RouteType.Bb)
 			{
 				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 				}
 			}
 
-			if (obj1.Edge.Route == Objects.Edge.RouteType.Bt)
+			if (obj1.Edge.Route == Objects.RouteType.Bt)
 			{
 				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 				}
 			}
 
-			if (obj1.Edge.Route == Objects.Edge.RouteType.C)
+			if (obj1.Edge.Route == Objects.RouteType.C)
 			{
 				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 				return obj2.Points[0].Y.CompareTo(obj1.Points[0].Y);
 			}
 
-			if (obj1.Edge.Route == Objects.Edge.RouteType.D)
+			if (obj1.Edge.Route == Objects.RouteType.D)
 			{
 				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
