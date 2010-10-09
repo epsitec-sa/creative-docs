@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			Unlocked,
 		}
 
-		protected enum MouseCursorType
+		private enum MouseCursorType
 		{
 			Unknown,
 			Arrow,
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			Locate,
 		}
 
-		protected enum PushDirection
+		private enum PushDirection
 		{
 			Automatic,
 			Left,
@@ -75,8 +75,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
+
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateDimmed();
 		}
 
-		protected void UpdateNodes()
+		private void UpdateNodes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
 			foreach (ObjectNode node in this.nodes)
@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.Invalidate();
 		}
 
-		protected void UpdateEdge(ObjectEdge edge, ObjectNode src, int srcRank, ObjectNode dst)
+		private void UpdateEdge(ObjectEdge edge, ObjectNode src, int srcRank, ObjectNode dst)
 		{
 			//	Met à jour la géométrie d'une liaison.
 			Rectangle srcBounds = src.Bounds;
@@ -618,7 +618,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		// (*)	Sera calculé par ObjectEdge.UpdateRoute !
 
-		protected void ShiftEdgesB(ObjectNode node, List<ObjectEdge> edges)
+		private void ShiftEdgesB(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -652,7 +652,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void ShiftEdgesC(ObjectNode node, List<ObjectEdge> edges)
+		private void ShiftEdgesC(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type C, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -676,7 +676,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void ShiftEdgesD(ObjectNode node, List<ObjectEdge> edges)
+		private void ShiftEdgesD(ObjectNode node, List<ObjectEdge> edges)
 		{
 			//	Met à jour une liste de connections de type D, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -765,7 +765,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.Invalidate();
 		}
 
-		protected void CommentsMemorize()
+		private void CommentsMemorize()
 		{
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectEdge objectEdge in this.edges)
@@ -797,7 +797,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void UpdateDimmed()
+		private void UpdateDimmed()
 		{
 			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
 			foreach (ObjectEdge objectEdge in this.edges)
@@ -963,7 +963,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void CloseOneNode(ObjectNode node)
+		private void CloseOneNode(ObjectNode node)
 		{
 			if (node.Comment != null)
 			{
@@ -980,7 +980,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.nodes.Remove(node);  // supprime la boîte demandée
 		}
 
-		protected void ExploreConnectedToRoot(List<ObjectNode> visited, ObjectNode root)
+		private void ExploreConnectedToRoot(List<ObjectNode> visited, ObjectNode root)
 		{
 			//	Cherche récursivement tous les objets depuis 'root'.
 			foreach (Edge edge in root.Edges)
@@ -1006,7 +1006,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void CloseEdges(ObjectNode removedNode)
+		private void CloseEdges(ObjectNode removedNode)
 		{
 			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
 			//	les connections sur la boîte supprimée.
@@ -1024,7 +1024,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		protected void PushLayout(ObjectNode exclude, PushDirection direction, double margin)
+		private void PushLayout(ObjectNode exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
@@ -1052,7 +1052,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected ObjectNode PushSearch(ObjectNode node, ObjectNode exclude, double margin)
+		private ObjectNode PushSearch(ObjectNode node, ObjectNode exclude, double margin)
 		{
 			//	Cherche une boîte qui chevauche 'node'.
 			Rectangle rect = node.Bounds;
@@ -1074,7 +1074,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
-		protected void PushAction(ObjectNode node, ObjectNode inter, PushDirection direction, double margin)
+		private void PushAction(ObjectNode node, ObjectNode inter, PushDirection direction, double margin)
 		{
 			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
@@ -1118,7 +1118,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		protected void RedimArea()
+		private void RedimArea()
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
@@ -1135,7 +1135,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.OnAreaSizeChanged();
 		}
 
-		protected Rectangle ComputeObjectsBounds()
+		private Rectangle ComputeObjectsBounds()
 		{
 			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
@@ -1163,7 +1163,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return bounds;
 		}
 
-		protected void MoveObjects(double dx, double dy)
+		private void MoveObjects(double dx, double dy)
 		{
 			//	Déplace tous les objets.
 			if (dx == 0 && dy == 0)  // immobile ?
@@ -1253,7 +1253,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected Point ConvWidgetToEditor(Point pos)
+		private Point ConvWidgetToEditor(Point pos)
 		{
 			//	Conversion d'une coordonnée dans l'espace normal des widgets vers l'espace de l'éditeur,
 			//	qui varie selon les ascenseurs (AreaOffset) et le zoom.
@@ -1265,7 +1265,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return pos;
 		}
 
-		protected Point ConvEditorToWidget(Point pos)
+		private Point ConvEditorToWidget(Point pos)
 		{
 			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
 			pos.Y = this.areaSize.Height-pos.Y;
@@ -1276,7 +1276,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return pos;
 		}
 
-		protected void EditorMouseMove(Message message, Point pos)
+		private void EditorMouseMove(Message message, Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1444,7 +1444,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void EditorMouseDown(Message message, Point pos)
+		private void EditorMouseDown(Message message, Point pos)
 		{
 			//	Début du déplacement d'une boîte.
 			if (this.lastCursor == MouseCursorType.Hand)
@@ -1463,7 +1463,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void EditorMouseUp(Message message, Point pos)
+		private void EditorMouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
 			if (this.isAreaMoving)
@@ -1559,7 +1559,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.lockObject = obj;
 		}
 
-		protected AbstractObject DetectObject(Point pos)
+		private AbstractObject DetectObject(Point pos)
 		{
 			//	Détecte l'objet visé par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1795,7 +1795,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			reader.Close();
 		}
 
-		protected void WriteXml(XmlWriter writer)
+		private void WriteXml(XmlWriter writer)
 		{
 #if false
 			//	Sérialise toutes les boîtes.
@@ -1812,7 +1812,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 #endif
 		}
 
-		protected void ReadXml(XmlReader reader)
+		private void ReadXml(XmlReader reader)
 		{
 #if false
 			//	Désérialise toutes les boîtes.
@@ -1854,7 +1854,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return this.GetTooltipEditedText(pos);
 		}
 
-		protected string GetTooltipEditedText(Point pos)
+		private string GetTooltipEditedText(Point pos)
 		{
 			//	Donne le texte du tooltip en fonction de la position.
 			if (this.hilitedObject == null)
@@ -1870,7 +1870,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#endregion
 
 		#region MouseCursor
-		protected void ChangeMouseCursor(MouseCursorType cursor)
+		private void ChangeMouseCursor(MouseCursorType cursor)
 		{
 			//	Change le sprite de la souris.
 			if (cursor == this.lastCursor)
@@ -1917,7 +1917,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void SetMouseCursorImage(ref Image image, string name)
+		private void SetMouseCursorImage(ref Image image, string name)
 		{
 			//	Choix du sprite de la souris.
 			if (image == null)

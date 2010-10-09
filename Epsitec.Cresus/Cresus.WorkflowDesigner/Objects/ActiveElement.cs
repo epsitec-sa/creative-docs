@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		EdgeHilited,
 		EdgeMove1,
 		EdgeMove2,
+		EdgeChangeDst,
 		EdgeComment,
 
 		CommentEdit,
