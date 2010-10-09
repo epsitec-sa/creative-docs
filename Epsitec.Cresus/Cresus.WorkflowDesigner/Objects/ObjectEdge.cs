@@ -438,26 +438,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.isDraggingDst)
 			{
+				//	Dessine une connection courbe qui rejoint le point d'arrivée en train d'être
+				//	déplacé par la souris, pour changer le noeud de destination.
 				Point p1 = this.points.First ();
-				Point pd = (this.points.Count > 2) ? this.points[1] : Point.Zero;
+				Point ps = (this.points.Count > 2) ? this.points[1] : Point.Zero;
 				Point p2 = this.points.Last ();
 				Color color = this.GetColor (0);
 				double lineWidth = 4;
 
 				Path path = new Path ();
 				path.MoveTo (p1);
-				if (pd.IsZero)
+				if (ps.IsZero)
 				{
 					path.LineTo (p2);
 				}
 				else
 				{
-					path.CurveTo (pd, p2);
+					path.CurveTo (ps, p2);
 				}
 				Misc.DrawPathDash (graphics, path, lineWidth, 15, 10, true, color);
 
 				graphics.LineWidth = lineWidth;
-				AbstractObject.DrawEndingArrow (graphics, pd.IsZero ? p1 : pd, p2);
+				AbstractObject.DrawEndingArrow (graphics, ps.IsZero ? p1 : ps, p2);
 				graphics.RenderSolid (color);
 				graphics.LineWidth = 1;
 

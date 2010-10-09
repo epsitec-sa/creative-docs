@@ -1187,26 +1187,52 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected void MoveEdge(int srcRank, int dstRank)
 		{
 			//	Déplace un champ.
+			if (dstRank < srcRank)
+			{
+				dstRank++;
+			}
+
+			var entity = this.Entity.Edges[srcRank];
+			this.Entity.Edges.RemoveAt (srcRank);
+			this.Entity.Edges.Insert (dstRank, entity);
+
+			var edge = this.edges[srcRank];
+			this.edges.RemoveAt (srcRank);
+			this.edges.Insert (dstRank, edge);
+
+			this.UpdateEdgesLink ();
+			this.editor.UpdateAfterAddOrRemoveEdge (this);
+			this.editor.SetLocalDirty ();
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		protected void RemoveEdge(int rank)
 		{
 			//	Supprime un champ.
+			this.Entity.Edges.RemoveAt (rank);
+			this.edges.RemoveAt (rank);
+
+			this.UpdateEdgesLink ();
+			this.editor.UpdateAfterAddOrRemoveEdge (this);
+			this.editor.SetLocalDirty ();
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		protected void AddEdge(int rank)
 		{
 			//	Ajoute un nouveau champ.
-			var newEdge = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
+			var newEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 
-			newEdge.Name = "Nouveau";
-			newEdge.Description = "Nouveau";
-			newEdge.TransitionAction = "xxx";
+			newEntity.Name = "Nouveau";
+			newEntity.Description = "Nouvelle connection vers un noeud";
+			newEntity.TransitionAction = "xxx";
 			//?newEdge.NextNode = "";
 
-			this.Entity.Edges.Add (newEdge);
+			var newEdge = new Edge (this.editor, newEntity, this);
+	
+			this.Entity.Edges.Insert (rank+1, newEntity);
+			this.edges.Insert (rank+1, newEdge);
 
-			this.UpdateEdges ();
 			this.UpdateEdgesLink ();
 			this.editor.UpdateAfterAddOrRemoveEdge (this);
 			this.editor.SetLocalDirty ();
@@ -1243,8 +1269,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				var edge = new Edge (this.editor, entityEdge, this);
 				this.edges.Add (edge);
 			}
-
-			// TODO: remettre les connections !
 		}
 
 		protected void UpdateEdgesLink()
