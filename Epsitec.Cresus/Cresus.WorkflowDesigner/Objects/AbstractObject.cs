@@ -116,15 +116,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public virtual bool IsReadyForDragging
-		{
-			//	Est-ce que l'objet est dragable ?
-			get
-			{
-				return false;
-			}
-		}
-
 		public ActiveElement HilitedElement
 		{
 			get
@@ -560,7 +551,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{
-			//	Dessine une ombre douce.
+			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
 			alpha /= smooth;
 
 			for (int i=0; i<smooth; i++)
@@ -592,16 +583,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public static void DrawStartingArrow(Graphics graphics, Point start, Point end)
 		{
-			//	Dessine une flèche selon le type de la relation.
-//-			if (relation == FieldRelation.Inclusion)
-//-			{
-//-				AbstractObject.DrawArrowBase(graphics, end, start);
-//-			}
+			//	Dessine une flèche selon le type.
 		}
 
 		public static void DrawEndingArrow(Graphics graphics, Point start, Point end)
 		{
-			//	Dessine une flèche selon le type de la relation.
+			//	Dessine une flèche selon le type.
 			AbstractObject.DrawArrowBase(graphics, start, end);
 
 #if false
@@ -913,25 +900,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public static readonly double minAttach = 20;
+		public static readonly double			minAttach = 20;
+		protected static readonly double		headerHeight = 32;
+		protected static readonly double		footerHeight = 16;
+		protected static readonly double		buttonRadius = 10;
+		protected static readonly double		bulletRadius = 4;
+		protected static readonly double		buttonSquare = 5;
+		protected static readonly double		lengthClose = 30;
+		protected static readonly double		arrowLength = 12;
+		protected static readonly double		arrowAngle = 25;
+		protected static readonly double		commentMinWidth = 50;
+		protected static readonly double		infoMinWidth = 50;
 
-		protected readonly Editor editor;
-		protected readonly AbstractEntity entity;
+		protected readonly Editor				editor;
+		protected readonly AbstractEntity		entity;
 
-		protected static readonly double headerHeight = 32;
-		protected static readonly double footerHeight = 16;
-		protected static readonly double buttonRadius = 10;
-		protected static readonly double bulletRadius = 4;
-		protected static readonly double buttonSquare = 5;
-		protected static readonly double lengthClose = 30;
-		protected static readonly double arrowLength = 12;
-		protected static readonly double arrowAngle = 25;
-		protected static readonly double commentMinWidth = 50;
-		protected static readonly double infoMinWidth = 50;
-
-		protected ActiveElement hilitedElement;
-		protected MainColor boxColor;
-		protected bool isDimmed;
-		protected int hilitedEdgeRank;
+		protected ActiveElement					hilitedElement;
+		protected MainColor						boxColor;
+		protected bool							isDimmed;
+		protected int							hilitedEdgeRank;
 	}
 }

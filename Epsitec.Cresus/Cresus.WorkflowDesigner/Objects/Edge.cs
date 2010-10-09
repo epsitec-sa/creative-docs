@@ -639,31 +639,31 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private readonly WorkflowEdgeEntity workflowEdgeEntity;
+		private readonly WorkflowEdgeEntity	workflowEdgeEntity;
 
-		private Editor editor;
-		private TextLayout textLayoutField;
-		private TextLayout textLayoutType;
-		private int index;
-		private ObjectNode srcNode;
-		private ObjectNode dstNode;
-		private ObjectEdge objectEdge;
-		private bool isExplored;
-		private bool isSourceExpanded;
-		private bool isAttachToRight;
-		private RouteType routeType;
-		private double routeRelativeAX1;
-		private double routeRelativeAX2;
-		private double routeAbsoluteAY;
-		private double routeRelativeBX;
-		private double routeRelativeBY;
-		private double routeRelativeCX;
-		private double routeAbsoluteDX;
-		private bool hasComment;
-		private Point commentPosition;
-		private Rectangle commentBounds;
-		private string commentText;
-		private double commentAttach;
-		private MainColor commentMainColor;
+		private Editor						editor;
+		private TextLayout					textLayoutField;
+		private TextLayout					textLayoutType;
+		private int							index;
+		private ObjectNode					srcNode;
+		private ObjectNode					dstNode;
+		private ObjectEdge					objectEdge;
+		private bool						isExplored;
+		private bool						isSourceExpanded;
+		private bool						isAttachToRight;
+		private RouteType					routeType;
+		private double						routeRelativeAX1;
+		private double						routeRelativeAX2;
+		private double						routeAbsoluteAY;
+		private double						routeRelativeBX;
+		private double						routeRelativeBY;
+		private double						routeRelativeCX;
+		private double						routeAbsoluteDX;
+		private bool						hasComment;
+		private Point						commentPosition;
+		private Rectangle					commentBounds;
+		private string						commentText;
+		private double						commentAttach;
+		private MainColor					commentMainColor;
 	}
 }
