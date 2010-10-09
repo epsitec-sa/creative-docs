@@ -266,6 +266,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool IsHilitedForEdgeChanging
+		{
+			//	Indique si cet objet est mis en évidence pendant un changement de noeud destination (EdgeChangeDst).
+			get
+			{
+				return this.isHilitedForEdgeChanging;
+			}
+			set
+			{
+				this.isHilitedForEdgeChanging = value;
+			}
+		}
+
 
 		public List<ObjectEdge> EdgeListBt
 		{
@@ -1309,7 +1322,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader);
+			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForEdgeChanging);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -1380,19 +1393,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (string.IsNullOrEmpty(this.subtitleString))
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-				rect.Deflate(4, 2);
+				rect.Deflate(8, 2);
 				this.title.LayoutSize = rect.Size;
 				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
 			else
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
-				rect.Deflate(4, 0);
+				rect.Deflate(8, 0);
 				this.title.LayoutSize = rect.Size;
 				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 				
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
-				rect.Deflate(4, 0);
+				rect.Deflate(8, 0);
 				this.subtitle.LayoutSize = rect.Size;
 				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
@@ -1883,7 +1896,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private WorkflowNodeEntity Entity
+		public WorkflowNodeEntity Entity
 		{
 			get
 			{
@@ -2059,5 +2072,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private double							changeWidthInitial;
 
 		private bool							isMoveColumnsSeparator1;
+		private bool							isHilitedForEdgeChanging;
 	}
 }

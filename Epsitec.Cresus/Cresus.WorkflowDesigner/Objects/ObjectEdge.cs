@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingRoute)
+			if (this.isDraggingRoute || this.isDraggingDst)
 			{
 				return null;  // pas de tooltip
 			}
@@ -162,9 +162,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.RouteMove(pos);
 				return true;
 			}
+			else if (this.isDraggingDst)
+			{
+				this.MouseMoveDst (pos);
+				return true;
+			}
 			else
 			{
-				return base.MouseMove(message, pos);
+				return base.MouseMove (message, pos);
 			}
 		}
 
@@ -177,6 +182,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.isDraggingRoute = true;
 				this.editor.LockObject(this);
 			}
+
+			if (this.hilitedElement == ActiveElement.EdgeChangeDst)
+			{
+				this.MouseDownDst (pos);
+			}
 		}
 
 		public override void MouseUp(Message message, Point pos)
@@ -188,6 +198,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged(null);
 				this.editor.LockObject(null);
 				this.editor.SetLocalDirty ();
+			}
+
+			if (this.isDraggingDst)
+			{
+				this.MouseUpDst ();
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeOpenLeft ||
@@ -332,6 +347,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return true;
 			}
 
+			//	Souris dans le bouton pour changer le noeud destination ?
+			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
+			{
+				element = ActiveElement.EdgeChangeDst;
+				return true;
+			}
+
 			//	Souris le long de la connection ?
 			if (DetectOver(pos, 4))
 			{
@@ -413,6 +435,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			if (this.isDraggingDst)
+			{
+				Point p1 = this.points.First ();
+				Point pd = (this.points.Count > 2) ? this.points[1] : Point.Zero;
+				Point p2 = this.points.Last ();
+				Color color = this.GetColor (0);
+				double lineWidth = 4;
+
+				Path path = new Path ();
+				path.MoveTo (p1);
+				if (pd.IsZero)
+				{
+					path.LineTo (p2);
+				}
+				else
+				{
+					path.CurveTo (pd, p2);
+				}
+				Misc.DrawPathDash (graphics, path, lineWidth, 15, 10, true, color);
+
+				graphics.LineWidth = lineWidth;
+				AbstractObject.DrawEndingArrow (graphics, pd.IsZero ? p1 : pd, p2);
+				graphics.RenderSolid (color);
+				graphics.LineWidth = 1;
+
+				this.DrawRoundButton (graphics, p1, AbstractObject.bulletRadius+1, false, false, true);
+
+				return;
+			}
 
 			if (this.points.Count >= 2 && this.edge.IsExplored && (this.edge.Route != RouteType.Himself || this.edge.IsSourceExpanded))
 			{
@@ -551,11 +603,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.hilitedElement == ActiveElement.EdgeMove2)
 				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.EdgeHilited)
 				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				}
+			}
+
+			//	Dessine le bouton pour changer de noeud destination.
+			m = this.PositionRouteChangeDst;
+			if (!m.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.EdgeChangeDst)
+				{
+					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.EdgeHilited)
+				{
+					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
 				}
 			}
 		}
@@ -785,6 +851,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		protected Point PositionRouteChangeDst
+		{
+			//	Retourne la position du bouton pour modifier le noeud destination.
+			get
+			{
+				if (this.points.Count == 0)
+				{
+					return Point.Zero;
+				}
+				else
+				{
+					return this.points.Last ();
+				}
+			}
+		}
+
 		protected void RouteMove(Point pos)
 		{
 			//	Modifie le routage en fonction du choix de l'utilisateur.
@@ -989,6 +1071,72 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		private void MouseDownDst(Point pos)
+		{
+			this.isDraggingDst = true;
+			this.editor.LockObject (this);
+
+			this.MouseMoveDst(pos);
+		}
+
+		private void MouseMoveDst(Point pos)
+		{
+			this.points[this.points.Count-1] = pos;
+
+			var node = this.DetectNode (pos);
+
+			if (this.hilitedDstNode != node)
+			{
+				if (this.hilitedDstNode != null)
+				{
+					this.hilitedDstNode.IsHilitedForEdgeChanging = false;
+				}
+
+				this.hilitedDstNode = node;
+
+				if (this.hilitedDstNode != null)
+				{
+					this.hilitedDstNode.IsHilitedForEdgeChanging = true;
+				}
+			}
+
+			this.editor.Invalidate ();
+		}
+
+		private void MouseUpDst()
+		{
+			this.isDraggingDst = false;
+
+			if (this.hilitedDstNode != null)
+			{
+				this.edge.DstNode = this.hilitedDstNode;
+				this.Entity.NextNode = this.edge.DstNode.Entity;
+
+				this.hilitedDstNode.IsHilitedForEdgeChanging = false;
+				this.hilitedDstNode = null;
+			}
+
+			this.editor.UpdateGeometry ();
+			this.editor.LockObject (null);
+			this.editor.SetLocalDirty ();
+		}
+
+		private ObjectNode DetectNode(Point pos)
+		{
+			for (int i=this.editor.Nodes.Count-1; i>=0; i--)
+			{
+				ObjectNode node = this.editor.Nodes[i];
+
+				if (node.Bounds.Contains (pos))
+				{
+					return node;
+				}
+			}
+
+			return null;
+		}
+
+
 		private WorkflowEdgeEntity Entity
 		{
 			get
@@ -1004,6 +1152,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private List<Point>					points;
 		private bool						isSrcHilited;
 		private bool						isDraggingRoute;
+		private bool						isDraggingDst;
 		private ObjectComment				comment;
+		private ObjectNode					hilitedDstNode;
 	}
 }
