@@ -3,10 +3,12 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WorkflowDesigner.Objects;
 
@@ -122,9 +124,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateInitialWorkflow()
 		{
-			var n = this.workflowDefinitionEntity.Edges[1].NextNode.Edges[0].NextNode;  // TODO: très provisoire !
+			var firstNodeEntity = this.workflowDefinitionEntity as WorkflowNodeEntity;
 
-			var node = new ObjectNode(this, n);
+			var node = new ObjectNode (this, firstNodeEntity);
 			node.IsRoot = true;
 			this.AddNode (node);
 
@@ -161,12 +163,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public ObjectNode SearchNode(string code)
+		public ObjectNode SearchNode(AbstractEntity entity)
 		{
-			//	Cherche un noeud d'après son code.
+			//	Cherche un noeud d'après l'entité qu'il représente.
+			var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
+
 			foreach (ObjectNode node in this.nodes)
 			{
-				if (node.Code == code)
+				var key = this.businessContext.DataContext.GetNormalizedEntityKey (node.AbstractEntity);
+
+				if (key == searchedKey)
 				{
 					return node;
 				}
