@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				var key = entityKey.Value;
 				
-				if (key.EntityId == EntityInfo<WorkflowDefinitionEntity>.GetTypeId ())
+				if (key.EntityId == EntityInfo<WorkflowNodeEntity>.GetTypeId ())
 				{
 					var businessContext = this.orchestrator.DefaultBusinessContext;
 
