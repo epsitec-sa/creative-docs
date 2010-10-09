@@ -1212,22 +1212,22 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					break;
 
 				case MessageType.MouseMove:
-					this.MouseMove(message, pos);
+					this.EditorMouseMove(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseDown:
-					this.MouseDown(message, pos);
+					this.EditorMouseDown(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseUp:
-					this.MouseUp(message, pos);
+					this.EditorMouseUp(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseLeave:
-					this.MouseMove(message, Point.Zero);
+					this.EditorMouseMove(message, Point.Zero);
 					break;
 
 				case MessageType.MouseWheel:
@@ -1276,7 +1276,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return pos;
 		}
 
-		protected void MouseMove(Message message, Point pos)
+		protected void EditorMouseMove(Message message, Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1444,7 +1444,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void MouseDown(Message message, Point pos)
+		protected void EditorMouseDown(Message message, Point pos)
 		{
 			//	Début du déplacement d'une boîte.
 			if (this.lastCursor == MouseCursorType.Hand)
@@ -1463,7 +1463,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		protected void MouseUp(Message message, Point pos)
+		protected void EditorMouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
 			if (this.isAreaMoving)

@@ -48,11 +48,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.routeType = RouteType.Close;
 			this.routeRelativeAX1 = 0.2;
 			this.routeRelativeAX2 = 0.8;
-			this.routeAbsoluteAY = 0.0;
-			this.routeRelativeBX = 0.0;
-			this.routeRelativeBY = 0.0;
-			this.routeRelativeCX = 0.5;
-			this.routeAbsoluteDX = 0.0;
+			this.routeAbsoluteAY  = 0.0;
+			this.routeRelativeBX  = 0.0;
+			this.routeRelativeBY  = 0.0;
+			this.routeRelativeCX  = 0.5;
+			this.routeAbsoluteDX  = 0.0;
 
 			this.commentAttach = AbstractObject.minAttach;
 			this.commentMainColor = MainColor.Yellow;
