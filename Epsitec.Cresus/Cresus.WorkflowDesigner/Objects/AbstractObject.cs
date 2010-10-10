@@ -256,21 +256,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator1:
 					return Res.Strings.Entities.Action.BoxMoveColumnsSeparator;
 
-				case AbstractObject.ActiveElement.ConnectionOpenLeft:
-					return Res.Strings.Entities.Action.ConnectionOpenLeft;
+				case AbstractObject.ActiveElement.ConnexionOpenLeft:
+					return Res.Strings.Entities.Action.ConnexionOpenLeft;
 
-				case AbstractObject.ActiveElement.ConnectionOpenRight:
-					return Res.Strings.Entities.Action.ConnectionOpenRight;
+				case AbstractObject.ActiveElement.ConnexionOpenRight:
+					return Res.Strings.Entities.Action.ConnexionOpenRight;
 
-				case AbstractObject.ActiveElement.ConnectionClose:
-					return Res.Strings.Entities.Action.ConnectionClose;
+				case AbstractObject.ActiveElement.ConnexionClose:
+					return Res.Strings.Entities.Action.ConnexionClose;
 
-				case AbstractObject.ActiveElement.ConnectionMove1:
-				case AbstractObject.ActiveElement.ConnectionMove2:
-					return Res.Strings.Entities.Action.ConnectionMove;
+				case AbstractObject.ActiveElement.ConnexionMove1:
+				case AbstractObject.ActiveElement.ConnexionMove2:
+					return Res.Strings.Entities.Action.ConnexionMove;
 
-				case AbstractObject.ActiveElement.ConnectionComment:
-					return Res.Strings.Entities.Action.ConnectionComment;
+				case AbstractObject.ActiveElement.ConnexionComment:
+					return Res.Strings.Entities.Action.ConnexionComment;
 
 				case AbstractObject.ActiveElement.CommentEdit:
 					return Res.Strings.Entities.Action.CommentEdit;
@@ -308,8 +308,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case AbstractObject.ActiveElement.CommentColor8:
 					return Res.Strings.Entities.Action.CommentColor8;
 
-				case AbstractObject.ActiveElement.CommentAttachToConnection:
-					return Res.Strings.Entities.Action.CommentAttachToConnection;
+				case AbstractObject.ActiveElement.CommentAttachToConnexion:
+					return Res.Strings.Entities.Action.CommentAttachToConnexion;
 
 				case AbstractObject.ActiveElement.InfoMove:
 					return Res.Strings.Entities.Action.InfoMove;

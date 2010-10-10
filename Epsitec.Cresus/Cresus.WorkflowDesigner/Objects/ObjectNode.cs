@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.boxColor = value;
 
-					//	Change la couleur de toutes les connections liées.
+					//	Change la couleur de toutes les connexions liées.
 					foreach (Edge edge in this.edges)
 					{
 						if (edge.ObjectEdge != null)
@@ -764,7 +764,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (pos.IsZero)
 			{
-				//	Si l'une des connection est dans l'état EdgeOpen*, il faut afficher
+				//	Si l'une des connexion est dans l'état EdgeOpen*, il faut afficher
 				//	aussi les petits cercles de gauche.
 				if (this.IsEdgeReadyForOpen())
 				{
@@ -1008,7 +1008,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void SetEdgesHilited(bool isHilited)
 		{
-			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
+			//	Modifie l'état 'hilited' de toutes les connexions qui partent de l'objet.
 			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
 			if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
@@ -1026,7 +1026,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected bool IsEdgeReadyForOpen()
 		{
-			//	Indique si l'une des connections qui partent de l'objet est en mode EdgeOpen*.
+			//	Indique si l'une des connexions qui partent de l'objet est en mode EdgeOpen*.
 			foreach (Edge edge in this.edges)
 			{
 				if (edge.ObjectEdge != null)
@@ -1193,7 +1193,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var newEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
 
 			newEntity.Name = "Nouveau";
-			newEntity.Description = "Nouvelle connection vers un noeud";
+			newEntity.Description = "Nouvelle connexion vers un noeud";
 			newEntity.TransitionAction = "xxx";
 			//?newEdge.NextNode = "";
 

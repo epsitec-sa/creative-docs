@@ -18,7 +18,7 @@ using System.Linq;
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	/// <summary>
-	/// Bulle pour représenter le commentaire associé à une entité ou une connection.
+	/// Bulle pour représenter le commentaire associé à une entité ou une connexion.
 	/// </summary>
 	public class ObjectComment : AbstractObject
 	{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public AbstractObject AttachObject
 		{
-			//	Object liée (boîte ou connection).
+			//	Object liée (boîte ou connexion).
 			get
 			{
 				return this.attachObject;
@@ -185,14 +185,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else if (this.isDraggingAttach)
 			{
-				ObjectEdge connection = this.attachObject as ObjectEdge;
+				ObjectEdge connexion = this.attachObject as ObjectEdge;
 
-				double attach = connection.PointToAttach(pos);
+				double attach = connexion.PointToAttach(pos);
 				if (attach != 0)
 				{
-					Point oldPos = connection.PositionEdgeComment;
-					connection.Edge.CommentAttach = attach;
-					Point newPos = connection.PositionEdgeComment;
+					Point oldPos = connexion.PositionEdgeComment;
+					connexion.Edge.CommentAttach = attach;
+					Point newPos = connexion.PositionEdgeComment;
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
@@ -261,10 +261,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.IsVisible = false;
 
-					ObjectEdge connection = this.attachObject as ObjectEdge;
-					if (connection != null)
+					ObjectEdge connexion = this.attachObject as ObjectEdge;
+					if (connexion != null)
 					{
-						connection.Edge.HasComment = false;
+						connexion.Edge.HasComment = false;
 					}
 				}
 
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton de déplacer l'attache ?
-			if (this.DetectRoundButton(this.PositionAttachToConnectionButton, pos))
+			if (this.DetectRoundButton(this.PositionAttachToConnexionButton, pos))
 			{
 				element = ActiveElement.CommentAttachToEdge;
 				return true;
@@ -555,7 +555,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour déplacer l'attache.
-			Point p = this.PositionAttachToConnectionButton;
+			Point p = this.PositionAttachToConnexionButton;
 			if (!p.IsZero)
 			{
 				if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
@@ -887,8 +887,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (pos.IsZero && this.attachObject is ObjectEdge)
 				{
-					ObjectEdge connection = this.attachObject as ObjectEdge;
-					Point attach = connection.PositionEdgeComment;
+					ObjectEdge connexion = this.attachObject as ObjectEdge;
+					Point attach = connexion.PositionEdgeComment;
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -1008,8 +1008,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.attachObject is ObjectEdge)
 				{
-					ObjectEdge connection = this.attachObject as ObjectEdge;
-					pos = connection.PositionEdgeComment;
+					ObjectEdge connexion = this.attachObject as ObjectEdge;
+					pos = connexion.PositionEdgeComment;
 
 					if (mode == AttachMode.Bottom || mode == AttachMode.BottomLeft || mode == AttachMode.BottomRight)
 					{
@@ -1091,8 +1091,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.attachObject is ObjectEdge)
 			{
-				ObjectEdge connection = this.attachObject as ObjectEdge;
-				Point attach = connection.PositionEdgeComment;
+				ObjectEdge connexion = this.attachObject as ObjectEdge;
+				Point attach = connexion.PositionEdgeComment;
 				if (!attach.IsZero && !this.bounds.Contains(attach))
 				{
 					if (this.bounds.Top <= attach.Y && this.bounds.Right <= attach.X)
@@ -1171,15 +1171,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionAttachToConnectionButton
+		protected Point PositionAttachToConnexionButton
 		{
-			//	Retourne la position du bouton pour modifier l'attache à la connection.
+			//	Retourne la position du bouton pour modifier l'attache à la connexion.
 			get
 			{
 				if (this.attachObject != null && this.attachObject is ObjectEdge)
 				{
-					ObjectEdge connection = this.attachObject as ObjectEdge;
-					return connection.PositionEdgeComment;
+					ObjectEdge connexion = this.attachObject as ObjectEdge;
+					return connexion.PositionEdgeComment;
 				}
 				else
 				{
@@ -1228,8 +1228,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Met à jour l'information de couleur dans le champ associé.
 			if (this.attachObject is ObjectEdge)
 			{
-				ObjectEdge connection = this.attachObject as ObjectEdge;
-				connection.Edge.CommentMainColor = this.BackgroundMainColor;
+				ObjectEdge connexion = this.attachObject as ObjectEdge;
+				connexion.Edge.CommentMainColor = this.BackgroundMainColor;
 			}
 		}
 
@@ -1240,7 +1240,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 #if false
 			//	Sérialise toutes les informations du commentaire.
 			//	Utilisé seulement pour les commentaires associés à des boîtes.
-			//	Les commentaires associés à des connections sont sérialisés par Field.
+			//	Les commentaires associés à des connexions sont sérialisés par Field.
 			writer.WriteStartElement(Xml.Comment);
 			
 			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
