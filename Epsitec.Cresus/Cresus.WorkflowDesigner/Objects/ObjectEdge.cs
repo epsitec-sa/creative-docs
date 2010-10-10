@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return false;
 		}
 
-		protected bool DetectOver(Point pos, double margin)
+		private bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connexion.
 			if (this.points.Count >= 2 && this.edge.IsExplored)
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void AddComment()
+		private void AddComment()
 		{
 			//	Ajoute un commentaire à la connexion.
 			if (this.comment == null)
@@ -629,7 +629,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected bool IsEdgeCommentButton
+		private bool IsEdgeCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point AttachToPoint(double d)
+		private Point AttachToPoint(double d)
 		{
 			//	Conversion d'une distance le long de la connexion en position.
 			//	Une distance positive commence depuis le début de la connexion.
@@ -768,7 +768,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected Point PositionRouteMove1
+		private Point PositionRouteMove1
 		{
 			//	Retourne la position du bouton pour modifier le routage.
 			get
@@ -828,7 +828,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionRouteMove2
+		private Point PositionRouteMove2
 		{
 			//	Retourne la position du bouton pour modifier le routage.
 			get
@@ -853,7 +853,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionRouteChangeDst
+		private Point PositionRouteChangeDst
 		{
 			//	Retourne la position du bouton pour modifier le noeud destination.
 			get
@@ -869,7 +869,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected void RouteMove(Point pos)
+		private void RouteMove(Point pos)
 		{
 			//	Modifie le routage en fonction du choix de l'utilisateur.
 			if (pos.IsZero)
@@ -1147,8 +1147,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-	
-		protected static readonly double arrowMinimalLength = 25;
+
+		private static readonly double arrowMinimalLength = 25;
 
 		private Edge						edge;
 		private List<Point>					points;
