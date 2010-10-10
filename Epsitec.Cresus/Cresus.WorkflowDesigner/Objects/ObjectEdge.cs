@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public Edge Edge
 		{
-			//	Champ de référence pour la connection.
+			//	Champ de référence pour la connexion.
 			get
 			{
 				return this.edge;
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public List<Point> Points
 		{
-			//	Retourne la liste des points. Si la connection est fermée, il s'agit des points
+			//	Retourne la liste des points. Si la connexion est fermée, il s'agit des points
 			//	droite et gauche. Aurement, il s'agit d'un nombre variable de points.
 			get
 			{
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsRightDirection
 		{
-			//	Retourne la direction effective dans laquelle part la connection.
+			//	Retourne la direction effective dans laquelle part la connexion.
 			//	A ne pas confondre avec Edge.IsAttachToRight !
 			get
 			{
@@ -135,18 +135,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 #if false
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.ConnectionComment:
+				case AbstractObject.ActiveElement.ConnexionComment:
 					if (this.comment == null)
 					{
-						return Res.Strings.Entities.Action.ConnectionComment3;
+						return Res.Strings.Entities.Action.ConnexionComment3;
 					}
 					else if (!this.comment.IsVisible)
 					{
-						return string.Format(Res.Strings.Entities.Action.ConnectionComment2, this.comment.Text);
+						return string.Format(Res.Strings.Entities.Action.ConnexionComment2, this.comment.Text);
 					}
 					else
 					{
-						return Res.Strings.Entities.Action.ConnectionComment1;
+						return Res.Strings.Entities.Action.ConnexionComment1;
 					}
 			}
 #endif
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				ObjectNode node = this.editor.SearchNode (this.Entity.NextNode);
 				if (node == null)
 				{
-					//	Ouvre la connection sur une nouvelle boîte.
+					//	Ouvre la connexion sur une nouvelle boîte.
 					node = new ObjectNode (this.editor, this.Entity.NextNode);
 					node.BackgroundMainColor = this.boxColor;
 
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				else
 				{
-					//	Ouvre la connection sur une boîte existante.
+					//	Ouvre la connexion sur une boîte existante.
 					this.edge.DstNode = node;
 					this.edge.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
 				}
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return false;
 			}
 
-			//	Souris dans la pastille ronde du départ de la connection ?
+			//	Souris dans la pastille ronde du départ de la connexion ?
 			if (this.edge.IsSourceExpanded)
 			{
 				if (this.edge.IsExplored)
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Souris dans le bouton pour commenter la connection.
+			//	Souris dans le bouton pour commenter la connexion.
 			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionEdgeComment))
 			{
 				element = ActiveElement.EdgeComment;
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return true;
 			}
 
-			//	Souris le long de la connection ?
+			//	Souris le long de la connexion ?
 			if (DetectOver(pos, 4))
 			{
 				element = ActiveElement.EdgeHilited;
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected bool DetectOver(Point pos, double margin)
 		{
-			//	Détecte si la souris est le long de la connection.
+			//	Détecte si la souris est le long de la connexion.
 			if (this.points.Count >= 2 && this.edge.IsExplored)
 			{
 				for (int i=0; i<this.points.Count-1; i++)
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void AddComment()
 		{
-			//	Ajoute un commentaire à la connection.
+			//	Ajoute un commentaire à la connexion.
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment(this.editor, this.Entity);
@@ -405,11 +405,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Point attach = this.PositionEdgeComment;
 				Rectangle rect;
 
-				if (attach.X > this.edge.SrcNode.Bounds.Right)  // connection sur la droite ?
+				if (attach.X > this.edge.SrcNode.Bounds.Right)  // connexion sur la droite ?
 				{
 					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
-				else  // connection sur la gauche ?
+				else  // connexion sur la gauche ?
 				{
 					rect = new Rectangle(attach.X-20-Editor.defaultWidth, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.isDraggingDst)
 			{
-				//	Dessine une connection courbe qui rejoint le point d'arrivée en train d'être
+				//	Dessine une connexion courbe qui rejoint le point d'arrivée en train d'être
 				//	déplacé par la souris, pour changer le noeud de destination.
 				Point p1 = this.points.First ();
 				Point ps = (this.points.Count > 2) ? this.points[1] : Point.Zero;
@@ -572,7 +572,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Dessine le bouton pour commenter la connection.
+			//	Dessine le bouton pour commenter la connexion.
 			Point p = this.PositionEdgeComment;
 			if (!p.IsZero && this.IsEdgeCommentButton)
 			{
@@ -642,7 +642,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public Point PositionEdgeComment
 		{
-			//	Retourne la position du bouton pour commenter la connection, ou pour déplacer
+			//	Retourne la position du bouton pour commenter la connexion, ou pour déplacer
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
@@ -657,9 +657,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected Point AttachToPoint(double d)
 		{
-			//	Conversion d'une distance le long de la connection en position.
-			//	Une distance positive commence depuis le début de la connection.
-			//	Une distance négative commence depuis la fin de la connection.
+			//	Conversion d'une distance le long de la connexion en position.
+			//	Une distance positive commence depuis le début de la connexion.
+			//	Une distance négative commence depuis la fin de la connexion.
 			if (this.points.Count < 2)
 			{
 				return Point.Zero;
@@ -718,7 +718,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double PointToAttach(Point p)
 		{
-			//	Conversion d'une position le long de la connection en distance depuis le début (si positif)
+			//	Conversion d'une position le long de la connexion en distance depuis le début (si positif)
 			//	ou depuis la fin (si négatif).
 			if (this.points.Count < 2)
 			{
@@ -930,7 +930,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void UpdateRoute()
 		{
-			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
+			//	Met à jour le routage de la connexion, dans les cas ou le routage dépend des choix de l'utilisateur.
 			retry:
 			if (this.edge.Route == RouteType.A)
 			{
@@ -1034,7 +1034,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.edge.Route == RouteType.C)
 			{
-				//	Met à jour les points milieu de la connection.
+				//	Met à jour les points milieu de la connexion.
 				double d = this.points[3].X-this.points[0].X;
 				double d1 = d*this.edge.RouteRelativeCX;
 

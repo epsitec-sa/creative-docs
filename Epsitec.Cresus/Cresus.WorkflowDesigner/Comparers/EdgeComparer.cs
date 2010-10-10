@@ -11,7 +11,7 @@ using System.Linq;
 namespace Epsitec.Cresus.WorkflowDesigner.Comparers
 {
 	/// <summary>
-	///	Compare deux connections pour minimiser les croisements.
+	///	Compare deux connexions pour minimiser les croisements.
 	/// </summary>
 	public class EdgeComparer : IComparer<Objects.ObjectEdge>
 	{

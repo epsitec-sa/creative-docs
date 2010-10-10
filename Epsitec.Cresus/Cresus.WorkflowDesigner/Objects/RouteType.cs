@@ -54,12 +54,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		// Les cas A et B ont un routage automatique ou personnalisé.
 		// 'x' = poignée pour personnaliser le routage.
 
-		Close,		// connection fermée
-		Himself,	// connection sur soi-même
-		A,			// connection de type A
-		Bt,			// connection de type B vers le haut
-		Bb,			// connection de type B vers le bas
-		C,			// connection de type C
-		D,			// connection de type D
+		Close,		// connexion fermée
+		Himself,	// connexion sur soi-même
+		A,			// connexion de type A
+		Bt,			// connexion de type B vers le haut
+		Bb,			// connexion de type B vers le bas
+		C,			// connexion de type C
+		D,			// connexion de type D
 	}
 }

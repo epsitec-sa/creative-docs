@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public ObjectNode SrcNode
 		{
-			//	Objet source de la connection
+			//	Objet source de la connexion
 			get
 			{
 				return this.srcNode;
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public ObjectNode DstNode
 		{
-			//	Objet destination de la connection (si la connection débouche sur un noeud).
+			//	Objet destination de la connexion (si la connexion débouche sur un noeud).
 			get
 			{
 				return this.dstNode;
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public ObjectEdge ObjectEdge
 		{
-			//	Objet connection.
+			//	Objet connexion.
 			get
 			{
 				return this.objectEdge;
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsExplored
 		{
-			//	Indique si une connection est explorée, c'est-à-dire si le noeud destination est visible.
+			//	Indique si une connexion est explorée, c'est-à-dire si le noeud destination est visible.
 			get
 			{
 				return this.isExplored;
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool IsSourceExpanded
 		{
-			//	Indique si la boîte source d'une connection est étendue.
+			//	Indique si la boîte source d'une connexion est étendue.
 			get
 			{
 				return this.isSourceExpanded;
@@ -167,10 +167,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public bool IsAttachToRight
 		{
 			//	Indique si la boîte source est attachée à droite ou à gauche.
-			//	Direction dans laquelle part la connection.
-			//	En fait, il s'agit du bouton ConnectionOpenLeft/Right utilisé pour ouvrir
-			//	la connection, et non de la direction effective dans laquelle part la
-			//	connection !
+			//	Direction dans laquelle part la connexion.
+			//	En fait, il s'agit du bouton ConnexionOpenLeft/Right utilisé pour ouvrir
+			//	la connexion, et non de la direction effective dans laquelle part la
+			//	connexion !
 			get
 			{
 				return this.isAttachToRight;
@@ -237,8 +237,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public double CommentAttach
 		{
 			//	Distance d'attache du commentaire.
-			//	Une distance positive commence depuis le début de la connection.
-			//	Une distance négative commence depuis la fin de la connection.
+			//	Une distance positive commence depuis le début de la connexion.
+			//	Une distance négative commence depuis la fin de la connexion.
 			get
 			{
 				return this.commentAttach;
@@ -265,13 +265,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void RouteClear()
 		{
-			//	Force un routage standard pour la connection.
+			//	Force un routage standard pour la connexion.
 			this.Route = RouteType.Close;
 		}
 
 		public RouteType Route
 		{
-			//	Type de routage de la connection.
+			//	Type de routage de la connexion.
 			get
 			{
 				return this.routeType;
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteRelativeAX1
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermédiaire de la connexion (cas A).
 			get
 			{
 				return this.routeRelativeAX1;
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteRelativeAX2
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermédiaire de la connexion (cas A).
 			get
 			{
 				return this.routeRelativeAX2;
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteAbsoluteAY
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermédiaire de la connexion (cas A).
 			get
 			{
 				return this.routeAbsoluteAY;
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteRelativeBX
 		{
-			//	Position intermédiaire de la connection (cas B).
+			//	Position intermédiaire de la connexion (cas B).
 			get
 			{
 				return this.routeRelativeBX;
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteRelativeBY
 		{
-			//	Position intermédiaire de la connection (cas B).
+			//	Position intermédiaire de la connexion (cas B).
 			get
 			{
 				return this.routeRelativeBY;
@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteRelativeCX
 		{
-			//	Position intermédiaire de la connection (cas C).
+			//	Position intermédiaire de la connexion (cas C).
 			//	0.5 correspond au milieu (valeur par défaut).
 			get
 			{
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double RouteAbsoluteDX
 		{
-			//	Position intermédiaire de la connection (cas D).
+			//	Position intermédiaire de la connexion (cas D).
 			//	0.0 correspond à la boucle la plus serrée (valeur par défaut).
 			get
 			{

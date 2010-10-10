@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Réparti astucieusement le point d'arrivé en haut ou en bas d'une boîte de toutes les
-			//	connections de type Bt ou Bb, pour éviter que deux connections n'arrivent sur le même point.
+			//	connexions de type Bt ou Bb, pour éviter que deux connexions n'arrivent sur le même point.
 			//	Les croisements sont minimisés.
 			foreach (ObjectNode node in this.nodes)
 			{
@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			edge.Edge.RouteClear();
 
 			double v = src.GetEdgeSrcVerticalPosition(srcRank);
-			if (src == dst)  // connection à soi-même ?
+			if (src == dst)  // connexion à soi-même ?
 			{
 				Point p = new Point(srcBounds.Right-1, v);
 				edge.Points.Add(p);
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void ShiftEdgesB(ObjectNode node, List<ObjectEdge> edges)
 		{
-			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
+			//	Met à jour une liste de connexions de type Bt ou Bb, afin qu'aucune connexion
 			//	n'arrive au même endroit.
 			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
@@ -654,7 +654,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void ShiftEdgesC(ObjectNode node, List<ObjectEdge> edges)
 		{
-			//	Met à jour une liste de connections de type C, afin qu'aucune connection
+			//	Met à jour une liste de connexions de type C, afin qu'aucune connexion
 			//	n'arrive au même endroit.
 			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
@@ -678,7 +678,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void ShiftEdgesD(ObjectNode node, List<ObjectEdge> edges)
 		{
-			//	Met à jour une liste de connections de type D, afin qu'aucune connection
+			//	Met à jour une liste de connexions de type D, afin qu'aucune connexion
 			//	n'arrive au même endroit.
 			edges.Sort(new Comparers.EdgeComparer());  // tri pour minimiser les croisements
 
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
 			this.CommentsMemorize();
 
-			//	Supprime tous les commentaires liés aux connections.
+			//	Supprime tous les commentaires liés aux connexions.
 			int j = 0;
 			while (j < this.comments.Count)
 			{
@@ -721,7 +721,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 			
-			this.edges.Clear();  // supprime toutes les connections existantes
+			this.edges.Clear();  // supprime toutes les connexions existantes
 
 			foreach (ObjectNode node in this.nodes)
 			{
@@ -747,7 +747,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			//	Recrée tous les commentaires liés aux connections.
+			//	Recrée tous les commentaires liés aux connexions.
 			foreach (ObjectEdge objectEdge in this.edges)
 			{
 				if (objectEdge.Edge.HasComment && objectEdge.Edge.IsExplored)
@@ -767,7 +767,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void CommentsMemorize()
 		{
-			//	Mémorise l'état de tous les commentaires liés à des connections.
+			//	Mémorise l'état de tous les commentaires liés à des connexions.
 			foreach (ObjectEdge objectEdge in this.edges)
 			{
 				objectEdge.Edge.HasComment = false;
@@ -799,7 +799,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void UpdateDimmed()
 		{
-			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
+			//	Met en estompé toutes les connexions qui partent ou qui arrivent sur une entité estompée.
 			foreach (ObjectEdge objectEdge in this.edges)
 			{
 				objectEdge.IsDimmed = false;
@@ -821,10 +821,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				else
 				{
 #if false
-					Module dstModule = this.module.DesignerApplication.SearchModule(connection.Field.Destination);
+					Module dstModule = this.module.DesignerApplication.SearchModule(connexion.Field.Destination);
 					Module currentModule = this.module.DesignerApplication.CurrentModule;
 
-					connection.IsDimmed = (dstModule != currentModule);
+					connexion.IsDimmed = (dstModule != currentModule);
 #endif
 				}
 
@@ -851,7 +851,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public bool IsEmptyArea(Rectangle area)
 		{
-			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connections).
+			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connexions).
 			foreach (ObjectNode node in this.nodes)
 			{
 				if (node.Bounds.IntersectsWith(area))
@@ -881,7 +881,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			if (node != null)
 			{
 				this.CloseOneNode(node);  // supprime la boîte demandée
-				this.CloseEdges(node);  // supprime ses connections
+				this.CloseEdges(node);  // supprime ses connexions
 				dirty = true;
 			}
 
@@ -943,7 +943,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					else  // boîte isolée ?
 					{
 						this.CloseOneNode(node);  // supprime la boîte isolée
-						this.CloseEdges(node);  // supprime ses connections
+						this.CloseEdges(node);  // supprime ses connexions
 						removed = true;
 						dirty = true;
 					}
@@ -1008,8 +1008,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void CloseEdges(ObjectNode removedNode)
 		{
-			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
-			//	les connections sur la boîte supprimée.
+			//	Parcourt toutes les connexions de toutes les boîtes, pour fermer toutes
+			//	les connexions sur la boîte supprimée.
 			foreach (ObjectNode node in this.nodes)
 			{
 				foreach (Edge edge in node.Edges)
@@ -1841,7 +1841,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.CloseBox(null);  // voir ObjectBox.AdjustAfterRead, commentaire (*)
-			this.UpdateAfterAddOrRemoveConnection(null);
+			this.UpdateAfterAddOrRemoveConnexion(null);
 			this.UpdateAfterOpenOrCloseBox();
 #endif
 		}
