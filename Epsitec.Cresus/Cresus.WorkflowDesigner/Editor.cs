@@ -225,6 +225,28 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public bool IsEditing
+		{
+			get
+			{
+				return this.editingObject != null;
+			}
+		}
+
+		public AbstractObject EditingObject
+		{
+			get
+			{
+				return this.editingObject;
+			}
+			set
+			{
+				this.editingObject = value;
+				this.OnEditingStateChanged ();
+			}
+		}
+
+
 		public bool Grid
 		{
 			get
@@ -1209,6 +1231,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				case MessageType.KeyUp:
 					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
 					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
+					if (this.IsEditing)  // édition en cours ?
+					{
+						if (message.KeyCode == KeyCode.Return)
+						{
+							this.editingObject.AcceptEdition ();
+							message.Consumer = this;
+						}
+						if (message.KeyCode == KeyCode.Escape)
+						{
+							this.editingObject.CancelEdition ();
+							message.Consumer = this;
+						}
+					}
 					break;
 
 				case MessageType.MouseMove:
@@ -1265,7 +1300,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return pos;
 		}
 
-		private Point ConvEditorToWidget(Point pos)
+		public Point ConvEditorToWidget(Point pos)
 		{
 			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
 			pos.Y = this.areaSize.Height-pos.Y;
@@ -1280,6 +1315,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
+			if (this.IsEditing)  // édition en cours ?
+			{
+				this.ChangeMouseCursor (MouseCursorType.Arrow);
+				return;
+			}
+
 			if (message.MessageType == MessageType.MouseMove &&
 				Message.CurrentState.Buttons == MouseButtons.None)
 			{
@@ -1455,7 +1496,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				AbstractObject obj = this.DetectObject(pos);
+				if (this.IsEditing)  // édition en cours ?
+				{
+					this.editingObject.AcceptEdition ();
+					this.editingObject = null;
+
+					this.Invalidate ();
+				}
+
+				AbstractObject obj = this.DetectObject (pos);
 				if (obj != null)
 				{
 					obj.MouseDown(message, pos);
@@ -1995,6 +2044,28 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				this.RemoveUserEventHandler("ZoomChanged", value);
 			}
 		}
+
+		protected virtual void OnEditingStateChanged()
+		{
+			//	Génère un événement pour dire que l'état d'édition a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditingStateChanged");
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event Epsitec.Common.Support.EventHandler EditingStateChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("EditingStateChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("EditingStateChanged", value);
+			}
+		}
 		#endregion
 
 
@@ -2033,5 +2104,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private bool							grid;
 		private double							gridStep;
 		private double							gridSubdiv;
+		private AbstractObject					editingObject;
 	}
 }

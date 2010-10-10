@@ -52,7 +52,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.parents = new List<ObjectNode>();
 
 			this.UpdateTitle ();
-
 			this.UpdateEdges ();
 		}
 
@@ -569,6 +568,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			this.initialPos = pos;
+
 			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1 && !this.editor.IsLocateActionHeader(message))
 			{
 				this.isDragging = true;
@@ -608,8 +609,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.isDragging = false;
 				this.editor.LockObject(null);
 				this.editor.SetLocalDirty ();
+
+				if (pos == this.initialPos)
+				{
+					if (this.hilitedElement == ActiveElement.NodeHeader)
+					{
+						Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
+						rect.Deflate (8, 2);
+
+						Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
+						Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
+						double width  = System.Math.Max (p2.X-p1.X, 100);
+						double height = System.Math.Max (p1.Y-p2.Y, 20);
+
+						rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
+
+						var textField = new TextField ();
+						textField.Parent = this.editor;
+						textField.SetManualBounds (rect);
+						textField.Text = this.titleString;
+						textField.ContentAlignment = ContentAlignment.MiddleLeft;
+						textField.SelectAll ();
+						textField.Focus ();
+
+						this.editingWidget = textField;
+						this.editor.EditingObject = this;
+						this.hilitedElement = ActiveElement.None;
+						return;
+					}
+				}
+
+				return;
 			}
-			else if (this.isEdgeMoving)
+			
+			if (this.isEdgeMoving)
 			{
 				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
 				{
@@ -617,141 +650,143 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				this.isEdgeMoving = false;
 				this.editor.LockObject(null);
+				return;
 			}
-			else if (this.isChangeWidth)
+			
+			if (this.isChangeWidth)
 			{
 				this.editor.UpdateAfterMoving(this);
 				this.isChangeWidth = false;
 				this.editor.LockObject(null);
 				this.editor.SetLocalDirty ();
+				return;
 			}
-			else if (this.isMoveColumnsSeparator1)
+			
+			if (this.isMoveColumnsSeparator1)
 			{
 				this.isMoveColumnsSeparator1 = false;
 				this.editor.LockObject(null);
 				this.editor.SetLocalDirty ();
+				return;
 			}
-			else
+			
+			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.IsLocateActionHeader(message) && !this.isRoot)
 			{
-				if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.IsLocateActionHeader(message) && !this.isRoot)
-				{
-					this.LocateEntity();
-				}
+				this.LocateEntity();
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeExtend)
-				{
-					this.IsExtended = !this.IsExtended;
-					this.editor.UpdateAfterGeometryChanged(this);
-					this.editor.SetLocalDirty ();
-				}
+			if (this.hilitedElement == ActiveElement.NodeExtend)
+			{
+				this.IsExtended = !this.IsExtended;
+				this.editor.UpdateAfterGeometryChanged(this);
+				this.editor.SetLocalDirty ();
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeClose)
+			if (this.hilitedElement == ActiveElement.NodeClose)
+			{
+				if (!this.isRoot)
 				{
-					if (!this.isRoot)
+					this.editor.CloseNode(this);
+					this.editor.UpdateAfterAddOrRemoveEdge(null);
+				}
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
+			{
+				this.RemoveEdge(this.hilitedEdgeRank);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
+			{
+				this.AddEdge(this.hilitedEdgeRank);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeEdgeName)
+			{
+				if (this.editor.IsLocateAction(message))
+				{
+					this.LocateEdge(this.hilitedEdgeRank);
+				}
+				else
+				{
+					if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
 					{
-						this.editor.CloseNode(this);
-						this.editor.UpdateAfterAddOrRemoveEdge(null);
+						this.ChangeEdgeType(this.hilitedEdgeRank);
 					}
 				}
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
+			if (this.hilitedElement == ActiveElement.NodeEdgeType)
+			{
+				if (this.editor.IsLocateAction(message))
 				{
-					this.RemoveEdge(this.hilitedEdgeRank);
+					this.LocateType(this.hilitedEdgeRank);
 				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
+				else
 				{
-					this.AddEdge(this.hilitedEdgeRank);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeName)
-				{
-					if (this.editor.IsLocateAction(message))
+					if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
 					{
-						this.LocateEdge(this.hilitedEdgeRank);
-					}
-					else
-					{
-						if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
-						{
-							this.ChangeEdgeType(this.hilitedEdgeRank);
-						}
+						this.ChangeEdgeType(this.hilitedEdgeRank);
 					}
 				}
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeEdgeType)
+			if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
+			{
+				if (this.editor.IsLocateAction(message))
 				{
-					if (this.editor.IsLocateAction(message))
-					{
-						this.LocateType(this.hilitedEdgeRank);
-					}
-					else
-					{
-						if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
-						{
-							this.ChangeEdgeType(this.hilitedEdgeRank);
-						}
-					}
+					this.LocateTitle(this.hilitedEdgeRank);
 				}
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
-				{
-					if (this.editor.IsLocateAction(message))
-					{
-						this.LocateTitle(this.hilitedEdgeRank);
-					}
-				}
+			if (this.hilitedElement == ActiveElement.NodeComment)
+			{
+				this.AddComment();
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeComment)
-				{
-					this.AddComment();
-				}
+			if (this.hilitedElement == ActiveElement.NodeInfo)
+			{
+				this.AddInfo();
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeInfo)
-				{
-					this.AddInfo();
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor5)
+			{
+				this.BackgroundMainColor = MainColor.Yellow;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor5)
-				{
-					this.BackgroundMainColor = MainColor.Yellow;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor6)
+			{
+				this.BackgroundMainColor = MainColor.Orange;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor6)
-				{
-					this.BackgroundMainColor = MainColor.Orange;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor3)
+			{
+				this.BackgroundMainColor = MainColor.Red;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor3)
-				{
-					this.BackgroundMainColor = MainColor.Red;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor7)
+			{
+				this.BackgroundMainColor = MainColor.Lilac;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor7)
-				{
-					this.BackgroundMainColor = MainColor.Lilac;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor8)
+			{
+				this.BackgroundMainColor = MainColor.Purple;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor8)
-				{
-					this.BackgroundMainColor = MainColor.Purple;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor1)
+			{
+				this.BackgroundMainColor = MainColor.Blue;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor1)
-				{
-					this.BackgroundMainColor = MainColor.Blue;
-				}
+			if (this.hilitedElement == ActiveElement.NodeColor2)
+			{
+				this.BackgroundMainColor = MainColor.Green;
+			}
 
-				if (this.hilitedElement == ActiveElement.NodeColor2)
-				{
-					this.BackgroundMainColor = MainColor.Green;
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeColor4)
-				{
-					this.BackgroundMainColor = MainColor.Grey;
-				}
-
+			if (this.hilitedElement == ActiveElement.NodeColor4)
+			{
+				this.BackgroundMainColor = MainColor.Grey;
 			}
 		}
 
@@ -1005,6 +1040,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Indique si l'opération est possible.
 			return true;
 		}
+
+
+		public override void AcceptEdition()
+		{
+			this.Entity.Name = this.editingWidget.Text;
+			this.UpdateTitle ();
+
+			this.StopEdition ();
+		}
+
+		public override void CancelEdition()
+		{
+			this.StopEdition ();
+		}
+
+		private void StopEdition()
+		{
+			this.editor.Children.Remove (this.editingWidget);
+			this.editingWidget = null;
+
+			this.editor.EditingObject = null;
+		}
+
 
 		protected void SetEdgesHilited(bool isHilited)
 		{
@@ -2030,6 +2088,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private List<ObjectEdge>				edgeListC;
 		private List<ObjectEdge>				edgeListD;
 		private List<ObjectNode>				parents;
+
+		private Point							initialPos;
 
 		private bool							isDragging;
 		private Point							draggingOffset;
