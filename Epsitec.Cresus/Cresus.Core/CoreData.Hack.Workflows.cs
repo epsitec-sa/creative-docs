@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core
 
 			def.EnableCondition = "MasterEntity=[L0AB2]";
 			def.Name = FormattedText.FromSimpleText ("Commande client");
-			def.Description = FormattedText.FromSimpleText ("Workflow pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
+			def.Description = FormattedText.FromSimpleText ("Diagramme pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
 			def.Edges.Add (edgeAB);
 			def.Edges.Add (edgeAC);
 
@@ -65,13 +65,15 @@ namespace Epsitec.Cresus.Core
 			edgeAC.NextNode = nodeC;
 
 			edgeCA.Name = FormattedText.FromSimpleText ("Editer la variante");
-			edgeCA.Description = FormattedText.FromSimpleText ("...");
+			edgeCA.Description = FormattedText.FromSimpleText ("Editer la variante de l'offre existante");
 			edgeCA.TransitionAction = "...";
 			edgeCA.NextNode = nodeA;
 
 			nodeB.Name = "Offre envoyée";
+			nodeB.Description = FormattedText.FromSimpleText ("L'offre a été envoyé au client");
 
 			nodeC.Name = "Variante de l'offre";
+			nodeC.Description = FormattedText.FromSimpleText ("On a créé une variante de l'offre existante");
 			nodeC.Edges.Add (edgeCA);
 
 			yield return def;
