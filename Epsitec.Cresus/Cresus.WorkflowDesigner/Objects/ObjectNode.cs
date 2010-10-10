@@ -1011,13 +1011,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (this.editingElement == ActiveElement.NodeHeader)
 			{
-				this.Entity.Name = this.editingWidget.Text;
+				this.Entity.Name        = this.editingTextFieldName.Text;
+				this.Entity.Description = this.editingTextFieldDescription.Text;
+
 				this.UpdateTitle ();
 			}
 
 			if (this.editingElement == ActiveElement.NodeEdgeName)
 			{
-				this.Entity.Edges[this.editingRank].Name = this.editingWidget.Text;
+				this.Entity.Edges[this.editingRank].Name        = this.editingTextFieldName.Text;
+				this.Entity.Edges[this.editingRank].Description = this.editingTextFieldDescription.Text;
+
 				this.edges[this.editingRank].UpdateTextField ();
 			}
 
@@ -1033,13 +1037,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			Rectangle rect = Rectangle.Empty;
 			string text = null;
+			string description = null;
 
 			if (element == ActiveElement.NodeHeader)
 			{
 				rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 				rect.Deflate (12, 6);
 
-				text = this.titleString;
+				text        = this.Entity.Name.ToString ();
+				description = this.Entity.Description.ToString ();
 			}
 
 			if (element == ActiveElement.NodeEdgeName && rank >= 0 && rank < this.Entity.Edges.Count)
@@ -1047,7 +1053,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect = this.GetEdgeNameBounds (rank);
 				rect.Offset (-4, 0);
 
-				text = this.Entity.Edges[rank].Name.ToString ();
+				text        = this.Entity.Edges[rank].Name.ToString ();
+				description = this.Entity.Edges[rank].Description.ToString ();
 			}
 
 			if (rect.IsEmpty)
@@ -1060,28 +1067,53 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
 			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
-			double width  = System.Math.Max (p2.X-p1.X, 100);
+			double width  = System.Math.Max (p2.X-p1.X, 175);
 			double height = System.Math.Max (p1.Y-p2.Y, 20);
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
-			var textField = new TextField ();
-			textField.Parent = this.editor;
-			textField.SetManualBounds (rect);
-			textField.Text = text;
-			textField.ContentAlignment = ContentAlignment.MiddleLeft;
-			textField.SelectAll ();
-			textField.Focus ();
+			double thickness = 2;
+			Rectangle frameRect = rect;
+			frameRect.Inflate (thickness);
 
-			this.editingWidget = textField;
+			double descriptionHeight = 10+14*5;  // hauteur pour 5 lignes
+			Rectangle descriptionRect = new Rectangle (rect.Left, rect.Bottom-descriptionHeight-thickness+1, rect.Width, descriptionHeight);
+
+			this.editingTextFieldDescription = new TextFieldMulti ();
+			this.editingTextFieldDescription.Parent = this.editor;
+			this.editingTextFieldDescription.SetManualBounds (descriptionRect);
+			this.editingTextFieldDescription.ScrollerVisibility = false;
+			this.editingTextFieldDescription.Text = description;
+			this.editingTextFieldDescription.TabIndex = 2;
+
+			this.editingFrame = new Separator ();
+			this.editingFrame.Parent = this.editor;
+			this.editingFrame.Color = this.GetColorMain ();
+			this.editingFrame.IsHorizontalLine = false;
+			this.editingFrame.IsVerticalLine = false;
+			this.editingFrame.SetManualBounds (frameRect);
+
+			this.editingTextFieldName = new TextField ();
+			this.editingTextFieldName.Parent = this.editor;
+			this.editingTextFieldName.SetManualBounds (rect);
+			this.editingTextFieldName.Text = text;
+			this.editingTextFieldName.TabIndex = 1;
+			this.editingTextFieldName.SelectAll ();
+			this.editingTextFieldName.Focus ();
+
 			this.editor.EditingObject = this;
 			this.hilitedElement = ActiveElement.None;
 		}
 
 		private void StopEdition()
 		{
-			this.editor.Children.Remove (this.editingWidget);
-			this.editingWidget = null;
+			this.editor.Children.Remove (this.editingFrame);
+			this.editor.Children.Remove (this.editingTextFieldName);
+			this.editor.Children.Remove (this.editingTextFieldDescription);
+
+			this.editingFrame = null;
+			this.editingTextFieldName = null;
+			this.editingTextFieldDescription = null;
 
 			this.editor.EditingObject = null;
 		}
@@ -2108,5 +2140,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private ActiveElement					editingElement;
 		private int								editingRank;
+		private Separator						editingFrame;
+		private TextField						editingTextFieldName;
+		private TextFieldMulti					editingTextFieldDescription;
 	}
 }

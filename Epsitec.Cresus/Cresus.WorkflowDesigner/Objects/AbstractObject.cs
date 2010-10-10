@@ -928,7 +928,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected MainColor						boxColor;
 		protected bool							isDimmed;
 		protected int							hilitedEdgeRank;
-
-		protected Widget						editingWidget;
 	}
 }
