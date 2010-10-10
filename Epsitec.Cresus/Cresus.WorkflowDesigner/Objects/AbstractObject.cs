@@ -368,6 +368,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public virtual void AcceptEdition()
+		{
+		}
+
+		public virtual void CancelEdition()
+		{
+		}
+
+
 		protected bool DetectSquareButton(Point center, Point pos)
 		{
 			//	Détecte si la souris est dans un bouton carré.
@@ -919,5 +928,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected MainColor						boxColor;
 		protected bool							isDimmed;
 		protected int							hilitedEdgeRank;
+
+		protected Widget						editingWidget;
 	}
 }
