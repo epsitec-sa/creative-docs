@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.commentMainColor = MainColor.Yellow;
 			this.commentText = this.workflowEdgeEntity.Description.ToString ();
 
-			this.textLayoutField.Text = this.workflowEdgeEntity.Name.ToString ();
-			//?this.textLayoutType.Text = this.edgeEntity.Description.ToString ();
+			this.UpdateTextField ();
+			this.UpdateTextType ();
 		}
 
 
@@ -87,6 +87,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				return this.textLayoutType;
 			}
+		}
+
+		public void UpdateTextField()
+		{
+			this.textLayoutField.Text = this.workflowEdgeEntity.Name.ToString ();
+		}
+
+		public void UpdateTextType()
+		{
+			//?this.textLayoutType.Text = this.edgeEntity.Description.ToString ();
 		}
 
 		public int Index

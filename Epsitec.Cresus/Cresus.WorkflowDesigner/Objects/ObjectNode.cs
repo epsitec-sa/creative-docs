@@ -605,7 +605,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			if (pos == this.initialPos)
 			{
-				if (this.hilitedElement == ActiveElement.NodeHeader)
+				if (this.hilitedElement == ActiveElement.NodeHeader ||
+					this.hilitedElement == ActiveElement.NodeEdgeName)
 				{
 					if (this.isDragging)
 					{
@@ -615,11 +616,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.editor.SetLocalDirty ();
 					}
 
-					this.StartEdition ();
+					this.StartEdition (this.hilitedElement, this.hilitedEdgeRank);
 					return;
 				}
 			}
-			
+
+			if (this.isDragging)
+			{
+				this.editor.UpdateAfterMoving (this);
+				this.isDragging = false;
+				this.editor.LockObject (null);
+				this.editor.SetLocalDirty ();
+				return;
+			}
+
 			if (this.isEdgeMoving)
 			{
 				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
@@ -999,8 +1009,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void AcceptEdition()
 		{
-			this.Entity.Name = this.editingWidget.Text;
-			this.UpdateTitle ();
+			if (this.editingElement == ActiveElement.NodeHeader)
+			{
+				this.Entity.Name = this.editingWidget.Text;
+				this.UpdateTitle ();
+			}
+
+			if (this.editingElement == ActiveElement.NodeEdgeName)
+			{
+				this.Entity.Edges[this.editingRank].Name = this.editingWidget.Text;
+				this.edges[this.editingRank].UpdateTextField ();
+			}
 
 			this.StopEdition ();
 		}
@@ -1010,10 +1029,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.StopEdition ();
 		}
 
-		private void StartEdition()
+		private void StartEdition(ActiveElement element, int rank)
 		{
-			Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-			rect.Deflate (12, 6);
+			Rectangle rect = Rectangle.Empty;
+			string text = null;
+
+			if (element == ActiveElement.NodeHeader)
+			{
+				rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
+				rect.Deflate (12, 6);
+
+				text = this.titleString;
+			}
+
+			if (element == ActiveElement.NodeEdgeName && rank >= 0 && rank < this.Entity.Edges.Count)
+			{
+				rect = this.GetEdgeNameBounds (rank);
+				rect.Offset (-4, 0);
+
+				text = this.Entity.Edges[rank].Name.ToString ();
+			}
+
+			if (rect.IsEmpty)
+			{
+				return;
+			}
+
+			this.editingElement = element;
+			this.editingRank = rank;
 
 			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
 			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
@@ -1025,7 +1068,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var textField = new TextField ();
 			textField.Parent = this.editor;
 			textField.SetManualBounds (rect);
-			textField.Text = this.titleString;
+			textField.Text = text;
 			textField.ContentAlignment = ContentAlignment.MiddleLeft;
 			textField.SelectAll ();
 			textField.Focus ();
@@ -2062,5 +2105,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private bool							isMoveColumnsSeparator1;
 		private bool							isHilitedForEdgeChanging;
+
+		private ActiveElement					editingElement;
+		private int								editingRank;
 	}
 }
