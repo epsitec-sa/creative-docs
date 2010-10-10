@@ -38,11 +38,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.subtitle = new TextLayout();
-			this.subtitle.DefaultFontSize = 9;
-			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
-			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
 			this.edges = new List<Edge>();
 
 			this.columnsSeparatorRelative1 = 0.5;
@@ -57,7 +52,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.parents = new List<ObjectNode>();
 
 			this.UpdateTitle ();
-			this.UpdateSubtitle ();
 
 			this.UpdateEdges ();
 		}
@@ -77,31 +71,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.titleString = value;
 
 					this.title.Text = Misc.Bold(this.titleString);
-				}
-			}
-		}
-
-		protected string Subtitle
-		{
-			//	Sous-titre au sommet de la boîte, juste sous le titre (description du noeud).
-			get
-			{
-				return this.subtitleString;
-			}
-			set
-			{
-				if (this.subtitleString != value)
-				{
-					this.subtitleString = value;
-
-					if (string.IsNullOrEmpty(this.subtitleString))
-					{
-						this.subtitle.Text = null;
-					}
-					else
-					{
-						this.subtitle.Text = Misc.Italic(this.subtitleString);
-					}
 				}
 			}
 		}
@@ -1414,25 +1383,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.GetColor(1) : this.GetColor(0);
 
-			if (string.IsNullOrEmpty(this.subtitleString))
-			{
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-				rect.Deflate(8, 2);
-				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-			}
-			else
-			{
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
-				rect.Deflate(8, 0);
-				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-				
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
-				rect.Deflate(8, 0);
-				this.subtitle.LayoutSize = rect.Size;
-				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-			}
+			rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
+			rect.Deflate(8, 2);
+			this.title.LayoutSize = rect.Size;
+			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 
 			//	Dessine les noms des champs.
 			if (this.isExtended)
@@ -1913,12 +1867,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.Title = this.Entity.Name.ToString ();
 		}
 
-		private void UpdateSubtitle()
-		{
-			//	Met à jour le sous-titre du noeud.
-			this.Subtitle = this.Entity.Description.ToString ();
-		}
-
 
 		public WorkflowNodeEntity Entity
 		{
@@ -2075,9 +2023,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool							isExtended;
 		private bool							isConnectedToRoot;
 		private string							titleString;
-		private string							subtitleString;
 		private TextLayout						title;
-		private TextLayout						subtitle;
 		private List<Edge>						edges;
 		private List<ObjectEdge>				edgeListBt;
 		private List<ObjectEdge>				edgeListBb;
