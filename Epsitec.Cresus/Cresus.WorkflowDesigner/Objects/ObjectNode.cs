@@ -603,43 +603,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.isDragging)
+			if (pos == this.initialPos)
 			{
-				this.editor.UpdateAfterMoving(this);
-				this.isDragging = false;
-				this.editor.LockObject(null);
-				this.editor.SetLocalDirty ();
-
-				if (pos == this.initialPos)
+				if (this.hilitedElement == ActiveElement.NodeHeader)
 				{
-					if (this.hilitedElement == ActiveElement.NodeHeader)
+					if (this.isDragging)
 					{
-						Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-						rect.Deflate (8, 2);
-
-						Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
-						Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
-						double width  = System.Math.Max (p2.X-p1.X, 100);
-						double height = System.Math.Max (p1.Y-p2.Y, 20);
-
-						rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
-
-						var textField = new TextField ();
-						textField.Parent = this.editor;
-						textField.SetManualBounds (rect);
-						textField.Text = this.titleString;
-						textField.ContentAlignment = ContentAlignment.MiddleLeft;
-						textField.SelectAll ();
-						textField.Focus ();
-
-						this.editingWidget = textField;
-						this.editor.EditingObject = this;
-						this.hilitedElement = ActiveElement.None;
-						return;
+						this.editor.UpdateAfterMoving (this);
+						this.isDragging = false;
+						this.editor.LockObject (null);
+						this.editor.SetLocalDirty ();
 					}
-				}
 
-				return;
+					this.StartEdition ();
+					return;
+				}
 			}
 			
 			if (this.isEdgeMoving)
@@ -1030,6 +1008,31 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void CancelEdition()
 		{
 			this.StopEdition ();
+		}
+
+		private void StartEdition()
+		{
+			Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
+			rect.Deflate (12, 6);
+
+			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
+			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
+			double width  = System.Math.Max (p2.X-p1.X, 100);
+			double height = System.Math.Max (p1.Y-p2.Y, 20);
+
+			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
+
+			var textField = new TextField ();
+			textField.Parent = this.editor;
+			textField.SetManualBounds (rect);
+			textField.Text = this.titleString;
+			textField.ContentAlignment = ContentAlignment.MiddleLeft;
+			textField.SelectAll ();
+			textField.Focus ();
+
+			this.editingWidget = textField;
+			this.editor.EditingObject = this;
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		private void StopEdition()
