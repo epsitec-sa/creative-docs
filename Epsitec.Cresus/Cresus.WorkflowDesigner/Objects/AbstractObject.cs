@@ -558,6 +558,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected void DrawNode2Shadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
+		{
+			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
+			alpha /= smooth;
+
+			for (int i=0; i<smooth; i++)
+			{
+				Path path = this.PathNode2Rectangle (rect);
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0, 0, 0));
+
+				rect.Deflate (1);
+			}
+		}
+
 		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
@@ -794,6 +809,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;
+		}
+
+		protected Path PathNode2Rectangle(Rectangle rect)
+		{
+			var path = new Path ();
+
+			path.AppendCircle (rect.Center, rect.Width/2, rect.Height/2);
+
+			return path;
 		}
 
 		protected Path PathNodeRectangle(Rectangle rect, double radius)

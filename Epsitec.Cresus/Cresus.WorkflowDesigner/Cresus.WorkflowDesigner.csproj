@@ -53,13 +53,18 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Comparers\EdgeComparer.cs" />
+    <Compile Include="Comparers\LinkComparer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="MainController.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
+    <Compile Include="Objects\LinkableObject.cs" />
+    <Compile Include="Objects\ObjectEdge2.cs" />
+    <Compile Include="Objects\Link.cs" />
+    <Compile Include="Objects\ObjectLink.cs" />
+    <Compile Include="Objects\ObjectNode2.cs" />
     <Compile Include="Objects\Edge.cs" />
     <Compile Include="Objects\MainColor.cs" />
     <Compile Include="Objects\ObjectNode.cs" />

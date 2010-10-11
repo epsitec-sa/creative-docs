@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
 				this.SetBounds(bounds);
-				this.editor.UpdateEdges();
+				this.editor.UpdateLinks();
 				return true;
 			}
 			else if (this.isEdgeMoving)
@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle bounds = this.Bounds;
 				bounds.Width = this.editor.GridAlign(System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
 				this.SetBounds(bounds);
-				this.editor.UpdateEdges();
+				this.editor.UpdateLinks();
 				return true;
 			}
 			else if (this.isMoveColumnsSeparator1)

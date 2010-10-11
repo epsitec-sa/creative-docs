@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		NodeComment,
 		NodeInfo,
 		NodeExtend,
+		NodeOpenLeft,
+		NodeOpenRight,
 		NodeClose,
 		NodeHeader,
 		NodeEdgeName,
