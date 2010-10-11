@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 		}
 
-		protected virtual bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
+		public virtual bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;

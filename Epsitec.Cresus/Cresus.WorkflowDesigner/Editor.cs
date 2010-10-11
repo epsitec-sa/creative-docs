@@ -1957,7 +1957,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.Invalidate ();
 				}
 
-				AbstractObject obj = this.DetectObject (pos);
+				AbstractObject obj = this.GetObjectForAction ();
 				if (obj != null)
 				{
 					obj.MouseDown(message, pos);
@@ -1974,7 +1974,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				AbstractObject obj = this.DetectObject(pos);
+				AbstractObject obj = this.GetObjectForAction ();
 				if (obj != null)
 				{
 					obj.MouseUp(message, pos);
@@ -2061,9 +2061,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.lockObject = obj;
 		}
 
-		private AbstractObject DetectObject(Point pos)
+		private AbstractObject GetObjectForAction()
 		{
-			//	Détecte l'objet visé par la souris.
 			//	L'objet à l'avant-plan a la priorité.
 			for (int i=this.comments.Count-1; i>=0; i--)
 			{
@@ -2082,6 +2081,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				if (info.IsReadyForAction)
 				{
 					return info;
+				}
+			}
+
+			foreach (var obj in this.LinkableObjects)
+			{
+				foreach (var link in obj.Links)
+				{
+					if (link.ObjectLink != null && link.ObjectLink.IsReadyForAction)
+					{
+						return obj;
+					}
 				}
 			}
 

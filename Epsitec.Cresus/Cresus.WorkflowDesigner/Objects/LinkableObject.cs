@@ -91,12 +91,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public virtual double GetLinkSrcVerticalPosition(int index)
 		{
-			return this.Bounds.Center.Y;  // TODO: ...
+			//	Retourne la position verticale pour un trait de liaison.
+			return this.Bounds.Center.Y;
 		}
 
 		public virtual Point GetLinkDstPosition(double posy, ObjectNode.EdgeAnchor anchor)
 		{
-			return this.Bounds.Center;  // TODO: ...
+			//	Retourne la position où accrocher la destination.
+			return this.Bounds.Center;
 		}
 
 
@@ -126,6 +128,72 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.editor.SetLocalDirty ();
 				}
 			}
+		}
+
+
+		public override bool MouseMove(Message message, Point pos)
+		{
+			foreach (Link link in this.links)
+			{
+				if (link.ObjectLink != null)
+				{
+					if (link.ObjectLink.MouseMove (message, pos))
+					{
+						return true;
+					}
+				}
+			}
+
+			return base.MouseMove (message, pos);
+		}
+
+		public override void MouseDown(Message message, Point pos)
+		{
+			base.MouseDown (message, pos);
+
+			foreach (Link link in this.links)
+			{
+				if (link.ObjectLink != null)
+				{
+					link.ObjectLink.MouseDown (message, pos);
+				}
+			}
+		}
+
+		public override void MouseUp(Message message, Point pos)
+		{
+			base.MouseUp (message, pos);
+
+			foreach (Link link in this.links)
+			{
+				if (link.ObjectLink != null)
+				{
+					link.ObjectLink.MouseUp (message, pos);
+				}
+			}
+		}
+
+		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
+		{
+			foreach (Link link in this.links)
+			{
+				if (link.ObjectLink != null)
+				{
+					ActiveElement e;
+					int r;
+
+					if (link.ObjectLink.MouseDetect (pos, out e, out r))
+					{
+						element = e;
+						edgeRank = r;
+						return true;
+					}
+				}
+			}
+
+			element = ActiveElement.None;
+			edgeRank = -1;
+			return false;
 		}
 
 

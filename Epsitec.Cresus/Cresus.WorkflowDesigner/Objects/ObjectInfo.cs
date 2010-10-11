@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		public override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;

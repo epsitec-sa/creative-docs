@@ -126,6 +126,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public override double GetLinkSrcVerticalPosition(int index)
+		{
+			//	Retourne la position verticale pour un trait de liaison.
+			return this.Bounds.Center.Y;
+		}
+
+		public override Point GetLinkDstPosition(double posv, ObjectNode.EdgeAnchor anchor)
+		{
+			//	Retourne la position où accrocher la destination.
+			switch (anchor)
+			{
+				case ObjectNode.EdgeAnchor.Left:
+					return new Point (this.bounds.Left, this.bounds.Center.Y);
+
+
+				case ObjectNode.EdgeAnchor.Right:
+					return new Point (this.bounds.Right, this.bounds.Center.Y);
+
+				case ObjectNode.EdgeAnchor.Bottom:
+					return new Point (this.bounds.Center.X, this.bounds.Bottom);
+
+				case ObjectNode.EdgeAnchor.Top:
+					return new Point (this.bounds.Center.X, this.bounds.Top);
+			}
+
+			return Point.Zero;
+		}
+
 
 		public bool IsRoot
 		{
@@ -293,15 +321,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateLinks();
 				return true;
 			}
-			else
-			{
-				return base.MouseMove(message, pos);
-			}
+
+			return base.MouseMove (message, pos);
 		}
 
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			base.MouseDown (message, pos);
+
 			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount2 > 1)
 			{
 				this.isDragging = true;
@@ -314,6 +342,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			base.MouseUp (message, pos);
+
 			if (this.isDragging)
 			{
 				this.editor.UpdateAfterMoving (this);
@@ -390,9 +420,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
+		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
+			if (base.MouseDetect (pos, out element, out edgeRank))
+			{
+				return true;
+			}
+
 			element = ActiveElement.None;
 			edgeRank = -1;
 			this.SetEdgesHilited(false);
