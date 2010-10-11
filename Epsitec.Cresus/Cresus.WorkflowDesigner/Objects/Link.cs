@@ -379,6 +379,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public Point DstPos
+		{
+			get
+			{
+				if (this.dstNode != null)
+				{
+					return this.dstNode.Bounds.Center;
+				}
+
+				return Point.Zero;
+			}
+		}
+
+
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{

@@ -185,14 +185,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else if (this.isDraggingAttach)
 			{
-				ObjectEdge connexion = this.attachObject as ObjectEdge;
+				ObjectLink link = this.attachObject as ObjectLink;
 
-				double attach = connexion.PointToAttach(pos);
+				double attach = link.PointToAttach(pos);
 				if (attach != 0)
 				{
-					Point oldPos = connexion.PositionEdgeComment;
-					connexion.Edge.CommentAttach = attach;
-					Point newPos = connexion.PositionEdgeComment;
+					Point oldPos = link.PositionLinkComment;
+					link.Link.CommentAttach = attach;
+					Point newPos = link.PositionLinkComment;
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
@@ -261,10 +261,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.IsVisible = false;
 
-					ObjectEdge connexion = this.attachObject as ObjectEdge;
-					if (connexion != null)
+					ObjectLink link = this.attachObject as ObjectLink;
+					if (link != null)
 					{
-						connexion.Edge.HasComment = false;
+						link.Link.HasComment = false;
 					}
 				}
 
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton de déplacer l'attache ?
-			if (this.DetectRoundButton(this.PositionAttachToConnexionButton, pos))
+			if (this.DetectRoundButton(this.PositionAttachToLinkButton, pos))
 			{
 				element = ActiveElement.CommentAttachToEdge;
 				return true;
@@ -555,7 +555,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour déplacer l'attache.
-			Point p = this.PositionAttachToConnexionButton;
+			Point p = this.PositionAttachToLinkButton;
 			if (!p.IsZero)
 			{
 				if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
@@ -616,11 +616,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
 
-			double d = Point.Distance(himself, other) - ObjectNode.roundFrameRadius;
+			double d = Point.Distance(himself, other) - ObjectEdge2.roundFrameRadius;
 
-			if (this.attachObject is ObjectNode)
+			if (this.attachObject is LinkableObject)
 			{
-				other = Point.Move(other, himself, ObjectNode.roundFrameRadius);
+				other = Point.Move(other, himself, ObjectEdge2.roundFrameRadius);
 			}
 			
 			Rectangle bounds = this.bounds;
@@ -844,11 +844,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					pos = bounds.TopRight;
 				}
 
-				if (pos.IsZero && this.attachObject is ObjectNode)
+				if (pos.IsZero && this.attachObject is LinkableObject)
 				{
-					ObjectNode box = this.attachObject as ObjectNode;
+					var box = this.attachObject as LinkableObject;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate(ObjectNode.roundFrameRadius);
+					boxBounds.Deflate(ObjectEdge2.roundFrameRadius);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -885,10 +885,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (pos.IsZero && this.attachObject is ObjectEdge)
+				if (pos.IsZero && this.attachObject is ObjectLink)
 				{
-					ObjectEdge connexion = this.attachObject as ObjectEdge;
-					Point attach = connexion.PositionEdgeComment;
+					ObjectLink link = this.attachObject as ObjectLink;
+					Point attach = link.PositionLinkComment;
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -941,11 +941,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle bounds = this.bounds;
 				bounds.Inflate(0.5);
 
-				if (this.attachObject is ObjectNode)
+				if (this.attachObject is LinkableObject)
 				{
-					ObjectNode box = this.attachObject as ObjectNode;
+					var box = this.attachObject as LinkableObject;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate(ObjectNode.roundFrameRadius);
+					boxBounds.Deflate(ObjectEdge2.roundFrameRadius);
 
 					if (mode == AttachMode.BottomLeft)
 					{
@@ -1006,10 +1006,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.attachObject is ObjectEdge)
+				if (this.attachObject is ObjectLink)
 				{
-					ObjectEdge connexion = this.attachObject as ObjectEdge;
-					pos = connexion.PositionEdgeComment;
+					ObjectLink link = this.attachObject as ObjectLink;
+					pos = link.PositionLinkComment;
 
 					if (mode == AttachMode.Bottom || mode == AttachMode.BottomLeft || mode == AttachMode.BottomRight)
 					{
@@ -1039,11 +1039,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected AttachMode GetAttachMode()
 		{
 			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
-			if (this.attachObject is ObjectNode)
+			if (this.attachObject is LinkableObject)
 			{
-				ObjectNode box = this.attachObject as ObjectNode;
+				var box = this.attachObject as LinkableObject;
 				Rectangle boxBounds = box.Bounds;
-				boxBounds.Deflate(ObjectNode.roundFrameRadius);
+				boxBounds.Deflate(ObjectEdge2.roundFrameRadius);
 
 				if (!this.bounds.IntersectsWith(boxBounds))
 				{
@@ -1089,10 +1089,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.attachObject is ObjectEdge)
+			if (this.attachObject is ObjectLink)
 			{
-				ObjectEdge connexion = this.attachObject as ObjectEdge;
-				Point attach = connexion.PositionEdgeComment;
+				ObjectLink link = this.attachObject as ObjectLink;
+				Point attach = link.PositionLinkComment;
 				if (!attach.IsZero && !this.bounds.Contains(attach))
 				{
 					if (this.bounds.Top <= attach.Y && this.bounds.Right <= attach.X)
@@ -1171,15 +1171,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionAttachToConnexionButton
+		protected Point PositionAttachToLinkButton
 		{
 			//	Retourne la position du bouton pour modifier l'attache à la connexion.
 			get
 			{
-				if (this.attachObject != null && this.attachObject is ObjectEdge)
+				if (this.attachObject != null && this.attachObject is ObjectLink)
 				{
-					ObjectEdge connexion = this.attachObject as ObjectEdge;
-					return connexion.PositionEdgeComment;
+					ObjectLink link = this.attachObject as ObjectLink;
+					return link.PositionLinkComment;
 				}
 				else
 				{
@@ -1226,10 +1226,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected void UpdateFieldColor()
 		{
 			//	Met à jour l'information de couleur dans le champ associé.
-			if (this.attachObject is ObjectEdge)
+			if (this.attachObject is ObjectLink)
 			{
-				ObjectEdge connexion = this.attachObject as ObjectEdge;
-				connexion.Edge.CommentMainColor = this.BackgroundMainColor;
+				ObjectLink link = this.attachObject as ObjectLink;
+				link.Link.CommentMainColor = this.BackgroundMainColor;
 			}
 		}
 

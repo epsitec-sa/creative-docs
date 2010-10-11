@@ -136,41 +136,81 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.links.Add (link);
 		}
 
-		public override double GetLinkSrcVerticalPosition(int index)
+		public override Point GetLinkSrcVerticalPosition(Point dstPos)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
-			return this.Bounds.Center.Y;
+			if (dstPos.IsZero)
+			{
+				return this.bounds.Center;
+			}
+
+			double r = ObjectEdge2.roundFrameRadius;
+
+			//?if (dstPos.X >= this.bounds.Left+r && dstPos.X <= this.bounds.Right-r)
+			if (false)
+			{
+				if (dstPos.Y < this.bounds.Bottom+r)
+				{
+					return new Point (dstPos.X, this.bounds.Bottom);
+				}
+				else
+				{
+					return new Point (dstPos.X, this.bounds.Top);
+				}
+			}
+			else
+			{
+				double x = (dstPos.X < this.bounds.Left) ? this.bounds.Left : this.bounds.Right;
+				double y = dstPos.Y;
+
+				if (dstPos.Y < this.bounds.Bottom+r)
+				{
+					y = this.bounds.Bottom+r;
+				}
+
+				if (dstPos.Y > this.bounds.Top-r)
+				{
+					y = this.bounds.Top-r;
+				}
+
+				return new Point (x, y);
+			}
 		}
 
 		public override Point GetLinkDstPosition(double posv, ObjectNode.EdgeAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
-			switch (anchor)
+			double r = ObjectEdge2.roundFrameRadius;
+
+			if (anchor == ObjectNode.EdgeAnchor.Left || anchor == ObjectNode.EdgeAnchor.Right)
 			{
-				case ObjectNode.EdgeAnchor.Left:
-					if (posv >= this.bounds.Bottom+ObjectEdge2.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectEdge2.roundFrameRadius)
-					{
-						return new Point (this.bounds.Left, posv);
-					}
+				double x = (anchor == ObjectNode.EdgeAnchor.Left) ? this.bounds.Left : this.bounds.Right;
+				double y;
 
-					return new Point (this.bounds.Left, this.bounds.Center.Y);
+				if (posv < this.bounds.Bottom+r)
+				{
+					y = this.bounds.Bottom+r;
+				}
+				else if (posv > this.bounds.Top-r)
+				{
+					y = this.bounds.Top-r;
+				}
+				else
+				{
+					y = posv;
+				}
 
+				return new Point (x, y);
+			}
 
-				case ObjectNode.EdgeAnchor.Right:
-					if (posv >= this.bounds.Bottom+ObjectEdge2.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectEdge2.roundFrameRadius)
-					{
-						return new Point (this.bounds.Right, posv);
-					}
+			if (anchor == ObjectNode.EdgeAnchor.Top)
+			{
+				return new Point (this.bounds.Center.X, this.bounds.Top);
+			}
 
-					return new Point (this.bounds.Right, this.bounds.Center.Y);
-
-				case ObjectNode.EdgeAnchor.Bottom:
-					return new Point (this.bounds.Center.X, this.bounds.Bottom);
-
-				case ObjectNode.EdgeAnchor.Top:
-					return new Point (this.bounds.Center.X, this.bounds.Top);
+			if (anchor == ObjectNode.EdgeAnchor.Bottom)
+			{
+				return new Point (this.bounds.Center.X, this.bounds.Bottom);
 			}
 
 			return Point.Zero;

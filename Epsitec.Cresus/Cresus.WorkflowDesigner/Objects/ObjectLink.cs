@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton pour commenter la connexion.
-			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionEdgeComment))
+			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionLinkComment))
 			{
 				element = ActiveElement.EdgeComment;
 				return true;
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.BackgroundMainColor = this.link.CommentMainColor;
 				this.comment.Text = this.link.CommentText;
 
-				Point attach = this.PositionEdgeComment;
+				Point attach = this.PositionLinkComment;
 				Rectangle rect;
 
 				if (attach.X > this.link.SrcNode.Bounds.Right)  // connexion sur la droite ?
@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour commenter la connexion.
-			Point p = this.PositionEdgeComment;
+			Point p = this.PositionLinkComment;
 			if (!p.IsZero && this.IsEdgeCommentButton)
 			{
 				if (this.hilitedElement == ActiveElement.EdgeComment)
@@ -630,7 +630,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public Point PositionEdgeComment
+		public Point PositionLinkComment
 		{
 			//	Retourne la position du bouton pour commenter la connexion, ou pour déplacer
 			//	le point d'attache lorsque le commentaire existe.
@@ -867,7 +867,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			Point oldPos = this.PositionEdgeComment;  // point d'attache avant re-routage
+			Point oldPos = this.PositionLinkComment;  // point d'attache avant re-routage
 
 			if (this.link.Route == RouteType.A)
 			{
@@ -896,8 +896,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.link.Route == RouteType.D)
 			{
-				//?if (this.link.IsAttachToRight)
-				if (true)
+				if (this.link.IsAttachToRight)
 				{
 					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
 					this.link.RouteAbsoluteDX = pos.X-px;
@@ -909,7 +908,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			Point newPos = this.PositionEdgeComment;  // point d'attache après re-routage
+			Point newPos = this.PositionLinkComment;  // point d'attache après re-routage
 
 			if (this.comment != null)
 			{
@@ -1048,8 +1047,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.link.Route == RouteType.D)
 			{
 				double px;
-				//?if (this.link.IsAttachToRight)
-				if (true)
+				if (this.link.IsAttachToRight)
 				{
 					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
 					px += this.link.RouteAbsoluteDX;
