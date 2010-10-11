@@ -554,9 +554,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							link.RouteClear ();
 
 							//	Important: toujours le point droite en premier !
-							double posv = obj.GetLinkSrcVerticalPosition (i);
-							objectLink.Points.Add (new Point (obj.Bounds.Right-1, posv));
-							objectLink.Points.Add (new Point (obj.Bounds.Left+1, posv));
+							Point ps = obj.GetLinkSrcVerticalPosition (link.DstPos);
+							objectLink.Points.Add (new Point (obj.Bounds.Right-1, ps.Y));
+							objectLink.Points.Add (new Point (obj.Bounds.Left+1, ps.Y));
 							objectLink.Link.Route = RouteType.Close;
 						}
 						else
@@ -654,10 +654,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			link.Points.Clear();
 			link.Link.RouteClear();
 
-			double v = src.GetLinkSrcVerticalPosition (srcRank);
+			Point ps = src.GetLinkSrcVerticalPosition (link.Link.DstPos);
 			if (src == dst)  // connexion à soi-même ?
 			{
-				Point p = new Point(srcBounds.Right-1, v);
+				Point p = new Point(srcBounds.Right-1, ps.Y);
 				link.Points.Add(p);
 
 				p.X += 30;
@@ -673,11 +673,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
-				Point p = new Point(0, v);
-
 				if (dstBounds.Center.X > srcBounds.Right+Editor.edgeDetour/3)  // destination à droite ?
 				{
-					Point start = new Point(srcBounds.Right-1, p.Y);
+					Point start = new Point(srcBounds.Right-1, ps.Y);
 					link.Points.Add(start);
 
 					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
@@ -713,7 +711,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else if (dstBounds.Center.X < srcBounds.Left-Editor.edgeDetour/3)  // destination à gauche ?
 				{
-					Point start = new Point(srcBounds.Left+1, p.Y);
+					Point start = new Point(srcBounds.Left+1, ps.Y);
 					link.Points.Add(start);
 
 					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
@@ -749,7 +747,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else if (link.Link.IsAttachToRight)  // destination à droite à cheval ?
 				{
-					Point start = new Point(srcBounds.Right-1, p.Y);
+					Point start = new Point(srcBounds.Right-1, ps.Y);
 					Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Right);
 
 					link.Points.Add(start);
@@ -760,7 +758,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else  // destination à gauche à cheval ?
 				{
-					Point start = new Point(srcBounds.Left+1, p.Y);
+					Point start = new Point(srcBounds.Left+1, ps.Y);
 					Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Left);
 
 					link.Points.Add(start);
@@ -958,7 +956,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					objectLink.Link.CommentText = comment.Text;
 					objectLink.Link.CommentMainColor = comment.BackgroundMainColor;
 
-					Point pos = objectLink.PositionEdgeComment;
+					Point pos = objectLink.PositionLinkComment;
 					if (!pos.IsZero)
 					{
 						objectLink.Link.CommentPosition = pos;
