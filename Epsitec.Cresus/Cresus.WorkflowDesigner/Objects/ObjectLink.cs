@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ObjectLink(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
-			this.points = new List<Point> ();
 		}
 
 
@@ -52,16 +51,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public List<Point> Points
-		{
-			//	Retourne la liste des points. Si la connexion est fermée, il s'agit des points
-			//	droite et gauche. Aurement, il s'agit d'un nombre variable de points.
-			get
-			{
-				return this.points;
-			}
-		}
-
 		public bool IsSrcHilited
 		{
 			//	Indique si la boîte source est survolée par la souris.
@@ -81,11 +70,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la boîte de l'objet.
 			get
 			{
-				Rectangle bounds = Rectangle.Empty;
+				Rectangle bounds = this.PathCurves.ComputeBounds ();
+				bounds.Inflate (2);
 
-				foreach (Point p in this.points)
+				if (this.startVector.IsValid)
 				{
-					bounds = Rectangle.Union(bounds, new Rectangle(p, Size.Zero));
+					bounds = Rectangle.Union (bounds, new Rectangle (this.startVector.Origin, Size.Zero));
+				}
+
+				if (this.endVector.IsValid)
+				{
+					bounds = Rectangle.Union (bounds, new Rectangle (this.endVector.Origin, Size.Zero));
 				}
 
 				return bounds;
@@ -95,26 +90,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
-			for (int i=0; i<this.points.Count; i++)
+			if (this.startVector.IsValid)
 			{
-				this.points[i] = new Point(this.points[i].X+dx, this.points[i].Y+dy);
+				this.startVector = new Vector (this.startVector, new Size (dx, dy));
 			}
-		}
 
-		public bool IsRightDirection
-		{
-			//	Retourne la direction effective dans laquelle part la connexion.
-			//	A ne pas confondre avec Edge.IsAttachToRight !
-			get
+			if (this.endVector.IsValid)
 			{
-				if (this.points.Count < 2)
-				{
-					return true;
-				}
-				else
-				{
-					return this.points[0].X < this.points[1].X;
-				}
+				this.endVector = new Vector (this.endVector, new Size (dx, dy));
 			}
 		}
 
@@ -122,7 +105,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingRoute || this.isDraggingDst)
+			if (this.isDraggingDst)
 			{
 				return null;  // pas de tooltip
 			}
@@ -152,12 +135,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override bool MouseMove(Message message, Point pos)
 		{
 			//	La souris est bougée.
-			if (this.isDraggingRoute)
-			{
-				this.RouteMove(pos);
-				return true;
-			}
-			else if (this.isDraggingDst)
+			if (this.isDraggingDst)
 			{
 				this.MouseMoveDst (pos);
 				return true;
@@ -171,13 +149,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.EdgeMove1 ||
-				this.hilitedElement == ActiveElement.EdgeMove2)
-			{
-				this.isDraggingRoute = true;
-				this.editor.LockObject(this);
-			}
-
 			if (this.hilitedElement == ActiveElement.EdgeChangeDst)
 			{
 				this.MouseDownDst (pos);
@@ -187,14 +158,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.isDraggingRoute)
-			{
-				this.isDraggingRoute = false;
-				this.editor.UpdateAfterGeometryChanged(null);
-				this.editor.LockObject(null);
-				this.editor.SetLocalDirty ();
-			}
-
 			if (this.isDraggingDst)
 			{
 				this.MouseUpDst ();
@@ -292,7 +255,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || this.points.Count == 0 || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			if (pos.IsZero || this.startVector.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return false;
 			}
@@ -300,7 +263,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Souris dans la pastille ronde du départ de la connexion ?
 			if (this.link.DstNode != null)
 			{
-				if (this.DetectRoundButton(pos, this.points[0]))
+				if (this.DetectRoundButton (pos, this.startVector.Origin))
 				{
 					element = ActiveElement.EdgeClose;
 					return true;
@@ -308,13 +271,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				if (this.DetectRoundButton(pos, this.points[0]))
+				if (this.DetectRoundButton (pos, this.startVector.Origin))
 				{
 					element = ActiveElement.EdgeOpenRight;
 					return true;
 				}
 
-				if (this.DetectRoundButton(pos, this.points[1]))
+				if (this.DetectRoundButton (pos, this.startVector.Origin))
 				{
 					element = ActiveElement.EdgeOpenLeft;
 					return true;
@@ -322,22 +285,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton pour commenter la connexion.
-			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionLinkComment))
+			if (this.IsLinkCommentButton && this.DetectRoundButton(pos, this.PositionLinkComment))
 			{
 				element = ActiveElement.EdgeComment;
-				return true;
-			}
-
-			//	Souris dans le bouton pour déplacer le point milieu ?
-			if (this.DetectRoundButton(pos, this.PositionRouteMove1))
-			{
-				element = ActiveElement.EdgeMove1;
-				return true;
-			}
-
-			if (this.DetectRoundButton(pos, this.PositionRouteMove2))
-			{
-				element = ActiveElement.EdgeMove2;
 				return true;
 			}
 
@@ -361,18 +311,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connexion.
-			if (this.points.Count >= 2 && this.link.DstNode != null)
+			if (this.link.DstNode != null)
 			{
 				var rect = this.Bounds;
 				rect.Inflate (margin);
 
 				if (rect.Contains (pos))
 				{
-					if (Geometry.DetectOutline (this.PathLines, margin, pos))
-					{
-						return true;
-					}
-
 					if (Geometry.DetectOutline (this.PathCurves, margin, pos))
 					{
 						return true;
@@ -426,8 +371,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Rectangle re = edge.Bounds;
 			Rectangle rn = node.Bounds;
 
-			re.Inflate (5);
-			rn.Inflate (5);
+			re.Inflate (4);
+			rn.Inflate (4);
 
 			if (re.IntersectsWith (rn))
 			{
@@ -440,7 +385,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			ObjectLink.GetAttach (node.Bounds, edge.Bounds, out nodeAnchor, out edgeAnchor);
 
 			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center);
-			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Start);
+			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin);
 
 			if (this.link.SrcNode is ObjectEdge)
 			{
@@ -548,6 +493,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				//	Dessine une connexion courbe qui rejoint le point d'arrivée en train d'être
 				//	déplacé par la souris, pour changer le noeud de destination.
+#if false
 				Point p1 = this.points.First ();
 				Point ps = (this.points.Count > 2) ? this.points[1] : Point.Zero;
 				Point p2 = this.points.Last ();
@@ -572,6 +518,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.LineWidth = 1;
 
 				this.DrawRoundButton (graphics, p1, AbstractObject.bulletRadius+1, false, false, true);
+#endif
 
 				return;
 			}
@@ -582,32 +529,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.startVector.IsValid)
 				{
-					AbstractObject.DrawStartingArrow (graphics, this.startVector.Start, this.startVector.End);
+					AbstractObject.DrawStartingArrow (graphics, this.startVector.Origin, this.startVector.End);
 				}
 
 				if (this.endVector.IsValid)
 				{
-					AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Start);
+					AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Origin);
 				}
 				
 				graphics.LineWidth = 1;
 
-				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
-
-				if (this.hilitedElement != ActiveElement.None)
-				{
-					Misc.DrawPathDash (graphics, this.PathLines, 1, 1, 3, true, color);
-				}
-
 				graphics.Rasterizer.AddOutline (this.PathCurves, 2);
 
+				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
 				graphics.RenderSolid(color);
 			}
 
-			if (this.points.Count == 2 && this.link.DstNode == null)
+			if (this.link.DstNode == null && this.startVector.IsValid)
 			{
 				//	Dessine le moignon de liaison.
-				Point start = this.points[0];
+				Point start = this.startVector.Origin;
 				Point end = new Point(start.X+AbstractObject.lengthClose, start.Y);
 
 				graphics.LineWidth = 2;
@@ -623,6 +564,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid(color);
 			}
 
+#if false
 			if (this.points.Count != 0)
 			{
 				//	Dessine les cercles aux points de départ.
@@ -671,10 +613,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 			}
+#endif
 
 			//	Dessine le bouton pour commenter la connexion.
 			Point p = this.PositionLinkComment;
-			if (!p.IsZero && this.IsEdgeCommentButton)
+			if (!p.IsZero && this.IsLinkCommentButton)
 			{
 				if (this.hilitedElement == ActiveElement.EdgeComment)
 				{
@@ -686,35 +629,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Dessine le bouton pour déplacer le point milieu.
-			Point m = this.PositionRouteMove1;
-			if (!m.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.EdgeMove1)
-				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-			}
-
-			m = this.PositionRouteMove2;
-			if (!m.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.EdgeMove2)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-			}
-
 			//	Dessine le bouton pour changer de noeud destination.
-			m = this.PositionRouteChangeDst;
+			Point m = this.PositionRouteChangeDst;
 			if (!m.IsZero)
 			{
 				if (this.hilitedElement == ActiveElement.EdgeChangeDst)
@@ -728,62 +644,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Path PathLines
-		{
-			get
-			{
-				var path = new Path ();
-
-				path.MoveTo (this.points[0]);
-
-				for (int i = 1; i < this.points.Count; i++)
-				{
-					path.LineTo (this.points[i]);
-				}
-
-				return path;
-			}
-		}
-
 		private Path PathCurves
 		{
 			get
 			{
-#if false
-				var path = new Path ();
-
-				path.MoveTo (this.points[0]);
-
-				int n = this.points.Count;
-				for (int i = 1; i < n-1; i++)
-				{
-					Point p0 = this.points[i];
-					Point p1 = (i == n-2) ? Point.Move (this.points[i+1], p0, AbstractObject.arrowLength-4) : Point.Scale (p0, this.points[i+1], 0.5);
-
-					path.CurveTo (p0, p1);
-				}
-
-				path.LineTo (this.points.Last ());
-
-				return path;
-#else
 				var path = new Path ();
 
 				if (this.startVector.IsValid && this.endVector.IsValid)
 				{
-					double d = Point.Distance (this.startVector.Start, this.endVector.Start) * 0.5;
+					double d = Point.Distance (this.startVector.Origin, this.endVector.Origin) * 0.5;
 
-					path.MoveTo (this.startVector.Start);
-					path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Start);
+					path.MoveTo (this.startVector.Origin);
+					path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Origin);
 				}
 
 				return path;
-#endif
 			}
 		}
 
 
-		private bool IsEdgeCommentButton
+		private bool IsLinkCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
@@ -800,441 +680,48 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
-				if (this.link.DstNode != null && this.points.Count >= 2)
-				{
-					return this.AttachToPoint(this.link.CommentAttach);
-				}
-
-				return Point.Zero;
+				return this.AttachToPoint (this.link.CommentAttach);
 			}
 		}
 
 		private Point AttachToPoint(double d)
 		{
-			Point p = this.BaseAttachToPoint (d);
-
-			if (p.IsZero)
+			if (this.link.DstNode != null && this.startVector.IsValid)
 			{
-				return p;
+				return Geometry.PointOnPath (this.PathCurves, this.link.CommentAttach);
 			}
-
-			return Geometry.Projection (this.PathCurves, p);
-		}
-
-		private Point BaseAttachToPoint(double d)
-		{
-			//	Conversion d'une distance le long de la connexion en position.
-			//	Une distance positive commence depuis le début de la connexion.
-			//	Une distance négative commence depuis la fin de la connexion.
-			if (this.points.Count < 2)
+			else
 			{
 				return Point.Zero;
 			}
-
-			double total = 0;
-			for (int i=0; i<this.points.Count-1; i++)
-			{
-				total += Point.Distance(this.points[i], this.points[i+1]);
-			}
-
-			bool fromBegin = true;
-			if (d < 0)  // attaché depuis la fin ?
-			{
-				d = d+total;
-				fromBegin = false;
-			}
-
-			d = System.Math.Min(d, total-AbstractObject.minAttach);
-			d = System.Math.Max(d, AbstractObject.minAttach);
-
-			if (fromBegin)  // attaché depuis le début ?
-			{
-				for (int i=0; i<this.points.Count-1; i++)
-				{
-					double len = Point.Distance(this.points[i], this.points[i+1]);
-					if (d < len)
-					{
-						return Point.Move(this.points[i], this.points[i+1], d);
-					}
-					else
-					{
-						d -= len;
-					}
-				}
-			}
-			else  // attaché depuis la fin ?
-			{
-				d = total-d;
-				for (int i=this.points.Count-2; i>=0; i--)
-				{
-					double len = Point.Distance(this.points[i], this.points[i+1]);
-					if (d < len)
-					{
-						return Point.Move(this.points[i+1], this.points[i], d);
-					}
-					else
-					{
-						d -= len;
-					}
-				}
-			}
-
-			return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.minAttach);
 		}
 
 		public double PointToAttach(Point p)
 		{
-			//	Conversion d'une position le long de la connexion en distance depuis le début (si positif)
-			//	ou depuis la fin (si négatif).
-			if (this.points.Count < 2)
+			if (this.link.DstNode != null && this.startVector.IsValid)
+			{
+				return Geometry.OffsetOnPath (this.PathCurves, p);
+			}
+			else
 			{
 				return 0;
 			}
-
-			double total = 0;
-			double min = double.MaxValue;
-			int j = -1;
-			for (int i=0; i<this.points.Count-1; i++)
-			{
-				total += Point.Distance(this.points[i], this.points[i+1]);
-				Point pi = Point.Projection(this.points[i], this.points[i+1], p);
-				if (Geometry.IsInside(this.points[i], this.points[i+1], pi))
-				{
-					double di = Point.Distance(pi, p);
-					if (di < min)
-					{
-						min = di;
-						j = i;
-					}
-				}
-			}
-
-			if (j == -1)
-			{
-				return 0;
-			}
-
-			Point pj = Point.Projection(this.points[j], this.points[j+1], p);
-			double dj = Point.Distance(this.points[j], pj);
-
-			for (int i=0; i<j; i++)
-			{
-				dj += Point.Distance(this.points[i], this.points[i+1]);
-			}
-
-			dj = System.Math.Max(dj, AbstractObject.minAttach);
-			dj = System.Math.Min(dj, total-AbstractObject.minAttach);
-
-			if (dj > total/2)  // plus proche de la fin ?
-			{
-				dj = dj-total;  // attaché depuis la fin (valeur négative)
-			}
-
-			return dj;
 		}
 
-
-		private Point PositionRouteMove1
-		{
-			//	Retourne la position du bouton pour modifier le routage.
-			get
-			{
-				if (this.link.Route == RouteType.A)
-				{
-					if (this.points.Count == 6)
-					{
-						return this.points[2];
-					}
-
-					if (this.points.Count == 2)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 75)
-						{
-							return Point.Scale(this.points[0], this.points[1], this.link.RouteRelativeAX1);
-						}
-					}
-				}
-
-				if (this.link.Route == RouteType.Bt || this.link.Route == RouteType.Bb)
-				{
-					if (this.points.Count == 5)
-					{
-						return this.points[2];
-					}
-					
-					if (this.points.Count == 3)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 50 && Point.Distance(this.points[1], this.points[2]) >= 50)
-						{
-							return this.points[1];
-						}
-					}
-				}
-
-				if (this.link.Route == RouteType.C)
-				{
-					if (this.points.Count == 4)
-					{
-						if (Point.Distance(this.points[0], this.points[3]) >= 75)
-						{
-							return this.points[1];
-						}
-					}
-				}
-
-				if (this.link.Route == RouteType.D)
-				{
-					if (this.points.Count == 4)
-					{
-						return this.points[1];
-					}
-				}
-
-				return Point.Zero;
-			}
-		}
-
-		private Point PositionRouteMove2
-		{
-			//	Retourne la position du bouton pour modifier le routage.
-			get
-			{
-				if (this.link.Route == RouteType.A)
-				{
-					if (this.points.Count == 6)
-					{
-						return this.points[3];
-					}
-					
-					if (this.points.Count == 2)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 75)
-						{
-							return Point.Scale(this.points[0], this.points[1], this.link.RouteRelativeAX2);
-						}
-					}
-				}
-
-				return Point.Zero;
-			}
-		}
 
 		private Point PositionRouteChangeDst
 		{
 			//	Retourne la position du bouton pour modifier le noeud destination.
 			get
 			{
-				if (this.points.Count == 0)
+				if (this.endVector.IsZero)
 				{
 					return Point.Zero;
 				}
 				else
 				{
-					return this.points.Last ();
+					return this.endVector.Origin;
 				}
-			}
-		}
-
-		private void RouteMove(Point pos)
-		{
-			//	Modifie le routage en fonction du choix de l'utilisateur.
-			if (pos.IsZero)
-			{
-				return;
-			}
-
-			Point oldPos = this.PositionLinkComment;  // point d'attache avant re-routage
-
-			if (this.link.Route == RouteType.A)
-			{
-				if (this.hilitedElement == ActiveElement.EdgeMove1)
-				{
-					this.link.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
-				}
-				else
-				{
-					this.link.RouteRelativeAX2 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
-				}
-
-				this.link.RouteAbsoluteAY = pos.Y-this.points[0].Y;
-			}
-
-			if (this.link.Route == RouteType.Bt || this.link.Route == RouteType.Bb)
-			{
-				this.link.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
-				this.link.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
-			}
-
-			if (this.link.Route == RouteType.C)
-			{
-				this.link.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
-			}
-
-			if (this.link.Route == RouteType.D)
-			{
-				if (this.link.IsAttachToRight)
-				{
-					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
-					this.link.RouteAbsoluteDX = pos.X-px;
-				}
-				else
-				{
-					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
-					this.link.RouteAbsoluteDX = px-pos.X;
-				}
-			}
-
-			Point newPos = this.PositionLinkComment;  // point d'attache après re-routage
-
-			if (this.comment != null)
-			{
-				Rectangle bounds = this.comment.Bounds;
-				bounds.Offset(newPos-oldPos);
-				this.comment.SetBounds(bounds);  // déplace le commentaire
-			}
-		}
-
-		public void UpdateRoute()
-		{
-			//	Met à jour le routage de la connexion, dans les cas ou le routage dépend des choix de l'utilisateur.
-			retry:
-			if (this.link.Route == RouteType.A)
-			{
-				if (this.link.RouteAbsoluteAY == 0)
-				{
-					if (this.points.Count == 6)
-					{
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-					}
-				}
-				else
-				{
-					if (this.points.Count == 2)
-					{
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-					}
-
-					double d = this.points[5].X-this.points[0].X;
-					double d1 = d*this.link.RouteRelativeAX1;
-					double d2 = d*this.link.RouteRelativeAX2;
-
-					d1 -= d;
-					d2 -= d;
-					if (d2 > 0)
-					{
-						d2 = System.Math.Max (d2, ObjectLink.arrowMinimalLength);
-						if (d2 > d1)
-						{
-							this.link.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
-							goto retry;
-						}
-					}
-					else
-					{
-						d2 = -System.Math.Max (-d2, ObjectLink.arrowMinimalLength);
-						if (d2 < d1)
-						{
-							this.link.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
-							goto retry;
-						}
-					}
-					d1 += d;
-					d2 += d;
-
-					double px1 = this.points[0].X + d1;
-					double px2 = this.points[0].X + d2;
-					double py = this.points[0].Y + this.link.RouteAbsoluteAY;
-					this.points[1] = new Point(px1, this.points[0].Y);
-					this.points[2] = new Point(px1, py);
-					this.points[3] = new Point(px2, py);
-					this.points[4] = new Point(px2, this.points[0].Y);
-				}
-			}
-
-			if (this.link.Route == RouteType.Bt || this.link.Route == RouteType.Bb)
-			{
-				if (this.link.RouteRelativeBX == 0 || this.link.RouteRelativeBY == 0)
-				{
-					if (this.points.Count == 5)
-					{
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-					}
-					this.points[1] = new Point(this.points[2].X, this.points[0].Y);
-				}
-				else
-				{
-					if (this.points.Count == 3)
-					{
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-					}
-
-					double d = this.points[4].Y-this.points[0].Y;
-					double d1 = d*this.link.RouteRelativeBY;
-
-					d1 -= d;
-					if (d1 > 0)
-					{
-						d1 = System.Math.Max (d1, ObjectLink.arrowMinimalLength);
-					}
-					else
-					{
-						d1 = -System.Math.Max (-d1, ObjectLink.arrowMinimalLength);
-					}
-					d1 += d;
-
-					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.link.RouteRelativeBX;
-					double py = this.points[0].Y + d1;
-					this.points[1] = new Point(px, this.points[0].Y);
-					this.points[2] = new Point(px, py);
-					this.points[3] = new Point(this.points[4].X, py);
-				}
-			}
-
-			if (this.link.Route == RouteType.C)
-			{
-				//	Met à jour les points milieu de la connexion.
-				double d = this.points[3].X-this.points[0].X;
-				double d1 = d*this.link.RouteRelativeCX;
-
-				d1 -= d;
-				if (d1 > 0)
-				{
-					d1 = System.Math.Max (d1, ObjectLink.arrowMinimalLength);
-				}
-				else
-				{
-					d1 = -System.Math.Max (-d1, ObjectLink.arrowMinimalLength);
-				}
-				d1 += d;
-
-				double px = this.points[0].X + d1;
-				this.points[1] = new Point(px, this.points[0].Y);
-				this.points[2] = new Point(px, this.points[3].Y);
-			}
-
-			if (this.link.Route == RouteType.D)
-			{
-				double px;
-				if (this.link.IsAttachToRight)
-				{
-					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
-					px += this.link.RouteAbsoluteDX;
-				}
-				else
-				{
-					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
-					px -= this.link.RouteAbsoluteDX;
-				}
-				this.points[1] = new Point(px, this.points[0].Y);
-				this.points[2] = new Point(px, this.points[3].Y);
 			}
 		}
 
@@ -1249,7 +736,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void MouseMoveDst(Point pos)
 		{
-			this.points[this.points.Count-1] = pos;
+			this.endVector = new Vector (pos, this.endVector.Direction);
 
 			var node = this.DetectNode (pos);
 
@@ -1305,14 +792,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private static readonly double arrowMinimalLength = 25;
-
 		private Link						link;
-		private List<Point>					points;
 		private Vector						startVector;
 		private Vector						endVector;
 		private bool						isSrcHilited;
-		private bool						isDraggingRoute;
 		private bool						isDraggingDst;
 		private ObjectComment				comment;
 		private ObjectNode					hilitedDstNode;

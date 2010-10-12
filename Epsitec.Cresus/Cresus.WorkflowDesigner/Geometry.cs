@@ -13,60 +13,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 	/// </summary>
 	public class Geometry
 	{
-		public static bool IsOver(Rectangle rect, Point a, Point b, double margin)
-		{
-			//	Retourne true si la droite ab passe sur le rectangle.
-			//	Les 4 droites du rectangle sont étendues selon margin, pour éviter des liaisons
-			//	presque parallèles:
-			//	    o        o
-			//	    |        |
-			//	o---o--------o---o
-			//	    |        |
-			//	    |        | margin
-			//	    |        <--->
-			//	o---o--------o---o
-			//	    |        |
-			//	    o        o
-			if (rect.Contains(a) && rect.Contains(b))
-			{
-				return true;
-			}
-
-			if (Geometry.IsIntersect(new Point(rect.Left-margin, rect.Top), new Point(rect.Right+margin, rect.Top), a, b))
-			{
-				return true;
-			}
-
-			if (Geometry.IsIntersect(new Point(rect.Left-margin, rect.Bottom), new Point(rect.Right+margin, rect.Bottom), a, b))
-			{
-				return true;
-			}
-
-			if (Geometry.IsIntersect(new Point(rect.Left, rect.Bottom-margin), new Point(rect.Left, rect.Top+margin), a, b))
-			{
-				return true;
-			}
-
-			if (Geometry.IsIntersect(new Point(rect.Right, rect.Bottom-margin), new Point(rect.Right, rect.Top+margin), a, b))
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		public static bool IsIntersect(Point a, Point b, Point c, Point d)
-		{
-			//	Retourne true si le point d'intersection de deux droites est sur l'une des deux.
-			Point[] i = Geometry.Intersect(a, b, c, d);
-			if (i == null)
-			{
-				return false;
-			}
-
-			return Geometry.IsInside(a, b, i[0]) && Geometry.IsInside(c, d, i[0]);
-		}
-
 		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			//	Calcule le point d'intersection entre deux droites ab et cd.
@@ -142,74 +88,114 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public static Point Projection(Path path, Point pos)
+		public static Point PointOnPath(Path path, double offset)
 		{
-			int rank = 0;
-			double distance = double.MaxValue;
-			Point best = Point.Zero;
+			//	Calcule la position d'un point sur un chemin, à partir d'un offset compris entre 0 et 1.
+			//	0 -> début du chemin
+			//	1 -> fin du chemin
+			var list = Geometry.PathExtract (path);
 
-			while (true)
+			if (list.Count == 0)
 			{
-				Point pp1, ss1, ss2, pp2, onCurve;
-				if (!Geometry.PathExtract (path, rank, out pp1, out ss1, out ss2, out pp2))
-				{
-					break;
-				}
-
-				double d;
-				if (Geometry.DetectBezier (pp1, ss1, ss2, pp2, pos, out onCurve, out d))
-				{
-					if (distance > d)
-					{
-						best = onCurve;
-						distance = d;
-					}
-				}
-
-				rank++;
+				return Point.Zero;
 			}
 
-			return best;
+			int i = (int) (offset*list.Count);
+			i = System.Math.Max (i, 0);
+			i = System.Math.Min (i, list.Count-1);
+
+			double t = (i+offset) / list.Count;
+
+			return Point.FromBezier (list[i].p1, list[i].s1, list[i].s2, list[i].p2, t);
 		}
 
-		private static bool DetectBezier(Point p1, Point s1, Point s2, Point p2, Point p, out Point onCurve, out double distance)
+		public static double OffsetOnPath(Path path, Point pos)
 		{
-			int maxStep = 100;		//	nombre d'étapes arbitraire fixé à 100
-			onCurve = Point.Zero;
-			distance = double.MaxValue;
+			//	Calcule l'offset d'un point sur un chemin.
+			//	0 -> début du chemin
+			//	1 -> fin du chemin
+			var list = Geometry.PathExtract (path);
 
+			if (list.Count == 0)
+			{
+				return 0;
+			}
+
+			double distance = double.MaxValue;
+			double offset = 0;
+
+			foreach (var b in list)
+			{
+				double d, t;
+				Geometry.DetectBezier (b, pos, out d, out t);
+
+				if (distance > d)
+				{
+					distance = d;
+					offset = t;
+				}
+			}
+
+			return offset;
+		}
+
+		private static void DetectBezier(OneBezier b, Point pos, out double distance, out double offset)
+		{
+			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
+
+			int maxStep = 100;		//	nombre d'étapes arbitraire fixé à 100
+
+			Point  a = b.p1;
 			double t = 0;
 			double dt = 1.0 / maxStep;
+			distance = double.MaxValue;
+			offset = 0;
 
 			for (int step = 1; step <= maxStep; step++)
 			{
 				t += dt;
 
-				Point b = Point.FromBezier (p1, s1, s2, p2, t);
-				double d = Point.Distance (b, p);
+				Point p = Point.FromBezier (b.p1, b.s1, b.s2, b.p2, t);
+				double d = Point.Distance (p, pos);
 
 				if (distance > d)
 				{
-					onCurve = b;
 					distance = d;
+					offset = t;
 				}
 			}
-
-			return !onCurve.IsZero;
 		}
 
-		private static bool PathExtract(Path path, int rank, out Point pp1, out Point ss1, out Point ss2, out Point pp2)
+
+		private static List<OneBezier> PathExtract(Path path)
+		{
+			//	Extrait tous les fragments de droite ou de courbe d'un chemin.
+			var list = new List<OneBezier> ();
+			int rank = 0;
+
+			while (true)
+			{
+				OneBezier b = Geometry.PathExtract (path, rank++);
+
+				if (b.IsZero)
+				{
+					break;
+				}
+
+				list.Add (b);
+			}
+
+			return list;
+		}
+
+		private static OneBezier PathExtract(Path path, int rank)
 		{
 			//	Extrait un fragment de droite ou de courbe d'un chemin.
-			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements (out elements, out points);
 
-			pp1 = Point.Zero;
-			ss1 = Point.Zero;
-			ss2 = Point.Zero;
-			pp2 = Point.Zero;
+			var result = new OneBezier ();
 
 			Point start = Point.Zero;
 			Point current = Point.Zero;
@@ -230,11 +216,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						p1 = points[i++];
 						if (--rank < 0)
 						{
-							pp1 = current;
-							ss1 = current;
-							ss2 = p1;
-							pp2 = p1;
-							return true;
+							result.p1 = current;
+							result.s1 = current;
+							result.s2 = p1;
+							result.p2 = p1;
+							return result;
 						}
 						current = p1;
 						break;
@@ -246,11 +232,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						Geometry.BezierS1ToS2 (current, ref p1, ref p2, p3);
 						if (--rank < 0)
 						{
-							pp1 = current;
-							ss1 = p1;
-							ss2 = p2;
-							pp2 = p3;
-							return true;
+							result.p1 = current;
+							result.s1 = p1;
+							result.s2 = p2;
+							result.p2 = p3;
+							return result;
 						}
 						current = p3;
 						break;
@@ -261,11 +247,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						p3 = points[i++];
 						if (--rank < 0)
 						{
-							pp1 = current;
-							ss1 = p1;
-							ss2 = p2;
-							pp2 = p3;
-							return true;
+							result.p1 = current;
+							result.s1 = p1;
+							result.s2 = p2;
+							result.p2 = p3;
+							return result;
 						}
 						current = p3;
 						break;
@@ -275,19 +261,25 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						{
 							if (!Point.Equals (current, start) && --rank < 0)
 							{
-								pp1 = current;
-								ss1 = current;
-								ss2 = start;
-								pp2 = start;
-								return true;
+								result.p1 = current;
+								result.s1 = current;
+								result.s2 = start;
+								result.p2 = start;
+								return result;
 							}
 						}
 						i++;
 						break;
 				}
 			}
-			return false;
+
+			result.p1 = Point.Zero;
+			result.s1 = Point.Zero;
+			result.s2 = Point.Zero;
+			result.p2 = Point.Zero;
+			return result;
 		}
+
 
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
@@ -417,6 +409,23 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Il s'agit ici d'une approximation empyrique !
 			s1 = Point.Scale (p1, s1, 2.0/3.0);
 			s2 = Point.Scale (p2, s2, 2.0/3.0);
+		}
+
+
+		private struct OneBezier
+		{
+			public Point p1;
+			public Point s1;
+			public Point s2;
+			public Point p2;
+
+			public bool IsZero
+			{
+				get
+				{
+					return this.p1.IsZero || this.s1.IsZero || this.s2.IsZero || this.p2.IsZero;
+				}
+			}
 		}
 	}
 }

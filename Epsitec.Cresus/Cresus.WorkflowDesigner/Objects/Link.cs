@@ -31,16 +31,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.index = -1;
 			
-			this.routeType = RouteType.Close;
-			this.routeRelativeAX1 = 0.2;
-			this.routeRelativeAX2 = 0.8;
-			this.routeAbsoluteAY  = 0.0;
-			this.routeRelativeBX  = 0.0;
-			this.routeRelativeBY  = 0.0;
-			this.routeRelativeCX  = 0.5;
-			this.routeAbsoluteDX  = 0.0;
-
-			this.commentAttach = AbstractObject.minAttach;
+			this.commentAttach = 0.1;
 			this.commentMainColor = MainColor.Yellow;
 			this.commentText = "Coucou";
 		}
@@ -165,9 +156,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double CommentAttach
 		{
-			//	Distance d'attache du commentaire.
-			//	Une distance positive commence depuis le début de la connexion.
-			//	Une distance négative commence depuis la fin de la connexion.
+			//	Distance d'attache du commentaire (0..n).
 			get
 			{
 				return this.commentAttach;
@@ -188,193 +177,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.commentMainColor = value;
-			}
-		}
-
-
-		public void RouteClear()
-		{
-			//	Force un routage standard pour la connexion.
-			this.Route = RouteType.Close;
-		}
-
-		public RouteType Route
-		{
-			//	Type de routage de la connexion.
-			get
-			{
-				return this.routeType;
-			}
-			set
-			{
-				if (this.routeType != value)
-				{
-					this.routeType = value;
-					this.objectLink.UpdateRoute ();
-				}
-			}
-		}
-
-		public double RouteRelativeAX1
-		{
-			//	Position intermédiaire de la connexion (cas A).
-			get
-			{
-				return this.routeRelativeAX1;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.1);
-				value = System.Math.Min(value, this.routeRelativeAX2-0.1);
-
-				if (this.routeRelativeAX1 != value)
-				{
-					this.routeRelativeAX1 = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public double RouteRelativeAX2
-		{
-			//	Position intermédiaire de la connexion (cas A).
-			get
-			{
-				return this.routeRelativeAX2;
-			}
-			set
-			{
-				value = System.Math.Max(value, this.routeRelativeAX1+0.1);
-				value = System.Math.Min(value, 0.9);
-
-				if (this.routeRelativeAX2 != value)
-				{
-					this.routeRelativeAX2 = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public double RouteAbsoluteAY
-		{
-			//	Position intermédiaire de la connexion (cas A).
-			get
-			{
-				return this.routeAbsoluteAY;
-			}
-			set
-			{
-				if (System.Math.Abs(value) <= 5)
-				{
-					value = 0;
-				}
-
-				if (this.routeAbsoluteAY != value)
-				{
-					this.routeAbsoluteAY = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public void RouteAbsoluteAYClear()
-		{
-			//	Réinitialise un cas A simple, sans exécuter UpdateRoute().
-			this.routeAbsoluteAY = 0;
-		}
-
-		public double RouteRelativeBX
-		{
-			//	Position intermédiaire de la connexion (cas B).
-			get
-			{
-				return this.routeRelativeBX;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.0);
-				value = System.Math.Min(value, 0.9);
-
-				if (this.routeRelativeBX != value)
-				{
-					this.routeRelativeBX = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public double RouteRelativeBY
-		{
-			//	Position intermédiaire de la connexion (cas B).
-			get
-			{
-				return this.routeRelativeBY;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.0);
-				value = System.Math.Min(value, 0.9);
-
-				if (this.routeRelativeBY != value)
-				{
-					this.routeRelativeBY = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public double RouteRelativeCX
-		{
-			//	Position intermédiaire de la connexion (cas C).
-			//	0.5 correspond au milieu (valeur par défaut).
-			get
-			{
-				return this.routeRelativeCX;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.1);
-				value = System.Math.Min(value, 0.9);
-
-				if (this.routeRelativeCX != value)
-				{
-					this.routeRelativeCX = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public double RouteAbsoluteDX
-		{
-			//	Position intermédiaire de la connexion (cas D).
-			//	0.0 correspond à la boucle la plus serrée (valeur par défaut).
-			get
-			{
-				return this.routeAbsoluteDX;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.0);
-
-				if (this.routeAbsoluteDX != value)
-				{
-					this.routeAbsoluteDX = value;
-
-					this.objectLink.UpdateRoute ();
-					this.editor.Invalidate();
-				}
 			}
 		}
 
@@ -564,14 +366,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public void DeserializeCopyTo(Link dst)
 		{
 			dst.isAttachToRight = this.isAttachToRight;
-			dst.routeType = this.routeType;
-			dst.routeRelativeAX1 = this.routeRelativeAX1;
-			dst.routeRelativeAX2 = this.routeRelativeAX2;
-			dst.routeAbsoluteAY = this.routeAbsoluteAY;
-			dst.routeRelativeBX = this.routeRelativeBX;
-			dst.routeRelativeBY = this.routeRelativeBY;
-			dst.routeRelativeCX = this.routeRelativeCX;
-			dst.routeAbsoluteDX = this.routeAbsoluteDX;
 			dst.hasComment = this.hasComment;
 			dst.commentPosition = this.commentPosition;
 			dst.commentBounds = this.commentBounds;
@@ -588,14 +382,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private LinkableObject				dstNode;
 		private ObjectLink					objectLink;
 		private bool						isAttachToRight;
-		private RouteType					routeType;
-		private double						routeRelativeAX1;
-		private double						routeRelativeAX2;
-		private double						routeAbsoluteAY;
-		private double						routeRelativeBX;
-		private double						routeRelativeBY;
-		private double						routeRelativeCX;
-		private double						routeAbsoluteDX;
 		private bool						hasComment;
 		private Point						commentPosition;
 		private Rectangle					commentBounds;

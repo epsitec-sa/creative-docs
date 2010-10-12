@@ -10,24 +10,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public struct Vector
 	{
-		public Vector(Point start, Point end)
+		public Vector(Point origin, Point end)
 		{
-			this.start = start;
-			this.end = end;
+			this.origin = origin;
+			this.end    = end;
 		}
 
 		public Vector(Point start, Size direction)
 		{
-			this.start = start;
-			this.end = start + direction;
+			this.origin = start;
+			this.end    = start + direction;
+		}
+
+		public Vector(Vector vector, Size offset)
+		{
+			this.origin = new Point (vector.origin.X+offset.Width, vector.origin.Y+offset.Height);
+			this.end    = new Point (vector.end   .X+offset.Width, vector.end   .Y+offset.Height);
 		}
 
 
-		public Point Start
+		public Point Origin
 		{
 			get
 			{
-				return this.start;
+				return this.origin;
 			}
 		}
 
@@ -39,10 +45,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public Size Direction
+		{
+			get
+			{
+				return new Size (this.end.X-this.origin.X, this.end.Y-this.origin.Y);
+			}
+		}
+
 
 		public Point GetPoint(double distance)
 		{
-			return Point.Move (this.start, this.end, distance);
+			return Point.Move (this.origin, this.end, distance);
 		}
 
 
@@ -58,13 +72,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				return start.IsZero || end.IsZero;
+				return origin.IsZero || end.IsZero;
 			}
 		}
 
 		public static readonly Vector Zero;
 
-		private readonly Point start;
+		private readonly Point origin;
 		private readonly Point end;
 	}
 }
