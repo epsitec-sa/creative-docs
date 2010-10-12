@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return offset;
 		}
 
-		private static void DetectBezier(OneBezier b, Point pos, out double distance, out double offset)
+		private static void DetectBezier(SingleBezier b, Point pos, out double distance, out double offset)
 		{
 			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
 
@@ -167,15 +167,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		private static List<OneBezier> PathExtract(Path path)
+		private static List<SingleBezier> PathExtract(Path path)
 		{
 			//	Extrait tous les fragments de droite ou de courbe d'un chemin.
-			var list = new List<OneBezier> ();
+			var list = new List<SingleBezier> ();
 			int rank = 0;
 
 			while (true)
 			{
-				OneBezier b = Geometry.PathExtract (path, rank++);
+				SingleBezier b = Geometry.PathExtract (path, rank++);
 
 				if (b.IsZero)
 				{
@@ -188,14 +188,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return list;
 		}
 
-		private static OneBezier PathExtract(Path path, int rank)
+		private static SingleBezier PathExtract(Path path, int rank)
 		{
 			//	Extrait un fragment de droite ou de courbe d'un chemin.
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements (out elements, out points);
 
-			var result = new OneBezier ();
+			var result = new SingleBezier ();
 
 			Point start = Point.Zero;
 			Point current = Point.Zero;
@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		private struct OneBezier
+		private struct SingleBezier
 		{
 			public Point p1;
 			public Point s1;

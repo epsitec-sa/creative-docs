@@ -700,7 +700,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (this.link.DstNode != null && this.startVector.IsValid)
 			{
-				return Geometry.OffsetOnPath (this.PathCurves, p);
+				double offset = Geometry.OffsetOnPath (this.PathCurves, p);
+
+				offset = System.Math.Max (offset, 0.1);
+				offset = System.Math.Min (offset, 0.9);
+
+				return offset;
 			}
 			else
 			{
