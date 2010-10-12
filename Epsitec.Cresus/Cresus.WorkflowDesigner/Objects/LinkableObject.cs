@@ -89,13 +89,44 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public ObjectComment Comment
+		{
+			//	Commentaire lié.
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
+		}
+
+
+		public void SetBounds(Rectangle bounds)
+		{
+			//	Modifie la boîte de l'objet.
+			Point p1 = this.bounds.TopLeft;
+			this.bounds = bounds;
+			Point p2 = this.bounds.TopLeft;
+
+			//	S'il existe un commentaire associé, il doit aussi être déplacé.
+			if (this.comment != null)
+			{
+				Rectangle rect = this.comment.InternalBounds;
+				rect.Offset (p2-p1);
+				this.comment.SetBounds (rect);
+			}
+		}
+
+
 		public virtual Point GetLinkSrcVerticalPosition(Point dstPos)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
 			return this.Bounds.Center;
 		}
 
-		public virtual Point GetLinkDstPosition(double posy, ObjectNode.EdgeAnchor anchor)
+		public virtual Point GetLinkDstPosition(double posy, LinkAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
 			return this.Bounds.Center;
@@ -243,10 +274,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected Rectangle						bounds;
 		protected List<Link>					links;
 		private List<ObjectLink>				linkListBt;
 		private List<ObjectLink>				linkListBb;
 		private List<ObjectLink>				linkListC;
 		private List<ObjectLink>				linkListD;
+		protected ObjectComment					comment;
 	}
 }

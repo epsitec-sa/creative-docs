@@ -17,86 +17,49 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public class ObjectNode : AbstractObject
+	public class ObjectNode : LinkableObject
 	{
-		public enum EdgeAnchor
-		{
-			Left,
-			Right,
-			Bottom,
-			Top,
-		}
-
-
 		public ObjectNode(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 
 			this.title = new TextLayout();
-			this.title.DefaultFontSize = 12;
+			this.title.DefaultFontSize = 24;
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.edges = new List<Edge>();
-
-			this.columnsSeparatorRelative1 = 0.5;
 			this.isRoot = false;
-			this.isExtended = false;
-
-			this.edgeListBt = new List<ObjectEdge>();
-			this.edgeListBb = new List<ObjectEdge>();
-			this.edgeListC  = new List<ObjectEdge>();
-			this.edgeListD  = new List<ObjectEdge>();
 
 			this.parents = new List<ObjectNode>();
 
 			this.UpdateTitle ();
-			this.UpdateEdges ();
 		}
 
 
-		public string Title
+		public int TitleNumber
 		{
 			//	Titre au sommet de la boîte (nom du noeud).
 			get
 			{
-				return this.titleString;
+				return this.titleNumber;
 			}
 			set
 			{
-				if (this.titleString != value)
+				if (this.titleNumber != value)
 				{
-					this.titleString = value;
+					this.titleNumber = value;
 
-					this.title.Text = Misc.Bold(this.titleString);
+					this.title.Text = Misc.Bold(this.titleNumber.ToString ());
 				}
 			}
 		}
 
-		public ObjectComment Comment
+		public List<ObjectNode> Parents
 		{
-			//	Commentaire lié.
 			get
 			{
-				return this.comment;
-			}
-			set
-			{
-				this.comment = value;
-			}
-		}
-
-		public ObjectInfo Info
-		{
-			//	Informations liées.
-			get
-			{
-				return this.info;
-			}
-			set
-			{
-				this.info = value;
+				return this.parents;
 			}
 		}
 
@@ -116,71 +79,52 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.bounds.Offset(dx, dy);
 		}
 
-		public void SetBounds(Rectangle bounds)
+		public override void CreateLinks()
 		{
-			//	Modifie la boîte de l'objet.
-			Point p1 = this.bounds.TopLeft;
-			this.bounds = bounds;
-			Point p2 = this.bounds.TopLeft;
+			this.links.Clear ();
 
-			//	S'il existe un commentaire associé, il doit aussi être déplacé.
-			if (this.comment != null)
+			foreach (var entityEdge in this.Entity.Edges)
 			{
-				Rectangle rect = this.comment.InternalBounds;
-				rect.Offset(p2-p1);
-				this.comment.SetBounds(rect);
-			}
+				var link = new Link (this.editor, this);
+				link.DstNode = this.editor.SearchObject (entityEdge);
 
-			//	S'il existe des informations associées, elles doivent aussi être déplacées.
-			if (this.info != null)
-			{
-				Rectangle rect = this.info.InternalBounds;
-				rect.Offset(p2-p1);
-				this.info.SetBounds(rect);
+				//?var objectLink = new ObjectLink (this.editor, this.Entity);
+				//?objectLink.Link = link;
+
+				//?link.ObjectLink = objectLink;
+
+				this.links.Add (link);
 			}
 		}
 
-		public override MainColor BackgroundMainColor
+		public override Point GetLinkSrcVerticalPosition(Point dstPos)
 		{
-			//	Couleur de fond de la boîte.
-			get
-			{
-				return this.boxColor;
-			}
-			set
-			{
-				if (this.boxColor != value)
-				{
-					this.boxColor = value;
-
-					//	Change la couleur de toutes les connexions liées.
-					foreach (Edge edge in this.edges)
-					{
-						if (edge.ObjectEdge != null)
-						{
-							edge.ObjectEdge.BackgroundMainColor = this.boxColor;
-						}
-					}
-
-					//	Change la couleur des informations liées.
-					if (this.info != null)
-					{
-						this.info.BackgroundMainColor = this.boxColor;
-					}
-
-					this.editor.Invalidate();
-					this.editor.SetLocalDirty ();
-				}
-			}
+			//	Retourne la position verticale pour un trait de liaison.
+			return this.Bounds.Center;
 		}
 
-		public List<Edge> Edges
+		public override Point GetLinkDstPosition(double posv, LinkAnchor anchor)
 		{
-			get
+			//	Retourne la position où accrocher la destination.
+			switch (anchor)
 			{
-				return this.edges;
+				case LinkAnchor.Left:
+					return new Point (this.bounds.Left, this.bounds.Center.Y);
+
+
+				case LinkAnchor.Right:
+					return new Point (this.bounds.Right, this.bounds.Center.Y);
+
+				case LinkAnchor.Bottom:
+					return new Point (this.bounds.Center.X, this.bounds.Bottom);
+
+				case LinkAnchor.Top:
+					return new Point (this.bounds.Center.X, this.bounds.Top);
 			}
+
+			return Point.Zero;
 		}
+
 
 		public bool IsRoot
 		{
@@ -195,27 +139,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.isRoot = value;
 
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public bool IsExtended
-		{
-			//	Etat de la boîte (compact ou étendu).
-			//	En mode compact, seul le titre est visible.
-			//	En mode étendu, les champs sont visibles.
-			get
-			{
-				return this.isExtended;
-			}
-			set
-			{
-				if (this.isExtended != value)
-				{
-					this.isExtended = value;
-
-					this.UpdateEdgesLink();
 					this.editor.Invalidate();
 				}
 			}
@@ -248,178 +171,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public List<ObjectEdge> EdgeListBt
-		{
-			get
-			{
-				return this.edgeListBt;
-			}
-		}
-
-		public List<ObjectEdge> EdgeListBb
-		{
-			get
-			{
-				return this.edgeListBb;
-			}
-		}
-
-		public List<ObjectEdge> EdgeListC
-		{
-			get
-			{
-				return this.edgeListC;
-			}
-		}
-
-		public List<ObjectEdge> EdgeListD
-		{
-			get
-			{
-				return this.edgeListD;
-			}
-		}
-
-		public List<ObjectNode> Parents
-		{
-			get
-			{
-				return this.parents;
-			}
-		}
-
-
-		public double GetBestHeight()
-		{
-			//	Retourne la hauteur requise selon le nombre de champs définis.
-			if (this.isExtended)
-			{
-				return AbstractObject.headerHeight + ObjectNode.edgeHeight*this.edges.Count + AbstractObject.footerHeight + 20;
-			}
-			else
-			{
-				return AbstractObject.headerHeight;
-			}
-		}
-
-		public double GetEdgeSrcVerticalPosition(int rank)
-		{
-			//	Retourne la position verticale pour un trait de liaison.
-			//	Il s'agit toujours de la position de départ d'une liaison.
-			if (this.isExtended && rank < this.edges.Count)
-			{
-				Rectangle rect = this.GetEdgeBounds(rank);
-				return rect.Center.Y;
-			}
-			else
-			{
-				return this.bounds.Center.Y;
-			}
-		}
-
-		public Point GetEdgeDstPosition(double posv, EdgeAnchor anchor)
-		{
-			//	Retourne la position où accrocher la destination.
-			//	Il s'agit toujours de la position d'arrivée d'une liaison.
-			switch (anchor)
-			{
-				case EdgeAnchor.Left:
-					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
-						this.IsVerticalPositionFree(posv, false))
-					{
-						return new Point(this.bounds.Left, posv);
-					}
-
-					if (this.isExtended)
-					{
-						//	En dessous du glyph 'o--' et du moignon "source".
-						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight-12);
-					}
-					else
-					{
-						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight*0.5);
-					}
-
-
-				case EdgeAnchor.Right:
-					if (posv >= this.bounds.Bottom+ObjectNode.roundFrameRadius &&
-						posv <= this.bounds.Top-ObjectNode.roundFrameRadius &&
-						this.IsVerticalPositionFree(posv, true))
-					{
-						return new Point(this.bounds.Right, posv);
-					}
-
-					return new Point(this.bounds.Right, this.bounds.Top-AbstractObject.headerHeight*0.5);
-
-				case EdgeAnchor.Bottom:
-					return new Point(this.bounds.Center.X, this.bounds.Bottom);
-
-				case EdgeAnchor.Top:
-					return new Point(this.bounds.Center.X, this.bounds.Top);
-			}
-
-			return Point.Zero;
-		}
-
-		private bool IsVerticalPositionFree(double posv, bool right)
-		{
-			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
-			if (!right && this.isExtended)
-			{
-				double y = this.bounds.Top-AbstractObject.headerHeight;
-				if (posv >= y-ObjectNode.edgeHeight/2 && posv <= y+ObjectNode.edgeHeight/2)  // sur le moignon "source" ?
-				{
-					return false;
-				}
-			}
-
-			if (!right && this.isExtended)
-			{
-				double y = this.bounds.Top-AbstractObject.headerHeight*0.5;
-				if (posv >= y-ObjectNode.edgeHeight/2 && posv <= y+ObjectNode.edgeHeight/2)  // sur le glyph 'o--' ?
-				{
-					return false;
-				}
-			}
-
-			for (int i=0; i<this.edges.Count; i++)
-			{
-				Edge edge = this.edges[i];
-				ObjectEdge objectEdge = edge.ObjectEdge;
-
-				if (objectEdge != null)
-				{
-					Rectangle rect = this.GetEdgeBounds(i);
-					if (posv >= rect.Bottom && posv <= rect.Top)
-					{
-						if (edge.IsExplored)
-						{
-							if (edge.IsAttachToRight)
-							{
-								if (right)  return false;
-							}
-							else
-							{
-								if (!right)  return false;
-							}
-						}
-						else
-						{
-							if (right)  return false;
-						}
-					}
-				}
-			}
-
-			return true;
-		}
-
-
 		protected override string GetToolTipText(ActiveElement element, int edgeRank)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDragging || this.isEdgeMoving || this.isChangeWidth || this.isMoveColumnsSeparator1)
+			if (this.isDragging)
 			{
 				return null;  // pas de tooltip
 			}
@@ -537,38 +292,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateLinks();
 				return true;
 			}
-			else if (this.isEdgeMoving)
-			{
-				return base.MouseMove(message, pos);
-			}
-			else if (this.isChangeWidth)
-			{
-				Rectangle bounds = this.Bounds;
-				bounds.Width = this.editor.GridAlign(System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
-				this.SetBounds(bounds);
-				this.editor.UpdateLinks();
-				return true;
-			}
-			else if (this.isMoveColumnsSeparator1)
-			{
-				Rectangle rect = this.Bounds;
-				rect.Deflate(ObjectNode.textMargin, 0);
-				pos.X = System.Math.Min(pos.X, this.ColumnsSeparatorAbsolute(1));
-				this.columnsSeparatorRelative1 = (pos.X-rect.Left)/rect.Width;
-				this.columnsSeparatorRelative1 = System.Math.Max(this.columnsSeparatorRelative1, 0.2);
-				this.editor.Invalidate();
-				return true;
-			}
-			else
-			{
-				return base.MouseMove(message, pos);
-			}
+
+			return base.MouseMove (message, pos);
 		}
 
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			this.initialPos = pos;
+			base.MouseDown (message, pos);
 
 			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1)
 			{
@@ -577,49 +308,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate();
 				this.editor.LockObject(this);
 			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeMovable)
-			{
-				this.isEdgeMoving = true;
-				this.edgeInitialRank = this.hilitedEdgeRank;
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeChangeWidth)
-			{
-				this.isChangeWidth = true;
-				this.changeWidthPos = pos.X;
-				this.changeWidthInitial = this.bounds.Width;
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeMoveColumnsSeparator1)
-			{
-				this.isMoveColumnsSeparator1 = true;
-				this.editor.LockObject(this);
-			}
 		}
 
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (pos == this.initialPos)
-			{
-				if (this.hilitedElement == ActiveElement.NodeHeader ||
-					this.hilitedElement == ActiveElement.NodeEdgeName)
-				{
-					if (this.isDragging)
-					{
-						this.editor.UpdateAfterMoving (this);
-						this.isDragging = false;
-						this.editor.LockObject (null);
-						this.editor.SetLocalDirty ();
-					}
-
-					this.StartEdition (this.hilitedElement, this.hilitedEdgeRank);
-					return;
-				}
-			}
+			base.MouseUp (message, pos);
 
 			if (this.isDragging)
 			{
@@ -630,73 +324,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.isEdgeMoving)
+			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
 			{
-				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
-				{
-					this.MoveEdge(this.edgeInitialRank, this.hilitedEdgeRank);
-				}
-				this.isEdgeMoving = false;
-				this.editor.LockObject(null);
-				return;
 			}
-			
-			if (this.isChangeWidth)
+
+			if (this.hilitedElement == ActiveElement.NodeOpenRight)
 			{
-				this.editor.UpdateAfterMoving(this);
-				this.isChangeWidth = false;
-				this.editor.LockObject(null);
-				this.editor.SetLocalDirty ();
-				return;
-			}
-			
-			if (this.isMoveColumnsSeparator1)
-			{
-				this.isMoveColumnsSeparator1 = false;
-				this.editor.LockObject(null);
-				this.editor.SetLocalDirty ();
-				return;
-			}
-			
-			if (this.hilitedElement == ActiveElement.NodeExtend)
-			{
-				this.IsExtended = !this.IsExtended;
-				this.editor.UpdateAfterGeometryChanged(this);
-				this.editor.SetLocalDirty ();
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeClose)
 			{
 				if (!this.isRoot)
 				{
-					this.editor.CloseNode(this);
+					this.editor.CloseObject(this);
 					this.editor.UpdateAfterAddOrRemoveEdge(null);
-				}
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
-			{
-				this.RemoveEdge(this.hilitedEdgeRank);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
-			{
-				this.AddEdge(this.hilitedEdgeRank);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeName)
-			{
-				if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
-				{
-					this.ChangeEdgeType(this.hilitedEdgeRank);
-				}
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeType)
-			{
-				if (this.IsMousePossible(this.hilitedElement, this.hilitedEdgeRank))
-				{
-					this.ChangeEdgeType(this.hilitedEdgeRank);
 				}
 			}
 
@@ -707,11 +348,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.NodeComment)
 			{
 				this.AddComment();
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeInfo)
-			{
-				this.AddInfo();
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeColor5)
@@ -758,6 +394,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
+			if (base.MouseDetect (pos, out element, out edgeRank))
+			{
+				return true;
+			}
+
 			element = ActiveElement.None;
 			edgeRank = -1;
 			this.SetEdgesHilited(false);
@@ -773,221 +414,86 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return false;
 			}
 
-			Rectangle rect;
-
-			if (this.isEdgeMoving)
+			//	Souris dans le bouton d'ouverture ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLeftButton, pos))
 			{
-				//	Souris entre deux champs ?
-				for (int i=-1; i<this.edges.Count; i++)
-				{
-					rect = this.GetEdgeMovingBounds(i);
-					if (rect.Contains(pos))
-					{
-						element = ActiveElement.NodeEdgeMoving;
-						edgeRank = i;
-						return true;
-					}
-				}
+				element = ActiveElement.NodeOpenLeft;
+				return true;
 			}
-			else
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenRightButton, pos))
 			{
-				//	Souris dans le bouton compact/étendu ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionExtendButton, pos))
-				{
-					element = ActiveElement.NodeExtend;
-					return true;
-				}
+				element = ActiveElement.NodeOpenRight;
+				return true;
+			}
 
-				//	Souris dans le bouton de fermeture ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCloseButton, pos))
-				{
-					element = ActiveElement.NodeClose;
-					return true;
-				}
+			//	Souris dans le bouton de fermeture ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCloseButton, pos))
+			{
+				element = ActiveElement.NodeClose;
+				return true;
+			}
 
-				//	Souris dans le bouton des commentaires ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
-				{
-					element = ActiveElement.NodeComment;
-					return true;
-				}
+			//	Souris dans le bouton des commentaires ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
+			{
+				element = ActiveElement.NodeComment;
+				return true;
+			}
 
-				//	Souris dans le bouton des informations ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionInfoButton, pos))
-				{
-					element = ActiveElement.NodeInfo;
-					return true;
-				}
+			//	Souris dans le bouton des couleurs ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
+			{
+				element = ActiveElement.NodeColor5;
+				return true;
+			}
 
-				//	Souris dans le bouton des couleurs ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
-				{
-					element = ActiveElement.NodeColor5;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
+			{
+				element = ActiveElement.NodeColor6;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
-				{
-					element = ActiveElement.NodeColor6;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(2), pos))
+			{
+				element = ActiveElement.NodeColor3;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(2), pos))
-				{
-					element = ActiveElement.NodeColor3;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
+			{
+				element = ActiveElement.NodeColor7;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
-				{
-					element = ActiveElement.NodeColor7;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
+			{
+				element = ActiveElement.NodeColor8;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
-				{
-					element = ActiveElement.NodeColor8;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
+			{
+				element = ActiveElement.NodeColor1;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
-				{
-					element = ActiveElement.NodeColor1;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
+			{
+				element = ActiveElement.NodeColor2;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
-				{
-					element = ActiveElement.NodeColor2;
-					return true;
-				}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
+			{
+				element = ActiveElement.NodeColor4;
+				return true;
+			}
 
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
-				{
-					element = ActiveElement.NodeColor4;
-					return true;
-				}
-
-				if (this.isExtended)
-				{
-					//	Souris dans le bouton pour changer la largeur ?
-					//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
-					double d1 = Point.Distance(this.PositionChangeWidthButton, pos);
-					double d2;
-					
-					d2 = Point.Distance(this.PositionMoveColumnsButton(0), pos);
-					if (d1 < d2)
-					{
-						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d1 <= AbstractObject.buttonRadius+1)
-						{
-							element = ActiveElement.NodeChangeWidth;
-							return true;
-						}
-					}
-					else
-					{
-						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d2 <= AbstractObject.buttonRadius+1)
-						{
-							element = ActiveElement.NodeMoveColumnsSeparator1;
-							return true;
-						}
-					}
-
-					//	Souris dans l'en-tête ?
-					if (this.bounds.Contains(pos) && 
-						(pos.Y >= this.bounds.Top-AbstractObject.headerHeight ||
-						 pos.Y <= this.bounds.Bottom+AbstractObject.footerHeight))
-					{
-						element = ActiveElement.NodeHeader;
-						this.SetEdgesHilited(true);
-						return true;
-					}
-
-					//	Souris entre deux champs ?
-					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
-					{
-						for (int i=-1; i<this.edges.Count; i++)
-						{
-							rect = this.GetEdgeAddBounds(i);
-							if (rect.Contains(pos))
-							{
-								element = ActiveElement.NodeEdgeAdd;
-								edgeRank = i;
-								this.SetEdgesHilited(true);
-								return true;
-							}
-						}
-					}
-
-					//	Souris sur le séparateur des colonnes ?
-					double sep = this.ColumnsSeparatorAbsolute(0);
-					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked &&
-						this.columnsSeparatorRelative1 < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
-						pos.Y >= this.bounds.Bottom+AbstractObject.footerHeight &&
-						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
-					{
-						element = ActiveElement.NodeMoveColumnsSeparator1;
-						this.SetEdgesHilited(true);
-						return true;
-					}
-
-					//	Souris dans un champ ?
-					for (int i=0; i<this.edges.Count; i++)
-					{
-						rect = this.GetEdgeRemoveBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeRemove;
-							edgeRank = i;
-							this.SetEdgesHilited(true);
-							return true;
-						}
-
-						rect = this.GetEdgeMovableBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeMovable;
-							edgeRank = i;
-							this.SetEdgesHilited(true);
-							return true;
-						}
-
-						rect = this.GetEdgeNameBounds(i);
-						if (rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeName;
-							edgeRank = i;
-							this.SetEdgesHilited(true);
-							return true;
-						}
-
-						rect = this.GetEdgeTypeBounds(i);
-						if (rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeType;
-							edgeRank = i;
-							this.SetEdgesHilited(true);
-							return true;
-						}
-
-						rect = this.GetEdgeExpressionBounds(i);
-						if (rect.Contains(pos))
-						{
-							element = ActiveElement.NodeEdgeExpression;
-							edgeRank = i;
-							this.SetEdgesHilited(true);
-							return true;
-						}
-					}
-				}
-				else  // boîte compactée ?
-				{
-					if (this.bounds.Contains(pos))
-					{
-						element = ActiveElement.NodeHeader;
-						return true;
-					}
-				}
+			if (this.bounds.Contains(pos))
+			{
+				element = ActiveElement.NodeHeader;
+				return true;
 			}
 
 			if (!this.bounds.Contains(pos))
@@ -1007,342 +513,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override void AcceptEdition()
-		{
-			if (this.editingElement == ActiveElement.NodeHeader)
-			{
-				this.Entity.Name        = this.editingTextFieldName.Text;
-				this.Entity.Description = this.editingTextFieldDescription.Text;
-
-				this.UpdateTitle ();
-			}
-
-			if (this.editingElement == ActiveElement.NodeEdgeName)
-			{
-				this.Entity.Edges[this.editingRank].Name        = this.editingTextFieldName.Text;
-				this.Entity.Edges[this.editingRank].Description = this.editingTextFieldDescription.Text;
-
-				this.edges[this.editingRank].UpdateTextField ();
-			}
-
-			this.StopEdition ();
-		}
-
-		public override void CancelEdition()
-		{
-			this.StopEdition ();
-		}
-
-		private void StartEdition(ActiveElement element, int rank)
-		{
-			Rectangle rect = Rectangle.Empty;
-			string text = null;
-			string description = null;
-
-			if (element == ActiveElement.NodeHeader)
-			{
-				rect = new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-				rect.Deflate (12, 6);
-
-				text        = this.Entity.Name.ToString ();
-				description = this.Entity.Description.ToString ();
-			}
-
-			if (element == ActiveElement.NodeEdgeName && rank >= 0 && rank < this.Entity.Edges.Count)
-			{
-				rect = this.GetEdgeNameBounds (rank);
-				rect.Offset (-4, 0);
-
-				text        = this.Entity.Edges[rank].Name.ToString ();
-				description = this.Entity.Edges[rank].Description.ToString ();
-			}
-
-			if (rect.IsEmpty)
-			{
-				return;
-			}
-
-			this.editingElement = element;
-			this.editingRank = rank;
-
-			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
-			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
-			double width  = System.Math.Max (p2.X-p1.X, 175);
-			double height = System.Math.Max (p1.Y-p2.Y, 20);
-
-			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
-
-			double thickness = 2;
-			Rectangle frameRect = rect;
-			frameRect.Inflate (thickness);
-
-			double descriptionHeight = 10+14*5;  // hauteur pour 5 lignes
-			Rectangle descriptionRect = new Rectangle (rect.Left, rect.Bottom-descriptionHeight-thickness+1, rect.Width, descriptionHeight);
-
-			this.editingTextFieldDescription = new TextFieldMulti ();
-			this.editingTextFieldDescription.Parent = this.editor;
-			this.editingTextFieldDescription.SetManualBounds (descriptionRect);
-			this.editingTextFieldDescription.ScrollerVisibility = false;
-			this.editingTextFieldDescription.Text = description;
-			this.editingTextFieldDescription.TabIndex = 2;
-
-			this.editingFrame = new Separator ();
-			this.editingFrame.Parent = this.editor;
-			this.editingFrame.Color = this.GetColorMain ();
-			this.editingFrame.IsHorizontalLine = false;
-			this.editingFrame.IsVerticalLine = false;
-			this.editingFrame.SetManualBounds (frameRect);
-
-			this.editingTextFieldName = new TextField ();
-			this.editingTextFieldName.Parent = this.editor;
-			this.editingTextFieldName.SetManualBounds (rect);
-			this.editingTextFieldName.Text = text;
-			this.editingTextFieldName.TabIndex = 1;
-			this.editingTextFieldName.SelectAll ();
-			this.editingTextFieldName.Focus ();
-
-			this.editor.EditingObject = this;
-			this.hilitedElement = ActiveElement.None;
-		}
-
-		private void StopEdition()
-		{
-			this.editor.Children.Remove (this.editingFrame);
-			this.editor.Children.Remove (this.editingTextFieldName);
-			this.editor.Children.Remove (this.editingTextFieldDescription);
-
-			this.editingFrame = null;
-			this.editingTextFieldName = null;
-			this.editingTextFieldDescription = null;
-
-			this.editor.EditingObject = null;
-		}
-
-
-		private void SetEdgesHilited(bool isHilited)
-		{
-			//	Modifie l'état 'hilited' de toutes les connexions qui partent de l'objet.
-			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
-			if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
-			{
-				isHilited = false;
-			}
-
-			foreach (Edge edge in this.edges)
-			{
-				if (edge.ObjectEdge != null)
-				{
-					edge.ObjectEdge.IsSrcHilited = isHilited;
-				}
-			}
-		}
-
-		private bool IsEdgeReadyForOpen()
-		{
-			//	Indique si l'une des connexions qui partent de l'objet est en mode EdgeOpen*.
-			foreach (Edge edge in this.edges)
-			{
-				if (edge.ObjectEdge != null)
-				{
-					ActiveElement ae = edge.ObjectEdge.HilitedElement;
-					if (ae == ActiveElement.EdgeOpenLeft ||
-						ae == ActiveElement.EdgeOpenRight)
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		private Rectangle GetEdgeRemoveBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-
-			rect.Width = rect.Height;
-			
-			return rect;
-		}
-
-		private Rectangle GetEdgeAddBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-			
-			rect.Width = rect.Height;
-			rect.Bottom -= 6;
-			rect.Height = 6*2;
-
-			return rect;
-		}
-
-		private Rectangle GetEdgeMovableBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-
-			rect.Left = rect.Right-rect.Height;
-			
-			return rect;
-		}
-
-		private Rectangle GetEdgeMovingBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-			
-			rect.Bottom -= ObjectNode.edgeHeight/2;
-			rect.Height = ObjectNode.edgeHeight;
-
-			return rect;
-		}
-
-		private Rectangle GetEdgeNameBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par le nom d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-
-			rect.Deflate(ObjectNode.textMargin, 0);
-			rect.Right = this.ColumnsSeparatorAbsolute(0);
-
-			return rect;
-		}
-
-		private Rectangle GetEdgeTypeBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par le type d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-			
-			rect.Deflate(ObjectNode.textMargin, 0);
-			rect.Left = this.ColumnsSeparatorAbsolute(0)+1;
-			rect.Right = this.ColumnsSeparatorAbsolute(1);
-
-			return rect;
-		}
-
-		private Rectangle GetEdgeExpressionBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par l'expression d'un champ.
-			Rectangle rect = this.GetEdgeBounds(rank);
-			
-			rect.Deflate(9.5, 0);
-			rect.Left = this.ColumnsSeparatorAbsolute(1)+1;
-
-			return rect;
-		}
-
-		private Rectangle GetEdgeBounds(int rank)
-		{
-			//	Retourne le rectangle occupé par un champ.
-			Rectangle rect = this.bounds;
-			rect.Deflate(2, 0);
-			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectNode.edgeHeight*(rank+1) - 12;
-			rect.Height = ObjectNode.edgeHeight;
-
-			return rect;
-		}
-
-
-		private void MoveEdge(int srcRank, int dstRank)
-		{
-			//	Déplace un champ.
-			if (dstRank < srcRank)
-			{
-				dstRank++;
-			}
-
-			var entity = this.Entity.Edges[srcRank];
-			this.Entity.Edges.RemoveAt (srcRank);
-			this.Entity.Edges.Insert (dstRank, entity);
-
-			var edge = this.edges[srcRank];
-			this.edges.RemoveAt (srcRank);
-			this.edges.Insert (dstRank, edge);
-
-			this.UpdateEdgesLink ();
-			this.editor.UpdateAfterAddOrRemoveEdge (this);
-			this.editor.SetLocalDirty ();
-			this.hilitedElement = ActiveElement.None;
-		}
-
-		private void RemoveEdge(int rank)
-		{
-			//	Supprime un champ.
-			this.Entity.Edges.RemoveAt (rank);
-			this.edges.RemoveAt (rank);
-
-			this.UpdateEdgesLink ();
-			this.editor.UpdateAfterAddOrRemoveEdge (this);
-			this.editor.SetLocalDirty ();
-			this.hilitedElement = ActiveElement.None;
-		}
-
-		private void AddEdge(int rank)
-		{
-			//	Ajoute un nouveau champ.
-			var newEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
-
-			newEntity.Name = "Nouveau";
-			newEntity.Description = "Nouvelle connexion vers un noeud";
-			newEntity.TransitionAction = "xxx";
-			//?newEdge.NextNode = "";
-
-			var newEdge = new Edge (this.editor, newEntity, this);
-	
-			this.Entity.Edges.Insert (rank+1, newEntity);
-			this.edges.Insert (rank+1, newEdge);
-
-			this.UpdateEdgesLink ();
-			this.editor.UpdateAfterAddOrRemoveEdge (this);
-			this.editor.SetLocalDirty ();
-			this.hilitedElement = ActiveElement.None;
-		}
-
-		private void ChangeEdgeType(int rank)
-		{
-			//	Choix du type pour un champ.
-		}
-
-		private void UpdateInformations()
-		{
-			//	Met à jour les informations de l'éventuel ObjectInfo lié.
-			if (this.info != null)  // existe un ObjectInfo lié ?
-			{
-				this.info.Text = this.GetInformations (false);
-				this.editor.UpdateAfterCommentChanged ();
-			}
-		}
-
-		private string GetInformations(bool resume)
-		{
-			//	Retourne les informations pour l'ObjectInfo lié.
-			return this.Entity.Name.ToString ();  // TODO: provisoire
-		}
-
-		private void UpdateEdges()
-		{
-			this.edges.Clear ();
-
-			foreach (var entityEdge in this.Entity.Edges)
-			{
-				var edge = new Edge (this.editor, entityEdge, this);
-				this.edges.Add (edge);
-			}
-		}
-
-		private void UpdateEdgesLink()
-		{
-			//	Met à jour toutes les liaisons des champs.
-			for (int i=0; i<this.edges.Count; i++)
-			{
-				this.edges[i].Index = i;
-				this.edges[i].IsSourceExpanded = this.isExtended;
-			}
-		}
-
-
 		private void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.
@@ -1353,47 +523,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				Rectangle rect = this.bounds;
 				rect.Left = rect.Right+30;
-				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
-				this.comment.SetBounds(rect);
-				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+				rect.Width = System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth);
+				this.comment.SetBounds (rect);
+				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment(this.comment);
-				this.editor.UpdateAfterCommentChanged();
+				this.editor.AddComment (this.comment);
+				this.editor.UpdateAfterCommentChanged ();
 
-				this.comment.EditComment();  // édite tout de suite le texte du commentaire
+				this.comment.EditComment ();  // édite tout de suite le texte du commentaire
 			}
 			else
 			{
 				this.comment.IsVisible = !this.comment.IsVisible;
-			}
-
-			this.editor.SetLocalDirty ();
-		}
-
-		private void AddInfo()
-		{
-			//	Ajoute une information à la boîte.
-			if (this.info == null)
-			{
-				this.info = new ObjectInfo (this.editor, this.Entity);
-				this.info.AttachObject = this;
-				this.info.BackgroundMainColor = this.BackgroundMainColor;
-
-				Rectangle rect = this.bounds;
-				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
-				rect.Bottom = rect.Top+20;
-				rect.Height = 50;  // hauteur arbitraire
-				this.info.SetBounds(rect);
-				this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
-
-				this.UpdateInformations();
-
-				this.editor.AddInfo(this.info);
-				this.editor.UpdateAfterCommentChanged();
-			}
-			else
-			{
-				this.info.IsVisible = !this.info.IsVisible;
 			}
 
 			this.editor.SetLocalDirty ();
@@ -1416,12 +557,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect.Inflate(2);
 			}
 			rect.Offset(ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
-			this.DrawNodeShadow(graphics, rect, ObjectNode.roundFrameRadius+ObjectNode.shadowOffset, (int)ObjectNode.shadowOffset, 0.2);
+			this.DrawNode2Shadow (graphics, rect, (int) ObjectNode.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathNodeRectangle (rect, ObjectNode.roundFrameRadius);
+			Path path = this.PathNode2Rectangle (rect);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -1441,165 +582,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
 
-			//	Dessine en blanc la zone pour les champs.
-			if (this.isExtended)
-			{
-				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
-				graphics.AddFilledRectangle(inside);
-				graphics.RenderSolid(this.GetColor(1));
-				graphics.AddFilledRectangle(inside);
-				Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
-				Color ci2 = this.GetColorMain(0.0);
-				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
-
-				//	Trait vertical de séparation.
-				if (this.columnsSeparatorRelative1 < 1.0)
-				{
-					double posx = this.ColumnsSeparatorAbsolute(0)+0.5;
-					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(colorLine);
-				}
-
-				{
-					double posx = this.ColumnsSeparatorAbsolute(1)+0.5;
-					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(colorLine);
-				}
-
-				//	Ombre supérieure.
-				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
-				graphics.AddFilledRectangle(shadow);
-				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
-			}
-
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.GetColor(1) : this.GetColor(0);
 
-			rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-			rect.Deflate(8, 2);
+			rect = this.bounds;
+			rect.Offset (0, 2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-
-			//	Dessine les noms des champs.
-			if (this.isExtended)
-			{
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
-				graphics.RenderSolid(colorFrame);
-
-				//	Dessine toutes les lignes, titres ou simples champs.
-				for (int i=0; i<this.edges.Count; i++)
-				{
-					Color colorName = this.GetColor(0);
-					Color colorType = this.GetColor(0);
-					Color colorExpr = this.GetColor(0);
-
-					if (this.hilitedElement == ActiveElement.NodeEdgeName && this.hilitedEdgeRank == i)
-					{
-						rect = this.GetEdgeNameBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain());
-
-						colorName = this.GetColor(1);
-					}
-
-					if (this.hilitedElement == ActiveElement.NodeEdgeType && this.hilitedEdgeRank == i)
-					{
-						rect = this.GetEdgeTypeBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain());
-
-						colorType = this.GetColor(1);
-					}
-
-					if (this.hilitedElement == ActiveElement.NodeEdgeExpression && this.hilitedEdgeRank == i)
-					{
-						rect = this.GetEdgeExpressionBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain());
-
-						colorExpr = this.GetColor(1);
-					}
-
-					if ((this.hilitedElement == ActiveElement.NodeEdgeRemove || this.hilitedElement == ActiveElement.NodeEdgeMovable) && this.hilitedEdgeRank == i)
-					{
-						rect = this.GetEdgeBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain(0.3));
-					}
-
-					if (this.isEdgeMoving && this.edgeInitialRank == i)
-					{
-						rect = this.GetEdgeBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain(0.3));
-					}
-
-					//	Affiche le nom du champ.
-					rect = this.GetEdgeNameBounds(i);
-					rect.Right -= 2;
-					this.edges[i].TextLayoutField.LayoutSize = rect.Size;
-					this.edges[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
-
-					//	Affiche le type du champ.
-					rect = this.GetEdgeTypeBounds(i);
-					rect.Left += 1;
-					if (rect.Width > 10)
-					{
-						this.edges[i].TextLayoutType.LayoutSize = rect.Size;
-						this.edges[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
-					}
-
-					rect = this.GetEdgeBounds(i);
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.RenderSolid(colorLine);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
-				{
-					Point p1 = this.GetEdgeBounds(this.edgeInitialRank).Center;
-					Point p2 = this.GetEdgeMovingBounds(this.hilitedEdgeRank).Center;
-					p1.X = p2.X = this.GetEdgeMovableBounds(0).Center.X;
-					this.DrawMovingArrow(graphics, p1, p2);
-				}
-
-				if (this.hilitedElement != ActiveElement.None &&
-					this.hilitedElement != ActiveElement.NodeChangeWidth &&
-					this.hilitedElement != ActiveElement.NodeMoveColumnsSeparator1 &&
-					this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
-					!this.IsHeaderHilite && !this.isEdgeMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
-				{
-					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetEdgeAddBounds(-1).Center;
-					Point p2 = this.GetEdgeAddBounds(this.edges.Count-1).Center;
-					bool hilited = this.hilitedElement == ActiveElement.NodeEdgeAdd || this.hilitedElement == ActiveElement.NodeEdgeRemove;
-					this.DrawEmptySlider(graphics, p1, p2, hilited);
-
-					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					p1.X = p2.X = this.GetEdgeMovableBounds(0).Center.X;
-					hilited = this.hilitedElement == ActiveElement.NodeEdgeMovable;
-					this.DrawEmptySlider(graphics, p1, p2, hilited);
-				}
-			}
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
 			graphics.RenderSolid (colorFrame);
 
-			//	Dessine le bouton compact/étendu.
-			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			if (this.hilitedElement == ActiveElement.NodeExtend)
+			//	Dessine le bouton d'ouverture.
+			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
 			{
-				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
+				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
+				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenRight)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
 			}
 
 			//	Dessine le bouton de fermeture.
@@ -1620,55 +631,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
-			}
-
-			//	Dessine le bouton des informations.
-			if (this.hilitedElement == ActiveElement.NodeInfo)
-			{
-				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
-			}
-
-			//	Dessine les boutons sur les glissières.
-			if (this.isExtended)
-			{
-				if (this.hilitedElement == ActiveElement.NodeEdgeRemove)
-				{
-					rect = this.GetEdgeRemoveBounds(this.hilitedEdgeRank);
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Minus, true, true);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeAdd)
-				{
-					rect = this.GetEdgeBounds(this.hilitedEdgeRank);
-					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
-
-					rect = this.GetEdgeAddBounds(this.hilitedEdgeRank);
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeMovable)
-				{
-					rect = this.GetEdgeMovableBounds(this.hilitedEdgeRank);
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.VerticalMove, true, true);
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeMoving)
-				{
-					rect = this.GetEdgeBounds(this.hilitedEdgeRank);
-					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
-				}
-
-				if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
-				{
-					rect = this.GetEdgeMovableBounds(this.hilitedEdgeRank);
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-", true, true);
-				}
 			}
 
 			//	Dessine le bouton des couleurs.
@@ -1744,34 +706,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
 			}
 
-			if (this.isExtended)
-			{
-				//	Dessine le bouton pour déplacer le séparateur des colonnes.
-				if (this.hilitedElement == ActiveElement.NodeMoveColumnsSeparator1)
-				{
-					double sep = this.ColumnsSeparatorAbsolute(0);
-					graphics.LineWidth = 4;
-					graphics.AddLine(sep, this.bounds.Bottom+AbstractObject.footerHeight+3, sep, this.bounds.Top-AbstractObject.headerHeight-3);
-					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.GetColorMain());
-
-					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton(0), AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.NodeHeader && !this.isDragging)
-				{
-					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton(0), AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-
-				//	Dessine le bouton pour changer la largeur.
-				if (this.hilitedElement == ActiveElement.NodeChangeWidth)
-				{
-					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.NodeHeader && !this.isDragging)
-				{
-					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-			}
+			//	Dessine les connexions.
+			this.DrawLinks (graphics);
 		}
 
 		private bool IsHeaderHilite
@@ -1796,6 +732,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeColor7 ||
 						this.hilitedElement == ActiveElement.NodeColor8 ||
 						this.hilitedElement == ActiveElement.NodeExtend ||
+						this.hilitedElement == ActiveElement.NodeOpenLeft ||
+						this.hilitedElement == ActiveElement.NodeOpenRight ||
 						this.hilitedElement == ActiveElement.NodeClose);
 			}
 		}
@@ -1805,62 +743,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le dessus de l'objet.
 		}
 
-		private void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
+		private Point PositionCommentButton
 		{
-			//	Dessine un large traitillé.
-			Path path = new Path();
-			path.MoveTo(p1);
-			path.LineTo(p2);
-			Misc.DrawPathDash(graphics, path, 3, 5, 5, false, color);
-		}
-
-		private void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
-		{
-			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
-			Rectangle rect = new Rectangle(p1, p2);
-			rect.Inflate(2.5+6);
-			this.DrawRoundShadow(graphics, rect, rect.Width/2, 6, 0.2);
-			rect.Deflate(6);
-			Path path = this.PathRoundRectangle(rect, rect.Width/2);
-
-			Color hiliteColor = this.GetColor(1);
-			if (hilited)
+			//	Retourne la position du bouton pour montrer le commentaire.
+			get
 			{
-				hiliteColor = this.GetColorMain();
-				hiliteColor = Color.FromAlphaRgb(hiliteColor.A, 1-(1-hiliteColor.R)*0.2, 1-(1-hiliteColor.G)*0.2, 1-(1-hiliteColor.B)*0.2);
+				return new Point (this.bounds.Left+AbstractObject.buttonRadius, this.bounds.Top-AbstractObject.buttonRadius);
 			}
-
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(hiliteColor);
-
-			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(this.GetColor(0));
-		}
-
-		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
-		{
-			//	Dessine une flèche pendant le déplacement d'un champ.
-			if (System.Math.Abs(p1.Y-p2.Y) < ObjectNode.edgeHeight)
-			{
-				return;
-			}
-
-			p2 = Point.Move(p2, p1, 1);
-			double d = (p1.Y > p2.Y) ? -6 : 6;
-			double sx = 3;
-
-			Path path = new Path();
-			path.MoveTo(p2);
-			path.LineTo(p2.X-d*3/sx, p2.Y-d*2);
-			path.LineTo(p2.X-d/sx, p2.Y-d*2);
-			path.LineTo(p1.X-d/sx, p1.Y);
-			path.LineTo(p1.X+d/sx, p1.Y);
-			path.LineTo(p2.X+d/sx, p2.Y-d*2);
-			path.LineTo(p2.X+d*3/sx, p2.Y-d*2);
-			path.Close();
-
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.GetColorMain());
 		}
 
 		private Point PositionCloseButton
@@ -1868,63 +757,32 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-AbstractObject.buttonRadius, this.bounds.Top-AbstractObject.buttonRadius);
 			}
 		}
 
-		private Point PositionExtendButton
+		private Point PositionOpenLeftButton
 		{
-			//	Retourne la position du bouton pour étendre.
+			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				return new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Left, this.bounds.Center.Y);
 			}
 		}
 
-		private Point PositionChangeWidthButton
+		private Point PositionOpenRightButton
 		{
-			//	Retourne la position du bouton pour changer la largeur.
+			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				return new Point(this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
-			}
-		}
-
-		private Point PositionMoveColumnsButton(int rank)
-		{
-			//	Retourne la position du bouton pour déplacer le séparateur des colonnes.
-			return new Point(this.ColumnsSeparatorAbsolute(rank), this.bounds.Bottom+AbstractObject.footerHeight/2+1);
-		}
-
-		private Point PositionCommentButton
-		{
-			//	Retourne la position du bouton pour montrer le commentaire.
-			get
-			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
-			}
-		}
-
-		private Point PositionInfoButton
-		{
-			//	Retourne la position du bouton pour montrer les informations.
-			get
-			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right, this.bounds.Center.Y);
 			}
 		}
 
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			if (this.IsExtended)
-			{
-				return new Point(this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
-			}
-			else
-			{
-				return Point.Zero;
-			}
+			return new Point (this.bounds.Center.X + (2*AbstractObject.buttonSquare+1)*(rank-3.5) + 0.5, this.bounds.Bottom + AbstractObject.buttonSquare);
 		}
 
 		private string GetGroupTooltip(int rank)
@@ -1933,30 +791,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return null;  // pas de tooltip
 		}
 
-		private double ColumnsSeparatorAbsolute(int rank)
-		{
-			//	Retourne la position absolue du séparateur des colonnes.
-			Rectangle rect = this.bounds;
-			rect.Deflate(ObjectNode.textMargin, 0);
-
-			double max = rect.Left + System.Math.Floor(rect.Width-ObjectNode.expressionWidth);
-
-			if (rank == 0)
-			{
-				double pos = rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative1);
-				return System.Math.Min(pos, max);
-			}
-			else
-			{
-				return max;
-			}
-		}
-
 
 		private void UpdateTitle()
 		{
 			//	Met à jour le titre du noeud.
-			this.Title = this.Entity.Name.ToString ();
+			this.TitleNumber = this.editor.GetNodeTitleNumbrer ();
 		}
 
 
@@ -2099,49 +938,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double			roundFrameRadius = 15;
+		public static readonly double			frameRadius = 30;
 		private static readonly double			shadowOffset = 6;
-		private static readonly double			textMargin = 13;
-		private static readonly double			expressionWidth = 20;
-		private static readonly double			edgeHeight = 20;
-		private static readonly double			sourcesMenuHeight = 20;
-		private static readonly double			indentWidth = 2;
 
-		private ObjectComment					comment;
-		private ObjectInfo						info;
-		private Rectangle						bounds;
-		private double							columnsSeparatorRelative1;
 		private bool							isRoot;
-		private bool							isExtended;
 		private bool							isConnectedToRoot;
-		private string							titleString;
+		private int								titleNumber;
 		private TextLayout						title;
-		private List<Edge>						edges;
-		private List<ObjectEdge>				edgeListBt;
-		private List<ObjectEdge>				edgeListBb;
-		private List<ObjectEdge>				edgeListC;
-		private List<ObjectEdge>				edgeListD;
 		private List<ObjectNode>				parents;
-
-		private Point							initialPos;
 
 		private bool							isDragging;
 		private Point							draggingOffset;
 
-		private bool							isEdgeMoving;
-		private int								edgeInitialRank;
-
-		private bool							isChangeWidth;
-		private double							changeWidthPos;
-		private double							changeWidthInitial;
-
-		private bool							isMoveColumnsSeparator1;
 		private bool							isHilitedForEdgeChanging;
-
-		private ActiveElement					editingElement;
-		private int								editingRank;
-		private Separator						editingFrame;
-		private TextField						editingTextFieldName;
-		private TextFieldMulti					editingTextFieldDescription;
 	}
 }

@@ -1145,11 +1145,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.SetLocalDirty ();
 		}
 
-		private ObjectNode2 DetectNode(Point pos)
+		private ObjectNode DetectNode(Point pos)
 		{
 			for (int i=this.editor.Nodes.Count-1; i>=0; i--)
 			{
-				ObjectNode2 node = this.editor.Nodes2[i];
+				ObjectNode node = this.editor.Nodes[i];
 
 				if (node.Bounds.Contains (pos))
 				{
@@ -1169,6 +1169,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool						isDraggingRoute;
 		private bool						isDraggingDst;
 		private ObjectComment				comment;
-		private ObjectNode2					hilitedDstNode;
+		private ObjectNode					hilitedDstNode;
 	}
 }
