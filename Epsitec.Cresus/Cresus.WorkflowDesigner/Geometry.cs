@@ -141,5 +141,135 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return ( Point.Distance(a,p) <= length && Point.Distance(b,p) <= length );
 		}
 
+
+		public static bool DetectOutline(Path path, double width, Point pos)
+		{
+			//	Détecte si la souris est sur le trait d'un chemin.
+			return (Geometry.DetectOutlineRank (path, width, pos) != -1);
+		}
+
+		public static int DetectOutlineRank(Path path, double width, Point pos)
+		{
+			//	Détecte sur quel trait d'un chemin est la souris.
+			//	Retourne le rang du trait (0..1), ou -1.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			Point p1,s1,s2,p2;
+			return Geometry.DetectOutlineRank (path, width, pos, out p1, out s1, out s2, out p2);
+		}
+
+		public static int DetectOutlineRank(Path path, double width, Point pos,
+											out Point bp1, out Point bs1, out Point bs2, out Point bp2)
+		{
+			//	Détecte sur quel trait d'un chemin est la souris.
+			//	Retourne le rang du trait (0..1), ou -1.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			bp1 = Point.Zero;
+			bs1 = Point.Zero;
+			bs2 = Point.Zero;
+			bp2 = Point.Zero;
+
+			if (path == null)
+			{
+				return -1;
+			}
+
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements (out elements, out points);
+
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
+			int i = 0;
+			int rank = 0;
+			while (i < elements.Length)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						current = points[i++];
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						if (Point.DetectSegment (current, p1, pos, width))
+						{
+							bp1 = current;
+							bs1 = current;
+							bs2 = p1;
+							bp2 = p1;
+							return rank;
+						}
+						rank++;
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i];
+						p2 = points[i++];
+						p3 = points[i++];
+						Geometry.BezierS1ToS2 (current, ref p1, ref p2, p3);
+						if (Point.DetectBezier (current, p1, p2, p3, pos, width))
+						{
+							bp1 = current;
+							bs1 = p1;
+							bs2 = p2;
+							bp2 = p3;
+							return rank;
+						}
+						rank++;
+						current = p3;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						if (Point.DetectBezier (current, p1, p2, p3, pos, width))
+						{
+							bp1 = current;
+							bs1 = p1;
+							bs2 = p2;
+							bp2 = p3;
+							return rank;
+						}
+						rank++;
+						current = p3;
+						break;
+
+					default:
+						if ((elements[i] & PathElement.FlagClose) != 0)
+						{
+							if (current != start)
+							{
+								if (Point.DetectSegment (current, start, pos, width))
+								{
+									bp1 = current;
+									bs1 = current;
+									bs2 = start;
+									bp2 = start;
+									return rank;
+								}
+								rank++;
+							}
+						}
+						i++;
+						break;
+				}
+			}
+			return -1;
+		}
+
+		public static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
+		{
+			//	Convertit une courbe de Bézier définie par un seul point secondaire en
+			//	une courbe "traditionnelle" définie par deux points secondaires.
+			//	Il s'agit ici d'une approximation empyrique !
+			s1 = Point.Scale (p1, s1, 2.0/3.0);
+			s2 = Point.Scale (p2, s2, 2.0/3.0);
+		}
 	}
 }

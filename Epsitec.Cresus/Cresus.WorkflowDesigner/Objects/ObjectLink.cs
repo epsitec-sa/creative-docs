@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris le long de la connexion ?
-			if (DetectOver(pos, 4))
+			if (this.DetectOver(pos, 4))
 			{
 				element = ActiveElement.EdgeHilited;
 				return true;
@@ -363,22 +363,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Détecte si la souris est le long de la connexion.
 			if (this.points.Count >= 2 && this.link.DstNode != null)
 			{
-				for (int i=0; i<this.points.Count-1; i++)
+				if (Geometry.DetectOutline (this.GetPathLines (), margin, pos))
 				{
-					Point p1 = this.points[i];
-					Point p2 = this.points[i+1];
+					return true;
+				}
 
-					if (Point.Distance(p1, pos) <= margin ||
-						Point.Distance(p2, pos) <= margin)
-					{
-						return true;
-					}
-
-					Point p = Point.Projection(p1, p2, pos);
-					if (Point.Distance(p, pos) <= margin && Geometry.IsInside(p1, p2, p))
-					{
-						return true;
-					}
+				if (Geometry.DetectOutline (this.GetPathCurves (), margin, pos))
+				{
+					return true;
 				}
 			}
 
@@ -464,33 +456,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.points.Count >= 2 && this.link.DstNode != null)
 			{
-				Point start = Point.Move (this.points[0], this.points[1], AbstractObject.bulletRadius);
-
 				graphics.LineWidth = 2;
-				for (int i=0; i<this.points.Count-1; i++)
-				{
-					Point p1 = (i==0) ? start : this.points[i];
-					Point p2 = this.points[i+1];
-
-					if (i == 0)
-					{
-						AbstractObject.DrawStartingArrow(graphics, p1, p2);
-					}
-
-					graphics.AddLine(p1, p2);
-
-					if (i == this.points.Count-2)
-					{
-						AbstractObject.DrawEndingArrow(graphics, p1, p2);
-					}
-				}
+				int n = this.points.Count;
+				AbstractObject.DrawStartingArrow (graphics, this.points[0], this.points[1]);
+				AbstractObject.DrawEndingArrow (graphics, this.points[n-2], this.points[n-1]);
 				graphics.LineWidth = 1;
 
-				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
+				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
+
+				if (this.hilitedElement != ActiveElement.None)
 				{
-					color = this.GetColorMain();
+					Misc.DrawPathDash (graphics, this.GetPathLines (), 1, 1, 3, true, color);
 				}
+
+				graphics.Rasterizer.AddOutline (this.GetPathCurves (), 2);
+
 				graphics.RenderSolid(color);
 			}
 
@@ -616,6 +596,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
 				}
 			}
+		}
+
+		private Path GetPathLines()
+		{
+			var path = new Path ();
+
+			path.MoveTo (this.points[0]);
+
+			for (int i = 1; i < this.points.Count; i++)
+			{
+				path.LineTo (this.points[i]);
+			}
+
+			return path;
+		}
+
+		private Path GetPathCurves()
+		{
+			var path = new Path ();
+
+			path.MoveTo (this.points[0]);
+
+			int n = this.points.Count;
+			for (int i = 1; i < n-1; i++)
+			{
+				Point p0 = this.points[i];
+				Point p1 = (i == n-2) ? Point.Move (this.points[i+1], p0, AbstractObject.arrowLength-4) : Point.Scale (p0, this.points[i+1], 0.5);
+
+				path.CurveTo (p0, p1);
+			}
+
+			path.LineTo (this.points.Last ());
+
+			return path;
 		}
 
 
