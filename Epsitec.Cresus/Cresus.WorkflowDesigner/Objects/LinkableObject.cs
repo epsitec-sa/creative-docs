@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.links = new List<Link> ();
-
-			this.linkListBt = new List<ObjectLink> ();
-			this.linkListBb = new List<ObjectLink> ();
-			this.linkListC  = new List<ObjectLink> ();
-			this.linkListD  = new List<ObjectLink> ();
 		}
 
 
@@ -52,39 +47,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.links;
-			}
-		}
-
-
-		public List<ObjectLink> LinkListBt
-		{
-			get
-			{
-				return this.linkListBt;
-			}
-		}
-
-		public List<ObjectLink> LinkListBb
-		{
-			get
-			{
-				return this.linkListBb;
-			}
-		}
-
-		public List<ObjectLink> LinkListC
-		{
-			get
-			{
-				return this.linkListC;
-			}
-		}
-
-		public List<ObjectLink> LinkListD
-		{
-			get
-			{
-				return this.linkListD;
 			}
 		}
 
@@ -269,10 +231,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected Rectangle						bounds;
 		protected List<Link>					links;
-		private List<ObjectLink>				linkListBt;
-		private List<ObjectLink>				linkListBb;
-		private List<ObjectLink>				linkListC;
-		private List<ObjectLink>				linkListD;
 		protected ObjectComment					comment;
 	}
 }
