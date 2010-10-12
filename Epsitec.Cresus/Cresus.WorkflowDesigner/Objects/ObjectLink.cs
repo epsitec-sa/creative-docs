@@ -363,14 +363,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Détecte si la souris est le long de la connexion.
 			if (this.points.Count >= 2 && this.link.DstNode != null)
 			{
-				if (Geometry.DetectOutline (this.PathLines, margin, pos))
-				{
-					return true;
-				}
+				var rect = this.Bounds;
+				rect.Inflate (margin);
 
-				if (Geometry.DetectOutline (this.PathCurves, margin, pos))
+				if (rect.Contains (pos))
 				{
-					return true;
+					if (Geometry.DetectOutline (this.PathLines, margin, pos))
+					{
+						return true;
+					}
+
+					if (Geometry.DetectOutline (this.PathCurves, margin, pos))
+					{
+						return true;
+					}
 				}
 			}
 
