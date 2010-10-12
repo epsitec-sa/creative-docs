@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public LinkableObject(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
-			this.links = new List<Link> ();
+			this.objectLinks = new List<ObjectLink> ();
 		}
 
 
@@ -33,20 +33,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 		}
 
-		public void ClearLinks()
-		{
-			foreach (Link link in this.links)
-			{
-				link.ObjectLink = null;
-			}
-		}
 
-
-		public List<Link> Links
+		public List<ObjectLink> ObjectLinks
 		{
 			get
 			{
-				return this.links;
+				return this.objectLinks;
 			}
 		}
 
@@ -82,7 +74,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
+		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
 		{
 			return Vector.Zero;
 		}
@@ -102,12 +94,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.boxColor = value;
 
 					//	Change la couleur de toutes les connexions liées.
-					foreach (Link link in this.links)
+					foreach (var obj in this.objectLinks)
 					{
-						if (link.ObjectLink != null)
-						{
-							link.ObjectLink.BackgroundMainColor = this.boxColor;
-						}
+						obj.BackgroundMainColor = this.boxColor;
 					}
 
 					this.editor.Invalidate ();
@@ -119,14 +108,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
+				if (obj.MouseMove (message, pos))
 				{
-					if (link.ObjectLink.MouseMove (message, pos))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 
@@ -137,12 +123,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.MouseDown (message, pos);
 
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
-				{
-					link.ObjectLink.MouseDown (message, pos);
-				}
+				obj.MouseDown (message, pos);
 			}
 		}
 
@@ -150,36 +133,60 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.MouseUp (message, pos);
 
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
-				{
-					link.ObjectLink.MouseUp (message, pos);
-				}
+				obj.MouseUp (message, pos);
 			}
 		}
 
 		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
-				{
-					ActiveElement e;
-					int r;
+				ActiveElement e;
+				int r;
 
-					if (link.ObjectLink.MouseDetect (pos, out e, out r))
-					{
-						element = e;
-						edgeRank = r;
-						return true;
-					}
+				if (obj.MouseDetect (pos, out e, out r))
+				{
+					element = e;
+					edgeRank = r;
+					return true;
 				}
 			}
 
 			element = ActiveElement.None;
 			edgeRank = -1;
 			return false;
+		}
+
+
+		protected void DraggingMouseMove(Point pos)
+		{
+			var list = new List<Point> ();
+
+			foreach (var obj in this.objectLinks)
+			{
+				if (obj.Comment != null)
+				{
+					list.Add (obj.PositionLinkComment);
+				}
+			}
+
+			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
+			this.SetBounds (bounds);
+			this.editor.UpdateLinks ();
+
+			int i = 0;
+			foreach (var obj in this.objectLinks)
+			{
+				if (obj.Comment != null)
+				{
+					Point p1 = list[i++];
+					Point p2 = obj.PositionLinkComment;
+
+					obj.Comment.Move (p2.X-p1.X, p2.Y-p1.Y);
+				}
+			}
 		}
 
 
@@ -192,28 +199,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				isHilited = false;
 			}
 
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
-				{
-					link.ObjectLink.IsSrcHilited = isHilited;
-				}
+				obj.IsSrcHilited = isHilited;
 			}
 		}
 
 		protected bool IsEdgeReadyForOpen()
 		{
 			//	Indique si l'une des connexions qui partent de l'objet est en mode EdgeOpen*.
-			foreach (Link link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				if (link.ObjectLink != null)
+				ActiveElement ae = obj.HilitedElement;
+				if (ae == ActiveElement.EdgeOpenLeft ||
+					ae == ActiveElement.EdgeOpenRight)
 				{
-					ActiveElement ae = link.ObjectLink.HilitedElement;
-					if (ae == ActiveElement.EdgeOpenLeft ||
-						ae == ActiveElement.EdgeOpenRight)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 
@@ -222,15 +223,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void DrawLinks(Graphics graphics)
 		{
-			foreach (var link in this.links)
+			foreach (var obj in this.objectLinks)
 			{
-				link.ObjectLink.DrawBackground (graphics);
+				obj.DrawBackground (graphics);
 			}
 		}
 
 
 		protected Rectangle						bounds;
-		protected List<Link>					links;
+		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
+		protected Point							draggingOffset;
 	}
 }

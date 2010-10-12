@@ -81,23 +81,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void CreateLinks()
 		{
-			this.links.Clear ();
+			this.objectLinks.Clear ();
 
 			foreach (var entityEdge in this.Entity.Edges)
 			{
-				var link = new Link (this.editor, this);
-				link.DstNode = this.editor.SearchObject (entityEdge);
+				var link = new ObjectLink (this.editor, this.Entity);
+				link.SrcObject = this;
+				link.DstObject = this.editor.SearchObject (entityEdge);
 
-				//?var objectLink = new ObjectLink (this.editor, this.Entity);
-				//?objectLink.Link = link;
-
-				//?link.ObjectLink = objectLink;
-
-				this.links.Add (link);
+				this.objectLinks.Add (link);
 			}
 		}
 
-		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
+		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
 		{
 			Point p1 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius);
 			Point p2 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius+1);
@@ -267,9 +263,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Si la souris est dans cette boîte, retourne true.
 			if (this.isDragging)
 			{
-				Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
-				this.SetBounds(bounds);
-				this.editor.UpdateLinks();
+				this.DraggingMouseMove (pos);
 				return true;
 			}
 
@@ -928,8 +922,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private List<ObjectNode>				parents;
 
 		private bool							isDragging;
-		private Point							draggingOffset;
-
 		private bool							isHilitedForEdgeChanging;
 	}
 }

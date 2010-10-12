@@ -62,7 +62,6 @@
     <Compile Include="Objects\LinkableObject.cs" />
     <Compile Include="Objects\LinkAnchor.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />
-    <Compile Include="Objects\Link.cs" />
     <Compile Include="Objects\ObjectLink.cs" />
     <Compile Include="Objects\ObjectNode.cs" />
     <Compile Include="Objects\MainColor.cs" />

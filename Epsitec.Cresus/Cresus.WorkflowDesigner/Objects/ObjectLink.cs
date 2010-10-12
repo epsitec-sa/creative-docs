@@ -22,21 +22,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ObjectLink(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
+			this.CommentAttach = 0.1;
 		}
 
 
-		public Link Link
+		public LinkableObject SrcObject
 		{
-			//	Champ de référence pour la connexion.
+			//	Objet source de la connexion
 			get
 			{
-				return this.link;
+				return this.srcObject;
 			}
 			set
 			{
-				this.link = value;
+				this.srcObject = value;
 			}
 		}
+
+		public LinkableObject DstObject
+		{
+			//	Objet destination de la connexion (si la connexion débouche sur un noeud).
+			get
+			{
+				return this.dstObject;
+			}
+			set
+			{
+				this.dstObject = value;
+			}
+		}
+
 
 		public ObjectComment Comment
 		{
@@ -50,6 +65,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = value;
 			}
 		}
+
+		public double CommentAttach
+		{
+			//	Position relative le long de la courbe du commentaire lié (0..1).
+			get;
+			set;
+		}
+
 
 		public bool IsSrcHilited
 		{
@@ -70,7 +93,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la boîte de l'objet.
 			get
 			{
-				Rectangle bounds = this.PathCurves.ComputeBounds ();
+				Rectangle bounds = this.Path.ComputeBounds ();
 				bounds.Inflate (2);
 
 				if (this.startVector.IsValid)
@@ -99,6 +122,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.endVector = new Vector (this.endVector, new Size (dx, dy));
 			}
+
+			this.SetPathDirty ();
 		}
 
 
@@ -167,7 +192,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeOpenLeft ||
 				this.hilitedElement == ActiveElement.EdgeOpenRight)
 			{
-				this.link.IsExplored = true;
+				this.IsExplored = true;
 
 				ObjectNode2 node = this.editor.SearchNode2 (this.Entity.NextNode);
 				if (node == null)
@@ -176,13 +201,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					node = new ObjectNode2 (this.editor, this.Entity.NextNode);
 					node.BackgroundMainColor = this.boxColor;
 
-					this.link.DstNode = node;
-					this.link.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
+					this.DstNode = node;
+					this.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
 
 					this.editor.AddNode (node);
 					this.editor.UpdateGeometry ();
 
-					ObjectNode2 src = this.link.SrcNode;
+					ObjectNode2 src = this.SrcNode;
 					//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
 					Rectangle bounds;
 					double posv = src.Bounds.Center.Y;
@@ -225,8 +250,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				else
 				{
 					//	Ouvre la connexion sur une boîte existante.
-					this.link.DstNode = node;
-					this.link.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
+					this.DstNode = node;
+					this.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
 				}
 
 				this.editor.UpdateAfterAddOrRemoveEdge2 (node);
@@ -235,9 +260,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
-				ObjectNode2 dst = this.link.DstNode;
-				this.link.IsExplored = false;
-				this.link.DstNode = null;
+				ObjectNode2 dst = this.DstNode;
+				this.IsExplored = false;
+				this.DstNode = null;
 				this.editor.CloseNode(null);
 				this.editor.UpdateAfterAddOrRemoveEdge2(null);
 			}
@@ -261,7 +286,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans la pastille ronde du départ de la connexion ?
-			if (this.link.DstNode != null)
+			if (this.DstObject != null)
 			{
 				if (this.DetectRoundButton (pos, this.startVector.Origin))
 				{
@@ -311,14 +336,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connexion.
-			if (this.link.DstNode != null)
+			if (this.DstObject != null)
 			{
 				var rect = this.Bounds;
 				rect.Inflate (margin);
 
 				if (rect.Contains (pos))
 				{
-					if (Geometry.DetectOutline (this.PathCurves, margin, pos))
+					if (Geometry.DetectOutline (this.Path, margin, pos))
 					{
 						return true;
 					}
@@ -331,7 +356,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void UpdateLink()
 		{
-			if (this.link.DstNode == null)
+			if (this.DstObject == null)
 			{
 				this.startVector = Vector.Zero;
 				this.endVector   = Vector.Zero;
@@ -343,24 +368,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			ObjectEdge edge = null;
 			ObjectNode node = null;
 
-			if (this.link.SrcNode is ObjectEdge)
+			if (this.SrcObject is ObjectEdge)
 			{
-				edge = this.link.SrcNode as ObjectEdge;
+				edge = this.SrcObject as ObjectEdge;
 			}
 
-			if (this.link.SrcNode is ObjectNode)
+			if (this.SrcObject is ObjectNode)
 			{
-				node = this.link.SrcNode as ObjectNode;
+				node = this.SrcObject as ObjectNode;
 			}
 
-			if (this.link.DstNode is ObjectEdge)
+			if (this.DstObject is ObjectEdge)
 			{
-				edge = this.link.DstNode as ObjectEdge;
+				edge = this.DstObject as ObjectEdge;
 			}
 
-			if (this.link.DstNode is ObjectNode)
+			if (this.DstObject is ObjectNode)
 			{
-				node = this.link.DstNode as ObjectNode;
+				node = this.DstObject as ObjectNode;
 			}
 
 			if (edge == null || node == null)
@@ -384,10 +409,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			LinkAnchor nodeAnchor, edgeAnchor;
 			ObjectLink.GetAttach (node.Bounds, edge.Bounds, out nodeAnchor, out edgeAnchor);
 
-			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center);
-			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin);
+			bool edgeIsStart = this.SrcObject is ObjectEdge;
 
-			if (this.link.SrcNode is ObjectEdge)
+			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center, !edgeIsStart);
+			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin,   edgeIsStart);
+
+			if (edgeIsStart)
 			{
 				this.startVector = edgeVector;
 				this.endVector   = nodeVector;
@@ -397,6 +424,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.startVector = nodeVector;
 				this.endVector   = edgeVector;
 			}
+
+			this.SetPathDirty ();
 		}
 
 		private static void GetAttach(Rectangle r1, Rectangle r2, out LinkAnchor anchor1, out LinkAnchor anchor2)
@@ -452,13 +481,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.comment = new ObjectComment(this.editor, this.entity);
 				this.comment.AttachObject = this;
-				this.comment.BackgroundMainColor = this.link.CommentMainColor;
-				this.comment.Text = this.link.CommentText;
+				this.comment.Text = "Coucou";
 
 				Point attach = this.PositionLinkComment;
 				Rectangle rect;
 
-				if (attach.X > this.link.SrcNode.Bounds.Right)  // connexion sur la droite ?
+				if (attach.X > this.SrcObject.Bounds.Right)  // connexion sur la droite ?
 				{
 					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
@@ -523,29 +551,39 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.link.DstNode != null)
+			if (this.DstObject != null)
 			{
-				graphics.LineWidth = 2;
+				graphics.Rasterizer.AddOutline (this.Path, 6);
+				graphics.RenderSolid (Color.FromBrightness (1));
+
+				graphics.Rasterizer.AddOutline (this.Path, 2);
+				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
+				graphics.RenderSolid (color);
+
+				{
+					graphics.LineWidth = 2;
+
+					if (this.startVector.IsValid)
+					{
+						AbstractObject.DrawStartingArrow (graphics, this.startVector.Origin, this.startVector.End);
+					}
+
+					if (this.endVector.IsValid)
+					{
+						AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Origin);
+					}
+
+					graphics.RenderSolid (color);
+					graphics.LineWidth = 1;
+				}
 
 				if (this.startVector.IsValid)
 				{
-					AbstractObject.DrawStartingArrow (graphics, this.startVector.Origin, this.startVector.End);
+					this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 				}
-
-				if (this.endVector.IsValid)
-				{
-					AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Origin);
-				}
-				
-				graphics.LineWidth = 1;
-
-				graphics.Rasterizer.AddOutline (this.PathCurves, 2);
-
-				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
-				graphics.RenderSolid(color);
 			}
 
-			if (this.link.DstNode == null && this.startVector.IsValid)
+			if (this.DstObject == null && this.startVector.IsValid)
 			{
 				//	Dessine le moignon de liaison.
 				Point start = this.startVector.Origin;
@@ -592,7 +630,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else
 					{
-						if (this.link.DstNode != null && i != 0)  break;
+						if (this.DstNode != null && i != 0)  break;
 						if (!this.isSrcHilited && i != 0)  break;
 					}
 
@@ -644,24 +682,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Path PathCurves
-		{
-			get
-			{
-				var path = new Path ();
-
-				if (this.startVector.IsValid && this.endVector.IsValid)
-				{
-					double d = Point.Distance (this.startVector.Origin, this.endVector.Origin) * 0.5;
-
-					path.MoveTo (this.startVector.Origin);
-					path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Origin);
-				}
-
-				return path;
-			}
-		}
-
 
 		private bool IsLinkCommentButton
 		{
@@ -680,15 +700,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
-				return this.AttachToPoint (this.link.CommentAttach);
+				return this.AttachToPoint (this.CommentAttach);
 			}
 		}
 
 		private Point AttachToPoint(double d)
 		{
-			if (this.link.DstNode != null && this.startVector.IsValid)
+			if (this.DstObject != null && this.startVector.IsValid)
 			{
-				return Geometry.PointOnPath (this.PathCurves, this.link.CommentAttach);
+				return Geometry.PointOnPath (this.Path, this.CommentAttach);
 			}
 			else
 			{
@@ -698,9 +718,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double PointToAttach(Point p)
 		{
-			if (this.link.DstNode != null && this.startVector.IsValid)
+			if (this.DstObject != null && this.startVector.IsValid)
 			{
-				double offset = Geometry.OffsetOnPath (this.PathCurves, p);
+				double offset = Geometry.OffsetOnPath (this.Path, p);
 
 				offset = System.Math.Max (offset, 0.1);
 				offset = System.Math.Min (offset, 0.9);
@@ -769,8 +789,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedDstNode != null)
 			{
-				this.link.DstNode = this.hilitedDstNode;
-				//?this.Entity.NextNode = this.link.DstNode.Entity;
+				this.DstObject = this.hilitedDstNode;
+				//?this.Entity.NextNode = this.DstNode.Entity;
 
 				this.hilitedDstNode.IsHilitedForEdgeChanging = false;
 				this.hilitedDstNode = null;
@@ -797,12 +817,50 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private Link						link;
-		private Vector						startVector;
-		private Vector						endVector;
-		private bool						isSrcHilited;
-		private bool						isDraggingDst;
-		private ObjectComment				comment;
-		private ObjectNode					hilitedDstNode;
+		#region Path engine
+		private void SetPathDirty()
+		{
+			this.path = null;
+		}
+
+		private Path Path
+		{
+			get
+			{
+				if (this.path == null)
+				{
+					this.path = this.ComputePath ();
+				}
+
+				return this.path;
+			}
+		}
+
+		private Path ComputePath()
+		{
+			var path = new Path ();
+
+			if (this.startVector.IsValid && this.endVector.IsValid)
+			{
+				double d = Point.Distance (this.startVector.Origin, this.endVector.Origin) * 0.5;
+
+				path.MoveTo (this.startVector.Origin);
+				path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Origin);
+			}
+
+			return path;
+		}
+		#endregion
+
+
+		private LinkableObject					srcObject;
+		private LinkableObject					dstObject;
+		private Vector							startVector;
+		private Vector							endVector;
+		private Path							path;
+		private bool							isSrcHilited;
+		private bool							isDraggingDst;
+		private ObjectComment					comment;
+		private ObjectNode						hilitedDstNode;
 	}
 }

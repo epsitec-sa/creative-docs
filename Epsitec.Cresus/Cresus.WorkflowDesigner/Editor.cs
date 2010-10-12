@@ -134,7 +134,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.CreateLinks ();
 			}
 
-			this.CreateLinks ();
 			this.UpdateAfterGeometryChanged (null);
 		}
 
@@ -245,6 +244,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
 			this.comments.Add(comment);
+		}
+
+		public void RemoveComment(ObjectComment comment)
+		{
+			this.comments.Remove (comment);
 		}
 
 
@@ -388,8 +392,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			this.UpdateLinks();
 			this.RedimArea();
-
-			this.UpdateDimmed();
 		}
 
 		public void UpdateAfterGeometryChanged(ObjectNode node)
@@ -401,8 +403,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			this.UpdateLinks ();
 			this.RedimArea ();
-
-			this.UpdateDimmed ();
 		}
 
 		public void UpdateAfterMoving(LinkableObject node)
@@ -422,13 +422,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea ();
 
-			this.CreateLinks ();
 			this.RedimArea ();
 
 			this.UpdateLinks ();
 			this.RedimArea ();
-
-			this.UpdateDimmed ();
 		}
 
 		private void UpdateNodes()
@@ -445,152 +442,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.Invalidate ();
-		}
-
-		public void CreateLinks()
-		{
-			//	Crée (ou recrée) toutes les liaisons nécessaires.
-			this.CommentsMemorize();
-
-			//	Supprime tous les commentaires liés aux connexions.
-			int j = 0;
-			while (j < this.comments.Count)
-			{
-				ObjectComment comment = this.comments[j];
-
-				if (comment.AttachObject is LinkableObject)
-				{
-					this.comments.RemoveAt(j);
-				}
-				else
-				{
-					j++;
-				}
-			}
-
-			foreach (var obj in this.LinkableObjects)
-			{
-				obj.ClearLinks ();  // supprime toutes les connexions existantes
-			}
-
-			foreach (var obj in this.LinkableObjects)
-			{
-				for (int i=0; i<obj.Links.Count; i++)
-				{
-					Link link = obj.Links[i];
-
-					//	Si la liaison est ouverte sur une boîte qui n'existe plus,
-					//	considère la liaison comme fermée !
-					if (link.DstNode != null)
-					{
-						if (!this.LinkableObjects.Contains (link.DstNode))
-						{
-							link.DstNode = null;
-						}
-					}
-
-					ObjectLink objectLink = new ObjectLink(this, obj.AbstractEntity);
-					objectLink.Link = link;
-					objectLink.BackgroundMainColor = obj.BackgroundMainColor;
-					link.ObjectLink = objectLink;
-				}
-			}
-
-			//	Recrée tous les commentaires liés aux connexions.
-			foreach (var link in this.Links)
-			{
-				var objectLink = link.ObjectLink;
-
-				if (objectLink != null && objectLink.Link.HasComment && objectLink.Link.DstNode != null)
-				{
-					objectLink.Comment = new ObjectComment (this, objectLink.AbstractEntity);
-					objectLink.Comment.AttachObject = objectLink;
-					objectLink.Comment.Text = objectLink.Link.CommentText;
-					objectLink.Comment.BackgroundMainColor = objectLink.Link.CommentMainColor;
-					objectLink.Comment.SetBounds (objectLink.Link.CommentBounds);
-
-					this.AddComment (objectLink.Comment);
-				}
-			}
-
-			this.Invalidate();
-		}
-
-		private void CommentsMemorize()
-		{
-			//	Mémorise l'état de tous les commentaires liés à des connexions.
-			foreach (var link in this.Links)
-			{
-				link.HasComment = false;
-			}
-
-			foreach (ObjectComment comment in this.comments)
-			{
-				if (comment.AttachObject is ObjectLink)
-				{
-					ObjectLink objectLink = comment.AttachObject as ObjectLink;
-
-					objectLink.Link.HasComment = true;
-					objectLink.Link.CommentText = comment.Text;
-					objectLink.Link.CommentMainColor = comment.BackgroundMainColor;
-
-					Point pos = objectLink.PositionLinkComment;
-					if (!pos.IsZero)
-					{
-						objectLink.Link.CommentPosition = pos;
-					}
-
-					if (!comment.Bounds.IsEmpty)
-					{
-						objectLink.Link.CommentBounds = comment.Bounds;
-					}
-				}
-			}
-		}
-
-		private void UpdateDimmed()
-		{
-			//	Met en estompé toutes les connexions qui partent ou qui arrivent sur une entité estompée.
-			foreach (var link in this.Links)
-			{
-				var objectLink = link.ObjectLink;
-				if (objectLink != null)
-				{
-					objectLink.IsDimmed = false;
-				}
-			}
-
-			foreach (var link in this.Links)
-			{
-				var objectLink = link.ObjectLink;
-				if (objectLink != null)
-				{
-					if (objectLink.Link.DstNode != null)
-					{
-						if (objectLink.Link.SrcNode != null && objectLink.Link.SrcNode.IsDimmed)
-						{
-							objectLink.IsDimmed = true;
-						}
-						else if (objectLink.Link.DstNode != null && objectLink.Link.DstNode.IsDimmed)
-						{
-							objectLink.IsDimmed = true;
-						}
-					}
-
-					if (objectLink.Comment != null)
-					{
-						objectLink.Comment.IsDimmed = objectLink.IsDimmed;
-					}
-				}
-			}
-
-			foreach (var obj in this.LinkableObjects)
-			{
-				if (obj.Comment != null)
-				{
-					obj.Comment.IsDimmed = obj.IsDimmed;
-				}
-			}
 		}
 
 
@@ -1324,24 +1175,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				foreach (var obj in this.LinkableObjects)
 				{
-					foreach (var link in obj.Links)
-					{
-						if (link.ObjectLink != null)
-						{
-							yield return link.ObjectLink;
-						}
-					}
-				}
-			}
-		}
-
-		private IEnumerable<Link> Links
-		{
-			get
-			{
-				foreach (var obj in this.LinkableObjects)
-				{
-					foreach (var link in obj.Links)
+					foreach (var link in obj.ObjectLinks)
 					{
 						yield return link;
 					}
@@ -1355,12 +1189,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				foreach (var obj in this.LinkableObjects)
 				{
-					foreach (var link in obj.Links)
+					foreach (var link in obj.ObjectLinks)
 					{
-						if (link.ObjectLink != null)
-						{
-							yield return link.ObjectLink;
-						}
+						yield return link;
 					}
 				}
 			}

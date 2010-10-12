@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (attach != 0)
 				{
 					Point oldPos = link.PositionLinkComment;
-					link.Link.CommentAttach = attach;
+					link.CommentAttach = attach;
 					Point newPos = link.PositionLinkComment;
 
 					Rectangle bounds = this.bounds;
@@ -264,7 +264,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					ObjectLink link = this.attachObject as ObjectLink;
 					if (link != null)
 					{
-						link.Link.HasComment = false;
+						link.Comment = null;
+						this.editor.RemoveComment (this);
 					}
 				}
 
@@ -276,49 +277,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.hilitedElement == ActiveElement.CommentColor1)
 				{
 					this.BackgroundMainColor = MainColor.Yellow;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor2)
 				{
 					this.BackgroundMainColor = MainColor.Orange;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor3)
 				{
 					this.BackgroundMainColor = MainColor.Red;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor4)
 				{
 					this.BackgroundMainColor = MainColor.Lilac;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor5)
 				{
 					this.BackgroundMainColor = MainColor.Purple;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor6)
 				{
 					this.BackgroundMainColor = MainColor.Blue;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor7)
 				{
 					this.BackgroundMainColor = MainColor.Green;
-					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor8)
 				{
 					this.BackgroundMainColor = MainColor.DarkGrey;
-					this.UpdateFieldColor();
 				}
 			}
 		}
@@ -1219,17 +1212,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else
 			{
 				return this.GetColorAdjusted(this.GetColorMain(), 0.7);
-			}
-		}
-
-
-		protected void UpdateFieldColor()
-		{
-			//	Met à jour l'information de couleur dans le champ associé.
-			if (this.attachObject is ObjectLink)
-			{
-				ObjectLink link = this.attachObject as ObjectLink;
-				link.Link.CommentMainColor = this.BackgroundMainColor;
 			}
 		}
 
