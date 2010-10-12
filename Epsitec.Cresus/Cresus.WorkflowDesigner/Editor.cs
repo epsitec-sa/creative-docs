@@ -1065,19 +1065,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
 
-			foreach (var obj in this.LinkableObjects)
+			foreach (var obj in this.AllObjects)
 			{
 				bounds = Rectangle.Union (bounds, obj.Bounds);
-			}
-
-			foreach (var obj in this.LinkObjects)
-			{
-				bounds = Rectangle.Union (bounds, obj.Bounds);
-			}
-
-			foreach (ObjectComment comment in this.comments)
-			{
-				bounds = Rectangle.Union(bounds, comment.Bounds);
 			}
 
 			return bounds;
@@ -1091,19 +1081,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return;
 			}
 
-			foreach (var obj in this.LinkableObjects)
+			foreach (var obj in this.AllObjects)
 			{
 				obj.Move (dx, dy);
-			}
-
-			foreach (var obj in this.LinkObjects)
-			{
-				obj.Move (dx, dy);
-			}
-
-			foreach (ObjectComment comment in this.comments)
-			{
-				comment.Move(dx, dy);
 			}
 		}
 
@@ -1494,44 +1474,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private AbstractObject GetObjectForAction()
 		{
 			//	L'objet à l'avant-plan a la priorité.
-			for (int i=this.comments.Count-1; i>=0; i--)
+			foreach (var obj in this.AllObjects.Reverse ())
 			{
-				ObjectComment comment = this.comments[i];
-
-				if (comment.IsReadyForAction)
+				if (obj.IsReadyForAction)
 				{
-					return comment;
-				}
-			}
-
-			foreach (var obj in this.LinkableObjects)
-			{
-				foreach (var link in obj.Links)
-				{
-					if (link.ObjectLink != null && link.ObjectLink.IsReadyForAction)
-					{
-						return obj;
-					}
-				}
-			}
-
-			for (int i=this.edges.Count-1; i>=0; i--)
-			{
-				ObjectEdge edge = this.edges[i];
-
-				if (edge.IsReadyForAction)
-				{
-					return edge;
-				}
-			}
-
-			for (int i=this.nodes.Count-1; i>=0; i--)
-			{
-				ObjectNode node = this.nodes[i];
-
-				if (node.IsReadyForAction)
-				{
-					return node;
+					return obj;
 				}
 			}
 
@@ -1657,33 +1604,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void PaintObjects(Graphics graphics)
 		{
 			//	Dessine l'arrière-plan de tous les objets.
-			foreach (AbstractObject obj in this.nodes)
-			{
-				obj.DrawBackground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.edges)
-			{
-				obj.DrawBackground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.comments)
+			foreach (var obj in this.AllObjects)
 			{
 				obj.DrawBackground (graphics);
 			}
 
 			//	Dessine l'avant plan tous les objets.
-			foreach (AbstractObject obj in this.nodes)
-			{
-				obj.DrawForeground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.edges)
-			{
-				obj.DrawForeground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.comments)
+			foreach (var obj in this.AllObjects)
 			{
 				obj.DrawForeground (graphics);
 			}
@@ -1691,6 +1618,38 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		#region Enumerators
+		private IEnumerable<AbstractObject> AllObjects
+		{
+			get
+			{
+				foreach (var obj in this.edges)
+				{
+					yield return obj;
+				}
+
+				foreach (var obj in this.nodes)
+				{
+					yield return obj;
+				}
+
+				foreach (var obj in this.comments)
+				{
+					yield return obj;
+				}
+
+				foreach (var obj in this.LinkableObjects)
+				{
+					foreach (var link in obj.Links)
+					{
+						if (link.ObjectLink != null)
+						{
+							yield return link.ObjectLink;
+						}
+					}
+				}
+			}
+		}
+
 		private IEnumerable<Link> Links
 		{
 			get
