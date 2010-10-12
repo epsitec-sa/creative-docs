@@ -363,12 +363,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Détecte si la souris est le long de la connexion.
 			if (this.points.Count >= 2 && this.link.DstNode != null)
 			{
-				if (Geometry.DetectOutline (this.GetPathLines (), margin, pos))
+				if (Geometry.DetectOutline (this.PathLines, margin, pos))
 				{
 					return true;
 				}
 
-				if (Geometry.DetectOutline (this.GetPathCurves (), margin, pos))
+				if (Geometry.DetectOutline (this.PathCurves, margin, pos))
 				{
 					return true;
 				}
@@ -466,10 +466,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.hilitedElement != ActiveElement.None)
 				{
-					Misc.DrawPathDash (graphics, this.GetPathLines (), 1, 1, 3, true, color);
+					Misc.DrawPathDash (graphics, this.PathLines, 1, 1, 3, true, color);
 				}
 
-				graphics.Rasterizer.AddOutline (this.GetPathCurves (), 2);
+				graphics.Rasterizer.AddOutline (this.PathCurves, 2);
 
 				graphics.RenderSolid(color);
 			}
@@ -598,38 +598,44 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Path GetPathLines()
+		private Path PathLines
 		{
-			var path = new Path ();
-
-			path.MoveTo (this.points[0]);
-
-			for (int i = 1; i < this.points.Count; i++)
+			get
 			{
-				path.LineTo (this.points[i]);
-			}
+				var path = new Path ();
 
-			return path;
+				path.MoveTo (this.points[0]);
+
+				for (int i = 1; i < this.points.Count; i++)
+				{
+					path.LineTo (this.points[i]);
+				}
+
+				return path;
+			}
 		}
 
-		private Path GetPathCurves()
+		private Path PathCurves
 		{
-			var path = new Path ();
-
-			path.MoveTo (this.points[0]);
-
-			int n = this.points.Count;
-			for (int i = 1; i < n-1; i++)
+			get
 			{
-				Point p0 = this.points[i];
-				Point p1 = (i == n-2) ? Point.Move (this.points[i+1], p0, AbstractObject.arrowLength-4) : Point.Scale (p0, this.points[i+1], 0.5);
+				var path = new Path ();
 
-				path.CurveTo (p0, p1);
+				path.MoveTo (this.points[0]);
+
+				int n = this.points.Count;
+				for (int i = 1; i < n-1; i++)
+				{
+					Point p0 = this.points[i];
+					Point p1 = (i == n-2) ? Point.Move (this.points[i+1], p0, AbstractObject.arrowLength-4) : Point.Scale (p0, this.points[i+1], 0.5);
+
+					path.CurveTo (p0, p1);
+				}
+
+				path.LineTo (this.points.Last ());
+
+				return path;
 			}
-
-			path.LineTo (this.points.Last ());
-
-			return path;
 		}
 
 
@@ -660,6 +666,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 		private Point AttachToPoint(double d)
+		{
+			Point p = this.BaseAttachToPoint (d);
+
+			if (p.IsZero)
+			{
+				return p;
+			}
+
+			return Geometry.Projection (this.PathCurves, p);
+		}
+
+		private Point BaseAttachToPoint(double d)
 		{
 			//	Conversion d'une distance le long de la connexion en position.
 			//	Une distance positive commence depuis le début de la connexion.
