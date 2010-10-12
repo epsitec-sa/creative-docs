@@ -61,16 +61,13 @@
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
     <Compile Include="Objects\LinkableObject.cs" />
-    <Compile Include="Objects\ObjectEdge2.cs" />
+    <Compile Include="Objects\LinkAnchor.cs" />
+    <Compile Include="Objects\ObjectEdge.cs" />
     <Compile Include="Objects\Link.cs" />
     <Compile Include="Objects\ObjectLink.cs" />
-    <Compile Include="Objects\ObjectNode2.cs" />
-    <Compile Include="Objects\Edge.cs" />
-    <Compile Include="Objects\MainColor.cs" />
     <Compile Include="Objects\ObjectNode.cs" />
+    <Compile Include="Objects\MainColor.cs" />
     <Compile Include="Objects\ObjectComment.cs" />
-    <Compile Include="Objects\ObjectEdge.cs" />
-    <Compile Include="Objects\ObjectInfo.cs" />
     <Compile Include="Objects\RouteType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>

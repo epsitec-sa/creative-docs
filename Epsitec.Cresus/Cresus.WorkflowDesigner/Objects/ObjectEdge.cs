@@ -17,117 +17,285 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public class ObjectEdge : AbstractObject
+	public class ObjectEdge : LinkableObject
 	{
 		public ObjectEdge(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 
-			this.points = new List<Point> ();
+			this.title = new TextLayout ();
+			this.title.DefaultFontSize = 12;
+			this.title.Alignment = ContentAlignment.MiddleCenter;
+			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+			this.subtitle = new TextLayout ();
+			this.subtitle.DefaultFontSize = 9;
+			this.subtitle.Alignment = ContentAlignment.MiddleLeft;
+			this.subtitle.BreakMode = TextBreakMode.Hyphenate;
+
+			this.UpdateTitle ();
+			this.UpdateSubtitle ();
 		}
 
 
-		public Edge Edge
+		public string Title
 		{
-			//	Champ de référence pour la connexion.
+			//	Titre au sommet de la boîte (nom du noeud).
 			get
 			{
-				return this.edge;
+				return this.titleString;
 			}
 			set
 			{
-				this.edge = value;
+				if (this.titleString != value)
+				{
+					this.titleString = value;
+
+					this.title.Text = Misc.Bold (this.titleString);
+				}
 			}
 		}
 
-		public ObjectComment Comment
+		public string Subtitle
 		{
-			//	Commentaire lié.
+			//	Titre au sommet de la boîte (nom du noeud).
 			get
 			{
-				return this.comment;
+				return this.subtitleString;
 			}
 			set
 			{
-				this.comment = value;
+				if (this.subtitleString != value)
+				{
+					this.subtitleString = value;
+
+					this.subtitle.Text = this.subtitleString;
+				}
 			}
 		}
-
-		public List<Point> Points
-		{
-			//	Retourne la liste des points. Si la connexion est fermée, il s'agit des points
-			//	droite et gauche. Aurement, il s'agit d'un nombre variable de points.
-			get
-			{
-				return this.points;
-			}
-		}
-
-		public bool IsSrcHilited
-		{
-			//	Indique si la boîte source est survolée par la souris.
-			get
-			{
-				return this.isSrcHilited;
-			}
-			set
-			{
-				this.isSrcHilited = value;
-			}
-		}
-
 
 		public override Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.
+			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
 			get
 			{
-				Rectangle bounds = Rectangle.Empty;
-
-				if (this.edge.IsSourceExpanded)
-				{
-					foreach (Point p in this.points)
-					{
-						bounds = Rectangle.Union(bounds, new Rectangle(p, Size.Zero));
-					}
-				}
-
-				return bounds;
+				return this.bounds;
 			}
 		}
 
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
-			for (int i=0; i<this.points.Count; i++)
-			{
-				this.points[i] = new Point(this.points[i].X+dx, this.points[i].Y+dy);
-			}
+			this.bounds.Offset(dx, dy);
 		}
 
-		public bool IsRightDirection
+
+		public override void CreateLinks()
 		{
-			//	Retourne la direction effective dans laquelle part la connexion.
-			//	A ne pas confondre avec Edge.IsAttachToRight !
-			get
+			this.links.Clear ();
+	
+			var link = new Link (this.editor, this);
+			link.DstNode = this.editor.SearchObject (this.Entity.NextNode);
+
+			//?var objectLink = new ObjectLink (this.editor, this.Entity);
+			//?objectLink.Link = link;
+
+			//?link.ObjectLink = objectLink;
+
+			this.links.Add (link);
+		}
+
+		public override Point GetLinkSrcVerticalPosition(Point dstPos)
+		{
+			//	Retourne la position verticale pour un trait de liaison.
+			if (dstPos.IsZero)
 			{
-				if (this.points.Count < 2)
+				return this.bounds.Center;
+			}
+
+			double r = ObjectEdge.roundFrameRadius * 1.5;  // * 1.5 pour ne pas trop s'approcher des coins arrondis
+
+			//?if (dstPos.X >= this.bounds.Left+r && dstPos.X <= this.bounds.Right-r)
+			if (false)
+			{
+				if (dstPos.Y < this.bounds.Bottom+r)
 				{
-					return true;
+					return new Point (dstPos.X, this.bounds.Bottom);
 				}
 				else
 				{
-					return this.points[0].X < this.points[1].X;
+					return new Point (dstPos.X, this.bounds.Top);
 				}
+			}
+			else
+			{
+				double x = (dstPos.X < this.bounds.Left) ? this.bounds.Left : this.bounds.Right;
+				double y = dstPos.Y;
+
+				if (dstPos.Y < this.bounds.Bottom+r)
+				{
+					y = this.bounds.Bottom+r;
+				}
+
+				if (dstPos.Y > this.bounds.Top-r)
+				{
+					y = this.bounds.Top-r;
+				}
+
+				return new Point (x, y);
+			}
+		}
+
+		public override Point GetLinkDstPosition(double posv, LinkAnchor anchor)
+		{
+			//	Retourne la position où accrocher la destination.
+			double r = ObjectEdge.roundFrameRadius * 1.5;  // * 1.5 pour ne pas trop s'approcher des coins arrondis
+
+			if (anchor == LinkAnchor.Left || anchor == LinkAnchor.Right)
+			{
+				double x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
+				double y;
+
+				if (posv < this.bounds.Bottom+r)
+				{
+					y = this.bounds.Bottom+r;
+				}
+				else if (posv > this.bounds.Top-r)
+				{
+					y = this.bounds.Top-r;
+				}
+				else
+				{
+					y = posv;
+				}
+
+				return new Point (x, y);
+			}
+
+			if (anchor == LinkAnchor.Top)
+			{
+				return new Point (this.bounds.Center.X, this.bounds.Top);
+			}
+
+			if (anchor == LinkAnchor.Bottom)
+			{
+				return new Point (this.bounds.Center.X, this.bounds.Bottom);
+			}
+
+			return Point.Zero;
+		}
+
+
+		public bool IsHilitedForEdgeChanging
+		{
+			//	Indique si cet objet est mis en évidence pendant un changement de noeud destination (EdgeChangeDst).
+			get
+			{
+				return this.isHilitedForEdgeChanging;
+			}
+			set
+			{
+				this.isHilitedForEdgeChanging = value;
 			}
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element, int fieldRank)
+		public override void AcceptEdition()
+		{
+			if (this.editingElement == ActiveElement.NodeHeader)
+			{
+				this.Entity.Name = this.editingTextField.Text;
+				this.UpdateTitle ();
+			}
+
+			if (this.editingElement == ActiveElement.NodeEdgeName)
+			{
+				this.Entity.Description = this.editingTextField.Text;
+				this.UpdateSubtitle ();
+			}
+
+			this.StopEdition ();
+		}
+
+		public override void CancelEdition()
+		{
+			this.StopEdition ();
+		}
+
+		private void StartEdition(ActiveElement element)
+		{
+			Rectangle rect = Rectangle.Empty;
+			string text = null;
+
+			if (element == ActiveElement.NodeHeader)
+			{
+				rect = this.RectangleTitle;
+				rect.Deflate (4, 6);
+
+				text = this.Entity.Name.ToString ();
+
+				this.editingTextField = new TextField ();
+			}
+
+			if (element == ActiveElement.NodeEdgeName)
+			{
+				rect = this.RectangleSubtitle;
+				rect.Inflate (6, 1);
+
+				text = this.Entity.Description.ToString ();
+
+				var field = new TextFieldMulti ();
+				field.ScrollerVisibility = false;
+				this.editingTextField = field;
+			}
+
+			if (rect.IsEmpty)
+			{
+				return;
+			}
+
+			this.editingElement = element;
+
+			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
+			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
+			double width  = System.Math.Max (p2.X-p1.X, 175);
+			double height = System.Math.Max (p1.Y-p2.Y, 20);
+
+			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
+
+			double thickness = 2;
+			Rectangle frameRect = rect;
+			frameRect.Inflate (thickness);
+
+			double descriptionHeight = 10+14*5;  // hauteur pour 5 lignes
+			Rectangle descriptionRect = new Rectangle (rect.Left, rect.Bottom-descriptionHeight-thickness+1, rect.Width, descriptionHeight);
+
+			this.editingTextField.Parent = this.editor;
+			this.editingTextField.SetManualBounds (rect);
+			this.editingTextField.Text = text;
+			this.editingTextField.TabIndex = 1;
+			this.editingTextField.SelectAll ();
+			this.editingTextField.Focus ();
+
+			this.editor.EditingObject = this;
+			this.hilitedElement = ActiveElement.None;
+		}
+
+		private void StopEdition()
+		{
+			this.editor.Children.Remove (this.editingTextField);
+			this.editingTextField = null;
+
+			this.editor.EditingObject = null;
+		}
+
+
+		protected override string GetToolTipText(ActiveElement element, int edgeRank)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingRoute || this.isDraggingDst)
+			if (this.isDragging || this.isChangeWidth)
 			{
 				return null;  // pas de tooltip
 			}
@@ -135,292 +303,410 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 #if false
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.ConnexionComment:
-					if (this.comment == null)
+				case ActiveElement.BoxHeader:
+					if (this.editor.BoxCount == 1)
 					{
-						return Res.Strings.Entities.Action.ConnexionComment3;
-					}
-					else if (!this.comment.IsVisible)
-					{
-						return string.Format(Res.Strings.Entities.Action.ConnexionComment2, this.comment.Text);
+						return null;
 					}
 					else
 					{
-						return Res.Strings.Entities.Action.ConnexionComment1;
+						if (this.isRoot)
+						{
+							return Res.Strings.Entities.Action.BoxHeader;
+						}
+						else if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+						{
+							return Res.Strings.Entities.Action.BoxHeader1;
+						}
+						else
+						{
+							return Res.Strings.Entities.Action.BoxHeader2;
+						}
+					}
+
+				case ActiveElement.BoxSources:
+					if (this.sourcesList.Count == 0)
+					{
+						return null;
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxSources1;
+					}
+
+				case ActiveElement.BoxExtend:
+					if (this.isExtended)
+					{
+						return Res.Strings.Entities.Action.BoxExtend1;
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxExtend2;
+					}
+
+				case ActiveElement.BoxComment:
+					if (this.comment == null)
+					{
+						return Res.Strings.Entities.Action.BoxComment1;
+					}
+					else if (!this.comment.IsVisible)
+					{
+						return string.Format(Res.Strings.Entities.Action.BoxComment2, this.comment.Text);
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxComment3;
+					}
+
+				case ActiveElement.BoxInfo:
+					if (this.info == null || !this.info.IsVisible)
+					{
+						return string.Format(Res.Strings.Entities.Action.BoxInfo1, this.GetInformations(true));
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxInfo2;
+					}
+
+				case ActiveElement.BoxClose:
+					if (this.isRoot)
+					{
+						return null;
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxClose;
+					}
+
+				case ActiveElement.BoxFieldGroup:
+					return this.GetGroupTooltip(fieldRank);
+
+				case ActiveElement.BoxFieldExpression:
+					string expression = this.fields[fieldRank].LocalExpression;
+					string deepExpression = this.fields[fieldRank].InheritedExpression;
+					if (!string.IsNullOrEmpty(expression))
+					{
+						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
+					}
+					else if (expression != "" && !string.IsNullOrEmpty(deepExpression))
+					{
+						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, deepExpression);
+					}
+					else
+					{
+						return Res.Strings.Entities.Action.BoxFieldExpression;
 					}
 			}
 #endif
 
-			return base.GetToolTipText(element, fieldRank);
+			return base.GetToolTipText(element, edgeRank);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
 		{
-			//	La souris est bougée.
-			if (this.isDraggingRoute)
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			if (this.isDragging)
 			{
-				this.RouteMove(pos);
+				Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
+				this.SetBounds(bounds);
+				this.editor.UpdateLinks();
 				return true;
 			}
-			else if (this.isDraggingDst)
+			
+			if (this.isChangeWidth)
 			{
-				this.MouseMoveDst (pos);
+				Rectangle bounds = this.Bounds;
+				bounds.Width = this.editor.GridAlign (System.Math.Max (pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
+				this.SetBounds (bounds);
+				this.editor.UpdateLinks ();
 				return true;
 			}
-			else
-			{
-				return base.MouseMove (message, pos);
-			}
+
+			return base.MouseMove (message, pos);
 		}
 
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.EdgeMove1 ||
-				this.hilitedElement == ActiveElement.EdgeMove2)
+			base.MouseDown (message, pos);
+
+			this.initialPos = pos;
+
+			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1)
 			{
-				this.isDraggingRoute = true;
+				this.isDragging = true;
+				this.draggingOffset = pos-this.bounds.BottomLeft;
+				this.editor.Invalidate();
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeChangeDst)
+			if (this.hilitedElement == ActiveElement.NodeChangeWidth)
 			{
-				this.MouseDownDst (pos);
+				this.isChangeWidth = true;
+				this.changeWidthPos = pos.X;
+				this.changeWidthInitial = this.bounds.Width;
+				this.editor.LockObject (this);
 			}
 		}
 
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.isDraggingRoute)
-			{
-				this.isDraggingRoute = false;
-				this.editor.UpdateAfterGeometryChanged(null);
-				this.editor.LockObject(null);
-				this.editor.SetLocalDirty ();
-			}
+			base.MouseUp (message, pos);
 
-			if (this.isDraggingDst)
+			if (pos == this.initialPos)
 			{
-				this.MouseUpDst ();
-			}
-
-			if (this.hilitedElement == ActiveElement.EdgeOpenLeft ||
-				this.hilitedElement == ActiveElement.EdgeOpenRight)
-			{
-				this.edge.IsExplored = true;
-
-				ObjectNode node = null;  //this.editor.SearchObject (this.Entity.NextNode) as ObjectNode;
-				if (node == null)
+				if (this.hilitedElement == ActiveElement.NodeHeader ||
+					this.hilitedElement == ActiveElement.NodeEdgeName)
 				{
-					//	Ouvre la connexion sur une nouvelle boîte.
-					node = new ObjectNode (this.editor, this.Entity.NextNode);
-					node.BackgroundMainColor = this.boxColor;
-
-					this.edge.DstNode = node;
-					this.edge.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
-
-					this.editor.AddNode (node);
-					this.editor.UpdateGeometry ();
-
-					ObjectNode src = this.edge.SrcNode;
-					//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-					Rectangle bounds;
-					double posv = src.GetEdgeSrcVerticalPosition (this.edge.Index) - (Editor.edgeDetour+12);
-
-					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
+					if (this.isDragging)
 					{
-						bounds = new Rectangle (src.Bounds.Left-50-node.Bounds.Width, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
-						bounds.Inflate (50, Editor.pushMargin);
-
-						for (int i=0; i<1000; i++)
-						{
-							if (this.editor.IsEmptyArea (bounds))
-							{
-								break;
-							}
-							bounds.Offset (-1, 0);
-						}
-
-						bounds.Deflate (50, Editor.pushMargin);
+						//?this.editor.UpdateAfterMoving (this);
+						this.isDragging = false;
+						this.editor.LockObject (null);
+						this.editor.SetLocalDirty ();
 					}
-					else
-					{
-						bounds = new Rectangle (src.Bounds.Right+50, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
-						bounds.Inflate (50, Editor.pushMargin);
 
-						for (int i=0; i<1000; i++)
-						{
-							if (this.editor.IsEmptyArea (bounds))
-							{
-								break;
-							}
-							bounds.Offset (1, 0);
-						}
-
-						bounds.Deflate (50, Editor.pushMargin);
-					}
-					bounds = this.editor.NodeGridAlign (bounds);
-					node.SetBounds (bounds);
+					this.StartEdition (this.hilitedElement);
+					return;
 				}
-				else
-				{
-					//	Ouvre la connexion sur une boîte existante.
-					this.edge.DstNode = node;
-					this.edge.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
-				}
-
-				this.editor.UpdateAfterAddOrRemoveEdge (node);
-				this.editor.SetLocalDirty ();
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeClose)
+			if (this.isDragging)
 			{
-				ObjectNode dst = this.edge.DstNode;
-				this.edge.IsExplored = false;
-				this.edge.DstNode = null;
-				this.editor.CloseNode(null);
+				this.editor.UpdateAfterMoving (this);
+				this.isDragging = false;
+				this.editor.LockObject (null);
+				this.editor.SetLocalDirty ();
+				return;
+			}
+
+			if (this.isChangeWidth)
+			{
+				this.editor.UpdateAfterMoving (this);
+				this.isChangeWidth = false;
+				this.editor.LockObject (null);
+				this.editor.SetLocalDirty ();
+				return;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
+			{
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenRight)
+			{
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeClose)
+			{
+				this.editor.CloseObject (this);
 				this.editor.UpdateAfterAddOrRemoveEdge(null);
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeComment)
+			if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
+			{
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeComment)
 			{
 				this.AddComment();
 			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor5)
+			{
+				this.BackgroundMainColor = MainColor.Yellow;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor6)
+			{
+				this.BackgroundMainColor = MainColor.Orange;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor3)
+			{
+				this.BackgroundMainColor = MainColor.Red;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor7)
+			{
+				this.BackgroundMainColor = MainColor.Lilac;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor8)
+			{
+				this.BackgroundMainColor = MainColor.Purple;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor1)
+			{
+				this.BackgroundMainColor = MainColor.Blue;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor2)
+			{
+				this.BackgroundMainColor = MainColor.Green;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor4)
+			{
+				this.BackgroundMainColor = MainColor.Grey;
+			}
 		}
 
-		public override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			element = ActiveElement.None;
-			fieldRank = -1;
+			if (base.MouseDetect (pos, out element, out edgeRank))
+			{
+				return true;
+			}
 
-			if (pos.IsZero || this.points.Count == 0 || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			element = ActiveElement.None;
+			edgeRank = -1;
+			this.SetEdgesHilited(false);
+
+			if (pos.IsZero)
+			{
+				//	Si l'une des connexion est dans l'état EdgeOpen*, il faut afficher
+				//	aussi les petits cercles de gauche.
+				if (this.IsEdgeReadyForOpen())
+				{
+					this.SetEdgesHilited(true);
+				}
+				return false;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionChangeWidthButton, pos))
+			{
+				element = ActiveElement.NodeChangeWidth;
+				return true;
+			}
+
+			//	Souris dans le bouton d'ouverture ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLeftButton, pos))
+			{
+				element = ActiveElement.NodeOpenLeft;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenRightButton, pos))
+			{
+				element = ActiveElement.NodeOpenRight;
+				return true;
+			}
+
+			//	Souris dans le bouton de fermeture ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCloseButton, pos))
+			{
+				element = ActiveElement.NodeClose;
+				return true;
+			}
+
+			//	Souris dans le bouton des commentaires ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
+			{
+				element = ActiveElement.NodeComment;
+				return true;
+			}
+
+			//	Souris dans le bouton des couleurs ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
+			{
+				element = ActiveElement.NodeColor5;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
+			{
+				element = ActiveElement.NodeColor6;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(2), pos))
+			{
+				element = ActiveElement.NodeColor3;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
+			{
+				element = ActiveElement.NodeColor7;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
+			{
+				element = ActiveElement.NodeColor8;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
+			{
+				element = ActiveElement.NodeColor1;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
+			{
+				element = ActiveElement.NodeColor2;
+				return true;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
+			{
+				element = ActiveElement.NodeColor4;
+				return true;
+			}
+
+			if (this.RectangleTitle.Contains (pos))
+			{
+				element = ActiveElement.NodeHeader;
+				return true;
+			}
+
+			if (this.RectangleSubtitle.Contains (pos))
+			{
+				element = ActiveElement.NodeEdgeName;
+				return true;
+			}
+
+			if (!this.bounds.Contains (pos))
 			{
 				return false;
 			}
 
-			//	Souris dans la pastille ronde du départ de la connexion ?
-			if (this.edge.IsSourceExpanded)
-			{
-				if (this.edge.IsExplored)
-				{
-					if (this.DetectRoundButton(pos, this.points[0]))
-					{
-						element = ActiveElement.EdgeClose;
-						return true;
-					}
-				}
-				else
-				{
-					if (this.DetectRoundButton(pos, this.points[0]))
-					{
-						element = ActiveElement.EdgeOpenRight;
-						return true;
-					}
-
-					if (this.DetectRoundButton(pos, this.points[1]))
-					{
-						element = ActiveElement.EdgeOpenLeft;
-						return true;
-					}
-				}
-			}
-
-			//	Souris dans le bouton pour commenter la connexion.
-			if (this.IsEdgeCommentButton && this.DetectRoundButton(pos, this.PositionEdgeComment))
-			{
-				element = ActiveElement.EdgeComment;
-				return true;
-			}
-
-			//	Souris dans le bouton pour déplacer le point milieu ?
-			if (this.DetectRoundButton(pos, this.PositionRouteMove1))
-			{
-				element = ActiveElement.EdgeMove1;
-				return true;
-			}
-
-			if (this.DetectRoundButton(pos, this.PositionRouteMove2))
-			{
-				element = ActiveElement.EdgeMove2;
-				return true;
-			}
-
-			//	Souris dans le bouton pour changer le noeud destination ?
-			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
-			{
-				element = ActiveElement.EdgeChangeDst;
-				return true;
-			}
-
-			//	Souris le long de la connexion ?
-			if (DetectOver(pos, 4))
-			{
-				element = ActiveElement.EdgeHilited;
-				return true;
-			}
-
-			return false;
+			element = ActiveElement.NodeInside;
+			this.SetEdgesHilited(true);
+			return true;
 		}
 
-		private bool DetectOver(Point pos, double margin)
+		public override bool IsMousePossible(ActiveElement element, int edgeRank)
 		{
-			//	Détecte si la souris est le long de la connexion.
-			if (this.points.Count >= 2 && this.edge.IsExplored)
-			{
-				for (int i=0; i<this.points.Count-1; i++)
-				{
-					Point p1 = this.points[i];
-					Point p2 = this.points[i+1];
-
-					if (Point.Distance(p1, pos) <= margin ||
-						Point.Distance(p2, pos) <= margin)
-					{
-						return true;
-					}
-
-					Point p = Point.Projection(p1, p2, pos);
-					if (Point.Distance(p, pos) <= margin && Geometry.IsInside(p1, p2, p))
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
+			//	Indique si l'opération est possible.
+			return true;
 		}
 
 
 		private void AddComment()
 		{
-			//	Ajoute un commentaire à la connexion.
+			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
 			{
-				this.comment = new ObjectComment(this.editor, this.Entity);
+				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
-				this.comment.BackgroundMainColor = this.edge.CommentMainColor;
-				this.comment.Text = this.edge.CommentText;
 
-				Point attach = this.PositionEdgeComment;
-				Rectangle rect;
+				Rectangle rect = this.bounds;
+				rect.Left = rect.Right+30;
+				rect.Width = System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth);
+				this.comment.SetBounds (rect);
+				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
-				if (attach.X > this.edge.SrcNode.Bounds.Right)  // connexion sur la droite ?
-				{
-					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
-				}
-				else  // connexion sur la gauche ?
-				{
-					rect = new Rectangle(attach.X-20-Editor.defaultWidth, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
-				}
+				this.editor.AddComment (this.comment);
+				this.editor.UpdateAfterCommentChanged ();
 
-				this.comment.SetBounds(rect);
-				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
-
-				this.editor.AddComment(this.comment);
-				this.editor.UpdateAfterCommentChanged();
-
-				this.comment.EditComment();  // édite tout de suite le texte du commentaire
+				this.comment.EditComment ();  // édite tout de suite le texte du commentaire
 			}
 			else
 			{
@@ -430,716 +716,331 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.SetLocalDirty ();
 		}
 
-		
+
 		public override void DrawBackground(Graphics graphics)
 		{
-			//	Dessine l'objet.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			//	Dessine le fond de l'objet.
+			//	Héritage	->	Traitillé
+			//	Interface	->	Trait plein avec o---
+			Rectangle rect;
 
-			if (this.isDraggingDst)
+			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForEdgeChanging);
+
+			//	Dessine l'ombre.
+			rect = this.bounds;
+			rect.Offset (ObjectEdge.shadowOffset, -(ObjectEdge.shadowOffset));
+			this.DrawRoundShadow (graphics, rect, ObjectEdge.roundFrameRadius, (int) ObjectEdge.shadowOffset, 0.2);
+
+			//	Construit le chemin du cadre.
+			rect = this.bounds;
+			rect.Deflate(1);
+			Path path = this.PathRoundRectangle (rect, ObjectEdge.roundFrameRadius);
+
+			//	Dessine l'intérieur en blanc.
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(this.GetColor(1));
+
+			//	Dessine l'intérieur en dégradé.
+			graphics.Rasterizer.AddSurface(path);
+			Color c1 = this.GetColorMain(dragging ? 0.8 : 0.4);
+			Color c2 = this.GetColorMain(dragging ? 0.4 : 0.1);
+			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
+
+			Color colorLine = this.GetColor(0.9);
+			if (dragging)
 			{
-				//	Dessine une connexion courbe qui rejoint le point d'arrivée en train d'être
-				//	déplacé par la souris, pour changer le noeud de destination.
-				Point p1 = this.points.First ();
-				Point ps = (this.points.Count > 2) ? this.points[1] : Point.Zero;
-				Point p2 = this.points.Last ();
-				Color color = this.GetColor (0);
-				double lineWidth = 4;
-
-				Path path = new Path ();
-				path.MoveTo (p1);
-				if (ps.IsZero)
-				{
-					path.LineTo (p2);
-				}
-				else
-				{
-					path.CurveTo (ps, p2);
-				}
-				Misc.DrawPathDash (graphics, path, lineWidth, 15, 10, true, color);
-
-				graphics.LineWidth = lineWidth;
-				AbstractObject.DrawEndingArrow (graphics, ps.IsZero ? p1 : ps, p2);
-				graphics.RenderSolid (color);
-				graphics.LineWidth = 1;
-
-				this.DrawRoundButton (graphics, p1, AbstractObject.bulletRadius+1, false, false, true);
-
-				return;
+				colorLine = this.GetColorMain(0.3);
 			}
 
-			if (this.points.Count >= 2 && this.edge.IsExplored && (this.edge.Route != RouteType.Himself || this.edge.IsSourceExpanded))
+			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
+
+			//	Dessine en blanc la zone pour les champs.
+			Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
+			graphics.AddFilledRectangle (inside);
+			graphics.RenderSolid (this.GetColor (1));
+			graphics.AddFilledRectangle (inside);
+			Color ci1 = this.GetColorMain (dragging ? 0.2 : 0.1);
+			Color ci2 = this.GetColorMain (0.0);
+			this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
+
+			//	Ombre supérieure.
+			Rectangle shadow = new Rectangle (this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
+			graphics.AddFilledRectangle (shadow);
+			this.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
+
+			graphics.AddLine (this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
+			graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
+			graphics.RenderSolid (colorFrame);
+
+			//	Dessine le titre.
+			Color titleColor = dragging ? this.GetColor (1) : this.GetColor (0);
+
+			rect = this.RectangleTitle;
+			rect.Deflate (2, 2);
+			this.title.LayoutSize = rect.Size;
+			this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+
+			//	Dessine le sous-titre.
+			Color subtitleColor = this.GetColor (0);
+
+			rect = this.RectangleSubtitle;
+			this.subtitle.LayoutSize = rect.Size;
+			this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, subtitleColor, GlyphPaintStyle.Normal);
+
+			//	Dessine le cadre en noir.
+			graphics.Rasterizer.AddOutline (path, 2);
+			graphics.RenderSolid (colorFrame);
+
+			//	Dessine le bouton d'ouverture.
+			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
 			{
-				Point start = this.points[0];
-				if (this.edge.IsSourceExpanded)
-				{
-					start = Point.Move(start, this.points[1], AbstractObject.bulletRadius);
-				}
-
-				graphics.LineWidth = 2;
-				for (int i=0; i<this.points.Count-1; i++)
-				{
-					Point p1 = (i==0) ? start : this.points[i];
-					Point p2 = this.points[i+1];
-
-					if (i == 0)
-					{
-						AbstractObject.DrawStartingArrow(graphics, p1, p2);
-					}
-
-					graphics.AddLine(p1, p2);
-
-					if (i == this.points.Count-2)
-					{
-						AbstractObject.DrawEndingArrow(graphics, p1, p2);
-					}
-				}
-				graphics.LineWidth = 1;
-
-				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					color = this.GetColorMain();
-				}
-				graphics.RenderSolid(color);
+				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
 			}
 
-			if (this.points.Count == 2 && !this.edge.IsExplored && this.edge.IsSourceExpanded)
+			if (this.hilitedElement == ActiveElement.NodeOpenRight)
 			{
-				//	Dessine le moignon de liaison.
-				Point start = this.points[0];
-				Point end = new Point(start.X+AbstractObject.lengthClose, start.Y);
-
-				graphics.LineWidth = 2;
-				graphics.AddLine(start, end);
-				AbstractObject.DrawEndingArrow(graphics, start, end);
-				graphics.LineWidth = 1;
-
-				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					color = this.GetColorMain();
-				}
-				graphics.RenderSolid(color);
+				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
 			}
 
-			if (this.points.Count != 0 && this.edge.IsSourceExpanded)
+			//	Dessine le bouton de fermeture.
+			if (this.hilitedElement == ActiveElement.NodeClose)
 			{
-				//	Dessine les cercles aux points de départ.
-				for (int i=0; i<this.points.Count; i++)
-				{
-					Point start = this.points[i];
-					GlyphShape shape = GlyphShape.None;
-
-					bool hilite = false;
-					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
-					{
-						hilite = (i == 1);
-						shape = GlyphShape.ArrowLeft;
-					}
-					else if (this.hilitedElement == ActiveElement.EdgeOpenRight)
-					{
-						hilite = (i == 0);
-						shape = GlyphShape.ArrowRight;
-					}
-					else if (this.hilitedElement == ActiveElement.EdgeClose)
-					{
-						if (i != 0)  break;
-						hilite = true;
-						shape = GlyphShape.Close;
-					}
-					else
-					{
-						if (this.edge.IsExplored && i != 0)  break;
-						if (!this.isSrcHilited && i != 0)  break;
-					}
-
-					if (hilite)
-					{
-						this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, shape, true, false);
-					}
-					else
-					{
-						if (this.hilitedElement == ActiveElement.EdgeHilited)
-						{
-							this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-						}
-						else
-						{
-							this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
-						}
-					}
-				}
+				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, true);
 			}
 
-			//	Dessine le bouton pour commenter la connexion.
-			Point p = this.PositionEdgeComment;
-			if (!p.IsZero && this.IsEdgeCommentButton)
+			//	Dessine le bouton des commentaires.
+			if (this.hilitedElement == ActiveElement.NodeComment)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeComment)
-				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
-				}
+				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
 			}
 
-			//	Dessine le bouton pour déplacer le point milieu.
-			Point m = this.PositionRouteMove1;
-			if (!m.IsZero)
+			//	Dessine le bouton des couleurs.
+			if (this.hilitedElement == ActiveElement.NodeColor5)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeMove1)
-				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
+				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
 			}
 
-			m = this.PositionRouteMove2;
-			if (!m.IsZero)
+			if (this.hilitedElement == ActiveElement.NodeColor6)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeMove2)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
+				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
 			}
 
-			//	Dessine le bouton pour changer de noeud destination.
-			m = this.PositionRouteChangeDst;
-			if (!m.IsZero)
+			if (this.hilitedElement == ActiveElement.NodeColor3)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeChangeDst)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
-				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
-				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
-				}
+				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, true);
 			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor7)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor8)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
+			}
+			
+			if (this.hilitedElement == ActiveElement.NodeColor1)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor2)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeColor4)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
+			}
+
+			//	Dessine le bouton pour changer la largeur.
+			if (this.hilitedElement == ActiveElement.NodeChangeWidth)
+			{
+				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+			}
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.NodeHeader && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+			}
+
+			//	Dessine les connexions.
+			this.DrawLinks (graphics);
 		}
 
-
-		private bool IsEdgeCommentButton
+		private bool IsHeaderHilite
 		{
-			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
-			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
-			//	le bouton CommentAttachToEdge pour déplacer le point d'attache.
+			//	Indique si la souris est dans l'en-tête.
 			get
 			{
-				return (this.comment == null || !this.comment.IsVisible);
+				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+				{
+					return false;
+				}
+
+				return (this.hilitedElement == ActiveElement.NodeHeader ||
+						this.hilitedElement == ActiveElement.NodeComment ||
+						this.hilitedElement == ActiveElement.NodeInfo ||
+						this.hilitedElement == ActiveElement.NodeColor1 ||
+						this.hilitedElement == ActiveElement.NodeColor2 ||
+						this.hilitedElement == ActiveElement.NodeColor3 ||
+						this.hilitedElement == ActiveElement.NodeColor4 ||
+						this.hilitedElement == ActiveElement.NodeColor5 ||
+						this.hilitedElement == ActiveElement.NodeColor6 ||
+						this.hilitedElement == ActiveElement.NodeColor7 ||
+						this.hilitedElement == ActiveElement.NodeColor8 ||
+						this.hilitedElement == ActiveElement.NodeExtend ||
+						this.hilitedElement == ActiveElement.NodeOpenLeft ||
+						this.hilitedElement == ActiveElement.NodeOpenRight ||
+						this.hilitedElement == ActiveElement.NodeClose);
 			}
 		}
 
-		public Point PositionEdgeComment
+		public override void DrawForeground(Graphics graphics)
 		{
-			//	Retourne la position du bouton pour commenter la connexion, ou pour déplacer
-			//	le point d'attache lorsque le commentaire existe.
+			//	Dessine le dessus de l'objet.
+		}
+
+		private Rectangle RectangleTitle
+		{
 			get
 			{
-				if (this.edge.IsSourceExpanded && this.edge.IsExplored && this.points.Count >= 2)
-				{
-					return this.AttachToPoint(this.edge.CommentAttach);
-				}
-
-				return Point.Zero;
+				return new Rectangle (this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 			}
 		}
 
-		private Point AttachToPoint(double d)
+		private Rectangle RectangleSubtitle
 		{
-			//	Conversion d'une distance le long de la connexion en position.
-			//	Une distance positive commence depuis le début de la connexion.
-			//	Une distance négative commence depuis la fin de la connexion.
-			if (this.points.Count < 2)
-			{
-				return Point.Zero;
-			}
-
-			double total = 0;
-			for (int i=0; i<this.points.Count-1; i++)
-			{
-				total += Point.Distance(this.points[i], this.points[i+1]);
-			}
-
-			bool fromBegin = true;
-			if (d < 0)  // attaché depuis la fin ?
-			{
-				d = d+total;
-				fromBegin = false;
-			}
-
-			d = System.Math.Min(d, total-AbstractObject.minAttach);
-			d = System.Math.Max(d, AbstractObject.minAttach);
-
-			if (fromBegin)  // attaché depuis le début ?
-			{
-				for (int i=0; i<this.points.Count-1; i++)
-				{
-					double len = Point.Distance(this.points[i], this.points[i+1]);
-					if (d < len)
-					{
-						return Point.Move(this.points[i], this.points[i+1], d);
-					}
-					else
-					{
-						d -= len;
-					}
-				}
-			}
-			else  // attaché depuis la fin ?
-			{
-				d = total-d;
-				for (int i=this.points.Count-2; i>=0; i--)
-				{
-					double len = Point.Distance(this.points[i], this.points[i+1]);
-					if (d < len)
-					{
-						return Point.Move(this.points[i+1], this.points[i], d);
-					}
-					else
-					{
-						d -= len;
-					}
-				}
-			}
-
-			return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.minAttach);
-		}
-
-		public double PointToAttach(Point p)
-		{
-			//	Conversion d'une position le long de la connexion en distance depuis le début (si positif)
-			//	ou depuis la fin (si négatif).
-			if (this.points.Count < 2)
-			{
-				return 0;
-			}
-
-			double total = 0;
-			double min = double.MaxValue;
-			int j = -1;
-			for (int i=0; i<this.points.Count-1; i++)
-			{
-				total += Point.Distance(this.points[i], this.points[i+1]);
-				Point pi = Point.Projection(this.points[i], this.points[i+1], p);
-				if (Geometry.IsInside(this.points[i], this.points[i+1], pi))
-				{
-					double di = Point.Distance(pi, p);
-					if (di < min)
-					{
-						min = di;
-						j = i;
-					}
-				}
-			}
-
-			if (j == -1)
-			{
-				return 0;
-			}
-
-			Point pj = Point.Projection(this.points[j], this.points[j+1], p);
-			double dj = Point.Distance(this.points[j], pj);
-
-			for (int i=0; i<j; i++)
-			{
-				dj += Point.Distance(this.points[i], this.points[i+1]);
-			}
-
-			dj = System.Math.Max(dj, AbstractObject.minAttach);
-			dj = System.Math.Min(dj, total-AbstractObject.minAttach);
-
-			if (dj > total/2)  // plus proche de la fin ?
-			{
-				dj = dj-total;  // attaché depuis la fin (valeur négative)
-			}
-
-			return dj;
-		}
-
-
-		private Point PositionRouteMove1
-		{
-			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.edge.Route == RouteType.A)
-				{
-					if (this.points.Count == 6)
-					{
-						return this.points[2];
-					}
+				var rect = this.bounds;
+				rect.Deflate (8, 8, AbstractObject.headerHeight+2, AbstractObject.footerHeight+2);
 
-					if (this.points.Count == 2)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 75)
-						{
-							return Point.Scale(this.points[0], this.points[1], this.edge.RouteRelativeAX1);
-						}
-					}
-				}
-
-				if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
-				{
-					if (this.points.Count == 5)
-					{
-						return this.points[2];
-					}
-					
-					if (this.points.Count == 3)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 50 && Point.Distance(this.points[1], this.points[2]) >= 50)
-						{
-							return this.points[1];
-						}
-					}
-				}
-
-				if (this.edge.Route == RouteType.C)
-				{
-					if (this.points.Count == 4)
-					{
-						if (Point.Distance(this.points[0], this.points[3]) >= 75)
-						{
-							return this.points[1];
-						}
-					}
-				}
-
-				if (this.edge.Route == RouteType.D)
-				{
-					if (this.points.Count == 4)
-					{
-						return this.points[1];
-					}
-				}
-
-				return Point.Zero;
+				return rect;
 			}
 		}
 
-		private Point PositionRouteMove2
+		private Point PositionCommentButton
 		{
-			//	Retourne la position du bouton pour modifier le routage.
+			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				if (this.edge.Route == RouteType.A)
-				{
-					if (this.points.Count == 6)
-					{
-						return this.points[3];
-					}
-					
-					if (this.points.Count == 2)
-					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 75)
-						{
-							return Point.Scale(this.points[0], this.points[1], this.edge.RouteRelativeAX2);
-						}
-					}
-				}
-
-				return Point.Zero;
+				return new Point (this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
-		private Point PositionRouteChangeDst
+		private Point PositionCloseButton
 		{
-			//	Retourne la position du bouton pour modifier le noeud destination.
+			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				if (this.points.Count == 0)
-				{
-					return Point.Zero;
-				}
-				else
-				{
-					return this.points.Last ();
-				}
+				return new Point (this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
-		private void RouteMove(Point pos)
+		private Point PositionOpenLeftButton
 		{
-			//	Modifie le routage en fonction du choix de l'utilisateur.
-			if (pos.IsZero)
+			//	Retourne la position du bouton pour ouvrir.
+			get
 			{
-				return;
-			}
-
-			Point oldPos = this.PositionEdgeComment;  // point d'attache avant re-routage
-
-			if (this.edge.Route == RouteType.A)
-			{
-				if (this.hilitedElement == ActiveElement.EdgeMove1)
-				{
-					this.edge.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
-				}
-				else
-				{
-					this.edge.RouteRelativeAX2 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
-				}
-
-				this.edge.RouteAbsoluteAY = pos.Y-this.points[0].Y;
-			}
-
-			if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
-			{
-				this.edge.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
-				this.edge.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
-			}
-
-			if (this.edge.Route == RouteType.C)
-			{
-				this.edge.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
-			}
-
-			if (this.edge.Route == RouteType.D)
-			{
-				if (this.edge.IsAttachToRight)
-				{
-					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
-					this.edge.RouteAbsoluteDX = pos.X-px;
-				}
-				else
-				{
-					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
-					this.edge.RouteAbsoluteDX = px-pos.X;
-				}
-			}
-
-			Point newPos = this.PositionEdgeComment;  // point d'attache après re-routage
-
-			if (this.comment != null)
-			{
-				Rectangle bounds = this.comment.Bounds;
-				bounds.Offset(newPos-oldPos);
-				this.comment.SetBounds(bounds);  // déplace le commentaire
+				return new Point (this.bounds.Left, this.bounds.Center.Y);
 			}
 		}
 
-		public void UpdateRoute()
+		private Point PositionOpenRightButton
 		{
-			//	Met à jour le routage de la connexion, dans les cas ou le routage dépend des choix de l'utilisateur.
-			retry:
-			if (this.edge.Route == RouteType.A)
+			//	Retourne la position du bouton pour ouvrir.
+			get
 			{
-				if (this.edge.RouteAbsoluteAY == 0)
-				{
-					if (this.points.Count == 6)
-					{
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-					}
-				}
-				else
-				{
-					if (this.points.Count == 2)
-					{
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-					}
-
-					double d = this.points[5].X-this.points[0].X;
-					double d1 = d*this.edge.RouteRelativeAX1;
-					double d2 = d*this.edge.RouteRelativeAX2;
-
-					d1 -= d;
-					d2 -= d;
-					if (d2 > 0)
-					{
-						d2 = System.Math.Max(d2, ObjectEdge.arrowMinimalLength);
-						if (d2 > d1)
-						{
-							this.edge.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
-							goto retry;
-						}
-					}
-					else
-					{
-						d2 = -System.Math.Max(-d2, ObjectEdge.arrowMinimalLength);
-						if (d2 < d1)
-						{
-							this.edge.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
-							goto retry;
-						}
-					}
-					d1 += d;
-					d2 += d;
-
-					double px1 = this.points[0].X + d1;
-					double px2 = this.points[0].X + d2;
-					double py = this.points[0].Y + this.edge.RouteAbsoluteAY;
-					this.points[1] = new Point(px1, this.points[0].Y);
-					this.points[2] = new Point(px1, py);
-					this.points[3] = new Point(px2, py);
-					this.points[4] = new Point(px2, this.points[0].Y);
-				}
-			}
-
-			if (this.edge.Route == RouteType.Bt || this.edge.Route == RouteType.Bb)
-			{
-				if (this.edge.RouteRelativeBX == 0 || this.edge.RouteRelativeBY == 0)
-				{
-					if (this.points.Count == 5)
-					{
-						this.points.RemoveAt(1);
-						this.points.RemoveAt(1);
-					}
-					this.points[1] = new Point(this.points[2].X, this.points[0].Y);
-				}
-				else
-				{
-					if (this.points.Count == 3)
-					{
-						this.points.Insert(1, Point.Zero);
-						this.points.Insert(1, Point.Zero);
-					}
-
-					double d = this.points[4].Y-this.points[0].Y;
-					double d1 = d*this.edge.RouteRelativeBY;
-
-					d1 -= d;
-					if (d1 > 0)
-					{
-						d1 = System.Math.Max(d1, ObjectEdge.arrowMinimalLength);
-					}
-					else
-					{
-						d1 = -System.Math.Max(-d1, ObjectEdge.arrowMinimalLength);
-					}
-					d1 += d;
-
-					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.edge.RouteRelativeBX;
-					double py = this.points[0].Y + d1;
-					this.points[1] = new Point(px, this.points[0].Y);
-					this.points[2] = new Point(px, py);
-					this.points[3] = new Point(this.points[4].X, py);
-				}
-			}
-
-			if (this.edge.Route == RouteType.C)
-			{
-				//	Met à jour les points milieu de la connexion.
-				double d = this.points[3].X-this.points[0].X;
-				double d1 = d*this.edge.RouteRelativeCX;
-
-				d1 -= d;
-				if (d1 > 0)
-				{
-					d1 = System.Math.Max(d1, ObjectEdge.arrowMinimalLength);
-				}
-				else
-				{
-					d1 = -System.Math.Max(-d1, ObjectEdge.arrowMinimalLength);
-				}
-				d1 += d;
-
-				double px = this.points[0].X + d1;
-				this.points[1] = new Point(px, this.points[0].Y);
-				this.points[2] = new Point(px, this.points[3].Y);
-			}
-
-			if (this.edge.Route == RouteType.D)
-			{
-				double px;
-				if (this.edge.IsAttachToRight)
-				{
-					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.edgeDetour;
-					px += this.edge.RouteAbsoluteDX;
-				}
-				else
-				{
-					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.edgeDetour;
-					px -= this.edge.RouteAbsoluteDX;
-				}
-				this.points[1] = new Point(px, this.points[0].Y);
-				this.points[2] = new Point(px, this.points[3].Y);
+				return new Point (this.bounds.Right, this.bounds.Center.Y);
 			}
 		}
 
-
-		private void MouseDownDst(Point pos)
+		private Point PositionColorButton(int rank)
 		{
-			this.isDraggingDst = true;
-			this.editor.LockObject (this);
-
-			this.MouseMoveDst(pos);
+			//	Retourne la position du bouton pour choisir la couleur.
+			return new Point (this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
 		}
 
-		private void MouseMoveDst(Point pos)
+		private Point PositionChangeWidthButton
 		{
-			this.points[this.points.Count-1] = pos;
-
-			var node = this.DetectNode (pos);
-
-			if (this.hilitedDstNode != node)
+			//	Retourne la position du bouton pour changer la largeur.
+			get
 			{
-				if (this.hilitedDstNode != null)
-				{
-					this.hilitedDstNode.IsHilitedForEdgeChanging = false;
-				}
-
-				this.hilitedDstNode = node;
-
-				if (this.hilitedDstNode != null)
-				{
-					this.hilitedDstNode.IsHilitedForEdgeChanging = true;
-				}
+				return new Point (this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 			}
-
-			this.editor.Invalidate ();
 		}
 
-		private void MouseUpDst()
+		private string GetGroupTooltip(int rank)
 		{
-			this.isDraggingDst = false;
-
-			if (this.hilitedDstNode != null)
-			{
-				this.edge.DstNode = this.hilitedDstNode;
-				this.Entity.NextNode = this.edge.DstNode.Entity;
-
-				this.hilitedDstNode.IsHilitedForEdgeChanging = false;
-				this.hilitedDstNode = null;
-			}
-
-			this.editor.UpdateGeometry ();
-			this.editor.LockObject (null);
-			this.editor.SetLocalDirty ();
+			//	Retourne le tooltip à afficher pour un groupe.
+			return null;  // pas de tooltip
 		}
 
-		private ObjectNode DetectNode(Point pos)
+
+		private void UpdateTitle()
 		{
-			for (int i=this.editor.Nodes.Count-1; i>=0; i--)
-			{
-				ObjectNode node = this.editor.Nodes[i];
+			//	Met à jour le titre du noeud.
+			this.Title = this.Entity.Name.ToString ();
+		}
 
-				if (node.Bounds.Contains (pos))
-				{
-					return node;
-				}
-			}
-
-			return null;
+		private void UpdateSubtitle()
+		{
+			//	Met à jour le sous-titre du noeud.
+			this.Subtitle = this.Entity.Description.ToString ();
 		}
 
 
-		private WorkflowEdgeEntity Entity
+		public WorkflowEdgeEntity Entity
 		{
 			get
 			{
@@ -1148,14 +1049,157 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private static readonly double arrowMinimalLength = 25;
+		#region Serialization
+		public void WriteXml(XmlWriter writer)
+		{
+			//	Sérialise toutes les informations de la boîte et de ses champs.
+#if false
+			writer.WriteStartElement(Xml.Box);
+			
+			writer.WriteElementString(Xml.Druid, this.cultureMap.Id.ToString());
+			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
+			writer.WriteElementString(Xml.IsExtended, this.isExtended.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-		private Edge						edge;
-		private List<Point>					points;
-		private bool						isSrcHilited;
-		private bool						isDraggingRoute;
-		private bool						isDraggingDst;
-		private ObjectComment				comment;
-		private ObjectNode					hilitedDstNode;
+			if (this.columnsSeparatorRelative1 != 0.5)
+			{
+				writer.WriteElementString(Xml.ColumnsSeparatorRelative1, this.columnsSeparatorRelative1.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			}
+			
+			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
+
+			foreach (Field field in this.fields)
+			{
+				field.WriteXml(writer);
+			}
+
+			if (this.comment != null && this.comment.IsVisible)  // commentaire associé ?
+			{
+				this.comment.WriteXml(writer);
+			}
+			
+			if (this.info != null && this.info.IsVisible)  // informations associées ?
+			{
+				this.info.WriteXml(writer);
+			}
+			
+			writer.WriteEndElement();
+#endif
+		}
+
+		public void ReadXml(XmlReader reader)
+		{
+#if false
+			this.fields.Clear();
+
+			reader.Read();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+
+					if (name == Xml.Field)
+					{
+						Field field = new Field(this.editor);
+						field.ReadXml(reader);
+						reader.Read();
+						this.fields.Add(field);
+					}
+					else if (name == Xml.Comment)
+					{
+						this.comment = new ObjectComment(this.editor);
+						this.comment.ReadXml(reader);
+						this.comment.AttachObject = this;
+						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+						this.editor.AddComment(this.comment);
+						reader.Read();
+					}
+					else if (name == Xml.Info)
+					{
+						this.info = new ObjectInfo(this.editor);
+						this.info.ReadXml(reader);
+						this.info.AttachObject = this;
+						this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
+						this.editor.AddInfo(this.info);
+						reader.Read();
+					}
+					else
+					{
+						string element = reader.ReadElementString();
+
+						if (name == Xml.Druid)
+						{
+							Druid druid = Druid.Parse(element);
+							if (druid.IsValid)
+							{
+								Module module = this.SearchModule(druid);
+								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
+							}
+						}
+						else if (name == Xml.Bounds)
+						{
+							this.bounds = Rectangle.Parse(element);
+						}
+						else if (name == Xml.IsExtended)
+						{
+							this.isExtended = bool.Parse(element);
+						}
+						else if (name == Xml.ColumnsSeparatorRelative1)
+						{
+							this.columnsSeparatorRelative1 = double.Parse(element);
+						}
+						else if (name == Xml.Color)
+						{
+							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
+						}
+						else
+						{
+							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in box", name));
+						}
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.Box);
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+#endif
+		}
+
+		public void AdjustAfterRead()
+		{
+			//	Ajuste le contenu de la boîte après sa désérialisation.
+		}
+		#endregion
+
+
+		public static readonly Size				frameSize = new Size (200, 100);
+		public static readonly double			roundFrameRadius = 12;
+		private static readonly double			shadowOffset = 6;
+
+		private string							titleString;
+		private TextLayout						title;
+		private string							subtitleString;
+		private TextLayout						subtitle;
+
+		private Point							initialPos;
+
+		private bool							isDragging;
+		private Point							draggingOffset;
+
+		private bool							isChangeWidth;
+		private double							changeWidthPos;
+		private double							changeWidthInitial;
+
+		private bool							isHilitedForEdgeChanging;
+
+		private ActiveElement					editingElement;
+		private AbstractTextField				editingTextField;
 	}
 }

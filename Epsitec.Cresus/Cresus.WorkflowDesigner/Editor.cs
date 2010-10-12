@@ -61,12 +61,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 
-			this.nodes       = new List<ObjectNode> ();
-			this.nodes2      = new List<ObjectNode2> ();
-			this.edges       = new List<ObjectEdge> ();
-			this.edges2      = new List<ObjectEdge2> ();
-			this.comments    = new List<ObjectComment> ();
-			this.infos       = new List<ObjectInfo> ();
+			this.nodes    = new List<ObjectNode> ();
+			this.edges    = new List<ObjectEdge> ();
+			this.comments = new List<ObjectComment> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
@@ -138,7 +135,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.CreateLinks ();
-			this.UpdateAfterGeometryChanged2 (null);
+			this.UpdateAfterGeometryChanged (null);
 		}
 
 		private void CreateInitialWorkflow(List<AbstractEntity> alreadyCreated, WorkflowEdgeEntity edgeEntity)
@@ -150,7 +147,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			alreadyCreated.Add (edgeEntity);
 
-			var edge = new ObjectEdge2 (this, edgeEntity);
+			var edge = new ObjectEdge (this, edgeEntity);
 			this.AddEdge (edge);
 
 			if (edgeEntity.NextNode.IsNotNull ())
@@ -168,7 +165,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			alreadyCreated.Add (nodeEntity);
 
-			var node = new ObjectNode2 (this, nodeEntity);
+			var node = new ObjectNode (this, nodeEntity);
 			node.IsRoot = isRoot;
 			this.AddNode (node);
 
@@ -188,15 +185,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public int NodeCount2
-		{
-			//	Retourne le nombre de boîtes existantes.
-			get
-			{
-				return this.nodes2.Count;
-			}
-		}
-
 		public List<ObjectNode> Nodes
 		{
 			//	Retourne la liste des boîtes.
@@ -206,22 +194,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		public List<ObjectNode2> Nodes2
-		{
-			//	Retourne la liste des boîtes.
-			get
-			{
-				return this.nodes2;
-			}
-		}
-
 
 		public LinkableObject SearchObject(AbstractEntity entity)
 		{
 			//	Cherche un objet d'après l'entité qu'il représente.
 			var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
 
-			foreach (var node in this.nodes2)
+			foreach (var node in this.nodes)
 			{
 				var key = this.businessContext.DataContext.GetNormalizedEntityKey (node.AbstractEntity);
 
@@ -231,7 +210,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			foreach (var edge in this.edges2)
+			foreach (var edge in this.edges)
 			{
 				var key = this.businessContext.DataContext.GetNormalizedEntityKey (edge.AbstractEntity);
 
@@ -247,38 +226,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void AddNode(ObjectNode node)
 		{
-			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
-			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateNodes().
-			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
-			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
-			//	fonction de la boîte parent.
-			node.SetBounds (new Rectangle (0, 0, Editor.defaultWidth, 0));
-			node.IsExtended = true;
-
-			this.nodes.Add (node);
-		}
-
-		public void AddNode(ObjectNode2 node)
-		{
 			//	Ajoute une nouvelle boîte dans l'éditeur.
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
-			node.SetBounds (new Rectangle (0, 0, ObjectNode2.frameRadius*2, ObjectNode2.frameRadius*2));
-			this.nodes2.Add (node);
+			node.SetBounds (new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2));
+			this.nodes.Add (node);
 		}
 
 		public void AddEdge(ObjectEdge edge)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
+			edge.SetBounds (new Rectangle (Point.Zero, ObjectEdge.frameSize));
 			this.edges.Add (edge);
-		}
-
-		public void AddEdge(ObjectEdge2 edge)
-		{
-			//	Ajoute une nouvelle liaison dans l'éditeur.
-			edge.SetBounds (new Rectangle (Point.Zero, ObjectEdge2.frameSize));
-			this.edges2.Add (edge);
 		}
 
 		public void AddComment(ObjectComment comment)
@@ -287,18 +247,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.comments.Add(comment);
 		}
 
-		public void AddInfo(ObjectInfo info)
-		{
-			//	Ajoute une nouvelle information dans l'éditeur.
-			this.infos.Add(info);
-		}
-
 
 		public int GetNodeTitleNumbrer()
 		{
 			int number = 0;
 
-			foreach (var node in this.nodes2)
+			foreach (var node in this.nodes)
 			{
 				number = System.Math.Max (number, node.TitleNumber);
 			}
@@ -311,11 +265,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.nodes.Clear ();
-			this.nodes2.Clear ();
 			this.edges.Clear ();
-			this.edges2.Clear ();
 			this.comments.Clear();
-			this.infos.Clear();
 			this.LockObject(null);
 		}
 
@@ -454,20 +405,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateDimmed ();
 		}
 
-		public void UpdateAfterGeometryChanged2(ObjectNode2 node)
-		{
-			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateNodes ();  // adapte la taille selon compact/étendu
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
-			this.RedimArea ();
-
-			this.UpdateLinks ();
-			this.RedimArea ();
-
-			this.UpdateDimmed ();
-		}
-
-		public void UpdateAfterMoving(ObjectNode node)
+		public void UpdateAfterMoving(LinkableObject node)
 		{
 			//	Appelé lorsqu'une boîte a été bougée.
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
@@ -477,33 +415,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.RedimArea ();
 		}
 
-		public void UpdateAfterMoving(ObjectNode2 node)
-		{
-			//	Appelé lorsqu'une boîte a été bougée.
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
-			this.RedimArea ();
-
-			this.UpdateLinks ();
-			this.RedimArea ();
-		}
-
-		public void UpdateAfterAddOrRemoveEdge(ObjectNode node)
-		{
-			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
-			this.UpdateNodes ();
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
-			this.RedimArea ();
-
-			this.CreateLinks ();
-			this.RedimArea ();
-
-			this.UpdateLinks ();
-			this.RedimArea ();
-
-			this.UpdateDimmed ();
-		}
-
-		public void UpdateAfterAddOrRemoveEdge2(ObjectNode2 node)
+		public void UpdateAfterAddOrRemoveEdge(LinkableObject node)
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
 			this.UpdateNodes ();
@@ -522,15 +434,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private void UpdateNodes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
-			foreach (ObjectNode node in this.nodes)
-			{
-				Rectangle bounds = node.Bounds;
-				double top = bounds.Top;
-				double h = node.GetBestHeight();
-				bounds.Bottom = top-h;
-				bounds.Height = h;
-				node.SetBounds(bounds);
-			}
 		}
 
 		public void UpdateLinks()
@@ -578,26 +481,30 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.LinkListD.Clear();
 			}
 
-			foreach (ObjectEdge edge in this.edges)
+			foreach (Link link in this.Links)
 			{
-				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.Bt)
+				ObjectLink objectLink = link.ObjectLink;
+				if (objectLink != null)
 				{
-					edge.Edge.DstNode.EdgeListBt.Add(edge);
-				}
+					if (link.DstNode != null && link.Route == RouteType.Bt)
+					{
+						link.DstNode.LinkListBt.Add (objectLink);
+					}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.Bb)
-				{
-					edge.Edge.DstNode.EdgeListBb.Add(edge);
-				}
+					if (link.DstNode != null && link.Route == RouteType.Bb)
+					{
+						link.DstNode.LinkListBb.Add (objectLink);
+					}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.C)
-				{
-					edge.Edge.DstNode.EdgeListC.Add(edge);
-				}
+					if (link.DstNode != null && link.Route == RouteType.C)
+					{
+						link.DstNode.LinkListC.Add (objectLink);
+					}
 
-				if (edge.Edge.DstNode != null && edge.Edge.Route == RouteType.D)
-				{
-					edge.Edge.DstNode.EdgeListD.Add(edge);
+					if (link.DstNode != null && link.Route == RouteType.D)
+					{
+						link.DstNode.LinkListD.Add (objectLink);
+					}
 				}
 			}
 
@@ -620,16 +527,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Adapte tous les commentaires.
 			foreach (ObjectComment comment in this.comments)
 			{
-				if (comment.AttachObject is ObjectEdge)
+				if (comment.AttachObject is ObjectLink)
 				{
-					ObjectEdge edge = comment.AttachObject as ObjectEdge;
+					var link = comment.AttachObject as ObjectLink;
 
-					Point oldPos = edge.Edge.CommentPosition;
-					Point newPos = edge.PositionEdgeComment;
+					Point oldPos = link.Link.CommentPosition;
+					Point newPos = link.PositionLinkComment;
 
 					if (!oldPos.IsZero && !newPos.IsZero)
 					{
-						Rectangle rect = edge.Edge.CommentBounds;
+						Rectangle rect = link.Link.CommentBounds;
 						rect.Offset(newPos-oldPos);
 						comment.SetBounds(rect);  // déplace le commentaire
 					}
@@ -680,21 +587,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Top);
 						link.Points.Add(new Point(end.X, start.Y));
 						link.Points.Add(end);
 						link.Link.Route = RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Bottom);
 						link.Points.Add(new Point(end.X, start.Y));
 						link.Points.Add(end);
 						link.Link.Route = RouteType.Bt;
 					}
 					else
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Left);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Left);
 						if (start.Y != end.Y && end.X-start.X > Editor.edgeDetour)
 						{
 							link.Points.Add(Point.Zero);  // (*)
@@ -716,21 +623,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 					if (dstBounds.Top < start.Y-Editor.edgeDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Top);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Top);
 						link.Points.Add(new Point(end.X, start.Y));
 						link.Points.Add(end);
 						link.Link.Route = RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.edgeDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Bottom);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Bottom);
 						link.Points.Add(new Point(end.X, start.Y));
 						link.Points.Add(end);
 						link.Link.Route = RouteType.Bt;
 					}
 					else
 					{
-						Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Right);
+						Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Right);
 						if (start.Y != end.Y && start.X-end.X > Editor.edgeDetour)
 						{
 							link.Points.Add(Point.Zero);  // (*)
@@ -748,7 +655,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				else if (link.Link.IsAttachToRight)  // destination à droite à cheval ?
 				{
 					Point start = new Point(srcBounds.Right-1, ps.Y);
-					Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Right);
+					Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Right);
 
 					link.Points.Add(start);
 					link.Points.Add(Point.Zero);  // (*)
@@ -759,7 +666,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				else  // destination à gauche à cheval ?
 				{
 					Point start = new Point(srcBounds.Left+1, ps.Y);
-					Point end = dst.GetLinkDstPosition(start.Y, ObjectNode.EdgeAnchor.Left);
+					Point end = dst.GetLinkDstPosition (start.Y, LinkAnchor.Left);
 
 					link.Points.Add(start);
 					link.Points.Add(Point.Zero);  // (*)
@@ -854,22 +761,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private IEnumerable<LinkableObject> LinkableObjects
-		{
-			get
-			{
-				foreach (var node in this.nodes2)
-				{
-					yield return node;
-				}
-
-				foreach (var edge in this.edges2)
-				{
-					yield return edge;
-				}
-			}
-		}
-
 
 		public void CreateLinks()
 		{
@@ -921,17 +812,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Recrée tous les commentaires liés aux connexions.
-			foreach (ObjectEdge objectEdge in this.edges)
+			foreach (var link in this.Links)
 			{
-				if (objectEdge.Edge.HasComment && objectEdge.Edge.IsExplored)
-				{
-					objectEdge.Comment = new ObjectComment (this, objectEdge.AbstractEntity);
-					objectEdge.Comment.AttachObject = objectEdge;
-					objectEdge.Comment.Text = objectEdge.Edge.CommentText;
-					objectEdge.Comment.BackgroundMainColor = objectEdge.Edge.CommentMainColor;
-					objectEdge.Comment.SetBounds(objectEdge.Edge.CommentBounds);
+				var objectLink = link.ObjectLink;
 
-					this.AddComment(objectEdge.Comment);
+				if (objectLink != null && objectLink.Link.HasComment && objectLink.Link.DstNode != null)
+				{
+					objectLink.Comment = new ObjectComment (this, objectLink.AbstractEntity);
+					objectLink.Comment.AttachObject = objectLink;
+					objectLink.Comment.Text = objectLink.Link.CommentText;
+					objectLink.Comment.BackgroundMainColor = objectLink.Link.CommentMainColor;
+					objectLink.Comment.SetBounds (objectLink.Link.CommentBounds);
+
+					this.AddComment (objectLink.Comment);
 				}
 			}
 
@@ -941,9 +834,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private void CommentsMemorize()
 		{
 			//	Mémorise l'état de tous les commentaires liés à des connexions.
-			foreach (ObjectEdge objectEdge in this.edges)
+			foreach (var link in this.Links)
 			{
-				objectEdge.Edge.HasComment = false;
+				link.HasComment = false;
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -973,50 +866,44 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private void UpdateDimmed()
 		{
 			//	Met en estompé toutes les connexions qui partent ou qui arrivent sur une entité estompée.
-			foreach (ObjectEdge objectEdge in this.edges)
+			foreach (var link in this.Links)
 			{
-				objectEdge.IsDimmed = false;
-			}
-
-			foreach (ObjectEdge objectEdge in this.edges)
-			{
-				if (objectEdge.Edge.IsExplored)
+				var objectLink = link.ObjectLink;
+				if (objectLink != null)
 				{
-					if (objectEdge.Edge.SrcNode != null && objectEdge.Edge.SrcNode.IsDimmed)
-					{
-						objectEdge.IsDimmed = true;
-					}
-					else if (objectEdge.Edge.DstNode != null && objectEdge.Edge.DstNode.IsDimmed)
-					{
-						objectEdge.IsDimmed = true;
-					}
-				}
-				else
-				{
-#if false
-					Module dstModule = this.module.DesignerApplication.SearchModule(connexion.Field.Destination);
-					Module currentModule = this.module.DesignerApplication.CurrentModule;
-
-					connexion.IsDimmed = (dstModule != currentModule);
-#endif
-				}
-
-				if (objectEdge.Comment != null)
-				{
-					objectEdge.Comment.IsDimmed = objectEdge.IsDimmed;
+					objectLink.IsDimmed = false;
 				}
 			}
 
-			foreach (ObjectNode node in this.nodes)
+			foreach (var link in this.Links)
 			{
-				if (node.Comment != null)
+				var objectLink = link.ObjectLink;
+				if (objectLink != null)
 				{
-					node.Comment.IsDimmed = node.IsDimmed;
-				}
+					if (objectLink.Link.DstNode != null)
+					{
+						if (objectLink.Link.SrcNode != null && objectLink.Link.SrcNode.IsDimmed)
+						{
+							objectLink.IsDimmed = true;
+						}
+						else if (objectLink.Link.DstNode != null && objectLink.Link.DstNode.IsDimmed)
+						{
+							objectLink.IsDimmed = true;
+						}
+					}
 
-				if (node.Info != null)
+					if (objectLink.Comment != null)
+					{
+						objectLink.Comment.IsDimmed = objectLink.IsDimmed;
+					}
+				}
+			}
+
+			foreach (var obj in this.LinkableObjects)
+			{
+				if (obj.Comment != null)
 				{
-					node.Info.IsDimmed = node.IsDimmed;
+					obj.Comment.IsDimmed = obj.IsDimmed;
 				}
 			}
 		}
@@ -1025,17 +912,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public bool IsEmptyArea(Rectangle area)
 		{
 			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connexions).
-			foreach (ObjectNode node in this.nodes)
+			foreach (var obj in this.LinkableObjects)
 			{
-				if (node.Bounds.IntersectsWith (area))
-				{
-					return false;
-				}
-			}
-
-			foreach (ObjectNode2 node in this.nodes2)
-			{
-				if (node.Bounds.IntersectsWith (area))
+				if (obj.Bounds.IntersectsWith (area))
 				{
 					return false;
 				}
@@ -1044,322 +923,25 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return true;
 		}
 
-		public void CloseNode(ObjectNode node)
+
+		public void CloseObject(LinkableObject obj)
 		{
-			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
-			//	La stratégie utilisée est la suivante:
-			//	1. On ferme la boîte demandée.
-			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
-			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
-			//	3. Tant qu'on a détruit au moins une boîte, on recommence au point 2.
-			if (node != null && node.IsRoot)
+			//	Ferme une boîte.
+			if (obj is ObjectNode)
 			{
-				return;  // on ne détruit jamais la boîte racine
+				this.nodes.Remove (obj as ObjectNode);
 			}
 
-			bool dirty = false;
-
-			if (node != null)
+			if (obj is ObjectEdge)
 			{
-				this.CloseOneNode(node);  // supprime la boîte demandée
-				this.CloseEdges(node);  // supprime ses connexions
-				dirty = true;
+				this.edges.Remove (obj as ObjectEdge);
 			}
 
-			foreach (ObjectNode anode in this.nodes)
-			{
-				anode.IsConnectedToRoot = false;
-				anode.Parents.Clear();
-			}
-
-			foreach (ObjectNode anode in this.nodes)
-			{
-				foreach (Edge edge in anode.Edges)
-				{
-					ObjectNode dstNode = edge.DstNode;
-					if (dstNode != null)
-					{
-						dstNode.Parents.Add(anode);
-					}
-				}
-			}
-
-			foreach (ObjectNode anode in this.nodes)
-			{
-				List<ObjectNode> visited = new List<ObjectNode>();
-				visited.Add(anode);
-				this.ExploreConnectedToRoot(visited, anode);
-
-				bool toRoot = false;
-				foreach (ObjectNode vnode in visited)
-				{
-					if (vnode == this.nodes[0])
-					{
-						toRoot = true;
-						break;
-					}
-				}
-
-				if (toRoot)
-				{
-					foreach (ObjectNode vnode in visited)
-					{
-						vnode.IsConnectedToRoot = true;
-					}
-				}
-			}
-
-			bool removed;
-			do
-			{
-				removed = false;
-				int i = 1;  // on saute toujours la boîte racine
-				while (i < this.nodes.Count)
-				{
-					node = this.nodes[i];
-					if (node.IsConnectedToRoot)  // boîte liée à la racine ?
-					{
-						i++;
-					}
-					else  // boîte isolée ?
-					{
-						this.CloseOneNode(node);  // supprime la boîte isolée
-						this.CloseEdges(node);  // supprime ses connexions
-						removed = true;
-						dirty = true;
-					}
-				}
-			}
-			while (removed);  // recommence tant qu'on a détruit quelque chose
-
-			foreach (ObjectNode anode in this.nodes)
-			{
-				anode.IsConnectedToRoot = false;
-				anode.Parents.Clear();
-			}
-
-			if (dirty)
-			{
-				this.SetLocalDirty();
-			}
-		}
-
-		private void CloseOneNode(ObjectNode node)
-		{
-			if (node.Comment != null)
-			{
-				this.comments.Remove(node.Comment);
-				node.Comment = null;
-			}
-
-			if (node.Info != null)
-			{
-				this.infos.Remove(node.Info);
-				node.Info = null;
-			}
-
-			this.nodes.Remove(node);  // supprime la boîte demandée
-		}
-
-		private void ExploreConnectedToRoot(List<ObjectNode> visited, ObjectNode root)
-		{
-			//	Cherche récursivement tous les objets depuis 'root'.
-			foreach (Edge edge in root.Edges)
-			{
-				ObjectNode dstNode = edge.DstNode;
-				if (dstNode != null)
-				{
-					if (!visited.Contains(dstNode))
-					{
-						visited.Add(dstNode);
-						this.ExploreConnectedToRoot(visited, dstNode);
-					}
-				}
-			}
-
-			foreach (ObjectNode srcNode in root.Parents)
-			{
-				if (!visited.Contains(srcNode))
-				{
-					visited.Add(srcNode);
-					this.ExploreConnectedToRoot(visited, srcNode);
-				}
-			}
-		}
-
-		private void CloseEdges(ObjectNode removedNode)
-		{
-			//	Parcourt toutes les connexions de toutes les boîtes, pour fermer toutes
-			//	les connexions sur la boîte supprimée.
-			foreach (ObjectNode node in this.nodes)
-			{
-				foreach (Edge edge in node.Edges)
-				{
-					if (edge.DstNode == removedNode)
-					{
-						edge.DstNode = null;
-						edge.IsExplored = false;
-					}
-				}
-			}
+			this.SetLocalDirty ();
 		}
 
 
-		public void CloseNode2(ObjectNode2 node)
-		{
-			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
-			//	La stratégie utilisée est la suivante:
-			//	1. On ferme la boîte demandée.
-			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
-			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
-			//	3. Tant qu'on a détruit au moins une boîte, on recommence au point 2.
-			if (node != null && node.IsRoot)
-			{
-				return;  // on ne détruit jamais la boîte racine
-			}
-
-			bool dirty = false;
-
-			if (node != null)
-			{
-				this.CloseOneNode (node);  // supprime la boîte demandée
-				this.CloseEdges (node);  // supprime ses connexions
-				dirty = true;
-			}
-
-			foreach (ObjectNode2 anode in this.nodes2)
-			{
-				anode.IsConnectedToRoot = false;
-				anode.Parents.Clear ();
-			}
-
-			foreach (ObjectNode2 anode in this.nodes2)
-			{
-				foreach (Link edge in anode.Links)
-				{
-					ObjectNode2 dstNode = edge.DstNode as ObjectNode2;
-					if (dstNode != null)
-					{
-						dstNode.Parents.Add (anode);
-					}
-				}
-			}
-
-			foreach (ObjectNode2 anode in this.nodes2)
-			{
-				List<ObjectNode2> visited = new List<ObjectNode2> ();
-				visited.Add (anode);
-				this.ExploreConnectedToRoot (visited, anode);
-
-				bool toRoot = false;
-				foreach (ObjectNode2 vnode in visited)
-				{
-					if (vnode == this.nodes2[0])
-					{
-						toRoot = true;
-						break;
-					}
-				}
-
-				if (toRoot)
-				{
-					foreach (ObjectNode2 vnode in visited)
-					{
-						vnode.IsConnectedToRoot = true;
-					}
-				}
-			}
-
-			bool removed;
-			do
-			{
-				removed = false;
-				int i = 1;  // on saute toujours la boîte racine
-				while (i < this.nodes2.Count)
-				{
-					node = this.nodes2[i];
-					if (node.IsConnectedToRoot)  // boîte liée à la racine ?
-					{
-						i++;
-					}
-					else  // boîte isolée ?
-					{
-						this.CloseOneNode (node);  // supprime la boîte isolée
-						this.CloseEdges (node);  // supprime ses connexions
-						removed = true;
-						dirty = true;
-					}
-				}
-			}
-			while (removed);  // recommence tant qu'on a détruit quelque chose
-
-			foreach (ObjectNode2 anode in this.nodes2)
-			{
-				anode.IsConnectedToRoot = false;
-				anode.Parents.Clear ();
-			}
-
-			if (dirty)
-			{
-				this.SetLocalDirty ();
-			}
-		}
-
-		private void CloseOneNode(ObjectNode2 node)
-		{
-			if (node.Comment != null)
-			{
-				this.comments.Remove (node.Comment);
-				node.Comment = null;
-			}
-
-			this.nodes2.Remove (node);  // supprime la boîte demandée
-		}
-
-		private void ExploreConnectedToRoot(List<ObjectNode2> visited, ObjectNode2 root)
-		{
-			//	Cherche récursivement tous les objets depuis 'root'.
-			foreach (Link edge in root.Links)
-			{
-				ObjectNode2 dstNode = edge.DstNode as ObjectNode2;
-				if (dstNode != null)
-				{
-					if (!visited.Contains (dstNode))
-					{
-						visited.Add (dstNode);
-						this.ExploreConnectedToRoot (visited, dstNode);
-					}
-				}
-			}
-
-			foreach (ObjectNode2 srcNode in root.Parents)
-			{
-				if (!visited.Contains (srcNode))
-				{
-					visited.Add (srcNode);
-					this.ExploreConnectedToRoot (visited, srcNode);
-				}
-			}
-		}
-
-		private void CloseEdges(ObjectNode2 removedNode)
-		{
-			//	Parcourt toutes les connexions de toutes les boîtes, pour fermer toutes
-			//	les connexions sur la boîte supprimée.
-			foreach (ObjectNode2 node in this.nodes2)
-			{
-				foreach (Link edge in node.Links)
-				{
-					if (edge.DstNode == removedNode)
-					{
-						edge.DstNode = null;
-					}
-				}
-			}
-		}
-
-
-		private void PushLayout(ObjectNode exclude, PushDirection direction, double margin)
+		private void PushLayout(LinkableObject exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
@@ -1367,109 +949,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				bool push = false;
 
-				for (int i=0; i<this.nodes.Count; i++)
+				foreach (var obj in this.LinkableObjects)
 				{
-					ObjectNode node = this.nodes[i];
-
-					ObjectNode inter = this.PushSearch(node, exclude, margin);
+					var inter = this.PushSearch (obj, exclude, margin);
 					if (inter != null)
 					{
 						push = true;
-						this.PushAction(node, inter, direction, margin);
-						this.PushLayout(inter, direction, margin);
-					}
-				}
-
-				if (!push)
-				{
-					break;
-				}
-			}
-		}
-
-		private ObjectNode PushSearch(ObjectNode node, ObjectNode exclude, double margin)
-		{
-			//	Cherche une boîte qui chevauche 'node'.
-			Rectangle rect = node.Bounds;
-			rect.Inflate(margin);
-
-			for (int i=0; i<this.nodes.Count; i++)
-			{
-				ObjectNode obj = this.nodes[i];
-
-				if (obj != node && obj != exclude)
-				{
-					if (obj.Bounds.IntersectsWith(rect))
-					{
-						return obj;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		private void PushAction(ObjectNode node, ObjectNode inter, PushDirection direction, double margin)
-		{
-			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
-			Rectangle rect = inter.Bounds;
-
-			double dr = node.Bounds.Right - rect.Left + margin;
-			double dl = rect.Right - node.Bounds.Left + margin;
-			double dt = node.Bounds.Top - rect.Bottom + margin;
-			double db = rect.Top - node.Bounds.Bottom + margin;
-
-			if (direction == PushDirection.Automatic)
-			{
-				double min = System.Math.Min(System.Math.Min(dr, dl), System.Math.Min(dt, db));
-
-					 if (min == dr)  direction = PushDirection.Right;
-				else if (min == dl)  direction = PushDirection.Left;
-				else if (min == dt)  direction = PushDirection.Top;
-				else                 direction = PushDirection.Bottom;
-			}
-
-			if (direction == PushDirection.Right)
-			{
-				rect.Offset(dr, 0);
-			}
-
-			if (direction == PushDirection.Left)
-			{
-				rect.Offset(-dl, 0);
-			}
-
-			if (direction == PushDirection.Top)
-			{
-				rect.Offset(0, dt);
-			}
-
-			if (direction == PushDirection.Bottom)
-			{
-				rect.Offset(0, -db);
-			}
-
-			inter.SetBounds(rect);
-		}
-
-
-		private void PushLayout(ObjectNode2 exclude, PushDirection direction, double margin)
-		{
-			//	Pousse les boîtes pour éviter tout chevauchement.
-			//	Une boîte peut être poussée hors de la surface de dessin.
-			for (int max=0; max<100; max++)
-			{
-				bool push = false;
-
-				for (int i=0; i<this.nodes2.Count; i++)
-				{
-					ObjectNode2 node = this.nodes2[i];
-
-					ObjectNode2 inter = this.PushSearch (node, exclude, margin);
-					if (inter != null)
-					{
-						push = true;
-						this.PushAction (node, inter, direction, margin);
+						this.PushAction (obj, inter, direction, margin);
 						this.PushLayout (inter, direction, margin);
 					}
 				}
@@ -1481,16 +967,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private ObjectNode2 PushSearch(ObjectNode2 node, ObjectNode2 exclude, double margin)
+		private LinkableObject PushSearch(LinkableObject node, LinkableObject exclude, double margin)
 		{
 			//	Cherche une boîte qui chevauche 'node'.
 			Rectangle rect = node.Bounds;
 			rect.Inflate (margin);
 
-			for (int i=0; i<this.nodes2.Count; i++)
+			foreach (var obj in this.LinkableObjects)
 			{
-				ObjectNode2 obj = this.nodes2[i];
-
 				if (obj != node && obj != exclude)
 				{
 					if (obj.Bounds.IntersectsWith (rect))
@@ -1503,7 +987,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
-		private void PushAction(ObjectNode2 node, ObjectNode2 inter, PushDirection direction, double margin)
+		private void PushAction(LinkableObject node, LinkableObject inter, PushDirection direction, double margin)
 		{
 			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
@@ -1518,13 +1002,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				double min = System.Math.Min (System.Math.Min (dr, dl), System.Math.Min (dt, db));
 
 				if (min == dr)
+				{
 					direction = PushDirection.Right;
+				}
 				else if (min == dl)
+				{
 					direction = PushDirection.Left;
+				}
 				else if (min == dt)
+				{
 					direction = PushDirection.Top;
+				}
 				else
+				{
 					direction = PushDirection.Bottom;
+				}
 			}
 
 			if (direction == PushDirection.Right)
@@ -1573,34 +1065,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
 
-			foreach (ObjectNode node in this.nodes)
+			foreach (var obj in this.LinkableObjects)
 			{
-				bounds = Rectangle.Union (bounds, node.Bounds);
+				bounds = Rectangle.Union (bounds, obj.Bounds);
 			}
 
-			foreach (ObjectNode2 node in this.nodes2)
+			foreach (var obj in this.LinkObjects)
 			{
-				bounds = Rectangle.Union (bounds, node.Bounds);
-			}
-
-			foreach (ObjectEdge edge in this.edges)
-			{
-				bounds = Rectangle.Union (bounds, edge.Bounds);
-			}
-
-			foreach (ObjectEdge2 edge in this.edges2)
-			{
-				bounds = Rectangle.Union (bounds, edge.Bounds);
+				bounds = Rectangle.Union (bounds, obj.Bounds);
 			}
 
 			foreach (ObjectComment comment in this.comments)
 			{
 				bounds = Rectangle.Union(bounds, comment.Bounds);
-			}
-
-			foreach (ObjectInfo info in this.infos)
-			{
-				bounds = Rectangle.Union(bounds, info.Bounds);
 			}
 
 			return bounds;
@@ -1614,34 +1091,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return;
 			}
 
-			foreach (ObjectNode node in this.nodes)
+			foreach (var obj in this.LinkableObjects)
 			{
-				node.Move (dx, dy);
+				obj.Move (dx, dy);
 			}
 
-			foreach (ObjectNode2 node in this.nodes2)
+			foreach (var obj in this.LinkObjects)
 			{
-				node.Move (dx, dy);
-			}
-
-			foreach (ObjectEdge edge in this.edges)
-			{
-				edge.Move (dx, dy);
-			}
-
-			foreach (ObjectEdge2 edge in this.edges2)
-			{
-				edge.Move (dx, dy);
+				obj.Move (dx, dy);
 			}
 
 			foreach (ObjectComment comment in this.comments)
 			{
 				comment.Move(dx, dy);
-			}
-		
-			foreach (ObjectInfo info in this.infos)
-			{
-				info.Move(dx, dy);
 			}
 		}
 
@@ -1784,16 +1246,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 				}
 
-				for (int i=this.infos.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.infos[i];
-					if (obj.MouseMove(message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
-
 				for (int i=this.edges.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.edges[i];
@@ -1804,29 +1256,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 				}
 
-				for (int i=this.edges2.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.edges2[i];
-					if (obj.MouseMove (message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
-
 				for (int i=this.nodes.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.nodes[i];
-					if (obj.MouseMove (message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
-
-				for (int i=this.nodes2.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.nodes2[i];
 					if (obj.MouseMove (message, pos))
 					{
 						fly = obj;
@@ -1853,7 +1285,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						if (this.IsLocateActionHeader(message))
 						{
-							ObjectNode node = fly as ObjectNode;
+							var node = fly as ObjectNode;
 							if (node != null && !node.IsRoot)
 							{
 								type = MouseCursorType.Locate;
@@ -1865,7 +1297,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						}
 						else
 						{
-							if (this.NodeCount2 > 1)
+							if (this.NodeCount > 1)
 							{
 								type = MouseCursorType.Move;
 							}
@@ -2072,16 +1504,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			for (int i=this.infos.Count-1; i>=0; i--)
-			{
-				ObjectInfo info = this.infos[i];
-
-				if (info.IsReadyForAction)
-				{
-					return info;
-				}
-			}
-
 			foreach (var obj in this.LinkableObjects)
 			{
 				foreach (var link in obj.Links)
@@ -2103,29 +1525,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
-			for (int i=this.edges2.Count-1; i>=0; i--)
-			{
-				ObjectEdge2 edge = this.edges2[i];
-
-				if (edge.IsReadyForAction)
-				{
-					return edge;
-				}
-			}
-
 			for (int i=this.nodes.Count-1; i>=0; i--)
 			{
 				ObjectNode node = this.nodes[i];
-
-				if (node.IsReadyForAction)
-				{
-					return node;
-				}
-			}
-
-			for (int i=this.nodes2.Count-1; i>=0; i--)
-			{
-				ObjectNode2 node = this.nodes2[i];
 
 				if (node.IsReadyForAction)
 				{
@@ -2260,22 +1662,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.DrawBackground (graphics);
 			}
 
-			foreach (AbstractObject obj in this.nodes2)
-			{
-				obj.DrawBackground (graphics);
-			}
-
 			foreach (AbstractObject obj in this.edges)
-			{
-				obj.DrawBackground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.edges2)
-			{
-				obj.DrawBackground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.infos)
 			{
 				obj.DrawBackground (graphics);
 			}
@@ -2291,22 +1678,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.DrawForeground (graphics);
 			}
 
-			foreach (AbstractObject obj in this.nodes2)
-			{
-				obj.DrawForeground (graphics);
-			}
-
 			foreach (AbstractObject obj in this.edges)
-			{
-				obj.DrawForeground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.edges2)
-			{
-				obj.DrawForeground (graphics);
-			}
-
-			foreach (AbstractObject obj in this.infos)
 			{
 				obj.DrawForeground (graphics);
 			}
@@ -2317,6 +1689,55 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+
+		#region Enumerators
+		private IEnumerable<Link> Links
+		{
+			get
+			{
+				foreach (var obj in this.LinkableObjects)
+				{
+					foreach (var link in obj.Links)
+					{
+						yield return link;
+					}
+				}
+			}
+		}
+
+		private IEnumerable<ObjectLink> LinkObjects
+		{
+			get
+			{
+				foreach (var obj in this.LinkableObjects)
+				{
+					foreach (var link in obj.Links)
+					{
+						if (link.ObjectLink != null)
+						{
+							yield return link.ObjectLink;
+						}
+					}
+				}
+			}
+		}
+
+		private IEnumerable<LinkableObject> LinkableObjects
+		{
+			get
+			{
+				foreach (var node in this.nodes)
+				{
+					yield return node;
+				}
+
+				foreach (var edge in this.edges)
+				{
+					yield return edge;
+				}
+			}
+		}
+#endregion
 
 		#region Serialization
 		public string Serialize()
@@ -2579,11 +2000,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private WorkflowDefinitionEntity		workflowDefinitionEntity;
 		private List<ObjectNode>				nodes;
-		private List<ObjectNode2>				nodes2;
 		private List<ObjectEdge>				edges;
-		private List<ObjectEdge2>				edges2;
 		private List<ObjectComment>				comments;
-		private List<ObjectInfo>				infos;
 
 		private Size							areaSize;
 		private double							zoom;
