@@ -120,18 +120,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public virtual Point GetLinkSrcVerticalPosition(Point dstPos)
-		{
-			//	Retourne la position verticale pour un trait de liaison.
-			return this.Bounds.Center;
-		}
-
-		public virtual Point GetLinkDstPosition(double posy, LinkAnchor anchor)
-		{
-			//	Retourne la position où accrocher la destination.
-			return this.Bounds.Center;
-		}
-
 		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
 		{
 			return Vector.Zero;

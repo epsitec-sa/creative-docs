@@ -933,7 +933,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public static readonly double			minAttach = 20;
 		protected static readonly double		headerHeight = 32;
 		protected static readonly double		footerHeight = 16;
 		protected static readonly double		buttonRadius = 10;

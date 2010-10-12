@@ -97,34 +97,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override Point GetLinkSrcVerticalPosition(Point dstPos)
-		{
-			//	Retourne la position verticale pour un trait de liaison.
-			return this.Bounds.Center;
-		}
-
-		public override Point GetLinkDstPosition(double posv, LinkAnchor anchor)
-		{
-			//	Retourne la position où accrocher la destination.
-			switch (anchor)
-			{
-				case LinkAnchor.Left:
-					return new Point (this.bounds.Left, this.bounds.Center.Y);
-
-
-				case LinkAnchor.Right:
-					return new Point (this.bounds.Right, this.bounds.Center.Y);
-
-				case LinkAnchor.Bottom:
-					return new Point (this.bounds.Center.X, this.bounds.Bottom);
-
-				case LinkAnchor.Top:
-					return new Point (this.bounds.Center.X, this.bounds.Top);
-			}
-
-			return Point.Zero;
-		}
-
 		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
 		{
 			Point p1 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius);
