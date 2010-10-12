@@ -132,6 +132,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return this.Bounds.Center;
 		}
 
+		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
+		{
+			return Vector.Zero;
+		}
+
 
 		public override MainColor BackgroundMainColor
 		{

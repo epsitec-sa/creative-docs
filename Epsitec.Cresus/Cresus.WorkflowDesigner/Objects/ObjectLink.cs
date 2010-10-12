@@ -384,6 +384,122 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public void UpdateLink()
+		{
+			if (this.link.DstNode == null)
+			{
+				this.startVector = Vector.Zero;
+				this.endVector   = Vector.Zero;
+				// TODO:
+
+				return;
+			}
+
+			ObjectEdge edge = null;
+			ObjectNode node = null;
+
+			if (this.link.SrcNode is ObjectEdge)
+			{
+				edge = this.link.SrcNode as ObjectEdge;
+			}
+
+			if (this.link.SrcNode is ObjectNode)
+			{
+				node = this.link.SrcNode as ObjectNode;
+			}
+
+			if (this.link.DstNode is ObjectEdge)
+			{
+				edge = this.link.DstNode as ObjectEdge;
+			}
+
+			if (this.link.DstNode is ObjectNode)
+			{
+				node = this.link.DstNode as ObjectNode;
+			}
+
+			if (edge == null || node == null)
+			{
+				return;
+			}
+
+			Rectangle re = edge.Bounds;
+			Rectangle rn = node.Bounds;
+
+			re.Inflate (5);
+			rn.Inflate (5);
+
+			if (re.IntersectsWith (rn))
+			{
+				this.startVector = Vector.Zero;
+				this.endVector   = Vector.Zero;
+				return;
+			}
+
+			LinkAnchor nodeAnchor, edgeAnchor;
+			ObjectLink.GetAttach (node.Bounds, edge.Bounds, out nodeAnchor, out edgeAnchor);
+
+			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center);
+			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Start);
+
+			if (this.link.SrcNode is ObjectEdge)
+			{
+				this.startVector = edgeVector;
+				this.endVector   = nodeVector;
+			}
+			else
+			{
+				this.startVector = nodeVector;
+				this.endVector   = edgeVector;
+			}
+		}
+
+		private static void GetAttach(Rectangle r1, Rectangle r2, out LinkAnchor anchor1, out LinkAnchor anchor2)
+		{
+			double min = double.MaxValue;
+			anchor1 = LinkAnchor.Left;
+			anchor2 = LinkAnchor.Left;
+
+			foreach (LinkAnchor a1 in System.Enum.GetValues (typeof (LinkAnchor)))
+			{
+				foreach (LinkAnchor a2 in System.Enum.GetValues (typeof (LinkAnchor)))
+				{
+					Point p1 = ObjectLink.GetAttach (r1, a1);
+					Point p2 = ObjectLink.GetAttach (r2, a2);
+
+					double d = Point.Distance (p1, p2);
+
+					if (min > d)
+					{
+						min = d;
+						anchor1 = a1;
+						anchor2 = a2;
+					}
+				}
+			}
+		}
+
+		private static Point GetAttach(Rectangle rect, LinkAnchor anchor)
+		{
+			switch (anchor)
+			{
+				case LinkAnchor.Left:
+					return new Point (rect.Left, rect.Center.Y);
+
+				case LinkAnchor.Right:
+					return new Point (rect.Right, rect.Center.Y);
+
+				case LinkAnchor.Bottom:
+					return new Point (rect.Center.X, rect.Bottom);
+
+				case LinkAnchor.Top:
+					return new Point (rect.Center.X, rect.Top);
+			}
+
+			return rect.Center;
+		}
+
+
 		private void AddComment()
 		{
 			//	Ajoute un commentaire à la connexion.
@@ -460,12 +576,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.points.Count >= 2 && this.link.DstNode != null)
+			if (this.link.DstNode != null)
 			{
 				graphics.LineWidth = 2;
-				int n = this.points.Count;
-				AbstractObject.DrawStartingArrow (graphics, this.points[0], this.points[1]);
-				AbstractObject.DrawEndingArrow (graphics, this.points[n-2], this.points[n-1]);
+
+				if (this.startVector.IsValid)
+				{
+					AbstractObject.DrawStartingArrow (graphics, this.startVector.Start, this.startVector.End);
+				}
+
+				if (this.endVector.IsValid)
+				{
+					AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Start);
+				}
+				
 				graphics.LineWidth = 1;
 
 				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
@@ -625,6 +749,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
+#if false
 				var path = new Path ();
 
 				path.MoveTo (this.points[0]);
@@ -641,6 +766,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				path.LineTo (this.points.Last ());
 
 				return path;
+#else
+				var path = new Path ();
+
+				if (this.startVector.IsValid && this.endVector.IsValid)
+				{
+					double d = Point.Distance (this.startVector.Start, this.endVector.Start) * 0.5;
+
+					path.MoveTo (this.startVector.Start);
+					path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Start);
+				}
+
+				return path;
+#endif
 			}
 		}
 
@@ -1171,6 +1309,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private Link						link;
 		private List<Point>					points;
+		private Vector						startVector;
+		private Vector						endVector;
 		private bool						isSrcHilited;
 		private bool						isDraggingRoute;
 		private bool						isDraggingDst;

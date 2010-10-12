@@ -439,6 +439,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateLinks()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
+			foreach (var obj in this.LinkObjects)
+			{
+				obj.UpdateLink ();
+			}
+
+			this.Invalidate ();
+			return;  //?
+
+
 			this.CommentsMemorize();
 
 			foreach (var obj in this.LinkableObjects)
