@@ -142,6 +142,153 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public static Point Projection(Path path, Point pos)
+		{
+			int rank = 0;
+			double distance = double.MaxValue;
+			Point best = Point.Zero;
+
+			while (true)
+			{
+				Point pp1, ss1, ss2, pp2, onCurve;
+				if (!Geometry.PathExtract (path, rank, out pp1, out ss1, out ss2, out pp2))
+				{
+					break;
+				}
+
+				double d;
+				if (Geometry.DetectBezier (pp1, ss1, ss2, pp2, pos, out onCurve, out d))
+				{
+					if (distance > d)
+					{
+						best = onCurve;
+						distance = d;
+					}
+				}
+
+				rank++;
+			}
+
+			return best;
+		}
+
+		private static bool DetectBezier(Point p1, Point s1, Point s2, Point p2, Point p, out Point onCurve, out double distance)
+		{
+			int maxStep = 100;		//	nombre d'étapes arbitraire fixé à 100
+			onCurve = Point.Zero;
+			distance = double.MaxValue;
+
+			double t = 0;
+			double dt = 1.0 / maxStep;
+
+			for (int step = 1; step <= maxStep; step++)
+			{
+				t += dt;
+
+				Point b = Point.FromBezier (p1, s1, s2, p2, t);
+				double d = Point.Distance (b, p);
+
+				if (distance > d)
+				{
+					onCurve = b;
+					distance = d;
+				}
+			}
+
+			return !onCurve.IsZero;
+		}
+
+		private static bool PathExtract(Path path, int rank, out Point pp1, out Point ss1, out Point ss2, out Point pp2)
+		{
+			//	Extrait un fragment de droite ou de courbe d'un chemin.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements (out elements, out points);
+
+			pp1 = Point.Zero;
+			ss1 = Point.Zero;
+			ss2 = Point.Zero;
+			pp2 = Point.Zero;
+
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
+			int i = 0;
+			while (i < elements.Length)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						current = points[i++];
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						if (--rank < 0)
+						{
+							pp1 = current;
+							ss1 = current;
+							ss2 = p1;
+							pp2 = p1;
+							return true;
+						}
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i];
+						p2 = points[i++];
+						p3 = points[i++];
+						Geometry.BezierS1ToS2 (current, ref p1, ref p2, p3);
+						if (--rank < 0)
+						{
+							pp1 = current;
+							ss1 = p1;
+							ss2 = p2;
+							pp2 = p3;
+							return true;
+						}
+						current = p3;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						if (--rank < 0)
+						{
+							pp1 = current;
+							ss1 = p1;
+							ss2 = p2;
+							pp2 = p3;
+							return true;
+						}
+						current = p3;
+						break;
+
+					default:
+						if ((elements[i] & PathElement.FlagClose) != 0)
+						{
+							if (!Point.Equals (current, start) && --rank < 0)
+							{
+								pp1 = current;
+								ss1 = current;
+								ss2 = start;
+								pp2 = start;
+								return true;
+							}
+						}
+						i++;
+						break;
+				}
+			}
+			return false;
+		}
+
 		public static bool DetectOutline(Path path, double width, Point pos)
 		{
 			//	Détecte si la souris est sur le trait d'un chemin.
