@@ -69,6 +69,7 @@
     <Compile Include="Objects\MainColor.cs" />
     <Compile Include="Objects\ObjectComment.cs" />
     <Compile Include="Objects\RouteType.cs" />
+    <Compile Include="Objects\Vector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>
       </SubType>

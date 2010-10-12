@@ -187,6 +187,61 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return Point.Zero;
 		}
 
+		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
+		{
+			double r = ObjectEdge.roundFrameRadius * 1.5;  // * 1.5 pour ne pas trop s'approcher des coins arrondis
+
+			if (anchor == LinkAnchor.Left || anchor == LinkAnchor.Right)
+			{
+				double x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
+				double y;
+
+				if (dstPos.Y < this.bounds.Bottom+r)
+				{
+					y = this.bounds.Bottom+r;
+				}
+				else if (dstPos.Y > this.bounds.Top-r)
+				{
+					y = this.bounds.Top-r;
+				}
+				else
+				{
+					y = dstPos.Y;
+				}
+
+				Point p = new Point (x, y);
+				Size dir = new Size ((anchor == LinkAnchor.Left) ? -1 : 1, 0);
+
+				return new Vector (p, dir);
+			}
+
+			if (anchor == LinkAnchor.Bottom || anchor == LinkAnchor.Top)
+			{
+				double x;
+				double y = (anchor == LinkAnchor.Bottom) ? this.bounds.Bottom : this.bounds.Top;
+
+				if (dstPos.X < this.bounds.Left+r)
+				{
+					x = this.bounds.Left+r;
+				}
+				else if (dstPos.X > this.bounds.Right-r)
+				{
+					x = this.bounds.Right-r;
+				}
+				else
+				{
+					x = dstPos.X;
+				}
+
+				Point p = new Point (x, y);
+				Size dir = new Size (0, (anchor == LinkAnchor.Bottom) ? -1 : 1);
+
+				return new Vector (p, dir);
+			}
+
+			return Vector.Zero;
+		}
+
 
 		public bool IsHilitedForEdgeChanging
 		{

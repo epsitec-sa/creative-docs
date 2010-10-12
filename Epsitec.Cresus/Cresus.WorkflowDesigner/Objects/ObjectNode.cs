@@ -125,6 +125,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return Point.Zero;
 		}
 
+		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos)
+		{
+			Point p1 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius);
+			Point p2 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius+1);
+
+			return new Vector (p1, p2);
+		}
+
 
 		public bool IsRoot
 		{
