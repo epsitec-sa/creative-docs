@@ -145,6 +145,61 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void AcceptEdition()
+		{
+			this.Text = this.editingTextField.Text;
+
+			this.UpdateHeight ();
+			this.StopEdition ();
+		}
+
+		public override void CancelEdition()
+		{
+			this.StopEdition ();
+		}
+
+		private void StartEdition(ActiveElement element)
+		{
+			Rectangle rect = this.bounds;
+			string text = this.Text;
+
+			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
+			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
+			double width  = System.Math.Max (p2.X-p1.X, 175);
+			double height = System.Math.Max (p1.Y-p2.Y, 10+14*5);
+
+			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
+
+			double thickness = 2;
+			Rectangle frameRect = rect;
+			frameRect.Inflate (thickness);
+
+			double descriptionHeight = 10+14*5;  // hauteur pour 5 lignes
+			Rectangle descriptionRect = new Rectangle (rect.Left, rect.Bottom-descriptionHeight-thickness+1, rect.Width, descriptionHeight);
+
+			var field = new TextFieldMulti ();
+			field.Parent = this.editor;
+			field.ScrollerVisibility = false;
+			field.SetManualBounds (rect);
+			field.Text = text;
+			field.TabIndex = 1;
+			field.SelectAll ();
+			field.Focus ();
+			this.editingTextField = field;
+
+			this.editor.EditingObject = this;
+			this.hilitedElement = ActiveElement.None;
+		}
+
+		private void StopEdition()
+		{
+			this.editor.Children.Remove (this.editingTextField);
+			this.editingTextField = null;
+
+			this.editor.EditingObject = null;
+		}
+
+
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
@@ -211,6 +266,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			this.initialPos = pos;
+
 			if (this.hilitedElement == ActiveElement.CommentMove)
 			{
 				this.isDraggingMove = true;
@@ -234,6 +291,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			if (pos == this.initialPos)
+			{
+				if (this.hilitedElement == ActiveElement.CommentEdit)
+				{
+					this.StartEdition (this.hilitedElement);
+					return;
+				}
+			}
+
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
@@ -1282,19 +1348,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		protected static readonly double commentHeaderHeight = 24;
-		protected static readonly double textMargin = 5;
-		protected static readonly double queueThickness = 5;
+		private static readonly double			commentHeaderHeight = 24;
+		private static readonly double			textMargin = 5;
+		private static readonly double			queueThickness = 5;
 
-		protected Rectangle bounds;
-		protected AbstractObject attachObject;
-		protected bool isVisible;
-		protected TextLayout textLayoutTitle;
-		protected TextLayout textLayoutComment;
+		private Rectangle						bounds;
+		private AbstractObject					attachObject;
+		private bool							isVisible;
+		private TextLayout						textLayoutTitle;
+		private TextLayout						textLayoutComment;
 
-		protected bool isDraggingMove;
-		protected bool isDraggingWidth;
-		protected bool isDraggingAttach;
-		protected Point draggingPos;
+		private Point							initialPos;
+		private bool							isDraggingMove;
+		private bool							isDraggingWidth;
+		private bool							isDraggingAttach;
+		private Point							draggingPos;
+
+		private AbstractTextField				editingTextField;
 	}
 }

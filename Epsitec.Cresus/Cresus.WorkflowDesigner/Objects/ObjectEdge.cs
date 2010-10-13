@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.isDragging)
 					{
-						//?this.editor.UpdateAfterMoving (this);
+						this.editor.UpdateAfterMoving (this);
 						this.isDragging = false;
 						this.editor.LockObject (null);
 						this.editor.SetLocalDirty ();
@@ -1118,15 +1118,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						subtitle;
 
 		private bool							isExtended;
-
 		private Point							initialPos;
-
 		private bool							isDragging;
-
 		private bool							isChangeWidth;
 		private double							changeWidthPos;
 		private double							changeWidthInitial;
-
 		private bool							isHilitedForEdgeChanging;
 
 		private ActiveElement					editingElement;
