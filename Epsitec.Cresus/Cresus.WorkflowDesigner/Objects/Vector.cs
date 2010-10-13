@@ -53,6 +53,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool HasDirection
+		{
+			get
+			{
+				return this.end.X != this.origin.X || this.end.Y != this.origin.Y;
+			}
+		}
+
 
 		public Point GetPoint(double distance)
 		{

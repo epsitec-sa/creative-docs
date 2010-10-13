@@ -74,6 +74,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public bool IsHilitedForLinkChanging
+		{
+			//	Indique si cet objet est mis en évidence pendant un changement de destination d'une connexion.
+			get
+			{
+				return this.isHilitedForLinkChanging;
+			}
+			set
+			{
+				this.isHilitedForLinkChanging = value;
+			}
+		}
+
+
+		public virtual void RemoveEntityLink(LinkableObject dst)
+		{
+		}
+
+		public virtual void AddEntityLink(LinkableObject dst)
+		{
+		}
+
+
 		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
 		{
 			return Vector.Zero;
@@ -213,5 +236,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
 		protected Point							draggingOffset;
+		protected bool							isHilitedForLinkChanging;
 	}
 }

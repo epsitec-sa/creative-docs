@@ -93,6 +93,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+
+		public override void RemoveEntityLink(LinkableObject dst)
+		{
+			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowEdgeEntity);
+			System.Diagnostics.Debug.Assert (this.Entity.Edges.Contains (dst.AbstractEntity as WorkflowEdgeEntity));
+
+			this.Entity.Edges.Remove (dst.AbstractEntity as WorkflowEdgeEntity);
+		}
+
+		public override void AddEntityLink(LinkableObject dst)
+		{
+			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowEdgeEntity);
+
+			this.Entity.Edges.Add (dst.AbstractEntity as WorkflowEdgeEntity);
+		}
+
+
 		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
 		{
 			Point p1 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius);
@@ -130,19 +147,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.isConnectedToRoot = value;
-			}
-		}
-
-		public bool IsHilitedForEdgeChanging
-		{
-			//	Indique si cet objet est mis en évidence pendant un changement de noeud destination (EdgeChangeDst).
-			get
-			{
-				return this.isHilitedForEdgeChanging;
-			}
-			set
-			{
-				this.isHilitedForEdgeChanging = value;
 			}
 		}
 
@@ -396,7 +400,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForEdgeChanging);
+			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForLinkChanging);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -774,6 +778,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private List<ObjectNode>				parents;
 
 		private bool							isDragging;
-		private bool							isHilitedForEdgeChanging;
 	}
 }
