@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.EdgeChangeDst)
+			if (this.hilitedElement == ActiveElement.LinkChangeDst)
 			{
 				this.MouseDownDst (pos);
 			}
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 #endif
 
-			if (this.hilitedElement == ActiveElement.EdgeComment)
+			if (this.hilitedElement == ActiveElement.LinkComment)
 			{
 				this.AddComment();
 			}
@@ -290,21 +290,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.DetectRoundButton (pos, this.startVector.Origin))
 				{
-					element = ActiveElement.EdgeClose;
-					return true;
-				}
-			}
-			else
-			{
-				if (this.DetectRoundButton (pos, this.startVector.Origin))
-				{
-					element = ActiveElement.EdgeOpenRight;
-					return true;
-				}
-
-				if (this.DetectRoundButton (pos, this.startVector.Origin))
-				{
-					element = ActiveElement.EdgeOpenLeft;
+					element = ActiveElement.LinkClose;
 					return true;
 				}
 			}
@@ -312,21 +298,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Souris dans le bouton pour commenter la connexion.
 			if (this.IsLinkCommentButton && this.DetectRoundButton(pos, this.PositionLinkComment))
 			{
-				element = ActiveElement.EdgeComment;
+				element = ActiveElement.LinkComment;
 				return true;
 			}
 
 			//	Souris dans le bouton pour changer le noeud destination ?
 			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
 			{
-				element = ActiveElement.EdgeChangeDst;
+				element = ActiveElement.LinkChangeDst;
 				return true;
 			}
 
 			//	Souris le long de la connexion ?
 			if (this.DetectOver(pos, 4))
 			{
-				element = ActiveElement.EdgeHilited;
+				element = ActiveElement.LinkHilited;
 				return true;
 			}
 
@@ -403,8 +389,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Cherche la connexion la plus courte parmi toutes les possibilités.
-			LinkAnchor nodeAnchor = LinkAnchor.Left;
-			LinkAnchor edgeAnchor = LinkAnchor.Left;
+			//	On tient compte du fait que l'objet node a un vecteur qui est toujours dirgé à
+			//	partir du centre, contrairement à l'objet edge.
+			LinkAnchor nodeAnchor = LinkAnchor.Left;  // sans importance
+			LinkAnchor edgeAnchor = LinkAnchor.Left;  // pour que ça compile
 
 			Vector v1 = node.GetLinkVector (nodeAnchor, edge.Bounds.Center, edgeToNode);
 
@@ -422,6 +410,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
+			//	Calcule les vecteurs définitifs.
 			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center, !edgeToNode);
 			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin,   edgeToNode);
 
@@ -523,7 +512,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				graphics.Rasterizer.AddOutline (this.Path, 2);
-				Color color = (this.hilitedElement == ActiveElement.EdgeHilited) ? this.GetColorMain () : this.GetColor (0);
+				Color color = (this.hilitedElement == ActiveElement.LinkHilited) ? this.GetColorMain () : this.GetColor (0);
 				graphics.RenderSolid (color);
 
 				{
@@ -561,7 +550,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
+				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
 					color = this.GetColorMain();
 				}
@@ -606,7 +595,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else
 					{
-						if (this.hilitedElement == ActiveElement.EdgeHilited)
+						if (this.hilitedElement == ActiveElement.LinkHilited)
 						{
 							this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
 						}
@@ -623,11 +612,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point p = this.PositionLinkComment;
 			if (!p.IsZero && this.IsLinkCommentButton)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeComment)
+				if (this.hilitedElement == ActiveElement.LinkComment)
 				{
 					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
+				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
 					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
 				}
@@ -637,11 +626,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point m = this.PositionRouteChangeDst;
 			if (!m.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeChangeDst)
+				if (this.hilitedElement == ActiveElement.LinkChangeDst)
 				{
 					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.EdgeHilited)
+				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
 					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
 				}

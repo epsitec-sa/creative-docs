@@ -298,10 +298,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
-			{
-			}
-
 			if (this.hilitedElement == ActiveElement.NodeOpenRight)
 			{
 			}
@@ -313,10 +309,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.editor.CloseObject(this);
 					this.editor.UpdateAfterAddOrRemoveEdge(null);
 				}
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
-			{
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeComment)
@@ -375,26 +367,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			element = ActiveElement.None;
 			edgeRank = -1;
-			this.SetEdgesHilited(false);
-
-			if (pos.IsZero)
-			{
-				//	Si l'une des connexion est dans l'état EdgeOpen*, il faut afficher
-				//	aussi les petits cercles de gauche.
-				if (this.IsEdgeReadyForOpen())
-				{
-					this.SetEdgesHilited(true);
-				}
-				return false;
-			}
 
 			//	Souris dans le bouton d'ouverture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLeftButton, pos))
-			{
-				element = ActiveElement.NodeOpenLeft;
-				return true;
-			}
-
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenRightButton, pos))
 			{
 				element = ActiveElement.NodeOpenRight;
@@ -476,7 +450,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			element = ActiveElement.NodeInside;
-			this.SetEdgesHilited(true);
 			return true;
 		}
 
@@ -569,15 +542,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid (colorFrame);
 
 			//	Dessine le bouton d'ouverture.
-			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
-			}
-
 			if (this.hilitedElement == ActiveElement.NodeOpenRight)
 			{
 				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
@@ -696,7 +660,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				return (this.hilitedElement == ActiveElement.NodeHeader ||
 						this.hilitedElement == ActiveElement.NodeComment ||
-						this.hilitedElement == ActiveElement.NodeInfo ||
 						this.hilitedElement == ActiveElement.NodeColor1 ||
 						this.hilitedElement == ActiveElement.NodeColor2 ||
 						this.hilitedElement == ActiveElement.NodeColor3 ||
@@ -705,8 +668,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeColor6 ||
 						this.hilitedElement == ActiveElement.NodeColor7 ||
 						this.hilitedElement == ActiveElement.NodeColor8 ||
-						this.hilitedElement == ActiveElement.NodeExtend ||
-						this.hilitedElement == ActiveElement.NodeOpenLeft ||
 						this.hilitedElement == ActiveElement.NodeOpenRight ||
 						this.hilitedElement == ActiveElement.NodeClose);
 			}
@@ -732,15 +693,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return new Point (this.bounds.Right-AbstractObject.buttonRadius, this.bounds.Top-AbstractObject.buttonRadius);
-			}
-		}
-
-		private Point PositionOpenLeftButton
-		{
-			//	Retourne la position du bouton pour ouvrir.
-			get
-			{
-				return new Point (this.bounds.Left, this.bounds.Center.Y);
 			}
 		}
 

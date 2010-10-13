@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
+			if (this.hilitedElement == ActiveElement.CommentAttachTo)
 			{
 				this.isDraggingAttach = true;
 				this.editor.LockObject(this);
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Souris dans le bouton de déplacer l'attache ?
 			if (this.DetectRoundButton(this.PositionAttachToLinkButton, pos))
 			{
-				element = ActiveElement.CommentAttachToEdge;
+				element = ActiveElement.CommentAttachTo;
 				return true;
 			}
 
@@ -551,7 +551,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point p = this.PositionAttachToLinkButton;
 			if (!p.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.CommentAttachToEdge)
+				if (this.hilitedElement == ActiveElement.CommentAttachTo)
 				{
 					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
@@ -594,7 +594,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.CommentColor6 ||
 						this.hilitedElement == ActiveElement.CommentColor7 ||
 						this.hilitedElement == ActiveElement.CommentColor8 ||
-						this.hilitedElement == ActiveElement.CommentAttachToEdge);
+						this.hilitedElement == ActiveElement.CommentAttachTo);
 			}
 		}
 

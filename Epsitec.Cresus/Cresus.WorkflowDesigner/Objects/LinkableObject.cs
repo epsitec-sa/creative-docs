@@ -190,37 +190,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void SetEdgesHilited(bool isHilited)
-		{
-			//	Modifie l'état 'hilited' de toutes les connexions qui partent de l'objet.
-			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
-			if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
-			{
-				isHilited = false;
-			}
-
-			foreach (var obj in this.objectLinks)
-			{
-				obj.IsSrcHilited = isHilited;
-			}
-		}
-
-		protected bool IsEdgeReadyForOpen()
-		{
-			//	Indique si l'une des connexions qui partent de l'objet est en mode EdgeOpen*.
-			foreach (var obj in this.objectLinks)
-			{
-				ActiveElement ae = obj.HilitedElement;
-				if (ae == ActiveElement.EdgeOpenLeft ||
-					ae == ActiveElement.EdgeOpenRight)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		protected void DrawLinks(Graphics graphics)
 		{
 			foreach (var obj in this.objectLinks)
