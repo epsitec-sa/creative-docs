@@ -797,7 +797,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
-					if (fly.HilitedElement == ActiveElement.NodeHeader)
+					if (fly.HilitedElement == ActiveElement.EdgeHeader ||
+						fly.HilitedElement == ActiveElement.NodeHeader)
 					{
 						if (this.IsLocateActionHeader(message))
 						{
@@ -825,13 +826,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 					else if (fly.HilitedElement == ActiveElement.None ||
 							 fly.HilitedElement == ActiveElement.NodeInside ||
+							 fly.HilitedElement == ActiveElement.EdgeInside ||
 							 fly.HilitedElement == ActiveElement.EdgeHilited)
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (fly.HilitedElement == ActiveElement.NodeEdgeName ||
-							 fly.HilitedElement == ActiveElement.NodeEdgeType ||
-							 fly.HilitedElement == ActiveElement.NodeEdgeExpression)
+					else if (fly.HilitedElement == ActiveElement.EdgeDescription)
 					{
 						if (this.IsLocateAction(message))
 						{
@@ -847,17 +847,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 							{
 								type = MouseCursorType.Arrow;
 							}
-						}
-					}
-					else if (fly.HilitedElement == ActiveElement.NodeEdgeTitle)
-					{
-						if (this.IsLocateAction(message))
-						{
-							type = MouseCursorType.Locate;
-						}
-						else
-						{
-							type = MouseCursorType.Arrow;
 						}
 					}
 					else if (fly.HilitedElement == ActiveElement.CommentEdit)

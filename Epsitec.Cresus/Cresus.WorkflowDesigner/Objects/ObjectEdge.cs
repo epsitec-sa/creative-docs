@@ -176,13 +176,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void AcceptEdition()
 		{
-			if (this.editingElement == ActiveElement.NodeHeader)
+			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
 				this.Entity.Name = this.editingTextField.Text;
 				this.UpdateTitle ();
 			}
 
-			if (this.editingElement == ActiveElement.NodeEdgeName)
+			if (this.editingElement == ActiveElement.EdgeDescription)
 			{
 				this.Entity.Description = this.editingTextField.Text;
 				this.UpdateSubtitle ();
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Rectangle rect = Rectangle.Empty;
 			string text = null;
 
-			if (element == ActiveElement.NodeHeader)
+			if (element == ActiveElement.EdgeHeader)
 			{
 				rect = this.RectangleTitle;
 				rect.Deflate (4, 6);
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editingTextField = new TextField ();
 			}
 
-			if (element == ActiveElement.NodeEdgeName)
+			if (element == ActiveElement.EdgeDescription)
 			{
 				rect = this.RectangleSubtitle;
 				rect.Inflate (6, 1);
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.initialPos = pos;
 
-			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1)
+			if (this.hilitedElement == ActiveElement.EdgeHeader && this.editor.NodeCount > 1)
 			{
 				this.isDragging = true;
 				this.draggingOffset = pos-this.bounds.BottomLeft;
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeChangeWidth)
+			if (this.hilitedElement == ActiveElement.EdgeChangeWidth)
 			{
 				this.isChangeWidth = true;
 				this.changeWidthPos = pos.X;
@@ -427,8 +427,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (pos == this.initialPos)
 			{
-				if (this.hilitedElement == ActiveElement.NodeHeader ||
-					this.hilitedElement == ActiveElement.NodeEdgeName)
+				if (this.hilitedElement == ActiveElement.EdgeHeader ||
+					this.hilitedElement == ActiveElement.EdgeDescription)
 				{
 					if (this.isDragging)
 					{
@@ -461,65 +461,57 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
+			if (this.hilitedElement == ActiveElement.EdgeOpenRight)
 			{
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenRight)
-			{
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeClose)
+			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				this.editor.CloseObject (this);
 				this.editor.UpdateAfterAddOrRemoveEdge(null);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeEdgeTitle)
-			{
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeComment)
+			if (this.hilitedElement == ActiveElement.EdgeComment)
 			{
 				this.AddComment();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor5)
+			if (this.hilitedElement == ActiveElement.EdgeColor5)
 			{
 				this.BackgroundMainColor = MainColor.Yellow;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor6)
+			if (this.hilitedElement == ActiveElement.EdgeColor6)
 			{
 				this.BackgroundMainColor = MainColor.Orange;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor3)
+			if (this.hilitedElement == ActiveElement.EdgeColor3)
 			{
 				this.BackgroundMainColor = MainColor.Red;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor7)
+			if (this.hilitedElement == ActiveElement.EdgeColor7)
 			{
 				this.BackgroundMainColor = MainColor.Lilac;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor8)
+			if (this.hilitedElement == ActiveElement.EdgeColor8)
 			{
 				this.BackgroundMainColor = MainColor.Purple;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor1)
+			if (this.hilitedElement == ActiveElement.EdgeColor1)
 			{
 				this.BackgroundMainColor = MainColor.Blue;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor2)
+			if (this.hilitedElement == ActiveElement.EdgeColor2)
 			{
 				this.BackgroundMainColor = MainColor.Green;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor4)
+			if (this.hilitedElement == ActiveElement.EdgeColor4)
 			{
 				this.BackgroundMainColor = MainColor.Grey;
 			}
@@ -535,110 +527,92 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			element = ActiveElement.None;
 			edgeRank = -1;
-			this.SetEdgesHilited(false);
-
-			if (pos.IsZero)
-			{
-				//	Si l'une des connexion est dans l'état EdgeOpen*, il faut afficher
-				//	aussi les petits cercles de gauche.
-				if (this.IsEdgeReadyForOpen())
-				{
-					this.SetEdgesHilited(true);
-				}
-				return false;
-			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionChangeWidthButton, pos))
 			{
-				element = ActiveElement.NodeChangeWidth;
+				element = ActiveElement.EdgeChangeWidth;
 				return true;
 			}
 
 			//	Souris dans le bouton d'ouverture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLeftButton, pos))
-			{
-				element = ActiveElement.NodeOpenLeft;
-				return true;
-			}
-
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenRightButton, pos))
 			{
-				element = ActiveElement.NodeOpenRight;
+				element = ActiveElement.EdgeOpenRight;
 				return true;
 			}
 
 			//	Souris dans le bouton de fermeture ?
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCloseButton, pos))
 			{
-				element = ActiveElement.NodeClose;
+				element = ActiveElement.EdgeClose;
 				return true;
 			}
 
 			//	Souris dans le bouton des commentaires ?
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
 			{
-				element = ActiveElement.NodeComment;
+				element = ActiveElement.EdgeComment;
 				return true;
 			}
 
 			//	Souris dans le bouton des couleurs ?
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
 			{
-				element = ActiveElement.NodeColor5;
+				element = ActiveElement.EdgeColor5;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
 			{
-				element = ActiveElement.NodeColor6;
+				element = ActiveElement.EdgeColor6;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(2), pos))
 			{
-				element = ActiveElement.NodeColor3;
+				element = ActiveElement.EdgeColor3;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
 			{
-				element = ActiveElement.NodeColor7;
+				element = ActiveElement.EdgeColor7;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
 			{
-				element = ActiveElement.NodeColor8;
+				element = ActiveElement.EdgeColor8;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
 			{
-				element = ActiveElement.NodeColor1;
+				element = ActiveElement.EdgeColor1;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
 			{
-				element = ActiveElement.NodeColor2;
+				element = ActiveElement.EdgeColor2;
 				return true;
 			}
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
 			{
-				element = ActiveElement.NodeColor4;
+				element = ActiveElement.EdgeColor4;
 				return true;
 			}
 
 			if (this.RectangleTitle.Contains (pos))
 			{
-				element = ActiveElement.NodeHeader;
+				element = ActiveElement.EdgeHeader;
 				return true;
 			}
 
 			if (this.RectangleSubtitle.Contains (pos))
 			{
-				element = ActiveElement.NodeEdgeName;
+				element = ActiveElement.EdgeDescription;
 				return true;
 			}
 
@@ -647,8 +621,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return false;
 			}
 
-			element = ActiveElement.NodeInside;
-			this.SetEdgesHilited(true);
+			element = ActiveElement.EdgeInside;
 			return true;
 		}
 
@@ -694,7 +667,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForEdgeChanging);
+			bool dragging = (this.hilitedElement == ActiveElement.EdgeHeader || this.isHilitedForEdgeChanging);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -762,16 +735,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid (colorFrame);
 
 			//	Dessine le bouton d'ouverture.
-			if (this.hilitedElement == ActiveElement.NodeOpenLeft)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeOpenRight)
+			if (this.hilitedElement == ActiveElement.EdgeOpenRight)
 			{
 				this.DrawRoundButton (graphics, this.PositionOpenRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
 			}
@@ -781,7 +745,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton de fermeture.
-			if (this.hilitedElement == ActiveElement.NodeClose)
+			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, true);
 			}
@@ -791,7 +755,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton des commentaires.
-			if (this.hilitedElement == ActiveElement.NodeComment)
+			if (this.hilitedElement == ActiveElement.EdgeComment)
 			{
 				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
 			}
@@ -801,7 +765,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton des couleurs.
-			if (this.hilitedElement == ActiveElement.NodeColor5)
+			if (this.hilitedElement == ActiveElement.EdgeColor5)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
 			}
@@ -810,7 +774,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor6)
+			if (this.hilitedElement == ActiveElement.EdgeColor6)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
 			}
@@ -819,7 +783,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor3)
+			if (this.hilitedElement == ActiveElement.EdgeColor3)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, true);
 			}
@@ -828,7 +792,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor7)
+			if (this.hilitedElement == ActiveElement.EdgeColor7)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
 			}
@@ -837,7 +801,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor8)
+			if (this.hilitedElement == ActiveElement.EdgeColor8)
 			{
 				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
 			}
@@ -846,7 +810,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
 			}
 			
-			if (this.hilitedElement == ActiveElement.NodeColor1)
+			if (this.hilitedElement == ActiveElement.EdgeColor1)
 			{
 				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
 			}
@@ -855,7 +819,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor2)
+			if (this.hilitedElement == ActiveElement.EdgeColor2)
 			{
 				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
 			}
@@ -864,7 +828,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor4)
+			if (this.hilitedElement == ActiveElement.EdgeColor4)
 			{
 				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
 			}
@@ -874,11 +838,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour changer la largeur.
-			if (this.hilitedElement == ActiveElement.NodeChangeWidth)
+			if (this.hilitedElement == ActiveElement.EdgeChangeWidth)
 			{
 				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 			}
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.NodeHeader && !this.isDragging)
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.EdgeHeader && !this.isDragging)
 			{
 				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 			}
@@ -897,21 +861,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return false;
 				}
 
-				return (this.hilitedElement == ActiveElement.NodeHeader ||
-						this.hilitedElement == ActiveElement.NodeComment ||
-						this.hilitedElement == ActiveElement.NodeInfo ||
-						this.hilitedElement == ActiveElement.NodeColor1 ||
-						this.hilitedElement == ActiveElement.NodeColor2 ||
-						this.hilitedElement == ActiveElement.NodeColor3 ||
-						this.hilitedElement == ActiveElement.NodeColor4 ||
-						this.hilitedElement == ActiveElement.NodeColor5 ||
-						this.hilitedElement == ActiveElement.NodeColor6 ||
-						this.hilitedElement == ActiveElement.NodeColor7 ||
-						this.hilitedElement == ActiveElement.NodeColor8 ||
-						this.hilitedElement == ActiveElement.NodeExtend ||
-						this.hilitedElement == ActiveElement.NodeOpenLeft ||
-						this.hilitedElement == ActiveElement.NodeOpenRight ||
-						this.hilitedElement == ActiveElement.NodeClose);
+				return (this.hilitedElement == ActiveElement.EdgeHeader ||
+						this.hilitedElement == ActiveElement.EdgeComment ||
+						this.hilitedElement == ActiveElement.EdgeColor1 ||
+						this.hilitedElement == ActiveElement.EdgeColor2 ||
+						this.hilitedElement == ActiveElement.EdgeColor3 ||
+						this.hilitedElement == ActiveElement.EdgeColor4 ||
+						this.hilitedElement == ActiveElement.EdgeColor5 ||
+						this.hilitedElement == ActiveElement.EdgeColor6 ||
+						this.hilitedElement == ActiveElement.EdgeColor7 ||
+						this.hilitedElement == ActiveElement.EdgeColor8 ||
+						this.hilitedElement == ActiveElement.EdgeExtend ||
+						this.hilitedElement == ActiveElement.EdgeOpenRight ||
+						this.hilitedElement == ActiveElement.EdgeClose);
 			}
 		}
 
@@ -954,15 +916,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return new Point (this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
-			}
-		}
-
-		private Point PositionOpenLeftButton
-		{
-			//	Retourne la position du bouton pour ouvrir.
-			get
-			{
-				return new Point (this.bounds.Left, this.bounds.Center.Y);
 			}
 		}
 
