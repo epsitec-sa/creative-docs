@@ -139,24 +139,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
+		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			foreach (var obj in this.objectLinks)
 			{
-				ActiveElement e;
-				int r;
+				ActiveElement element = obj.MouseDetectBackground (pos);
 
-				if (obj.MouseDetect (pos, out e, out r))
+				if (element != ActiveElement.None)
 				{
-					element = e;
-					edgeRank = r;
-					return true;
+					return element;
 				}
 			}
 
-			element = ActiveElement.None;
-			edgeRank = -1;
-			return false;
+			return ActiveElement.None;
+		}
+
+		public override ActiveElement MouseDetectForeground(Point pos)
+		{
+			foreach (var obj in this.objectLinks)
+			{
+				ActiveElement element = obj.MouseDetectForeground (pos);
+
+				if (element != ActiveElement.None)
+				{
+					return element;
+				}
+			}
+
+			return ActiveElement.None;
 		}
 
 

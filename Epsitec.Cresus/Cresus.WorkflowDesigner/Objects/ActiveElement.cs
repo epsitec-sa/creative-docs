@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		NodeInside,
 		NodeComment,
-		NodeOpenRight,
+		NodeOpenLink,
 		NodeClose,
 		NodeHeader,
 		NodeColor1,
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		EdgeInside,
 		EdgeHeader,
 		EdgeComment,
-		EdgeOpenRight,
+		EdgeOpenLink,
 		EdgeClose,
 		EdgeHilited,
 		EdgeExtend,

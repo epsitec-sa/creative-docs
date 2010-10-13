@@ -107,240 +107,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public bool IsReadyForAction
-		{
-			//	Est-ce que l'objet est prêt pour une action.
-			get
-			{
-				return (this.hilitedElement != ActiveElement.None);
-			}
-		}
-
 		public ActiveElement HilitedElement
 		{
 			get
 			{
 				return this.hilitedElement;
 			}
-		}
-
-		public int HilitedEdgeRank
-		{
-			get
+			set
 			{
-				return this.hilitedEdgeRank;
+				if (this.hilitedElement != value)
+				{
+					this.hilitedElement = value;
+					this.editor.Invalidate ();
+				}
 			}
 		}
 
 		public string GetToolTipText(Point pos)
 		{
 			//	Retourne le texte pour le tooltip.
-			ActiveElement element;
-			int edgeRank;
-			this.MouseDetect(pos, out element, out edgeRank);
-			return this.GetToolTipText(element, edgeRank);
+			return this.GetToolTipText (this.hilitedElement);
 		}
 
-		protected virtual string GetToolTipText(ActiveElement element, int edgeRank)
+		protected virtual string GetToolTipText(ActiveElement element)
 		{
-#if false
-			switch (element)
-			{
-				case AbstractObject.ActiveElement.BoxHeader:
-					return Res.Strings.Entities.Action.BoxHeader;
-
-				case AbstractObject.ActiveElement.BoxSources:
-					return Res.Strings.Entities.Action.BoxSources;
-
-				case AbstractObject.ActiveElement.BoxComment:
-					return Res.Strings.Entities.Action.BoxComment;
-
-				case AbstractObject.ActiveElement.BoxInfo:
-					return Res.Strings.Entities.Action.BoxInfo;
-
-				case AbstractObject.ActiveElement.BoxColor1:
-					return Res.Strings.Entities.Action.BoxColor1;
-
-				case AbstractObject.ActiveElement.BoxColor2:
-					return Res.Strings.Entities.Action.BoxColor2;
-
-				case AbstractObject.ActiveElement.BoxColor3:
-					return Res.Strings.Entities.Action.BoxColor3;
-
-				case AbstractObject.ActiveElement.BoxColor4:
-					return Res.Strings.Entities.Action.BoxColor4;
-
-				case AbstractObject.ActiveElement.BoxColor5:
-					return Res.Strings.Entities.Action.BoxColor5;
-
-				case AbstractObject.ActiveElement.BoxColor6:
-					return Res.Strings.Entities.Action.BoxColor6;
-
-				case AbstractObject.ActiveElement.BoxColor7:
-					return Res.Strings.Entities.Action.BoxColor7;
-
-				case AbstractObject.ActiveElement.BoxColor8:
-					return Res.Strings.Entities.Action.BoxColor8;
-
-				case AbstractObject.ActiveElement.BoxExtend:
-					return Res.Strings.Entities.Action.BoxExtend;
-
-				case AbstractObject.ActiveElement.BoxClose:
-					return Res.Strings.Entities.Action.BoxClose;
-
-				case AbstractObject.ActiveElement.BoxFieldName:
-					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
-					{
-						if (this.IsMousePossible(element, fieldRank))
-						{
-							return Res.Strings.Entities.Action.BoxFieldName3;
-						}
-						else
-						{
-							return Res.Strings.Entities.Action.BoxFieldName2;
-						}
-					}
-					else
-					{
-						return Res.Strings.Entities.Action.BoxFieldName1;
-					}
-
-				case AbstractObject.ActiveElement.BoxFieldType:
-					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
-					{
-						if (this.IsMousePossible(element, fieldRank))
-						{
-							return Res.Strings.Entities.Action.BoxFieldType3;
-						}
-						else
-						{
-							return Res.Strings.Entities.Action.BoxFieldType2;
-						}
-					}
-					else
-					{
-						return Res.Strings.Entities.Action.BoxFieldType1;
-					}
-
-				case AbstractObject.ActiveElement.BoxFieldExpression:
-					return Res.Strings.Entities.Action.BoxFieldExpression;
-
-				case AbstractObject.ActiveElement.BoxFieldAdd:
-					return Res.Strings.Entities.Action.BoxFieldAdd;
-
-				case AbstractObject.ActiveElement.BoxFieldRemove:
-					return Res.Strings.Entities.Action.BoxFieldRemove;
-
-				case AbstractObject.ActiveElement.BoxFieldMovable:
-					return Res.Strings.Entities.Action.BoxFieldMovable;
-
-				case AbstractObject.ActiveElement.BoxFieldTitle:
-					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
-					{
-						return Res.Strings.Entities.Action.BoxFieldTitle2;
-					}
-					else
-					{
-						return Res.Strings.Entities.Action.BoxFieldTitle1;
-					}
-
-				case AbstractObject.ActiveElement.BoxFieldAddInterface:
-					return Res.Strings.Entities.Action.BoxFieldAddInterface;
-
-				case AbstractObject.ActiveElement.BoxFieldRemoveInterface:
-					return Res.Strings.Entities.Action.BoxFieldRemoveInterface;
-
-				case AbstractObject.ActiveElement.BoxChangeWidth:
-					return Res.Strings.Entities.Action.BoxChangeWidth;
-
-				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator1:
-					return Res.Strings.Entities.Action.BoxMoveColumnsSeparator;
-
-				case AbstractObject.ActiveElement.ConnexionOpenLeft:
-					return Res.Strings.Entities.Action.ConnexionOpenLeft;
-
-				case AbstractObject.ActiveElement.ConnexionOpenRight:
-					return Res.Strings.Entities.Action.ConnexionOpenRight;
-
-				case AbstractObject.ActiveElement.ConnexionClose:
-					return Res.Strings.Entities.Action.ConnexionClose;
-
-				case AbstractObject.ActiveElement.ConnexionMove1:
-				case AbstractObject.ActiveElement.ConnexionMove2:
-					return Res.Strings.Entities.Action.ConnexionMove;
-
-				case AbstractObject.ActiveElement.ConnexionComment:
-					return Res.Strings.Entities.Action.ConnexionComment;
-
-				case AbstractObject.ActiveElement.CommentEdit:
-					return Res.Strings.Entities.Action.CommentEdit;
-
-				case AbstractObject.ActiveElement.CommentMove:
-					return Res.Strings.Entities.Action.CommentMove;
-
-				case AbstractObject.ActiveElement.CommentWidth:
-					return Res.Strings.Entities.Action.CommentWidth;
-
-				case AbstractObject.ActiveElement.CommentClose:
-					return Res.Strings.Entities.Action.CommentClose;
-
-				case AbstractObject.ActiveElement.CommentColor1:
-					return Res.Strings.Entities.Action.CommentColor1;
-
-				case AbstractObject.ActiveElement.CommentColor2:
-					return Res.Strings.Entities.Action.CommentColor2;
-
-				case AbstractObject.ActiveElement.CommentColor3:
-					return Res.Strings.Entities.Action.CommentColor3;
-
-				case AbstractObject.ActiveElement.CommentColor4:
-					return Res.Strings.Entities.Action.CommentColor4;
-
-				case AbstractObject.ActiveElement.CommentColor5:
-					return Res.Strings.Entities.Action.CommentColor5;
-
-				case AbstractObject.ActiveElement.CommentColor6:
-					return Res.Strings.Entities.Action.CommentColor6;
-
-				case AbstractObject.ActiveElement.CommentColor7:
-					return Res.Strings.Entities.Action.CommentColor7;
-
-				case AbstractObject.ActiveElement.CommentColor8:
-					return Res.Strings.Entities.Action.CommentColor8;
-
-				case AbstractObject.ActiveElement.CommentAttachToConnexion:
-					return Res.Strings.Entities.Action.CommentAttachToConnexion;
-
-				case AbstractObject.ActiveElement.InfoMove:
-					return Res.Strings.Entities.Action.InfoMove;
-
-				case AbstractObject.ActiveElement.InfoWidth:
-					return Res.Strings.Entities.Action.InfoWidth;
-
-				case AbstractObject.ActiveElement.InfoClose:
-					return Res.Strings.Entities.Action.InfoClose;
-			}
-#endif
-
 			return null;  // pas de tooltip
 		}
 
 		public virtual bool MouseMove(Message message, Point pos)
 		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
-			ActiveElement element;
-			int edgeRank;
-			this.MouseDetect(pos, out element, out edgeRank);
-
-			if (this.hilitedElement != element || this.hilitedEdgeRank != edgeRank)
-			{
-				this.hilitedElement = element;
-				this.hilitedEdgeRank = edgeRank;
-				this.editor.Invalidate();
-			}
-
-			return (this.hilitedElement != ActiveElement.None);
+			return false;
 		}
 
 		public virtual void MouseDown(Message message, Point pos)
@@ -353,15 +149,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 		}
 
-		public virtual bool MouseDetect(Point pos, out ActiveElement element, out int edgeRank)
+		public virtual ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			element = ActiveElement.None;
-			edgeRank = -1;
-			return false;
+			return ActiveElement.None;
 		}
 
-		public virtual bool IsMousePossible(ActiveElement element, int edgeRank)
+		public virtual ActiveElement MouseDetectForeground(Point pos)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			return ActiveElement.None;
+		}
+
+		public virtual bool IsMousePossible(ActiveElement element)
 		{
 			//	Indique si l'opération est possible.
 			return true;
@@ -950,6 +750,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected ActiveElement					hilitedElement;
 		protected MainColor						boxColor;
 		protected bool							isDimmed;
-		protected int							hilitedEdgeRank;
 	}
 }
