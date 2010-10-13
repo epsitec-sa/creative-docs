@@ -160,6 +160,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				obj.MouseUp (message, pos);
 			}
+
+			if (this.hilitedElement == ActiveElement.EdgeOpenLink ||
+				this.hilitedElement == ActiveElement.NodeOpenLink)
+			{
+				//	Crée un moignon de lien o--->
+				var link = new ObjectLink (this.editor, this.entity);
+				link.SrcObject = this;
+				link.UpdateLink ();
+
+				this.objectLinks.Add (link);
+			}
 		}
 
 		public override ActiveElement MouseDetectBackground(Point pos)
@@ -222,6 +233,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+
+		protected bool HasUnlikedLink
+		{
+			get
+			{
+				foreach (var obj in this.objectLinks)
+				{
+					if (obj.IsUnlinked)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
 
 		protected void DrawLinks(Graphics graphics)
 		{
