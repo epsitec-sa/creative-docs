@@ -356,43 +356,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void UpdateLink()
 		{
+			this.startVector = Vector.Zero;
+			this.endVector   = Vector.Zero;
+
 			if (this.DstObject == null)
 			{
-				this.startVector = Vector.Zero;
-				this.endVector   = Vector.Zero;
 				// TODO:
 
 				return;
 			}
 
-			ObjectEdge edge = null;
-			ObjectNode node = null;
+			//	Une connexion est toujours edge -> node ou node -> edge.
+			bool edgeToNode = this.SrcObject is ObjectEdge;
 
-			if (this.SrcObject is ObjectEdge)
+			ObjectEdge edge;
+			ObjectNode node;
+
+			if (edgeToNode)
 			{
 				edge = this.SrcObject as ObjectEdge;
+				node = this.DstObject as ObjectNode;
 			}
-
-			if (this.SrcObject is ObjectNode)
+			else
 			{
 				node = this.SrcObject as ObjectNode;
-			}
-
-			if (this.DstObject is ObjectEdge)
-			{
 				edge = this.DstObject as ObjectEdge;
 			}
 
-			if (this.DstObject is ObjectNode)
-			{
-				node = this.DstObject as ObjectNode;
-			}
-
+			//	S'il ne s'agit pas d'une connexion edge -> node ou node -> edge, ou ne peut rien faire.
 			if (edge == null || node == null)
 			{
 				return;
 			}
 
+			//	S'il y a chevauchement ou presque entre les boîtes sources et destination, il est
+			//	préférable de ne pas dessiner de liaison.
 			Rectangle re = edge.Bounds;
 			Rectangle rn = node.Bounds;
 
@@ -401,20 +399,33 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (re.IntersectsWith (rn))
 			{
-				this.startVector = Vector.Zero;
-				this.endVector   = Vector.Zero;
 				return;
 			}
 
-			LinkAnchor nodeAnchor, edgeAnchor;
-			ObjectLink.GetAttach (node.Bounds, edge.Bounds, out nodeAnchor, out edgeAnchor);
+			//	Cherche la connexion la plus courte parmi toutes les possibilités.
+			LinkAnchor nodeAnchor = LinkAnchor.Left;
+			LinkAnchor edgeAnchor = LinkAnchor.Left;
 
-			bool edgeIsStart = this.SrcObject is ObjectEdge;
+			Vector v1 = node.GetLinkVector (nodeAnchor, edge.Bounds.Center, edgeToNode);
 
-			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center, !edgeIsStart);
-			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin,   edgeIsStart);
+			double min = double.MaxValue;
+			foreach (LinkAnchor a2 in System.Enum.GetValues (typeof (LinkAnchor)))
+			{
+				Vector v2 = edge.GetLinkVector (a2, node.Bounds.Center, !edgeToNode);
 
-			if (edgeIsStart)
+				double d = Point.Distance (v1.Origin, v2.Origin);
+
+				if (min > d)
+				{
+					min = d;
+					edgeAnchor = a2;
+				}
+			}
+
+			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center, !edgeToNode);
+			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin,   edgeToNode);
+
+			if (edgeToNode)
 			{
 				this.startVector = edgeVector;
 				this.endVector   = nodeVector;
@@ -426,51 +437,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.SetPathDirty ();
-		}
-
-		private static void GetAttach(Rectangle r1, Rectangle r2, out LinkAnchor anchor1, out LinkAnchor anchor2)
-		{
-			double min = double.MaxValue;
-			anchor1 = LinkAnchor.Left;
-			anchor2 = LinkAnchor.Left;
-
-			foreach (LinkAnchor a1 in System.Enum.GetValues (typeof (LinkAnchor)))
-			{
-				foreach (LinkAnchor a2 in System.Enum.GetValues (typeof (LinkAnchor)))
-				{
-					Point p1 = ObjectLink.GetAttach (r1, a1);
-					Point p2 = ObjectLink.GetAttach (r2, a2);
-
-					double d = Point.Distance (p1, p2);
-
-					if (min > d)
-					{
-						min = d;
-						anchor1 = a1;
-						anchor2 = a2;
-					}
-				}
-			}
-		}
-
-		private static Point GetAttach(Rectangle rect, LinkAnchor anchor)
-		{
-			switch (anchor)
-			{
-				case LinkAnchor.Left:
-					return new Point (rect.Left, rect.Center.Y);
-
-				case LinkAnchor.Right:
-					return new Point (rect.Right, rect.Center.Y);
-
-				case LinkAnchor.Bottom:
-					return new Point (rect.Center.X, rect.Bottom);
-
-				case LinkAnchor.Top:
-					return new Point (rect.Center.X, rect.Top);
-			}
-
-			return rect.Center;
 		}
 
 
