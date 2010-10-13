@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.RedimArea();
 		}
 
-		public void UpdateAfterGeometryChanged(ObjectNode node)
+		public void UpdateAfterGeometryChanged(LinkableObject node)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateNodes ();  // adapte la taille selon compact/étendu
