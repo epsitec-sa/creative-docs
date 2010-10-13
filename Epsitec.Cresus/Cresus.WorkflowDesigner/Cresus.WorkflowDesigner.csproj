@@ -157,7 +157,6 @@
     <EmbeddedResource Include="Images\RadioYes.icon" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Comparers\" />
     <Folder Include="Dialogs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -170,13 +170,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
-			double thickness = 2;
-			Rectangle frameRect = rect;
-			frameRect.Inflate (thickness);
-
-			double descriptionHeight = 10+14*5;  // hauteur pour 5 lignes
-			Rectangle descriptionRect = new Rectangle (rect.Left, rect.Bottom-descriptionHeight-thickness+1, rect.Width, descriptionHeight);
-
 			var field = new TextFieldMulti ();
 			field.Parent = this.editor;
 			field.ScrollerVisibility = false;
