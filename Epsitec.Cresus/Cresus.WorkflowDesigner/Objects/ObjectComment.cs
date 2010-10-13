@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element, int fieldRank)
+		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
 			if (this.isDraggingMove || this.isDraggingWidth || this.isDraggingAttach)
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return null;  // pas de tooltip
 			}
 
-			return base.GetToolTipText(element, fieldRank);
+			return base.GetToolTipText(element);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
@@ -316,102 +316,97 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			element = ActiveElement.None;
-			fieldRank = -1;
-
 			if (pos.IsZero || !this.isVisible || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
-				return false;
-			}
-
-			//	Souris dans le bouton pour modifier la largeur ?
-			if (this.DetectRoundButton(this.PositionWidthButton, pos))
-			{
-				element = ActiveElement.CommentWidth;
-				return true;
-			}
-
-			//	Souris dans le bouton de fermeture ?
-			if (this.DetectRoundButton(this.PositionCloseButton, pos))
-			{
-				element = ActiveElement.CommentClose;
-				return true;
-			}
-
-			//	Souris dans le bouton de déplacer l'attache ?
-			if (this.DetectRoundButton(this.PositionAttachToLinkButton, pos))
-			{
-				element = ActiveElement.CommentAttachTo;
-				return true;
+				return ActiveElement.None;
 			}
 
 			//	Souris dans l'en-tête ?
 			if (this.HeaderRectangle.Contains(pos))
 			{
-				element = ActiveElement.CommentMove;
-				return true;
-			}
-
-			//	Souris dans le bouton des couleurs ?
-			if (this.DetectSquareButton(this.PositionColorButton(0), pos))
-			{
-				element = ActiveElement.CommentColor1;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(1), pos))
-			{
-				element = ActiveElement.CommentColor2;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(2), pos))
-			{
-				element = ActiveElement.CommentColor3;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
-			{
-				element = ActiveElement.CommentColor4;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(4), pos))
-			{
-				element = ActiveElement.CommentColor5;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
-			{
-				element = ActiveElement.CommentColor6;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(6), pos))
-			{
-				element = ActiveElement.CommentColor7;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(7), pos))
-			{
-				element = ActiveElement.CommentColor8;
-				return true;
+				return ActiveElement.CommentMove;
 			}
 
 			//	Souris dans la boîte ?
 			if (this.bounds.Contains(pos))
 			{
-				element = ActiveElement.CommentEdit;
-				return true;
+				return ActiveElement.CommentEdit;
 			}
 
-			return false;
+			return ActiveElement.None;
+		}
+
+		public override ActiveElement MouseDetectForeground(Point pos)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			if (pos.IsZero || !this.isVisible || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			{
+				return ActiveElement.None;
+			}
+
+			//	Souris dans le bouton pour modifier la largeur ?
+			if (this.DetectRoundButton (this.PositionWidthButton, pos))
+			{
+				return ActiveElement.CommentWidth;
+			}
+
+			//	Souris dans le bouton de fermeture ?
+			if (this.DetectRoundButton (this.PositionCloseButton, pos))
+			{
+				return ActiveElement.CommentClose;
+			}
+
+			//	Souris dans le bouton de déplacer l'attache ?
+			if (this.DetectRoundButton (this.PositionAttachToLinkButton, pos))
+			{
+				return ActiveElement.CommentAttachTo;
+			}
+
+			//	Souris dans le bouton des couleurs ?
+			if (this.DetectSquareButton (this.PositionColorButton (0), pos))
+			{
+				return ActiveElement.CommentColor1;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (1), pos))
+			{
+				return ActiveElement.CommentColor2;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (2), pos))
+			{
+				return ActiveElement.CommentColor3;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (3), pos))
+			{
+				return ActiveElement.CommentColor4;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (4), pos))
+			{
+				return ActiveElement.CommentColor5;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (5), pos))
+			{
+				return ActiveElement.CommentColor6;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (6), pos))
+			{
+				return ActiveElement.CommentColor7;
+			}
+
+			if (this.DetectSquareButton (this.PositionColorButton (7), pos))
+			{
+				return ActiveElement.CommentColor8;
+			}
+
+			return ActiveElement.None;
 		}
 
 
@@ -456,16 +451,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-		}
-
-		public override void DrawForeground(Graphics graphics)
-		{
-			//	Dessine le dessus de l'objet.
 			if (!this.isVisible)
 			{
 				return;
 			}
-			
+
 			Rectangle rect;
 			Rectangle rh = Rectangle.Empty;
 			if (this.hilitedElement != ActiveElement.None)
@@ -477,42 +467,57 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			rect = this.bounds;
 			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
-				rect = Rectangle.Union(rect, rh);
+				rect = Rectangle.Union (rect, rh);
 			}
-			rect.Inflate(2);
-			rect.Offset(8, -8);
-			this.DrawRoundShadow(graphics, rect, 8, 8, 0.2);
+			rect.Inflate (2);
+			rect.Offset (8, -8);
+			this.DrawRoundShadow (graphics, rect, 8, 8, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				rect = rh;
-				rect.Inflate(0.5);
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.GetColor(0));
+				rect.Inflate (0.5);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.ColorCommentHeader (this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (this.GetColor (0));
 
 				rect.Width -= rect.Height;
-				rect.Offset(0, 1);
+				rect.Offset (0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
-				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(1), GlyphPaintStyle.Normal);
+				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor (1), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine la boîte vide avec la queue (bulle de bd).
-			Path path = this.GetFramePath();
+			Path path = this.GetFramePath ();
 
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.ColorComment(this.hilitedElement != ActiveElement.None));
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (this.ColorComment (this.hilitedElement != ActiveElement.None));
 
-			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(this.GetColor(0));
+			graphics.Rasterizer.AddOutline (path);
+			graphics.RenderSolid (this.GetColor (0));
 
 			//	Dessine le texte.
 			rect = this.bounds;
-			rect.Deflate(ObjectComment.textMargin);
+			rect.Deflate (ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor (this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+		}
+
+		public override void DrawForeground(Graphics graphics)
+		{
+			//	Dessine le dessus de l'objet.
+			if (!this.isVisible)
+			{
+				return;
+			}
+
+			Rectangle rh = Rectangle.Empty;
+			if (this.hilitedElement != ActiveElement.None)
+			{
+				rh = this.HeaderRectangle;
+			}
 
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)

@@ -750,41 +750,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				AbstractObject fly = null;
-
-				for (int i=this.comments.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.comments[i];
-					if (obj.MouseMove(message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
-
-				for (int i=this.edges.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.edges[i];
-					if (obj.MouseMove (message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
-
-				for (int i=this.nodes.Count-1; i>=0; i--)
-				{
-					AbstractObject obj = this.nodes[i];
-					if (obj.MouseMove (message, pos))
-					{
-						fly = obj;
-						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-					}
-				}
+				this.MouseMoveUpdateObjects (pos);
 
 				MouseCursorType type = MouseCursorType.Unknown;
 
-				if (fly == null)
+				if (this.hilitedObject != null)
+				{
+					this.hilitedObject.MouseMove (message, pos);
+				}
+
+				if (this.hilitedObject == null)
 				{
 					if (this.IsScrollerEnable)
 					{
@@ -797,68 +772,46 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
-					if (fly.HilitedElement == ActiveElement.EdgeHeader ||
-						fly.HilitedElement == ActiveElement.NodeHeader)
+					if (this.hilitedObject.HilitedElement == ActiveElement.EdgeHeader ||
+						this.hilitedObject.HilitedElement == ActiveElement.NodeHeader)
 					{
-						if (this.IsLocateActionHeader(message))
+						if (this.NodeCount > 1)
 						{
-							var node = fly as ObjectNode;
-							if (node != null && !node.IsRoot)
-							{
-								type = MouseCursorType.Locate;
-							}
-							else
-							{
-								type = MouseCursorType.Arrow;
-							}
+							type = MouseCursorType.Move;
 						}
 						else
 						{
-							if (this.NodeCount > 1)
-							{
-								type = MouseCursorType.Move;
-							}
-							else
-							{
-								type = MouseCursorType.Arrow;
-							}
+							type = MouseCursorType.Arrow;
 						}
 					}
-					else if (fly.HilitedElement == ActiveElement.None ||
-							 fly.HilitedElement == ActiveElement.NodeInside ||
-							 fly.HilitedElement == ActiveElement.EdgeInside ||
-							 fly.HilitedElement == ActiveElement.EdgeHilited)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.None ||
+							 this.hilitedObject.HilitedElement == ActiveElement.NodeInside ||
+							 this.hilitedObject.HilitedElement == ActiveElement.EdgeInside ||
+							 this.hilitedObject.HilitedElement == ActiveElement.EdgeHilited)
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (fly.HilitedElement == ActiveElement.EdgeDescription)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeDescription)
 					{
-						if (this.IsLocateAction(message))
+						if (this.hilitedObject.IsMousePossible (this.hilitedObject.HilitedElement))
 						{
-							type = MouseCursorType.Locate;
+							type = MouseCursorType.IBeam;
 						}
 						else
 						{
-							if (fly.IsMousePossible(fly.HilitedElement, fly.HilitedEdgeRank))
-							{
-								type = MouseCursorType.IBeam;
-							}
-							else
-							{
-								type = MouseCursorType.Arrow;
-							}
+							type = MouseCursorType.Arrow;
 						}
 					}
-					else if (fly.HilitedElement == ActiveElement.CommentEdit)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentEdit)
 					{
 						type = MouseCursorType.IBeam;
 					}
-					else if (fly.HilitedElement == ActiveElement.CommentMove ||
-							 fly.HilitedElement == ActiveElement.InfoMove)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentMove ||
+							 this.hilitedObject.HilitedElement == ActiveElement.InfoMove)
 					{
 						type = MouseCursorType.Move;
 					}
-					else if (fly.HilitedElement == ActiveElement.InfoEdit)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.InfoEdit)
 					{
 						type = MouseCursorType.Arrow;
 					}
@@ -869,7 +822,47 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 
 				this.ChangeMouseCursor(type);
-				this.hilitedObject = fly;
+			}
+		}
+
+		private void MouseMoveUpdateObjects(Point pos)
+		{
+			//	Met à jour tous les objets suite à un déplacement de la souris.
+			//	On parcourt les objets dans le même ordre que le dessin.
+			//	Il faut parcourir tous les objets, pour les mettre à jour.
+			this.hilitedObject = null;
+			ActiveElement hilitedElement = ActiveElement.None;
+
+			foreach (var obj in this.AllObjects)
+			{
+				ActiveElement element = obj.MouseDetectBackground (pos);
+				if (element != ActiveElement.None)
+				{
+					this.hilitedObject = obj;
+					hilitedElement = element;
+				}
+			}
+
+			foreach (var obj in this.AllObjects)
+			{
+				ActiveElement element = obj.MouseDetectForeground (pos);
+				if (element != ActiveElement.None)
+				{
+					this.hilitedObject = obj;
+					hilitedElement = element;
+				}
+			}
+
+			foreach (var obj in this.AllObjects)
+			{
+				if (obj == this.hilitedObject)
+				{
+					obj.HilitedElement = hilitedElement;
+				}
+				else
+				{
+					obj.HilitedElement = ActiveElement.None;
+				}
 			}
 		}
 
@@ -892,10 +885,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.Invalidate ();
 				}
 
-				AbstractObject obj = this.GetObjectForAction ();
-				if (obj != null)
+				if (this.hilitedObject != null)
 				{
-					obj.MouseDown(message, pos);
+					this.hilitedObject.MouseDown (message, pos);
 				}
 			}
 		}
@@ -909,10 +901,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				AbstractObject obj = this.GetObjectForAction ();
-				if (obj != null)
+				if (this.hilitedObject != null)
 				{
-					obj.MouseUp(message, pos);
+					this.hilitedObject.MouseUp (message, pos);
 				}
 			}
 		}
@@ -968,18 +959,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool IsLocateAction(Message message)
-		{
-			//	Indique si l'action débouche sur une opération de navigation.
-			return (message.IsControlPressed || this.CurrentModifyMode != ModifyMode.Unlocked);
-		}
-
-		public bool IsLocateActionHeader(Message message)
-		{
-			//	Indique si l'action débouche sur une opération de navigation (pour NodeHeader).
-			return (message.IsControlPressed || this.CurrentModifyMode == ModifyMode.Locked);
-		}
-
 		public ModifyMode CurrentModifyMode
 		{
 			//	Retourne le mode de travail courant.
@@ -995,21 +974,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Indique l'objet en cours de drag.
 			this.lockObject = obj;
 		}
-
-		private AbstractObject GetObjectForAction()
-		{
-			//	L'objet à l'avant-plan a la priorité.
-			foreach (var obj in this.AllObjects.Reverse ())
-			{
-				if (obj.IsReadyForAction)
-				{
-					return obj;
-				}
-			}
-
-			return null;
-		}
-
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)

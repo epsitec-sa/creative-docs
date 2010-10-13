@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element, int fieldRank)
+		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
 			if (this.isDraggingDst)
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 #endif
 
-			return base.GetToolTipText(element, fieldRank);
+			return base.GetToolTipText(element);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
@@ -274,49 +274,50 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			element = ActiveElement.None;
-			fieldRank = -1;
-
 			if (pos.IsZero || this.startVector.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
-				return false;
-			}
-
-			//	Souris dans la pastille ronde du départ de la connexion ?
-			if (this.DstObject != null)
-			{
-				if (this.DetectRoundButton (pos, this.startVector.Origin))
-				{
-					element = ActiveElement.LinkClose;
-					return true;
-				}
-			}
-
-			//	Souris dans le bouton pour commenter la connexion.
-			if (this.IsLinkCommentButton && this.DetectRoundButton(pos, this.PositionLinkComment))
-			{
-				element = ActiveElement.LinkComment;
-				return true;
-			}
-
-			//	Souris dans le bouton pour changer le noeud destination ?
-			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
-			{
-				element = ActiveElement.LinkChangeDst;
-				return true;
+				return ActiveElement.None;
 			}
 
 			//	Souris le long de la connexion ?
 			if (this.DetectOver(pos, 4))
 			{
-				element = ActiveElement.LinkHilited;
-				return true;
+				return ActiveElement.LinkHilited;
 			}
 
-			return false;
+			return ActiveElement.None;
+		}
+
+		public override ActiveElement MouseDetectForeground(Point pos)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			if (pos.IsZero || this.startVector.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			{
+				return ActiveElement.None;
+			}
+
+			//	Souris dans le bouton pour fermer la connexion.
+			if (this.DetectRoundButton (pos, this.PositionLinkClose))
+			{
+				return ActiveElement.LinkClose;
+			}
+
+			//	Souris dans le bouton pour commenter la connexion.
+			if (this.IsLinkCommentButton && this.DetectRoundButton (pos, this.PositionLinkComment))
+			{
+				return ActiveElement.LinkComment;
+			}
+
+			//	Souris dans le bouton pour changer le noeud destination ?
+			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
+			{
+				return ActiveElement.LinkChangeDst;
+			}
+
+			return ActiveElement.None;
 		}
 
 		private bool DetectOver(Point pos, double margin)
@@ -556,83 +557,67 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				graphics.RenderSolid(color);
 			}
+		}
 
-#if false
-			if (this.points.Count != 0)
-			{
-				//	Dessine les cercles aux points de départ.
-				for (int i=0; i<this.points.Count; i++)
-				{
-					Point start = this.points[i];
-					GlyphShape shape = GlyphShape.None;
-
-					bool hilite = false;
-					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
-					{
-						hilite = (i == 1);
-						shape = GlyphShape.ArrowLeft;
-					}
-					else if (this.hilitedElement == ActiveElement.EdgeOpenRight)
-					{
-						hilite = (i == 0);
-						shape = GlyphShape.ArrowRight;
-					}
-					else if (this.hilitedElement == ActiveElement.EdgeClose)
-					{
-						if (i != 0)  break;
-						hilite = true;
-						shape = GlyphShape.Close;
-					}
-					else
-					{
-						if (this.DstNode != null && i != 0)  break;
-						if (!this.isSrcHilited && i != 0)  break;
-					}
-
-					if (hilite)
-					{
-						this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, shape, true, false);
-					}
-					else
-					{
-						if (this.hilitedElement == ActiveElement.LinkHilited)
-						{
-							this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-						}
-						else
-						{
-							this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
-						}
-					}
-				}
-			}
-#endif
+		public override void DrawForeground(Graphics graphics)
+		{
+			Point p;
 
 			//	Dessine le bouton pour commenter la connexion.
-			Point p = this.PositionLinkComment;
+			p = this.PositionLinkComment;
 			if (!p.IsZero && this.IsLinkCommentButton)
 			{
 				if (this.hilitedElement == ActiveElement.LinkComment)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
 				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", false, false);
+				}
+			}
+
+			//	Dessine le bouton pour fermer la connexion.
+			p = this.PositionLinkClose;
+			if (!p.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.LinkClose)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.LinkHilited)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
 				}
 			}
 
 			//	Dessine le bouton pour changer de noeud destination.
-			Point m = this.PositionRouteChangeDst;
-			if (!m.IsZero)
+			p = this.PositionRouteChangeDst;
+			if (!p.IsZero)
 			{
 				if (this.hilitedElement == ActiveElement.LinkChangeDst)
 				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
-					this.DrawRoundButton (graphics, m, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				}
+			}
+		}
+
+
+		public Point PositionLinkClose
+		{
+			get
+			{
+				if (this.startVector.IsValid)
+				{
+					return this.startVector.Origin;
+				}
+				else
+				{
+					return Point.Zero;
 				}
 			}
 		}
