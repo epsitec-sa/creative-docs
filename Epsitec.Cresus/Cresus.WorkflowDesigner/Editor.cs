@@ -477,6 +477,20 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public LinkableObject DetectLinkableObject(Point pos, System.Type filteredType)
+		{
+			foreach (var obj in this.LinkableObjects)
+			{
+				if (obj.GetType () != filteredType && obj.Bounds.Contains (pos))
+				{
+					return obj;
+				}
+			}
+
+			return null;
+		}
+
+
 		private void PushLayout(LinkableObject exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
