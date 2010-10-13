@@ -605,7 +605,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				if (!this.HasUnlikedLink)
+				if (!this.HasNoneDstObject)
 				{
 					return new Point (this.bounds.Right, this.bounds.Center.Y);
 				}

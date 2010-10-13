@@ -234,13 +234,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected bool HasUnlikedLink
+		protected bool HasNoneDstObject
 		{
 			get
 			{
 				foreach (var obj in this.objectLinks)
 				{
-					if (obj.IsUnlinked)
+					if (obj.IsNoneDstObject)
 					{
 						return true;
 					}

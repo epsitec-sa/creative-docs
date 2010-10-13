@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.srcObject.ObjectLinks.Remove (this);
 
-				if (!this.IsUnlinked)
+				if (!this.IsNoneDstObject)
 				{
 					this.srcObject.RemoveEntityLink (this.dstObject);
 				}
@@ -321,17 +321,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connexion.
-			if (this.DstObject != null)
-			{
-				var rect = this.Bounds;
-				rect.Inflate (margin);
+			var rect = this.Bounds;
+			rect.Inflate (margin);
 
-				if (rect.Contains (pos))
+			if (rect.Contains (pos))
+			{
+				if (Geometry.DetectOutline (this.Path, margin, pos))
 				{
-					if (Geometry.DetectOutline (this.Path, margin, pos))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 
@@ -339,7 +336,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public bool IsUnlinked
+		public bool IsNoneDstObject
 		{
 			get
 			{
@@ -349,16 +346,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void UpdateLink()
 		{
+			//	Met à jour les deux vecteurs permettant de définir le chemin de la connexion.
+			this.SetPathDirty ();
+
 			this.startVector = Vector.Zero;
 			this.endVector   = Vector.Zero;
 
-			if (this.isDraggingDst)
+			if (this.isDraggingDst && this.hilitedDstObject == null)
 			{
 				this.DraggingDstUpdateLink ();
 				return;
 			}
 
-			if (this.DstObject == null)  // moignon de liaison o---> ?
+			LinkableObject dstObject = (this.hilitedDstObject == null) ? this.DstObject : this.hilitedDstObject;
+
+			if (dstObject == null)  // moignon de liaison o---> ?
 			{
 				Point p1 = new Point (this.srcObject.Bounds.Right,                            this.srcObject.Bounds.Center.Y);
 				Point p2 = new Point (this.srcObject.Bounds.Right+AbstractObject.lengthClose, this.srcObject.Bounds.Center.Y);
@@ -366,7 +368,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.startVector = new Vector (p1, new Size ( 1, 0));
 				this.endVector   = new Vector (p2, new Size (-1, 0));
 
-				this.SetPathDirty ();
 				return;
 			}
 
@@ -379,12 +380,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (edgeToNode)
 			{
 				edge = this.SrcObject as ObjectEdge;
-				node = this.DstObject as ObjectNode;
+				node =      dstObject as ObjectNode;
 			}
 			else
 			{
 				node = this.SrcObject as ObjectNode;
-				edge = this.DstObject as ObjectEdge;
+				edge =      dstObject as ObjectEdge;
 			}
 
 			//	S'il ne s'agit pas d'une connexion edge -> node ou node -> edge, ou ne peut rien faire.
@@ -445,8 +446,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.startVector = nodeVector;
 				this.endVector   = edgeVector;
 			}
-
-			this.SetPathDirty ();
 		}
 
 		private void DraggingDstUpdateLink()
@@ -469,8 +468,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 			}
-
-			this.SetPathDirty ();
 		}
 
 
@@ -518,9 +515,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.Rasterizer.AddOutline (this.Path, 6);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
-			graphics.Rasterizer.AddOutline (this.Path, 2);
-			Color color = (this.hilitedElement == ActiveElement.LinkHilited) ? this.GetColorMain () : this.GetColor (0);
-			graphics.RenderSolid (color);
+			Color color = (this.IsHilite || this.isDraggingDst) ? this.GetColorMain () : this.GetColor (0);
+
+			if (this.isDraggingDst && this.hilitedDstObject == null)
+			{
+				Misc.DrawPathDash (graphics, this.Path, 2, 1, 4, true, color);
+			}
+			else
+			{
+				graphics.Rasterizer.AddOutline (this.Path, 2);
+				graphics.RenderSolid (color);
+			}
 
 			{
 				graphics.LineWidth = 2;
@@ -557,7 +562,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", true, false);
 				}
-				if (this.hilitedElement == ActiveElement.LinkHilited)
+				else if (this.IsHilite)
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", false, false);
 				}
@@ -571,7 +576,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.LinkHilited)
+				else if (this.IsHilite)
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
 				}
@@ -585,7 +590,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.LinkHilited)
+				else if (this.IsHilite)
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -599,7 +604,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.LinkHilited)
+				else if (this.IsHilite)
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, false, false);
 				}
@@ -607,7 +612,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public Point PositionLinkClose
+		private bool IsHilite
+		{
+			//	Indique si la souris est dans l'en-tête.
+			get
+			{
+				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked || this.isDraggingDst)
+				{
+					return false;
+				}
+
+				return (this.hilitedElement == ActiveElement.LinkHilited ||
+						this.hilitedElement == ActiveElement.LinkClose ||
+						this.hilitedElement == ActiveElement.LinkComment ||
+						this.hilitedElement == ActiveElement.LinkChangeDst ||
+						this.hilitedElement == ActiveElement.LinkCreateDst);
+			}
+		}
+
+
+		private Point PositionLinkClose
 		{
 			get
 			{
@@ -643,7 +667,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour créer la destination.
 			get
 			{
-				if (this.endVector.IsValid && this.IsUnlinked)
+				if (this.endVector.IsValid && this.IsNoneDstObject)
 				{
 					return this.endVector.Origin + new Point (AbstractObject.buttonRadius*2+2, 0);
 				}
@@ -661,7 +685,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le bouton CommentAttachToEdge pour déplacer le point d'attache.
 			get
 			{
-				return !this.IsUnlinked && (this.comment == null || !this.comment.IsVisible);
+				return !this.IsNoneDstObject && (this.comment == null || !this.comment.IsVisible);
 			}
 		}
 
@@ -716,10 +740,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void DraggingDstMouseMove(Point pos)
 		{
-			this.draggingDstPos = pos;
-			this.UpdateLink ();
-
 			var obj = this.editor.DetectLinkableObject (pos, this.srcObject.GetType ());
+
+			if (this.DraggingDstAlreadyLinked (obj))  // déjà une connexion sur cet objet ?
+			{
+				obj = null;  // on n'en veut pas une 2ème !
+			}
 
 			if (this.hilitedDstObject != obj)
 			{
@@ -736,7 +762,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
+			this.draggingDstPos = pos;
+			this.UpdateLink ();
 			this.editor.Invalidate ();
+		}
+
+		private bool DraggingDstAlreadyLinked(LinkableObject candidate)
+		{
+			foreach (var link in this.srcObject.ObjectLinks)
+			{
+				if (link.dstObject == candidate)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private void DraggingDstMouseUp()
@@ -820,7 +861,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool							isSrcHilited;
 		private bool							isDraggingDst;
 		private Point							draggingDstPos;
-		private ObjectComment					comment;
 		private LinkableObject					hilitedDstObject;
+		private ObjectComment					comment;
 	}
 }
