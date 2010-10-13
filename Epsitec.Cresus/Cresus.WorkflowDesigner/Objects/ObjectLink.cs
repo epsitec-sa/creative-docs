@@ -402,12 +402,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Vector v2 = edge.GetLinkVector (a2, node.Bounds.Center, !edgeToNode);
 
-				double d = Point.Distance (v1.Origin, v2.Origin);
-
-				if (min > d)
+				if (v2.IsValid)
 				{
-					min = d;
-					edgeAnchor = a2;
+					double d = Point.Distance (v1.Origin, v2.Origin);
+
+					if (min > d)
+					{
+						min = d;
+						edgeAnchor = a2;
+					}
 				}
 			}
 

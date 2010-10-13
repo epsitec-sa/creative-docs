@@ -289,63 +289,66 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return element;
 			}
 
-			//	Souris dans le bouton d'ouverture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLinkButton, pos))
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return ActiveElement.NodeOpenLink;
-			}
+				//	Souris dans le bouton d'ouverture ?
+				if (this.DetectRoundButton (this.PositionOpenLinkButton, pos))
+				{
+					return ActiveElement.NodeOpenLink;
+				}
 
-			//	Souris dans le bouton de fermeture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCloseButton, pos))
-			{
-				return ActiveElement.NodeClose;
-			}
+				//	Souris dans le bouton de fermeture ?
+				if (this.DetectRoundButton (this.PositionCloseButton, pos))
+				{
+					return ActiveElement.NodeClose;
+				}
 
-			//	Souris dans le bouton des commentaires ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCommentButton, pos))
-			{
-				return ActiveElement.NodeComment;
-			}
+				//	Souris dans le bouton des commentaires ?
+				if (this.DetectRoundButton (this.PositionCommentButton, pos))
+				{
+					return ActiveElement.NodeComment;
+				}
 
-			//	Souris dans le bouton des couleurs ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (0), pos))
-			{
-				return ActiveElement.NodeColor1;
-			}
+				//	Souris dans le bouton des couleurs ?
+				if (this.DetectSquareButton (this.PositionColorButton (0), pos))
+				{
+					return ActiveElement.NodeColor1;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (1), pos))
-			{
-				return ActiveElement.NodeColor2;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (1), pos))
+				{
+					return ActiveElement.NodeColor2;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (2), pos))
-			{
-				return ActiveElement.NodeColor3;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (2), pos))
+				{
+					return ActiveElement.NodeColor3;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (3), pos))
-			{
-				return ActiveElement.NodeColor4;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (3), pos))
+				{
+					return ActiveElement.NodeColor4;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
-			{
-				return ActiveElement.NodeColor5;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (4), pos))
+				{
+					return ActiveElement.NodeColor5;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
-			{
-				return ActiveElement.NodeColor6;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (5), pos))
+				{
+					return ActiveElement.NodeColor6;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
-			{
-				return ActiveElement.NodeColor7;
-			}
+				if (this.DetectSquareButton (this.PositionColorButton (6), pos))
+				{
+					return ActiveElement.NodeColor7;
+				}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
-			{
-				return ActiveElement.NodeColor8;
+				if (this.DetectSquareButton (this.PositionColorButton (7), pos))
+				{
+					return ActiveElement.NodeColor8;
+				}
 			}
 
 			return ActiveElement.None;

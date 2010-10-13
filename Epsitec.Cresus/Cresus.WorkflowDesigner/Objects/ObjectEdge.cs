@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.subtitle.Alignment = ContentAlignment.MiddleLeft;
 			this.subtitle.BreakMode = TextBreakMode.Hyphenate;
 
+			this.isExtended = true;
+
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
 		}
@@ -51,7 +53,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.titleString != value)
 				{
 					this.titleString = value;
-
 					this.title.Text = Misc.Bold (this.titleString);
 				}
 			}
@@ -69,8 +70,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.subtitleString != value)
 				{
 					this.subtitleString = value;
-
 					this.subtitle.Text = this.subtitleString;
+				}
+			}
+		}
+
+		public bool IsExtended
+		{
+			//	Etat de la boîte (compact ou étendu).
+			//	En mode compact, seul le titre est visible.
+			get
+			{
+				return this.isExtended;
+			}
+			set
+			{
+				if (this.isExtended != value)
+				{
+					this.isExtended = value;
+
+					this.UpdateBounds ();
+					this.editor.UpdateAfterGeometryChanged (this);
+					this.editor.SetLocalDirty ();
 				}
 			}
 		}
@@ -110,20 +131,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (anchor == LinkAnchor.Left || anchor == LinkAnchor.Right)
 			{
-				double x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
-				double y;
+				double x, y;
 
-				if (dstPos.Y < this.bounds.Bottom+r)
+				if (this.isExtended)
 				{
-					y = this.bounds.Bottom+r;
-				}
-				else if (dstPos.Y > this.bounds.Top-r)
-				{
-					y = this.bounds.Top-r;
+					x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
+
+					if (dstPos.Y < this.bounds.Bottom+r)
+					{
+						y = this.bounds.Bottom+r;
+					}
+					else if (dstPos.Y > this.bounds.Top-r)
+					{
+						y = this.bounds.Top-r;
+					}
+					else
+					{
+						y = dstPos.Y;
+					}
 				}
 				else
 				{
-					y = dstPos.Y;
+					if (isDst)
+					{
+						return Vector.Zero;
+					}
+					else
+					{
+						x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
+						y = this.bounds.Center.Y;
+					}
 				}
 
 				Point p = new Point (x, y);
@@ -362,6 +399,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
+			if (this.hilitedElement == ActiveElement.EdgeExtend)
+			{
+				this.IsExtended = !this.IsExtended;
+			}
+
 			if (this.hilitedElement == ActiveElement.EdgeOpenLink)
 			{
 			}
@@ -454,68 +496,80 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return element;
 			}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionChangeWidthButton, pos))
+			//	Souris dans le bouton compact/étendu ?
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return ActiveElement.EdgeChangeWidth;
-			}
+				if (this.DetectRoundButton (this.PositionExtendButton, pos))
+				{
+					return ActiveElement.EdgeExtend;
+				}
 
-			//	Souris dans le bouton d'ouverture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionOpenLinkButton, pos))
-			{
-				return ActiveElement.EdgeOpenLink;
-			}
+				//	Souris dans le bouton de fermeture ?
+				if (this.DetectRoundButton (this.PositionCloseButton, pos))
+				{
+					return ActiveElement.EdgeClose;
+				}
 
-			//	Souris dans le bouton de fermeture ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCloseButton, pos))
-			{
-				return ActiveElement.EdgeClose;
-			}
+				//	Souris dans le bouton des commentaires ?
+				if (this.DetectRoundButton (this.PositionCommentButton, pos))
+				{
+					return ActiveElement.EdgeComment;
+				}
 
-			//	Souris dans le bouton des commentaires ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionCommentButton, pos))
-			{
-				return ActiveElement.EdgeComment;
-			}
+				if (this.isExtended)
+				{
+					if (this.DetectRoundButton (this.PositionChangeWidthButton, pos))
+					{
+						return ActiveElement.EdgeChangeWidth;
+					}
 
-			//	Souris dans le bouton des couleurs ?
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (0), pos))
-			{
-				return ActiveElement.EdgeColor1;
-			}
+					//	Souris dans le bouton d'ouverture ?
+					if (this.DetectRoundButton (this.PositionOpenLinkButton, pos))
+					{
+						return ActiveElement.EdgeOpenLink;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (1), pos))
-			{
-				return ActiveElement.EdgeColor2;
-			}
+					//	Souris dans le bouton des couleurs ?
+					if (this.DetectSquareButton (this.PositionColorButton (0), pos))
+					{
+						return ActiveElement.EdgeColor1;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (2), pos))
-			{
-				return ActiveElement.EdgeColor3;
-			}
+					if (this.DetectSquareButton (this.PositionColorButton (1), pos))
+					{
+						return ActiveElement.EdgeColor2;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (3), pos))
-			{
-				return ActiveElement.EdgeColor4;
-			}
+					if (this.DetectSquareButton (this.PositionColorButton (2), pos))
+					{
+						return ActiveElement.EdgeColor3;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (4), pos))
-			{
-				return ActiveElement.EdgeColor5;
-			}
+					if (this.DetectSquareButton (this.PositionColorButton (3), pos))
+					{
+						return ActiveElement.EdgeColor4;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (5), pos))
-			{
-				return ActiveElement.EdgeColor6;
-			}
+					if (this.DetectSquareButton (this.PositionColorButton (4), pos))
+					{
+						return ActiveElement.EdgeColor5;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (6), pos))
-			{
-				return ActiveElement.EdgeColor7;
-			}
+					if (this.DetectSquareButton (this.PositionColorButton (5), pos))
+					{
+						return ActiveElement.EdgeColor6;
+					}
 
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton (this.PositionColorButton (7), pos))
-			{
-				return ActiveElement.EdgeColor8;
+					if (this.DetectSquareButton (this.PositionColorButton (6), pos))
+					{
+						return ActiveElement.EdgeColor7;
+					}
+
+					if (this.DetectSquareButton (this.PositionColorButton (7), pos))
+					{
+						return ActiveElement.EdgeColor8;
+					}
+				}
 			}
 
 			return ActiveElement.None;
@@ -594,22 +648,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
 
 			//	Dessine en blanc la zone pour les champs.
-			Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
-			graphics.AddFilledRectangle (inside);
-			graphics.RenderSolid (this.GetColor (1));
-			graphics.AddFilledRectangle (inside);
-			Color ci1 = this.GetColorMain (dragging ? 0.2 : 0.1);
-			Color ci2 = this.GetColorMain (0.0);
-			this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
+			if (this.isExtended)
+			{
+				Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
+				graphics.AddFilledRectangle (inside);
+				graphics.RenderSolid (this.GetColor (1));
+				graphics.AddFilledRectangle (inside);
+				Color ci1 = this.GetColorMain (dragging ? 0.2 : 0.1);
+				Color ci2 = this.GetColorMain (0.0);
+				this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
 
-			//	Ombre supérieure.
-			Rectangle shadow = new Rectangle (this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
-			graphics.AddFilledRectangle (shadow);
-			this.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
+				//	Ombre supérieure.
+				Rectangle shadow = new Rectangle (this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
+				graphics.AddFilledRectangle (shadow);
+				this.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
 
-			graphics.AddLine (this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
-			graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
-			graphics.RenderSolid (colorFrame);
+				graphics.AddLine (this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
+				graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
+				graphics.RenderSolid (colorFrame);
+			}
 
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.GetColor (1) : this.GetColor (0);
@@ -620,11 +677,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 
 			//	Dessine le sous-titre.
-			Color subtitleColor = this.GetColor (0);
+			if (this.isExtended)
+			{
+				Color subtitleColor = this.GetColor (0);
 
-			rect = this.RectangleSubtitle;
-			this.subtitle.LayoutSize = rect.Size;
-			this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, subtitleColor, GlyphPaintStyle.Normal);
+				rect = this.RectangleSubtitle;
+				this.subtitle.LayoutSize = rect.Size;
+				this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, subtitleColor, GlyphPaintStyle.Normal);
+			}
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, 2);
@@ -636,6 +696,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void DrawForeground(Graphics graphics)
 		{
+			//	Dessine le bouton compact/étendu.
+			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			if (this.hilitedElement == ActiveElement.EdgeExtend)
+			{
+				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
+			}
+
 			//	Dessine le bouton d'ouverture.
 			if (this.hilitedElement == ActiveElement.EdgeOpenLink)
 			{
@@ -810,7 +881,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				return new Point (this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+				if (this.isExtended)
+				{
+					return new Point (this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+				}
+				else
+				{
+					return Point.Zero;
+				}
+			}
+		}
+
+		private Point PositionExtendButton
+		{
+			//	Retourne la position du bouton pour étendre.
+			get
+			{
+				return new Point (this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -826,7 +913,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			return new Point (this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
+			if (this.isExtended)
+			{
+				return new Point (this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
+			}
+			else
+			{
+				return Point.Zero;
+			}
 		}
 
 		private Point PositionChangeWidthButton
@@ -834,7 +928,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour changer la largeur.
 			get
 			{
-				return new Point (this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
+				if (this.isExtended)
+				{
+					return new Point (this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
+				}
+				else
+				{
+					return Point.Zero;
+				}
 			}
 		}
 
@@ -855,6 +956,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met à jour le sous-titre du noeud.
 			this.Subtitle = this.Entity.Description.ToString ();
+		}
+
+		private void UpdateBounds()
+		{
+			Point origin = this.bounds.TopLeft;
+			double width = this.bounds.Width;
+			double height = this.isExtended ? ObjectEdge.frameSize.Height : AbstractObject.headerHeight;
+
+			Rectangle bounds = new Rectangle (origin.X, origin.Y-height, width, height);
+			this.SetBounds (bounds);
 		}
 
 
@@ -1005,6 +1116,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						title;
 		private string							subtitleString;
 		private TextLayout						subtitle;
+
+		private bool							isExtended;
 
 		private Point							initialPos;
 
