@@ -252,6 +252,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.AddComment();
 			}
+
+			if (this.hilitedElement == ActiveElement.LinkClose)
+			{
+				this.srcObject.ObjectLinks.Remove (this);
+
+				if (!this.IsUnlinked)
+				{
+					this.srcObject.RemoveEntityLink (this.dstObject);
+				}
+
+				this.editor.Invalidate ();
+			}
 		}
 
 		public override ActiveElement MouseDetectBackground(Point pos)
@@ -292,9 +304,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton pour changer le noeud destination ?
-			if (this.DetectRoundButton (pos, this.PositionRouteChangeDst))
+			if (this.DetectRoundButton (pos, this.PositionLinkChangeDst))
 			{
 				return ActiveElement.LinkChangeDst;
+			}
+
+			//	Souris dans le bouton pour créer le noeud destination ?
+			if (this.DetectRoundButton (pos, this.PositionLinkCreateDst))
+			{
+				return ActiveElement.LinkCreateDst;
 			}
 
 			return ActiveElement.None;
@@ -321,6 +339,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public bool IsUnlinked
+		{
+			get
+			{
+				return this.dstObject == null;
+			}
+		}
+
 		public void UpdateLink()
 		{
 			this.startVector = Vector.Zero;
@@ -332,8 +358,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.DstObject == null)
+			if (this.DstObject == null)  // moignon de liaison o---> ?
 			{
+				Point p1 = new Point (this.srcObject.Bounds.Right,                            this.srcObject.Bounds.Center.Y);
+				Point p2 = new Point (this.srcObject.Bounds.Right+AbstractObject.lengthClose, this.srcObject.Bounds.Center.Y);
+
+				this.startVector = new Vector (p1, new Size ( 1, 0));
+				this.endVector   = new Vector (p2, new Size (-1, 0));
+
+				this.SetPathDirty ();
 				return;
 			}
 
@@ -482,57 +515,33 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine l'objet.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			graphics.Rasterizer.AddOutline (this.Path, 6);
+			graphics.RenderSolid (Color.FromBrightness (1));
 
-			if (this.DstObject != null || this.isDraggingDst)
+			graphics.Rasterizer.AddOutline (this.Path, 2);
+			Color color = (this.hilitedElement == ActiveElement.LinkHilited) ? this.GetColorMain () : this.GetColor (0);
+			graphics.RenderSolid (color);
+
 			{
-				graphics.Rasterizer.AddOutline (this.Path, 6);
-				graphics.RenderSolid (Color.FromBrightness (1));
+				graphics.LineWidth = 2;
 
-				graphics.Rasterizer.AddOutline (this.Path, 2);
-				Color color = (this.hilitedElement == ActiveElement.LinkHilited) ? this.GetColorMain () : this.GetColor (0);
+				if (this.startVector.IsValid && this.startVector.HasDirection)
+				{
+					AbstractObject.DrawStartingArrow (graphics, this.startVector.Origin, this.startVector.End);
+				}
+
+				if (this.endVector.IsValid && this.endVector.HasDirection)
+				{
+					AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Origin);
+				}
+
 				graphics.RenderSolid (color);
-
-				{
-					graphics.LineWidth = 2;
-
-					if (this.startVector.IsValid)
-					{
-						AbstractObject.DrawStartingArrow (graphics, this.startVector.Origin, this.startVector.End);
-					}
-
-					if (this.endVector.IsValid)
-					{
-						AbstractObject.DrawEndingArrow (graphics, this.endVector.End, this.endVector.Origin);
-					}
-
-					graphics.RenderSolid (color);
-					graphics.LineWidth = 1;
-				}
-
-				if (this.startVector.IsValid)
-				{
-					this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
-				}
+				graphics.LineWidth = 1;
 			}
 
-			if (this.DstObject == null && this.startVector.IsValid && !this.isDraggingDst)
+			if (this.startVector.IsValid)
 			{
-				//	Dessine le moignon de liaison.
-				Point start = this.startVector.Origin;
-				Point end = new Point(start.X+AbstractObject.lengthClose, start.Y);
-
-				graphics.LineWidth = 2;
-				graphics.AddLine(start, end);
-				AbstractObject.DrawEndingArrow(graphics, start, end);
-				graphics.LineWidth = 1;
-
-				Color color = this.GetColor(0);
-				if (this.hilitedElement == ActiveElement.LinkHilited)
-				{
-					color = this.GetColorMain();
-				}
-				graphics.RenderSolid(color);
+				this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 			}
 		}
 
@@ -569,7 +578,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le bouton pour changer de noeud destination.
-			p = this.PositionRouteChangeDst;
+			p = this.PositionLinkChangeDst;
 			if (!p.IsZero)
 			{
 				if (this.hilitedElement == ActiveElement.LinkChangeDst)
@@ -579,6 +588,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.hilitedElement == ActiveElement.LinkHilited)
 				{
 					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				}
+			}
+
+			//	Dessine le bouton pour créer le noeud destination.
+			p = this.PositionLinkCreateDst;
+			if (!p.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.LinkCreateDst)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.LinkHilited)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, false, false);
 				}
 			}
 		}
@@ -599,6 +622,37 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		private Point PositionLinkChangeDst
+		{
+			//	Retourne la position du bouton pour modifier la destination.
+			get
+			{
+				if (this.endVector.IsValid)
+				{
+					return this.endVector.Origin;
+				}
+				else
+				{
+					return Point.Zero;
+				}
+			}
+		}
+
+		private Point PositionLinkCreateDst
+		{
+			//	Retourne la position du bouton pour créer la destination.
+			get
+			{
+				if (this.endVector.IsValid && this.IsUnlinked)
+				{
+					return this.endVector.Origin + new Point (AbstractObject.buttonRadius*2+2, 0);
+				}
+				else
+				{
+					return Point.Zero;
+				}
+			}
+		}
 
 		private bool IsLinkCommentButton
 		{
@@ -607,7 +661,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le bouton CommentAttachToEdge pour déplacer le point d'attache.
 			get
 			{
-				return (this.comment == null || !this.comment.IsVisible);
+				return !this.IsUnlinked && (this.comment == null || !this.comment.IsVisible);
 			}
 		}
 
@@ -651,23 +705,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private Point PositionRouteChangeDst
-		{
-			//	Retourne la position du bouton pour modifier le noeud destination.
-			get
-			{
-				if (this.endVector.IsZero)
-				{
-					return Point.Zero;
-				}
-				else
-				{
-					return this.endVector.Origin;
-				}
-			}
-		}
-
-
+		#region Draggind destination
 		private void DraggingDstMouseDown(Point pos)
 		{
 			this.isDraggingDst = true;
@@ -705,10 +743,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.isDraggingDst = false;
 
-			if (this.hilitedDstObject != null)
+			if (this.hilitedDstObject == null)
 			{
-				this.srcObject.RemoveEntityLink (this.dstObject);
-				this.DstObject = this.hilitedDstObject;
+				this.UpdateLink ();
+			}
+			else
+			{
+				if (this.dstObject != null)
+				{
+					this.srcObject.RemoveEntityLink (this.dstObject);
+				}
+
+				this.dstObject = this.hilitedDstObject;
+				
 				this.srcObject.AddEntityLink (this.dstObject);
 
 				this.hilitedDstObject.IsHilitedForLinkChanging = false;
@@ -719,7 +766,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.LockObject (null);
 			this.editor.SetLocalDirty ();
 		}
-
+		#endregion
 
 		#region Path engine
 		private void SetPathDirty()

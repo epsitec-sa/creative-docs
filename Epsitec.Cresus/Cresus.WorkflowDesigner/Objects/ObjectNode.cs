@@ -587,7 +587,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Left+AbstractObject.buttonRadius-2, this.bounds.Top-AbstractObject.buttonRadius);
+				return new Point (this.bounds.Left+AbstractObject.buttonRadius+9, this.bounds.Top-AbstractObject.buttonRadius-4);
 			}
 		}
 
@@ -596,7 +596,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point (this.bounds.Right-AbstractObject.buttonRadius+2, this.bounds.Top-AbstractObject.buttonRadius);
+				return new Point (this.bounds.Right-AbstractObject.buttonRadius-9, this.bounds.Top-AbstractObject.buttonRadius-4);
 			}
 		}
 
@@ -605,7 +605,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				return new Point (this.bounds.Center.X, this.bounds.Top-AbstractObject.buttonRadius);
+				if (!this.HasUnlikedLink)
+				{
+					return new Point (this.bounds.Right, this.bounds.Center.Y);
+				}
+				else
+				{
+					return Point.Zero;
+				}
 			}
 		}
 

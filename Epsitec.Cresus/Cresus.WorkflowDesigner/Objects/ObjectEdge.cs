@@ -811,7 +811,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 			}
-			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.EdgeHeader && !this.isDragging)
+			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawRoundButton (graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 			}
@@ -829,6 +829,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				return (this.hilitedElement == ActiveElement.EdgeHeader ||
+						this.hilitedElement == ActiveElement.EdgeDescription ||
+						this.hilitedElement == ActiveElement.EdgeInside ||
 						this.hilitedElement == ActiveElement.EdgeComment ||
 						this.hilitedElement == ActiveElement.EdgeColor1 ||
 						this.hilitedElement == ActiveElement.EdgeColor2 ||
@@ -877,9 +879,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour ouvrir.
 			get
 			{
-				if (this.isExtended)
+				if (this.isExtended && !this.HasUnlikedLink)
 				{
-					return new Point (this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+					return new Point (this.bounds.Right, this.bounds.Center.Y);
 				}
 				else
 				{
