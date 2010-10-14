@@ -27,7 +27,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		EdgeInside,
 		EdgeHeader,
 		EdgeComment,
-		EdgeOpenLink,
 		EdgeClose,
 		EdgeHilited,
 		EdgeExtend,
