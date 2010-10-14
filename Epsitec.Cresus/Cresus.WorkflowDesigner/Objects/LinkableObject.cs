@@ -161,8 +161,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				obj.MouseUp (message, pos);
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeOpenLink ||
-				this.hilitedElement == ActiveElement.NodeOpenLink)
+			if (this.hilitedElement == ActiveElement.NodeOpenLink)
 			{
 				//	Crée un moignon de lien o--->
 				var link = new ObjectLink (this.editor, this.entity);

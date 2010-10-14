@@ -400,10 +400,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.IsExtended = !this.IsExtended;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeOpenLink)
-			{
-			}
-
 			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				this.editor.CloseObject (this);
@@ -517,12 +513,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					if (this.DetectRoundButton (this.PositionChangeWidthButton, pos))
 					{
 						return ActiveElement.EdgeChangeWidth;
-					}
-
-					//	Souris dans le bouton d'ouverture ?
-					if (this.DetectRoundButton (this.PositionOpenLinkButton, pos))
-					{
-						return ActiveElement.EdgeOpenLink;
 					}
 
 					//	Souris dans le bouton des couleurs ?
@@ -703,16 +693,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DrawRoundButton (graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
 			}
 
-			//	Dessine le bouton d'ouverture.
-			if (this.hilitedElement == ActiveElement.EdgeOpenLink)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
-			}
-
 			//	Dessine le bouton de fermeture.
 			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
@@ -841,7 +821,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.EdgeColor7 ||
 						this.hilitedElement == ActiveElement.EdgeColor8 ||
 						this.hilitedElement == ActiveElement.EdgeExtend ||
-						this.hilitedElement == ActiveElement.EdgeOpenLink ||
 						this.hilitedElement == ActiveElement.EdgeClose);
 			}
 		}
@@ -871,22 +850,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return new Point (this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
-			}
-		}
-
-		private Point PositionOpenLinkButton
-		{
-			//	Retourne la position du bouton pour ouvrir.
-			get
-			{
-				if (this.isExtended && !this.HasNoneDstObject)
-				{
-					return new Point (this.bounds.Right, this.bounds.Center.Y);
-				}
-				else
-				{
-					return Point.Zero;
-				}
 			}
 		}
 
