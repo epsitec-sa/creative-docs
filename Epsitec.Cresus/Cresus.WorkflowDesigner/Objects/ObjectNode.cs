@@ -203,16 +203,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLink)
-			{
-			}
-
 			if (this.hilitedElement == ActiveElement.NodeClose)
 			{
 				if (!this.isRoot)
 				{
 					this.editor.CloseObject(this);
-					this.editor.UpdateAfterAddOrRemoveEdge(null);
+					this.editor.UpdateAfterAddOrRemove(null);
 				}
 			}
 
@@ -296,9 +292,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
 				//	Souris dans le bouton d'ouverture ?
-				if (this.DetectRoundButton (this.PositionOpenLinkButton, pos))
+				if (this.DetectRoundButton (this.PositionOpenLinkLeftButton, pos))
 				{
-					return ActiveElement.NodeOpenLink;
+					return ActiveElement.NodeOpenLinkLeft;
+				}
+
+				if (this.DetectRoundButton (this.PositionOpenLinkRightButton, pos))
+				{
+					return ActiveElement.NodeOpenLinkRight;
 				}
 
 				//	Souris dans le bouton de fermeture ?
@@ -445,21 +446,27 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
 			graphics.RenderSolid (colorFrame);
-
-			//	Dessine les connexions.
-			this.DrawLinks (graphics);
 		}
 
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le bouton d'ouverture.
-			if (this.hilitedElement == ActiveElement.NodeOpenLink)
+			if (this.hilitedElement == ActiveElement.NodeOpenLinkLeft)
 			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
+				this.DrawRoundButton (graphics, this.PositionOpenLinkLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
+				this.DrawRoundButton (graphics, this.PositionOpenLinkLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenLinkRight)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenLinkRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionOpenLinkRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
 			}
 
 			//	Dessine le bouton de fermeture.
@@ -577,7 +584,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeColor6 ||
 						this.hilitedElement == ActiveElement.NodeColor7 ||
 						this.hilitedElement == ActiveElement.NodeColor8 ||
-						this.hilitedElement == ActiveElement.NodeOpenLink ||
+						this.hilitedElement == ActiveElement.NodeOpenLinkLeft ||
+						this.hilitedElement == ActiveElement.NodeOpenLinkRight ||
 						this.hilitedElement == ActiveElement.NodeClose);
 			}
 		}
@@ -600,7 +608,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Point PositionOpenLinkButton
+		private Point PositionOpenLinkLeftButton
+		{
+			//	Retourne la position du bouton pour ouvrir.
+			get
+			{
+				if (!this.HasNoneDstObject)
+				{
+					return new Point (this.bounds.Left, this.bounds.Center.Y);
+				}
+				else
+				{
+					return Point.Zero;
+				}
+			}
+		}
+
+		private Point PositionOpenLinkRightButton
 		{
 			//	Retourne la position du bouton pour ouvrir.
 			get

@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.RedimArea ();
 		}
 
-		public void UpdateAfterAddOrRemoveEdge(LinkableObject node)
+		public void UpdateAfterAddOrRemove(LinkableObject node)
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
 			this.UpdateNodes ();
@@ -463,6 +463,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void CloseObject(LinkableObject obj)
 		{
 			//	Ferme une boîte.
+			foreach (var link in this.LinkObjects.ToArray ())
+			{
+				if (link.DstObject == obj)
+				{
+					link.SrcObject.ObjectLinks.Remove (link);
+					link.SrcObject.RemoveEntityLink (obj);
+				}
+			}
+
 			if (obj is ObjectNode)
 			{
 				this.nodes.Remove (obj as ObjectNode);

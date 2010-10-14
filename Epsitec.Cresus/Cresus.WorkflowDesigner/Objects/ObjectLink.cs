@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.CommentAttach = 0.5;  // au milieu
+			this.StumpAnchor = LinkAnchor.Right;  // moignon o---> par défaut
 		}
 
 
@@ -169,85 +170,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DraggingDstMouseUp ();
 			}
 
-#if false
-			if (this.hilitedElement == ActiveElement.LinkChangeDst)
-			{
-				this.IsExplored = true;
-
-				ObjectNode2 node = this.editor.SearchNode2 (this.Entity.NextNode);
-				if (node == null)
-				{
-					//	Ouvre la connexion sur une nouvelle boîte.
-					node = new ObjectNode2 (this.editor, this.Entity.NextNode);
-					node.BackgroundMainColor = this.boxColor;
-
-					this.DstNode = node;
-					this.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
-
-					this.editor.AddNode (node);
-					this.editor.UpdateGeometry ();
-
-					ObjectNode2 src = this.SrcNode;
-					//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-					Rectangle bounds;
-					double posv = src.Bounds.Center.Y;
-
-					if (this.hilitedElement == ActiveElement.EdgeOpenLeft)
-					{
-						bounds = new Rectangle (src.Bounds.Left-50-node.Bounds.Width, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
-						bounds.Inflate (50, Editor.pushMargin);
-
-						for (int i=0; i<1000; i++)
-						{
-							if (this.editor.IsEmptyArea (bounds))
-							{
-								break;
-							}
-							bounds.Offset (-1, 0);
-						}
-
-						bounds.Deflate (50, Editor.pushMargin);
-					}
-					else
-					{
-						bounds = new Rectangle (src.Bounds.Right+50, posv-node.Bounds.Height, node.Bounds.Width, node.Bounds.Height);
-						bounds.Inflate (50, Editor.pushMargin);
-
-						for (int i=0; i<1000; i++)
-						{
-							if (this.editor.IsEmptyArea (bounds))
-							{
-								break;
-							}
-							bounds.Offset (1, 0);
-						}
-
-						bounds.Deflate (50, Editor.pushMargin);
-					}
-					bounds = this.editor.NodeGridAlign (bounds);
-					node.SetBounds (bounds);
-				}
-				else
-				{
-					//	Ouvre la connexion sur une boîte existante.
-					this.DstNode = node;
-					this.IsAttachToRight = (this.hilitedElement == ActiveElement.EdgeOpenRight);
-				}
-
-				this.editor.UpdateAfterAddOrRemoveEdge2 (node);
-				this.editor.SetLocalDirty ();
-			}
-
-			if (this.hilitedElement == ActiveElement.EdgeClose)
-			{
-				ObjectNode2 dst = this.DstNode;
-				this.IsExplored = false;
-				this.DstNode = null;
-				this.editor.CloseNode(null);
-				this.editor.UpdateAfterAddOrRemoveEdge2(null);
-			}
-#endif
-
 			if (this.hilitedElement == ActiveElement.LinkComment)
 			{
 				this.AddComment();
@@ -263,6 +185,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				this.editor.Invalidate ();
+			}
+
+			if (this.hilitedElement == ActiveElement.LinkCreateDst)
+			{
+				if (this.srcObject is ObjectNode)
+				{
+					this.CreateEdge ();
+				}
+
+				if (this.srcObject is ObjectEdge)
+				{
+					this.CreateNode ();
+				}
 			}
 		}
 
@@ -336,6 +271,66 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		private void CreateEdge()
+		{
+			var edgeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
+			edgeEntity.Name = "Nouveau";
+
+			var obj = new ObjectEdge (this.editor, edgeEntity);
+
+			this.srcObject.AddEntityLink (obj);
+
+			this.editor.AddEdge (obj);
+			this.editor.UpdateGeometry ();
+
+			this.MoveObjectToFreeArea (obj);
+		}
+
+		private void CreateNode()
+		{
+			var nodeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowNodeEntity> ();
+
+			var obj = new ObjectNode (this.editor, nodeEntity);
+
+			this.editor.AddNode (obj);
+			this.editor.UpdateGeometry ();
+
+			this.MoveObjectToFreeArea (obj);
+		}
+
+		private void MoveObjectToFreeArea(LinkableObject obj)
+		{
+			//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+			Point p = this.endVector.Origin;
+			Size s = obj.Bounds.Size;
+			Rectangle bounds = new Rectangle (p.X-s.Width/2, p.Y-s.Height/2, s.Width, s.Height);
+			bounds.Inflate (50, Editor.pushMargin);
+
+			for (int i=0; i<1000; i++)
+			{
+				if (this.editor.IsEmptyArea (bounds))
+				{
+					break;
+				}
+				bounds.Offset (-this.endVector.Direction.Width*2, -this.endVector.Direction.Height*2);
+			}
+
+			bounds.Deflate (50, Editor.pushMargin);
+
+			bounds = this.editor.NodeGridAlign (bounds);
+			obj.SetBounds (bounds);
+
+			this.dstObject = obj;
+			this.editor.UpdateAfterAddOrRemove (obj);
+		}
+
+
+		public LinkAnchor StumpAnchor
+		{
+			get;
+			set;
+		}
+
 		public bool IsNoneDstObject
 		{
 			get
@@ -347,41 +342,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public void UpdateLink()
 		{
 			//	Met à jour les deux vecteurs permettant de définir le chemin de la connexion.
-			if (!this.isDraggingDst && this.startVector.IsValid && this.DstObject == null)
-			{
-				// Si on a un moignon de liaison o--->, on n'y touche pas.
-				return;
-			}
-
 			this.SetPathDirty ();
 
 			this.startVector = Vector.Zero;
 			this.endVector   = Vector.Zero;
 
-			if (this.isDraggingDst && this.hilitedDstObject == null)
-			{
-				this.DraggingDstUpdateLink ();
-				return;
-			}
-
 			LinkableObject dstObject = (this.hilitedDstObject == null) ? this.DstObject : this.hilitedDstObject;
-
-			if (dstObject == null)  // moignon de liaison o---> ?
-			{
-				Point p1 = new Point (this.srcObject.Bounds.Right,                            this.srcObject.Bounds.Center.Y);
-				Point p2 = new Point (this.srcObject.Bounds.Right+AbstractObject.lengthClose, this.srcObject.Bounds.Center.Y);
-
-				this.startVector = new Vector (p1, new Size ( 1, 0));
-				this.endVector   = new Vector (p2, new Size (-1, 0));
-
-				return;
-			}
 
 			//	Une connexion est toujours edge -> node ou node -> edge.
 			bool edgeToNode = this.SrcObject is ObjectEdge;
 
-			ObjectEdge edge;
-			ObjectNode node;
+			LinkableObject edge;
+			LinkableObject node;
 
 			if (edgeToNode)
 			{
@@ -392,6 +364,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				node = this.SrcObject as ObjectNode;
 				edge =      dstObject as ObjectEdge;
+			}
+
+			if (dstObject == null || (this.isDraggingDst && this.hilitedDstObject == null))
+			{
+				Point pos = this.draggingStumpPos;
+
+				if (pos.IsZero)
+				{
+					switch (this.StumpAnchor)
+					{
+						case LinkAnchor.Left:
+							pos = new Point (this.srcObject.Bounds.Left-ObjectLink.lengthStumpLink, this.srcObject.Bounds.Center.Y);
+							break;
+						case LinkAnchor.Right:
+							pos = new Point (this.srcObject.Bounds.Right+ObjectLink.lengthStumpLink, this.srcObject.Bounds.Center.Y);
+							break;
+						case LinkAnchor.Bottom:
+							pos = new Point (this.srcObject.Bounds.Center.X, this.srcObject.Bounds.Bottom-ObjectLink.lengthStumpLink);
+							break;
+						case LinkAnchor.Top:
+							pos = new Point (this.srcObject.Bounds.Center.X, this.srcObject.Bounds.Top+ObjectLink.lengthStumpLink);
+							break;
+					}
+				}
+
+				if (edgeToNode)
+				{
+					node = new ObjectNodeFoo (this.editor, null);
+					node.SetBounds (new Rectangle (pos, Size.Zero));
+				}
+				else
+				{
+					edge = new ObjectEdgeFoo (this.editor, null);
+					edge.SetBounds (new Rectangle (pos, Size.Zero));
+				}
 			}
 
 			//	S'il ne s'agit pas d'une connexion edge -> node ou node -> edge, ou ne peut rien faire.
@@ -452,28 +459,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.startVector = nodeVector;
 				this.endVector   = edgeVector;
 			}
-		}
 
-		private void DraggingDstUpdateLink()
-		{
-			double min = double.MaxValue;
-			foreach (LinkAnchor anchor in System.Enum.GetValues (typeof (LinkAnchor)))
-			{
-				Vector vector = this.SrcObject.GetLinkVector (anchor, this.draggingDstPos, false);
-
-				if (vector.IsValid)
-				{
-					double d = Point.Distance (this.draggingDstPos, vector.Origin);
-
-					if (min > d)
-					{
-						min = d;
-						this.startVector = vector;
-					}
-				}
-			}
-
-			this.endVector = new Vector (this.draggingDstPos, Point.Move (this.draggingDstPos, this.startVector.Origin, 1));
+			this.StumpAnchor = edgeAnchor;
 		}
 
 
@@ -801,7 +788,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			this.draggingDstPos = pos;
+			this.draggingStumpPos = pos;
 			this.UpdateLink ();
 			this.editor.Invalidate ();
 		}
@@ -822,6 +809,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DraggingDstMouseUp()
 		{
 			this.isDraggingDst = false;
+			this.draggingStumpPos = Point.Zero;
 			this.initialPath = null;
 
 			if (this.dstObject != null)
@@ -899,11 +887,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Vector							initialStartVector;
 		private Vector							initialEndVector;
 		private Path							initialPath;
+
+		private Point							stumpRelativePos;
 		
 		private bool							isSrcHilited;
 		private bool							isDraggingDst;
-		private Point							draggingDstPos;
 		private LinkableObject					hilitedDstObject;
+		private Point							draggingStumpPos;
 		
 		private ObjectComment					comment;
 	}

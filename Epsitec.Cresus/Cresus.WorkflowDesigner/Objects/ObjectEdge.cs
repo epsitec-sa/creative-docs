@@ -38,6 +38,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
+
+			//	Crée la liaison unique.
+			this.CreateLinks ();
 		}
 
 
@@ -403,7 +406,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				this.editor.CloseObject (this);
-				this.editor.UpdateAfterAddOrRemoveEdge(null);
+				this.editor.UpdateAfterAddOrRemove(null);
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeComment)
@@ -675,9 +678,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, 2);
 			graphics.RenderSolid (colorFrame);
-
-			//	Dessine les connexions.
-			this.DrawLinks (graphics);
 		}
 
 		public override void DrawForeground(Graphics graphics)

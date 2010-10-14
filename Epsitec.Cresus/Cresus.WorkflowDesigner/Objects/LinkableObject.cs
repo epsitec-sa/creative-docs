@@ -161,11 +161,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				obj.MouseUp (message, pos);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLink)
+			if (this.hilitedElement == ActiveElement.NodeOpenLinkLeft)
+			{
+				//	Crée un moignon de lien <---o
+				var link = new ObjectLink (this.editor, this.entity);
+				link.SrcObject = this;
+				link.StumpAnchor = LinkAnchor.Left;
+				link.UpdateLink ();
+
+				this.objectLinks.Add (link);
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenLinkRight)
 			{
 				//	Crée un moignon de lien o--->
 				var link = new ObjectLink (this.editor, this.entity);
 				link.SrcObject = this;
+				link.StumpAnchor = LinkAnchor.Right;
 				link.UpdateLink ();
 
 				this.objectLinks.Add (link);
@@ -246,14 +258,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				return false;
-			}
-		}
-
-		protected void DrawLinks(Graphics graphics)
-		{
-			foreach (var obj in this.objectLinks)
-			{
-				obj.DrawBackground (graphics);
 			}
 		}
 
