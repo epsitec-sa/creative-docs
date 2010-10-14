@@ -31,7 +31,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.isRoot = false;
 
-			this.parents = new List<ObjectNode>();
+			if (this.Entity.Name.IsNullOrWhiteSpace)
+			{
+				this.TitleNumber = this.editor.GetNodeTitleNumbrer ();
+			}
 
 			this.UpdateTitle ();
 		}
@@ -42,24 +45,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Titre au sommet de la boîte (nom du noeud).
 			get
 			{
-				return this.titleNumber;
+				int value;
+				if (int.TryParse (this.Entity.Name.ToSimpleText (), out value))
+				{
+					return value;
+				}
+				else
+				{
+					return -1;
+				}
 			}
 			set
 			{
-				if (this.titleNumber != value)
-				{
-					this.titleNumber = value;
-
-					this.title.Text = Misc.Bold(this.titleNumber.ToString ());
-				}
-			}
-		}
-
-		public List<ObjectNode> Parents
-		{
-			get
-			{
-				return this.parents;
+				this.Entity.Name = value.ToString ();
+				this.UpdateTitle ();
 			}
 		}
 
@@ -151,6 +150,51 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void AcceptEdition()
+		{
+			this.Entity.Name = this.editingTextField.Text;
+			this.UpdateTitle ();
+
+			this.StopEdition ();
+		}
+
+		public override void CancelEdition()
+		{
+			this.StopEdition ();
+		}
+
+		private void StartEdition(ActiveElement element)
+		{
+			Rectangle rect = this.RectangleEditName;
+
+			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
+			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
+			double width  = System.Math.Max (p2.X-p1.X, 30);
+			double height = System.Math.Max (p1.Y-p2.Y, 20);
+			
+			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
+
+			this.editingTextField = new TextField ();
+			this.editingTextField.Parent = this.editor;
+			this.editingTextField.SetManualBounds (rect);
+			this.editingTextField.Text = this.Entity.Name.ToString ();
+			this.editingTextField.TabIndex = 1;
+			this.editingTextField.SelectAll ();
+			this.editingTextField.Focus ();
+
+			this.editor.EditingObject = this;
+			this.hilitedElement = ActiveElement.None;
+		}
+
+		private void StopEdition()
+		{
+			this.editor.Children.Remove (this.editingTextField);
+			this.editingTextField = null;
+
+			this.editor.EditingObject = null;
+		}
+
+
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
@@ -180,6 +224,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
 
+			this.initialPos = pos;
+
 			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1)
 			{
 				this.isDragging = true;
@@ -193,6 +239,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
+
+			if (pos == this.initialPos)
+			{
+				if (this.hilitedElement == ActiveElement.NodeHeader)
+				{
+					if (this.isDragging)
+					{
+						this.editor.UpdateAfterMoving (this);
+						this.isDragging = false;
+						this.editor.LockObject (null);
+						this.editor.SetLocalDirty ();
+					}
+
+					this.StartEdition (this.hilitedElement);
+					return;
+				}
+			}
 
 			if (this.isDragging)
 			{
@@ -267,12 +330,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return element;
 			}
 
-			if (this.bounds.Contains(pos))
+			if (this.bounds.Contains (pos))
 			{
 				return ActiveElement.NodeHeader;
 			}
 
-			if (this.bounds.Contains(pos))
+			if (this.bounds.Contains (pos))
 			{
 				return ActiveElement.NodeInside;
 			}
@@ -590,12 +653,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		private Rectangle RectangleEditName
+		{
+			get
+			{
+				Rectangle rect = this.bounds;
+				rect.Deflate (15, 30);
+
+				return rect;
+			}
+		}
+
 		private Point PositionCommentButton
 		{
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Left+AbstractObject.buttonRadius+9, this.bounds.Top-AbstractObject.buttonRadius-4);
+				return new Point (this.bounds.Center.X-AbstractObject.buttonRadius-1, this.bounds.Top-AbstractObject.buttonRadius-9);
 			}
 		}
 
@@ -604,7 +678,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point (this.bounds.Right-AbstractObject.buttonRadius-9, this.bounds.Top-AbstractObject.buttonRadius-4);
+				return new Point (this.bounds.Center.X+AbstractObject.buttonRadius+1, this.bounds.Top-AbstractObject.buttonRadius-9);
 			}
 		}
 
@@ -615,7 +689,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (!this.HasNoneDstObject)
 				{
-					return new Point (this.bounds.Left, this.bounds.Center.Y);
+					return new Point (this.bounds.Left+AbstractObject.buttonRadius*2, this.bounds.Center.Y);
 				}
 				else
 				{
@@ -631,7 +705,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (!this.HasNoneDstObject)
 				{
-					return new Point (this.bounds.Right, this.bounds.Center.Y);
+					return new Point (this.bounds.Right-AbstractObject.buttonRadius*2, this.bounds.Center.Y);
 				}
 				else
 				{
@@ -656,7 +730,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateTitle()
 		{
 			//	Met à jour le titre du noeud.
-			this.TitleNumber = this.editor.GetNodeTitleNumbrer ();
+			this.title.Text = Misc.Bold (this.Entity.Name.ToString ());
 		}
 
 
@@ -799,15 +873,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double			frameRadius = 30;
+		public static readonly double			frameRadius = 40;
 		private static readonly double			shadowOffset = 6;
 
 		private bool							isRoot;
 		private bool							isConnectedToRoot;
-		private int								titleNumber;
 		private TextLayout						title;
-		private List<ObjectNode>				parents;
 
 		private bool							isDragging;
+		private Point							initialPos;
+
+		private AbstractTextField				editingTextField;
 	}
 }

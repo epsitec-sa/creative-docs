@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.UpdateTitle ();
 			}
 
-			if (this.editingElement == ActiveElement.EdgeDescription)
+			if (this.editingElement == ActiveElement.EdgeEditDescription)
 			{
 				this.Entity.Description = this.editingTextField.Text;
 				this.UpdateSubtitle ();
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editingTextField = new TextField ();
 			}
 
-			if (element == ActiveElement.EdgeDescription)
+			if (element == ActiveElement.EdgeEditDescription)
 			{
 				rect = this.RectangleSubtitle;
 				rect.Inflate (6, 1);
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (pos == this.initialPos)
 			{
 				if (this.hilitedElement == ActiveElement.EdgeHeader ||
-					this.hilitedElement == ActiveElement.EdgeDescription)
+					this.hilitedElement == ActiveElement.EdgeEditDescription)
 				{
 					if (this.isDragging)
 					{
@@ -471,7 +471,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.RectangleSubtitle.Contains (pos))
 			{
-				return ActiveElement.EdgeDescription;
+				return ActiveElement.EdgeEditDescription;
 			}
 
 			if (this.bounds.Contains (pos))
@@ -809,7 +809,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				return (this.hilitedElement == ActiveElement.EdgeHeader ||
-						this.hilitedElement == ActiveElement.EdgeDescription ||
+						this.hilitedElement == ActiveElement.EdgeEditDescription ||
 						this.hilitedElement == ActiveElement.EdgeInside ||
 						this.hilitedElement == ActiveElement.EdgeComment ||
 						this.hilitedElement == ActiveElement.EdgeColor1 ||

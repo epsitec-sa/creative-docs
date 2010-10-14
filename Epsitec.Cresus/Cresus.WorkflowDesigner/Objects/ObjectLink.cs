@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ObjectLink(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
-			this.CommentAttach = 0.5;  // au milieu
+			this.commentAttach = 0.5;  // au milieu
 			this.StumpAnchor = LinkAnchor.Right;  // moignon o---> par défaut
 		}
 
@@ -70,8 +70,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public double CommentAttach
 		{
 			//	Position relative le long de la courbe du commentaire lié (0..1).
-			get;
-			set;
+			get
+			{
+				return this.commentAttach;
+			}
+			set
+			{
+				value = System.Math.Max (value, 0.1);
+				value = System.Math.Min (value, 0.9);
+
+				this.commentAttach = value;
+			}
 		}
 
 
@@ -233,7 +242,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Souris dans le bouton pour commenter la connexion.
-			if (this.IsLinkCommentButton && this.DetectRoundButton (pos, this.PositionLinkComment))
+			if (this.HasLinkCommentButton && this.DetectRoundButton (pos, this.PositionLinkComment))
 			{
 				return ActiveElement.LinkComment;
 			}
@@ -277,7 +286,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			edgeEntity.Name = "Nouveau";
 
 			var obj = new ObjectEdge (this.editor, edgeEntity);
-
 			this.srcObject.AddEntityLink (obj);
 
 			this.editor.AddEdge (obj);
@@ -291,12 +299,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var nodeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowNodeEntity> ();
 
 			var obj = new ObjectNode (this.editor, nodeEntity);
+			this.srcObject.AddEntityLink (obj);
 
 			this.editor.AddNode (obj);
 			this.editor.UpdateGeometry ();
 
 			this.MoveObjectToFreeArea (obj);
 		}
+
 
 		private void MoveObjectToFreeArea(LinkableObject obj)
 		{
@@ -562,7 +572,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine le bouton pour commenter la connexion.
 			p = this.PositionLinkComment;
-			if (!p.IsZero && this.IsLinkCommentButton)
+			if (!p.IsZero && this.HasLinkCommentButton)
 			{
 				if (this.hilitedElement == ActiveElement.LinkComment)
 				{
@@ -691,14 +701,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private bool IsLinkCommentButton
+		private bool HasLinkCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
-			//	le bouton CommentAttachToEdge pour déplacer le point d'attache.
+			//	le bouton CommentAttachTo pour déplacer le point d'attache.
 			get
 			{
-				return !this.IsNoneDstObject && (this.comment == null || !this.comment.IsVisible);
+				return this.comment == null || !this.comment.IsVisible;
 			}
 		}
 
@@ -708,15 +718,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
-				return this.AttachToPoint (this.CommentAttach);
+				return this.AttachToPoint (this.commentAttach);
 			}
 		}
 
 		private Point AttachToPoint(double d)
 		{
-			if (this.DstObject != null && this.startVector.IsValid)
+			if (this.startVector.IsValid)
 			{
-				return Geometry.PointOnPath (this.Path, this.CommentAttach);
+				return Geometry.PointOnPath (this.Path, this.commentAttach);
 			}
 			else
 			{
@@ -726,14 +736,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public double PointToAttach(Point p)
 		{
-			if (this.DstObject != null && this.startVector.IsValid)
+			if (this.startVector.IsValid)
 			{
-				double offset = Geometry.OffsetOnPath (this.Path, p);
-
-				offset = System.Math.Max (offset, 0.1);
-				offset = System.Math.Min (offset, 0.9);
-
-				return offset;
+				return Geometry.OffsetOnPath (this.Path, p);
 			}
 			else
 			{
@@ -888,13 +893,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Vector							initialEndVector;
 		private Path							initialPath;
 
-		private Point							stumpRelativePos;
-		
 		private bool							isSrcHilited;
 		private bool							isDraggingDst;
 		private LinkableObject					hilitedDstObject;
 		private Point							draggingStumpPos;
-		
+
+		private double							commentAttach;
 		private ObjectComment					comment;
 	}
 }
