@@ -197,25 +197,28 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public LinkableObject SearchObject(AbstractEntity entity)
 		{
 			//	Cherche un objet d'après l'entité qu'il représente.
-			var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
-
-			foreach (var node in this.nodes)
+			if (entity.IsNotNull ())
 			{
-				var key = this.businessContext.DataContext.GetNormalizedEntityKey (node.AbstractEntity);
+				var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
 
-				if (key == searchedKey)
+				foreach (var node in this.nodes)
 				{
-					return node;
+					var key = this.businessContext.DataContext.GetNormalizedEntityKey (node.AbstractEntity);
+
+					if (key == searchedKey)
+					{
+						return node;
+					}
 				}
-			}
 
-			foreach (var edge in this.edges)
-			{
-				var key = this.businessContext.DataContext.GetNormalizedEntityKey (edge.AbstractEntity);
-
-				if (key == searchedKey)
+				foreach (var edge in this.edges)
 				{
-					return edge;
+					var key = this.businessContext.DataContext.GetNormalizedEntityKey (edge.AbstractEntity);
+
+					if (key == searchedKey)
+					{
+						return edge;
+					}
 				}
 			}
 
@@ -467,7 +470,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (link.DstObject == obj)
 				{
-					link.SrcObject.ObjectLinks.Remove (link);
+					link.DstObject = null;
 					link.SrcObject.RemoveEntityLink (obj);
 				}
 			}
@@ -814,7 +817,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeDescription)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription)
 					{
 						if (this.hilitedObject.IsMousePossible (this.hilitedObject.HilitedElement))
 						{
@@ -1132,6 +1135,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#region Enumerators
 		private IEnumerable<AbstractObject> AllObjects
 		{
+			//	Cet énumérateur détermine, entre autres, l'ordre dans lequel sont dessinés les objets.
 			get
 			{
 				foreach (var obj in this.edges)

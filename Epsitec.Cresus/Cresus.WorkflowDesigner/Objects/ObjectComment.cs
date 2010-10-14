@@ -617,11 +617,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.hilitedElement == ActiveElement.CommentAttachTo)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 			}
 		}
