@@ -738,7 +738,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double		buttonRadius = 10;
 		protected static readonly double		bulletRadius = 4;
 		protected static readonly double		buttonSquare = 5;
-		protected static readonly double		lengthClose = 60;
+		protected static readonly double		lengthStumpLink = 60;
 		protected static readonly double		arrowLength = 12;
 		protected static readonly double		arrowAngle = 25;
 		protected static readonly double		commentMinWidth = 50;
