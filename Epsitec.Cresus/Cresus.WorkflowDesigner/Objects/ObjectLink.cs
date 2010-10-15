@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.commentAttach = 0.5;  // au milieu
+			this.magnetAttach1 = 0.1;
+			this.magnetAttach2 = 0.9;
 			this.StumpAngle = 0;  // moignon o---> par défaut
 		}
 
@@ -76,10 +78,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			set
 			{
+				value = System.Math.Max (value, 0.2);
+				value = System.Math.Min (value, 0.8);
+
+				this.commentAttach = value;
+			}
+		}
+
+		public double MagnetAttach1
+		{
+			//	Position relative le long de la courbe (0..1).
+			get
+			{
+				return this.magnetAttach1;
+			}
+			set
+			{
 				value = System.Math.Max (value, 0.1);
 				value = System.Math.Min (value, 0.9);
 
-				this.commentAttach = value;
+				this.magnetAttach1 = value;
+			}
+		}
+
+		public double MagnetAttach2
+		{
+			//	Position relative le long de la courbe (0..1).
+			get
+			{
+				return this.magnetAttach2;
+			}
+			set
+			{
+				value = System.Math.Max (value, 0.1);
+				value = System.Math.Min (value, 0.9);
+
+				this.magnetAttach2 = value;
 			}
 		}
 
@@ -245,6 +279,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.HasLinkCommentButton && this.DetectRoundButton (pos, this.PositionLinkComment))
 			{
 				return ActiveElement.LinkComment;
+			}
+
+			if (this.DetectRoundButton (pos, this.PositionMagnet1))
+			{
+				return ActiveElement.LinkMagnet1;
+			}
+
+			if (this.DetectRoundButton (pos, this.PositionMagnet2))
+			{
+				return ActiveElement.LinkMagnet2;
 			}
 
 			//	Souris dans le bouton pour changer le noeud destination ?
@@ -661,6 +705,32 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
+			p = this.PositionMagnet1;
+			if (!p.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.LinkMagnet1)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", true, false);
+				}
+				else if (this.IsHilite)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", false, false);
+				}
+			}
+
+			p = this.PositionMagnet2;
+			if (!p.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.LinkMagnet2)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", true, false);
+				}
+				else if (this.IsHilite)
+				{
+					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", false, false);
+				}
+			}
+
 			//	Dessine le bouton pour fermer la connexion.
 			p = this.PositionLinkClose;
 			if (!p.IsZero)
@@ -718,6 +788,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return (this.hilitedElement == ActiveElement.LinkHilited ||
 						this.hilitedElement == ActiveElement.LinkClose ||
 						this.hilitedElement == ActiveElement.LinkComment ||
+						this.hilitedElement == ActiveElement.LinkMagnet1 ||
+						this.hilitedElement == ActiveElement.LinkMagnet2 ||
 						this.hilitedElement == ActiveElement.LinkChangeDst ||
 						this.hilitedElement == ActiveElement.LinkCreateDst);
 			}
@@ -789,6 +861,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public Point PositionMagnet1
+		{
+			get
+			{
+				return this.AttachToPoint (this.magnetAttach1);
+			}
+		}
+
+		public Point PositionMagnet2
+		{
+			get
+			{
+				return this.AttachToPoint (this.magnetAttach2);
+			}
+		}
+
 		public Point PositionLinkComment
 		{
 			//	Retourne la position du bouton pour commenter la connexion, ou pour déplacer
@@ -803,7 +891,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (this.startVector.IsValid)
 			{
-				return Geometry.PointOnPath (this.Path, this.commentAttach);
+				return Geometry.PointOnPath (this.Path, d);
 			}
 			else
 			{
@@ -977,5 +1065,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private double							commentAttach;
 		private ObjectComment					comment;
+
+		private double							magnetAttach1;
+		private double							magnetAttach2;
 	}
 }
