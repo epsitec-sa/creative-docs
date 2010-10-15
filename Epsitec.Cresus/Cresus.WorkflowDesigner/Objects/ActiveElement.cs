@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		LinkComment,
 		LinkChangeDst,
 		LinkCreateDst,
+		LinkMagnet1,
+		LinkMagnet2,
 
 		CommentEdit,
 		CommentMove,
