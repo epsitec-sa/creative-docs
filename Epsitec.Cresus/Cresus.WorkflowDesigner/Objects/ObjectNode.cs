@@ -117,6 +117,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return new Vector (p1, p2);
 		}
 
+		public override Point GetLinkStumpPos(double angle)
+		{
+			Point c = this.bounds.Center;
+			return Transform.RotatePointDeg (c, angle, new Point (c.X+ObjectNode.frameRadius+ObjectLink.lengthStumpLink, c.Y));
+		}
+
 
 		public bool IsRoot
 		{
@@ -246,7 +252,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.isDragging)
 					{
-						this.editor.UpdateAfterMoving (this);
+						this.editor.UpdateAfterGeometryChanged (this);
 						this.isDragging = false;
 						this.editor.LockObject (null);
 						this.editor.SetLocalDirty ();
@@ -259,11 +265,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.isDragging)
 			{
-				this.editor.UpdateAfterMoving (this);
+				this.editor.UpdateAfterGeometryChanged (this);
 				this.isDragging = false;
 				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeOpenLink)
+			{
+				//	Crée un moignon de lien o--->
+				var link = new ObjectLink (this.editor, this.entity);
+				link.SrcObject = this;
+				link.StumpAngle = this.ComputeBestStumpAngle ();
+				link.UpdateLink ();
+
+				this.objectLinks.Add (link);
+				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeClose)
@@ -271,7 +289,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (!this.isRoot)
 				{
 					this.editor.CloseObject(this);
-					this.editor.UpdateAfterAddOrRemove(null);
+					this.editor.UpdateAfterGeometryChanged (null);
 				}
 			}
 
@@ -354,68 +372,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				//	Souris dans le bouton d'ouverture ?
-				if (this.DetectRoundButton (this.PositionOpenLinkLeftButton, pos))
+				//	Détection dans l'ordre inverse du dessin !
+				foreach (var b in this.ActiveButtons.Reverse ())
 				{
-					return ActiveElement.NodeOpenLinkLeft;
-				}
-
-				if (this.DetectRoundButton (this.PositionOpenLinkRightButton, pos))
-				{
-					return ActiveElement.NodeOpenLinkRight;
-				}
-
-				//	Souris dans le bouton de fermeture ?
-				if (this.DetectRoundButton (this.PositionCloseButton, pos))
-				{
-					return ActiveElement.NodeClose;
-				}
-
-				//	Souris dans le bouton des commentaires ?
-				if (this.DetectRoundButton (this.PositionCommentButton, pos))
-				{
-					return ActiveElement.NodeComment;
-				}
-
-				//	Souris dans le bouton des couleurs ?
-				if (this.DetectSquareButton (this.PositionColorButton (0), pos))
-				{
-					return ActiveElement.NodeColor1;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (1), pos))
-				{
-					return ActiveElement.NodeColor2;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (2), pos))
-				{
-					return ActiveElement.NodeColor3;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (3), pos))
-				{
-					return ActiveElement.NodeColor4;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (4), pos))
-				{
-					return ActiveElement.NodeColor5;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (5), pos))
-				{
-					return ActiveElement.NodeColor6;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (6), pos))
-				{
-					return ActiveElement.NodeColor7;
-				}
-
-				if (this.DetectSquareButton (this.PositionColorButton (7), pos))
-				{
-					return ActiveElement.NodeColor8;
+					if (b.roundButton)
+					{
+						if (this.DetectRoundButton (b.pos, pos))
+						{
+							return b.element;
+						}
+					}
+					else
+					{
+						if (this.DetectSquareButton (b.pos, pos))
+						{
+							return b.element;
+						}
+					}
 				}
 			}
 
@@ -429,6 +402,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override string DebugInformations
+		{
+			get
+			{
+				return string.Format ("Node: {0} {1}", this.Entity.Name.ToString (), this.DebugInformationsObjectLinks);
+			}
+		}
+
+		public override string DebugInformationsBase
+		{
+			get
+			{
+				return string.Format ("{0}", this.Entity.Name.ToString ());
+			}
+		}
+
+	
 		private void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.
@@ -513,117 +503,104 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void DrawForeground(Graphics graphics)
 		{
-			//	Dessine le bouton d'ouverture.
-			if (this.hilitedElement == ActiveElement.NodeOpenLinkLeft)
+			//	Dessine tous les boutons.
+			foreach (var b in this.ActiveButtons)
 			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, true, false, true);
+				if (b.glyph != GlyphShape.None)
+				{
+					if (this.hilitedElement == b.element)
+					{
+						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.glyph, true, false, b.enable);
+					}
+					else if (this.IsHeaderHilite && !this.isDragging)
+					{
+						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.glyph, false, false, b.enable);
+					}
+				}
+				else if (b.text != null)
+				{
+					if (this.hilitedElement == b.element)
+					{
+						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.text, true, false, b.enable);
+					}
+					else if (this.IsHeaderHilite && !this.isDragging)
+					{
+						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.text, false, false, b.enable);
+					}
+				}
+				else if (b.color != MainColor.None)
+				{
+					if (this.hilitedElement == b.element)
+					{
+						this.DrawSquareButton (graphics, b.pos, b.color, this.boxColor == b.color, true);
+					}
+					else if (this.IsHeaderHilite && !this.isDragging)
+					{
+						this.DrawSquareButton (graphics, b.pos, b.color, this.boxColor == b.color, false);
+					}
+				}
 			}
-			else if (this.IsHeaderHilite && !this.isDragging)
+		}
+
+
+		private IEnumerable<ActiveButton> ActiveButtons
+		{
+			get
 			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkLeftButton, AbstractObject.buttonRadius, GlyphShape.ArrowLeft, false, false, true);
+				yield return new ActiveButton (ActiveElement.NodeOpenLink, this.PositionOpenLinkButton, GlyphShape.Plus);
+				yield return new ActiveButton (ActiveElement.NodeClose,    this.PositionCloseButton,    GlyphShape.Close, !this.isRoot);
+				yield return new ActiveButton (ActiveElement.LinkComment,  this.PositionCommentButton,  "C");
+
+				yield return new ActiveButton (ActiveElement.NodeColor1, this.PositionColorButton (0), MainColor.Yellow);
+				yield return new ActiveButton (ActiveElement.NodeColor2, this.PositionColorButton (1), MainColor.Orange);
+				yield return new ActiveButton (ActiveElement.NodeColor3, this.PositionColorButton (2), MainColor.Red);
+				yield return new ActiveButton (ActiveElement.NodeColor4, this.PositionColorButton (3), MainColor.Lilac);
+				yield return new ActiveButton (ActiveElement.NodeColor5, this.PositionColorButton (4), MainColor.Purple);
+				yield return new ActiveButton (ActiveElement.NodeColor6, this.PositionColorButton (5), MainColor.Blue);
+				yield return new ActiveButton (ActiveElement.NodeColor7, this.PositionColorButton (6), MainColor.Green);
+				yield return new ActiveButton (ActiveElement.NodeColor8, this.PositionColorButton (7), MainColor.Grey);
+			}
+		}
+
+		private class ActiveButton
+		{
+			public ActiveButton(ActiveElement element, Point pos, GlyphShape glyph, bool enable = true)
+			{
+				this.element     = element;
+				this.pos         = pos;
+				this.glyph       = glyph;
+				this.color       = MainColor.None;
+				this.enable      = enable;
+				this.roundButton = true;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLinkRight)
+			public ActiveButton(ActiveElement element, Point pos, string text, bool enable = true)
 			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, true, false, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionOpenLinkRightButton, AbstractObject.buttonRadius, GlyphShape.ArrowRight, false, false, true);
-			}
-
-			//	Dessine le bouton de fermeture.
-			if (this.hilitedElement == ActiveElement.NodeClose)
-			{
-				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
+				this.element     = element;
+				this.pos         = pos;
+				this.glyph       = GlyphShape.None;
+				this.text        = text;
+				this.color       = MainColor.None;
+				this.enable      = enable;
+				this.roundButton = true;
 			}
 
-			//	Dessine le bouton des commentaires.
-			if (this.hilitedElement == ActiveElement.NodeComment)
+			public ActiveButton(ActiveElement element, Point pos, MainColor color, bool enable = true)
 			{
-				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
-			}
-
-			//	Dessine le bouton des couleurs.
-			if (this.hilitedElement == ActiveElement.NodeColor1)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
+				this.element     = element;
+				this.pos         = pos;
+				this.color       = color;
+				this.enable      = enable;
+				this.roundButton = false;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor2)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor3)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (2), MainColor.Red, this.boxColor == MainColor.Red, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor4)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor5)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor6)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor7)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (6), MainColor.Green, this.boxColor == MainColor.Green, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (6), MainColor.Green, this.boxColor == MainColor.Green, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeColor8)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (7), MainColor.Grey, this.boxColor == MainColor.Grey, true);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawSquareButton (graphics, this.PositionColorButton (7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
-			}
+			public ActiveElement	element;
+			public Point			pos;
+			public bool				enable;
+			public bool				roundButton;
+			public GlyphShape		glyph;
+			public string			text;
+			public MainColor		color;
 		}
 
 
@@ -647,8 +624,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeColor6 ||
 						this.hilitedElement == ActiveElement.NodeColor7 ||
 						this.hilitedElement == ActiveElement.NodeColor8 ||
-						this.hilitedElement == ActiveElement.NodeOpenLinkLeft ||
-						this.hilitedElement == ActiveElement.NodeOpenLinkRight ||
+						this.hilitedElement == ActiveElement.NodeOpenLink ||
 						this.hilitedElement == ActiveElement.NodeClose);
 			}
 		}
@@ -658,7 +634,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				Rectangle rect = this.bounds;
-				rect.Deflate (15, 30);
+				rect.Deflate (15, 20);
 
 				return rect;
 			}
@@ -682,30 +658,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Point PositionOpenLinkLeftButton
+		private Point PositionOpenLinkButton
 		{
 			//	Retourne la position du bouton pour ouvrir.
+			//	Le bouton est placé dans la direction où sera ouvert la connexion.
 			get
 			{
 				if (!this.HasNoneDstObject)
 				{
-					return new Point (this.bounds.Left+AbstractObject.buttonRadius*2, this.bounds.Center.Y);
-				}
-				else
-				{
-					return Point.Zero;
-				}
-			}
-		}
+					Point c = this.bounds.Center;
+					double a = this.ComputeBestStumpAngle ();
 
-		private Point PositionOpenLinkRightButton
-		{
-			//	Retourne la position du bouton pour ouvrir.
-			get
-			{
-				if (!this.HasNoneDstObject)
-				{
-					return new Point (this.bounds.Right-AbstractObject.buttonRadius*2, this.bounds.Center.Y);
+					return Transform.RotatePointDeg (c, a, new Point (c.X+ObjectNode.frameRadius, c.Y));
 				}
 				else
 				{
@@ -717,7 +681,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			return new Point (this.bounds.Center.X + (2*AbstractObject.buttonSquare+1)*(rank-3.5) + 0.5, this.bounds.Bottom + AbstractObject.buttonSquare);
+			double y = this.bounds.Bottom;
+
+			Point p = this.PositionOpenLinkButton;
+			if (!p.IsZero)
+			{
+				//	Sous le bouton 'OpenLink', avec un petit chevauchement.
+				y = System.Math.Min (y, p.Y-AbstractObject.buttonRadius-2);
+			}
+
+			return new Point (this.bounds.Center.X + (2*AbstractObject.buttonSquare+1)*(rank-3.5) + 0.5, y);
 		}
 
 		private string GetGroupTooltip(int rank)
@@ -873,7 +846,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double			frameRadius = 40;
+		public static readonly double			frameRadius = 30;
 		private static readonly double			shadowOffset = 6;
 
 		private bool							isRoot;

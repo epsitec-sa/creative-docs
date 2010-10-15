@@ -225,6 +225,40 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
+		public IEnumerable<ObjectLink> SearchLinkParents(LinkableObject obj)
+		{
+			this.OutputDebugInformations ();
+
+			var list = new List<ObjectLink> ();
+			foreach (var link in this.LinkObjects)
+			{
+				string s = link.DebugInformations;
+				if (link.DstObject == obj)
+					list.Add (link);
+			}
+			return list;
+
+			return this.LinkObjects.Where (x => x.DstObject == obj);
+		}
+
+
+		public void OutputDebugInformations()
+		{
+			System.Diagnostics.Debug.WriteLine ("");
+			System.Diagnostics.Debug.WriteLine ("Linkables:");
+			foreach (var obj in this.LinkableObjects)
+			{
+				System.Diagnostics.Debug.WriteLine (obj.DebugInformations);
+			}
+
+			System.Diagnostics.Debug.WriteLine ("");
+			System.Diagnostics.Debug.WriteLine ("Links:");
+			foreach (var link in this.LinkObjects)
+			{
+				System.Diagnostics.Debug.WriteLine (link.DebugInformations);
+			}
+		}
+
 
 		public void AddNode(ObjectNode node)
 		{
@@ -384,7 +418,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
-			this.UpdateNodes();
 			this.UpdateLinks();
 		}
 
@@ -400,40 +433,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateAfterGeometryChanged(LinkableObject node)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateNodes ();  // adapte la taille selon compact/étendu
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea ();
 
 			this.UpdateLinks ();
 			this.RedimArea ();
-		}
-
-		public void UpdateAfterMoving(LinkableObject node)
-		{
-			//	Appelé lorsqu'une boîte a été bougée.
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
-			this.RedimArea ();
-
-			this.UpdateLinks ();
-			this.RedimArea ();
-		}
-
-		public void UpdateAfterAddOrRemove(LinkableObject node)
-		{
-			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
-			this.UpdateNodes ();
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
-			this.RedimArea ();
-
-			this.RedimArea ();
-
-			this.UpdateLinks ();
-			this.RedimArea ();
-		}
-
-		private void UpdateNodes()
-		{
-			//	Met à jour la géométrie de toutes les boîtes.
 		}
 
 		public void UpdateLinks()
@@ -1163,7 +1167,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private IEnumerable<ObjectLink> LinkObjects
+		public IEnumerable<ObjectLink> LinkObjects
 		{
 			get
 			{

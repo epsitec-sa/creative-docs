@@ -13,6 +13,54 @@ namespace Epsitec.Cresus.WorkflowDesigner
 	/// </summary>
 	public class Geometry
 	{
+		public static double AngleAvg(IList<double> angles)
+		{
+			//	Retourne la moyenne de plusieurs angles donnés en degrés.
+			//	Pour effectuer la moyenne des angles, on procède à une addition de vecteurs unitaires.
+			double x = 0;
+			double y = 0;
+
+			foreach (var angle in angles)
+			{
+				double rad = Geometry.DegToRad (angle);
+
+				x += System.Math.Cos (rad);  // ajoute le vecteur
+				y += System.Math.Sin (rad);
+			}
+
+			return Point.ComputeAngleDeg (x, y);
+		}
+
+
+		private static double DegToRad(double angle)
+		{
+			return angle * System.Math.PI / 180.0;
+		}
+
+		private static double RadToDeg(double angle)
+		{
+			return angle * 180.0 / System.Math.PI;
+		}
+
+
+		public static Point IsIntersect(Point a, Point b, Point c, Point d)
+		{
+			Point[] points = Geometry.Intersect (a, b, c, d);
+
+			if (points == null)
+			{
+				return Point.Zero;
+			}
+
+			Point i = points[0];
+			if (Geometry.IsInside (a, b, i) || Geometry.IsInside (c, d, i))
+			{
+				return i;
+			}
+
+			return Point.Zero;
+		}
+
 		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			//	Calcule le point d'intersection entre deux droites ab et cd.

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.commentAttach = 0.5;  // au milieu
-			this.StumpAnchor = LinkAnchor.Right;  // moignon o---> par défaut
+			this.StumpAngle = 0;  // moignon o---> par défaut
 		}
 
 
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.srcObject.RemoveEntityLink (this.dstObject);
 				}
 
-				this.editor.Invalidate ();
+				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
 			if (this.hilitedElement == ActiveElement.LinkCreateDst)
@@ -288,7 +288,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var obj = new ObjectEdge (this.editor, edgeEntity);
 			this.srcObject.AddEntityLink (obj);
 
+			string s = obj.DebugInformationsEntityKey;
+
 			this.editor.AddEdge (obj);
+			obj.CreateLinks ();  // recrée la connexion dans la bonne direction
 			this.editor.UpdateGeometry ();
 
 			this.MoveObjectToFreeArea (obj);
@@ -305,6 +308,47 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.UpdateGeometry ();
 
 			this.MoveObjectToFreeArea (obj);
+		}
+
+
+		public override string DebugInformations
+		{
+			get
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				builder.Append ("Link: ");
+
+				if (this.srcObject == null)
+				{
+					builder.Append ("x");
+				}
+				else
+				{
+					builder.Append (this.srcObject.DebugInformationsBase);
+				}
+
+				builder.Append ("->");
+
+				if (this.dstObject == null)
+				{
+					builder.Append ("x");
+				}
+				else
+				{
+					builder.Append (this.dstObject.DebugInformationsBase);
+				}
+
+				return builder.ToString ();
+			}
+		}
+
+		public override string DebugInformationsBase
+		{
+			get
+			{
+				return this.DebugInformations;
+			}
 		}
 
 
@@ -331,11 +375,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			obj.SetBounds (bounds);
 
 			this.dstObject = obj;
-			this.editor.UpdateAfterAddOrRemove (obj);
+			this.editor.UpdateAfterGeometryChanged (obj);
 		}
 
 
-		public LinkAnchor StumpAnchor
+		public double StumpAngle
 		{
 			get;
 			set;
@@ -382,31 +426,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (pos.IsZero)
 				{
-					switch (this.StumpAnchor)
-					{
-						case LinkAnchor.Left:
-							pos = new Point (this.srcObject.Bounds.Left-ObjectLink.lengthStumpLink, this.srcObject.Bounds.Center.Y);
-							break;
-						case LinkAnchor.Right:
-							pos = new Point (this.srcObject.Bounds.Right+ObjectLink.lengthStumpLink, this.srcObject.Bounds.Center.Y);
-							break;
-						case LinkAnchor.Bottom:
-							pos = new Point (this.srcObject.Bounds.Center.X, this.srcObject.Bounds.Bottom-ObjectLink.lengthStumpLink);
-							break;
-						case LinkAnchor.Top:
-							pos = new Point (this.srcObject.Bounds.Center.X, this.srcObject.Bounds.Top+ObjectLink.lengthStumpLink);
-							break;
-					}
+					pos = this.srcObject.GetLinkStumpPos (this.StumpAngle);
 				}
 
 				if (edgeToNode)
 				{
-					node = new ObjectNodeFoo (this.editor, null);
+					node = new ObjectFoo (this.editor, null);
 					node.SetBounds (new Rectangle (pos, Size.Zero));
 				}
 				else
 				{
-					edge = new ObjectEdgeFoo (this.editor, null);
+					edge = new ObjectFoo (this.editor, null);
 					edge.SetBounds (new Rectangle (pos, Size.Zero));
 				}
 			}
@@ -470,7 +500,50 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.endVector   = edgeVector;
 			}
 
-			this.StumpAnchor = edgeAnchor;
+			double angle = this.GetAngleSrc ();
+			if (!double.IsNaN (angle))
+			{
+				this.StumpAngle = angle;
+			}
+		}
+
+		public double GetAngleSrc()
+		{
+			//	Retourne l'angle que fait la connexion avec son objet source.
+			if (this.srcObject != null && this.startVector.IsValid)
+			{
+				return Point.ComputeAngleDeg (this.srcObject.Bounds.Center, this.startVector.Origin);
+			}
+			else
+			{
+				return double.NaN;
+			}
+		}
+
+		public double GetAngleDst()
+		{
+			//	Retourne l'angle que fait la connexion avec son objet destination.
+			if (this.dstObject != null && this.endVector.IsValid)
+			{
+				return Point.ComputeAngleDeg (this.dstObject.Bounds.Center, this.endVector.Origin);
+			}
+			else
+			{
+				return double.NaN;
+			}
+		}
+
+		public double GetAngle()
+		{
+			//	Retourne l'angle de la connexion.
+			if (this.startVector.IsValid && this.endVector.IsValid)
+			{
+				return Point.ComputeAngleDeg (this.startVector.Origin, this.endVector.Origin);
+			}
+			else
+			{
+				return double.NaN;
+			}
 		}
 
 

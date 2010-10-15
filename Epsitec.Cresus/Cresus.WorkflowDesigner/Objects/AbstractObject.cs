@@ -177,6 +177,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public virtual string DebugInformations
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public virtual string DebugInformationsBase
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public string DebugInformationsEntityKey
+		{
+			get
+			{
+				var key = this.editor.BusinessContext.DataContext.GetNormalizedEntityKey (this.entity);
+
+				if (key.HasValue)
+				{
+					return key.Value.ToString ();
+				}
+				else
+				{
+					return "no key";
+				}
+			}
+		}
+
+
 		protected bool DetectSquareButton(Point center, Point pos)
 		{
 			//	Détecte si la souris est dans un bouton carré.
