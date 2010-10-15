@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				double rad = Geometry.DegToRad (angle);
 
-				x += System.Math.Cos (rad);  // ajoute le vecteur
+				x += System.Math.Cos (rad);  // ajoute le vecteur unitaire
 				y += System.Math.Sin (rad);
 			}
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			Point i = points[0];
-			if (Geometry.IsInside (a, b, i) || Geometry.IsInside (c, d, i))
+			if (Geometry.IsInside (a, b, i) && Geometry.IsInside (c, d, i))
 			{
 				return i;
 			}

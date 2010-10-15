@@ -286,15 +286,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			edgeEntity.Name = "Nouveau";
 
 			var obj = new ObjectEdge (this.editor, edgeEntity);
+			obj.ObjectLinks[0].StumpAngle = this.GetAngle ();
+
+			this.dstObject = obj;
 			this.srcObject.AddEntityLink (obj);
 
-			string s = obj.DebugInformationsEntityKey;
-
 			this.editor.AddEdge (obj);
-			obj.CreateLinks ();  // recrée la connexion dans la bonne direction
+			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
 			this.editor.UpdateGeometry ();
 
-			this.MoveObjectToFreeArea (obj);
+			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
 		}
 
 		private void CreateNode()
@@ -302,12 +303,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var nodeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowNodeEntity> ();
 
 			var obj = new ObjectNode (this.editor, nodeEntity);
+
+			this.dstObject = obj;
 			this.srcObject.AddEntityLink (obj);
 
 			this.editor.AddNode (obj);
+			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
 			this.editor.UpdateGeometry ();
 
-			this.MoveObjectToFreeArea (obj);
+			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
 		}
 
 
@@ -352,24 +356,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private void MoveObjectToFreeArea(LinkableObject obj)
+		private void MoveObjectToFreeArea(LinkableObject obj, Point start, Point end)
 		{
 			//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-			Point p = this.endVector.Origin;
-			Size s = obj.Bounds.Size;
-			Rectangle bounds = new Rectangle (p.X-s.Width/2, p.Y-s.Height/2, s.Width, s.Height);
-			bounds.Inflate (50, Editor.pushMargin);
+			Point offset = Point.Move (start, end, 2);
+
+			Rectangle bounds = obj.Bounds;
+			bounds.Inflate (Editor.pushMargin);
 
 			for (int i=0; i<1000; i++)
 			{
-				if (this.editor.IsEmptyArea (bounds))
+				if (this.editor.IsEmptyArea (bounds, obj))
 				{
 					break;
 				}
-				bounds.Offset (-this.endVector.Direction.Width*2, -this.endVector.Direction.Height*2);
+				bounds.Offset (offset);
 			}
 
-			bounds.Deflate (50, Editor.pushMargin);
+			bounds.Deflate (Editor.pushMargin);
 
 			bounds = this.editor.NodeGridAlign (bounds);
 			obj.SetBounds (bounds);

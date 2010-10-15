@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public virtual void CreateLinks()
+		public virtual void CreateInitialLinks()
 		{
 		}
 
@@ -57,9 +57,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public virtual void SetBoundsAtEnd(Point start, Point end)
+		{
+		}
+
 		public void SetBounds(Rectangle bounds)
 		{
 			//	Modifie la boîte de l'objet.
+			bounds = new Rectangle(Point.GridAlign (bounds.BottomLeft), Point.GridAlign (bounds.TopRight));
+			
 			Point p1 = this.bounds.TopLeft;
 			this.bounds = bounds;
 			Point p2 = this.bounds.TopLeft;

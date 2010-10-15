@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			foreach (var obj in this.LinkableObjects)
 			{
-				obj.CreateLinks ();
+				obj.CreateInitialLinks ();
 			}
 
 			this.UpdateAfterGeometryChanged (null);
@@ -194,9 +194,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public LinkableObject SearchObject(AbstractEntity entity)
+		public LinkableObject SearchInitialObject(AbstractEntity entity)
 		{
 			//	Cherche un objet d'après l'entité qu'il représente.
+			//	On ne peut chercher ainsi que les objets initiaux, qui ont été sauvés dans la base.
+			//	Les entités créées par après n'ont pas de clés !
 			if (entity.IsNotNull ())
 			{
 				var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
@@ -223,22 +225,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			return null;
-		}
-
-		public IEnumerable<ObjectLink> SearchLinkParents(LinkableObject obj)
-		{
-			this.OutputDebugInformations ();
-
-			var list = new List<ObjectLink> ();
-			foreach (var link in this.LinkObjects)
-			{
-				string s = link.DebugInformations;
-				if (link.DstObject == obj)
-					list.Add (link);
-			}
-			return list;
-
-			return this.LinkObjects.Where (x => x.DstObject == obj);
 		}
 
 
@@ -419,6 +405,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
 			this.UpdateLinks();
+			this.RedimArea ();
 		}
 
 		public void UpdateAfterCommentChanged()
@@ -452,12 +439,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool IsEmptyArea(Rectangle area)
+		public bool IsEmptyArea(Rectangle area, AbstractObject filteredObject)
 		{
 			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connexions).
 			foreach (var obj in this.LinkableObjects)
 			{
-				if (obj.Bounds.IntersectsWith (area))
+				if (obj != filteredObject &&  obj.Bounds.IntersectsWith (area))
 				{
 					return false;
 				}
@@ -476,6 +463,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					link.DstObject = null;
 					link.SrcObject.RemoveEntityLink (obj);
+					link.StumpAngle = link.GetAngle ();
 				}
 			}
 

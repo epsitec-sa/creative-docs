@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateSubtitle ();
 
 			//	Crée la liaison unique.
-			this.CreateLinks ();
+			this.CreateInitialLinks ();
 		}
 
 
@@ -116,30 +116,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override void CreateLinks()
+		public override void CreateInitialLinks()
 		{
 			this.objectLinks.Clear ();
 	
 			var link = new ObjectLink (this.editor, this.Entity);
 			link.SrcObject = this;
-			link.DstObject = this.editor.SearchObject (this.Entity.NextNode);  // null si n'existe pas (et donc moignon o--->)
-
-			var linkParents = this.editor.SearchLinkParents (this);
-
-			var angles = new List<double> ();
-			foreach (var linkParent in linkParents)
-			{
-				double angle = linkParent.GetAngle ();
-
-				if (!double.IsNaN (angle))
-				{
-					angles.Add (angle);
-				}
-			}
-
-			link.StumpAngle = Geometry.AngleAvg (angles);
+			link.DstObject = this.editor.SearchInitialObject (this.Entity.NextNode);  // null si n'existe pas (et donc moignon o--->)
 
 			this.objectLinks.Add (link);
+		}
+
+
+		public override void SetBoundsAtEnd(Point start, Point end)
+		{
+			double d = (ObjectEdge.frameSize.Width+ObjectEdge.frameSize.Height)/4;  // approximation
+
+			Point center = Point.Move (end, start, -d);
+			Rectangle rect = new Rectangle (center.X-ObjectEdge.frameSize.Width/2, center.Y-ObjectEdge.frameSize.Height/2, ObjectEdge.frameSize.Width, ObjectEdge.frameSize.Height);
+
+			this.SetBounds (rect);
 		}
 
 
@@ -234,7 +230,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override Point GetLinkStumpPos(double angle)
 		{
 			Point c = this.bounds.Center;
-			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+100, c.Y));  // longueur arbitraire
+			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+this.bounds.Width+this.bounds.Height, c.Y));
 
 			foreach (Point i in this.GetIntersect (c, p))
 			{
