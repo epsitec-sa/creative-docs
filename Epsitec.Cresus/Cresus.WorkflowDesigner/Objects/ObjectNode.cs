@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.bounds.Offset(dx, dy);
 		}
 
-		public override void CreateLinks()
+		public override void CreateInitialLinks()
 		{
 			this.objectLinks.Clear ();
 
@@ -86,10 +86,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				var link = new ObjectLink (this.editor, this.Entity);
 				link.SrcObject = this;
-				link.DstObject = this.editor.SearchObject (entityEdge);
+				link.DstObject = this.editor.SearchInitialObject (entityEdge);
 
 				this.objectLinks.Add (link);
 			}
+		}
+
+
+		public override void SetBoundsAtEnd(Point start, Point end)
+		{
+			Point center = Point.Move (end, start, -ObjectNode.frameRadius);
+			Rectangle rect = new Rectangle (center.X-ObjectNode.frameRadius, center.Y-ObjectNode.frameRadius, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
+
+			this.SetBounds (rect);
 		}
 
 
