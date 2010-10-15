@@ -102,7 +102,31 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return Vector.Zero;
 		}
 
+		public virtual Point GetLinkStumpPos(double angle)
+		{
+			return Point.Zero;
+		}
 
+
+		public string DebugInformationsObjectLinks
+		{
+			get
+			{
+				var builder = new System.Text.StringBuilder ();
+				builder.Append ("( ObjectLinks: ");
+
+				foreach (var obj in this.objectLinks)
+				{
+					builder.Append (obj.DebugInformationsBase);
+					builder.Append (" ");
+				}
+
+				builder.Append (") ");
+				return builder.ToString ();
+			}
+		}
+
+	
 		public override MainColor BackgroundMainColor
 		{
 			//	Couleur de fond de la boîte.
@@ -160,28 +184,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				obj.MouseUp (message, pos);
 			}
-
-			if (this.hilitedElement == ActiveElement.NodeOpenLinkLeft)
-			{
-				//	Crée un moignon de lien <---o
-				var link = new ObjectLink (this.editor, this.entity);
-				link.SrcObject = this;
-				link.StumpAnchor = LinkAnchor.Left;
-				link.UpdateLink ();
-
-				this.objectLinks.Add (link);
-			}
-
-			if (this.hilitedElement == ActiveElement.NodeOpenLinkRight)
-			{
-				//	Crée un moignon de lien o--->
-				var link = new ObjectLink (this.editor, this.entity);
-				link.SrcObject = this;
-				link.StumpAnchor = LinkAnchor.Right;
-				link.UpdateLink ();
-
-				this.objectLinks.Add (link);
-			}
 		}
 
 		public override ActiveElement MouseDetectBackground(Point pos)
@@ -212,6 +214,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			return ActiveElement.None;
+		}
+
+
+		protected double ComputeBestStumpAngle()
+		{
+			//	Calcul le meilleur angle possible pour une nouvelle connexion. En tenant compte de toutes
+			//	les connexions qui partent et qui arrivent, on se place à l'opposé.
+			var angles = new List<double> ();
+
+			//	Tient compte des liens qui partent.
+			foreach (var link in this.objectLinks)
+			{
+				double angle = link.GetAngleSrc ();
+
+				if (!double.IsNaN (angle))
+				{
+					angles.Add (angle);
+				}
+			}
+
+			//	Tient compte des liens qui arrivent.
+			foreach (var link in this.editor.LinkObjects)
+			{
+				if (link.DstObject == this)
+				{
+					double angle = link.GetAngleDst ();
+
+					if (!double.IsNaN (angle))
+					{
+						angles.Add (angle);
+					}
+				}
+			}
+
+			return Geometry.AngleAvg (angles) - 180;  // à l'opposé
 		}
 
 

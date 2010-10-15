@@ -59,8 +59,7 @@
     <Compile Include="Misc.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
-    <Compile Include="Objects\ObjectNodeFoo.cs" />
-    <Compile Include="Objects\ObjectEdgeFoo.cs" />
+    <Compile Include="Objects\ObjectFoo.cs" />
     <Compile Include="Objects\LinkableObject.cs" />
     <Compile Include="Objects\LinkAnchor.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />

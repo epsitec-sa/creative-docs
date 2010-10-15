@@ -122,7 +122,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	
 			var link = new ObjectLink (this.editor, this.Entity);
 			link.SrcObject = this;
-			link.DstObject = this.editor.SearchObject (this.Entity.NextNode);
+			link.DstObject = this.editor.SearchObject (this.Entity.NextNode);  // null si n'existe pas (et donc moignon o--->)
+
+			var linkParents = this.editor.SearchLinkParents (this);
+
+			var angles = new List<double> ();
+			foreach (var linkParent in linkParents)
+			{
+				double angle = linkParent.GetAngle ();
+
+				if (!double.IsNaN (angle))
+				{
+					angles.Add (angle);
+				}
+			}
+
+			link.StumpAngle = Geometry.AngleAvg (angles);
 
 			this.objectLinks.Add (link);
 		}
@@ -214,6 +229,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			return Vector.Zero;
+		}
+
+		public override Point GetLinkStumpPos(double angle)
+		{
+			Point c = this.bounds.Center;
+			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+100, c.Y));  // longueur arbitraire
+
+			foreach (Point i in this.GetIntersect (c, p))
+			{
+				if (!i.IsZero)
+				{
+					return Point.Move (i, c, -AbstractObject.lengthStumpLink);
+				}
+			}
+
+			return this.bounds.Center;
+		}
+
+		private IEnumerable<Point> GetIntersect(Point c, Point p)
+		{
+			yield return Geometry.IsIntersect (c, p, this.bounds.TopRight,    this.bounds.BottomRight);
+			yield return Geometry.IsIntersect (c, p, this.bounds.BottomRight, this.bounds.BottomLeft );
+			yield return Geometry.IsIntersect (c, p, this.bounds.BottomLeft,  this.bounds.TopLeft    );
+			yield return Geometry.IsIntersect (c, p, this.bounds.TopLeft,     this.bounds.TopRight   );
 		}
 
 
@@ -369,7 +408,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.isDragging)
 					{
-						this.editor.UpdateAfterMoving (this);
+						this.editor.UpdateAfterGeometryChanged (this);
 						this.isDragging = false;
 						this.editor.LockObject (null);
 						this.editor.SetLocalDirty ();
@@ -382,7 +421,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.isDragging)
 			{
-				this.editor.UpdateAfterMoving (this);
+				this.editor.UpdateAfterGeometryChanged (this);
 				this.isDragging = false;
 				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
@@ -391,7 +430,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.isChangeWidth)
 			{
-				this.editor.UpdateAfterMoving (this);
+				this.editor.UpdateAfterGeometryChanged (this);
 				this.isChangeWidth = false;
 				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
@@ -406,7 +445,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeClose)
 			{
 				this.editor.CloseObject (this);
-				this.editor.UpdateAfterAddOrRemove(null);
+				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeComment)
@@ -571,6 +610,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override string DebugInformations
+		{
+			get
+			{
+				return string.Format ("Edge: {0} {1}", this.Entity.Name.ToString (), this.DebugInformationsObjectLinks);
+			}
+		}
+
+		public override string DebugInformationsBase
+		{
+			get
+			{
+				return string.Format ("{0}", this.Entity.Name.ToString ());
+			}
+		}
+
+	
 		private void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.

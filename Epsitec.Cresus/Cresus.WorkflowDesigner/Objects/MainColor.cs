@@ -8,14 +8,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public enum MainColor
 	{
-		Blue,
-		Green,
-		Red,
-		Grey,
-		DarkGrey,
+		None,
 		Yellow,
 		Orange,
+		Red,
 		Lilac,
 		Purple,
+		Blue,
+		Green,
+		Grey,
+		DarkGrey,
 	}
 }
