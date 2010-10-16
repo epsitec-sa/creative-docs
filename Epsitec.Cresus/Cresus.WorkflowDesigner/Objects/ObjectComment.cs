@@ -51,20 +51,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutComment = new TextLayout();
 			this.textLayoutComment.DefaultFontSize = 10;
 			this.textLayoutComment.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-
-			if (this.entity is WorkflowNodeEntity)
-			{
-				var node = this.entity as WorkflowNodeEntity;
-
-				this.textLayoutComment.Text = node.Name.ToString ();  // TODO: provisoire
-			}
-
-			if (this.entity is WorkflowEdgeEntity)
-			{
-				var edge = this.entity as WorkflowEdgeEntity;
-
-				this.textLayoutComment.Text = edge.Description.ToString ();  // TODO: provisoire
-			}
+			this.textLayoutComment.Text = "Cliquez ici pour entrer un commentaire...";
 		}
 
 

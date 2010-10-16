@@ -22,10 +22,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ObjectLink(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
-			this.commentAttach = 0.5;  // au milieu
-			this.StumpAngle = 0;  // moignon o---> par défaut
-
-			this.magnetList = new List<Point> ();
+			this.commentAttach = 0.1;
 		}
 
 
@@ -78,8 +75,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			set
 			{
-				value = System.Math.Max (value, 0.2);
-				value = System.Math.Min (value, 0.8);
+				value = System.Math.Max (value, 0.1);
+				value = System.Math.Min (value, 0.9);
 
 				this.commentAttach = value;
 			}
@@ -108,15 +105,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle bounds = this.Path.ComputeBounds ();
 				bounds.Inflate (2);
 
-				if (this.startVector.IsValid)
-				{
-					bounds = Rectangle.Union (bounds, new Rectangle (this.startVector.Origin, Size.Zero));
-				}
+				bounds = Rectangle.Union (bounds, new Rectangle (this.startVector.Origin, Size.Zero));
+				bounds = Rectangle.Union (bounds, new Rectangle (this.endVector.Origin, Size.Zero));
 
-				if (this.endVector.IsValid)
-				{
-					bounds = Rectangle.Union (bounds, new Rectangle (this.endVector.Origin, Size.Zero));
-				}
+				bounds = Rectangle.Union (bounds, new Rectangle (this.CustomizeStartPos, Size.Zero));
+				bounds = Rectangle.Union (bounds, new Rectangle (this.CustomizeEndPos, Size.Zero));
 
 				return bounds;
 			}
@@ -125,17 +118,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
-			if (this.startVector.IsValid)
-			{
-				this.startVector = new Vector (this.startVector, new Size (dx, dy));
-			}
-
-			if (this.endVector.IsValid)
-			{
-				this.endVector = new Vector (this.endVector, new Size (dx, dy));
-			}
-
 			this.SetPathDirty ();
+			this.UpdateVectors ();
 		}
 
 
@@ -158,9 +142,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DraggingDstMouseMove (pos);
 				return true;
 			}
-			else if (this.isDraggingMagnet)
+			else if (this.isDraggingCustomize)
 			{
-				this.MagnetMouseMove (pos);
+				this.CustomizeMouseMove (pos);
 				return true;
 			}
 			else
@@ -177,15 +161,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DraggingDstMouseDown (pos);
 			}
 
-			if (this.hilitedElement == ActiveElement.LinkMagnetHome)
+			if (this.hilitedElement == ActiveElement.LinkCustomizeStart ||
+				this.hilitedElement == ActiveElement.LinkCustomizeEnd)
 			{
-				this.MagnetMouseDown (pos, -1);
-			}
-
-			if (this.hilitedElement >= ActiveElement.LinkMagnet0 &&
-				this.hilitedElement <= ActiveElement.LinkMagnet9)
-			{
-				this.MagnetMouseDown (pos, this.hilitedElement - ActiveElement.LinkMagnet0);
+				this.CustomizeMouseDown (pos);
 			}
 		}
 
@@ -197,9 +176,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.DraggingDstMouseUp ();
 			}
 
-			if (this.isDraggingMagnet)
+			if (this.isDraggingCustomize)
 			{
-				this.MagnetMouseUp (pos);
+				this.CustomizeMouseUp (pos);
 			}
 
 			if (this.hilitedElement == ActiveElement.LinkComment)
@@ -236,7 +215,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (pos.IsZero || this.startVector.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
 			}
@@ -253,7 +232,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (pos.IsZero || this.startVector.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
 			}
@@ -270,18 +249,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return ActiveElement.LinkComment;
 			}
 
-			//	Souris dans l'un des boutons magnétiques.
-			if (this.DetectRoundButton (pos, this.MagnetHomePos))
+			//	Souris dans l'un des boutons utilisateur.
+			if (this.dstObject != null && this.DetectRoundButton (pos, this.CustomizeStartPos, ObjectLink.customizeButtonRadius))
 			{
-				return ActiveElement.LinkMagnetHome;
+				return ActiveElement.LinkCustomizeStart;
 			}
 
-			for (int i=0; i<this.magnetList.Count; i++)
+			if (this.dstObject != null && this.DetectRoundButton (pos, this.CustomizeEndPos, ObjectLink.customizeButtonRadius))
 			{
-				if (this.DetectRoundButton (pos, this.GetMagnetAbsolutePos (i)))
-				{
-					return ActiveElement.LinkMagnet0+i;
-				}
+				return ActiveElement.LinkCustomizeEnd;
 			}
 
 			//	Souris dans le bouton pour changer le noeud destination ?
@@ -305,7 +281,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var rect = this.Bounds;
 			rect.Inflate (margin);
 
-			if (rect.Contains (pos))
+			if (rect.Contains (pos) && this.IsUsablePath)
 			{
 				if (Geometry.DetectOutline (this.Path, margin, pos))
 				{
@@ -323,10 +299,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			edgeEntity.Name = "Nouveau";
 
 			var obj = new ObjectEdge (this.editor, edgeEntity);
-			obj.ObjectLinks[0].StumpAngle = this.GetAngle ();
+			obj.ObjectLinks[0].SetStumpAngle (this.GetAngle ());
 
 			this.dstObject = obj;
 			this.srcObject.AddEntityLink (obj);
+
+			this.startManual = false;
+			this.endManual = false;
 
 			this.editor.AddEdge (obj);
 			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
@@ -343,6 +322,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.dstObject = obj;
 			this.srcObject.AddEntityLink (obj);
+
+			this.startManual = false;
+			this.endManual = false;
 
 			this.editor.AddNode (obj);
 			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
@@ -420,10 +402,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public double StumpAngle
+		public void SetStumpAngle(double angle)
 		{
-			get;
-			set;
+			this.startAngle = angle;
+			this.endAngle = angle+180;
+
+			this.startManual = false;
+			this.endManual = false;
+
+			this.SetPathDirty ();
+			this.UpdateVectors ();
+			this.UpdateDistances ();
+
+			this.startManual = true;
+			this.endManual = true;
 		}
 
 		public bool IsNoneDstObject
@@ -439,152 +431,101 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Met à jour les deux vecteurs permettant de définir le chemin de la connexion.
 			this.SetPathDirty ();
 
-			this.startVector = Vector.Zero;
-			this.endVector   = Vector.Zero;
+			this.UpdateAngles ();
+			this.UpdateVectors ();
+			this.UpdateDistances ();
+		}
 
-			LinkableObject dstObject = (this.hilitedDstObject == null) ? this.DstObject : this.hilitedDstObject;
+		private void UpdateAngles()
+		{
+			Point src = this.srcObject.Bounds.Center;
 
-			//	Une connexion est toujours edge -> node ou node -> edge.
-			bool edgeToNode = this.SrcObject is ObjectEdge;
+			Point dst;
 
-			LinkableObject edge;
-			LinkableObject node;
-
-			if (edgeToNode)
+			if (this.isDraggingDst && this.hilitedDstObject != null)
 			{
-				edge = this.SrcObject as ObjectEdge;
-				node =      dstObject as ObjectNode;
+				dst = this.hilitedDstObject.Bounds.Center;
+			}
+			else if (this.isDraggingDst)
+			{
+				dst = this.draggingStumpPos;
+			}
+			else if (this.dstObject != null)
+			{
+				dst = this.dstObject.Bounds.Center;
 			}
 			else
 			{
-				node = this.SrcObject as ObjectNode;
-				edge =      dstObject as ObjectEdge;
+				dst = new Point (src.X+ObjectLink.lengthStumpLink, src.Y);  // moignon o--->
 			}
 
-			if (dstObject == null || (this.isDraggingDst && this.hilitedDstObject == null))
+			double angle = Point.ComputeAngleDeg (src, dst);
+
+			if (!this.startManual)
 			{
-				Point pos = this.draggingStumpPos;
-
-				if (pos.IsZero)
-				{
-					pos = this.srcObject.GetLinkStumpPos (this.StumpAngle);
-				}
-
-				if (edgeToNode)
-				{
-					node = new ObjectFoo (this.editor, null);
-					node.SetBounds (new Rectangle (pos, Size.Zero));
-				}
-				else
-				{
-					edge = new ObjectFoo (this.editor, null);
-					edge.SetBounds (new Rectangle (pos, Size.Zero));
-				}
+				this.startAngle = angle;
 			}
 
-			//	S'il ne s'agit pas d'une connexion edge -> node ou node -> edge, ou ne peut rien faire.
-			if (edge == null || node == null)
+			if (!this.endManual)
 			{
-				return;
+				this.endAngle = angle+180;
 			}
+		}
 
-			//	S'il y a chevauchement ou presque entre les boîtes sources et destination, il est
-			//	préférable de ne pas dessiner de liaison.
-			Rectangle re = edge.Bounds;
-			Rectangle rn = node.Bounds;
+		private void UpdateVectors()
+		{
+			this.startVector = this.srcObject.GetLinkVector (this.startAngle, isDst: false);
 
-			re.Inflate (4);
-			rn.Inflate (4);
-
-			if (re.IntersectsWith (rn))
+			if (this.isDraggingDst && this.hilitedDstObject != null)
 			{
-				return;
+				this.endVector = this.hilitedDstObject.GetLinkVector (this.endAngle, isDst: true);
 			}
-
-			//	Cherche la connexion la plus courte parmi toutes les possibilités.
-			//	On tient compte du fait que l'objet node a un vecteur qui est toujours dirgé à
-			//	partir du centre, contrairement à l'objet edge.
-			LinkAnchor nodeAnchor = LinkAnchor.Left;  // sans importance
-			LinkAnchor edgeAnchor = LinkAnchor.Left;  // pour que ça compile
-
-			Vector v1 = node.GetLinkVector (nodeAnchor, edge.Bounds.Center, edgeToNode);
-
-			double min = double.MaxValue;
-			foreach (LinkAnchor a2 in System.Enum.GetValues (typeof (LinkAnchor)))
+			else if (this.isDraggingDst)
 			{
-				Vector v2 = edge.GetLinkVector (a2, node.Bounds.Center, !edgeToNode);
-
-				if (v2.IsValid)
-				{
-					double d = Point.Distance (v1.Origin, v2.Origin);
-
-					if (min > d)
-					{
-						min = d;
-						edgeAnchor = a2;
-					}
-				}
+				this.endVector = new Vector (this.draggingStumpPos, this.endAngle);
 			}
-
-			//	Calcule les vecteurs définitifs.
-			Vector edgeVector = edge.GetLinkVector (edgeAnchor, node.Bounds.Center, !edgeToNode);
-			Vector nodeVector = node.GetLinkVector (nodeAnchor, edgeVector.Origin,   edgeToNode);
-
-			if (edgeToNode)
+			else if (this.dstObject != null)
 			{
-				this.startVector = edgeVector;
-				this.endVector   = nodeVector;
+				this.endVector = this.dstObject.GetLinkVector (this.endAngle, isDst: true);
 			}
 			else
 			{
-				this.startVector = nodeVector;
-				this.endVector   = edgeVector;
+				Vector s = this.startVector;
+				this.endVector = new Vector (s.GetPoint (ObjectLink.lengthStumpLink), s.Origin);
+			}
+		}
+
+		private void UpdateDistances()
+		{
+			double d = Point.Distance (this.startVector.Origin, this.endVector.Origin) * 0.5;
+
+			if (!this.startManual)
+			{
+				this.startDistance = d;
 			}
 
-			double angle = this.GetAngleSrc ();
-			if (!double.IsNaN (angle))
+			if (!this.endManual)
 			{
-				this.StumpAngle = angle;
+				this.endDistance = d;
 			}
 		}
 
 		public double GetAngleSrc()
 		{
 			//	Retourne l'angle que fait la connexion avec son objet source.
-			if (this.srcObject != null && this.startVector.IsValid)
-			{
-				return Point.ComputeAngleDeg (this.srcObject.Bounds.Center, this.startVector.Origin);
-			}
-			else
-			{
-				return double.NaN;
-			}
+			return this.startAngle;
 		}
 
 		public double GetAngleDst()
 		{
 			//	Retourne l'angle que fait la connexion avec son objet destination.
-			if (this.dstObject != null && this.endVector.IsValid)
-			{
-				return Point.ComputeAngleDeg (this.dstObject.Bounds.Center, this.endVector.Origin);
-			}
-			else
-			{
-				return double.NaN;
-			}
+			return this.endAngle;
 		}
 
 		public double GetAngle()
 		{
 			//	Retourne l'angle de la connexion.
-			if (this.startVector.IsValid && this.endVector.IsValid)
-			{
-				return Point.ComputeAngleDeg (this.startVector.Origin, this.endVector.Origin);
-			}
-			else
-			{
-				return double.NaN;
-			}
+			return Point.ComputeAngleDeg (this.startVector.Origin, this.endVector.Origin);
 		}
 
 
@@ -595,7 +536,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.comment = new ObjectComment(this.editor, this.entity);
 				this.comment.AttachObject = this;
-				this.comment.Text = "Coucou";
 
 				Point attach = this.PositionLinkComment;
 				Rectangle rect;
@@ -630,46 +570,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine l'objet.
 			//	Dessine la connexion en blanc.
-			graphics.Rasterizer.AddOutline (this.Path, 6);
-			graphics.RenderSolid (Color.FromBrightness (1));
-
-			//	Dessine les contraintes magnétiques.
-			if ((this.isDraggingMagnet || this.IsHilite) && this.endVector.HasDirection)
+			if (this.IsUsablePath)
 			{
-				Misc.DrawPathDash (graphics, this.MagnetConstrainPath, 1, 1, 4, true, this.GetColorMain ());
+				graphics.Rasterizer.AddOutline (this.Path, 6);
+				graphics.RenderSolid (Color.FromBrightness (1));
+
+				//	Dessine les contraintes utilisateur.
+				if (this.dstObject != null && (this.isDraggingCustomize || this.IsHilite))
+				{
+					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.GetColorMain ());
+				}
+
+				//	Dessine la connexion et la flèche.
+				Color color = (this.IsHilite || this.isDraggingDst) ? this.GetColorMain () : this.GetColor (0);
+
+				if (this.isDraggingDst && this.hilitedDstObject == null)
+				{
+					Misc.DrawPathDash (graphics, this.Path, 2, 1, 4, true, color);
+				}
+				else
+				{
+					graphics.Rasterizer.AddOutline (this.Path, 2);
+					graphics.RenderSolid (color);
+				}
+
+				this.DrawArrow (graphics, this.startVector, this.endVector, color);
 			}
-
-			//	Dessine la connexion initiale.
-			if (this.initialPath != null)
-			{
-				Color dimmedColor = this.GetColorMain (0.05);
-
-				graphics.Rasterizer.AddOutline (this.initialPath, 2);
-				graphics.RenderSolid (dimmedColor);
-
-				this.DrawArrow (graphics, this.initialStartVector, this.initialEndVector, dimmedColor);
-			}
-
-			//	Dessine la connexion et la flèche.
-			Color color = (this.IsHilite || this.isDraggingDst) ? this.GetColorMain () : this.GetColor (0);
-
-			if (this.isDraggingDst && this.hilitedDstObject == null)
-			{
-				Misc.DrawPathDash (graphics, this.Path, 2, 1, 4, true, color);
-			}
-			else
-			{
-				graphics.Rasterizer.AddOutline (this.Path, 2);
-				graphics.RenderSolid (color);
-			}
-
-			this.DrawArrow (graphics, this.startVector, this.endVector, color);
 
 			//	Dessine la pastille au départ.
-			if (this.startVector.IsValid)
-			{
-				this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
-			}
+			this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 		}
 
 		private void DrawArrow(Graphics graphics, Vector startVector, Vector endVector, Color color)
@@ -692,13 +621,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void DrawForeground(Graphics graphics)
 		{
-			//	Dessine les contraintes magnétiques.
-			if ((this.isDraggingMagnet || this.IsHilite) && this.endVector.HasDirection)
-			{
-				this.DrawRoundButton (graphics, this.MagnetStartPos, 3, GlyphShape.None, false, false);
-				this.DrawRoundButton (graphics, this.MagnetEndPos,   3, GlyphShape.None, false, false);
-			}
-
+			//	Dessine les contraintes utilisateur.
 			Point p;
 
 			//	Dessine le bouton pour commenter la connexion.
@@ -715,33 +638,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			//	Dessine les boutons magnétiques.
-			p = this.MagnetHomePos;
-			if (!p.IsZero)
+			//	Dessine les boutons utilisateur.
+			p = this.CustomizeStartPos;
+			if (!p.IsZero && this.dstObject != null)
 			{
-				if (this.hilitedElement == ActiveElement.LinkMagnetHome)
+				if (this.hilitedElement == ActiveElement.LinkCustomizeStart)
 				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", true, false);
+					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", true, false);
 				}
 				else if (this.IsHilite)
 				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", false, false);
+					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", false, false);
 				}
 			}
 
-			for (int i=0; i<this.magnetList.Count; i++)
+			p = this.CustomizeEndPos;
+			if (!p.IsZero && this.dstObject != null)
 			{
-				p = this.GetMagnetAbsolutePos (i);
-				if (!p.IsZero)
+				if (this.hilitedElement == ActiveElement.LinkCustomizeEnd)
 				{
-					if (this.hilitedElement == ActiveElement.LinkMagnet0+i)
-					{
-						this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", true, false);
-					}
-					else if (this.IsHilite)
-					{
-						this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "o", false, false);
-					}
+					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", true, false);
+				}
+				else if (this.IsHilite)
+				{
+					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", false, false);
 				}
 			}
 
@@ -802,17 +722,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return (this.hilitedElement == ActiveElement.LinkHilited ||
 						this.hilitedElement == ActiveElement.LinkClose ||
 						this.hilitedElement == ActiveElement.LinkComment ||
-						this.hilitedElement == ActiveElement.LinkMagnetHome ||
-						this.hilitedElement == ActiveElement.LinkMagnet0 ||
-						this.hilitedElement == ActiveElement.LinkMagnet1 ||
-						this.hilitedElement == ActiveElement.LinkMagnet2 ||
-						this.hilitedElement == ActiveElement.LinkMagnet3 ||
-						this.hilitedElement == ActiveElement.LinkMagnet4 ||
-						this.hilitedElement == ActiveElement.LinkMagnet5 ||
-						this.hilitedElement == ActiveElement.LinkMagnet6 ||
-						this.hilitedElement == ActiveElement.LinkMagnet7 ||
-						this.hilitedElement == ActiveElement.LinkMagnet8 ||
-						this.hilitedElement == ActiveElement.LinkMagnet9 ||
+						this.hilitedElement == ActiveElement.LinkCustomizeStart ||
+						this.hilitedElement == ActiveElement.LinkCustomizeEnd ||
 						this.hilitedElement == ActiveElement.LinkChangeDst ||
 						this.hilitedElement == ActiveElement.LinkCreateDst);
 			}
@@ -823,7 +734,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				if (this.startVector.IsValid && !this.HasSrcWithSingleLink)
+				if (!this.HasSrcWithSingleLink)
 				{
 					return this.startVector.Origin;
 				}
@@ -839,14 +750,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour modifier la destination.
 			get
 			{
-				if (this.endVector.IsValid)
-				{
-					return this.endVector.Origin;
-				}
-				else
-				{
-					return Point.Zero;
-				}
+				return this.endVector.Origin;
 			}
 		}
 
@@ -855,16 +759,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour créer la destination.
 			get
 			{
-				if (this.endVector.IsValid && this.IsNoneDstObject)
+				if (this.IsNoneDstObject)
 				{
-					if (this.endVector.HasDirection)
-					{
-						return Point.Move (this.endVector.Origin, this.endVector.End, -AbstractObject.buttonRadius*2+2);
-					}
-					else
-					{
-						return this.endVector.Origin + new Point (AbstractObject.buttonRadius*2+2, 0);
-					}
+					return Point.Move (this.endVector.Origin, this.endVector.End, -AbstractObject.buttonRadius*2+2);
 				}
 				else
 				{
@@ -875,12 +772,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private bool HasLinkCommentButton
 		{
-			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
+			//	Indique s'il faut afficher le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
 			//	le bouton CommentAttachTo pour déplacer le point d'attache.
 			get
 			{
-				return this.comment == null || !this.comment.IsVisible;
+				return this.dstObject != null && (this.comment == null || !this.comment.IsVisible);
 			}
 		}
 
@@ -896,26 +793,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private Point AttachToPoint(double d)
 		{
-			if (this.startVector.IsValid)
-			{
-				return Geometry.PointOnPath (this.Path, d);
-			}
-			else
-			{
-				return Point.Zero;
-			}
+			return Geometry.PointOnPath (this.Path, d);
 		}
 
 		public double PointToAttach(Point p)
 		{
-			if (this.startVector.IsValid)
-			{
-				return Geometry.OffsetOnPath (this.Path, p);
-			}
-			else
-			{
-				return 0;
-			}
+			return Geometry.OffsetOnPath (this.Path, p);
 		}
 
 
@@ -928,223 +811,165 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		#region Magnet utilities
-		private void MagnetMouseDown(Point pos, int rank)
+		#region Customize utilities
+		private void CustomizeMouseDown(Point pos)
 		{
-			if (rank == -1)
-			{
-				if (this.magnetList.Count >= ObjectLink.magnetMax)
-				{
-					return;
-				}
-
-				this.magnetList.Add (this.MagnetAbsToRel (this.MagnetHomePos));
-				rank = this.magnetList.Count-1;
-
-				this.hilitedElement = ActiveElement.LinkMagnet0+rank;
-			}
-
-			this.magnetDraggingRank = rank;
-			this.isDraggingMagnet = true;
+			this.isDraggingCustomize = true;
 			this.SetPathDirty ();
 			this.editor.LockObject (this);
 			this.editor.Invalidate ();
 		}
 
-		private void MagnetMouseMove(Point pos)
+		private void CustomizeMouseMove(Point pos)
 		{
-			if (this.IsNearMagnetHome (pos))
+			if (this.hilitedElement == ActiveElement.LinkCustomizeStart)
 			{
-				pos = this.MagnetHomePos;
+				this.CustomizeStartPos = pos;
 			}
 
-			this.SetMagnetAbsolutePos (this.magnetDraggingRank, pos);
+			if (this.hilitedElement == ActiveElement.LinkCustomizeEnd)
+			{
+				this.CustomizeEndPos = pos;
+			}
+
 			this.SetPathDirty ();
 			this.editor.Invalidate ();
 		}
 
-		private void MagnetMouseUp(Point pos)
+		private void CustomizeMouseUp(Point pos)
 		{
-			if (this.IsNearMagnetHome (pos))
-			{
-				this.magnetList.RemoveAt (this.magnetDraggingRank);
-			}
-
-			this.isDraggingMagnet = false;
+			this.isDraggingCustomize = false;
 			this.editor.LockObject (null);
 			this.SetPathDirty ();
+			this.editor.UpdateGeometry ();
 			this.editor.SetLocalDirty ();
 			this.editor.Invalidate ();
 		}
 
 
-		private Path MagnetConstrainPath
+		private Path CustomizeConstrainPath
 		{
 			get
 			{
 				var path = new Path ();
 
 				path.MoveTo (this.startVector.Origin);
-				path.LineTo (this.MagnetStartPos);
+				path.LineTo (this.CustomizeStartPos);
 
-				for (int i = 0; i < this.magnetList.Count; i++)
-				{
-					path.LineTo (this.GetMagnetAbsolutePos (i));
-				}
-
-				path.LineTo (this.MagnetEndPos);
-				path.LineTo (this.endVector.Origin);
+				path.MoveTo (this.endVector.Origin);
+				path.LineTo (this.CustomizeEndPos);
 
 				return path;
 			}
 		}
 
 
-		private bool IsNearMagnetHome(Point pos)
-		{
-			double d = Point.Distance (this.MagnetHomePos, pos);
-
-			return d < ObjectLink.magnetHomeMargin;
-		}
-
-		private Point MagnetHomePos
+		private Point CustomizeStartPos
 		{
 			get
 			{
-				return this.AttachToPoint (0.1);
+				return this.startVector.GetPoint (this.startDistance);
+			}
+			set
+			{
+				this.startAngle = Point.ComputeAngleDeg (this.srcObject.Bounds.Center, value);
+				this.UpdateVectors ();
+				this.startDistance = Point.Distance (this.startVector.Origin, value);
+				this.startManual = true;
 			}
 		}
 
-		private Point MagnetStartPos
+		private Point CustomizeEndPos
 		{
 			get
 			{
-				Point dst;
-
-				if (this.magnetList.Count == 0)
-				{
-					dst = this.endVector.Origin;
-				}
-				else
-				{
-					dst = this.GetMagnetAbsolutePos (0);
-				}
-
-				double d = Point.Distance (this.startVector.Origin, dst) * 0.5;
-				return this.startVector.GetPoint (d);
+				return this.endVector.GetPoint (this.endDistance);
 			}
-		}
-
-		private Point MagnetEndPos
-		{
-			get
+			set
 			{
-				Point dst;
-
-				if (this.magnetList.Count == 0)
-				{
-					dst = this.startVector.Origin;
-				}
-				else
-				{
-					dst = this.GetMagnetAbsolutePos (this.magnetList.Count-1);
-				}
-
-				double d = Point.Distance (this.endVector.Origin, dst) * 0.5;
-				return this.endVector.GetPoint (d);
+				this.endAngle = Point.ComputeAngleDeg (this.dstObject.Bounds.Center, value);
+				this.UpdateVectors ();
+				this.endDistance = Point.Distance (this.endVector.Origin, value);
+				this.endManual = true;
 			}
 		}
 
-		private Point GetMagnetAbsolutePos(int rank)
+#if false
+		private Point CustomizeRelToAsb(Point pos)
 		{
-			if (rank < 0 || rank >= ObjectLink.magnetMax)
-			{
-				return Point.Zero;
-			}
+			Vector startVector = this.startVector;
+			Vector endVector   = this.endVector;
 
-			return this.MagnetRelToAsb (this.magnetList[rank]);
-		}
-
-		private void SetMagnetAbsolutePos(int rank, Point pos)
-		{
-			if (rank < 0 || rank >= ObjectLink.magnetMax)
-			{
-				return;
-			}
-
-			this.magnetList[rank] = this.MagnetAbsToRel (pos);
-		}
-
-		private Point MagnetRelToAsb(Point pos)
-		{
-			if (this.startVector.IsZero || this.endVector.IsZero)
+			if (startVector.IsZero || endVector.IsZero)
 			{
 				return Point.Zero;
 			}
 
 			double x, y;
 
-			if (this.startVector.Origin.X == this.endVector.Origin.X)
+			if (startVector.Origin.X == endVector.Origin.X)
 			{
-				x = this.startVector.Origin.X;
+				x = startVector.Origin.X;
 			}
 			else
 			{
-				x = this.startVector.Origin.X + pos.X*(this.endVector.Origin.X-this.startVector.Origin.X);
+				x = startVector.Origin.X + pos.X*(endVector.Origin.X-startVector.Origin.X);
 			}
 
-			if (this.startVector.Origin.Y == this.endVector.Origin.Y)
+			if (startVector.Origin.Y == endVector.Origin.Y)
 			{
-				y = this.startVector.Origin.Y;
+				y = startVector.Origin.Y;
 			}
 			else
 			{
-				y = this.startVector.Origin.Y + pos.Y*(this.endVector.Origin.Y-this.startVector.Origin.Y);
+				y = startVector.Origin.Y + pos.Y*(endVector.Origin.Y-startVector.Origin.Y);
 			}
 
 			return new Point (x, y);
 		}
 
-		private Point MagnetAbsToRel(Point pos)
+		private Point CustomizeAbsToRel(Point pos)
 		{
-			if (this.startVector.IsZero || this.endVector.IsZero)
+			Vector startVector = this.startVector;
+			Vector endVector   = this.endVector;
+
+			if (startVector.IsZero || endVector.IsZero)
 			{
 				return Point.Zero;
 			}
 
 			double x, y;
 
-			if (this.startVector.Origin.X == this.endVector.Origin.X)
+			if (startVector.Origin.X == endVector.Origin.X)
 			{
 				x = 0.5;
 			}
 			else
 			{
-				x = (pos.X-this.startVector.Origin.X) / (this.endVector.Origin.X-this.startVector.Origin.X);
+				x = (pos.X-startVector.Origin.X) / (endVector.Origin.X-startVector.Origin.X);
 			}
 
-			if (this.startVector.Origin.Y == this.endVector.Origin.Y)
+			if (startVector.Origin.Y == endVector.Origin.Y)
 			{
 				y = 0.5;
 			}
 			else
 			{
-				y = (pos.Y-this.startVector.Origin.Y) / (this.endVector.Origin.Y-this.startVector.Origin.Y);
+				y = (pos.Y-startVector.Origin.Y) / (endVector.Origin.Y-startVector.Origin.Y);
 			}
 
 			return new Point (x, y);
 		}
+#endif
 		#endregion
 
 		#region Draggind destination
 		private void DraggingDstMouseDown(Point pos)
 		{
 			this.isDraggingDst = true;
+			this.startManual = false;
+			this.endManual = false;
 			this.editor.LockObject (this);
-
-			this.initialPath = this.Path;
-			this.initialStartVector = this.startVector;
-			this.initialEndVector = this.endVector;
 
 			this.DraggingDstMouseMove(pos);
 		}
@@ -1195,7 +1020,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.isDraggingDst = false;
 			this.draggingStumpPos = Point.Zero;
-			this.initialPath = null;
 
 			if (this.dstObject != null)
 			{
@@ -1204,7 +1028,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.dstObject = this.hilitedDstObject;
 
-			if (this.hilitedDstObject != null)
+			if (this.hilitedDstObject == null)
+			{
+				this.startManual = false;
+				this.endManual = false;
+
+				this.SetPathDirty ();
+				this.UpdateVectors ();
+				this.UpdateDistances ();
+
+				this.startManual = true;
+				this.endManual = true;
+			}
+			else
 			{
 				this.srcObject.AddEntityLink (this.dstObject);
 
@@ -1224,6 +1060,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.path = null;
 		}
 
+		private bool IsUsablePath
+		{
+			//	Si les objets source et destination sont très proches ou se chevauchent, le chemin n'est plus utilisable.
+			get
+			{
+				if (this.dstObject == null)
+				{
+					return true;
+				}
+
+				Rectangle rs = this.srcObject.Bounds;
+				Rectangle rd = this.dstObject.Bounds;
+
+				rs.Inflate (5);
+				rd.Inflate (5);
+
+				return !rs.IntersectsWith (rd);
+			}
+		}
+
 		private Path Path
 		{
 			get
@@ -1241,79 +1097,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			var path = new Path ();
 
-			if (this.startVector.IsValid && this.endVector.IsValid)
-			{
-				if (this.magnetList.Count == 0 || !this.endVector.HasDirection)
-				{
-					double d = Point.Distance (this.startVector.Origin, this.endVector.Origin) * 0.5;
-
-					path.MoveTo (this.startVector.Origin);
-
-					if (this.endVector.HasDirection)
-					{
-						path.CurveTo (this.startVector.GetPoint (d), this.endVector.GetPoint (d), this.endVector.Origin);
-					}
-					else
-					{
-						path.CurveTo (this.startVector.GetPoint (d), this.endVector.Origin);
-					}
-				}
-				else
-				{
-					var points = new List<Point> ();
-
-					points.Add (this.MagnetStartPos);
-
-					for (int i = 0; i < this.magnetList.Count; i++)
-					{
-						points.Add (this.GetMagnetAbsolutePos (i));
-					}
-
-					points.Add (this.MagnetEndPos);
-
-					path.MoveTo (this.startVector.Origin);
-
-					for (int i = 0; i < points.Count; i++)
-					{
-						Point s = points[i];
-						Point p;
-
-						if (i < points.Count-1)
-						{
-							p = Point.Scale (points[i], points[i+1], 0.5);
-						}
-						else
-						{
-							p = this.endVector.Origin;
-						}
-
-						path.CurveTo (s, p);
-					}
-				}
-			}
+			path.MoveTo (this.startVector.Origin);
+			path.CurveTo (this.CustomizeStartPos, this.CustomizeEndPos, this.endVector.Origin);
 
 			return path;
 		}
 		#endregion
 
 
-		private static readonly int				magnetMax = 10;
-		private static readonly int				magnetHomeMargin = 10;
+		private static readonly double			customizeButtonRadius = 5;
 
 		private LinkableObject					srcObject;
 		private LinkableObject					dstObject;
 
+		private double							startAngle;
+		private double							endAngle;
+		private double							startDistance;
+		private double							endDistance;
 		private Vector							startVector;
 		private Vector							endVector;
+		private bool							startManual;
+		private bool							endManual;
 		private Path							path;
 
-		private Vector							initialStartVector;
-		private Vector							initialEndVector;
-		private Path							initialPath;
-
-		private List<Point>						magnetList;
-		private bool							isDraggingMagnet;
-		private int								magnetDraggingRank;
+		private bool							isDraggingCustomize;
 
 		private bool							isSrcHilited;
 		private bool							isDraggingDst;

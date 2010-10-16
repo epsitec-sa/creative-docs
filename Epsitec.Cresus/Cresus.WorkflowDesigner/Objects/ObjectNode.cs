@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.UpdateTitle ();
+
+			this.SetBounds (new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2));
 		}
 
 
@@ -118,10 +120,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
+		public override Vector GetLinkVector(double angle, bool isDst)
 		{
-			Point p1 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius);
-			Point p2 = Point.Move (this.bounds.Center, dstPos, ObjectNode.frameRadius+1);
+			Point c = this.bounds.Center;
+			double r = this.isRoot ? ObjectNode.frameRadius+2 : ObjectNode.frameRadius;
+
+			Point p1 = Transform.RotatePointDeg (c, angle, new Point (c.X+r, c.Y));
+			Point p2 = Transform.RotatePointDeg (c, angle, new Point (c.X+r+1, c.Y));
 
 			return new Vector (p1, p2);
 		}
@@ -241,7 +246,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.initialPos = pos;
 
-			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.NodeCount > 1)
+			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.LinkableObjectsCount > 1)
 			{
 				this.isDragging = true;
 				this.draggingOffset = pos-this.bounds.BottomLeft;
@@ -286,7 +291,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				//	Crée un moignon de lien o--->
 				var link = new ObjectLink (this.editor, this.entity);
 				link.SrcObject = this;
-				link.StumpAngle = this.ComputeBestStumpAngle ();
+				link.SetStumpAngle (this.ComputeBestStumpAngle ());
 				link.UpdateLink ();
 
 				this.objectLinks.Add (link);
@@ -437,8 +442,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
-				rect.Left = rect.Right+30;
-				rect.Width = System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth);
+				rect.Top = rect.Top+50;
+				rect.Width = 200;
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
@@ -558,7 +563,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				yield return new ActiveButton (ActiveElement.NodeOpenLink, this.PositionOpenLinkButton, GlyphShape.Plus);
 				yield return new ActiveButton (ActiveElement.NodeClose,    this.PositionCloseButton,    GlyphShape.Close, !this.isRoot);
-				yield return new ActiveButton (ActiveElement.LinkComment,  this.PositionCommentButton,  "C");
+				yield return new ActiveButton (ActiveElement.NodeComment,  this.PositionCommentButton,  "C");
 
 				yield return new ActiveButton (ActiveElement.NodeColor1, this.PositionColorButton (0), MainColor.Yellow);
 				yield return new ActiveButton (ActiveElement.NodeColor2, this.PositionColorButton (1), MainColor.Orange);
@@ -855,7 +860,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly double			frameRadius = 30;
+		private static readonly double			frameRadius = 30;
 		private static readonly double			shadowOffset = 6;
 
 		private bool							isRoot;

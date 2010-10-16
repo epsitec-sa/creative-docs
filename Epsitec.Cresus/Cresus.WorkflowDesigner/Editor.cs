@@ -175,21 +175,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public int NodeCount
+		public int LinkableObjectsCount
 		{
 			//	Retourne le nombre de boîtes existantes.
 			get
 			{
-				return this.nodes.Count;
-			}
-		}
-
-		public List<ObjectNode> Nodes
-		{
-			//	Retourne la liste des boîtes.
-			get
-			{
-				return this.nodes;
+				return this.LinkableObjects.Count ();
 			}
 		}
 
@@ -252,14 +243,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
-			node.SetBounds (new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2));
 			this.nodes.Add (node);
 		}
 
 		public void AddEdge(ObjectEdge edge)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
-			edge.SetBounds (new Rectangle (Point.Zero, ObjectEdge.frameSize));
 			this.edges.Add (edge);
 		}
 
@@ -463,7 +452,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					link.DstObject = null;
 					link.SrcObject.RemoveEntityLink (obj);
-					link.StumpAngle = link.GetAngle ();
+					link.SetStumpAngle (link.GetAngle ());
 				}
 			}
 
@@ -793,7 +782,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					if (this.hilitedObject.HilitedElement == ActiveElement.EdgeHeader ||
 						this.hilitedObject.HilitedElement == ActiveElement.NodeHeader)
 					{
-						if (this.NodeCount > 1)
+						if (this.LinkableObjectsCount > 1)
 						{
 							type = MouseCursorType.Move;
 						}

@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected bool DetectRoundButton(Point center, Point pos)
+		protected bool DetectRoundButton(Point center, Point pos, double radius = 0)
 		{
 			//	Détecte si la souris est dans un bouton circulaire.
 			if (center.IsZero)
@@ -271,7 +271,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				return (Point.Distance(center, pos) <= AbstractObject.buttonRadius+1);
+				if (radius == 0)
+				{
+					radius = AbstractObject.buttonRadius;
+				}
+
+				return Point.Distance(center, pos) <= radius+1;
 			}
 		}
 
