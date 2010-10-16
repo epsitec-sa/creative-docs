@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
 
+			this.SetBounds (new Rectangle (Point.Zero, ObjectEdge.frameSize));
+
 			//	Crée la liaison unique.
 			this.CreateInitialLinks ();
 		}
@@ -124,6 +126,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			link.SrcObject = this;
 			link.DstObject = this.editor.SearchInitialObject (this.Entity.NextNode);  // null si n'existe pas (et donc moignon o--->)
 
+			if (link.DstObject == null)
+			{
+				link.SetStumpAngle (0);
+			}
+
 			this.objectLinks.Add (link);
 		}
 
@@ -155,73 +162,44 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
+		public override Vector GetLinkVector(double angle, bool isDst)
 		{
-			// * 1.5 pour ne pas trop s'approcher des coins arrondis
-			double r = ObjectEdge.roundFrameRadius * (isDst ? 2.5 : 1.5);
+			double margin = ObjectEdge.roundFrameRadius * (isDst ? 2.5 : 1.5);
 
-			if (anchor == LinkAnchor.Left || anchor == LinkAnchor.Right)
+			Point c = this.bounds.Center;
+			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+this.bounds.Width+this.bounds.Height, c.Y));
+
+			Segment s = this.GetIntersect (c, p);
+			if (s != null)
 			{
-				double x, y;
-
-				if (this.isExtended)
+				if (s.anchor == LinkAnchor.Left || s.anchor == LinkAnchor.Right)
 				{
-					x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
-
-					if (dstPos.Y < this.bounds.Bottom+r)
-					{
-						y = this.bounds.Bottom+r;
-					}
-					else if (dstPos.Y > this.bounds.Top-r)
-					{
-						y = this.bounds.Top-r;
-					}
-					else
-					{
-						y = dstPos.Y;
-					}
-				}
-				else
-				{
-					if (isDst)
-					{
-						return Vector.Zero;
-					}
-					else
-					{
-						x = (anchor == LinkAnchor.Left) ? this.bounds.Left : this.bounds.Right;
-						y = this.bounds.Center.Y;
-					}
+					s.intersection.Y = System.Math.Max (s.intersection.Y, s.p1.Y+margin);
+					s.intersection.Y = System.Math.Min (s.intersection.Y, s.p2.Y-margin);
 				}
 
-				Point p = new Point (x, y);
-				Size dir = new Size ((anchor == LinkAnchor.Left) ? -1 : 1, 0);
-
-				return new Vector (p, dir);
-			}
-
-			if (anchor == LinkAnchor.Bottom || anchor == LinkAnchor.Top)
-			{
-				double x;
-				double y = (anchor == LinkAnchor.Bottom) ? this.bounds.Bottom : this.bounds.Top;
-
-				if (dstPos.X < this.bounds.Left+r)
+				if (s.anchor == LinkAnchor.Bottom || s.anchor == LinkAnchor.Top)
 				{
-					x = this.bounds.Left+r;
-				}
-				else if (dstPos.X > this.bounds.Right-r)
-				{
-					x = this.bounds.Right-r;
-				}
-				else
-				{
-					x = dstPos.X;
+					s.intersection.X = System.Math.Max (s.intersection.X, s.p1.X+margin);
+					s.intersection.X = System.Math.Min (s.intersection.X, s.p2.X-margin);
 				}
 
-				Point p = new Point (x, y);
-				Size dir = new Size (0, (anchor == LinkAnchor.Bottom) ? -1 : 1);
+				Point i = new Point (System.Math.Floor (s.intersection.X), System.Math.Floor (s.intersection.Y));
 
-				return new Vector (p, dir);
+				switch (s.anchor)
+				{
+					case LinkAnchor.Left:
+						return new Vector (i, new Size (-1, 0));
+
+					case LinkAnchor.Right:
+						return new Vector (i, new Size (1, 0));
+
+					case LinkAnchor.Bottom:
+						return new Vector (i, new Size (0, -1));
+
+					case LinkAnchor.Top:
+						return new Vector (i, new Size (0, 1));
+				}
 			}
 
 			return Vector.Zero;
@@ -232,23 +210,60 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point c = this.bounds.Center;
 			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+this.bounds.Width+this.bounds.Height, c.Y));
 
-			foreach (Point i in this.GetIntersect (c, p))
+			Segment s = this.GetIntersect (c, p);
+			if (s != null)
 			{
-				if (!i.IsZero)
-				{
-					return Point.Move (i, c, -AbstractObject.lengthStumpLink);
-				}
+				return Point.Move (s.intersection, c, -AbstractObject.lengthStumpLink);
 			}
 
 			return this.bounds.Center;
 		}
 
-		private IEnumerable<Point> GetIntersect(Point c, Point p)
+		private Segment GetIntersect(Point c, Point p)
 		{
-			yield return Geometry.IsIntersect (c, p, this.bounds.TopRight,    this.bounds.BottomRight);
-			yield return Geometry.IsIntersect (c, p, this.bounds.BottomRight, this.bounds.BottomLeft );
-			yield return Geometry.IsIntersect (c, p, this.bounds.BottomLeft,  this.bounds.TopLeft    );
-			yield return Geometry.IsIntersect (c, p, this.bounds.TopLeft,     this.bounds.TopRight   );
+			Point i;
+
+			i = Geometry.IsIntersect (c, p, this.bounds.BottomRight, this.bounds.TopRight);
+			if (!i.IsZero)
+			{
+				return new Segment (i, this.bounds.BottomRight, this.bounds.TopRight, LinkAnchor.Right);
+			}
+
+			i = Geometry.IsIntersect (c, p, this.bounds.BottomLeft, this.bounds.BottomRight);
+			if (!i.IsZero)
+			{
+				return new Segment (i, this.bounds.BottomLeft, this.bounds.BottomRight, LinkAnchor.Bottom);
+			}
+
+			i = Geometry.IsIntersect (c, p, this.bounds.BottomLeft,  this.bounds.TopLeft);
+			if (!i.IsZero)
+			{
+				return new Segment (i, this.bounds.BottomLeft, this.bounds.TopLeft, LinkAnchor.Left);
+			}
+
+			i = Geometry.IsIntersect (c, p, this.bounds.TopLeft, this.bounds.TopRight);
+			if (!i.IsZero)
+			{
+				return new Segment (i, this.bounds.TopLeft, this.bounds.TopRight, LinkAnchor.Top);
+			}
+
+			return null;
+		}
+
+		private class Segment
+		{
+			public Segment(Point intersection, Point p1, Point p2, LinkAnchor anchor)
+			{
+				this.intersection = intersection;
+				this.p1           = p1;
+				this.p2           = p2;
+				this.anchor       = anchor;
+			}
+
+			public Point		intersection;
+			public Point		p1;
+			public Point		p2;
+			public LinkAnchor	anchor;
 		}
 
 
@@ -375,7 +390,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.initialPos = pos;
 
-			if (this.hilitedElement == ActiveElement.EdgeHeader && this.editor.NodeCount > 1)
+			if (this.hilitedElement == ActiveElement.EdgeHeader && this.editor.LinkableObjectsCount > 1)
 			{
 				this.isDragging = true;
 				this.draggingOffset = pos-this.bounds.BottomLeft;
@@ -632,7 +647,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
-				rect.Left = rect.Right+30;
+				rect.Top = rect.Top+50;
 				rect.Width = System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth);
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
@@ -1121,7 +1136,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		public static readonly Size				frameSize = new Size (200, 100);
+		private static readonly Size			frameSize = new Size (200, 100);
 		public static readonly double			roundFrameRadius = 12;
 		private static readonly double			shadowOffset = 6;
 

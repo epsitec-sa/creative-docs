@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public virtual Vector GetLinkVector(LinkAnchor anchor, Point dstPos, bool isDst)
+		public virtual Vector GetLinkVector(double angle, bool isDst)
 		{
 			return Vector.Zero;
 		}
@@ -254,7 +254,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			return Geometry.AngleAvg (angles) - 180;  // à l'opposé
+			if (angles.Count == 0)
+			{
+				return 270;  // de haut en bas
+			}
+			else
+			{
+				return Geometry.AngleAvg (angles) - 180;  // à l'opposé
+			}
 		}
 
 

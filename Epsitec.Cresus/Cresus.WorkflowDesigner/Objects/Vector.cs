@@ -22,6 +22,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.end    = start + direction;
 		}
 
+		public Vector(Point start, double angle)
+		{
+			this.origin = start;
+			this.end    = Transform.RotatePointDeg (start, angle, new Point (start.X+1, start.Y));
+		}
+
 		public Vector(Vector vector, Size offset)
 		{
 			this.origin = new Point (vector.origin.X+offset.Width, vector.origin.Y+offset.Height);
@@ -50,6 +56,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return new Size (this.end.X-this.origin.X, this.end.Y-this.origin.Y);
+			}
+		}
+
+		public double Angle
+		{
+			get
+			{
+				return Point.ComputeAngleDeg (this.origin, this.end);
 			}
 		}
 
