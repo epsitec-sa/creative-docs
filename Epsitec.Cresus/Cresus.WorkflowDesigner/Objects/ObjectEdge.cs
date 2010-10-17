@@ -340,6 +340,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.editor.EditingObject = this;
 			this.hilitedElement = ActiveElement.None;
+			this.UpdateButtonsState ();
 		}
 
 		private void StopEdition()
@@ -348,6 +349,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editingTextField = null;
 
 			this.editor.EditingObject = null;
+			this.UpdateButtonsState ();
 		}
 
 
@@ -394,6 +396,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeHeader && this.editor.LinkableObjectsCount > 1)
 			{
 				this.isDragging = true;
+				this.UpdateButtonsState ();
 				this.draggingOffset = pos-this.bounds.BottomLeft;
 				this.editor.Invalidate();
 				this.editor.LockObject(this);
@@ -402,6 +405,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.EdgeChangeWidth)
 			{
 				this.isChangeWidth = true;
+				this.UpdateButtonsState ();
 				this.changeWidthPos = pos.X;
 				this.changeWidthInitial = this.bounds.Width;
 				this.editor.LockObject (this);
@@ -422,6 +426,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					{
 						this.editor.UpdateAfterGeometryChanged (this);
 						this.isDragging = false;
+						this.UpdateButtonsState ();
 						this.editor.LockObject (null);
 						this.editor.SetLocalDirty ();
 					}
@@ -435,6 +440,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.isDragging = false;
+				this.UpdateButtonsState ();
 				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
@@ -444,6 +450,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.isChangeWidth = false;
+				this.UpdateButtonsState ();
 				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
@@ -509,12 +516,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			ActiveElement element = base.MouseDetectBackground (pos);
-			if (element != ActiveElement.None)
-			{
-				return element;
-			}
-
 			if (this.RectangleTitle.Contains (pos))
 			{
 				return ActiveElement.EdgeHeader;
@@ -536,12 +537,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			ActiveElement element = base.MouseDetectForeground (pos);
-			if (element != ActiveElement.None)
-			{
-				return element;
-			}
-
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
 				return this.DetectButtons (pos);
@@ -609,7 +604,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.EdgeHeader || this.isHilitedForLinkChanging);
+			bool dragging = (this.hilitedElement == ActiveElement.EdgeHeader || this.hilitedElement == ActiveElement.EdgeEditDescription || this.isHilitedForLinkChanging);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -713,7 +708,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.EdgeColor7 ||
 						this.hilitedElement == ActiveElement.EdgeColor8 ||
 						this.hilitedElement == ActiveElement.EdgeExtend ||
-						this.hilitedElement == ActiveElement.EdgeClose);
+						this.hilitedElement == ActiveElement.EdgeClose ||
+						this.hilitedElement == ActiveElement.EdgeChangeWidth);
 			}
 		}
 
@@ -878,33 +874,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateClose(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateComment(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateExtend(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.Glyph = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateChangeWidth(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging && this.isExtended;
+			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging && this.isExtended);
 		}
 
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorEngine.MainColor == button.Color;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging && this.isExtended;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+		}
+
+		private bool IsDragging
+		{
+			get
+			{
+				return this.isDragging || this.isChangeWidth || this.editor.IsEditing;
+			}
 		}
 
 

@@ -194,36 +194,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override ActiveElement MouseDetectBackground(Point pos)
-		{
-			foreach (var obj in this.objectLinks)
-			{
-				ActiveElement element = obj.MouseDetectBackground (pos);
-
-				if (element != ActiveElement.None)
-				{
-					return element;
-				}
-			}
-
-			return ActiveElement.None;
-		}
-
-		public override ActiveElement MouseDetectForeground(Point pos)
-		{
-			foreach (var obj in this.objectLinks)
-			{
-				ActiveElement element = obj.MouseDetectForeground (pos);
-
-				if (element != ActiveElement.None)
-				{
-					return element;
-				}
-			}
-
-			return ActiveElement.None;
-		}
-
 
 		protected double ComputeBestStumpAngle()
 		{

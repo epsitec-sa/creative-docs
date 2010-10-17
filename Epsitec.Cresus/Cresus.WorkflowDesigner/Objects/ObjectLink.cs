@@ -250,11 +250,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Détecte si la souris est le long de la connexion.
 			var rect = this.Bounds;
-			rect.Inflate (margin);
+			rect.Inflate (margin*2);
 
 			if (rect.Contains (pos) && this.IsUsablePath)
 			{
 				if (Geometry.DetectOutline (this.Path, margin, pos))
+				{
+					return true;
+				}
+
+				if (Geometry.DetectOutline (this.CustomizeConstrainPath, margin*2, pos))
 				{
 					return true;
 				}
@@ -384,6 +389,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.SetPathDirty ();
 			this.UpdateVectors ();
 			this.UpdateDistances ();
+			this.UpdateButtonsGeometry ();
 
 			this.startManual = true;
 			this.endManual = true;
@@ -405,6 +411,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateAngles ();
 			this.UpdateVectors ();
 			this.UpdateDistances ();
+			this.UpdateButtonsGeometry ();
 		}
 
 		private void UpdateAngles()
@@ -712,6 +719,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void CustomizeMouseDown(Point pos)
 		{
 			this.isDraggingCustomize = true;
+			this.UpdateButtonsState ();
 			this.SetPathDirty ();
 			this.editor.LockObject (this);
 			this.editor.Invalidate ();
@@ -730,14 +738,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.SetPathDirty ();
+			this.UpdateButtonsGeometry ();
 			this.editor.Invalidate ();
 		}
 
 		private void CustomizeMouseUp(Point pos)
 		{
 			this.isDraggingCustomize = false;
+			this.UpdateButtonsState ();
 			this.editor.LockObject (null);
 			this.SetPathDirty ();
+			this.UpdateButtonsGeometry ();
 			this.editor.UpdateGeometry ();
 			this.editor.SetLocalDirty ();
 			this.editor.Invalidate ();
@@ -864,6 +875,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DraggingDstMouseDown(Point pos)
 		{
 			this.isDraggingDst = true;
+			this.UpdateButtonsState ();
 			this.startManual = false;
 			this.endManual = false;
 			this.editor.LockObject (this);
@@ -916,6 +928,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DraggingDstMouseUp()
 		{
 			this.isDraggingDst = false;
+			this.UpdateButtonsState ();
 			this.draggingStumpPos = Point.Zero;
 
 			if (this.dstObject != null)
@@ -933,6 +946,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.SetPathDirty ();
 				this.UpdateVectors ();
 				this.UpdateDistances ();
+				this.UpdateButtonsGeometry ();
 
 				this.startManual = true;
 				this.endManual = true;
@@ -1045,41 +1059,48 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateClose(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite;
+			button.State.Visible = this.IsHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateComment(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && this.HasLinkCommentButton;
+			button.State.Visible = this.IsHilite && this.HasLinkCommentButton && !this.IsDragging;
+			button.State.Detectable = button.State.Visible;
 		}
 
 		private void UpdateButtonStateChangeDst(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite;
+			button.State.Visible = button.State.Hilited || (this.IsHilite && !this.IsDragging);
 		}
 
 		private void UpdateButtonStateCreateDst(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite;
+			button.State.Visible = this.IsHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateCustomizeStart(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && this.dstObject != null;
+			button.State.Visible = button.State.Hilited || (this.IsHilite && this.dstObject != null && !this.IsDragging);
 		}
 
 		private void UpdateButtonStateCustomizeEnd(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && this.dstObject != null;
+			button.State.Visible = button.State.Hilited || (this.IsHilite && this.dstObject != null && !this.IsDragging);
 		}
 
+		private bool IsDragging
+		{
+			get
+			{
+				return this.isDraggingCustomize || this.isDraggingDst;
+			}
+		}
 
-		private static readonly double			customizeButtonRadius = 5;
 
 		private LinkableObject					srcObject;
 		private LinkableObject					dstObject;

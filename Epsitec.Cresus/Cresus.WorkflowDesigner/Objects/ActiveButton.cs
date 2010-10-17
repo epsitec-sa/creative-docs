@@ -100,18 +100,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public bool Shadow
-		{
-			get
-			{
-				return this.shadow;
-			}
-			set
-			{
-				this.shadow = value;
-			}
-		}
-
 		public bool RoundButton
 		{
 			get
@@ -173,7 +161,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public bool Detect(Point pos)
 		{
-			if (this.state.Visible && !this.center.IsZero)
+			//	Il faut détecter les boutons invisibles !
+			if (this.state.Detectable && !this.center.IsZero)
 			{
 				if (this.roundButton)
 				{
@@ -189,7 +178,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return false;
 			}
 		}
-
 
 		public void Draw(Graphics graphics)
 		{
@@ -345,14 +333,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			if (this.shadow)
-			{
-				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
-				rect.Inflate (this.radius*0.2);
-				rect.Offset (0, -this.radius*0.7);
-				//?this.DrawRoundShadow (graphics, rect, rect.Width/2, (int) (this.radius*0.7), 0.5);
-			}
-
 			Color colorSurface;
 			Color colorFrame;
 			Color colorShape;
@@ -388,7 +368,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private ActiveElement				element;
 		private Point						center;
 		private double						radius;
-		private bool						shadow;
 		private bool						roundButton;
 		private GlyphShape					glyph;
 		private string						text;
