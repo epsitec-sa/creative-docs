@@ -138,18 +138,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Couleur de fond de la boîte.
 			get
 			{
-				return this.boxColor;
+				return this.colorEngine.MainColor;
 			}
 			set
 			{
-				if (this.boxColor != value)
+				if (this.colorEngine.MainColor != value)
 				{
-					this.boxColor = value;
+					this.colorEngine.MainColor = value;
 
 					//	Change la couleur de toutes les connexions liées.
 					foreach (var obj in this.objectLinks)
 					{
-						obj.BackgroundMainColor = this.boxColor;
+						obj.BackgroundMainColor = this.colorEngine.MainColor;
 					}
 
 					this.editor.Invalidate ();
@@ -229,27 +229,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	les connexions qui partent et qui arrivent, on se place à l'opposé.
 			var angles = new List<double> ();
 
-			//	Tient compte des liens qui partent.
-			foreach (var link in this.objectLinks)
+			if (this.objectLinks != null)
 			{
-				double angle = link.GetAngleSrc ();
-
-				if (!double.IsNaN (angle))
+				//	Tient compte des liens qui partent.
+				foreach (var link in this.objectLinks)
 				{
-					angles.Add (angle);
-				}
-			}
-
-			//	Tient compte des liens qui arrivent.
-			foreach (var link in this.editor.LinkObjects)
-			{
-				if (link.DstObject == this)
-				{
-					double angle = link.GetAngleDst ();
+					double angle = link.GetAngleSrc ();
 
 					if (!double.IsNaN (angle))
 					{
 						angles.Add (angle);
+					}
+				}
+
+				//	Tient compte des liens qui arrivent.
+				foreach (var link in this.editor.LinkObjects)
+				{
+					if (link.DstObject == this)
+					{
+						double angle = link.GetAngleDst ();
+
+						if (!double.IsNaN (angle))
+						{
+							angles.Add (angle);
+						}
 					}
 				}
 			}
@@ -299,11 +302,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				foreach (var obj in this.objectLinks)
+				if (this.objectLinks != null)
 				{
-					if (obj.IsNoneDstObject)
+					foreach (var obj in this.objectLinks)
 					{
-						return true;
+						if (obj.IsNoneDstObject)
+						{
+							return true;
+						}
 					}
 				}
 

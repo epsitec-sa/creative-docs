@@ -386,24 +386,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				//	Détection dans l'ordre inverse du dessin !
-				foreach (var b in this.ActiveButtons.Reverse ())
-				{
-					if (b.roundButton)
-					{
-						if (this.DetectRoundButton (b.pos, pos))
-						{
-							return b.element;
-						}
-					}
-					else
-					{
-						if (this.DetectSquareButton (b.pos, pos))
-						{
-							return b.element;
-						}
-					}
-				}
+				return this.DetectButtons (pos);
 			}
 
 			return ActiveElement.None;
@@ -486,24 +469,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.GetColor(1));
+			graphics.RenderSolid(this.colorEngine.GetColor(1));
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.GetColorMain(dragging ? 0.8 : 0.4);
-			Color c2 = this.GetColorMain(dragging ? 0.4 : 0.1);
+			Color c1 = this.colorEngine.GetColorMain (dragging ? 0.8 : 0.4);
+			Color c2 = this.colorEngine.GetColorMain (dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-			Color colorLine = this.GetColor(0.9);
+			Color colorLine = this.colorEngine.GetColor (0.9);
 			if (dragging)
 			{
-				colorLine = this.GetColorMain(0.3);
+				colorLine = this.colorEngine.GetColorMain (0.3);
 			}
 
-			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
+			Color colorFrame = dragging ? this.colorEngine.GetColorMain () : this.colorEngine.GetColor (0);
 
 			//	Dessine le titre.
-			Color titleColor = dragging ? this.GetColor(1) : this.GetColor(0);
+			Color titleColor = dragging ? this.colorEngine.GetColor (1) : this.colorEngine.GetColor (0);
 
 			rect = this.bounds;
 			rect.Offset (0, 2);
@@ -518,103 +501,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine tous les boutons.
-			foreach (var b in this.ActiveButtons)
-			{
-				if (b.glyph != GlyphShape.None)
-				{
-					if (this.hilitedElement == b.element)
-					{
-						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.glyph, true, false, b.enable);
-					}
-					else if (this.IsHeaderHilite && !this.isDragging)
-					{
-						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.glyph, false, false, b.enable);
-					}
-				}
-				else if (b.text != null)
-				{
-					if (this.hilitedElement == b.element)
-					{
-						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.text, true, false, b.enable);
-					}
-					else if (this.IsHeaderHilite && !this.isDragging)
-					{
-						this.DrawRoundButton (graphics, b.pos, AbstractObject.buttonRadius, b.text, false, false, b.enable);
-					}
-				}
-				else if (b.color != MainColor.None)
-				{
-					if (this.hilitedElement == b.element)
-					{
-						this.DrawSquareButton (graphics, b.pos, b.color, this.boxColor == b.color, true);
-					}
-					else if (this.IsHeaderHilite && !this.isDragging)
-					{
-						this.DrawSquareButton (graphics, b.pos, b.color, this.boxColor == b.color, false);
-					}
-				}
-			}
-		}
-
-
-		private IEnumerable<ActiveButton> ActiveButtons
-		{
-			get
-			{
-				yield return new ActiveButton (ActiveElement.NodeOpenLink, this.PositionOpenLinkButton, GlyphShape.Plus);
-				yield return new ActiveButton (ActiveElement.NodeClose,    this.PositionCloseButton,    GlyphShape.Close, !this.isRoot);
-				yield return new ActiveButton (ActiveElement.NodeComment,  this.PositionCommentButton,  "C");
-
-				yield return new ActiveButton (ActiveElement.NodeColor1, this.PositionColorButton (0), MainColor.Yellow);
-				yield return new ActiveButton (ActiveElement.NodeColor2, this.PositionColorButton (1), MainColor.Orange);
-				yield return new ActiveButton (ActiveElement.NodeColor3, this.PositionColorButton (2), MainColor.Red);
-				yield return new ActiveButton (ActiveElement.NodeColor4, this.PositionColorButton (3), MainColor.Lilac);
-				yield return new ActiveButton (ActiveElement.NodeColor5, this.PositionColorButton (4), MainColor.Purple);
-				yield return new ActiveButton (ActiveElement.NodeColor6, this.PositionColorButton (5), MainColor.Blue);
-				yield return new ActiveButton (ActiveElement.NodeColor7, this.PositionColorButton (6), MainColor.Green);
-				yield return new ActiveButton (ActiveElement.NodeColor8, this.PositionColorButton (7), MainColor.Grey);
-			}
-		}
-
-		private class ActiveButton
-		{
-			public ActiveButton(ActiveElement element, Point pos, GlyphShape glyph, bool enable = true)
-			{
-				this.element     = element;
-				this.pos         = pos;
-				this.glyph       = glyph;
-				this.color       = MainColor.None;
-				this.enable      = enable;
-				this.roundButton = true;
-			}
-
-			public ActiveButton(ActiveElement element, Point pos, string text, bool enable = true)
-			{
-				this.element     = element;
-				this.pos         = pos;
-				this.glyph       = GlyphShape.None;
-				this.text        = text;
-				this.color       = MainColor.None;
-				this.enable      = enable;
-				this.roundButton = true;
-			}
-
-			public ActiveButton(ActiveElement element, Point pos, MainColor color, bool enable = true)
-			{
-				this.element     = element;
-				this.pos         = pos;
-				this.color       = color;
-				this.enable      = enable;
-				this.roundButton = false;
-			}
-
-			public ActiveElement	element;
-			public Point			pos;
-			public bool				enable;
-			public bool				roundButton;
-			public GlyphShape		glyph;
-			public string			text;
-			public MainColor		color;
+			this.DrawButtons (graphics);
 		}
 
 
@@ -727,6 +614,55 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				return this.entity as WorkflowNodeEntity;
 			}
+		}
+
+
+		protected override void CreateButtons()
+		{
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorEngine, GlyphShape.Plus,  this.UpdateButtonOpenLink));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorEngine, GlyphShape.Close, this.UpdateButtonClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorEngine, "C",              this.UpdateButtonComment));
+
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonColor));
+		}
+
+		private void UpdateButtonOpenLink(ActiveButton button)
+		{
+			button.State.Center = this.PositionOpenLinkButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonClose(ActiveButton button)
+		{
+			button.State.Enable = !this.isRoot;
+			button.State.Center = this.PositionCloseButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonComment(ActiveButton button)
+		{
+			button.State.Center = this.PositionCommentButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonColor(ActiveButton button)
+		{
+			int rank = button.Element - ActiveElement.NodeColor1;
+
+			button.State.Center = this.PositionColorButton (rank);
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Selected = this.colorEngine.MainColor == button.Color;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
 		}
 
 

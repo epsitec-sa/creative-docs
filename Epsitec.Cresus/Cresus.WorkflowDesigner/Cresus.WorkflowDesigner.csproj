@@ -59,6 +59,9 @@
     <Compile Include="Misc.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
+    <Compile Include="Objects\ActiveButton.cs" />
+    <Compile Include="Objects\ColorEngine.cs" />
+    <Compile Include="Objects\ActiveButtonState.cs" />
     <Compile Include="Objects\LinkableObject.cs" />
     <Compile Include="Objects\LinkAnchor.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />

@@ -26,9 +26,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor = editor;
 			this.entity = entity;
 
-			this.boxColor = MainColor.Blue;
-			this.isDimmed = false;
+			this.colorEngine = new ColorEngine (MainColor.Blue);
 			this.hilitedElement = ActiveElement.None;
+
+			this.buttons = new List<ActiveButton> ();
+			this.CreateButtons ();
+			this.UpdateButtons ();
 		}
 
 
@@ -67,30 +70,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Couleur de fond de la boîte.
 			get
 			{
-				return this.boxColor;
+				return this.colorEngine.MainColor;
 			}
 			set
 			{
-				if (this.boxColor != value)
+				if (this.colorEngine.MainColor != value)
 				{
-					this.boxColor = value;
-					this.editor.Invalidate();
-				}
-			}
-		}
-
-		public bool IsDimmed
-		{
-			//	Détermine si l'objet apparaît en estompé (couleurs plus claires).
-			get
-			{
-				return this.isDimmed;
-			}
-			set
-			{
-				if (this.isDimmed != value)
-				{
-					this.isDimmed = value;
+					this.colorEngine.MainColor = value;
 					this.editor.Invalidate();
 				}
 			}
@@ -118,6 +104,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.hilitedElement != value)
 				{
 					this.hilitedElement = value;
+					this.UpdateButtons ();
 					this.editor.Invalidate ();
 				}
 			}
@@ -208,192 +195,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "no key";
 				}
 			}
-		}
-
-
-		protected bool DetectSquareButton(Point center, Point pos)
-		{
-			//	Détecte si la souris est dans un bouton carré.
-			if (center.IsZero)
-			{
-				return false;
-			}
-			else
-			{
-				double radius = AbstractObject.buttonSquare;
-				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				rect.Inflate(0.5);
-				return rect.Contains(pos);
-			}
-		}
-
-		protected void DrawSquareButton(Graphics graphics, Point center, MainColor color, bool selected, bool hilited)
-		{
-			//	Dessine un bouton carré avec une couleur.
-			if (center.IsZero)
-			{
-				return;
-			}
-
-			double radius = AbstractObject.buttonSquare;
-			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-			rect.Inflate(0.5);
-
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.GetColorMain(color, 0.8));
-
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.GetColor(0));
-
-			if (selected)
-			{
-				rect.Deflate(1);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.GetColor(1));
-				rect.Inflate(1);
-			}
-
-			if (hilited)
-			{
-				rect.Deflate(2);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.GetColor(1));
-			}
-		}
-
-
-		protected bool DetectRoundButton(Point center, Point pos, double radius = 0)
-		{
-			//	Détecte si la souris est dans un bouton circulaire.
-			if (center.IsZero)
-			{
-				return false;
-			}
-			else
-			{
-				if (radius == 0)
-				{
-					radius = AbstractObject.buttonRadius;
-				}
-
-				return Point.Distance(center, pos) <= radius+1;
-			}
-		}
-
-		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
-		{
-			//	Dessine un bouton circulaire avec un glyph.
-			this.DrawRoundButton(graphics, center, radius, shape, hilited, shadow, true);
-		}
-
-		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow, bool enable)
-		{
-			//	Dessine un bouton circulaire avec un glyph.
-			if (center.IsZero)
-			{
-				return;
-			}
-
-			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
-
-			if (shape != GlyphShape.None)
-			{
-				Color colorShape;
-				if (enable)
-				{
-					colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
-				}
-				else
-				{
-					colorShape = this.GetColor(0.7);
-				}
-
-				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, colorShape, shape, PaintTextStyle.Button);
-			}
-		}
-
-		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow)
-		{
-			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
-			this.DrawRoundButton(graphics, center, radius, text, hilited, shadow, true);
-		}
-
-		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow, bool enable)
-		{
-			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
-			if (center.IsZero)
-			{
-				return;
-			}
-
-			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
-
-			if (!string.IsNullOrEmpty(text))
-			{
-				Color colorShape;
-				if (enable)
-				{
-					colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
-				}
-				else
-				{
-					colorShape = this.GetColor(0.7);
-				}
-
-				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				double size = 14;
-
-				if (text == "*")  // texte étoile pour une relation privée ?
-				{
-					size = 30;  // beaucoup plus grand
-					rect.Offset(0, -4);  // légèrement plus bas
-				}
-
-				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, text, Font.GetFont(Font.DefaultFontFamily, "Bold"), size, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid(colorShape);
-			}
-		}
-
-		protected void DrawRoundButton(Graphics graphics, Point center, double radius, bool hilited, bool shadow, bool enable)
-		{
-			//	Dessine un bouton circulaire vide.
-			if (center.IsZero)
-			{
-				return;
-			}
-
-			if (shadow)
-			{
-				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				rect.Inflate(radius*0.2);
-				rect.Offset(0, -radius*0.7);
-				this.DrawRoundShadow(graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
-			}
-
-			Color colorSurface;
-			Color colorFrame;
-			Color colorShape;
-
-			if (enable)
-			{
-				colorSurface = hilited ? this.GetColorMain() : this.GetColor(1);
-				colorFrame = this.GetColor(0);
-				colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
-			}
-			else
-			{
-				colorSurface = this.GetColor(0.9);
-				colorFrame = this.GetColor(0.5);
-				colorShape = this.GetColor(0.7);
-			}
-
-			graphics.AddFilledCircle(center, radius);
-			graphics.RenderSolid(colorSurface);
-
-			graphics.AddCircle(center, radius);
-			graphics.RenderSolid(colorFrame);
 		}
 
 
@@ -495,123 +296,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected bool IsDarkColorMain
-		{
-			//	Indique si la couleur pour les mises en évidence est foncée.
-			get
-			{
-				return this.boxColor == MainColor.DarkGrey;
-			}
-		}
-
-		protected Color GetColorMain()
-		{
-			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorMain(1.0);
-		}
-
-		protected Color GetColorMain(double alpha)
-		{
-			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorMain(this.boxColor, alpha);
-		}
-
-		protected Color GetColorMain(MainColor boxColor)
-		{
-			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorMain(boxColor, 1.0);
-		}
-
-		protected Color GetColorMain(MainColor boxColor, double alpha)
-		{
-			//	Retourne la couleur pour les mises en évidence.
-			Color color = Color.FromAlphaRgb(alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
-
-			switch (boxColor)
-			{
-				case MainColor.Blue:
-					color = Color.FromAlphaRgb(alpha, 0.0/255.0, 90.0/255.0, 160.0/255.0);
-					break;
-
-				case MainColor.Green:
-					color = Color.FromAlphaRgb(alpha, 0.0/255.0, 130.0/255.0, 20.0/255.0);
-					break;
-
-				case MainColor.Red:
-					color = Color.FromAlphaRgb(alpha, 140.0/255.0, 30.0/255.0, 0.0/255.0);
-					break;
-
-				case MainColor.Grey:
-					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
-					break;
-
-				case MainColor.DarkGrey:
-					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
-					break;
-
-				case MainColor.Yellow:
-					color = Color.FromAlphaRgb(alpha, 200.0/255.0, 200.0/255.0, 0.0/255.0);
-					break;
-
-				case MainColor.Orange:
-					color = Color.FromAlphaRgb(alpha, 200.0/255.0, 150.0/255.0, 0.0/255.0);
-					break;
-
-				case MainColor.Lilac:
-					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 0.0/255.0, 150.0/255.0);
-					break;
-
-				case MainColor.Purple:
-					color = Color.FromAlphaRgb(alpha, 30.0/255.0, 0.0/255.0, 200.0/255.0);
-					break;
-			}
-
-			if (this.isDimmed)
-			{
-				color = this.GetColorLighter(color, 0.3);
-			}
-
-			return color;
-		}
-
-		protected Color GetColor(double brightness)
-		{
-			//	Retourne un niveau de gris.
-			Color color = Color.FromBrightness(brightness);
-
-			if (this.isDimmed)
-			{
-				color = this.GetColorLighter(color, 0.3);
-			}
-
-			return color;
-		}
-
-		protected Color GetColorAdjusted(Color color, double factor)
-		{
-			//	Retourne une couleur ajustée, sans changer la transparence.
-			if (this.IsDarkColorMain)
-			{
-				return this.GetColorDarker(color, factor);
-			}
-			else
-			{
-				return this.GetColorLighter(color, factor);
-			}
-		}
-
-		private Color GetColorLighter(Color color, double factor)
-		{
-			//	Retourne une couleur éclaircie, sans changer la transparence.
-			return Color.FromAlphaRgb(color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
-		}
-
-		private Color GetColorDarker(Color color, double factor)
-		{
-			//	Retourne une couleur assombrie, sans changer la transparence.
-			factor = 0.5+(factor*0.5);
-			return Color.FromAlphaRgb(color.A, color.R*factor, color.G*factor, color.B*factor);
-		}
 
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
@@ -772,6 +456,43 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected virtual void CreateButtons()
+		{
+		}
+
+		public void UpdateButtons()
+		{
+			foreach (var button in this.buttons)
+			{
+				button.Update ();
+			}
+		}
+
+		protected void DrawButtons(Graphics graphics)
+		{
+			foreach (var button in this.buttons)
+			{
+				button.Draw (graphics);
+			}
+		}
+
+		protected ActiveElement DetectButtons(Point pos)
+		{
+			//	Détection dans l'ordre inverse du dessin !
+			for (int i=this.buttons.Count-1; i>= 0; i--)
+			{
+				var button = this.buttons[i];
+
+				if (button.Detect (pos))
+				{
+					return button.Element;
+				}
+			}
+
+			return ActiveElement.None;
+		}
+
+
 		protected static readonly double		headerHeight = 32;
 		protected static readonly double		footerHeight = 16;
 		protected static readonly double		buttonRadius = 10;
@@ -786,8 +507,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected readonly Editor				editor;
 		protected readonly AbstractEntity		entity;
 
+		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
-		protected MainColor						boxColor;
-		protected bool							isDimmed;
+		protected ColorEngine					colorEngine;
 	}
 }
