@@ -237,39 +237,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return ActiveElement.None;
 			}
 
-			//	Souris dans le bouton pour fermer la connexion.
-			if (this.DetectRoundButton (pos, this.PositionLinkClose))
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return ActiveElement.LinkClose;
-			}
-
-			//	Souris dans le bouton pour commenter la connexion.
-			if (this.HasLinkCommentButton && this.DetectRoundButton (pos, this.PositionLinkComment))
-			{
-				return ActiveElement.LinkComment;
-			}
-
-			//	Souris dans l'un des boutons utilisateur.
-			if (this.dstObject != null && this.DetectRoundButton (pos, this.CustomizeStartPos, ObjectLink.customizeButtonRadius))
-			{
-				return ActiveElement.LinkCustomizeStart;
-			}
-
-			if (this.dstObject != null && this.DetectRoundButton (pos, this.CustomizeEndPos, ObjectLink.customizeButtonRadius))
-			{
-				return ActiveElement.LinkCustomizeEnd;
-			}
-
-			//	Souris dans le bouton pour changer le noeud destination ?
-			if (this.DetectRoundButton (pos, this.PositionLinkChangeDst))
-			{
-				return ActiveElement.LinkChangeDst;
-			}
-
-			//	Souris dans le bouton pour créer le noeud destination ?
-			if (this.DetectRoundButton (pos, this.PositionLinkCreateDst))
-			{
-				return ActiveElement.LinkCreateDst;
+				return this.DetectButtons (pos);
 			}
 
 			return ActiveElement.None;
@@ -578,11 +548,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				//	Dessine les contraintes utilisateur.
 				if (this.dstObject != null && (this.isDraggingCustomize || this.IsHilite))
 				{
-					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.GetColorMain ());
+					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.colorEngine.GetColorMain ());
 				}
 
 				//	Dessine la connexion et la flèche.
-				Color color = (this.IsHilite || this.isDraggingDst) ? this.GetColorMain () : this.GetColor (0);
+				Color color = (this.IsHilite || this.isDraggingDst) ? this.colorEngine.GetColorMain () : this.colorEngine.GetColor (0);
 
 				if (this.isDraggingDst && this.hilitedDstObject == null)
 				{
@@ -598,7 +568,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine la pastille au départ.
-			this.DrawRoundButton (graphics, this.startVector.Origin, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+			this.DrawCircle (graphics, this.startVector.Origin, AbstractObject.bulletRadius);
 		}
 
 		private void DrawArrow(Graphics graphics, Vector startVector, Vector endVector, Color color)
@@ -619,93 +589,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.LineWidth = 1;
 		}
 
+		private void DrawCircle(Graphics graphics, Point center, double radius)
+		{
+			//	Dessine un cercle vide.
+			graphics.AddFilledCircle (center, radius);
+			graphics.RenderSolid (this.colorEngine.GetColor (1));
+
+			graphics.AddCircle (center, radius);
+			graphics.RenderSolid (this.colorEngine.GetColor (0));
+		}
+
 		public override void DrawForeground(Graphics graphics)
 		{
-			//	Dessine les contraintes utilisateur.
-			Point p;
-
-			//	Dessine le bouton pour commenter la connexion.
-			p = this.PositionLinkComment;
-			if (!p.IsZero && this.HasLinkCommentButton)
-			{
-				if (this.hilitedElement == ActiveElement.LinkComment)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, "C", false, false);
-				}
-			}
-
-			//	Dessine les boutons utilisateur.
-			p = this.CustomizeStartPos;
-			if (!p.IsZero && this.dstObject != null)
-			{
-				if (this.hilitedElement == ActiveElement.LinkCustomizeStart)
-				{
-					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", false, false);
-				}
-			}
-
-			p = this.CustomizeEndPos;
-			if (!p.IsZero && this.dstObject != null)
-			{
-				if (this.hilitedElement == ActiveElement.LinkCustomizeEnd)
-				{
-					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, ObjectLink.customizeButtonRadius, "", false, false);
-				}
-			}
-
-			//	Dessine le bouton pour fermer la connexion.
-			p = this.PositionLinkClose;
-			if (!p.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.LinkClose)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-				}
-			}
-
-			//	Dessine le bouton pour changer de noeud destination.
-			p = this.PositionLinkChangeDst;
-			if (!p.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.LinkChangeDst)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-			}
-
-			//	Dessine le bouton pour créer le noeud destination.
-			p = this.PositionLinkCreateDst;
-			if (!p.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.LinkCreateDst)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, true, false);
-				}
-				else if (this.IsHilite)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.Plus, false, false);
-				}
-			}
+			this.DrawButtons (graphics);
 		}
 
 
@@ -1103,6 +999,59 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return path;
 		}
 		#endregion
+
+
+		protected override void CreateButtons()
+		{
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorEngine, GlyphShape.Close,          this.UpdateButtonClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorEngine, "C",                       this.UpdateButtonComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonChangeDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorEngine, GlyphShape.Plus,           this.UpdateButtonCreateDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorEngine, "o",                       this.UpdateButtonCustomizeStart));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeEnd,   this.colorEngine, "o",                       this.UpdateButtonCustomizeEnd));
+		}
+
+		private void UpdateButtonClose(ActiveButton button)
+		{
+			button.State.Center = this.PositionLinkClose;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite;
+		}
+
+		private void UpdateButtonComment(ActiveButton button)
+		{
+			button.State.Center = this.PositionLinkComment;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite && this.HasLinkCommentButton;
+		}
+
+		private void UpdateButtonChangeDst(ActiveButton button)
+		{
+			button.State.Center = this.PositionLinkChangeDst;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite;
+		}
+
+		private void UpdateButtonCreateDst(ActiveButton button)
+		{
+			button.State.Center = this.PositionLinkCreateDst;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite;
+		}
+
+		private void UpdateButtonCustomizeStart(ActiveButton button)
+		{
+			button.State.Center = this.CustomizeStartPos;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite && this.dstObject != null;
+		}
+
+		private void UpdateButtonCustomizeEnd(ActiveButton button)
+		{
+			button.State.Center = this.CustomizeEndPos;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHilite && this.dstObject != null;
+		}
 
 
 		private static readonly double			customizeButtonRadius = 5;

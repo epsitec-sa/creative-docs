@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.isVisible = true;
-			this.boxColor = MainColor.Yellow;
+			this.colorEngine.MainColor = MainColor.Yellow;
 
 			this.textLayoutTitle = new TextLayout();
 			this.textLayoutTitle.DefaultFontSize = 14;
@@ -393,63 +393,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return ActiveElement.None;
 			}
 
-			//	Souris dans le bouton pour modifier la largeur ?
-			if (this.DetectRoundButton (this.PositionWidthButton, pos))
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return ActiveElement.CommentWidth;
-			}
-
-			//	Souris dans le bouton de fermeture ?
-			if (this.DetectRoundButton (this.PositionCloseButton, pos))
-			{
-				return ActiveElement.CommentClose;
-			}
-
-			//	Souris dans le bouton de déplacer l'attache ?
-			if (this.DetectRoundButton (this.PositionAttachToLinkButton, pos))
-			{
-				return ActiveElement.CommentAttachTo;
-			}
-
-			//	Souris dans le bouton des couleurs ?
-			if (this.DetectSquareButton (this.PositionColorButton (0), pos))
-			{
-				return ActiveElement.CommentColor1;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (1), pos))
-			{
-				return ActiveElement.CommentColor2;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (2), pos))
-			{
-				return ActiveElement.CommentColor3;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (3), pos))
-			{
-				return ActiveElement.CommentColor4;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (4), pos))
-			{
-				return ActiveElement.CommentColor5;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (5), pos))
-			{
-				return ActiveElement.CommentColor6;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (6), pos))
-			{
-				return ActiveElement.CommentColor7;
-			}
-
-			if (this.DetectSquareButton (this.PositionColorButton (7), pos))
-			{
-				return ActiveElement.CommentColor8;
+				return this.DetectButtons (pos);
 			}
 
 			return ActiveElement.None;
@@ -527,12 +473,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.ColorCommentHeader (this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (this.GetColor (0));
+				graphics.RenderSolid (this.colorEngine.GetColor (0));
 
 				rect.Width -= rect.Height;
 				rect.Offset (0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
-				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor (1), GlyphPaintStyle.Normal);
+				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorEngine.GetColor (1), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine la boîte vide avec la queue (bulle de bd).
@@ -542,90 +488,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid (this.ColorComment (this.hilitedElement != ActiveElement.None));
 
 			graphics.Rasterizer.AddOutline (path);
-			graphics.RenderSolid (this.GetColor (0));
+			graphics.RenderSolid (this.colorEngine.GetColor (0));
 
 			//	Dessine le texte.
 			rect = this.bounds;
 			rect.Deflate (ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor (this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorEngine.GetColor (this.colorEngine.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
 		}
 
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			if (!this.isVisible)
+			if (this.isVisible)
 			{
-				return;
-			}
-
-			Rectangle rh = Rectangle.Empty;
-			if (this.hilitedElement != ActiveElement.None)
-			{
-				rh = this.HeaderRectangle;
-			}
-
-			//	Dessine le bouton de fermeture.
-			if (!rh.IsEmpty)
-			{
-				if (this.hilitedElement == ActiveElement.CommentClose)
-				{
-					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
-				}
-				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-				{
-					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-				}
-			}
-
-			//	Dessine les boutons des couleurs.
-			this.DrawColorButton(graphics, ActiveElement.CommentColor1, 0, MainColor.Yellow);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor2, 1, MainColor.Orange);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor3, 2, MainColor.Red);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor4, 3, MainColor.Lilac);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor5, 4, MainColor.Purple);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor6, 5, MainColor.Blue);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor7, 6, MainColor.Green);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor8, 7, MainColor.DarkGrey);
-
-			//	Dessine le bouton pour modifier la largeur.
-			if (this.hilitedElement == ActiveElement.CommentWidth)
-			{
-				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-			{
-				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-			}
-
-			//	Dessine le bouton pour déplacer l'attache.
-			Point p = this.PositionAttachToLinkButton;
-			if (!p.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.CommentAttachTo)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-				{
-					this.DrawRoundButton (graphics, p, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-			}
-		}
-
-		protected void DrawColorButton(Graphics graphics, ActiveElement activeElement, int rank, MainColor color)
-		{
-			//	Dessine un bouton pour choisir une couleur.
-			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-			{
-				if (this.hilitedElement == activeElement)
-				{
-					this.DrawSquareButton(graphics, this.PositionColorButton(rank), color, this.boxColor == color, true);
-				}
-				else if (this.IsHeaderHilite)
-				{
-					this.DrawSquareButton(graphics, this.PositionColorButton(rank), color, this.boxColor == color, false);
-				}
+				this.DrawButtons (graphics);
 			}
 		}
 
@@ -1242,11 +1119,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (hilited)
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.3);
+				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.3);
 			}
 			else
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.2);
+				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.2);
 			}
 		}
 
@@ -1254,19 +1131,68 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (dragging)
 			{
-				return this.GetColorMain(0.9);
+				return this.colorEngine.GetColorMain (0.9);
 			}
 			else if (hilited)
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.9);
+				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.9);
 			}
 			else
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.7);
+				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.7);
 			}
 		}
 
 
+
+		protected override void CreateButtons()
+		{
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentClose,    this.colorEngine, GlyphShape.Close,          this.UpdateButtonClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentWidth,    this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonWidth));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentAttachTo, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonAttachTo));
+
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonColor));
+		}
+
+		private void UpdateButtonClose(ActiveButton button)
+		{
+			button.State.Center = this.PositionCloseButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonWidth(ActiveButton button)
+		{
+			button.State.Center = this.PositionWidthButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonAttachTo(ActiveButton button)
+		{
+			button.State.Center = this.PositionAttachToLinkButton;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonColor(ActiveButton button)
+		{
+			int rank = button.Element - ActiveElement.CommentColor1;
+
+			button.State.Center = this.PositionColorButton (rank);
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Selected = this.colorEngine.MainColor == button.Color;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+	
+		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{

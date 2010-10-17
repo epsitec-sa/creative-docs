@@ -983,6 +983,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public void UpdateObjectButtons()
+		{
+			foreach (var obj in this.AllObjects)
+			{
+				obj.UpdateButtons ();
+			}
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
