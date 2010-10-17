@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.buttons = new List<ActiveButton> ();
 			this.CreateButtons ();
-			this.UpdateButtons ();
+			this.UpdateButtonsState ();
 		}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.hilitedElement != value)
 				{
 					this.hilitedElement = value;
-					this.UpdateButtons ();
+					this.UpdateButtonsState ();
 					this.editor.Invalidate ();
 				}
 			}
@@ -460,11 +460,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 		}
 
-		public void UpdateButtons()
+		public void UpdateButtonsGeometry()
 		{
 			foreach (var button in this.buttons)
 			{
-				button.Update ();
+				button.UpdateGeometry ();
+			}
+		}
+
+		public void UpdateButtonsState()
+		{
+			foreach (var button in this.buttons)
+			{
+				button.UpdateState ();
 			}
 		}
 

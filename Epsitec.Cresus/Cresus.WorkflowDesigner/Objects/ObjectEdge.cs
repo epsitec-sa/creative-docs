@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset(dx, dy);
+			this.UpdateButtonsGeometry ();
 		}
 
 
@@ -832,55 +833,75 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorEngine, GlyphShape.Close,          this.UpdateButtonClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorEngine, "C",                       this.UpdateButtonComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorEngine, GlyphShape.ArrowUp,        this.UpdateButtonExtend));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonChangeWidth));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,       this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorEngine, "C",                       this.UpdateButtonGeometryComment,     this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorEngine, GlyphShape.ArrowUp,        this.UpdateButtonGeometryExtend,      this.UpdateButtonStateExtend));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeWidth, this.UpdateButtonStateChangeWidth));
 
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 		}
 
-		private void UpdateButtonClose(ActiveButton button)
+		private void UpdateButtonGeometryClose(ActiveButton button)
 		{
-			button.State.Center = this.PositionCloseButton;
+			button.Center = this.PositionCloseButton;
+		}
+
+		private void UpdateButtonGeometryComment(ActiveButton button)
+		{
+			button.Center = this.PositionCommentButton;
+		}
+
+		private void UpdateButtonGeometryExtend(ActiveButton button)
+		{
+			button.Center = this.PositionExtendButton;
+		}
+
+		private void UpdateButtonGeometryChangeWidth(ActiveButton button)
+		{
+			button.Center = this.PositionChangeWidthButton;
+		}
+
+		private void UpdateButtonGeometryColor(ActiveButton button)
+		{
+			int rank = button.Element - ActiveElement.EdgeColor1;
+
+			button.Center = this.PositionColorButton (rank);
+		}
+
+		private void UpdateButtonStateClose(ActiveButton button)
+		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
 		}
 
-		private void UpdateButtonComment(ActiveButton button)
+		private void UpdateButtonStateComment(ActiveButton button)
 		{
-			button.State.Center = this.PositionCommentButton;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
 		}
 
-		private void UpdateButtonExtend(ActiveButton button)
+		private void UpdateButtonStateExtend(ActiveButton button)
 		{
-			button.State.Center = this.PositionExtendButton;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.Glyph = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
 		}
 
-		private void UpdateButtonChangeWidth(ActiveButton button)
+		private void UpdateButtonStateChangeWidth(ActiveButton button)
 		{
-			button.State.Center = this.PositionChangeWidthButton;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging && this.isExtended;
 		}
 
-		private void UpdateButtonColor(ActiveButton button)
+		private void UpdateButtonStateColor(ActiveButton button)
 		{
-			int rank = button.Element - ActiveElement.EdgeColor1;
-
-			button.State.Center = this.PositionColorButton (rank);
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorEngine.MainColor == button.Color;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging && this.isExtended;

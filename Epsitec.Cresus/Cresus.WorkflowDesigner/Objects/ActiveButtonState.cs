@@ -19,18 +19,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public Point Center
-		{
-			get
-			{
-				return this.center;
-			}
-			set
-			{
-				this.center = value;
-			}
-		}
-
 		public bool Selected
 		{
 			get
@@ -80,7 +68,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private Point			center;
 		private bool			selected;
 		private bool			hilited;
 		private bool			enable;

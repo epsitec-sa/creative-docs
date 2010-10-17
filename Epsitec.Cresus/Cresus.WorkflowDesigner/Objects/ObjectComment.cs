@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset(dx, dy);
+			this.UpdateButtonsGeometry ();
 		}
 
 		public Rectangle InternalBounds
@@ -110,6 +111,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Modifie la boîte de l'objet.
 			this.bounds = bounds;
+			this.UpdateButtonsGeometry ();
 		}
 
 		public bool IsVisible
@@ -1147,51 +1149,67 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentClose,    this.colorEngine, GlyphShape.Close,          this.UpdateButtonClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentWidth,    this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonWidth));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentAttachTo, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonAttachTo));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentClose,    this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentWidth,    this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryWidth,    this.UpdateButtonStateWidth));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentAttachTo, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryAttachTo, this.UpdateButtonStateAttachTo));
 
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 		}
 
-		private void UpdateButtonClose(ActiveButton button)
+		private void UpdateButtonGeometryClose(ActiveButton button)
 		{
-			button.State.Center = this.PositionCloseButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.Center = this.PositionCloseButton;
 		}
 
-		private void UpdateButtonWidth(ActiveButton button)
+		private void UpdateButtonGeometryWidth(ActiveButton button)
 		{
-			button.State.Center = this.PositionWidthButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.Center = this.PositionWidthButton;
 		}
 
-		private void UpdateButtonAttachTo(ActiveButton button)
+		private void UpdateButtonGeometryAttachTo(ActiveButton button)
 		{
-			button.State.Center = this.PositionAttachToLinkButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.Center = this.PositionAttachToLinkButton;
 		}
 
-		private void UpdateButtonColor(ActiveButton button)
+		private void UpdateButtonGeometryColor(ActiveButton button)
 		{
 			int rank = button.Element - ActiveElement.CommentColor1;
 
-			button.State.Center = this.PositionColorButton (rank);
+			button.Center = this.PositionColorButton (rank);
+		}
+
+		private void UpdateButtonStateClose(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonStateWidth(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonStateAttachTo(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite;
+		}
+
+		private void UpdateButtonStateColor(ActiveButton button)
+		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorEngine.MainColor == button.Color;
 			button.State.Visible = this.IsHeaderHilite;
 		}
-	
+
 		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)

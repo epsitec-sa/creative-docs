@@ -983,11 +983,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public void UpdateObjectButtons()
+		private void UpdateObjectButtonsGeometry()
 		{
 			foreach (var obj in this.AllObjects)
 			{
-				obj.UpdateButtons ();
+				obj.UpdateButtonsGeometry ();
+			}
+		}
+
+		private void UpdateObjectButtonsState()
+		{
+			foreach (var obj in this.AllObjects)
+			{
+				obj.UpdateButtonsState ();
 			}
 		}
 
