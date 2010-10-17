@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public ActiveButtonState()
 		{
 			this.enable = true;
+			this.detectable = true;
 		}
 
 
@@ -67,10 +68,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool Detectable
+		{
+			get
+			{
+				return this.detectable;
+			}
+			set
+			{
+				this.detectable = value;
+			}
+		}
+
 
 		private bool			selected;
 		private bool			hilited;
 		private bool			enable;
 		private bool			visible;
+		private bool			detectable;
 	}
 }

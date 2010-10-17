@@ -598,6 +598,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.grid = iGrid;
 
 			this.MoveObjects(-rect.Left, -rect.Bottom);
+			this.UpdateObjectButtonsGeometry ();
 
 			this.AreaSize = rect.Size;
 			this.OnAreaSizeChanged();
@@ -627,6 +628,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			foreach (var obj in this.AllObjects)
 			{
 				obj.Move (dx, dy);
+			}
+		}
+
+		private void UpdateObjectButtonsGeometry()
+		{
+			foreach (var obj in this.AllObjects)
+			{
+				obj.UpdateButtonsGeometry ();
 			}
 		}
 
@@ -980,23 +989,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Indique l'objet en cours de drag.
 			this.lockObject = obj;
-		}
-
-
-		private void UpdateObjectButtonsGeometry()
-		{
-			foreach (var obj in this.AllObjects)
-			{
-				obj.UpdateButtonsGeometry ();
-			}
-		}
-
-		private void UpdateObjectButtonsState()
-		{
-			foreach (var obj in this.AllObjects)
-			{
-				obj.UpdateButtonsState ();
-			}
 		}
 
 

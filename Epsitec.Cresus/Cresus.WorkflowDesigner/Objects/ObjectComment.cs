@@ -171,6 +171,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.editor.EditingObject = this;
 			this.hilitedElement = ActiveElement.None;
+			this.UpdateButtonsState ();
 		}
 
 		private void StopEdition()
@@ -179,6 +180,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editingTextField = null;
 
 			this.editor.EditingObject = null;
+			this.UpdateButtonsState ();
 		}
 
 
@@ -253,6 +255,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.CommentMove)
 			{
 				this.isDraggingMove = true;
+				this.UpdateButtonsState ();
 				this.draggingPos = pos;
 				this.editor.LockObject(this);
 			}
@@ -260,13 +263,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
 				this.isDraggingWidth = true;
-				this.editor.LockObject(this);
+				this.UpdateButtonsState ();
+				this.editor.LockObject (this);
 			}
 
 			if (this.hilitedElement == ActiveElement.CommentAttachTo)
 			{
 				this.isDraggingAttach = true;
-				this.editor.LockObject(this);
+				this.UpdateButtonsState ();
+				this.editor.LockObject (this);
 			}
 		}
 
@@ -285,21 +290,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
-				this.editor.LockObject(null);
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
 			else if (this.isDraggingWidth)
 			{
 				this.isDraggingWidth = false;
-				this.editor.LockObject(null);
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
 			else if (this.isDraggingAttach)
 			{
 				this.isDraggingAttach = false;
-				this.editor.LockObject(null);
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
@@ -439,6 +447,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.bounds.Bottom = this.bounds.Top-h;
 			}
+
+			this.UpdateButtonsGeometry ();
 		}
 
 
@@ -524,6 +534,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.CommentColor6 ||
 						this.hilitedElement == ActiveElement.CommentColor7 ||
 						this.hilitedElement == ActiveElement.CommentColor8 ||
+						this.hilitedElement == ActiveElement.CommentWidth ||
 						this.hilitedElement == ActiveElement.CommentAttachTo);
 			}
 		}
@@ -1188,26 +1199,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateClose(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateWidth(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging);
 		}
 
 		private void UpdateButtonStateAttachTo(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite;
+			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging);
 		}
 
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorEngine.MainColor == button.Color;
-			button.State.Visible = this.IsHeaderHilite;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+		}
+
+		private bool IsDragging
+		{
+			get
+			{
+				return this.isDraggingMove || this.isDraggingWidth || this.isDraggingAttach || this.editor.IsEditing;
+			}
 		}
 
 		
