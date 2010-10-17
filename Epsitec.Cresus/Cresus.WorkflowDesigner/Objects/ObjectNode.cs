@@ -78,6 +78,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset(dx, dy);
+			this.UpdateButtonsGeometry ();
 		}
 
 		public override void CreateInitialLinks()
@@ -619,47 +620,63 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorEngine, GlyphShape.Plus,  this.UpdateButtonOpenLink));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorEngine, GlyphShape.Close, this.UpdateButtonClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorEngine, "C",              this.UpdateButtonComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorEngine, GlyphShape.Plus,  this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorEngine, GlyphShape.Close, this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorEngine, "C",              this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
 
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 		}
 
-		private void UpdateButtonOpenLink(ActiveButton button)
+		private void UpdateButtonGeometryOpenLink(ActiveButton button)
 		{
-			button.State.Center = this.PositionOpenLinkButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.Center = this.PositionOpenLinkButton;
 		}
 
-		private void UpdateButtonClose(ActiveButton button)
+		private void UpdateButtonGeometryClose(ActiveButton button)
 		{
-			button.State.Enable = !this.isRoot;
-			button.State.Center = this.PositionCloseButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.Center = this.PositionCloseButton;
 		}
 
-		private void UpdateButtonComment(ActiveButton button)
+		private void UpdateButtonGeometryComment(ActiveButton button)
 		{
-			button.State.Center = this.PositionCommentButton;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+			button.Center = this.PositionCommentButton;
 		}
 
-		private void UpdateButtonColor(ActiveButton button)
+		private void UpdateButtonGeometryColor(ActiveButton button)
 		{
 			int rank = button.Element - ActiveElement.NodeColor1;
 
-			button.State.Center = this.PositionColorButton (rank);
+			button.Center = this.PositionColorButton (rank);
+		}
+
+		private void UpdateButtonStateOpenLink(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonStateClose(ActiveButton button)
+		{
+			button.State.Enable = !this.isRoot;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonStateComment(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.isDragging;
+		}
+
+		private void UpdateButtonStateColor(ActiveButton button)
+		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorEngine.MainColor == button.Color;
 			button.State.Visible = this.IsHeaderHilite && !this.isDragging;

@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public class ActiveButton
 	{
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, GlyphShape glyph, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, GlyphShape glyph, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element           = element;
 			this.parentColorEngine = parentColorEngine;
@@ -21,12 +21,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.glyph             = glyph;
 			this.colorEngine       = new ColorEngine (MainColor.None);
 			this.roundButton       = true;
+			this.geometryUpdater   = geometryUpdater;
 			this.stateUpdater      = stateUpdater;
 
 			this.state = new ActiveButtonState ();
 		}
 
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, string text, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, string text, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element           = element;
 			this.parentColorEngine = parentColorEngine;
@@ -35,18 +36,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.colorEngine       = new ColorEngine (MainColor.None);
 			this.text              = text;
 			this.roundButton       = true;
+			this.geometryUpdater   = geometryUpdater;
 			this.stateUpdater      = stateUpdater;
 
 			this.state = new ActiveButtonState ();
 		}
 
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, MainColor color, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, MainColor color, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element           = element;
 			this.parentColorEngine = parentColorEngine;
 			this.radius            = ActiveButton.buttonSquare;
 			this.colorEngine       = new ColorEngine (color);
 			this.roundButton       = false;
+			this.geometryUpdater   = geometryUpdater;
 			this.stateUpdater      = stateUpdater;
 
 			this.state = new ActiveButtonState ();
@@ -70,6 +73,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.element = value;
+			}
+		}
+
+		public Point Center
+		{
+			get
+			{
+				return this.center;
+			}
+			set
+			{
+				this.center = value;
 			}
 		}
 
@@ -146,14 +161,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public void Update()
+		public void UpdateGeometry()
+		{
+			this.geometryUpdater (this);
+		}
+
+		public void UpdateState()
 		{
 			this.stateUpdater (this);
 		}
 
 		public bool Detect(Point pos)
 		{
-			if (this.state.Visible && !this.state.Center.IsZero)
+			if (this.state.Visible && !this.center.IsZero)
 			{
 				if (this.roundButton)
 				{
@@ -173,7 +193,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public void Draw(Graphics graphics)
 		{
-			if (this.state.Visible && !this.state.Center.IsZero)
+			if (this.state.Visible && !this.center.IsZero)
 			{
 				if (this.glyph != GlyphShape.None)
 				{
@@ -194,13 +214,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool DetectSquareButton(Point pos)
 		{
 			//	Détecte si la souris est dans un bouton carré.
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return false;
 			}
 			else
 			{
-				Rectangle rect = new Rectangle (this.state.Center.X-this.radius, this.state.Center.Y-this.radius, this.radius*2, this.radius*2);
+				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 				rect.Inflate (0.5);
 				return rect.Contains (pos);
 			}
@@ -209,12 +229,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DrawSquareButton(Graphics graphics)
 		{
 			//	Dessine un bouton carré avec une couleur.
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return;
 			}
 
-			Rectangle rect = new Rectangle (this.state.Center.X-this.radius, this.state.Center.Y-this.radius, this.radius*2, this.radius*2);
+			Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 			rect.Inflate (0.5);
 
 			graphics.AddFilledRectangle (rect);
@@ -243,20 +263,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool DetectRoundButton(Point pos)
 		{
 			//	Détecte si la souris est dans un bouton circulaire.
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return false;
 			}
 			else
 			{
-				return Point.Distance (this.state.Center, pos) <= this.radius+1;
+				return Point.Distance (this.center, pos) <= this.radius+1;
 			}
 		}
 
 		private void DrawGlyphRoundButton(Graphics graphics)
 		{
 			//	Dessine un bouton circulaire avec un glyph.
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return;
 			}
@@ -276,7 +296,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-				Rectangle rect = new Rectangle (this.state.Center.X-this.radius, this.state.Center.Y-this.radius, this.radius*2, this.radius*2);
+				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 				adorner.PaintGlyph (graphics, rect, WidgetPaintState.Enabled, colorShape, this.glyph, PaintTextStyle.Button);
 			}
 		}
@@ -284,7 +304,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DrawTextRoundButton(Graphics graphics)
 		{
 			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return;
 			}
@@ -303,7 +323,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					colorShape = this.parentColorEngine.GetColor (0.7);
 				}
 
-				Rectangle rect = new Rectangle (this.state.Center.X-this.radius, this.state.Center.Y-this.radius, this.radius*2, this.radius*2);
+				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 				double size = 14;
 
 				if (this.text == "*")  // texte étoile pour une relation privée ?
@@ -320,14 +340,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void DrawEmptyRoundButton(Graphics graphics)
 		{
 			//	Dessine un bouton circulaire vide.
-			if (this.state.Center.IsZero)
+			if (this.center.IsZero)
 			{
 				return;
 			}
 
 			if (this.shadow)
 			{
-				Rectangle rect = new Rectangle (this.state.Center.X-this.radius, this.state.Center.Y-this.radius, this.radius*2, this.radius*2);
+				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
 				rect.Inflate (this.radius*0.2);
 				rect.Offset (0, -this.radius*0.7);
 				//?this.DrawRoundShadow (graphics, rect, rect.Width/2, (int) (this.radius*0.7), 0.5);
@@ -350,10 +370,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				colorShape   = this.parentColorEngine.GetColor (0.7);
 			}
 
-			graphics.AddFilledCircle (this.state.Center, this.radius);
+			graphics.AddFilledCircle (this.center, this.radius);
 			graphics.RenderSolid (colorSurface);
 
-			graphics.AddCircle (this.state.Center, this.radius);
+			graphics.AddCircle (this.center, this.radius);
 			graphics.RenderSolid (colorFrame);
 		}
 
@@ -361,9 +381,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double		buttonRadius = 10;
 		private static readonly double		buttonSquare = 5;
 
-		private ActiveButtonState			state;
-		private System.Action<ActiveButton>	stateUpdater;
+		private readonly ActiveButtonState				state;
+		private readonly System.Action<ActiveButton>	geometryUpdater;
+		private readonly System.Action<ActiveButton>	stateUpdater;
+
 		private ActiveElement				element;
+		private Point						center;
 		private double						radius;
 		private bool						shadow;
 		private bool						roundButton;

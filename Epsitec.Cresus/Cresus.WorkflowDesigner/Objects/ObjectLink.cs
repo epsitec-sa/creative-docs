@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Déplace l'objet.
 			this.SetPathDirty ();
 			this.UpdateVectors ();
+			this.UpdateButtonsGeometry ();
 		}
 
 
@@ -1003,52 +1004,76 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorEngine, GlyphShape.Close,          this.UpdateButtonClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorEngine, "C",                       this.UpdateButtonComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonChangeDst));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorEngine, GlyphShape.Plus,           this.UpdateButtonCreateDst));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorEngine, "o",                       this.UpdateButtonCustomizeStart));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeEnd,   this.colorEngine, "o",                       this.UpdateButtonCustomizeEnd));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,          this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorEngine, "C",                       this.UpdateButtonGeometryComment,        this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeDst,      this.UpdateButtonStateChangeDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorEngine, GlyphShape.Plus,           this.UpdateButtonGeometryCreateDst,      this.UpdateButtonStateCreateDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorEngine, "o",                       this.UpdateButtonGeometryCustomizeStart, this.UpdateButtonStateCustomizeStart));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeEnd,   this.colorEngine, "o",                       this.UpdateButtonGeometryCustomizeEnd,   this.UpdateButtonStateCustomizeEnd));
 		}
 
-		private void UpdateButtonClose(ActiveButton button)
+		private void UpdateButtonGeometryClose(ActiveButton button)
 		{
-			button.State.Center = this.PositionLinkClose;
+			button.Center = this.PositionLinkClose;
+		}
+
+		private void UpdateButtonGeometryComment(ActiveButton button)
+		{
+			button.Center = this.PositionLinkComment;
+		}
+
+		private void UpdateButtonGeometryChangeDst(ActiveButton button)
+		{
+			button.Center = this.PositionLinkChangeDst;
+		}
+
+		private void UpdateButtonGeometryCreateDst(ActiveButton button)
+		{
+			button.Center = this.PositionLinkCreateDst;
+		}
+
+		private void UpdateButtonGeometryCustomizeStart(ActiveButton button)
+		{
+			button.Center = this.CustomizeStartPos;
+		}
+
+		private void UpdateButtonGeometryCustomizeEnd(ActiveButton button)
+		{
+			button.Center = this.CustomizeEndPos;
+		}
+
+		private void UpdateButtonStateClose(ActiveButton button)
+		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite;
 		}
 
-		private void UpdateButtonComment(ActiveButton button)
+		private void UpdateButtonStateComment(ActiveButton button)
 		{
-			button.State.Center = this.PositionLinkComment;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite && this.HasLinkCommentButton;
 		}
 
-		private void UpdateButtonChangeDst(ActiveButton button)
+		private void UpdateButtonStateChangeDst(ActiveButton button)
 		{
-			button.State.Center = this.PositionLinkChangeDst;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite;
 		}
 
-		private void UpdateButtonCreateDst(ActiveButton button)
+		private void UpdateButtonStateCreateDst(ActiveButton button)
 		{
-			button.State.Center = this.PositionLinkCreateDst;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite;
 		}
 
-		private void UpdateButtonCustomizeStart(ActiveButton button)
+		private void UpdateButtonStateCustomizeStart(ActiveButton button)
 		{
-			button.State.Center = this.CustomizeStartPos;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite && this.dstObject != null;
 		}
 
-		private void UpdateButtonCustomizeEnd(ActiveButton button)
+		private void UpdateButtonStateCustomizeEnd(ActiveButton button)
 		{
-			button.State.Center = this.CustomizeEndPos;
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite && this.dstObject != null;
 		}

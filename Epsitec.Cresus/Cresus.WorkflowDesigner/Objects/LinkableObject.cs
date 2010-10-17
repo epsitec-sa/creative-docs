@@ -77,6 +77,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect.Offset (p2-p1);
 				this.comment.SetBounds (rect);
 			}
+
+			this.UpdateButtonsGeometry ();
 		}
 
 
