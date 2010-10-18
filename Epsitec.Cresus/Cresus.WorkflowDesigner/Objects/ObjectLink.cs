@@ -124,6 +124,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override List<AbstractObject> FriendObjects
+		{
+			//	Les objets amis sont les node/edge à chaque extrémité de la connexion.
+			get
+			{
+				var list = new List<AbstractObject> ();
+
+				list.Add (this.srcObject);
+
+				if (this.dstObject != null)
+				{
+					list.Add (this.dstObject);
+				}
+
+				return list;
+			}
+		}
+
+
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
@@ -885,9 +904,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void DraggingDstMouseMove(Point pos)
 		{
-			var obj = this.editor.DetectLinkableObject (pos, this.srcObject.GetType ());
+			var obj = this.editor.DetectLinkableObject (pos, filteredType: this.srcObject.GetType ());
 
-			if (this.DraggingDstAlreadyLinked (obj))  // déjà une connexion sur cet objet ?
+			if (obj != this.dstObject && this.DraggingDstAlreadyLinked (obj))  // déjà une connexion sur cet objet ?
 			{
 				obj = null;  // on n'en veut pas une 2ème !
 			}

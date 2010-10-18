@@ -869,15 +869,27 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 
+			//	Lorsque la souris survole un objet, tous les autres deviennent estompés.
+			//	Seuls restent normalement affichés l'objet survolé et ses 'amis'.
+			bool hasDimmned = (hilitedElement != ActiveElement.None);
+
+			List<AbstractObject> friendObjects = null;
+			if (this.hilitedObject != null && hasDimmned)
+			{
+				friendObjects = this.hilitedObject.FriendObjects;
+			}
+
 			foreach (var obj in this.AllObjects)
 			{
 				if (obj == this.hilitedObject)
 				{
 					obj.HilitedElement = hilitedElement;
+					obj.IsDimmed = false;
 				}
 				else
 				{
 					obj.HilitedElement = ActiveElement.None;
+					obj.IsDimmed = hasDimmned  && (friendObjects == null || !friendObjects.Contains (obj));
 				}
 			}
 		}
@@ -972,6 +984,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			return value;
+		}
+
+
+		public void ClearHilited()
+		{
+			foreach (var obj in this.AllObjects)
+			{
+				obj.HilitedElement = ActiveElement.None;
+				obj.IsDimmed = false;
+			}
 		}
 
 
@@ -1138,17 +1160,17 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					yield return obj;
 				}
 
-				foreach (var obj in this.comments)
-				{
-					yield return obj;
-				}
-
 				foreach (var obj in this.LinkableObjects)
 				{
 					foreach (var link in obj.ObjectLinks)
 					{
 						yield return link;
 					}
+				}
+
+				foreach (var obj in this.comments)
+				{
+					yield return obj;
 				}
 			}
 		}

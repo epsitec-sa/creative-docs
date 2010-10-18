@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editingTextField.Focus ();
 
 			this.editor.EditingObject = this;
-			this.hilitedElement = ActiveElement.None;
+			this.editor.ClearHilited ();
 			this.UpdateButtonsState ();
 		}
 
