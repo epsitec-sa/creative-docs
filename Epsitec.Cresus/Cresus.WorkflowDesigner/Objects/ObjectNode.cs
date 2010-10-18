@@ -157,19 +157,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public bool IsConnectedToRoot
-		{
-			//	Indique si cet objet est connecté à la racine (flag temporaire).
-			get
-			{
-				return this.isConnectedToRoot;
-			}
-			set
-			{
-				this.isConnectedToRoot = value;
-			}
-		}
-
 
 		public override void AcceptEdition()
 		{
@@ -818,7 +805,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double			shadowOffset = 6;
 
 		private bool							isRoot;
-		private bool							isConnectedToRoot;
 		private TextLayout						title;
 
 		private bool							isDragging;

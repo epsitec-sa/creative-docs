@@ -892,6 +892,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					obj.IsDimmed = hasDimmned  && (friendObjects == null || !friendObjects.Contains (obj));
 				}
 			}
+
+			this.Invalidate ();
 		}
 
 		private void EditorMouseDown(Message message, Point pos)
@@ -994,6 +996,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.HilitedElement = ActiveElement.None;
 				obj.IsDimmed = false;
 			}
+
+			this.Invalidate ();
 		}
 
 
