@@ -60,14 +60,14 @@
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
     <Compile Include="Objects\ActiveButton.cs" />
-    <Compile Include="Objects\ColorEngine.cs" />
+    <Compile Include="Objects\ColorFactory.cs" />
     <Compile Include="Objects\ActiveButtonState.cs" />
     <Compile Include="Objects\LinkableObject.cs" />
     <Compile Include="Objects\LinkAnchor.cs" />
     <Compile Include="Objects\ObjectEdge.cs" />
     <Compile Include="Objects\ObjectLink.cs" />
     <Compile Include="Objects\ObjectNode.cs" />
-    <Compile Include="Objects\MainColor.cs" />
+    <Compile Include="Objects\ColorItem.cs" />
     <Compile Include="Objects\ObjectComment.cs" />
     <Compile Include="Objects\Vector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

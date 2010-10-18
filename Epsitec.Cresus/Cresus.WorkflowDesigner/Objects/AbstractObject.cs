@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor = editor;
 			this.entity = entity;
 
-			this.colorEngine = new ColorEngine (MainColor.Blue);
+			this.colorFactory = new ColorFactory (ColorItem.Blue);
 			this.hilitedElement = ActiveElement.None;
 
 			this.buttons = new List<ActiveButton> ();
@@ -65,18 +65,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Déplace l'objet.
 		}
 
-		public virtual MainColor BackgroundMainColor
+		public virtual ColorItem BackgroundColorItem
 		{
 			//	Couleur de fond de la boîte.
 			get
 			{
-				return this.colorEngine.MainColor;
+				return this.colorFactory.ColorItem;
 			}
 			set
 			{
-				if (this.colorEngine.MainColor != value)
+				if (this.colorFactory.ColorItem != value)
 				{
-					this.colorEngine.MainColor = value;
+					this.colorFactory.ColorItem = value;
 					this.editor.Invalidate();
 				}
 			}
@@ -503,9 +503,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected static readonly double		headerHeight = 32;
 		protected static readonly double		footerHeight = 16;
-		protected static readonly double		buttonRadius = 10;
-		protected static readonly double		bulletRadius = 4;
-		protected static readonly double		buttonSquare = 5;
 		protected static readonly double		lengthStumpLink = 60;
 		protected static readonly double		arrowLength = 12;
 		protected static readonly double		arrowAngle = 25;
@@ -517,6 +514,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
-		protected ColorEngine					colorEngine;
+		protected ColorFactory					colorFactory;
 	}
 }

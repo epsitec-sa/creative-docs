@@ -1,11 +1,6 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,76 +10,39 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	{
 		public ActiveButtonState()
 		{
-			this.enable = true;
-			this.detectable = true;
+			this.Enable = true;
+			this.Detectable = true;
 		}
 
 
 		public bool Selected
 		{
-			get
-			{
-				return this.selected;
-			}
-			set
-			{
-				this.selected = value;
-			}
+			get;
+			set;
 		}
 
 		public bool Hilited
 		{
-			get
-			{
-				return this.hilited;
-			}
-			set
-			{
-				this.hilited = value;
-			}
+			get;
+			set;
 		}
 
 		public bool Enable
 		{
-			get
-			{
-				return this.enable;
-			}
-			set
-			{
-				this.enable = value;
-			}
+			get;
+			set;
 		}
 
 		public bool Visible
 		{
-			get
-			{
-				return this.visible;
-			}
-			set
-			{
-				this.visible = value;
-			}
+			get;
+			set;
 		}
 
 		public bool Detectable
 		{
-			get
-			{
-				return this.detectable;
-			}
-			set
-			{
-				this.detectable = value;
-			}
+			get;
+			set;
 		}
-
-
-		private bool			selected;
-		private bool			hilited;
-		private bool			enable;
-		private bool			visible;
-		private bool			detectable;
 	}
 }

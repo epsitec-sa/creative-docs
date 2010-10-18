@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			: base (editor, entity)
 		{
 			this.isVisible = true;
-			this.colorEngine.MainColor = MainColor.Yellow;
+			this.colorFactory.ColorItem = ColorItem.Yellow;
 
 			this.textLayoutTitle = new TextLayout();
 			this.textLayoutTitle.DefaultFontSize = 14;
@@ -332,42 +332,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.hilitedElement == ActiveElement.CommentColor1)
 				{
-					this.BackgroundMainColor = MainColor.Yellow;
+					this.BackgroundColorItem = ColorItem.Yellow;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor2)
 				{
-					this.BackgroundMainColor = MainColor.Orange;
+					this.BackgroundColorItem = ColorItem.Orange;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor3)
 				{
-					this.BackgroundMainColor = MainColor.Red;
+					this.BackgroundColorItem = ColorItem.Red;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor4)
 				{
-					this.BackgroundMainColor = MainColor.Lilac;
+					this.BackgroundColorItem = ColorItem.Lilac;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor5)
 				{
-					this.BackgroundMainColor = MainColor.Purple;
+					this.BackgroundColorItem = ColorItem.Purple;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor6)
 				{
-					this.BackgroundMainColor = MainColor.Blue;
+					this.BackgroundColorItem = ColorItem.Blue;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor7)
 				{
-					this.BackgroundMainColor = MainColor.Green;
+					this.BackgroundColorItem = ColorItem.Green;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColor8)
 				{
-					this.BackgroundMainColor = MainColor.DarkGrey;
+					this.BackgroundColorItem = ColorItem.DarkGrey;
 				}
 			}
 		}
@@ -485,12 +485,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.ColorCommentHeader (this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (this.colorEngine.GetColor (0));
+				graphics.RenderSolid (this.colorFactory.GetColor (0));
 
 				rect.Width -= rect.Height;
 				rect.Offset (0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
-				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorEngine.GetColor (1), GlyphPaintStyle.Normal);
+				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (1), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine la boîte vide avec la queue (bulle de bd).
@@ -500,13 +500,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid (this.ColorComment (this.hilitedElement != ActiveElement.None));
 
 			graphics.Rasterizer.AddOutline (path);
-			graphics.RenderSolid (this.colorEngine.GetColor (0));
+			graphics.RenderSolid (this.colorFactory.GetColor (0));
 
 			//	Dessine le texte.
 			rect = this.bounds;
 			rect.Deflate (ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorEngine.GetColor (this.colorEngine.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (this.colorFactory.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
 		}
 
 		public override void DrawForeground(Graphics graphics)
@@ -1125,18 +1125,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			return new Point(this.bounds.Left+AbstractObject.buttonSquare+(AbstractObject.buttonSquare+0.5)*rank*2, this.bounds.Bottom-1-AbstractObject.buttonSquare);
+			return new Point (this.bounds.Left+ActiveButton.buttonSquare+(ActiveButton.buttonSquare+0.5)*rank*2, this.bounds.Bottom-1-ActiveButton.buttonSquare);
 		}
 
 		protected Color ColorComment(bool hilited)
 		{
 			if (hilited)
 			{
-				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.3);
+				return this.colorFactory.GetColorAdjusted (this.colorFactory.GetColorMain (), 0.3);
 			}
 			else
 			{
-				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.2);
+				return this.colorFactory.GetColorAdjusted (this.colorFactory.GetColorMain (), 0.2);
 			}
 		}
 
@@ -1144,15 +1144,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (dragging)
 			{
-				return this.colorEngine.GetColorMain (0.9);
+				return this.colorFactory.GetColorMain (0.9);
 			}
 			else if (hilited)
 			{
-				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.9);
+				return this.colorFactory.GetColorAdjusted (this.colorFactory.GetColorMain (), 0.9);
 			}
 			else
 			{
-				return this.colorEngine.GetColorAdjusted (this.colorEngine.GetColorMain (), 0.7);
+				return this.colorFactory.GetColorAdjusted (this.colorFactory.GetColorMain (), 0.7);
 			}
 		}
 
@@ -1160,18 +1160,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentClose,    this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentWidth,    this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryWidth,    this.UpdateButtonStateWidth));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentAttachTo, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryAttachTo, this.UpdateButtonStateAttachTo));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentClose,    this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentWidth,    this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryWidth,    this.UpdateButtonStateWidth));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentAttachTo, this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryAttachTo, this.UpdateButtonStateAttachTo));
 
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor2, this.colorFactory, ColorItem.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor3, this.colorFactory, ColorItem.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor4, this.colorFactory, ColorItem.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor5, this.colorFactory, ColorItem.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor6, this.colorFactory, ColorItem.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor7, this.colorFactory, ColorItem.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.CommentColor8, this.colorFactory, ColorItem.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 		}
 
 		private void UpdateButtonGeometryClose(ActiveButton button)
@@ -1217,7 +1217,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Selected = this.colorEngine.MainColor == button.Color;
+			button.State.Selected = this.colorFactory.ColorItem == button.Color;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
@@ -1269,7 +1269,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 					else if (name == Xml.Color)
 					{
-						this.boxColor = (MainColor) System.Enum.Parse (typeof (MainColor), element);
+						this.boxColor = (ColorItem) System.Enum.Parse (typeof (ColorItem), element);
 					}
 					else
 					{

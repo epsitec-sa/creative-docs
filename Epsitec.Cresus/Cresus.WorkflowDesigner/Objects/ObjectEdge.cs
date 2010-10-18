@@ -474,42 +474,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.EdgeColor1)
 			{
-				this.BackgroundMainColor = MainColor.Yellow;
+				this.BackgroundColorItem = ColorItem.Yellow;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor2)
 			{
-				this.BackgroundMainColor = MainColor.Orange;
+				this.BackgroundColorItem = ColorItem.Orange;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor3)
 			{
-				this.BackgroundMainColor = MainColor.Red;
+				this.BackgroundColorItem = ColorItem.Red;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor4)
 			{
-				this.BackgroundMainColor = MainColor.Lilac;
+				this.BackgroundColorItem = ColorItem.Lilac;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor5)
 			{
-				this.BackgroundMainColor = MainColor.Purple;
+				this.BackgroundColorItem = ColorItem.Purple;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor6)
 			{
-				this.BackgroundMainColor = MainColor.Blue;
+				this.BackgroundColorItem = ColorItem.Blue;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor7)
 			{
-				this.BackgroundMainColor = MainColor.Green;
+				this.BackgroundColorItem = ColorItem.Green;
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor8)
 			{
-				this.BackgroundMainColor = MainColor.Grey;
+				this.BackgroundColorItem = ColorItem.Grey;
 			}
 		}
 
@@ -618,31 +618,31 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid (this.colorEngine.GetColor (1));
+			graphics.RenderSolid (this.colorFactory.GetColor (1));
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.colorEngine.GetColorMain (dragging ? 0.8 : 0.4);
-			Color c2 = this.colorEngine.GetColorMain (dragging ? 0.4 : 0.1);
+			Color c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
+			Color c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-			Color colorLine = this.colorEngine.GetColor (0.9);
+			Color colorLine = this.colorFactory.GetColor (0.9);
 			if (dragging)
 			{
-				colorLine = this.colorEngine.GetColorMain (0.3);
+				colorLine = this.colorFactory.GetColorMain (0.3);
 			}
 
-			Color colorFrame = dragging ? this.colorEngine.GetColorMain () : this.colorEngine.GetColor (0);
+			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
 				Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
 				graphics.AddFilledRectangle (inside);
-				graphics.RenderSolid (this.colorEngine.GetColor (1));
+				graphics.RenderSolid (this.colorFactory.GetColor (1));
 				graphics.AddFilledRectangle (inside);
-				Color ci1 = this.colorEngine.GetColorMain (dragging ? 0.2 : 0.1);
-				Color ci2 = this.colorEngine.GetColorMain (0.0);
+				Color ci1 = this.colorFactory.GetColorMain (dragging ? 0.2 : 0.1);
+				Color ci2 = this.colorFactory.GetColorMain (0.0);
 				this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
 
 				//	Ombre supérieure.
@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le titre.
-			Color titleColor = dragging ? this.colorEngine.GetColor (1) : this.colorEngine.GetColor (0);
+			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 
 			rect = this.RectangleTitle;
 			rect.Deflate (2, 2);
@@ -666,7 +666,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le sous-titre.
 			if (this.isExtended)
 			{
-				Color subtitleColor = this.colorEngine.GetColor (0);
+				Color subtitleColor = this.colorFactory.GetColor (0);
 
 				rect = this.RectangleSubtitle;
 				this.subtitle.LayoutSize = rect.Size;
@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Left+ActiveButton.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -746,7 +746,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour étendre.
 			get
 			{
-				return new Point (this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-ActiveButton.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -755,7 +755,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point (this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-ActiveButton.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -764,7 +764,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour choisir la couleur.
 			if (this.isExtended)
 			{
-				return new Point (this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
+				return new Point (this.bounds.Left-2+(ActiveButton.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+ActiveButton.buttonSquare);
 			}
 			else
 			{
@@ -829,19 +829,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,       this.UpdateButtonStateClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorEngine, "C",                       this.UpdateButtonGeometryComment,     this.UpdateButtonStateComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorEngine, GlyphShape.ArrowUp,        this.UpdateButtonGeometryExtend,      this.UpdateButtonStateExtend));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeWidth, this.UpdateButtonStateChangeWidth));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,       this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorFactory, "C",                       this.UpdateButtonGeometryComment,     this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorFactory, GlyphShape.ArrowUp,        this.UpdateButtonGeometryExtend,      this.UpdateButtonStateExtend));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeWidth, this.UpdateButtonStateChangeWidth));
 
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorEngine, MainColor.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor2, this.colorEngine, MainColor.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor3, this.colorEngine, MainColor.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor4, this.colorEngine, MainColor.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor5, this.colorEngine, MainColor.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor6, this.colorEngine, MainColor.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor7, this.colorEngine, MainColor.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor8, this.colorEngine, MainColor.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor2, this.colorFactory, ColorItem.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor3, this.colorFactory, ColorItem.Red,    this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor4, this.colorFactory, ColorItem.Lilac,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor5, this.colorFactory, ColorItem.Purple, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor6, this.colorFactory, ColorItem.Blue,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor7, this.colorFactory, ColorItem.Green,  this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor8, this.colorFactory, ColorItem.Grey,   this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 		}
 
 		private void UpdateButtonGeometryClose(ActiveButton button)
@@ -899,7 +899,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Selected = this.colorEngine.MainColor == button.Color;
+			button.State.Selected = this.colorFactory.ColorItem == button.Color;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
 		}
 
@@ -1014,7 +1014,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						}
 						else if (name == Xml.Color)
 						{
-							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
+							this.boxColor = (ColorItem) System.Enum.Parse(typeof(ColorItem), element);
 						}
 						else
 						{

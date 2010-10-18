@@ -135,23 +135,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 	
-		public override MainColor BackgroundMainColor
+		public override ColorItem BackgroundColorItem
 		{
 			//	Couleur de fond de la boîte.
 			get
 			{
-				return this.colorEngine.MainColor;
+				return this.colorFactory.ColorItem;
 			}
 			set
 			{
-				if (this.colorEngine.MainColor != value)
+				if (this.colorFactory.ColorItem != value)
 				{
-					this.colorEngine.MainColor = value;
+					this.colorFactory.ColorItem = value;
 
 					//	Change la couleur de toutes les connexions liées.
 					foreach (var obj in this.objectLinks)
 					{
-						obj.BackgroundMainColor = this.colorEngine.MainColor;
+						obj.BackgroundColorItem = this.colorFactory.ColorItem;
 					}
 
 					this.editor.Invalidate ();

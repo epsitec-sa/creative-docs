@@ -556,11 +556,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				//	Dessine les contraintes utilisateur.
 				if (this.dstObject != null && (this.isDraggingCustomize || this.IsHilite))
 				{
-					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.colorEngine.GetColorMain ());
+					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.colorFactory.GetColorMain ());
 				}
 
 				//	Dessine la connexion et la flèche.
-				Color color = (this.IsHilite || this.isDraggingDst) ? this.colorEngine.GetColorMain () : this.colorEngine.GetColor (0);
+				Color color = (this.IsHilite || this.isDraggingDst) ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
 				if (this.isDraggingDst && this.hilitedDstObject == null)
 				{
@@ -576,7 +576,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine la pastille au départ.
-			this.DrawCircle (graphics, this.startVector.Origin, AbstractObject.bulletRadius);
+			this.DrawCircle (graphics, this.startVector.Origin, 4);
 		}
 
 		private void DrawArrow(Graphics graphics, Vector startVector, Vector endVector, Color color)
@@ -601,10 +601,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine un cercle vide.
 			graphics.AddFilledCircle (center, radius);
-			graphics.RenderSolid (this.colorEngine.GetColor (1));
+			graphics.RenderSolid (this.colorFactory.GetColor (1));
 
 			graphics.AddCircle (center, radius);
-			graphics.RenderSolid (this.colorEngine.GetColor (0));
+			graphics.RenderSolid (this.colorFactory.GetColor (0));
 		}
 
 		public override void DrawForeground(Graphics graphics)
@@ -665,7 +665,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.IsNoneDstObject)
 				{
-					return Point.Move (this.endVector.Origin, this.endVector.End, -AbstractObject.buttonRadius*2+2);
+					return Point.Move (this.endVector.Origin, this.endVector.End, -ActiveButton.buttonRadius*2+2);
 				}
 				else
 				{
@@ -1018,12 +1018,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorEngine, GlyphShape.Close,          this.UpdateButtonGeometryClose,          this.UpdateButtonStateClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorEngine, "C",                       this.UpdateButtonGeometryComment,        this.UpdateButtonStateComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorEngine, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeDst,      this.UpdateButtonStateChangeDst));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorEngine, GlyphShape.Plus,           this.UpdateButtonGeometryCreateDst,      this.UpdateButtonStateCreateDst));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorEngine, "o",                       this.UpdateButtonGeometryCustomizeStart, this.UpdateButtonStateCustomizeStart));
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeEnd,   this.colorEngine, "o",                       this.UpdateButtonGeometryCustomizeEnd,   this.UpdateButtonStateCustomizeEnd));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,          this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorFactory, "C",                       this.UpdateButtonGeometryComment,        this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeDst,      this.UpdateButtonStateChangeDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorFactory, GlyphShape.Plus,           this.UpdateButtonGeometryCreateDst,      this.UpdateButtonStateCreateDst));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorFactory, "o",                       this.UpdateButtonGeometryCustomizeStart, this.UpdateButtonStateCustomizeStart));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeEnd,   this.colorFactory, "o",                       this.UpdateButtonGeometryCustomizeEnd,   this.UpdateButtonStateCustomizeEnd));
 		}
 
 		private void UpdateButtonGeometryClose(ActiveButton button)
