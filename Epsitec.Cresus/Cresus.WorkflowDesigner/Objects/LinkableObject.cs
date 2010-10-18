@@ -215,16 +215,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				//	Tient compte des liens qui arrivent.
-				foreach (var link in this.editor.LinkObjects)
+				foreach (var link in this.ArrivalObjectLinks)
 				{
-					if (link.DstObject == this)
-					{
-						double angle = link.GetAngleDst ();
+					double angle = link.GetAngleDst ();
 
-						if (!double.IsNaN (angle))
-						{
-							angles.Add (angle);
-						}
+					if (!double.IsNaN (angle))
+					{
+						angles.Add (angle);
 					}
 				}
 			}
@@ -244,6 +241,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			var list = new List<Point> ();
 
+			//	Mémorise la position de tous les liens qui partent.
 			foreach (var obj in this.objectLinks)
 			{
 				if (obj.Comment != null)
@@ -252,12 +250,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
+			//	Mémorise la position de tous les liens qui arrivent.
+			foreach (var obj in this.ArrivalObjectLinks)
+			{
+				if (obj.Comment != null)
+				{
+					list.Add (obj.PositionLinkComment);
+				}
+			}
+
+			//	Déplace l'objet.
 			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
 			this.SetBounds (bounds);
 			this.editor.UpdateLinks ();
 
 			int i = 0;
+
+			//	Déplace tous les liens qui partent.
 			foreach (var obj in this.objectLinks)
+			{
+				if (obj.Comment != null)
+				{
+					Point p1 = list[i++];
+					Point p2 = obj.PositionLinkComment;
+
+					obj.Comment.Move (p2.X-p1.X, p2.Y-p1.Y);
+				}
+			}
+
+			//	Déplace tous les liens qui arrivent.
+			foreach (var obj in this.ArrivalObjectLinks)
 			{
 				if (obj.Comment != null)
 				{
@@ -286,6 +308,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				return false;
+			}
+		}
+
+
+		private IEnumerable<ObjectLink> ArrivalObjectLinks
+		{
+			get
+			{
+				foreach (var link in this.editor.LinkObjects)
+				{
+					if (link.DstObject == this)
+					{
+						yield return link;
+					}
+				}
 			}
 		}
 

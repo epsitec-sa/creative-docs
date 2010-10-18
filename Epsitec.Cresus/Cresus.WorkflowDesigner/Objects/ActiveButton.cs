@@ -56,6 +56,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public ActiveElement Element
+		{
+			get
+			{
+				return this.element;
+			}
+		}
+
 		public ActiveButtonState State
 		{
 			get
@@ -64,15 +72,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ActiveElement Element
+		public double Radius
 		{
 			get
 			{
-				return this.element;
+				return this.radius;
 			}
-			set
+		}
+
+		public bool RoundButton
+		{
+			get
 			{
-				this.element = value;
+				return this.roundButton;
 			}
 		}
 
@@ -85,30 +97,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.center = value;
-			}
-		}
-
-		public double Radius
-		{
-			get
-			{
-				return this.radius;
-			}
-			set
-			{
-				this.radius = value;
-			}
-		}
-
-		public bool RoundButton
-		{
-			get
-			{
-				return this.roundButton;
-			}
-			set
-			{
-				this.roundButton = value;
 			}
 		}
 
@@ -136,7 +124,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public ColorItem Color
+		public ColorItem ColorItem
 		{
 			get
 			{
@@ -335,19 +323,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Color colorSurface;
 			Color colorFrame;
-			Color colorShape;
 
 			if (this.state.Enable)
 			{
 				colorSurface = this.state.Hilited ? this.parentColorFactory.GetColorMain () : this.parentColorFactory.GetColor (1);
 				colorFrame = this.parentColorFactory.GetColor (0);
-				colorShape = this.state.Hilited ? this.parentColorFactory.GetColor (1) : this.parentColorFactory.GetColor (0);
 			}
 			else
 			{
 				colorSurface = this.parentColorFactory.GetColor (0.9);
 				colorFrame   = this.parentColorFactory.GetColor (0.5);
-				colorShape   = this.parentColorFactory.GetColor (0.7);
 			}
 
 			graphics.AddFilledCircle (this.center, this.radius);
@@ -361,17 +346,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public static readonly double					buttonRadius = 10;
 		public static readonly double					buttonSquare = 5;
 
+		private readonly ActiveElement					element;
 		private readonly ActiveButtonState				state;
+		private readonly double							radius;
+		private readonly bool							roundButton;
+
+		private readonly ColorFactory					parentColorFactory;
+
 		private readonly System.Action<ActiveButton>	geometryUpdater;
 		private readonly System.Action<ActiveButton>	stateUpdater;
 
-		private ActiveElement							element;
 		private Point									center;
-		private double									radius;
-		private bool									roundButton;
 		private GlyphShape								glyph;
 		private string									text;
 		private ColorFactory							colorFactory;
-		private ColorFactory							parentColorFactory;
 	}
 }

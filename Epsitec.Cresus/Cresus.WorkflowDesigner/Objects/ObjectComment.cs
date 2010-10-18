@@ -1217,7 +1217,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Selected = this.colorFactory.ColorItem == button.Color;
+			button.State.Selected = this.colorFactory.ColorItem == button.ColorItem;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
