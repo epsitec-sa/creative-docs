@@ -82,20 +82,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public bool IsHilitedForLinkChanging
-		{
-			//	Indique si cet objet est mis en évidence pendant un changement de destination d'une connexion.
-			get
-			{
-				return this.isHilitedForLinkChanging;
-			}
-			set
-			{
-				this.isHilitedForLinkChanging = value;
-			}
-		}
-
-
 		public virtual void RemoveEntityLink(LinkableObject dst)
 		{
 		}
@@ -157,6 +143,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.editor.Invalidate ();
 					this.editor.SetLocalDirty ();
 				}
+			}
+		}
+
+
+		public override List<AbstractObject> FriendObjects
+		{
+			//	Les objets amis sont toutes les connexions qui partent ou arrivent de cet objet.
+			get
+			{
+				var list = new List<AbstractObject> ();
+
+				foreach (var obj in this.objectLinks)
+				{
+					list.Add (obj);
+				}
+
+				foreach (var obj in this.ArrivalObjectLinks)
+				{
+					list.Add (obj);
+				}
+
+				return list;
 			}
 		}
 
@@ -314,6 +322,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private IEnumerable<ObjectLink> ArrivalObjectLinks
 		{
+			//	Retourne la liste de toutes les connexions qui arrivent sur cet objet.
+			//	A l'inverse, this.objectLinks donne la liste de toutes les connexions partantes.
 			get
 			{
 				foreach (var link in this.editor.LinkObjects)
@@ -331,6 +341,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
 		protected Point							draggingOffset;
-		protected bool							isHilitedForLinkChanging;
 	}
 }

@@ -31,6 +31,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool IsDimmed
+		{
+			get
+			{
+				return this.isDimmed;
+			}
+			set
+			{
+				this.isDimmed = value;
+			}
+		}
+
 
 		public bool IsDarkColorMain
 		{
@@ -97,13 +109,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					break;
 			}
 
+			if (this.isDimmed)
+			{
+				color = this.GetColorLighter (color, 0.3);
+			}
+
 			return color;
 		}
 
 		public Color GetColor(double brightness)
 		{
 			//	Retourne un niveau de gris.
-			return Color.FromBrightness (brightness);
+			Color color = Color.FromBrightness (brightness);
+
+			if (this.isDimmed)
+			{
+				color = this.GetColorLighter (color, 0.3);
+			}
+
+			return color;
 		}
 
 		public Color GetColorAdjusted(Color color, double factor)
@@ -133,6 +157,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private ColorItem colorItem;
+		private ColorItem		colorItem;
+		private bool			isDimmed;
 	}
 }

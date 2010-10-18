@@ -110,6 +110,43 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool IsDimmed
+		{
+			get
+			{
+				return this.isDimmed;
+			}
+			set
+			{
+				this.isDimmed = value;
+				this.colorFactory.IsDimmed = this.isDimmed && !this.isHilitedForLinkChanging;
+			}
+		}
+
+		public bool IsHilitedForLinkChanging
+		{
+			//	Indique si cet objet est mis en évidence pendant un changement de destination d'une connexion.
+			get
+			{
+				return this.isHilitedForLinkChanging;
+			}
+			set
+			{
+				this.isHilitedForLinkChanging = value;
+				this.colorFactory.IsDimmed = this.isDimmed && !this.isHilitedForLinkChanging;
+			}
+		}
+
+
+		public virtual List<AbstractObject> FriendObjects
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+
 		public string GetToolTipText(Point pos)
 		{
 			//	Retourne le texte pour le tooltip.
@@ -514,6 +551,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
+		protected bool							isHilitedForLinkChanging;
+		protected bool							isDimmed;
 		protected ColorFactory					colorFactory;
 	}
 }
