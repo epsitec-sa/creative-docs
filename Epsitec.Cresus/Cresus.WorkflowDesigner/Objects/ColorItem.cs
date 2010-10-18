@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public enum MainColor
+	public enum ColorItem
 	{
 		None,
 		Yellow,

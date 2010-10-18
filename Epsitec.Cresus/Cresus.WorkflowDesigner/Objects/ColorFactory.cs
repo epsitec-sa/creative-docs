@@ -11,23 +11,23 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public class ColorEngine
+	public class ColorFactory
 	{
-		public ColorEngine(MainColor color)
+		public ColorFactory(ColorItem colorItem)
 		{
-			this.color = color;
+			this.colorItem = colorItem;
 		}
 
 
-		public MainColor MainColor
+		public ColorItem ColorItem
 		{
 			get
 			{
-				return this.color;
+				return this.colorItem;
 			}
 			set
 			{
-				this.color = value;
+				this.colorItem = value;
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Indique si la couleur pour les mises en évidence est foncée.
 			get
 			{
-				return this.color == MainColor.DarkGrey;
+				return this.colorItem == ColorItem.DarkGrey;
 			}
 		}
 
@@ -50,55 +50,49 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public Color GetColorMain(double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorMain (this.color, alpha);
+			return this.GetColorMain (this.colorItem, alpha);
 		}
 
-		public Color GetColorMain(MainColor boxColor)
-		{
-			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorMain (boxColor, 1.0);
-		}
-
-		public Color GetColorMain(MainColor boxColor, double alpha)
+		public Color GetColorMain(ColorItem colorItem, double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
 			Color color = Color.FromAlphaRgb (alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
 
-			switch (boxColor)
+			switch (colorItem)
 			{
-				case MainColor.Blue:
+				case ColorItem.Blue:
 					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 90.0/255.0, 160.0/255.0);
 					break;
 
-				case MainColor.Green:
+				case ColorItem.Green:
 					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 130.0/255.0, 20.0/255.0);
 					break;
 
-				case MainColor.Red:
+				case ColorItem.Red:
 					color = Color.FromAlphaRgb (alpha, 140.0/255.0, 30.0/255.0, 0.0/255.0);
 					break;
 
-				case MainColor.Grey:
+				case ColorItem.Grey:
 					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 
-				case MainColor.DarkGrey:
+				case ColorItem.DarkGrey:
 					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 
-				case MainColor.Yellow:
+				case ColorItem.Yellow:
 					color = Color.FromAlphaRgb (alpha, 200.0/255.0, 200.0/255.0, 0.0/255.0);
 					break;
 
-				case MainColor.Orange:
+				case ColorItem.Orange:
 					color = Color.FromAlphaRgb (alpha, 200.0/255.0, 150.0/255.0, 0.0/255.0);
 					break;
 
-				case MainColor.Lilac:
+				case ColorItem.Lilac:
 					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 0.0/255.0, 150.0/255.0);
 					break;
 
-				case MainColor.Purple:
+				case ColorItem.Purple:
 					color = Color.FromAlphaRgb (alpha, 30.0/255.0, 0.0/255.0, 200.0/255.0);
 					break;
 			}
@@ -125,13 +119,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public Color GetColorLighter(Color color, double factor)
+		private Color GetColorLighter(Color color, double factor)
 		{
 			//	Retourne une couleur éclaircie, sans changer la transparence.
 			return Color.FromAlphaRgb (color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
 		}
 
-		public Color GetColorDarker(Color color, double factor)
+		private Color GetColorDarker(Color color, double factor)
 		{
 			//	Retourne une couleur assombrie, sans changer la transparence.
 			factor = 0.5+(factor*0.5);
@@ -139,6 +133,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private MainColor color;
+		private ColorItem colorItem;
 	}
 }

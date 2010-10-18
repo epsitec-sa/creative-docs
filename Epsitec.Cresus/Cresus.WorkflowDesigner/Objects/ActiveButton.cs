@@ -13,44 +13,44 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public class ActiveButton
 	{
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, GlyphShape glyph, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, GlyphShape glyph, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
-			this.element           = element;
-			this.parentColorEngine = parentColorEngine;
-			this.radius            = ActiveButton.buttonRadius;
-			this.glyph             = glyph;
-			this.colorEngine       = new ColorEngine (MainColor.None);
-			this.roundButton       = true;
-			this.geometryUpdater   = geometryUpdater;
-			this.stateUpdater      = stateUpdater;
+			this.element            = element;
+			this.parentColorFactory = parentColorFactory;
+			this.radius             = ActiveButton.buttonRadius;
+			this.glyph              = glyph;
+			this.colorFactory       = new ColorFactory (ColorItem.None);
+			this.roundButton        = true;
+			this.geometryUpdater    = geometryUpdater;
+			this.stateUpdater       = stateUpdater;
 
 			this.state = new ActiveButtonState ();
 		}
 
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, string text, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, string text, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
-			this.element           = element;
-			this.parentColorEngine = parentColorEngine;
-			this.radius            = ActiveButton.buttonRadius;
-			this.glyph             = GlyphShape.None;
-			this.colorEngine       = new ColorEngine (MainColor.None);
-			this.text              = text;
-			this.roundButton       = true;
-			this.geometryUpdater   = geometryUpdater;
-			this.stateUpdater      = stateUpdater;
+			this.element            = element;
+			this.parentColorFactory = parentColorFactory;
+			this.radius             = ActiveButton.buttonRadius;
+			this.glyph              = GlyphShape.None;
+			this.colorFactory       = new ColorFactory (ColorItem.None);
+			this.text               = text;
+			this.roundButton        = true;
+			this.geometryUpdater    = geometryUpdater;
+			this.stateUpdater       = stateUpdater;
 
 			this.state = new ActiveButtonState ();
 		}
 
-		public ActiveButton(ActiveElement element, ColorEngine parentColorEngine, MainColor color, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
+		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, ColorItem color, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
-			this.element           = element;
-			this.parentColorEngine = parentColorEngine;
-			this.radius            = ActiveButton.buttonSquare;
-			this.colorEngine       = new ColorEngine (color);
-			this.roundButton       = false;
-			this.geometryUpdater   = geometryUpdater;
-			this.stateUpdater      = stateUpdater;
+			this.element            = element;
+			this.parentColorFactory = parentColorFactory;
+			this.radius             = ActiveButton.buttonSquare;
+			this.colorFactory       = new ColorFactory (color);
+			this.roundButton        = false;
+			this.geometryUpdater    = geometryUpdater;
+			this.stateUpdater       = stateUpdater;
 
 			this.state = new ActiveButtonState ();
 		}
@@ -136,15 +136,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public MainColor Color
+		public ColorItem Color
 		{
 			get
 			{
-				return this.colorEngine.MainColor;
+				return this.colorFactory.ColorItem;
 			}
 			set
 			{
-				this.colorEngine.MainColor = value;
+				this.colorFactory.ColorItem = value;
 			}
 		}
 
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.DrawTextRoundButton (graphics);
 				}
-				else if (this.colorEngine.MainColor != MainColor.None)
+				else if (this.colorFactory.ColorItem != ColorItem.None)
 				{
 					this.DrawSquareButton (graphics);
 				}
@@ -226,16 +226,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			rect.Inflate (0.5);
 
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (this.colorEngine.GetColorMain (this.colorEngine.MainColor, 0.8));
+			graphics.RenderSolid (this.colorFactory.GetColorMain (this.colorFactory.ColorItem, 0.8));
 
 			graphics.AddRectangle (rect);
-			graphics.RenderSolid (this.colorEngine.GetColor (0));
+			graphics.RenderSolid (this.colorFactory.GetColor (0));
 
 			if (this.state.Selected)
 			{
 				rect.Deflate (1);
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (this.colorEngine.GetColor (1));
+				graphics.RenderSolid (this.colorFactory.GetColor (1));
 				rect.Inflate (1);
 			}
 
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				rect.Deflate (2);
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (this.colorEngine.GetColor (1));
+				graphics.RenderSolid (this.colorFactory.GetColor (1));
 			}
 		}
 
@@ -276,11 +276,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Color colorShape;
 				if (this.state.Enable)
 				{
-					colorShape = this.state.Hilited ? this.parentColorEngine.GetColor (1) : this.parentColorEngine.GetColor (0);
+					colorShape = this.state.Hilited ? this.parentColorFactory.GetColor (1) : this.parentColorFactory.GetColor (0);
 				}
 				else
 				{
-					colorShape = this.parentColorEngine.GetColor (0.7);
+					colorShape = this.parentColorFactory.GetColor (0.7);
 				}
 
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -304,11 +304,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Color colorShape;
 				if (this.state.Enable)
 				{
-					colorShape = this.state.Hilited ? this.parentColorEngine.GetColor (1) : this.parentColorEngine.GetColor (0);
+					colorShape = this.state.Hilited ? this.parentColorFactory.GetColor (1) : this.parentColorFactory.GetColor (0);
 				}
 				else
 				{
-					colorShape = this.parentColorEngine.GetColor (0.7);
+					colorShape = this.parentColorFactory.GetColor (0.7);
 				}
 
 				Rectangle rect = new Rectangle (this.center.X-this.radius, this.center.Y-this.radius, this.radius*2, this.radius*2);
@@ -339,15 +339,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.state.Enable)
 			{
-				colorSurface = this.state.Hilited ? this.parentColorEngine.GetColorMain () : this.parentColorEngine.GetColor (1);
-				colorFrame = this.parentColorEngine.GetColor (0);
-				colorShape = this.state.Hilited ? this.parentColorEngine.GetColor (1) : this.parentColorEngine.GetColor (0);
+				colorSurface = this.state.Hilited ? this.parentColorFactory.GetColorMain () : this.parentColorFactory.GetColor (1);
+				colorFrame = this.parentColorFactory.GetColor (0);
+				colorShape = this.state.Hilited ? this.parentColorFactory.GetColor (1) : this.parentColorFactory.GetColor (0);
 			}
 			else
 			{
-				colorSurface = this.parentColorEngine.GetColor (0.9);
-				colorFrame   = this.parentColorEngine.GetColor (0.5);
-				colorShape   = this.parentColorEngine.GetColor (0.7);
+				colorSurface = this.parentColorFactory.GetColor (0.9);
+				colorFrame   = this.parentColorFactory.GetColor (0.5);
+				colorShape   = this.parentColorFactory.GetColor (0.7);
 			}
 
 			graphics.AddFilledCircle (this.center, this.radius);
@@ -358,20 +358,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private static readonly double		buttonRadius = 10;
-		private static readonly double		buttonSquare = 5;
+		public static readonly double					buttonRadius = 10;
+		public static readonly double					buttonSquare = 5;
 
 		private readonly ActiveButtonState				state;
 		private readonly System.Action<ActiveButton>	geometryUpdater;
 		private readonly System.Action<ActiveButton>	stateUpdater;
 
-		private ActiveElement				element;
-		private Point						center;
-		private double						radius;
-		private bool						roundButton;
-		private GlyphShape					glyph;
-		private string						text;
-		private ColorEngine					colorEngine;
-		private ColorEngine					parentColorEngine;
+		private ActiveElement							element;
+		private Point									center;
+		private double									radius;
+		private bool									roundButton;
+		private GlyphShape								glyph;
+		private string									text;
+		private ColorFactory							colorFactory;
+		private ColorFactory							parentColorFactory;
 	}
 }
