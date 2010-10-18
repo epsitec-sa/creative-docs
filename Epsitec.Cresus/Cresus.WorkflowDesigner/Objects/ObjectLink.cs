@@ -1065,7 +1065,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateComment(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && this.HasLinkCommentButton && !this.IsDragging;
+			button.State.Visible = this.IsHilite && this.HasLinkCommentButton && !this.IsDragging && !this.IsTooShortLink;
 			button.State.Detectable = button.State.Visible;
 		}
 
@@ -1084,13 +1084,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateCustomizeStart(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = button.State.Hilited || (this.IsHilite && this.dstObject != null && !this.IsDragging);
+			button.State.Visible = (this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && this.dstObject != null && !this.IsDragging && !this.IsTooShortLink);
+			button.State.Detectable = !this.IsTooShortLink;
 		}
 
 		private void UpdateButtonStateCustomizeEnd(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = button.State.Hilited || (this.IsHilite && this.dstObject != null && !this.IsDragging);
+			button.State.Visible = (this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && this.dstObject != null && !this.IsDragging && !this.IsTooShortLink);
+			button.State.Detectable = !this.IsTooShortLink;
 		}
 
 		private bool IsDragging
@@ -1098,6 +1100,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.isDraggingCustomize || this.isDraggingDst;
+			}
+		}
+
+		private bool IsTooShortLink
+		{
+			get
+			{
+				double d = Point.Distance (this.startVector.Origin, this.endVector.Origin);
+				return d < 50;
 			}
 		}
 
