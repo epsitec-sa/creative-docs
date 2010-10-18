@@ -13,6 +13,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public class ActiveButton
 	{
+		/// <summary>
+		/// Crée un bouton rond avec un glyphe.
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="parentColorFactory"></param>
+		/// <param name="glyph"></param>
+		/// <param name="geometryUpdater"></param>
+		/// <param name="stateUpdater"></param>
 		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, GlyphShape glyph, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element            = element;
@@ -27,6 +35,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.state = new ActiveButtonState ();
 		}
 
+		/// <summary>
+		/// Crée un bouton rond avec un texte d'un seul caractère.
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="parentColorFactory"></param>
+		/// <param name="text"></param>
+		/// <param name="geometryUpdater"></param>
+		/// <param name="stateUpdater"></param>
 		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, string text, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element            = element;
@@ -42,6 +58,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.state = new ActiveButtonState ();
 		}
 
+		/// <summary>
+		/// Crée un petit bouton carré pour choisir une couleur.
+		/// </summary>
+		/// <param name="element"></param>
+		/// <param name="parentColorFactory"></param>
+		/// <param name="color"></param>
+		/// <param name="geometryUpdater"></param>
+		/// <param name="stateUpdater"></param>
 		public ActiveButton(ActiveElement element, ColorFactory parentColorFactory, ColorItem color, System.Action<ActiveButton> geometryUpdater, System.Action<ActiveButton> stateUpdater)
 		{
 			this.element            = element;
@@ -69,22 +93,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.state;
-			}
-		}
-
-		public double Radius
-		{
-			get
-			{
-				return this.radius;
-			}
-		}
-
-		public bool RoundButton
-		{
-			get
-			{
-				return this.roundButton;
 			}
 		}
 
@@ -137,16 +145,27 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		/// <summary>
+		/// Met à jour la géométrie du bouton, c'est-à-dire sa position.
+		/// </summary>
 		public void UpdateGeometry()
 		{
 			this.geometryUpdater (this);
 		}
 
+		/// <summary>
+		/// Met à jour l'état du bouton (ActiveButtonState).
+		/// </summary>
 		public void UpdateState()
 		{
 			this.stateUpdater (this);
 		}
 
+		/// <summary>
+		/// Détecte si une position (généralement la souris) est dans le bouton.
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <returns></returns>
 		public bool Detect(Point pos)
 		{
 			//	Il faut détecter les boutons invisibles !
@@ -167,6 +186,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		/// <summary>
+		/// Dessine le bouton.
+		/// </summary>
+		/// <param name="graphics"></param>
 		public void Draw(Graphics graphics)
 		{
 			if (this.state.Visible && !this.center.IsZero)

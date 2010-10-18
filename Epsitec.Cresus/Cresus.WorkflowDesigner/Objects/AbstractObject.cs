@@ -105,7 +105,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.hilitedElement = value;
 					this.UpdateButtonsState ();
-					this.editor.Invalidate ();
 				}
 			}
 		}
