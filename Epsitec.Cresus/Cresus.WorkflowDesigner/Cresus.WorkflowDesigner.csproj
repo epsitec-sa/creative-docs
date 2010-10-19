@@ -53,6 +53,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\FileSaveImageDialog.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="MainController.cs" />
@@ -159,9 +160,7 @@
     <EmbeddedResource Include="Images\RadioNo.icon" />
     <EmbeddedResource Include="Images\RadioYes.icon" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dialogs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Cresus.Core\$(OutDir)plugins\" /R/Y</PostBuildEvent>
