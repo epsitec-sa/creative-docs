@@ -151,6 +151,32 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return null;  // pas de tooltip
 			}
 
+			switch (element)
+			{
+				case ActiveElement.LinkChangeDst:
+					if (this.dstObject == null)
+					{
+						return (this.srcObject is ObjectNode) ? "Lie la connexion à une action" : "Lie la connexion à un noeud";
+					}
+					else
+					{
+						return (this.srcObject is ObjectNode) ? "Lie la connexion à une autre action" : "Lie la connexion à un autre noeud";
+					}
+
+				case ActiveElement.LinkCreateDst:
+					return (this.srcObject is ObjectNode) ? "Crée une nouvelle action" : "Crée un nouveau noeud";
+
+				case ActiveElement.LinkClose:
+					return "Ferme la connexion";
+
+				case ActiveElement.LinkComment:
+					return "Ajoute un commentaire à la connexion";
+
+				case ActiveElement.LinkCustomizeStart:
+				case ActiveElement.LinkCustomizeEnd:
+					return "Modifie l'aspect de la connexion";
+			}
+
 			return base.GetToolTipText(element);
 		}
 

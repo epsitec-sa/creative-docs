@@ -361,7 +361,47 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return null;  // pas de tooltip
 			}
 
-			return base.GetToolTipText(element);
+			switch (element)
+			{
+				case ActiveElement.EdgeChangeWidth:
+					return "Change la largeur de la boîte";
+
+				case ActiveElement.EdgeClose:
+					return "Ferme l'action";
+
+				case ActiveElement.EdgeComment:
+					return "Ajoute un commentaire à l'action";
+
+				case ActiveElement.EdgeExtend:
+					return this.isExtended ? "Réduit la boîte" : "Etend éa boîte";
+
+				case ActiveElement.EdgeColor1:
+					return "Jaune";
+
+				case ActiveElement.EdgeColor2:
+					return "Orange";
+
+				case ActiveElement.EdgeColor3:
+					return "Rouge";
+
+				case ActiveElement.EdgeColor4:
+					return "Lilas";
+
+				case ActiveElement.EdgeColor5:
+					return "Violet";
+
+				case ActiveElement.EdgeColor6:
+					return "Bleu";
+
+				case ActiveElement.EdgeColor7:
+					return "Vert";
+
+				case ActiveElement.EdgeColor8:
+					return "Gris";
+
+			}
+
+			return base.GetToolTipText (element);
 		}
 
 		public override bool MouseMove(Message message, Point pos)

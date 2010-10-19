@@ -213,7 +213,43 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return null;  // pas de tooltip
 			}
 
-			return base.GetToolTipText(element);
+			switch (element)
+			{
+				case ActiveElement.NodeClose:
+					return "Ferme le noeud";
+
+				case ActiveElement.NodeComment:
+					return "Ajoute un commentaire au noeud";
+
+				case ActiveElement.NodeOpenLink:
+					return "Crée une nouvelle connexion";
+
+				case ActiveElement.NodeColor1:
+					return "Jaune";
+
+				case ActiveElement.NodeColor2:
+					return "Orange";
+
+				case ActiveElement.NodeColor3:
+					return "Rouge";
+
+				case ActiveElement.NodeColor4:
+					return "Lilas";
+
+				case ActiveElement.NodeColor5:
+					return "Violet";
+
+				case ActiveElement.NodeColor6:
+					return "Bleu";
+
+				case ActiveElement.NodeColor7:
+					return "Vert";
+
+				case ActiveElement.NodeColor8:
+					return "Gris";
+			}
+
+			return base.GetToolTipText (element);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
