@@ -9632,24 +9632,46 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/L0A5J/L0ACL
+		///	The <c>IsAuto</c> field.
+		///	designer:fld/L0A5J/L0AEL
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ACL]")]
-		public global::Epsitec.Common.Types.FormattedText Description
+		[global::Epsitec.Common.Support.EntityField ("[L0AEL]")]
+		public bool IsAuto
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACL]");
+				return this.GetField<bool> ("[L0AEL]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				bool oldValue = this.IsAuto;
 				if (oldValue != value)
 				{
-					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACL]", oldValue, value);
-					this.OnDescriptionChanged (oldValue, value);
+					this.OnIsAutoChanging (oldValue, value);
+					this.SetField<bool> ("[L0AEL]", oldValue, value);
+					this.OnIsAutoChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IsPublic</c> field.
+		///	designer:fld/L0A5J/L0AJL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJL]")]
+		public bool IsPublic
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0AJL]");
+			}
+			set
+			{
+				bool oldValue = this.IsPublic;
+				if (oldValue != value)
+				{
+					this.OnIsPublicChanging (oldValue, value);
+					this.SetField<bool> ("[L0AJL]", oldValue, value);
+					this.OnIsPublicChanged (oldValue, value);
 				}
 			}
 		}
@@ -9668,8 +9690,10 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnIsAutoChanging(bool oldValue, bool newValue);
+		partial void OnIsAutoChanged(bool oldValue, bool newValue);
+		partial void OnIsPublicChanging(bool oldValue, bool newValue);
+		partial void OnIsPublicChanged(bool oldValue, bool newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -9761,45 +9785,23 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TransitionMode</c> field.
+		///	The <c>TransitionType</c> field.
 		///	designer:fld/L0A6J/L0ASJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ASJ]")]
-		public int TransitionMode
+		public global::Epsitec.Cresus.Core.Business.WorkflowTransitionType TransitionType
 		{
 			get
 			{
-				return this.GetField<int> ("[L0ASJ]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowTransitionType> ("[L0ASJ]");
 			}
 			set
 			{
-				int oldValue = this.TransitionMode;
-				if (oldValue != value)
-				{
-					this.OnTransitionModeChanging (oldValue, value);
-					this.SetField<int> ("[L0ASJ]", oldValue, value);
-					this.OnTransitionModeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>TransitionType</c> field.
-		///	designer:fld/L0A6J/L0ABK
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ABK]")]
-		public int TransitionType
-		{
-			get
-			{
-				return this.GetField<int> ("[L0ABK]");
-			}
-			set
-			{
-				int oldValue = this.TransitionType;
+				global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue = this.TransitionType;
 				if (oldValue != value)
 				{
 					this.OnTransitionTypeChanging (oldValue, value);
-					this.SetField<int> ("[L0ABK]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowTransitionType> ("[L0ASJ]", oldValue, value);
 					this.OnTransitionTypeChanged (oldValue, value);
 				}
 			}
@@ -9833,10 +9835,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
-		partial void OnTransitionModeChanging(int oldValue, int newValue);
-		partial void OnTransitionModeChanged(int oldValue, int newValue);
-		partial void OnTransitionTypeChanging(int oldValue, int newValue);
-		partial void OnTransitionTypeChanged(int oldValue, int newValue);
+		partial void OnTransitionTypeChanging(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
+		partial void OnTransitionTypeChanged(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionActionChanging(string oldValue, string newValue);
 		partial void OnTransitionActionChanged(string oldValue, string newValue);
 		
@@ -10743,6 +10743,50 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowDefinitionEntity : global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity
 	{
 		///	<summary>
+		///	The <c>WorkflowName</c> field.
+		///	designer:fld/L0AAL/L0ALL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ALL]")]
+		public global::Epsitec.Common.Types.FormattedText WorkflowName
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ALL]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.WorkflowName;
+				if (oldValue != value)
+				{
+					this.OnWorkflowNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ALL]", oldValue, value);
+					this.OnWorkflowNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>WorkflowDescription</c> field.
+		///	designer:fld/L0AAL/L0AKL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AKL]")]
+		public global::Epsitec.Common.Types.FormattedText WorkflowDescription
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AKL]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.WorkflowDescription;
+				if (oldValue != value)
+				{
+					this.OnWorkflowDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AKL]", oldValue, value);
+					this.OnWorkflowDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>EnableCondition</c> field.
 		///	designer:fld/L0AAL/L0ABL
 		///	</summary>
@@ -10764,9 +10808,37 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>SerializedDesign</c> field.
+		///	designer:fld/L0AAL/L0ADL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADL]")]
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedDesign
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[L0ADL]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedDesign;
+				if (oldValue != value)
+				{
+					this.OnSerializedDesignChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[L0ADL]", oldValue, value);
+					this.OnSerializedDesignChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnWorkflowNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnWorkflowNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnWorkflowDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnWorkflowDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnEnableConditionChanging(string oldValue, string newValue);
 		partial void OnEnableConditionChanged(string oldValue, string newValue);
+		partial void OnSerializedDesignChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedDesignChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

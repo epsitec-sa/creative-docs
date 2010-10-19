@@ -112,6 +112,7 @@
     <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
+    <Compile Include="Business\WorkflowTransitionType.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />

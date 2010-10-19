@@ -34,49 +34,51 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<WorkflowDefinitionEntity> InsertWorkflowDefinitionsInDatabase()
 		{
-			var def = this.DataContext.CreateEntity<WorkflowDefinitionEntity> ();
-
-			var nodeA = this.DataContext.CreateEntity<WorkflowNodeEntity> ();
-			var nodeB = this.DataContext.CreateEntity<WorkflowNodeEntity> ();
-			var nodeC = this.DataContext.CreateEntity<WorkflowNodeEntity> ();
-
-			var edgeAB = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
-			var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
-			var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity> ();
-
-			def.EnableCondition = "MasterEntity=[L0AB2]";
-			def.Name = FormattedText.FromSimpleText ("e");
-			def.Description = FormattedText.FromSimpleText ("Diagramme pour le traitement d'une commande client (offre, bon pour commande, confirmation de commande, production, livraison)");
-			def.Edges.Add (edgeAB);
-			def.Edges.Add (edgeAC);
-
-			nodeA.Name = FormattedText.FromSimpleText ("1");
-			nodeA.Edges.Add (edgeAB);
-			nodeA.Edges.Add (edgeAC);
-
-			edgeAB.Name = FormattedText.FromSimpleText ("Créer une nouvelle offre");
-			edgeAB.Description = FormattedText.FromSimpleText ("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
-			edgeAB.TransitionAction = "WorkflowAction.NewAffair WorkflowAction.NewOffer";
-			edgeAB.NextNode = nodeB;
-
-			edgeAC.Name = FormattedText.FromSimpleText ("Créer une variante");
-			edgeAC.Description = FormattedText.FromSimpleText ("Crée une variante d'une offre existante");
-			edgeAC.TransitionAction = "WorkflowAction.NewOfferVariant";
-			edgeAC.NextNode = nodeC;
-
-			edgeCA.Name = FormattedText.FromSimpleText ("Editer la variante");
-			edgeCA.Description = FormattedText.FromSimpleText ("Editer la variante de l'offre existante");
-			edgeCA.TransitionAction = "...";
-			edgeCA.NextNode = nodeA;
-
-			nodeB.Name = "2";
-			nodeB.Description = FormattedText.FromSimpleText ("L'offre a été envoyé au client");
-
-			nodeC.Name = "3";
-			nodeC.Description = FormattedText.FromSimpleText ("On a créé une variante de l'offre existante");
-			nodeC.Edges.Add (edgeCA);
-
-			yield return def;
+            yield return this.GetNewWorkflow();
+            yield return this.GetNewWorkflow();
 		}
-	}
+        
+        private WorkflowDefinitionEntity GetNewWorkflow()
+        {
+            var def = this.DataContext.CreateEntity<WorkflowDefinitionEntity>();
+
+            var nodeA = this.DataContext.CreateEntity<WorkflowNodeEntity>();
+            var nodeB = this.DataContext.CreateEntity<WorkflowNodeEntity>();
+            var nodeC = this.DataContext.CreateEntity<WorkflowNodeEntity>();
+
+            var edgeAB = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
+            var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
+            var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
+
+            def.EnableCondition = "MasterEntity=[L0AB2]";
+            def.Name = FormattedText.FromSimpleText("e");
+            def.Edges.Add(edgeAB);
+            def.Edges.Add(edgeAC);
+
+            nodeA.Name = FormattedText.FromSimpleText("1");
+            nodeA.Edges.Add(edgeAB);
+            nodeA.Edges.Add(edgeAC);
+
+            edgeAB.Name = FormattedText.FromSimpleText("Créer une nouvelle offre");
+            edgeAB.Description = FormattedText.FromSimpleText("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
+            edgeAB.TransitionAction = "WorkflowAction.NewAffair WorkflowAction.NewOffer";
+            edgeAB.NextNode = nodeB;
+
+            edgeAC.Name = FormattedText.FromSimpleText("Créer une variante");
+            edgeAC.Description = FormattedText.FromSimpleText("Crée une variante d'une offre existante");
+            edgeAC.TransitionAction = "WorkflowAction.NewOfferVariant";
+            edgeAC.NextNode = nodeC;
+
+            edgeCA.Name = FormattedText.FromSimpleText("Editer la variante");
+            edgeCA.Description = FormattedText.FromSimpleText("Editer la variante de l'offre existante");
+            edgeCA.TransitionAction = "...";
+            edgeCA.NextNode = nodeA;
+
+            nodeB.Name = "2";
+
+            nodeC.Name = "3";
+            nodeC.Edges.Add(edgeCA);
+            return def;
+        }
+    }
 }
