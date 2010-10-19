@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Path path = this.PathNode2Rectangle (rect);
 				graphics.Rasterizer.AddSurface (path);
-				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0, 0, 0));
+				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
 
 				rect.Deflate (1);
 			}
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Path path = this.PathNodeRectangle (rect, radius);
 				graphics.Rasterizer.AddSurface (path);
-				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0, 0, 0));
+				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
 
 				rect.Deflate (1);
 				radius -= 1;
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Path path = this.PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(Color.FromAlphaRgb(alpha, 0, 0, 0));
+				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
 
 				rect.Deflate(1);
 				radius -= 1;
