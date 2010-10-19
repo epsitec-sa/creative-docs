@@ -156,11 +156,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.LinkChangeDst:
 					if (this.dstObject == null)
 					{
-						return (this.srcObject is ObjectNode) ? "Lie la connexion à une action" : "Lie la connexion à un noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une action" : "Connecte à un noeud";
 					}
 					else
 					{
-						return (this.srcObject is ObjectNode) ? "Lie la connexion à une autre action" : "Lie la connexion à un autre noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une autre action" : "Connecte à un autre noeud";
 					}
 
 				case ActiveElement.LinkCreateDst:
@@ -621,7 +621,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine la pastille au départ.
-			this.DrawCircle (graphics, this.startVector.Origin, 4);
+			bool triangle = false;
+			if (this.srcObject.AbstractEntity is WorkflowNodeEntity)
+			{
+				var nodeEntity = this.srcObject.AbstractEntity as WorkflowNodeEntity;
+				if (nodeEntity.IsAuto)
+				{
+					triangle = true;
+				}
+			}
+
+			if (triangle)
+			{
+				this.DrawTriangle (graphics, this.srcObject.Bounds.Center, this.startVector.Origin, 6);
+			}
+			else
+			{
+				this.DrawCircle (graphics, this.startVector.Origin, 4);
+			}
 		}
 
 		private void DrawArrow(Graphics graphics, Vector startVector, Vector endVector, Color color)
@@ -651,6 +668,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.AddCircle (center, radius);
 			graphics.RenderSolid (this.colorFactory.GetColor (0));
 		}
+
+		private void DrawTriangle(Graphics graphics, Point origin, Point center, double dim)
+		{
+			//	Dessine un triangle vide, dont la base est dirigée vers l'origine.
+			Point p1 = Point.Move (center, origin, -dim);
+			Point pp = Point.Move (center, origin,  dim);
+			Point v = center-pp;
+			Point p2 = new Point (pp.X+v.Y, pp.Y-v.X);
+			Point p3 = new Point (pp.X-v.Y, pp.Y+v.X);
+
+			var path = new Path ();
+			path.MoveTo (p1);
+			path.LineTo (p2);
+			path.LineTo (p3);
+			path.Close ();
+
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (this.colorFactory.GetColor (1));
+
+			graphics.Rasterizer.AddOutline (path, 1);
+			graphics.RenderSolid (this.colorFactory.GetColor (0));
+		}
+
 
 		public override void DrawForeground(Graphics graphics)
 		{

@@ -148,6 +148,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			var edge = new ObjectEdge (this, edgeEntity);
 			this.AddEdge (edge);
+			this.PushLayout (edge, PushDirection.Automatic, this.gridStep);
 
 			if (edgeEntity.NextNode.IsNotNull ())
 			{
@@ -167,6 +168,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			var node = new ObjectNode (this, nodeEntity);
 			node.IsRoot = isRoot;
 			this.AddNode (node);
+			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 
 			foreach (var edgeEntity in nodeEntity.Edges)
 			{

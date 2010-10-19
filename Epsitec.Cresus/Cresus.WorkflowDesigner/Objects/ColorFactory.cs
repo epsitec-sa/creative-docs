@@ -117,10 +117,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return color;
 		}
 
-		public Color GetColor(double brightness)
+		public Color GetColor(double brightness, double alpha = 1)
 		{
 			//	Retourne un niveau de gris.
 			Color color = Color.FromBrightness (brightness);
+			color = Color.FromAlphaRgb (alpha, color.R, color.G, color.B);
 
 			if (this.isDimmed)
 			{

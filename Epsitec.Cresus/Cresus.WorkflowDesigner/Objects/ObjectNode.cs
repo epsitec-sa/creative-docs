@@ -221,6 +221,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.NodeComment:
 					return "Ajoute un commentaire au noeud";
 
+				case ActiveElement.NodeInfo:
+					return "Monte ou cache les informations du noeud";
+
+				case ActiveElement.NodeAuto:
+					return this.Entity.IsAuto ? "Noeud en mode manuel" : "Noeud en mode automatique";
+
 				case ActiveElement.NodeOpenLink:
 					return "Crée une nouvelle connexion";
 
@@ -327,18 +333,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
+			if (this.hilitedElement == ActiveElement.NodeComment)
+			{
+				this.AddComment();
+			}
+
 			if (this.hilitedElement == ActiveElement.NodeClose)
 			{
 				if (!this.isRoot)
 				{
-					this.editor.CloseObject(this);
+					this.editor.CloseObject (this);
 					this.editor.UpdateAfterGeometryChanged (null);
 				}
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeComment)
+			if (this.hilitedElement == ActiveElement.NodeInfo)
 			{
-				this.AddComment();
+			}
+
+			if (this.hilitedElement == ActiveElement.NodeAuto)
+			{
+				this.Entity.IsAuto = !this.Entity.IsAuto;
+				this.UpdateButtonsState ();
+				this.editor.SetLocalDirty ();
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeColor1)
@@ -534,6 +551,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				return (this.hilitedElement == ActiveElement.NodeHeader ||
 						this.hilitedElement == ActiveElement.NodeComment ||
+						this.hilitedElement == ActiveElement.NodeClose ||
+						this.hilitedElement == ActiveElement.NodeInfo ||
+						this.hilitedElement == ActiveElement.NodeAuto ||
 						this.hilitedElement == ActiveElement.NodeColor1 ||
 						this.hilitedElement == ActiveElement.NodeColor2 ||
 						this.hilitedElement == ActiveElement.NodeColor3 ||
@@ -542,8 +562,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeColor6 ||
 						this.hilitedElement == ActiveElement.NodeColor7 ||
 						this.hilitedElement == ActiveElement.NodeColor8 ||
-						this.hilitedElement == ActiveElement.NodeOpenLink ||
-						this.hilitedElement == ActiveElement.NodeClose);
+						this.hilitedElement == ActiveElement.NodeOpenLink);
 			}
 		}
 
@@ -573,6 +592,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Top-ActiveButton.buttonRadius-9);
+			}
+		}
+
+		private Point PositionInfoButton
+		{
+			//	Retourne la position du bouton pour montrer le commentaire.
+			get
+			{
+				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom+ActiveButton.buttonRadius+9);
+			}
+		}
+
+		private Point PositionAutoButton
+		{
+			//	Retourne la position du bouton pour montrer le commentaire.
+			get
+			{
+				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom+ActiveButton.buttonRadius+9);
 			}
 		}
 
@@ -639,6 +676,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorFactory, GlyphShape.Plus,  this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close, this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",              this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",              this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",              this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorFactory, ColorItem.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
@@ -665,6 +704,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.Center = this.PositionCommentButton;
 		}
 
+		private void UpdateButtonGeometryInfo(ActiveButton button)
+		{
+			button.Center = this.PositionInfoButton;
+		}
+
+		private void UpdateButtonGeometryAuto(ActiveButton button)
+		{
+			button.Center = this.PositionAutoButton;
+		}
+
 		private void UpdateButtonGeometryColor(ActiveButton button)
 		{
 			int rank = button.Element - ActiveElement.NodeColor1;
@@ -689,6 +738,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+		}
+
+		private void UpdateButtonStateInfo(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+		}
+
+		private void UpdateButtonStateAuto(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+			button.Text = this.Entity.IsAuto ? "M" : "A";
 		}
 
 		private void UpdateButtonStateColor(ActiveButton button)

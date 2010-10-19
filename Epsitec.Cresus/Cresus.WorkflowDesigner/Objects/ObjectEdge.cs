@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.subtitle.Alignment = ContentAlignment.MiddleLeft;
 			this.subtitle.BreakMode = TextBreakMode.Hyphenate;
 
-			this.isExtended = true;
+			this.isExtended = false;
 
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
@@ -93,10 +93,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.isExtended != value)
 				{
 					this.isExtended = value;
-
-					this.UpdateBounds ();
-					this.editor.UpdateAfterGeometryChanged (this);
-					this.editor.SetLocalDirty ();
+					this.UpdateButtonsState ();
 				}
 			}
 		}
@@ -138,7 +135,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void SetBoundsAtEnd(Point start, Point end)
 		{
-			double d = (ObjectEdge.frameSize.Width+ObjectEdge.frameSize.Height)/4;  // approximation
+			double a = Point.ComputeAngleRad (start, end);
+			double d = System.Math.Abs (ObjectEdge.frameSize.Width*System.Math.Cos (a) + ObjectEdge.frameSize.Height*System.Math.Sin (a)) * 0.5;
 
 			Point center = Point.Move (end, start, -d);
 			Rectangle rect = new Rectangle (center.X-ObjectEdge.frameSize.Width/2, center.Y-ObjectEdge.frameSize.Height/2, ObjectEdge.frameSize.Width, ObjectEdge.frameSize.Height);
@@ -165,7 +163,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override Vector GetLinkVector(double angle, bool isDst)
 		{
-			double margin = ObjectEdge.roundFrameRadius * (isDst ? 2.5 : 1.5);
+			double xMargin = ObjectEdge.roundFrameRadius * (isDst ? 2.5 : 1.5);
+			double yMargin = ObjectEdge.roundFrameRadius;
 
 			Point c = this.bounds.Center;
 			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+this.bounds.Width+this.bounds.Height, c.Y));
@@ -175,14 +174,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (s.anchor == LinkAnchor.Left || s.anchor == LinkAnchor.Right)
 				{
-					s.intersection.Y = System.Math.Max (s.intersection.Y, s.p1.Y+margin);
-					s.intersection.Y = System.Math.Min (s.intersection.Y, s.p2.Y-margin);
+					s.intersection.Y = System.Math.Max (s.intersection.Y, s.p1.Y+yMargin);
+					s.intersection.Y = System.Math.Min (s.intersection.Y, s.p2.Y-yMargin);
 				}
 
 				if (s.anchor == LinkAnchor.Bottom || s.anchor == LinkAnchor.Top)
 				{
-					s.intersection.X = System.Math.Max (s.intersection.X, s.p1.X+margin);
-					s.intersection.X = System.Math.Min (s.intersection.X, s.p2.X-margin);
+					s.intersection.X = System.Math.Max (s.intersection.X, s.p1.X+xMargin);
+					s.intersection.X = System.Math.Min (s.intersection.X, s.p2.X-xMargin);
 				}
 
 				Point i = new Point (System.Math.Floor (s.intersection.X), System.Math.Floor (s.intersection.Y));
@@ -308,7 +307,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (element == ActiveElement.EdgeEditDescription)
 			{
 				rect = this.RectangleSubtitle;
-				rect.Inflate (6, 1);
+				rect.Inflate (6);
 
 				text = this.Entity.Description.ToString ();
 
@@ -373,7 +372,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "Ajoute un commentaire à l'action";
 
 				case ActiveElement.EdgeExtend:
-					return this.isExtended ? "Réduit la boîte" : "Etend éa boîte";
+					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
 				case ActiveElement.EdgeColor1:
 					return "Jaune";
@@ -643,13 +642,52 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Héritage	->	Traitillé
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
+			Color c1, c2;
 
 			bool dragging = (this.hilitedElement == ActiveElement.EdgeHeader || this.hilitedElement == ActiveElement.EdgeEditDescription || this.isHilitedForLinkChanging);
 
+			var extendedRect = new Rectangle (this.bounds.Left, this.bounds.Bottom-ObjectEdge.extendedHeight, this.bounds.Width, this.bounds.Height+ObjectEdge.extendedHeight);
+			extendedRect.Deflate (2, 0);
+
 			//	Dessine l'ombre.
-			rect = this.bounds;
+			if (this.isExtended)
+			{
+				rect = extendedRect;
+			}
+			else
+			{
+				rect = this.bounds;
+			}
 			rect.Offset (ObjectEdge.shadowOffset, -(ObjectEdge.shadowOffset));
 			this.DrawRoundShadow (graphics, rect, ObjectEdge.roundFrameRadius, (int) ObjectEdge.shadowOffset, 0.2);
+
+			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
+
+			//	Dessine le boîte étendue.
+			if (this.isExtended)
+			{
+				rect = extendedRect;
+				rect.Deflate (0.5);
+				Path extendedPath = this.PathRoundRectangle (rect, ObjectEdge.roundFrameRadius);
+
+				//	Dessine l'intérieur en blanc.
+				graphics.Rasterizer.AddSurface (extendedPath);
+				graphics.RenderSolid (this.colorFactory.GetColor (1));
+
+				//	Dessine l'intérieur en dégradé.
+				graphics.Rasterizer.AddSurface (extendedPath);
+				c1 = this.colorFactory.GetColorMain (dragging ? 0.3 : 0.2);
+				c2 = this.colorFactory.GetColorMain (dragging ? 0.1 : 0.0);
+				this.RenderHorizontalGradient (graphics, this.bounds, c1, c2);
+
+				//	Ombre supérieure.
+				Rectangle shadow = new Rectangle (extendedRect.Left, this.bounds.Center.Y-ObjectEdge.frameSize.Height/2-6, extendedRect.Width, ObjectEdge.frameSize.Height/2+6);
+				graphics.AddFilledRectangle (shadow);
+				this.RenderVerticalGradient (graphics, shadow, this.colorFactory.GetColor (0, 0), this.colorFactory.GetColor (0, 0.5));
+
+				graphics.Rasterizer.AddOutline (extendedPath, 1);
+				graphics.RenderSolid (colorFrame);
+			}
 
 			//	Construit le chemin du cadre.
 			rect = this.bounds;
@@ -662,18 +700,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
-			Color c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
+			c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
+			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-			Color colorLine = this.colorFactory.GetColor (0.9);
-			if (dragging)
-			{
-				colorLine = this.colorFactory.GetColorMain (0.3);
-			}
-
-			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
-
+#if false
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
@@ -694,6 +725,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid (colorFrame);
 			}
+#endif
 
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
@@ -765,8 +797,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				var rect = this.bounds;
-				rect.Deflate (8, 8, AbstractObject.headerHeight+2, AbstractObject.footerHeight+2);
+				var rect = new Rectangle (this.bounds.Left, this.bounds.Bottom-ObjectEdge.extendedHeight, this.bounds.Width, ObjectEdge.extendedHeight);
+				rect.Deflate (11, 8);
 
 				return rect;
 			}
@@ -786,7 +818,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour étendre.
 			get
 			{
-				return new Point (this.bounds.Right-ActiveButton.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-ActiveButton.buttonRadius*4-5, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -795,21 +827,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point (this.bounds.Right-ActiveButton.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-ActiveButton.buttonRadius*2-3, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			if (this.isExtended)
-			{
-				return new Point (this.bounds.Left-2+(ActiveButton.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+ActiveButton.buttonSquare);
-			}
-			else
-			{
-				return Point.Zero;
-			}
+			return new Point (this.bounds.Left-1+(ActiveButton.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom-7);
 		}
 
 		private Point PositionChangeWidthButton
@@ -817,14 +842,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour changer la largeur.
 			get
 			{
-				if (this.isExtended)
-				{
-					return new Point (this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
-				}
-				else
-				{
-					return Point.Zero;
-				}
+				return new Point (this.bounds.Right-1, this.bounds.Center.Y);
 			}
 		}
 
@@ -845,16 +863,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met à jour le sous-titre du noeud.
 			this.Subtitle = this.Entity.Description.ToString ();
-		}
-
-		private void UpdateBounds()
-		{
-			Point origin = this.bounds.TopLeft;
-			double width = this.bounds.Width;
-			double height = this.isExtended ? ObjectEdge.frameSize.Height : AbstractObject.headerHeight;
-
-			Rectangle bounds = new Rectangle (origin.X, origin.Y-height, width, height);
-			this.SetBounds (bounds);
 		}
 
 
@@ -933,14 +941,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateChangeWidth(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging && this.isExtended);
+			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging);
 		}
 
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorFactory.ColorItem == button.ColorItem;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private bool IsDragging
@@ -1082,8 +1090,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private static readonly Size			frameSize = new Size (200, 100);
-		public static readonly double			roundFrameRadius = 12;
+		private static readonly Size			frameSize = new Size (200, 32);
+		private static readonly double			extendedHeight = 60;
+		public static readonly double			roundFrameRadius = 16;
 		private static readonly double			shadowOffset = 6;
 
 		private string							titleString;
