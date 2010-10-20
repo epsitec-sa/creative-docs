@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 	/// The <c>ClipboardDataChangedEventArgs</c> class stores the new clipboard
 	/// data after the system clipboard was changed.
 	/// </summary>
-	public class ClipboardDataChangedEventArgs
+	public class ClipboardDataChangedEventArgs : EventArgs
 	{
 		public ClipboardDataChangedEventArgs(ClipboardReadData data)
 		{

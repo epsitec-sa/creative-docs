@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.application.ShutdownStarted += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application shutting down");
 
 			this.orchestrator.SettingActiveEntity += this.HandleOrchestratorSettingActiveEntity;
+			CommandDispatcher.CommandDispatching  += this.HandleCommandDispatcherCommandDispatching;
 		}
 
 		#region IDisposable Members
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
             if (entityKey.HasValue)
 			{
 				var key = entityKey.Value;
-				
+
 				if (key.EntityId == EntityInfo<WorkflowNodeEntity>.GetTypeId ())
 				{
 					var businessContext = this.orchestrator.DefaultBusinessContext;
@@ -60,10 +61,25 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					businessContext.SetActiveEntity (entityKey, navigationPathElement);
 
 					var workflow = businessContext.ActiveEntity as WorkflowDefinitionEntity;
-					
+
 					System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflow.Name + ">");
-					
+
 					this.CreateWorkflowDesigner (businessContext, workflow);
+					e.Cancel = true;
+				}
+				else
+				{
+					this.DisposeWorkflowDesigner ();
+				}
+			}
+		}
+
+		private void HandleCommandDispatcherCommandDispatching(object sender, CommandEventArgs e)
+		{
+			if (this.activeDesigner != null)
+			{
+				if (e.Command == ApplicationCommands.New)
+				{
 					e.Cancel = true;
 				}
 			}
@@ -71,15 +87,20 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void CreateWorkflowDesigner(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
 		{
-			if (this.activeDesigner != null)
-            {
-				this.activeDesigner.Dispose ();
-				this.activeDesigner = null;
-            }
+			this.DisposeWorkflowDesigner ();
 
 			this.activeDesigner = new WorkflowDesigner (businessContext, workflow);
 
 			this.orchestrator.DataViewController.SetCustomUI (this.activeDesigner.CreateUI ());
+		}
+
+		private void DisposeWorkflowDesigner()
+		{
+			if (this.activeDesigner != null)
+			{
+				this.activeDesigner.Dispose ();
+				this.activeDesigner = null;
+			}
 		}
 
 		

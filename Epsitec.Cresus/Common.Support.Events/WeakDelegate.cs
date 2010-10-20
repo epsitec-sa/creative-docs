@@ -1,6 +1,8 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+//	TODO: implement fully or kill
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -10,6 +12,7 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	/// <typeparam name="TEventArgs"></typeparam>
 	public class WeakDelegate<TEventArgs>
+		where TEventArgs : EventArgs
 	{
 		public WeakDelegate()
 		{

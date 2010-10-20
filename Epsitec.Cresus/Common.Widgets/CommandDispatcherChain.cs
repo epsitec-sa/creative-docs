@@ -1,10 +1,10 @@
 //	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public CommandDispatcherChain()
 		{
-			this.chain = new List<Weak<CommandDispatcher>> ();
+			this.dispatchers = new List<Weak<CommandDispatcher>> ();
 		}
 
 		/// <summary>
@@ -28,9 +28,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				for (int i = 0; i < this.chain.Count; i++)
+				for (int i = 0; i < this.dispatchers.Count; i++)
 				{
-					if (this.chain[i].IsAlive)
+					if (this.dispatchers[i].IsAlive)
 					{
 						return false;
 					}
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Weak<CommandDispatcher>[] chain = this.chain.ToArray ();
+				Weak<CommandDispatcher>[] chain = this.dispatchers.ToArray ();
 				bool enableForwarding = true;
 
 				for (int i = 0; i < chain.Length; i++)
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 
 					if (dispatcher == null)
 					{
-						this.chain.Remove (chain[i]);
+						this.dispatchers.Remove (chain[i]);
 					}
 					else if (enableForwarding)
 					{
@@ -133,22 +133,20 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The dispatcher chain or <c>null</c>.</returns>
 		public static CommandDispatcherChain BuildChain(Visual visual)
 		{
-			CommandDispatcherChain that = null;
+			CommandDispatcherChain chain = new CommandDispatcherChain ();
 
 			var window = visual.Window;
 
-#if true
 			if ((window != null) &&
 				(window.FocusedWidget != null))
 			{
-				CommandDispatcherChain.BuildChain (window.FocusedWidget, ref that);
+				chain.BuildPartialChain (window.FocusedWidget);
 			}
-#endif
-			
-			CommandDispatcherChain.BuildChain (visual, ref that);
-			CommandDispatcherChain.BuildChain (window, ref that);
 
-			return that;
+			chain.BuildPartialChain (visual);
+			chain.BuildPartialChain (window);
+			
+			return chain.RemoveDuplicates ();
 		}
 
 		/// <summary>
@@ -158,11 +156,11 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The dispatcher chain or <c>null</c>.</returns>
 		public static CommandDispatcherChain BuildChain(Window window)
 		{
-			CommandDispatcherChain that = null;
+			CommandDispatcherChain chain = new CommandDispatcherChain ();
 
-			CommandDispatcherChain.BuildChain (window, ref that);
-
-			return that;
+			chain.BuildPartialChain (window);
+			
+			return chain.RemoveDuplicates ();
 		}
 
 		/// <summary>
@@ -184,7 +182,7 @@ namespace Epsitec.Common.Widgets
 				return CommandDispatcherChain.BuildChain (window);
 			}
 			
-			CommandDispatcherChain that = null;
+			CommandDispatcherChain chain = new CommandDispatcherChain ();
 
 			if (obj != null)
 			{
@@ -192,36 +190,31 @@ namespace Epsitec.Common.Widgets
 
 				if (dispatcher != null)
 				{
-					if (that == null)
-					{
-						that = new CommandDispatcherChain ();
-					}
-					
-					that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
+					chain.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
 				}
 			}
-			
-			return that;
+
+			return chain.RemoveDuplicates ();
 		}
 
 		#region Private Methods
 
-		private static void BuildChain(DependencyObject obj, ref CommandDispatcherChain that)
+		private void BuildPartialChain(DependencyObject obj)
 		{
 			Visual visual = obj as Visual;
 			Window window = obj as Window;
 
 			if (visual != null)
 			{
-				CommandDispatcherChain.BuildChain (visual, ref that);
+				this.BuildPartialChain (visual);
 			}
 			if (window != null)
 			{
-				CommandDispatcherChain.BuildChain (window, ref that);
+				this.BuildPartialChain (window);
 			}
 		}
 
-		private static void BuildChain(Visual visual, ref CommandDispatcherChain that)
+		private void BuildPartialChain(Visual visual)
 		{
 			while (visual != null)
 			{
@@ -229,45 +222,30 @@ namespace Epsitec.Common.Widgets
 
 				if (dispatcher != null)
 				{
-					if (that == null)
-					{
-						that = new CommandDispatcherChain ();
-					}
-
-					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
-					{
-						that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
-					}
+					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
 				}
 
 				AbstractMenu menu = visual as AbstractMenu;
 
 				if (menu != null)
 				{
-					CommandDispatcherChain.BuildChain (menu.Host, ref that);
+					this.BuildPartialChain (menu.Host);
 				}
 
 				visual = visual.Parent;
 			}
 		}
 
-		private static void BuildChain(Window window, ref CommandDispatcherChain that)
+		private void BuildPartialChain(Window window)
 		{
 			while (window != null)
 			{
+				this.BuildPartialChainOfPrimaryDispatchers (window);
 				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (window);
 
 				if (dispatcher != null)
 				{
-					if (that == null)
-					{
-						that = new CommandDispatcherChain ();
-					}
-
-					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
-					{
-						that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
-					}
+					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
 				}
 
 				window = window.Owner ?? window.Parent;
@@ -276,21 +254,36 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ajouter ici la notion d'application/module/document
 		}
 
-		private static bool Contains(IEnumerable<Weak<CommandDispatcher>> chain, CommandDispatcher dispatcher)
+		private void BuildPartialChainOfPrimaryDispatchers(Window window)
 		{
-			foreach (Weak<CommandDispatcher> item in chain)
-			{
-				if (item.Target == dispatcher)
-				{
-					return true;
-				}
-			}
+			var childWidgets       = window.Root.FindAllChildren ();
+			var childDispatchers   = childWidgets.Select (x => CommandDispatcher.GetDispatcher (x));
+			var primaryDispatchers = childDispatchers.Where (x => (x != null) && (x.Level == CommandDispatcherLevel.Primary)).ToList ();
 
-			return false;
+			if (primaryDispatchers.Count > 0)
+            {
+				this.dispatchers.AddRange (primaryDispatchers.Select (x => new Weak<CommandDispatcher> (x)));
+			}
+		}
+
+		private CommandDispatcherChain RemoveDuplicates()
+		{
+			var items = this.dispatchers.Select (x => x.Target).Where (x => x != null).Distinct ().ToList ();
+
+			if (items.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				this.dispatchers.Clear ();
+				this.dispatchers.AddRange (items.Select (x => new Weak<CommandDispatcher> (x)));
+				return this;
+			}
 		}
 
 		#endregion
 
-		readonly List<Weak<CommandDispatcher>>	chain;
+		readonly List<Weak<CommandDispatcher>>	dispatchers;
 	}
 }

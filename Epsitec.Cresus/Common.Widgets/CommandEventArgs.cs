@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// The <c>CommandEventArgs</c> class describes a command dispatched by the
 	/// <see cref="CommandDispatcher"/>.
 	/// </summary>
-	public class CommandEventArgs : System.EventArgs
+	public class CommandEventArgs : Support.CancelEventArgs
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CommandEventArgs"/> class.
@@ -42,17 +42,17 @@ namespace Epsitec.Common.Widgets
 				return this.command;
 			}
 		}
-		
+
 		public bool								Executed
 		{
-			get
-			{
-				return this.executed;
-			}
-			set
-			{
-				this.executed = value;
-			}
+			get;
+			set;
+		}
+
+		public bool								Handled
+		{
+			get;
+			set;
 		}
 
 		public CommandContext					CommandContext
@@ -85,7 +85,6 @@ namespace Epsitec.Common.Widgets
 		private readonly CommandContextChain	chain;
 		private readonly CommandContext			context;
 		private readonly CommandState			state;
-		private bool							executed;
 	}
 	
 	/// <summary>

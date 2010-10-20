@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected void MouseMove(Message message, Point pos)
+		protected new void MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.

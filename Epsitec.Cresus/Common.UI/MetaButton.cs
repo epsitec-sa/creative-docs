@@ -321,7 +321,7 @@ namespace Epsitec.Common.UI
 
 			if (oldVisibility != this.textVisibility)
 			{
-				this.UpdateCaption ();
+				this.UpdateCaption (updateIconUri: true);
 			}
 		}
 

@@ -3292,8 +3292,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.textLayout.Alignment  = this.ContentAlignment;
 				this.textLayout.LayoutSize = this.GetTextLayoutSize ();
-				
-				this.UpdateCaption ();
+
+				this.UpdateCaption (updateIconUri: this.IconUri == null);
 			}
 		}
 
@@ -3310,7 +3310,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnDisplayCaptionChanged()
 		{
 			base.OnDisplayCaptionChanged ();
-			this.UpdateCaption ();
+			this.UpdateCaption (updateIconUri: true);
 		}
 
 		public void ForceCaptionUpdate()
@@ -3323,7 +3323,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateTextLayout ();
 		}
 
-		protected virtual void UpdateCaption()
+		protected virtual void UpdateCaption(bool updateIconUri)
 		{
 			if (this.textLayout == null)
 			{
@@ -3381,7 +3381,8 @@ namespace Epsitec.Common.Widgets
 						this.DefineToolTipFromCaption (null);
 					}
 
-					if (caption.HasIcon)
+					if ((caption.HasIcon) &&
+						(updateIconUri))
 					{
 						this.DefineIconFromCaption (caption.Icon);
 					}
