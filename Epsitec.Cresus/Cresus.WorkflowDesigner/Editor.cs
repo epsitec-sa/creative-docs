@@ -310,6 +310,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		public AbstractObject EditableObject
+		{
+			get
+			{
+				return this.editableObject;
+			}
+			set
+			{
+				this.editableObject = value;
+			}
+		}
+
 
 		public bool Grid
 		{
@@ -658,6 +670,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				case MessageType.KeyUp:
 					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
 					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
+					if (!this.IsEditing && this.editableObject != null)
+					{
+						this.editableObject.StartEdition ();
+					}
+
 					if (this.IsEditing)  // édition en cours ?
 					{
 						if (message.KeyCode == KeyCode.Return)
@@ -933,6 +950,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
+				this.editableObject = this.hilitedObject;  // avant MouseUp !
+
 				if (this.hilitedObject != null)
 				{
 					this.hilitedObject.MouseUp (message, pos);
@@ -1546,5 +1565,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private double							gridStep;
 		private double							gridSubdiv;
 		private AbstractObject					editingObject;
+		private AbstractObject					editableObject;
 	}
 }
