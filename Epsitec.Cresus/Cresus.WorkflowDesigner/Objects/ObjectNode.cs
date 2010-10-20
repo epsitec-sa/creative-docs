@@ -767,11 +767,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorFactory, GlyphShape.Plus,    this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeExtend,   this.colorFactory, GlyphShape.ArrowUp, this.UpdateButtonGeometryExtend,   this.UpdateButtonStateExtend));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",                this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",                this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",                this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodePublic,   this.colorFactory, "P",                this.UpdateButtonGeometryPublic,   this.UpdateButtonStatePublic));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close,   this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",                this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",                this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorFactory, ColorItem.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));

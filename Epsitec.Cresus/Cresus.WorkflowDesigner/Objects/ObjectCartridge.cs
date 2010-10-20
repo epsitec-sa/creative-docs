@@ -74,7 +74,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (element == ActiveElement.CartridgeEditName)
 			{
 				rect = this.RectangleTitle;
-
 				text = this.Entity.WorkflowName.ToString ();
 
 				this.editingTextField  = new TextField ();
@@ -83,7 +82,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (element == ActiveElement.CartridgeEditDescription)
 			{
 				rect = this.RectangleSubtitle;
-
 				text = this.Entity.WorkflowDescription.ToString ();
 
 				var field = new TextFieldMulti ();
