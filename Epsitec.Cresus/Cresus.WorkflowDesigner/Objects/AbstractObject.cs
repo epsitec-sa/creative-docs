@@ -200,6 +200,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public virtual void StartEdition()
+		{
+		}
+
 		public virtual void AcceptEdition()
 		{
 		}

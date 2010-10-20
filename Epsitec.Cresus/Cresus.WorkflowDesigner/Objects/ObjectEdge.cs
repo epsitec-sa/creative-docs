@@ -285,6 +285,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.StopEdition ();
 		}
 
+		public override void StartEdition()
+		{
+			this.StartEdition (ActiveElement.EdgeHeader);
+		}
+
 		private void StartEdition(ActiveElement element)
 		{
 			Rectangle rect = Rectangle.Empty;

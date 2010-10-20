@@ -156,18 +156,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.LinkChangeDst:
 					if (this.dstObject == null)
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte à une action" : "Connecte à un noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une transition" : "Connecte à un noeud";
 					}
 					else
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte à une autre action" : "Connecte à un autre noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une autre transition" : "Connecte à un autre noeud";
 					}
 
 				case ActiveElement.LinkCreateDst:
-					return (this.srcObject is ObjectNode) ? "Crée une nouvelle action" : "Crée un nouveau noeud";
+					return (this.srcObject is ObjectNode) ? "Crée une nouvelle transition" : "Crée un nouveau noeud";
 
 				case ActiveElement.LinkClose:
-					return "Ferme la connexion";
+					return "Supprime la connexion";
 
 				case ActiveElement.LinkComment:
 					return "Ajoute un commentaire à la connexion";
@@ -328,6 +328,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.startManual = false;
 			this.endManual = false;
 
+			this.editor.EditableObject = obj;
 			this.editor.AddEdge (obj);
 			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
 			this.editor.UpdateGeometry ();
@@ -347,6 +348,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.startManual = false;
 			this.endManual = false;
 
+			this.editor.EditableObject = obj;
 			this.editor.AddNode (obj);
 			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
 			this.editor.UpdateGeometry ();
