@@ -1103,8 +1103,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,          this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.LinkComment,        this.colorFactory, "C",                       this.UpdateButtonGeometryComment,        this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.LinkClose,          this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,          this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.LinkChangeDst,      this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeDst,      this.UpdateButtonStateChangeDst));
 			this.buttons.Add (new ActiveButton (ActiveElement.LinkCreateDst,      this.colorFactory, GlyphShape.Plus,           this.UpdateButtonGeometryCreateDst,      this.UpdateButtonStateCreateDst));
 			this.buttons.Add (new ActiveButton (ActiveElement.LinkCustomizeStart, this.colorFactory, "o",                       this.UpdateButtonGeometryCustomizeStart, this.UpdateButtonStateCustomizeStart));

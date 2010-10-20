@@ -613,7 +613,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			foreach (var obj in this.AllObjects)
 			{
-				bounds = Rectangle.Union (bounds, obj.Bounds);
+				bounds = Rectangle.Union (bounds, obj.ExtendedBounds);
 			}
 
 			return bounds;
@@ -1002,6 +1002,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.Invalidate ();
 		}
 
+		public void CompactAll()
+		{
+			foreach (var obj in this.LinkableObjects)
+			{
+				obj.IsExtended = false;
+			}
+		}
+
 
 		public ModifyMode CurrentModifyMode
 		{
@@ -1156,27 +1164,45 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Cet énumérateur détermine, entre autres, l'ordre dans lequel sont dessinés les objets.
 			get
 			{
-				foreach (var obj in this.edges)
-				{
-					yield return obj;
-				}
+				LinkableObject top = null;
 
 				foreach (var obj in this.nodes)
 				{
-					yield return obj;
+					if (obj.IsExtended)
+					{
+						top = obj;
+					}
+					else
+					{
+						yield return obj;
+					}
 				}
 
-				foreach (var obj in this.LinkableObjects)
+				foreach (var obj in this.edges)
 				{
-					foreach (var link in obj.ObjectLinks)
+					if (obj.IsExtended)
 					{
-						yield return link;
+						top = obj;
 					}
+					else
+					{
+						yield return obj;
+					}
+				}
+
+				foreach (var obj in this.LinkObjects)
+				{
+					yield return obj;
 				}
 
 				foreach (var obj in this.comments)
 				{
 					yield return obj;
+				}
+
+				if (top != null)
+				{
+					yield return top;
 				}
 			}
 		}
@@ -1199,14 +1225,35 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			get
 			{
-				foreach (var node in this.nodes)
+				LinkableObject top = null;
+
+				foreach (var obj in this.nodes)
 				{
-					yield return node;
+					if (obj.IsExtended)
+					{
+						top = obj;
+					}
+					else
+					{
+						yield return obj;
+					}
 				}
 
-				foreach (var edge in this.edges)
+				foreach (var obj in this.edges)
 				{
-					yield return edge;
+					if (obj.IsExtended)
+					{
+						top = obj;
+					}
+					else
+					{
+						yield return obj;
+					}
+				}
+
+				if (top != null)
+				{
+					yield return top;
 				}
 			}
 		}

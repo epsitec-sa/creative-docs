@@ -60,6 +60,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public virtual Rectangle ExtendedBounds
+		{
+			//	Retourne la boîte de l'objet, éventuellement agrandie si l'objet est étendu.
+			get
+			{
+				return this.Bounds;
+			}
+		}
+
 		public virtual void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
@@ -234,14 +243,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected void DrawNode2Shadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
+		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
 			alpha /= smooth;
 
 			for (int i=0; i<smooth; i++)
 			{
-				Path path = this.PathNode2Rectangle (rect);
+				Path path = this.PathNodeRectangle (rect);
 				graphics.Rasterizer.AddSurface (path);
 				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
 
@@ -370,7 +379,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.GradientRenderer.Transform = ot;
 		}
 
-		protected Path PathNode2Rectangle(Rectangle rect)
+		protected Path PathNodeRectangle(Rectangle rect)
 		{
 			var path = new Path ();
 
