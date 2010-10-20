@@ -32,6 +32,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public override void CreateUI(Widget container)
 		{
 			base.CreateUI (container);
+
+			this.commandDispatcher = new CommandDispatcher ("BrowserSettings", CommandDispatcherLevel.Primary);
+			this.commandDispatcher.AutoForwardCommands = true;
+
+			this.commandContext    = new CommandContext ("BrowserSettings", false);
+
+			CommandDispatcher.SetDispatcher (container, this.commandDispatcher);
+			CommandContext.SetContext (container, this.commandContext);
+
+			this.commandDispatcher.Register (ApplicationCommands.New, this.ExecuteNewCommand);
+
 			this.CreateUINewItemIconButton (container);
 		}
 
@@ -39,6 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.newItemIconButton = new LayeredIconButton
 			{
+				CommandObject = ApplicationCommands.New,
 				Name = "CreateNewItem",
 				Parent = container,
 				PreferredSize = new Size (28, 28),
@@ -46,8 +58,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				Dock = DockStyle.Left,
 				IconUri = Misc.GetResourceIconUri ("Edition.NewRecord"),
 			};
-
-			this.newItemIconButton.Clicked += this.HandleNewItemClicked;
 		}
 
 		
@@ -56,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.UpdateNewItemIconButton ();
 		}
 
-		private void HandleNewItemClicked(object sender, MessageEventArgs e)
+		private void ExecuteNewCommand(object sender, CommandEventArgs e)
 		{
 			this.browser.CreateNewItem ();
 		}
@@ -72,5 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly BrowserViewController browser;
 
 		private LayeredIconButton newItemIconButton;
+		private CommandDispatcher commandDispatcher;
+		private CommandContext    commandContext;
 	}
 }

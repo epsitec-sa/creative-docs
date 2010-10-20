@@ -1140,6 +1140,7 @@ namespace Epsitec.Common.Types
 		}
 
 		protected Support.EventHandler<TEventArgs> GetUserEventHandler<TEventArgs>(string name)
+			where TEventArgs : System.EventArgs
 		{
 			return this.GetUserEventHandler (name) as Support.EventHandler<TEventArgs>;
 		}

@@ -108,6 +108,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="EventHandler`1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -116,7 +117,7 @@
     <Compile Include="Utilities.cs" />
     <Compile Include="ValueEventArgs.cs" />
     <Compile Include="EventArgs.cs" />
-    <Compile Include="EventHandlers.cs">
+    <Compile Include="EventHandler.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeakDelegate.cs" />

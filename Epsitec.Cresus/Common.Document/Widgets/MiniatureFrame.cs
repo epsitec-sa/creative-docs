@@ -598,7 +598,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Events
-		public event EventHandler<MiniatureFrame> DragAndDropDoing
+		public event EventHandler<MiniatureFrameEventArgs> DragAndDropDoing
 		{
 			add
 			{
@@ -612,11 +612,11 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void OnDragAndDropDoing(MiniatureFrame dst)
 		{
-			EventHandler<MiniatureFrame> handler = (EventHandler<MiniatureFrame>) this.GetUserEventHandler("DragAndDropDoing");
+			EventHandler<MiniatureFrameEventArgs> handler = this.GetUserEventHandler<MiniatureFrameEventArgs>("DragAndDropDoing");
 
 			if (handler != null)
 			{
-				handler(this, dst);
+				handler (this, new MiniatureFrameEventArgs (dst));
 			}
 		}
 		#endregion
@@ -635,5 +635,24 @@ namespace Epsitec.Common.Document.Widgets
 		private DragInfo								dragInfo;
 		private Viewer									originalViewer;
 		private StaticText								originalLabel;
+	}
+
+	public class MiniatureFrameEventArgs : Support.EventArgs
+	{
+		public MiniatureFrameEventArgs(MiniatureFrame frame)
+		{
+			this.frame = frame;
+		}
+
+
+		public MiniatureFrame Frame
+		{
+			get
+			{
+				return this.frame;
+			}
+		}
+
+		private readonly MiniatureFrame frame;
 	}
 }

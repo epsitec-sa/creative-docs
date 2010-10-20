@@ -1,10 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -298,42 +298,7 @@ namespace Epsitec.Common.Widgets
 		
 		static CommandDispatcher()
 		{
-#if false
-			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
-			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
-			//	prétation de la regex :
-			//
-			//	- un <name> est constitué de caractères alphanumériques;
-			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
-			//	- suit zéro à n arguments <arg> séparés par une virgule;
-			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
-			//	  soit une valeur numérique, soit un nom (avec des '.' pour
-			//	  séparer les divers termes).
-			//
-			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
-			//	Il peut y avoir zéro à n arguments séparés par des virgules, le tout entre
-			//	parenthèses.
-			
-			string regex1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
-				//	                      <---- nom valide --->
-				/**/       @"\s*\(\s*((((?<arg>(" +
-				/**/                          @"(\""[^\""]{0,}\"")|" +
-				//	                            <-- guillemets -->
-				/**/                          @"(\'[^\']{0,}\')|" +
-				//	                            <-- apostr. -->
-				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
-				//	                            <----------- valeur décimale avec signe en option ------------>
-				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
-				//	                            <---- nom valide ---->
-				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
-			
-			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
-			
-			CommandDispatcher.commandArgRegex = new Regex (regex1, options);
-#endif
-
 			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
-
 			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
 
 			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
@@ -665,10 +630,14 @@ namespace Epsitec.Common.Widgets
 			
 			CommandEventArgs e = new CommandEventArgs (source, commandObject, contextChain, commandContext, commandState);
 
-			this.OnCommandDispatching ();
+			this.OnCommandDispatching (e);
+
+			if (e.Cancel)
+			{
+				return true;
+			}
 
 			EventSlot slot;
-			int handled = 0;
 			
 			if (this.eventHandlers.TryGetValue (commandObject, out slot))
 			{
@@ -676,55 +645,57 @@ namespace Epsitec.Common.Widgets
 				
 				if (slot.ExecuteCommand (this, e))
 				{
-					handled++;
+					e.Handled = true;
 				}
 			}
 
-			if (handled == 0)
+			this.OnCommandDispatched (e);
+
+			if (e.Executed)
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") not handled.");
-				return false;
+				return true;
+			}
+
+			if (e.Handled)
+			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") handled; not marked as executed.");
 			}
 			else
 			{
-				this.OnCommandDispatched ();
-				
-				if (e.Executed)
-				{
-					return true;
-				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") handled; not marked as executed.");
-					return false;
-				}
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") not handled.");
 			}
+			
+			return e.Cancel;
 		}
 
 		protected void OnOpletQueueBindingChanged()
 		{
-			if (this.OpletQueueBindingChanged != null)
-			{
-				this.OpletQueueBindingChanged (this);
+			var handler = this.OpletQueueBindingChanged;
+
+			if (handler != null)
+            {
+				handler (this);
 			}
 		}
 
-		protected void OnCommandDispatching()
+		protected void OnCommandDispatching(CommandEventArgs e)
 		{
-			if (this.CommandDispatching != null)
-			{
-				this.CommandDispatching (this);
-			}
+			var handler = CommandDispatcher.CommandDispatching;
+
+			if (handler != null)
+            {
+				handler (this, e);
+            }
 		}
 
 
-		protected void OnCommandDispatched()
+		protected void OnCommandDispatched(CommandEventArgs e)
 		{
-			//	Indique qu'une commande (ou un paquet de commandes) a été exécutée.
-			
-			if (this.CommandDispatched != null)
+			var handler = CommandDispatcher.CommandDispatched;
+
+			if (handler != null)
 			{
-				this.CommandDispatched (this);
+				handler (this, e);
 			}
 		}
 
@@ -768,13 +739,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event Support.EventHandler		OpletQueueBindingChanged;
-		public event Support.EventHandler		CommandDispatching;
-		public event Support.EventHandler		CommandDispatched;
+		public event EventHandler				OpletQueueBindingChanged;
 		
-		private string							name;
-		private CommandDispatcherLevel			level;
-		private long							id;
+		public static event EventHandler<CommandEventArgs>	CommandDispatching;
+		public static event EventHandler<CommandEventArgs>	CommandDispatched;
+		
+		private readonly string					name;
+		private readonly CommandDispatcherLevel	level;
+		private readonly long					id;
 		private bool							autoForwardCommands;
 
 		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
@@ -783,7 +755,6 @@ namespace Epsitec.Common.Widgets
 		
 		static object							exclusion = new object ();
 		
-//-		static Regex							commandArgRegex;
 		static System.Type						commandAttributeType;
 		
 		static CommandDispatcher				defaultDispatcher;

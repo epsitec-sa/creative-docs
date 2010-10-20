@@ -47,7 +47,8 @@ namespace Epsitec.Common.Designer
 			this.moduleInfoList = new List<ModuleInfo>();
 			this.settings = Epsitec.Common.Designer.Settings.Default;
 			this.context = new PanelsContext(this);
-			this.CommandDispatcher.CommandDispatching += this.HandleCommandDispatcherCommandDispatching;
+			
+			Widgets.CommandDispatcher.CommandDispatching += this.HandleCommandDispatcherCommandDispatching;
 		}
 
 		public void Show(Window parentWindow)
@@ -361,7 +362,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		private void HandleCommandDispatcherCommandDispatching(object sender)
+		private void HandleCommandDispatcherCommandDispatching(object sender, CommandEventArgs e)
 		{
 			AbstractTextField focusedWidget = this.Window.FocusedWidget as AbstractTextField;
 
