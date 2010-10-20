@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core
 			
 			List<string> items = TextFormatter.ConvertItemsToStrings (values);
 
-			//?TextFormatter.ProcessTags (items);
+			TextFormatter.ProcessTags (items);
 			TextFormatter.FormatText (buffer, items);
 
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
@@ -82,15 +82,24 @@ namespace Epsitec.Cresus.Core
 
 				char lastCharacter = buffer.LastCharacter ();
 
-				if (emptyItem == false &&
-					lastCharacter != '(' &&
-					prefix != '\n' &&
-					Misc.IsPunctuationMark (prefix) == false)
+				if ((prefix.IsPunctuationMark ()) &&
+					((lastCharacter == prefix) || emptyItem))
 				{
-					buffer.Append (" ");
+					//	Duplicate punctuation mark... or punctuation mark on a still empty line.
 				}
+				else
+				{
+					if ((emptyItem == false) &&
+						(lastCharacter != '(') &&
+						(prefix != '\n') &&
+						(prefix.IsPunctuationMark () == false) &&
+						(prefix != ')'))
+					{
+						buffer.Append (" ");
+					}
 
-				buffer.Append (text);
+					buffer.Append (text);
+				}
 
 				emptyItem = text.EndsWith (FormattedText.HtmlBreak) || string.IsNullOrEmpty (text.RemoveTag ());
 			}
@@ -106,7 +115,7 @@ namespace Epsitec.Cresus.Core
 			public const char SkipItemIfNextEmpty = '~';
 		}
 
-#if false
+
 		public const string Mark = "‼[mark]";
 		public const string ClearGroupIfEmpty = "‼[clear-group-if-empty]";
 
@@ -164,7 +173,7 @@ namespace Epsitec.Cresus.Core
 
 			items.RemoveRange (startIndex, num);
 		}
-#endif
+
 
 		public static string CurrentLanguageId
 		{
@@ -235,6 +244,27 @@ namespace Epsitec.Cresus.Core
 		{
 			return FormattedText.Unescape (text);
 		}
+		
+		public static bool IsPunctuationMark(this char c)
+		{
+			// Exclut le caractère '/', pour permettre de numéroter une facture "1000 / 45 / bg" (par exemple).
+			
+			switch (c)
+			{
+				case ',':
+				case ';':
+				case '.':
+				case ':':
+				case '!':
+				case '?':
+					return true;
+
+				default:
+					return false;
+			}
+		}
+
+
 	}
 	
 	static class StringBuilderExtension
