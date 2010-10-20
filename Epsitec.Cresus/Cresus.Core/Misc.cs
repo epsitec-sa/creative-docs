@@ -249,24 +249,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static bool IsPunctuationMark(char c)
-		{
-			// Exclu le caractère '/', pour permettre de numéroter une facture "1000 / 45 / bg" (par exemple).
-			switch (c)
-			{
-				case ',':
-				case ';':
-				case '.':
-				case ':':
-				case ')':
-					return true;
-
-				default:
-					return false;
-			}
-		}
-
-
 		public static string FormatUnit(decimal quantity, string unit)
 		{
 			//	1, "pce"		-> "1 pce"

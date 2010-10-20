@@ -24,12 +24,14 @@ namespace Epsitec.Cresus.Core.Entities
 				(
 					this.LegalPerson.Name, "\n",
 					this.LegalPerson.Complement, "\n",
-					TextFormatter.FormatText (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n"),
+					this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
 					this.Complement, "\n",
 					this.Address.Street.StreetName, "\n",
 					this.Address.Street.Complement, "\n",
 					this.Address.PostBox.Number, "\n",
-					TextFormatter.FormatText (this.Address.Location.Country.Code, "~-", this.Address.Location.PostalCode),
+					TextFormatter.Mark,
+					this.Address.Location.Country.Code, "~-", this.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
+					TextFormatter.Mark,
 					this.Address.Location.Name
 				);
 		}
@@ -38,9 +40,9 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					this.LegalPerson.Name, "~,",
-					TextFormatter.FormatText (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname), "~,",
-					this.Address.Street.StreetName, "~,",
+					this.LegalPerson.Name, ",",
+					this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, ",",
+					this.Address.Street.StreetName, ",",
 					this.Address.Location.PostalCode, this.Address.Location.Name
 				);
 		}
