@@ -31,11 +31,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.subtitle = new TextLayout ();
 			this.subtitle.DefaultFontSize = 9;
-			this.subtitle.Alignment = ContentAlignment.MiddleLeft;
-			this.subtitle.BreakMode = TextBreakMode.Hyphenate;
+			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
+			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+			this.description = new TextLayout ();
+			this.description.DefaultFontSize = 9;
+			this.description.Alignment = ContentAlignment.MiddleLeft;
+			this.description.BreakMode = TextBreakMode.Hyphenate;
 
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
+			this.UpdateDescription ();
 
 			this.SetBounds (new Rectangle (Point.Zero, ObjectEdge.frameSize));
 
@@ -63,7 +69,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public string Subtitle
 		{
-			//	Titre au sommet de la boîte (nom du noeud).
+			//	Sous-titre au sommet de la boîte (nom de l'action).
 			get
 			{
 				return this.subtitleString;
@@ -74,6 +80,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					this.subtitleString = value;
 					this.subtitle.Text = this.subtitleString;
+				}
+			}
+		}
+
+		public string Description
+		{
+			//	Titre au sommet de la boîte (nom du noeud).
+			get
+			{
+				return this.descriptionString;
+			}
+			set
+			{
+				if (this.descriptionString != value)
+				{
+					this.descriptionString = value;
+					this.description.Text = this.descriptionString;
 				}
 			}
 		}
@@ -268,13 +291,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
 				this.Entity.Name = this.editingTextField.Text;
+				this.Entity.TransitionAction = this.editingTextField2.Text;
 				this.UpdateTitle ();
+				this.UpdateSubtitle ();
 			}
 
 			if (this.editingElement == ActiveElement.EdgeEditDescription)
 			{
 				this.Entity.Description = this.editingTextField.Text;
-				this.UpdateSubtitle ();
+				this.UpdateDescription ();
 			}
 
 			this.StopEdition ();
@@ -294,6 +319,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			Rectangle rect = Rectangle.Empty;
 			string text = null;
+			string text2 = null;
 
 			if (element == ActiveElement.EdgeHeader)
 			{
@@ -301,13 +327,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect.Deflate (4, 6);
 
 				text = this.Entity.Name.ToString ();
+				text2 = (this.Entity.TransitionAction == null) ? "" : this.Entity.TransitionAction;
 
-				this.editingTextField = new TextField ();
+				this.editingTextField  = new TextField ();
+				this.editingTextField2 = new TextFieldCombo ();
 			}
 
 			if (element == ActiveElement.EdgeEditDescription)
 			{
-				rect = this.RectangleSubtitle;
+				rect = this.RectangleDescription;
 				rect.Inflate (6);
 
 				text = this.Entity.Description.ToString ();
@@ -338,6 +366,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editingTextField.SelectAll ();
 			this.editingTextField.Focus ();
 
+			if (text2 != null)
+			{
+				rect.Offset (0, -rect.Height+1);
+
+				this.editingTextField2.Parent = this.editor;
+				this.editingTextField2.SetManualBounds (rect);
+				this.editingTextField2.Text = text2;
+				this.editingTextField2.TabIndex = 2;
+
+				var combo = this.editingTextField2 as TextFieldCombo;
+				combo.Items.Add ("WorkflowAction.NewAffair");
+				combo.Items.Add ("WorkflowAction.NewOffer");
+				combo.Items.Add ("WorkflowAction.NewOfferVariant");
+				combo.Items.Add ("etc. (à terminer)");
+			}
+
 			this.editor.EditingObject = this;
 			this.editor.ClearHilited ();
 			this.UpdateButtonsState ();
@@ -347,6 +391,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.editor.Children.Remove (this.editingTextField);
 			this.editingTextField = null;
+
+			if (this.editingTextField2 != null)
+			{
+				this.editor.Children.Remove (this.editingTextField2);
+				this.editingTextField2 = null;
+			}
 
 			this.editor.EditingObject = null;
 			this.UpdateButtonsState ();
@@ -570,7 +620,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return ActiveElement.EdgeHeader;
 			}
 
-			if (this.RectangleSubtitle.Contains (pos))
+			if (this.RectangleDescription.Contains (pos))
 			{
 				return ActiveElement.EdgeEditDescription;
 			}
@@ -713,45 +763,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-#if false
-			//	Dessine en blanc la zone pour les champs.
-			if (this.isExtended)
-			{
-				Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
-				graphics.AddFilledRectangle (inside);
-				graphics.RenderSolid (this.colorFactory.GetColor (1));
-				graphics.AddFilledRectangle (inside);
-				Color ci1 = this.colorFactory.GetColorMain (dragging ? 0.2 : 0.1);
-				Color ci2 = this.colorFactory.GetColorMain (0.0);
-				this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
-
-				//	Ombre supérieure.
-				Rectangle shadow = new Rectangle (this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
-				graphics.AddFilledRectangle (shadow);
-				this.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
-
-				graphics.AddLine (this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
-				graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
-				graphics.RenderSolid (colorFrame);
-			}
-#endif
-
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 
 			rect = this.RectangleTitle;
-			rect.Deflate (2, 2);
-			this.title.LayoutSize = rect.Size;
-			this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+			rect.Deflate (8, 2);
+
+			if (string.IsNullOrEmpty (this.subtitleString))
+			{
+				this.title.LayoutSize = rect.Size;
+				this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+			}
+			else
+			{
+				var r = new Rectangle (rect.Left, rect.Bottom+12, rect.Width, rect.Height-12);
+				this.title.LayoutSize = r.Size;
+				this.title.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+
+				r = new Rectangle (rect.Left, rect.Bottom, rect.Width, 14);
+				this.subtitle.LayoutSize = r.Size;
+				this.subtitle.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+			}
 
 			//	Dessine le sous-titre.
 			if (this.isExtended)
 			{
-				Color subtitleColor = this.colorFactory.GetColor (0);
+				Color descriptionColor = this.colorFactory.GetColor (0);
 
-				rect = this.RectangleSubtitle;
-				this.subtitle.LayoutSize = rect.Size;
-				this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, subtitleColor, GlyphPaintStyle.Normal);
+				rect = this.RectangleDescription;
+				this.description.LayoutSize = rect.Size;
+				this.description.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, descriptionColor, GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine le cadre en noir.
@@ -802,7 +843,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Rectangle RectangleSubtitle
+		private Rectangle RectangleDescription
 		{
 			get
 			{
@@ -871,7 +912,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateSubtitle()
 		{
 			//	Met à jour le sous-titre du noeud.
-			this.Subtitle = this.Entity.Description.ToString ();
+			this.Subtitle = this.Entity.TransitionAction;
+		}
+
+		private void UpdateDescription()
+		{
+			//	Met à jour le sous-titre du noeud.
+			this.Description = this.Entity.Description.ToString ();
 		}
 
 
@@ -1112,6 +1159,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						title;
 		private string							subtitleString;
 		private TextLayout						subtitle;
+		private string							descriptionString;
+		private TextLayout						description;
 
 		private Point							initialPos;
 		private bool							isDragging;
@@ -1121,5 +1170,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private ActiveElement					editingElement;
 		private AbstractTextField				editingTextField;
+		private AbstractTextField				editingTextField2;
 	}
 }
