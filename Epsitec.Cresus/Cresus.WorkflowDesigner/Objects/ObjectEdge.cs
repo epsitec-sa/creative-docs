@@ -674,12 +674,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return ActiveElement.None;
 		}
 
-		public override bool IsMousePossible(ActiveElement element)
-		{
-			//	Indique si l'opération est possible.
-			return true;
-		}
-
 
 		public override string DebugInformations
 		{
@@ -846,7 +840,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void DrawForeground(Graphics graphics)
 		{
-			//	Dessine le bouton compact/étendu.
+			//	Dessine tous les boutons.
 			this.DrawButtons (graphics);
 		}
 

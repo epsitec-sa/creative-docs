@@ -193,12 +193,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return ActiveElement.None;
 		}
 
-		public virtual bool IsMousePossible(ActiveElement element)
-		{
-			//	Indique si l'opération est possible.
-			return true;
-		}
-
 
 		public virtual void StartEdition()
 		{

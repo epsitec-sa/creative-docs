@@ -51,6 +51,8 @@ namespace Epsitec.Cresus.Core
             var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
 
 			def.Code = "[L0AB2]";
+			def.WorkflowName = "Workflow principal";
+			def.WorkflowDescription = "Description complète du workflow principal.";
             def.Name = FormattedText.FromSimpleText("e");
             def.Edges.Add(edgeAB);
             def.Edges.Add(edgeAC);

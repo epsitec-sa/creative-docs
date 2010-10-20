@@ -134,6 +134,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.CreateInitialLinks ();
 			}
 
+			this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
+
 			this.UpdateAfterGeometryChanged (null);
 		}
 
@@ -826,16 +828,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription ||
+							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditName ||
+							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditDescription)
 					{
-						if (this.hilitedObject.IsMousePossible (this.hilitedObject.HilitedElement))
-						{
-							type = MouseCursorType.IBeam;
-						}
-						else
-						{
-							type = MouseCursorType.Arrow;
-						}
+						type = MouseCursorType.IBeam;
 					}
 					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentEdit)
 					{
@@ -1183,6 +1180,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Cet énumérateur détermine, entre autres, l'ordre dans lequel sont dessinés les objets.
 			get
 			{
+				if (this.cartridge != null)
+				{
+					yield return this.cartridge;
+				}
+
 				LinkableObject top = null;
 
 				foreach (var obj in this.nodes)
@@ -1540,6 +1542,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private List<ObjectNode>				nodes;
 		private List<ObjectEdge>				edges;
 		private List<ObjectComment>				comments;
+		private ObjectCartridge					cartridge;
 
 		private Size							areaSize;
 		private double							zoom;

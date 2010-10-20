@@ -29,8 +29,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.isRoot = false;
-
 			if (this.Entity.Name.IsNullOrWhiteSpace)
 			{
 				this.TitleNumber = this.editor.GetNodeTitleNumbrer ();
@@ -249,7 +247,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "Monte ou cache les informations du noeud";
 
 				case ActiveElement.NodeAuto:
-					return this.Entity.IsAuto ? "Noeud en mode manuel" : "Noeud en mode automatique";
+					return this.Entity.IsAuto ? "Change de \"automatique\" à \"manuel\"" : "Change de \"manuel\" à \"automatique\"";
 
 				case ActiveElement.NodeOpenLink:
 					return "Crée une nouvelle connexion";
@@ -462,12 +460,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			return ActiveElement.None;
-		}
-
-		public override bool IsMousePossible(ActiveElement element)
-		{
-			//	Indique si l'opération est possible.
-			return true;
 		}
 
 
@@ -817,7 +809,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
 			button.State.Detectable = this.isExtended;
-			button.Text = this.Entity.IsAuto ? "M" : "A";
 		}
 
 		private void UpdateButtonStateClose(ActiveButton button)
