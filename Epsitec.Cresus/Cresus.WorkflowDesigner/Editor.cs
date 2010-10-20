@@ -124,6 +124,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateInitialWorkflow()
 		{
+			this.initialNodePos = new Point (0, 0);
+			this.initialEdgePos = new Point (150, 80);
+
 			var firstNodeEntity = this.workflowDefinitionEntity as WorkflowNodeEntity;
 
 			List<AbstractEntity> alreadyCreated = new List<AbstractEntity> ();
@@ -150,7 +153,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			var edge = new ObjectEdge (this, edgeEntity);
 			this.AddEdge (edge);
-			this.PushLayout (edge, PushDirection.Automatic, this.gridStep);
+
+			edge.SetBounds (new Rectangle (this.initialEdgePos, edge.Bounds.Size));
+			this.initialEdgePos.Y += 80;
 
 			if (edgeEntity.NextNode.IsNotNull ())
 			{
@@ -170,7 +175,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			var node = new ObjectNode (this, nodeEntity);
 			node.IsRoot = isRoot;
 			this.AddNode (node);
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
+
+			node.SetBounds (new Rectangle (this.initialNodePos, node.Bounds.Size));
+			this.initialNodePos.Y += 80;
 
 			foreach (var edgeEntity in nodeEntity.Edges)
 			{
@@ -1568,5 +1575,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private double							gridSubdiv;
 		private AbstractObject					editingObject;
 		private AbstractObject					editableObject;
+		private Point							initialNodePos;
+		private Point							initialEdgePos;
 	}
 }
