@@ -10740,8 +10740,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>WorkflowDefinition</c> entity.
 	///	designer:cap/L0AAL
 	///	</summary>
-	public partial class WorkflowDefinitionEntity : global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity
+	public partial class WorkflowDefinitionEntity : global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AAL/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>WorkflowName</c> field.
 		///	designer:fld/L0AAL/L0ALL
@@ -10787,28 +10805,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>EnableCondition</c> field.
-		///	designer:fld/L0AAL/L0ABL
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ABL]")]
-		public string EnableCondition
-		{
-			get
-			{
-				return this.GetField<string> ("[L0ABL]");
-			}
-			set
-			{
-				string oldValue = this.EnableCondition;
-				if (oldValue != value)
-				{
-					this.OnEnableConditionChanging (oldValue, value);
-					this.SetField<string> ("[L0ABL]", oldValue, value);
-					this.OnEnableConditionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>SerializedDesign</c> field.
 		///	designer:fld/L0AAL/L0ADL
 		///	</summary>
@@ -10835,8 +10831,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnWorkflowNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnEnableConditionChanging(string oldValue, string newValue);
-		partial void OnEnableConditionChanged(string oldValue, string newValue);
 		partial void OnSerializedDesignChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		partial void OnSerializedDesignChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
