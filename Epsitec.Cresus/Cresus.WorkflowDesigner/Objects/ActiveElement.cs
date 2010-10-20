@@ -67,6 +67,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		CommentColor8,
 		CommentAttachTo,
 
+		CartridgeEditName,
+		CartridgeEditDescription,
+
 		InfoEdit,
 		InfoMove,
 		InfoWidth,

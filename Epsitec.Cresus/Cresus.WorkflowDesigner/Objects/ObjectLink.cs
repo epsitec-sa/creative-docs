@@ -696,6 +696,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void DrawForeground(Graphics graphics)
 		{
+			//	Dessine tous les boutons.
 			this.DrawButtons (graphics);
 		}
 
