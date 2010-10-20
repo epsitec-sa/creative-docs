@@ -56,6 +56,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool IsExtended
+		{
+			//	Etat de la boîte (compact ou étendu).
+			get
+			{
+				return this.isExtended;
+			}
+			set
+			{
+				if (this.isExtended != value)
+				{
+					this.isExtended = value;
+					this.UpdateButtonsState ();
+				}
+			}
+		}
+
 
 		public virtual void SetBoundsAtEnd(Point start, Point end)
 		{
@@ -340,6 +357,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected Rectangle						bounds;
 		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
+		protected bool							isExtended;
 		protected Point							draggingOffset;
 	}
 }

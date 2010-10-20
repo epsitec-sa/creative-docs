@@ -74,6 +74,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public override Rectangle ExtendedBounds
+		{
+			//	Retourne la boîte de l'objet, éventuellement agrandie si l'objet est étendu.
+			get
+			{
+				var box = this.bounds;
+
+				if (this.isExtended)
+				{
+					box = new Rectangle (box.Left, box.Bottom-ObjectNode.extendedHeight, box.Width, box.Height+ObjectNode.extendedHeight);
+				}
+
+				return box;
+			}
+		}
+
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
@@ -215,8 +231,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			switch (element)
 			{
+				case ActiveElement.NodeExtend:
+					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
+
 				case ActiveElement.NodeClose:
-					return "Ferme le noeud";
+					return "Supprime le noeud";
 
 				case ActiveElement.NodeComment:
 					return "Ajoute un commentaire au noeud";
@@ -321,6 +340,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
+			if (this.hilitedElement == ActiveElement.NodeExtend)
+			{
+				if (this.IsExtended)
+				{
+					this.IsExtended = false;
+				}
+				else
+				{
+					this.editor.CompactAll ();
+					this.IsExtended = true;
+				}
+				this.editor.UpdateAfterCommentChanged ();
+			}
+
 			if (this.hilitedElement == ActiveElement.NodeOpenLink)
 			{
 				//	Crée un moignon de lien o--->
@@ -402,12 +435,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (this.bounds.Contains (pos))
+			if (this.ExtendedBounds.Contains (pos))
 			{
 				return ActiveElement.NodeHeader;
 			}
 
-			if (this.bounds.Contains (pos))
+			if (this.ExtendedBounds.Contains (pos))
 			{
 				return ActiveElement.NodeInside;
 			}
@@ -484,8 +517,43 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Héritage	->	Traitillé
 			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
+			Color c1, c2;
 
 			bool dragging = (this.hilitedElement == ActiveElement.NodeHeader || this.isHilitedForLinkChanging);
+			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
+
+			var extendedRect = new Rectangle (this.bounds.Left, this.bounds.Bottom-ObjectNode.extendedHeight, this.bounds.Width, this.bounds.Height+ObjectNode.extendedHeight-5);
+			extendedRect.Deflate (2, 0);
+			if (this.isRoot)
+			{
+				extendedRect.Inflate (2);
+			}
+
+			//	Dessine le boîte étendue.
+			if (this.isExtended)
+			{
+				//	Dessine l'ombre.
+				rect = extendedRect;
+				rect.Offset (ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
+				this.DrawRoundShadow (graphics, rect, ObjectNode.frameRadius, (int) ObjectNode.shadowOffset, 0.2);
+
+				rect = extendedRect;
+				rect.Deflate (0.5);
+				Path extendedPath = this.PathRoundRectangle (rect, ObjectNode.frameRadius);
+
+				//	Dessine l'intérieur en blanc.
+				graphics.Rasterizer.AddSurface (extendedPath);
+				graphics.RenderSolid (this.colorFactory.GetColor (1));
+
+				//	Dessine l'intérieur en dégradé.
+				graphics.Rasterizer.AddSurface (extendedPath);
+				c1 = this.colorFactory.GetColorMain (dragging ? 0.3 : 0.2);
+				c2 = this.colorFactory.GetColorMain (dragging ? 0.1 : 0.0);
+				this.RenderHorizontalGradient (graphics, this.bounds, c1, c2);
+
+				graphics.Rasterizer.AddOutline (extendedPath, 1);
+				graphics.RenderSolid (colorFrame);
+			}
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -494,12 +562,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect.Inflate(2);
 			}
 			rect.Offset(ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
-			this.DrawNode2Shadow (graphics, rect, (int) ObjectNode.shadowOffset, 0.2);
+			this.DrawNodeShadow (graphics, rect, (int) ObjectNode.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathNode2Rectangle (rect);
+			Path path = this.PathNodeRectangle (rect);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -507,8 +575,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
-			Color c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
+			c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
+			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			Color colorLine = this.colorFactory.GetColor (0.9);
@@ -516,8 +584,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				colorLine = this.colorFactory.GetColorMain (0.3);
 			}
-
-			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
 			//	Dessine le titre.
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
@@ -550,6 +616,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 
 				return (this.hilitedElement == ActiveElement.NodeHeader ||
+						this.hilitedElement == ActiveElement.NodeExtend ||
 						this.hilitedElement == ActiveElement.NodeComment ||
 						this.hilitedElement == ActiveElement.NodeClose ||
 						this.hilitedElement == ActiveElement.NodeInfo ||
@@ -577,30 +644,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Point PositionCommentButton
+		private Point PositionExtendButton
 		{
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Top-ActiveButton.buttonRadius-9);
-			}
-		}
-
-		private Point PositionCloseButton
-		{
-			//	Retourne la position du bouton pour fermer.
-			get
-			{
-				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Top-ActiveButton.buttonRadius-9);
-			}
-		}
-
-		private Point PositionInfoButton
-		{
-			//	Retourne la position du bouton pour montrer le commentaire.
-			get
-			{
-				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom+ActiveButton.buttonRadius+9);
+				return new Point (this.bounds.Center.X, this.bounds.Top-ActiveButton.buttonRadius-9);
 			}
 		}
 
@@ -609,7 +658,34 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom+ActiveButton.buttonRadius+9);
+				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+8);
+			}
+		}
+
+		private Point PositionCloseButton
+		{
+			//	Retourne la position du bouton pour fermer.
+			get
+			{
+				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius+6);
+			}
+		}
+
+		private Point PositionCommentButton
+		{
+			//	Retourne la position du bouton pour montrer le commentaire.
+			get
+			{
+				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius+6);
+			}
+		}
+
+		private Point PositionInfoButton
+		{
+			//	Retourne la position du bouton pour montrer le commentaire.
+			get
+			{
+				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+8);
 			}
 		}
 
@@ -636,16 +712,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			double y = this.bounds.Bottom;
-
-			Point p = this.PositionOpenLinkButton;
-			if (!p.IsZero)
-			{
-				//	Sous le bouton 'OpenLink', avec un petit chevauchement.
-				y = System.Math.Min (y, p.Y-ActiveButton.buttonRadius-2);
-			}
-
-			return new Point (this.bounds.Center.X + (2*ActiveButton.buttonSquare+1)*(rank-3.5) + 0.5, y);
+			return new Point (this.bounds.Center.X + (2*ActiveButton.buttonSquare+1)*(rank-3.5) + 0.5, this.bounds.Bottom-14);
 		}
 
 		private string GetGroupTooltip(int rank)
@@ -673,11 +740,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void CreateButtons()
 		{
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorFactory, GlyphShape.Plus,  this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close, this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",              this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",              this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",              this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorFactory, GlyphShape.Plus,    this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeExtend,   this.colorFactory, GlyphShape.ArrowUp, this.UpdateButtonGeometryExtend,   this.UpdateButtonStateExtend));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",                this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close,   this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",                this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",                this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor2, this.colorFactory, ColorItem.Orange, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
@@ -692,6 +760,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonGeometryOpenLink(ActiveButton button)
 		{
 			button.Center = this.PositionOpenLinkButton;
+		}
+
+		private void UpdateButtonGeometryExtend(ActiveButton button)
+		{
+			button.Center = this.PositionExtendButton;
 		}
 
 		private void UpdateButtonGeometryClose(ActiveButton button)
@@ -727,37 +800,49 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
-		private void UpdateButtonStateClose(ActiveButton button)
-		{
-			button.State.Enable = !this.isRoot;
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
-		}
-
-		private void UpdateButtonStateComment(ActiveButton button)
+		private void UpdateButtonStateExtend(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
-		}
-
-		private void UpdateButtonStateInfo(ActiveButton button)
-		{
-			button.State.Hilited = this.hilitedElement == button.Element;
+			button.Glyph = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
 		}
 
 		private void UpdateButtonStateAuto(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
 			button.Text = this.Entity.IsAuto ? "M" : "A";
+		}
+
+		private void UpdateButtonStateClose(ActiveButton button)
+		{
+			button.State.Enable = !this.isRoot;
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
+		}
+
+		private void UpdateButtonStateComment(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
+		}
+
+		private void UpdateButtonStateInfo(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
 		}
 
 		private void UpdateButtonStateColor(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorFactory.ColorItem == button.ColorItem;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
 		}
 
 		private bool IsDragging
@@ -901,6 +986,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private static readonly double			frameRadius = 30;
 		private static readonly double			shadowOffset = 6;
+		private static readonly double			extendedHeight = 70;
 
 		private bool							isRoot;
 		private TextLayout						title;
