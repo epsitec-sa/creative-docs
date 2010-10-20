@@ -249,6 +249,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.NodeAuto:
 					return this.Entity.IsAuto ? "Change de \"automatique\" à \"manuel\"" : "Change de \"manuel\" à \"automatique\"";
 
+				case ActiveElement.NodePublic:
+					return this.Entity.IsPublic ? "Change de \"public\" à \"privé\"" : "Change de \"privé\" à \"public\"";
+
 				case ActiveElement.NodeOpenLink:
 					return "Crée une nouvelle connexion";
 
@@ -390,6 +393,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.hilitedElement == ActiveElement.NodeAuto)
 			{
 				this.Entity.IsAuto = !this.Entity.IsAuto;
+				this.UpdateButtonsState ();
+				this.editor.SetLocalDirty ();
+			}
+
+			if (this.hilitedElement == ActiveElement.NodePublic)
+			{
+				this.Entity.IsPublic = !this.Entity.IsPublic;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 			}
@@ -593,6 +603,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
 			graphics.RenderSolid (colorFrame);
+
+			if (this.Entity.IsPublic)
+			{
+				var circlePath = new Path ();
+				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius+2.5);
+
+				Misc.DrawPathDash (graphics, circlePath, 1, 5, 5, false, colorFrame);
+			}
 		}
 
 		public override void DrawForeground(Graphics graphics)
@@ -618,6 +636,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeClose ||
 						this.hilitedElement == ActiveElement.NodeInfo ||
 						this.hilitedElement == ActiveElement.NodeAuto ||
+						this.hilitedElement == ActiveElement.NodePublic ||
 						this.hilitedElement == ActiveElement.NodeColor1 ||
 						this.hilitedElement == ActiveElement.NodeColor2 ||
 						this.hilitedElement == ActiveElement.NodeColor3 ||
@@ -643,28 +662,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private Point PositionExtendButton
 		{
-			//	Retourne la position du bouton pour montrer le commentaire.
+			//	Retourne la position du bouton.
 			get
 			{
 				return this.bounds.Center;
-			}
-		}
-
-		private Point PositionAutoButton
-		{
-			//	Retourne la position du bouton pour montrer le commentaire.
-			get
-			{
-				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+8);
-			}
-		}
-
-		private Point PositionCloseButton
-		{
-			//	Retourne la position du bouton pour fermer.
-			get
-			{
-				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius+6);
 			}
 		}
 
@@ -673,16 +674,43 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius+6);
+				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*5+6);
 			}
 		}
 
 		private Point PositionInfoButton
 		{
-			//	Retourne la position du bouton pour montrer le commentaire.
+			//	Retourne la position du bouton.
 			get
 			{
-				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+8);
+				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*5+6);
+			}
+		}
+
+		private Point PositionAutoButton
+		{
+			//	Retourne la position du bouton.
+			get
+			{
+				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+4);
+			}
+		}
+
+		private Point PositionPublicButton
+		{
+			//	Retourne la position du bouton.
+			get
+			{
+				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+4);
+			}
+		}
+
+		private Point PositionCloseButton
+		{
+			//	Retourne la position du bouton pour fermer.
+			get
+			{
+				return new Point (this.bounds.Center.X, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius+3);
 			}
 		}
 
@@ -709,7 +737,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			return new Point (this.bounds.Center.X + (2*ActiveButton.buttonSquare+1)*(rank-3.5) + 0.5, this.bounds.Bottom-14);
+			return new Point (this.bounds.Center.X + (2*ActiveButton.buttonSquare+1)*(rank-3.5) + 0.5, this.bounds.Bottom-16);
 		}
 
 		private string GetGroupTooltip(int rank)
@@ -740,6 +768,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeOpenLink, this.colorFactory, GlyphShape.Plus,    this.UpdateButtonGeometryOpenLink, this.UpdateButtonStateOpenLink));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeExtend,   this.colorFactory, GlyphShape.ArrowUp, this.UpdateButtonGeometryExtend,   this.UpdateButtonStateExtend));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",                this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
+			this.buttons.Add (new ActiveButton (ActiveElement.NodePublic,   this.colorFactory, "P",                this.UpdateButtonGeometryPublic,   this.UpdateButtonStatePublic));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close,   this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",                this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",                this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
@@ -784,6 +813,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.Center = this.PositionAutoButton;
 		}
 
+		private void UpdateButtonGeometryPublic(ActiveButton button)
+		{
+			button.Center = this.PositionPublicButton;
+		}
+
 		private void UpdateButtonGeometryColor(ActiveButton button)
 		{
 			int rank = button.Element - ActiveElement.NodeColor1;
@@ -805,6 +839,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 		private void UpdateButtonStateAuto(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
+		}
+
+		private void UpdateButtonStatePublic(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
@@ -982,7 +1023,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private static readonly double			frameRadius = 25;
 		private static readonly double			shadowOffset = 6;
-		private static readonly double			extendedHeight = 70;
+		private static readonly double			extendedHeight = 90;
 
 		private bool							isRoot;
 		private TextLayout						title;
