@@ -1531,7 +1531,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		public static readonly double			defaultWidth = 200;
-		public static readonly double			edgeDetour = 30;
 		public static readonly double			pushMargin = 10;
 		private static readonly double			frameMargin = 40;
 

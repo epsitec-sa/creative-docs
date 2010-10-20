@@ -247,6 +247,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected void DrawEdgeShadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
+		{
+			//	Dessine une ombre douce pour un objet edge (ObjectEdge).
+			alpha /= smooth;
+
+			for (int i=0; i<smooth; i++)
+			{
+				Path path = this.PathEdgeRectangle (rect);
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
+
+				rect.Deflate (1);
+			}
+		}
+
 		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
@@ -259,22 +274,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
 
 				rect.Deflate (1);
-			}
-		}
-
-		protected void DrawNodeShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
-		{
-			//	Dessine une ombre douce pour un objet noeud (ObjectNode).
-			alpha /= smooth;
-
-			for (int i=0; i<smooth; i++)
-			{
-				Path path = this.PathNodeRectangle (rect, radius);
-				graphics.Rasterizer.AddSurface (path);
-				graphics.RenderSolid (this.colorFactory.GetColor (0, alpha));
-
-				rect.Deflate (1);
-				radius -= 1;
 			}
 		}
 
@@ -383,6 +382,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.GradientRenderer.Transform = ot;
 		}
 
+		protected Path PathEdgeRectangle(Rectangle rect)
+		{
+			var path = new Path ();
+
+			double radius = System.Math.Min (rect.Width, rect.Height) / 2;
+			path.AppendRoundedRectangle (rect, radius);
+
+			return path;
+		}
+
 		protected Path PathNodeRectangle(Rectangle rect)
 		{
 			var path = new Path ();
@@ -392,58 +401,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return path;
 		}
 
-		protected Path PathNodeRectangle(Rectangle rect, double radius)
-		{
-			//	Retourne le chemin d'un rectangle pour un ObjectNode.
-			//?return this.PathBevelRectangle (rect, radius*0.5, radius, radius*0.5, radius, true, true);  // coins biseautés
-			return this.PathBevelRectangle (rect, AbstractObject.headerHeight*0.25, AbstractObject.headerHeight, 0.5, 0.5, true, true);  // coins biseautés seulement en haut
-		}
-
 		protected Path PathRoundRectangle(Rectangle rect, double radius)
 		{
 			//	Retourne le chemin d'un rectangle à coins arrondis.
-			return this.PathRoundRectangle(rect, radius, true, true);  // coins arrondis partout
-		}
+			var path = new Path ();
 
-		protected Path PathRoundRectangle(Rectangle rect, double radius, bool isTopRounded, bool isBottomRounded)
-		{
-			//	Retourne le chemin d'un rectangle, avec des coins arrondis en haut et/ou en bas.
-			double ox = rect.Left;
-			double oy = rect.Bottom;
-			double dx = rect.Width;
-			double dy = rect.Height;
-
-			radius = System.Math.Min(radius, System.Math.Min(dx, dy)/2);
-
-			Path path = new Path();
-
-			if (isBottomRounded)  // coins bas/gauche et bas/droite arrondis ?
-			{
-				path.MoveTo(ox, oy+radius);
-				path.CurveTo(ox, oy, ox+radius, oy);
-				path.LineTo(ox+dx-radius, oy);
-				path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
-			}
-			else  // coins bas/gauche et bas/droite droits ?
-			{
-				path.MoveTo(ox, oy);
-				path.LineTo(ox+dx, oy);
-			}
-
-			if (isTopRounded)  // coins haut/gauche et haut/droite arrondis ?
-			{
-				path.LineTo(ox+dx, oy+dy-radius);
-				path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
-				path.LineTo(ox+radius, oy+dy);
-				path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
-			}
-			else  // coins haut/gauche et haut/droite droits ?
-			{
-				path.LineTo(ox+dx, oy+dy);
-				path.LineTo(ox, oy+dy);
-			}
-
-			path.Close();
+			radius = System.Math.Min (radius, System.Math.Min (rect.Width, rect.Height) / 2);
+			path.AppendRoundedRectangle (rect, radius);
 
 			return path;
 		}
@@ -550,8 +514,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected static readonly double		headerHeight = 32;
-		protected static readonly double		footerHeight = 16;
 		protected static readonly double		lengthStumpLink = 60;
 		protected static readonly double		arrowLength = 12;
 		protected static readonly double		arrowAngle = 25;
