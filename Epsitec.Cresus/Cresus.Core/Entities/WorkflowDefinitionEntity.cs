@@ -11,16 +11,5 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class WorkflowDefinitionEntity
 	{
-		public bool CheckEnableCondition(string typeKey)
-		{
-			if (this.EnableCondition == typeKey)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
 	}
 }

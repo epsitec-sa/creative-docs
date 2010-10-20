@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core
 			workflow.Threads.Add (thread);
 
 			thread.Status = WorkflowStatus.Pending;
-			thread.Definition = this.DataContext.GetEntitiesOfType<WorkflowDefinitionEntity> (x => x.EnableCondition == "MasterEntity=[L0AB2]").First ();
+			thread.Definition = this.DataContext.GetEntitiesOfType<WorkflowDefinitionEntity> (x => x.Code == "[L0AB2]").First ();
 			
 			return workflow;
 		}
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core
             var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
             var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
 
-            def.EnableCondition = "MasterEntity=[L0AB2]";
+			def.Code = "[L0AB2]";
             def.Name = FormattedText.FromSimpleText("e");
             def.Edges.Add(edgeAB);
             def.Edges.Add(edgeAC);
