@@ -422,6 +422,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.EdgeComment:
 					return "Ajoute un commentaire à la transition";
 
+				case ActiveElement.EdgeType:
+					if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
+					{
+						return "Change de \"normal\" à \"appel\"";
+					}
+					else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+					{
+						return "Change de \"appel\" à \"embranchement\"";
+					}
+					else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
+					{
+						return "Change de \"embranchement\" à \"normal\"";
+					}
+					break;
+
 				case ActiveElement.EdgeExtend:
 					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
@@ -448,7 +463,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				case ActiveElement.EdgeColor8:
 					return "Gris";
-
 			}
 
 			return base.GetToolTipText (element);
@@ -568,7 +582,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.EdgeComment)
 			{
-				this.AddComment();
+				this.AddComment ();
+			}
+
+			if (this.hilitedElement == ActiveElement.EdgeType)
+			{
+				if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
+				{
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Call;
+				}
+				else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+				{
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
+				}
+				else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
+				{
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Default;
+				}
 			}
 
 			if (this.hilitedElement == ActiveElement.EdgeColor1)
@@ -760,7 +790,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 
 			rect = this.RectangleTitle;
-			rect.Deflate (8, 2);
+			rect.Deflate (16, 2);
 
 			if (string.IsNullOrEmpty (this.subtitleString))
 			{
@@ -791,6 +821,27 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, 2);
 			graphics.RenderSolid (colorFrame);
+
+			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+			{
+				rect = this.bounds;
+				rect.Deflate (0, 3.5);
+				double r = rect.Height/2;
+				graphics.AddLine (rect.Left+r,  rect.Bottom-2, rect.Left+r,  rect.Top+2);
+				graphics.AddLine (rect.Right-r, rect.Bottom-2, rect.Right-r, rect.Top+2);
+
+				graphics.RenderSolid (colorFrame);
+			}
+
+			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
+			{
+				rect = this.bounds;
+				rect.Inflate (2.5);
+				path = this.PathEdgeRectangle (rect);
+
+				graphics.Rasterizer.AddOutline (path, 1);
+				graphics.RenderSolid (colorFrame);
+			}
 		}
 
 		public override void DrawForeground(Graphics graphics)
@@ -814,6 +865,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.EdgeEditDescription ||
 						this.hilitedElement == ActiveElement.EdgeInside ||
 						this.hilitedElement == ActiveElement.EdgeComment ||
+						this.hilitedElement == ActiveElement.EdgeType ||
 						this.hilitedElement == ActiveElement.EdgeColor1 ||
 						this.hilitedElement == ActiveElement.EdgeColor2 ||
 						this.hilitedElement == ActiveElement.EdgeColor3 ||
@@ -874,6 +926,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		private Point PositionTypeButton
+		{
+			//	Retourne la position du bouton pour montrer le type.
+			get
+			{
+				return new Point (this.bounds.Left+ActiveButton.buttonRadius*3+8, this.bounds.Bottom-ObjectEdge.extendedHeight+ActiveButton.buttonRadius+4);
+			}
+		}
+
 		private Point PositionCloseButton
 		{
 			//	Retourne la position du bouton pour fermer.
@@ -929,6 +990,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorFactory, GlyphShape.ArrowUp,        this.UpdateButtonGeometryExtend,      this.UpdateButtonStateExtend));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,       this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorFactory, "C",                       this.UpdateButtonGeometryComment,     this.UpdateButtonStateComment));
+			this.buttons.Add (new ActiveButton (ActiveElement.EdgeType,        this.colorFactory, "T",                       this.UpdateButtonGeometryType,        this.UpdateButtonStateType));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeWidth, this.UpdateButtonStateChangeWidth));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
@@ -954,6 +1016,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonGeometryComment(ActiveButton button)
 		{
 			button.Center = this.PositionCommentButton;
+		}
+
+		private void UpdateButtonGeometryType(ActiveButton button)
+		{
+			button.Center = this.PositionTypeButton;
 		}
 
 		private void UpdateButtonGeometryChangeWidth(ActiveButton button)
@@ -983,6 +1050,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 		private void UpdateButtonStateComment(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
+			button.State.Detectable = this.isExtended;
+		}
+
+		private void UpdateButtonStateType(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
