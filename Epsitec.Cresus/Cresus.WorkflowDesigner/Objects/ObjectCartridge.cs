@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void UpdateTitle()
 		{
-			this.title.Text = this.Entity.WorkflowName.ToString ();
+			this.title.Text = Misc.Bold (this.Entity.WorkflowName.ToString ());
 		}
 
 		private void UpdateSubtitle()
@@ -183,6 +183,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.subtitle.LayoutSize = rect.Size;
 			this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
 
+			rect = new Rectangle (Point.Zero, this.editor.AreaSize);
+			rect.Deflate (0.5);
+			graphics.AddRectangle (rect);
+
 			rect = this.RectangleTitle;
 			rect.Inflate (0.5);
 			graphics.AddRectangle (rect);
@@ -198,7 +202,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				var bounds = this.InternalBounds;
+				var bounds = this.CartridgeBounds;
 				return new Rectangle (bounds.Left, bounds.Top-ObjectCartridge.titleHeight, bounds.Width, ObjectCartridge.titleHeight);
 			}
 		}
@@ -207,12 +211,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				var bounds = this.InternalBounds;
+				var bounds = this.CartridgeBounds;
 				return new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, ObjectCartridge.frameSize.Height-ObjectCartridge.titleHeight-1);
 			}
 		}
 
-		private Rectangle InternalBounds
+		private Rectangle CartridgeBounds
 		{
 			get
 			{

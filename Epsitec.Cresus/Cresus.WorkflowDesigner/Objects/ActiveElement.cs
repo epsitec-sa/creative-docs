@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		NodeClose,
 		NodeInfo,
 		NodeAuto,
+		NodePublic,
 		NodeExtend,
 		NodeOpenLink,
 		NodeColor1,
