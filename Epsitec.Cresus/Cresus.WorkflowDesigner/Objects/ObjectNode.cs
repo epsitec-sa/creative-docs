@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 
 			this.title = new TextLayout();
-			this.title.DefaultFontSize = 24;
+			this.title.DefaultFontSize = 20;
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
@@ -643,7 +643,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				Rectangle rect = this.bounds;
-				rect.Deflate (15, 20);
+				rect.Deflate (10, 15);
 
 				return rect;
 			}
@@ -654,7 +654,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Center.X, this.bounds.Top-ActiveButton.buttonRadius-9);
+				return this.bounds.Center;
 			}
 		}
 
@@ -989,7 +989,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private static readonly double			frameRadius = 30;
+		private static readonly double			frameRadius = 25;
 		private static readonly double			shadowOffset = 6;
 		private static readonly double			extendedHeight = 70;
 
