@@ -582,12 +582,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.SetBounds(rect);
 				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment(this.comment);
+				this.editor.AddBalloon(this.comment);
 				this.editor.UpdateAfterCommentChanged();
 			}
 			else
 			{
-				this.comment.IsVisible = !this.comment.IsVisible;
+				this.editor.RemoveBalloon (this.comment);
+				this.comment = null;
 			}
 
 			this.editor.SetLocalDirty ();
@@ -772,7 +773,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	le bouton CommentAttachTo pour déplacer le point d'attache.
 			get
 			{
-				return this.dstObject != null && (this.comment == null || !this.comment.IsVisible);
+				return this.dstObject != null && this.comment == null;
 			}
 		}
 

@@ -246,10 +246,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "Supprime le noeud";
 
 				case ActiveElement.NodeComment:
-					return "Ajoute un commentaire au noeud";
+					return (this.comment == null) ? "Ajoute un commentaire au noeud" : "Ferme le commentaire";
 
 				case ActiveElement.NodeInfo:
-					return "Monte ou cache les informations du noeud";
+					return (this.info == null) ? "Monte les informations du noeud" : "Ferme les informations du noeud";
 
 				case ActiveElement.NodeAuto:
 					return this.Entity.IsAuto ? "Change de \"automatique\" à \"manuel\"" : "Change de \"manuel\" à \"automatique\"";
@@ -519,12 +519,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment (this.comment);
+				this.editor.AddBalloon (this.comment);
 				this.editor.UpdateAfterCommentChanged ();
 			}
 			else
 			{
-				this.comment.IsVisible = !this.comment.IsVisible;
+				this.editor.RemoveBalloon (this.comment);
+				this.comment = null;
 			}
 
 			this.editor.SetLocalDirty ();
@@ -544,12 +545,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.info.SetBounds (rect);
 				this.info.UpdateAfterAttachChanged ();
 
-				this.editor.AddInfo (this.info);
+				this.editor.AddBalloon (this.info);
 				this.editor.UpdateAfterCommentChanged ();
 			}
 			else
 			{
-				this.info.IsVisible = !this.info.IsVisible;
+				this.editor.RemoveBalloon (this.info);
+				this.info = null;
 			}
 
 			this.editor.SetLocalDirty ();

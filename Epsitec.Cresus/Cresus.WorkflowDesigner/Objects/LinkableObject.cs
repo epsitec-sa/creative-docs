@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public class LinkableObject : AbstractObject
+	public abstract class LinkableObject : AbstractObject
 	{
 		public LinkableObject(Editor editor, AbstractEntity entity)
 			: base (editor, entity)

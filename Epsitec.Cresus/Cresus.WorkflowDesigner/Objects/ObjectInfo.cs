@@ -17,100 +17,23 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	public class ObjectInfo : AbstractObject
+	public class ObjectInfo : BalloonObject
 	{
-		private enum AttachMode
-		{
-			None,
-			Left,
-			Right,
-			Bottom,
-			Top,
-			BottomLeft,
-			BottomRight,
-			TopLeft,
-			TopRight,
-		}
-
-
 		public ObjectInfo(Editor editor, AbstractEntity entity)
 			: base (editor, entity)
 		{
-			this.isVisible = true;
 			this.colorFactory.ColorItem = ColorItem.Blue;
+
+			this.textLayoutTitle.Text = "Informations";
 
 			this.textLayouts = new List<TextLayout> ();
 		}
 
 
-		public ObjectNode AttachObject
-		{
-			get
-			{
-				return this.attachObject;
-			}
-			set
-			{
-				this.attachObject = value;
-			}
-		}
-
 		public void UpdateAfterAttachChanged()
 		{
 			this.UpdateTextLayouts ();
 			this.UpdateHeight ();
-		}
-
-		public override Rectangle Bounds
-		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
-			get
-			{
-				return this.isVisible ? this.bounds : Rectangle.Empty;
-			}
-		}
-
-		public override void Move(double dx, double dy)
-		{
-			//	Déplace l'objet.
-			this.bounds.Offset(dx, dy);
-			this.UpdateButtonsGeometry ();
-		}
-
-		public Rectangle InternalBounds
-		{
-			//	Retourne la boîte de l'objet.
-			get
-			{
-				return this.bounds;
-			}
-		}
-
-		public void SetBounds(Rectangle bounds)
-		{
-			//	Modifie la boîte de l'objet.
-			this.bounds = bounds;
-			this.UpdateButtonsGeometry ();
-		}
-
-		public bool IsVisible
-		{
-			//	Est-ce que le commentaire est visible.
-			get
-			{
-				return this.isVisible;
-			}
-			set
-			{
-				if (this.isVisible != value)
-				{
-					this.isVisible = value;
-
-					this.editor.UpdateAfterCommentChanged();
-					this.editor.SetLocalDirty ();
-				}
-			}
 		}
 
 
@@ -132,23 +55,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			return base.GetToolTipText (element);
-		}
-
-
-		public override List<AbstractObject> FriendObjects
-		{
-			//	Les objets amis sont toutes les connexions qui partent ou arrivent de cet objet.
-			get
-			{
-				var list = new List<AbstractObject> ();
-
-				if (this.attachObject != null)
-				{
-					list.Add (this.attachObject);
-				}
-
-				return list;
-			}
 		}
 
 
@@ -260,15 +166,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (this.draggingLineCurrentRank <= this.draggingLineInitialRank-1)
 					{
-						var t = this.attachObject.Entity.Edges[this.draggingLineInitialRank];
-						this.attachObject.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
-						this.attachObject.Entity.Edges.Insert (this.draggingLineCurrentRank, t);
+						var t = this.Node.Entity.Edges[this.draggingLineInitialRank];
+						this.Node.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
+						this.Node.Entity.Edges.Insert (this.draggingLineCurrentRank, t);
 					}
 					else if (this.draggingLineCurrentRank >= this.draggingLineInitialRank+2)
 					{
-						var t = this.attachObject.Entity.Edges[this.draggingLineInitialRank];
-						this.attachObject.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
-						this.attachObject.Entity.Edges.Insert (this.draggingLineCurrentRank-1, t);
+						var t = this.Node.Entity.Edges[this.draggingLineInitialRank];
+						this.Node.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
+						this.Node.Entity.Edges.Insert (this.draggingLineCurrentRank-1, t);
 					}
 				}
 
@@ -282,13 +188,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.hilitedElement == ActiveElement.InfoClose)
 				{
-					this.IsVisible = false;
-
-					if (this.attachObject != null)
+					if (this.Node != null)
 					{
-						this.attachObject.Info = null;
-						this.editor.RemoveInfo (this);
+						this.Node.Info = null;
 					}
+
+					this.editor.RemoveBalloon (this);
 				}
 			}
 		}
@@ -296,24 +201,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (pos.IsZero || !this.isVisible || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
+			}
+
+			//	Souris dans l'en-tête ?
+			if (this.HeaderRectangle.Contains (pos))
+			{
+				return ActiveElement.InfoMove;
 			}
 
 			//	Souris dans la boîte ?
 			if (this.bounds.Contains(pos))
 			{
-				if (pos.Y <= this.bounds.Bottom+ObjectInfo.footerHeight)
-				{
-					return ActiveElement.InfoMove;
-				}
-
-				if (pos.Y >= this.bounds.Top-ObjectInfo.footerHeight)
-				{
-					return ActiveElement.InfoMove;
-				}
-
 				int  lineCount = this.LineCount;
 				for (int i = 0; i < lineCount; i++)
 				{
@@ -332,7 +233,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (pos.IsZero || !this.isVisible || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
 				return ActiveElement.None;
 			}
@@ -351,8 +252,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Adapte la hauteur de l'information en fonction de sa largeur et du contenu.
 			Rectangle rect = this.bounds;
 
-			double h = ObjectInfo.headerHeight + ObjectInfo.lineMargin*2 + ObjectInfo.footerHeight;
-			h += System.Math.Max (this.LineCount, 1) * ObjectInfo.lineHeight;
+			double h = System.Math.Max (this.LineCount, 1) * ObjectInfo.lineHeight;
 
 			var a = this.GetAttachMode();
 			if (a == AttachMode.Bottom || a == AttachMode.None)
@@ -371,15 +271,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-			if (!this.isVisible)
-			{
-				return;
-			}
+			this.colorFactory.ColorItem = this.ParentColorFartory.ColorItem;
+
+			base.DrawBackground (graphics);
 
 			Rectangle rect;
-			Color c1, c2;
-
-			this.colorFactory.ColorItem = this.ParentColorFartory.ColorItem;
 
 			bool dragging = (this.hilitedElement == ActiveElement.InfoInside);
 
@@ -391,64 +287,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				colorLine = this.colorFactory.GetColorMain (0.3);
 			}
 
-			//	Dessine la liaison.
-			AttachMode mode = this.GetAttachMode ();
-			Point himself = this.GetAttachHimself (mode);
-			Point other   = this.GetAttachOther (mode);
-
-			if (this.attachObject is LinkableObject)
-			{
-				other = Point.Move (other, himself, ObjectEdge.frameSize.Height/2);
-			}
-
-			himself = Point.Move (himself, other, -ObjectInfo.headerHeight);
-
-			himself = Point.GridAlign (himself, 0.5, 1);
-			other   = Point.GridAlign (other,   0.5, 1);
-
-			graphics.AddLine (himself, other);
-			graphics.RenderSolid (colorFrame);
-
-			//	Dessine l'ombre.
-			rect = this.bounds;
-			rect.Offset (ObjectInfo.shadowOffset, -(ObjectInfo.shadowOffset));
-			this.DrawRoundShadow (graphics, rect, ObjectInfo.headerHeight, (int) ObjectInfo.shadowOffset, 0.2);
-
-			//	Construit le chemin du cadre.
-			rect = this.bounds;
-			rect.Deflate (1);
-			Path path = this.PathRoundRectangle (rect, ObjectInfo.headerHeight);
-
-			//	Dessine l'intérieur en blanc.
-			graphics.Rasterizer.AddSurface (path);
-			graphics.RenderSolid (this.colorFactory.GetColor (1));
-
-			//	Dessine l'intérieur en dégradé.
-			graphics.Rasterizer.AddSurface (path);
-			c1 = this.colorFactory.GetColorMain (dragging ? 0.8 : 0.4);
-			c2 = this.colorFactory.GetColorMain (dragging ? 0.4 : 0.1);
-			this.RenderHorizontalGradient (graphics, this.bounds, c1, c2);
-
-			//	Dessine la zone pour les lignes.
-			Rectangle inside = new Rectangle (this.bounds.Left+1, this.bounds.Bottom+ObjectInfo.footerHeight, this.bounds.Width-2, this.bounds.Height-ObjectInfo.footerHeight-ObjectInfo.headerHeight);
-			graphics.AddFilledRectangle (inside);
-			graphics.RenderSolid (this.colorFactory.GetColor (1));
-			graphics.AddFilledRectangle (inside);
-			Color ci1 = this.colorFactory.GetColorMain (dragging ? 0.2 : 0.1);
-			Color ci2 = this.colorFactory.GetColorMain (0.0);
-			this.RenderHorizontalGradient (graphics, inside, ci1, ci2);
-
-			//	Ombre supérieure.
-			Rectangle shadow = new Rectangle (this.bounds.Left+1, this.bounds.Top-ObjectInfo.headerHeight-8, this.bounds.Width-2, 8);
-			graphics.AddFilledRectangle (shadow);
-			this.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
-
-			graphics.AddLine (this.bounds.Left+2, this.bounds.Top-ObjectInfo.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectInfo.headerHeight-0.5);
-			graphics.AddLine (this.bounds.Left+2, this.bounds.Bottom+ObjectInfo.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectInfo.footerHeight+0.5);
-			graphics.RenderSolid (colorFrame);
-
 			//	Dessine les lignes.
-			if (this.attachObject != null)
+			if (this.Node != null)
 			{
 				int sel = -1;
 
@@ -462,13 +302,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					graphics.RenderSolid (this.colorFactory.GetColorMain (this.isDraggingLine ? 0.3 : 1.0));
 				}
 
-				for (int i = 0; i < this.attachObject.Entity.Edges.Count; i++)
+				int lineCount = this.LineCount;
+				for (int i = 0; i < lineCount; i++)
 				{
 					var colorText = (i == sel) ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 					rect = this.RectangleLine (i);
 
-					graphics.AddLine (rect.Left+1, rect.Bottom-0.5, rect.Right-1, rect.Bottom-0.5);
-					graphics.RenderSolid (colorLine);
+					if (i < lineCount-1)
+					{
+						graphics.AddLine (rect.Left+1, rect.Bottom-0.5, rect.Right-1, rect.Bottom-0.5);
+						graphics.RenderSolid (colorLine);
+					}
 
 					rect.Deflate (10, 0);
 					this.textLayouts[i].LayoutSize = rect.Size;
@@ -492,19 +336,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.DrawMovingArrow (graphics, p1, p2);
 				}
 			}
-
-			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline (path, 2);
-			graphics.RenderSolid (colorFrame);
 		}
 
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			if (this.isVisible)
-			{
-				this.DrawButtons (graphics);
-			}
+			this.DrawButtons (graphics);
 		}
 
 		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
@@ -536,225 +373,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return (this.hilitedElement == ActiveElement.InfoInside ||
 						this.hilitedElement == ActiveElement.InfoMove ||
 						this.hilitedElement == ActiveElement.InfoClose ||
-						this.hilitedElement == ActiveElement.InfoWidth);
+						this.hilitedElement == ActiveElement.InfoWidth ||
+						(this.hilitedElement >= ActiveElement.InfoLine1 &&
+						 this.hilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines));
 			}
-		}
-
-
-		private Point GetAttachHimself(AttachMode mode)
-		{
-			//	Retourne le point d'attache sur le commentaire.
-			Point pos = Point.Zero;
-
-			if (mode != AttachMode.None)
-			{
-				Rectangle bounds = this.bounds;
-				bounds.Inflate(0.5);
-
-				if (mode == AttachMode.BottomLeft)
-				{
-					pos = bounds.BottomLeft;
-				}
-
-				if (mode == AttachMode.BottomRight)
-				{
-					pos = bounds.BottomRight;
-				}
-
-				if (mode == AttachMode.TopLeft)
-				{
-					pos = bounds.TopLeft;
-				}
-
-				if (mode == AttachMode.TopRight)
-				{
-					pos = bounds.TopRight;
-				}
-
-				if (pos.IsZero && this.attachObject is LinkableObject)
-				{
-					var box = this.attachObject as LinkableObject;
-					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
-
-					if (mode == AttachMode.Left || mode == AttachMode.Right)
-					{
-						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
-
-						double miny = System.Math.Max(boxBounds.Bottom, bounds.Bottom);
-						double maxy = System.Math.Min(boxBounds.Top, bounds.Top);
-
-						if (miny <= maxy)
-						{
-							pos.Y = (miny+maxy)/2;
-						}
-						else
-						{
-							pos.Y = (bounds.Top < boxBounds.Top) ? bounds.Top : bounds.Bottom;
-						}
-					}
-
-					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
-					{
-						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
-
-						double minx = System.Math.Max(boxBounds.Left, bounds.Left);
-						double maxx = System.Math.Min(boxBounds.Right, bounds.Right);
-
-						if (minx <= maxx)
-						{
-							pos.X = (minx+maxx)/2;
-						}
-						else
-						{
-							pos.X = (bounds.Right < boxBounds.Right) ? bounds.Right : bounds.Left;
-						}
-					}
-				}
-			}
-
-			return pos;
-		}
-
-		private Point GetAttachOther(AttachMode mode)
-		{
-			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
-			Point pos = Point.Zero;
-
-			if (mode != AttachMode.None)
-			{
-				Rectangle bounds = this.bounds;
-				bounds.Inflate(0.5);
-
-				if (this.attachObject is LinkableObject)
-				{
-					var box = this.attachObject as LinkableObject;
-					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
-
-					if (mode == AttachMode.BottomLeft)
-					{
-						return boxBounds.TopRight;
-					}
-
-					if (mode == AttachMode.BottomRight)
-					{
-						return boxBounds.TopLeft;
-					}
-
-					if (mode == AttachMode.TopLeft)
-					{
-						return boxBounds.BottomRight;
-					}
-
-					if (mode == AttachMode.TopRight)
-					{
-						return boxBounds.BottomLeft;
-					}
-					
-					Point himself = this.GetAttachHimself(mode);
-
-					if (mode == AttachMode.Left || mode == AttachMode.Right)
-					{
-						pos.X = (mode == AttachMode.Left) ? boxBounds.Right : boxBounds.Left;
-
-						if (himself.Y < boxBounds.Bottom)
-						{
-							pos.Y = boxBounds.Bottom;
-						}
-						else if (himself.Y > boxBounds.Top)
-						{
-							pos.Y = boxBounds.Top;
-						}
-						else
-						{
-							pos.Y = himself.Y;
-						}
-					}
-
-					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
-					{
-						pos.Y = (mode == AttachMode.Bottom) ? boxBounds.Top : boxBounds.Bottom;
-
-						if (himself.X < boxBounds.Left)
-						{
-							pos.X = boxBounds.Left;
-						}
-						else if (himself.X > boxBounds.Right)
-						{
-							pos.X = boxBounds.Right;
-						}
-						else
-						{
-							pos.X = himself.X;
-						}
-					}
-				}
-			}
-
-			return pos;
-		}
-
-		private AttachMode GetAttachMode()
-		{
-			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
-			if (this.attachObject is LinkableObject)
-			{
-				var box = this.attachObject;
-				Rectangle boxBounds = box.Bounds;
-				boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
-
-				if (!this.bounds.IntersectsWith(boxBounds))
-				{
-					if (this.bounds.Bottom >= boxBounds.Top && this.bounds.Right <= boxBounds.Left)
-					{
-						return AttachMode.BottomRight;
-					}
-					
-					if (this.bounds.Top <= boxBounds.Bottom && this.bounds.Right <= boxBounds.Left)
-					{
-						return AttachMode.TopRight;
-					}
-					
-					if (this.bounds.Bottom >= boxBounds.Top && this.bounds.Left >= boxBounds.Right)
-					{
-						return AttachMode.BottomLeft;
-					}
-					
-					if (this.bounds.Top <= boxBounds.Bottom && this.bounds.Left >= boxBounds.Right)
-					{
-						return AttachMode.TopLeft;
-					}
-					
-					if (this.bounds.Bottom >= boxBounds.Top)  // commentaire en dessus ?
-					{
-						return AttachMode.Bottom;
-					}
-					
-					if (this.bounds.Top <= boxBounds.Bottom)  // commentaire en dessous ?
-					{
-						return AttachMode.Top;
-					}
-
-					if (this.bounds.Left >= boxBounds.Right)  // commentaire à droite ?
-					{
-						return AttachMode.Left;
-					}
-
-					if (this.bounds.Right <= boxBounds.Left)  // commentaire à gauche ?
-					{
-						return AttachMode.Right;
-					}
-				}
-			}
-
-			return AttachMode.None;
 		}
 
 
 		private void UpdateTextLayouts()
 		{
-			if (this.attachObject == null)
+			if (this.Node == null)
 			{
 				return;
 			}
@@ -780,7 +408,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			for (int i = 0; i < lineCount; i++)
 			{
-				this.textLayouts[i].Text = this.attachObject.Entity.Edges[i].Name.ToString ();
+				this.textLayouts[i].Text = this.Node.Entity.Edges[i].Name.ToString ();
 			}
 		}
 
@@ -789,60 +417,51 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				if (this.attachObject == null)
+				if (this.Node == null)
 				{
 					return this.colorFactory;
 				}
 				else
 				{
-					return this.attachObject.ColorFartory;
+					return this.Node.ColorFartory;
 				}
 			}
 		}
 
 
-		private Point PositionCloseButton
-		{
-			//	Retourne la position du bouton de fermeture.
-			get
-			{
-				return new Point (this.bounds.Right-ActiveButton.buttonRadius-4, this.bounds.Top-ActiveButton.buttonRadius-4);
-			}
-		}
-
-		private Point PositionWidthButton
-		{
-			//	Retourne la position du bouton pour modifier la largeur.
-			get
-			{
-				return new Point(this.bounds.Right, this.bounds.Center.Y);
-			}
-		}
-
 		private Rectangle RectangleLine(int rank)
 		{
-			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.headerHeight-ObjectInfo.lineMargin-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
+			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
 		}
 
 		private Rectangle RectangleLineSeparator(int rank)
 		{
-			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.headerHeight-ObjectInfo.lineMargin+ObjectInfo.lineHeight/2-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
+			return new Rectangle (this.bounds.Left, this.bounds.Top+ObjectInfo.lineHeight/2-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
 		}
 
 		private int LineCount
 		{
 			get
 			{
-				if (this.attachObject == null)
+				if (this.Node == null)
 				{
 					return 0;
 				}
 				else
 				{
-					return this.attachObject.Entity.Edges.Count;
+					return this.Node.Entity.Edges.Count;
 				}
 			}
 		}
+
+		private ObjectNode Node
+		{
+			get
+			{
+				return this.attachObject as ObjectNode;
+			}
+		}
+
 
 		protected override void CreateButtons()
 		{
@@ -881,84 +500,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 		
-		#region Serialization
-		public void WriteXml(XmlWriter writer)
-		{
-#if false
-			//	Sérialise toutes les informations du commentaire.
-			//	Utilisé seulement pour les commentaires associés à des boîtes.
-			//	Les commentaires associés à des connexions sont sérialisés par Field.
-			writer.WriteStartElement(Xml.Comment);
-			
-			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
-			writer.WriteElementString(Xml.Text, this.textLayoutComment.Text);
-			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
-
-			writer.WriteEndElement();
-#endif
-		}
-
-		public void ReadXml(XmlReader reader)
-		{
-#if false
-			reader.Read();
-			
-			while (true)
-			{
-				if (reader.NodeType == XmlNodeType.Element)
-				{
-					string name = reader.LocalName;
-					string element = reader.ReadElementString();
-
-					if (name == Xml.Bounds)
-					{
-						this.bounds = Rectangle.Parse(element);
-					}
-					else if (name == Xml.Text)
-					{
-						this.textLayoutComment.Text = element;
-					}
-					else if (name == Xml.Color)
-					{
-						this.boxColor = (ColorItem) System.Enum.Parse (typeof (ColorItem), element);
-					}
-					else
-					{
-						throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in comment", name));
-					}
-				}
-				else if (reader.NodeType == XmlNodeType.EndElement)
-				{
-					System.Diagnostics.Debug.Assert(reader.Name == Xml.Comment);
-					break;
-				}
-				else
-				{
-					reader.Read();
-				}
-			}
-#endif
-		}
-		#endregion
-
-
-		private static readonly double			headerHeight = 15;
-		private static readonly double			footerHeight = 15;
 		private static readonly double			lineHeight = 20;
-		private static readonly double			lineMargin = 10;
-		private static readonly double			shadowOffset = 6;
 		public static readonly int				maxLines = 20;
 
-		private Rectangle						bounds;
-		private ObjectNode						attachObject;
-		private bool							isVisible;
 		private List<TextLayout>				textLayouts;
 
-		private Point							initialPos;
-		private bool							isDraggingMove;
-		private bool							isDraggingWidth;
 		private bool							isDraggingLine;
-		private Point							draggingPos;
 		private int								draggingLineInitialRank;
 		private int								draggingLineCurrentRank;
 	}

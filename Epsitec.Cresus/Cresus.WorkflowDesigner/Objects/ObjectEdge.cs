@@ -421,7 +421,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "Supprime la transition";
 
 				case ActiveElement.EdgeComment:
-					return "Ajoute un commentaire à la transition";
+					return (this.comment == null) ? "Ajoute un commentaire à la transition" : "Ferme le commentaire";
 
 				case ActiveElement.EdgeType:
 					if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
@@ -707,12 +707,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment (this.comment);
+				this.editor.AddBalloon (this.comment);
 				this.editor.UpdateAfterCommentChanged ();
 			}
 			else
 			{
-				this.comment.IsVisible = !this.comment.IsVisible;
+				this.editor.RemoveBalloon (this.comment);
+				this.comment = null;
 			}
 
 			this.editor.SetLocalDirty ();
