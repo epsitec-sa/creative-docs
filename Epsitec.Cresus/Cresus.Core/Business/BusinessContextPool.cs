@@ -17,20 +17,34 @@ namespace Epsitec.Cresus.Core.Business
 		public BusinessContextPool(CoreData data)
 		{
 			this.data = data;
-			this.businessContexts = new List<BusinessContext> ();
+			this.pool = new List<BusinessContext> ();
 		}
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return this.businessContexts.Count == 0;
+				return this.pool.Count == 0;
 			}
 		}
 
 		public BusinessContext CreateBusinessContext()
 		{
 			return new BusinessContext (this);
+		}
+
+		public void DisposeBusinessContext(BusinessContext context)
+		{
+			if (this.pool.Contains (context))
+			{
+				context.Dispose ();
+
+				System.Diagnostics.Debug.Assert (this.pool.Contains (context) == false);
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("Context does not belong to the pool");
+			}
 		}
 
 		internal DataContext CreateDataContext(BusinessContext context)
@@ -51,15 +65,15 @@ namespace Epsitec.Cresus.Core.Business
 
 		internal void Add(BusinessContext context)
 		{
-			this.businessContexts.Add (context);
+			this.pool.Add (context);
 		}
 
 		internal void Remove(BusinessContext context)
 		{
-			this.businessContexts.Remove (context);
+			this.pool.Remove (context);
 		}
 
-		private readonly List<BusinessContext> businessContexts;
+		private readonly List<BusinessContext> pool;
 		private readonly CoreData data;
 	}
 }
