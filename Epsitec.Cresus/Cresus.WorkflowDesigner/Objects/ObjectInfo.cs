@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingMove || this.isDraggingWidth)
+			if (this.isDraggingMove || this.isDraggingWidth || this.isDraggingLine)
 			{
 				return null;  // pas de tooltip
 			}
@@ -133,6 +133,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			return base.GetToolTipText (element);
 		}
+
+
+		public override List<AbstractObject> FriendObjects
+		{
+			//	Les objets amis sont toutes les connexions qui partent ou arrivent de cet objet.
+			get
+			{
+				var list = new List<AbstractObject> ();
+
+				if (this.attachObject != null)
+				{
+					list.Add (this.attachObject);
+				}
+
+				return list;
+			}
+		}
+
 
 		public override bool MouseMove(Message message, Point pos)
 		{
@@ -161,9 +179,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate();
 				return true;
 			}
+			else if (this.isDraggingLine)
+			{
+				int lineCount = this.LineCount;
+				int sel = -1;
+				for (int i = 0; i <= lineCount; i++)
+				{
+					if (this.RectangleLineSeparator (i).Contains (pos))
+					{
+						sel = i;
+						break;
+					}
+				}
+				if (this.draggingLineCurrentRank != sel)
+				{
+					this.draggingLineCurrentRank = sel;
+					this.editor.Invalidate ();
+				}
+				return true;
+			}
 			else
 			{
-				return base.MouseMove(message, pos);
+				return base.MouseMove (message, pos);
 			}
 		}
 
@@ -186,6 +223,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.UpdateButtonsState ();
 				this.editor.LockObject (this);
 			}
+
+			if (this.hilitedElement >= ActiveElement.InfoLine1 &&
+				this.hilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
+			{
+				this.isDraggingLine = true;
+				this.draggingLineInitialRank = this.hilitedElement - ActiveElement.InfoLine1;
+				this.draggingLineCurrentRank = -1;
+				this.editor.LockObject (this);
+				this.editor.Invalidate ();
+			}
 		}
 
 		public override void MouseUp(Message message, Point pos)
@@ -205,6 +252,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.UpdateButtonsState ();
 				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
+				this.editor.SetLocalDirty ();
+			}
+			else if (this.isDraggingLine)
+			{
+				if (this.draggingLineCurrentRank != -1 && this.draggingLineInitialRank != -1)
+				{
+					if (this.draggingLineCurrentRank <= this.draggingLineInitialRank-1)
+					{
+						var t = this.attachObject.Entity.Edges[this.draggingLineInitialRank];
+						this.attachObject.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
+						this.attachObject.Entity.Edges.Insert (this.draggingLineCurrentRank, t);
+					}
+					else if (this.draggingLineCurrentRank >= this.draggingLineInitialRank+2)
+					{
+						var t = this.attachObject.Entity.Edges[this.draggingLineInitialRank];
+						this.attachObject.Entity.Edges.RemoveAt (this.draggingLineInitialRank);
+						this.attachObject.Entity.Edges.Insert (this.draggingLineCurrentRank-1, t);
+					}
+				}
+
+				this.isDraggingLine = false;
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
+				this.editor.UpdateAfterCommentChanged ();
 				this.editor.SetLocalDirty ();
 			}
 			else
@@ -243,6 +314,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return ActiveElement.InfoMove;
 				}
 
+				int  lineCount = this.LineCount;
+				for (int i = 0; i < lineCount; i++)
+				{
+					if (this.RectangleLine (i).Contains (pos))
+					{
+						return ActiveElement.InfoLine1+i;
+					}
+				}
+
 				return ActiveElement.InfoInside;
 			}
 
@@ -272,13 +352,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Rectangle rect = this.bounds;
 
 			double h = ObjectInfo.headerHeight + ObjectInfo.lineMargin*2 + ObjectInfo.footerHeight;
-
-			int lineCount = 0;
-			if (this.attachObject != null)
-			{
-				lineCount = this.attachObject.Entity.Edges.Count;
-			}
-			h += System.Math.Max (lineCount, 1) * ObjectInfo.lineHeight;
+			h += System.Math.Max (this.LineCount, 1) * ObjectInfo.lineHeight;
 
 			var a = this.GetAttachMode();
 			if (a == AttachMode.Bottom || a == AttachMode.None)
@@ -376,8 +450,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine les lignes.
 			if (this.attachObject != null)
 			{
+				int sel = -1;
+
+				if (this.hilitedElement >= ActiveElement.InfoLine1 &&
+					this.hilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
+				{
+					sel = this.hilitedElement - ActiveElement.InfoLine1;
+					rect = this.RectangleLine (sel);
+
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (this.colorFactory.GetColorMain (this.isDraggingLine ? 0.3 : 1.0));
+				}
+
 				for (int i = 0; i < this.attachObject.Entity.Edges.Count; i++)
 				{
+					var colorText = (i == sel) ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 					rect = this.RectangleLine (i);
 
 					graphics.AddLine (rect.Left+1, rect.Bottom-0.5, rect.Right-1, rect.Bottom-0.5);
@@ -385,7 +472,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					rect.Deflate (10, 0);
 					this.textLayouts[i].LayoutSize = rect.Size;
-					this.textLayouts[i].Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (0), GlyphPaintStyle.Normal);
+					this.textLayouts[i].Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, colorText, GlyphPaintStyle.Normal);
+				}
+			}
+
+			//	Dessine la flèche pendant un déplacement de ligne.
+			if (this.isDraggingLine && this.draggingLineCurrentRank != -1)
+			{
+				if (this.draggingLineCurrentRank <= this.draggingLineInitialRank-1 ||
+					this.draggingLineCurrentRank >= this.draggingLineInitialRank+2)
+				{
+					rect = this.RectangleLineSeparator (this.draggingLineCurrentRank);
+					rect = new Rectangle (rect.Left, rect.Center.Y-2, rect.Width, 4);
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (this.colorFactory.GetColorMain ());
+
+					Point p1 = this.RectangleLine (this.draggingLineInitialRank).Center;
+					Point p2 = this.RectangleLineSeparator (this.draggingLineCurrentRank).Center;
+					this.DrawMovingArrow (graphics, p1, p2);
 				}
 			}
 
@@ -401,6 +505,27 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.DrawButtons (graphics);
 			}
+		}
+
+		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
+		{
+			//	Dessine une flèche pendant le déplacement d'un champ.
+			p2 = Point.Move (p2, p1, 1);
+			double d = (p1.Y > p2.Y) ? -6 : 6;
+			double sx = 3;
+
+			Path path = new Path ();
+			path.MoveTo (p2);
+			path.LineTo (p2.X-d*3/sx, p2.Y-d*2);
+			path.LineTo (p2.X-d/sx, p2.Y-d*2);
+			path.LineTo (p1.X-d/sx, p1.Y);
+			path.LineTo (p1.X+d/sx, p1.Y);
+			path.LineTo (p2.X+d/sx, p2.Y-d*2);
+			path.LineTo (p2.X+d*3/sx, p2.Y-d*2);
+			path.Close ();
+
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (this.colorFactory.GetColorMain ());
 		}
 
 		private bool IsHeaderHilite
@@ -634,7 +759,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return;
 			}
 
-			int lineCount = this.attachObject.Entity.Edges.Count;
+			int lineCount = this.LineCount;
 
 			//	Supprime les TextLayout en excès.
 			while (this.textLayouts.Count > lineCount)
@@ -699,6 +824,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.headerHeight-ObjectInfo.lineMargin-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
 		}
 
+		private Rectangle RectangleLineSeparator(int rank)
+		{
+			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.headerHeight-ObjectInfo.lineMargin+ObjectInfo.lineHeight/2-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
+		}
+
+		private int LineCount
+		{
+			get
+			{
+				if (this.attachObject == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.attachObject.Entity.Edges.Count;
+				}
+			}
+		}
 
 		protected override void CreateButtons()
 		{
@@ -803,6 +947,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double			lineHeight = 20;
 		private static readonly double			lineMargin = 10;
 		private static readonly double			shadowOffset = 6;
+		public static readonly int				maxLines = 20;
 
 		private Rectangle						bounds;
 		private ObjectNode						attachObject;
@@ -812,6 +957,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private Point							initialPos;
 		private bool							isDraggingMove;
 		private bool							isDraggingWidth;
+		private bool							isDraggingLine;
 		private Point							draggingPos;
+		private int								draggingLineInitialRank;
+		private int								draggingLineCurrentRank;
 	}
 }

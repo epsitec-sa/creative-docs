@@ -874,6 +874,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						type = MouseCursorType.Move;
 					}
+					else if (this.hilitedObject.HilitedElement >= ActiveElement.InfoLine1 &&
+							 this.hilitedObject.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
+					{
+						type = MouseCursorType.Move;
+					}
 					else
 					{
 						type = MouseCursorType.Finger;
