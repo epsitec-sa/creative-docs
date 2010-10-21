@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.nodes    = new List<ObjectNode> ();
 			this.edges    = new List<ObjectEdge> ();
 			this.comments = new List<ObjectComment> ();
+			this.infos    = new List<ObjectInfo> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
@@ -266,12 +267,23 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void AddComment(ObjectComment comment)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
-			this.comments.Add(comment);
+			this.comments.Add (comment);
+		}
+
+		public void AddInfo(ObjectInfo info)
+		{
+			//	Ajoute une nouvelle information dans l'éditeur.
+			this.infos.Add (info);
 		}
 
 		public void RemoveComment(ObjectComment comment)
 		{
 			this.comments.Remove (comment);
+		}
+
+		public void RemoveInfo(ObjectInfo info)
+		{
+			this.infos.Remove (info);
 		}
 
 
@@ -293,7 +305,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.nodes.Clear ();
 			this.edges.Clear ();
-			this.comments.Clear();
+			this.comments.Clear ();
+			this.infos.Clear ();
 			this.LockObject(null);
 		}
 
@@ -416,14 +429,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
-			this.UpdateLinks();
+			this.UpdateObjects ();
+			this.UpdateLinks ();
 			this.RedimArea ();
 		}
 
 		public void UpdateAfterCommentChanged()
 		{
 			//	Appelé lorsqu'un commentaire ou une information a changé.
-			this.RedimArea();
+			this.UpdateObjects ();
+			this.RedimArea ();
 
 			this.UpdateLinks();
 			this.RedimArea();
@@ -432,11 +447,20 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void UpdateAfterGeometryChanged(LinkableObject node)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
+			this.UpdateObjects ();
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea ();
 
 			this.UpdateLinks ();
 			this.RedimArea ();
+		}
+
+		public void UpdateObjects()
+		{
+			foreach (var obj in this.LinkableObjects)
+			{
+				obj.UpdateObject ();
+			}
 		}
 
 		public void UpdateLinks()
@@ -850,10 +874,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						type = MouseCursorType.Move;
 					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.InfoEdit)
-					{
-						type = MouseCursorType.Arrow;
-					}
 					else
 					{
 						type = MouseCursorType.Finger;
@@ -1228,6 +1248,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					yield return obj;
 				}
 
+				foreach (var obj in this.infos)
+				{
+					yield return obj;
+				}
+
 				if (top != null)
 				{
 					yield return top;
@@ -1549,6 +1574,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private List<ObjectNode>				nodes;
 		private List<ObjectEdge>				edges;
 		private List<ObjectComment>				comments;
+		private List<ObjectInfo>				infos;
 		private ObjectCartridge					cartridge;
 
 		private Size							areaSize;

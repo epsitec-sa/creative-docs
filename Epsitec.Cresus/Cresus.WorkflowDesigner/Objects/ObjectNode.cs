@@ -110,6 +110,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void UpdateObject()
+		{
+			this.UpdateAttachObject ();
+		}
+
 		public override void SetBoundsAtEnd(Point start, Point end)
 		{
 			Point center = Point.Move (end, start, -ObjectNode.frameRadius);
@@ -388,6 +393,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.NodeInfo)
 			{
+				this.AddInfo ();
 			}
 
 			if (this.hilitedElement == ActiveElement.NodeAuto)
@@ -473,6 +479,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		private void UpdateAttachObject()
+		{
+			if (this.info != null)
+			{
+				this.info.UpdateAfterAttachChanged ();
+			}
+		}
+
+
 		public override string DebugInformations
 		{
 			get
@@ -506,12 +521,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				this.editor.AddComment (this.comment);
 				this.editor.UpdateAfterCommentChanged ();
-
-				this.comment.EditComment ();  // édite tout de suite le texte du commentaire
 			}
 			else
 			{
 				this.comment.IsVisible = !this.comment.IsVisible;
+			}
+
+			this.editor.SetLocalDirty ();
+		}
+
+		private void AddInfo()
+		{
+			//	Ajoute une information à la boîte.
+			if (this.info == null)
+			{
+				this.info = new ObjectInfo (this.editor, this.Entity);
+				this.info.AttachObject = this;
+
+				Rectangle rect = this.bounds;
+				rect.Bottom = rect.Top+20;
+				rect.Width = 200;
+				this.info.SetBounds (rect);
+				this.info.UpdateAfterAttachChanged ();
+
+				this.editor.AddInfo (this.info);
+				this.editor.UpdateAfterCommentChanged ();
+			}
+			else
+			{
+				this.info.IsVisible = !this.info.IsVisible;
 			}
 
 			this.editor.SetLocalDirty ();

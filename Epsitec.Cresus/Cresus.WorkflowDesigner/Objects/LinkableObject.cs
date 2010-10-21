@@ -56,6 +56,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public ObjectInfo Info
+		{
+			//	Information liée.
+			get
+			{
+				return this.info;
+			}
+			set
+			{
+				this.info = value;
+			}
+		}
+
 		public bool IsExtended
 		{
 			//	Etat de la boîte (compact ou étendu).
@@ -73,6 +86,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+
+		public virtual void UpdateObject()
+		{
+		}
 
 		public virtual void SetBoundsAtEnd(Point start, Point end)
 		{
@@ -93,6 +110,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Rectangle rect = this.comment.InternalBounds;
 				rect.Offset (p2-p1);
 				this.comment.SetBounds (rect);
+			}
+
+			//	S'il existe une information associée, elle doit aussi être déplacée.
+			if (this.info != null)
+			{
+				Rectangle rect = this.info.InternalBounds;
+				rect.Offset (p2-p1);
+				this.info.SetBounds (rect);
 			}
 
 			this.UpdateButtonsGeometry ();
@@ -264,14 +289,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void DraggingMouseMove(Point pos)
 		{
-			var list = new List<Point> ();
+			var commentList = new List<Point> ();
 
 			//	Mémorise la position de tous les liens qui partent.
 			foreach (var obj in this.objectLinks)
 			{
 				if (obj.Comment != null)
 				{
-					list.Add (obj.PositionLinkComment);
+					commentList.Add (obj.PositionLinkComment);
 				}
 			}
 
@@ -280,7 +305,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (obj.Comment != null)
 				{
-					list.Add (obj.PositionLinkComment);
+					commentList.Add (obj.PositionLinkComment);
 				}
 			}
 
@@ -296,7 +321,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (obj.Comment != null)
 				{
-					Point p1 = list[i++];
+					Point p1 = commentList[i++];
 					Point p2 = obj.PositionLinkComment;
 
 					obj.Comment.Move (p2.X-p1.X, p2.Y-p1.Y);
@@ -308,7 +333,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (obj.Comment != null)
 				{
-					Point p1 = list[i++];
+					Point p1 = commentList[i++];
 					Point p2 = obj.PositionLinkComment;
 
 					obj.Comment.Move (p2.X-p1.X, p2.Y-p1.Y);
@@ -357,6 +382,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected Rectangle						bounds;
 		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
+		protected ObjectInfo					info;
 		protected bool							isExtended;
 		protected Point							draggingOffset;
 	}
