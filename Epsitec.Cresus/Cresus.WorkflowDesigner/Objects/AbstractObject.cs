@@ -51,6 +51,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public ColorFactory ColorFartory
+		{
+			get
+			{
+				return this.colorFactory;
+			}
+		}
+
 		public virtual Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.

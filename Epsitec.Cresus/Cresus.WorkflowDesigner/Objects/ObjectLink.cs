@@ -579,8 +579,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				this.editor.AddComment(this.comment);
 				this.editor.UpdateAfterCommentChanged();
-
-				this.comment.EditComment();  // édite tout de suite le texte du commentaire
 			}
 			else
 			{

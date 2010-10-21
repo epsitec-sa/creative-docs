@@ -17,12 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
-	/// <summary>
-	/// Bulle pour représenter le commentaire associé à une entité ou une connexion.
-	/// </summary>
 	public class ObjectComment : AbstractObject
 	{
-		protected enum AttachMode
+		private enum AttachMode
 		{
 			None,
 			Left,
@@ -361,11 +358,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentEdit)
-				{
-					this.EditComment();
-				}
-
 				if (this.hilitedElement == ActiveElement.CommentColor1)
 				{
 					this.BackgroundColorItem = ColorItem.Yellow;
@@ -447,23 +439,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return ActiveElement.None;
 		}
 
-
-		public void EditComment()
-		{
-			//	Modifie le texte du commentaire.
-#if false
-			Module module = this.editor.Module;
-			string text = this.textLayoutComment.Text;
-			text = module.DesignerApplication.DlgEntityComment(text);
-			if (text != null)
-			{
-				this.textLayoutComment.Text = text;
-				this.UpdateHeight();
-				this.editor.UpdateAfterCommentChanged();
-				this.editor.SetLocalDirty ();
-			}
-#endif
-		}
 
 		public void UpdateHeight()
 		{
@@ -554,7 +529,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected bool IsHeaderHilite
+		private bool IsHeaderHilite
 		{
 			//	Indique si la souris est dans l'en-tête.
 			get
@@ -576,7 +551,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected Path GetFramePath()
+		private Path GetFramePath()
 		{
 			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue,
 			//	comme une bulle de bd).
@@ -784,7 +759,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return path;
 		}
 
-		protected Point GetAttachHimself(AttachMode mode)
+		private Point GetAttachHimself(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur le commentaire.
 			Point pos = Point.Zero;
@@ -901,7 +876,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return pos;
 		}
 
-		protected Point GetAttachOther(AttachMode mode)
+		private Point GetAttachOther(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
 			Point pos = Point.Zero;
@@ -1006,7 +981,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return pos;
 		}
 
-		protected AttachMode GetAttachMode()
+		private AttachMode GetAttachMode()
 		{
 			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
 			if (this.attachObject is LinkableObject)
@@ -1111,7 +1086,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		protected Rectangle HeaderRectangle
+		private Rectangle HeaderRectangle
 		{
 			get
 			{
@@ -1122,7 +1097,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionCloseButton
+		private Point PositionCloseButton
 		{
 			//	Retourne la position du bouton de fermeture.
 			get
@@ -1132,7 +1107,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionWidthButton
+		private Point PositionWidthButton
 		{
 			//	Retourne la position du bouton pour modifier la largeur.
 			get
@@ -1141,7 +1116,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionAttachToLinkButton
+		private Point PositionAttachToLinkButton
 		{
 			//	Retourne la position du bouton pour modifier l'attache à la connexion.
 			get
@@ -1158,13 +1133,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Point PositionColorButton(int rank)
+		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
 			return new Point (this.bounds.Left+ActiveButton.buttonSquare+(ActiveButton.buttonSquare+0.5)*rank*2, this.bounds.Bottom-1-ActiveButton.buttonSquare);
 		}
 
-		protected Color ColorComment(bool hilited)
+		private Color ColorComment(bool hilited)
 		{
 			if (hilited)
 			{
@@ -1176,7 +1151,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected Color ColorCommentHeader(bool hilited, bool dragging)
+		private Color ColorCommentHeader(bool hilited, bool dragging)
 		{
 			if (dragging)
 			{
