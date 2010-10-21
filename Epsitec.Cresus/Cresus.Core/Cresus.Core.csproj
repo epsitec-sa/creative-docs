@@ -247,6 +247,7 @@
     <Compile Include="Data\DataLifetimeExpectancy.cs" />
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
+    <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />

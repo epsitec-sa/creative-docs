@@ -12,21 +12,27 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <summary>
 		/// No controller specified.
 		/// </summary>
-		None,
+		None = 0,
 
 		/// <summary>
 		/// Use the summary view controller (read only).
 		/// </summary>
-		Summary,
+		Summary = 1,
 
 		/// <summary>
 		/// Use the edition view controller (read write).
 		/// </summary>
-		Edition,
+		Edition = 2,
 
 		/// <summary>
-		/// Une the creation view controller (read only).
+		/// Use the creation view controller (special case, read only based on dummy bootstrap entity).
 		/// </summary>
-		Creation,
+		Creation = 3,
+	}
+
+	public enum ViewControllerTypeResolutionMode
+	{
+		ThrowOnFailure,
+		NullOnFailure,
 	}
 }

@@ -18,9 +18,28 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// </summary>
 	public static class EntityViewControllerResolver
 	{
-		public static EntityViewController Resolve(DataViewOrchestrator orchestrator, string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId, NavigationPathElement navigationPathElement)
+		public static EntityViewController Resolve(string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId, ResolutionMode resolutionMode)
 		{
-			return EntityViewControllerResolver.ResolveEntityViewController (name, entity, mode, controllerSubTypeId);
+			var entityType = entity.GetType ();
+			var type = EntityViewControllerResolver.ResolveEntityViewController(entityType, mode, controllerSubTypeId);
+
+			if (type == null)
+			{
+				if ((mode == ViewControllerMode.Creation) ||
+					(resolutionMode == ResolutionMode.NullOnError))
+				{
+					return null;
+				}
+
+				System.Diagnostics.Debug.Assert (resolutionMode == ResolutionMode.ThrowOnError);
+
+				throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
+			}
+
+			object[] constructorArguments = new object[] { name, entity };
+			object controllerInstance = System.Activator.CreateInstance (type, constructorArguments);
+			
+			return controllerInstance as EntityViewController;
 		}
 
 		
@@ -35,6 +54,9 @@ namespace Epsitec.Cresus.Core.Resolvers
 				case ViewControllerMode.Creation:
 					return "Creation";
 
+				case ViewControllerMode.None:
+					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} cannot be specified here", mode));
+
 				default:
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
@@ -42,6 +64,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int controllerSubTypeId)
 		{
+			System.Type match;
+
 			var baseTypePrefix = EntityViewControllerResolver.GetViewControllerPrefix (mode);
 			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
 
@@ -49,68 +73,61 @@ namespace Epsitec.Cresus.Core.Resolvers
 			//	generic EditionViewController base classes, which match the entity type (usually,
 			//	there should be exactly one such type).
 
-			var types = from type in typeof (EntityViewController).Assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract
-						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
-						select type;
+			var controllerTypes = from type in typeof (EntityViewController).Assembly.GetTypes ()
+								  where type.IsClass && !type.IsAbstract
+								  let baseType = type.BaseType
+								  where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
+								  let baseEntityType = baseType.GetGenericArguments ()[0]
+								  select new { Type = type, BaseEntityType = baseEntityType };
 
+			var types = from type in controllerTypes
+						where type.BaseEntityType == entityType
+						select type.Type;
+
+			types = EntityViewControllerResolver.FilterTypes (controllerSubTypeId, types);
+			match = types.FirstOrDefault ();
+
+			if (match != null)
+			{
+				return match;
+			}
+			
+			//	No specific controller was found for the entity type; now search for a controller
+			//	which supports a base type of the given entity (e.g. AbstractContactEntity for a
+			//	MailContactEntity) :
+
+			types = from type in controllerTypes
+					where type.BaseEntityType.IsAssignableFrom (entityType)
+					select type.Type;
+
+			types = EntityViewControllerResolver.FilterTypes (controllerSubTypeId, types);
+			match = types.FirstOrDefault ();
+
+			return match;
+		}
+
+		private static IEnumerable<System.Type> FilterTypes(int controllerSubTypeId, IEnumerable<System.Type> types)
+		{
 			if (controllerSubTypeId < 0)
 			{
-				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Length == 0);
+				return types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Length == 0);
 			}
 			else
 			{
-				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
+				return types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
 			}
-
-			//	Si on n'a rien trouvé et qu'on cherche un controllerSubTypeId précis, on effectue une nouvelle
-			//	recherche moins restrictive. Ceci est nécessaire pour trouver SummaryContactRoleListViewController !
-			//	TODO: C'est une verrue qu'il faudra probablement améliorer.
-
-			if (types.Count () == 0 && controllerSubTypeId >= 0)
-			{
-				types = from type in typeof (EntityViewController).Assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract
-						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
-						select type;
-
-				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
-			}
-
-			return types.FirstOrDefault ();
 		}
 
-		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId)
+		private static System.Type ResolveEntityViewController(System.Type entityType, ViewControllerMode mode, int controllerSubTypeId)
 		{
-			switch (mode)
+			if (mode == ViewControllerMode.None)
 			{
-				case ViewControllerMode.None:
-					return null;
-
-				case ViewControllerMode.Summary:
-				case ViewControllerMode.Edition:
-				case ViewControllerMode.Creation:
-					break;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
+				return null;
 			}
-
-			var type = EntityViewControllerResolver.FindViewControllerType (entity.GetType (), mode, controllerSubTypeId);
-
-			if (type == null)
+			else
 			{
-				if (mode == ViewControllerMode.Creation)
-				{
-					return null;
-				}
-
-				throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
+				return EntityViewControllerResolver.FindViewControllerType (entityType, mode, controllerSubTypeId);
 			}
-
-			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
 	}
 }
