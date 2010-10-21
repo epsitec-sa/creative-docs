@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		}
 
 
-		private System.Action disposeAction;
-		private System.Func<AbstractEntity> entityCreator;
+		private System.Action					disposeAction;
+		private System.Func<AbstractEntity>		entityCreator;
 	}
 }

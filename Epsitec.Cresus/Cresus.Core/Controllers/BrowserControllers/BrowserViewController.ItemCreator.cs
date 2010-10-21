@@ -17,6 +17,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -41,15 +42,25 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				if (controller == null)
 				{
 					//	There is no specific creation controller; therefore, create a real entity,
-					//	then create the user interface to edit it:
+					//	which will add it to the browser list, then make it active (which will in
+					//	turn create the controller needed to view/edit it).
 
 					var realEntity = this.CreateRealEntity ();
 
+#if false
 					controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, this.orchestrator,
 																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
-				}
 
-				this.orchestrator.ShowSubView (null, controller);
+					if (controller == null)
+                    {
+						return;
+                    }
+#endif
+				}
+				else
+				{
+					this.orchestrator.ShowSubView (null, controller);
+				}
 			}
 
 			private EntityViewController CreateCreationEntityViewController()
@@ -64,6 +75,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				if (creator == null)
 				{
+					//	No creation controller could be found: dispose the dummy entity immediately,
+					//	since it is no longer of any use.
+
 					System.Diagnostics.Debug.Assert (controller == null);
 
 					this.DisposeDummyEntity (dummyEntity);
@@ -107,10 +121,36 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private AbstractEntity CreateRealEntity()
 			{
-				var businessContext = this.orchestrator.DefaultBusinessContext;
-				var rootEntityId    = this.GetRootEntityId ();
+				var rootEntityId = this.GetRootEntityId ();
+				
+				CoreData        data    = this.orchestrator.Data;
+				BusinessContext context = data.CreateBusinessContext ();
 
-				return businessContext.CreateEntity (rootEntityId);
+				//	Create a real entity which will immediately be persisted to the database,
+				//	so that it has an entity key. Saving an empty entity would do nothing, so
+				//	we have to mark the entity as the active entity in the business context:
+				
+				var entity = context.CreateEntity (rootEntityId);
+
+				context.SetActiveEntity (entity);
+				context.SaveChanges (EntitySaveMode.IncludeEmptyActive);
+
+				//	Load the new entity in the browser context (in order to pick it up in the
+				//	list) and in the current business context (so that the user can work on it).
+				
+				var businessContext = this.orchestrator.DefaultBusinessContext;
+				var localEntity     = businessContext.GetLocalEntity (entity);
+				var localEntityKey  = businessContext.DataContext.GetNormalizedEntityKey (localEntity);
+				var browserEntity   = this.browser.browserDataContext.ResolveEntity (localEntityKey);
+
+				data.DisposeBusinessContext (context);
+
+				this.browser.UpdateCollectionAfterInsert (browserEntity);
+				this.browser.SetActiveEntityKey (localEntityKey);
+				this.browser.SelectActiveEntity ();
+				this.browser.RefreshScrollList ();
+
+				return localEntity;
 			}
 
 			private Druid GetRootEntityId()

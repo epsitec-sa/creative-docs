@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The entity.</param>
 		/// <returns>The entity, as loaded in the current context.</returns>
 		public T GetLocalEntity<T>(T entity)
-			where T : AbstractEntity, new ()
+			where T : AbstractEntity
 		{
 			if (entity.UnwrapNullEntity () == null)
 			{

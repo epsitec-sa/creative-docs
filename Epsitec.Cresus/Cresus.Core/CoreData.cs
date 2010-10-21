@@ -289,6 +289,10 @@ namespace Epsitec.Cresus.Core
 			return this.businessContextPool.CreateBusinessContext ();
 		}
 
+		public void DisposeBusinessContext(BusinessContext context)
+		{
+			this.businessContextPool.DisposeBusinessContext (context);
+		}
 
 		public AbstractEntity CreateDummyEntity(Druid entityId)
 		{

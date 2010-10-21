@@ -220,17 +220,23 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public void SaveChanges()
+		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
 			if (this.ContainsChanges ())
 			{
-				IEnumerable<AbstractEntity> notYetPersistedEntities = this.dataContext.GetEntities ().Where (x => !this.dataContext.IsPersistent (x));
+				var notYetPersistedEntities = new HashSet<AbstractEntity> (this.dataContext.GetEntities ().Where (x => !this.dataContext.IsPersistent (x)));
 
 				foreach (var entity in notYetPersistedEntities)
 				{
 					this.dataContext.UpdateEmptyEntityStatus (entity, entity.IsEntityEmpty);
 				}
 				
+				if ((entitySaveMode.HasFlag (EntitySaveMode.IncludeEmptyActive)) &&
+					(this.activeEntity != null))
+				{
+					this.dataContext.UpdateEmptyEntityStatus (this.activeEntity, false);
+				}
+
 				this.dataContext.SaveChanges ();
 				this.OnContainsChangesChanged ();
 			}
@@ -242,7 +248,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// database key.
 		/// </summary>
 		/// <typeparam name="T">The entity type.</typeparam>
-		/// <param name="entity">The entity.</param>
+		/// <param name="entity">The entity (or <c>null</c>).</param>
 		/// <returns>The local entity (or a wrapped null entity if <c>entity</c> was <c>null</c>).</returns>
 		public T GetLocalEntity<T>(T entity)
 			where T : AbstractEntity, new ()
@@ -255,16 +261,34 @@ namespace Epsitec.Cresus.Core.Business
 			return this.dataContext.GetLocalEntity (entity);
 		}
 
+		/// <summary>
+		/// Gets the local equivalent of the specified entity: if the entity belongs to another
+		/// data context, then it will have to be mapped to the local data context through its
+		/// database key.
+		/// </summary>
+		/// <param name="entity">The entity (which may not be <c>null</c>).</param>
+		/// <returns>The local entity.</returns>
+		public AbstractEntity GetLocalEntity(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			return this.dataContext.GetLocalEntity (entity);
+		}
+
 
 		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
 		{
 			this.activeNavigationPathElement = navigationPathElement;
 		}
 
-		private void SetActiveEntity(AbstractEntity entity)
+		public void SetActiveEntity(AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.Assert (entity != null);
-
+			System.Diagnostics.Debug.Assert (this.activeEntity == null);
+			
 			this.activeEntity = entity;
 
 			this.Register (entity);
@@ -507,5 +531,12 @@ namespace Epsitec.Cresus.Core.Business
 
 		private AbstractEntity activeEntity;
 		private NavigationPathElement activeNavigationPathElement;
+	}
+	[System.Flags]
+	public enum EntitySaveMode
+	{
+		None = 0,
+
+		IncludeEmptyActive = 0x0001,
 	}
 }
