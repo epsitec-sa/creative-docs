@@ -228,6 +228,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return base.GetToolTipText (element);
 		}
 
+
+		public override List<AbstractObject> FriendObjects
+		{
+			//	Les objets amis sont toutes les connexions qui partent ou arrivent de cet objet.
+			get
+			{
+				var list = new List<AbstractObject> ();
+
+				if (this.attachObject != null)
+				{
+					list.Add (this.attachObject);
+				}
+
+				return list;
+			}
+		}
+
+
 		public override bool MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.

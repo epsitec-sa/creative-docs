@@ -206,6 +206,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					list.Add (obj);
 				}
 
+				if (this.comment != null)
+				{
+					list.Add (this.comment);
+				}
+
+				if (this.info != null)
+				{
+					list.Add (this.info);
+				}
+
 				return list;
 			}
 		}
