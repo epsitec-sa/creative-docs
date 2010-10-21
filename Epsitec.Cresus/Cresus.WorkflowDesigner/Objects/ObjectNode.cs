@@ -513,9 +513,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
-				Rectangle rect = this.bounds;
-				rect.Top = rect.Top+50;
-				rect.Width = 200;
+				Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top+40, 200, 20);
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
@@ -539,9 +537,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.info = new ObjectInfo (this.editor, this.Entity);
 				this.info.AttachObject = this;
 
-				Rectangle rect = this.bounds;
-				rect.Bottom = rect.Top+20;
-				rect.Width = 200;
+				Rectangle rect = new Rectangle (this.bounds.Right+40, this.bounds.Bottom+15, 200, 20);
 				this.info.SetBounds (rect);
 				this.info.UpdateAfterAttachChanged ();
 
@@ -581,8 +577,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				//	Dessine l'ombre.
 				rect = extendedRect;
-				rect.Offset (ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
-				this.DrawRoundShadow (graphics, rect, ObjectNode.frameRadius, (int) ObjectNode.shadowOffset, 0.2);
+				rect.Offset (AbstractObject.shadowOffset, -(AbstractObject.shadowOffset));
+				this.DrawRoundShadow (graphics, rect, ObjectNode.frameRadius, (int) AbstractObject.shadowOffset, 0.2);
 
 				rect = extendedRect;
 				rect.Deflate (0.5);
@@ -608,8 +604,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				rect.Inflate(2);
 			}
-			rect.Offset(ObjectNode.shadowOffset, -(ObjectNode.shadowOffset));
-			this.DrawNodeShadow (graphics, rect, (int) ObjectNode.shadowOffset, 0.2);
+			rect.Offset (AbstractObject.shadowOffset, -(AbstractObject.shadowOffset));
+			this.DrawNodeShadow (graphics, rect, (int) AbstractObject.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre.
 			rect = this.bounds;
@@ -647,7 +643,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.Entity.IsPublic)
 			{
 				var circlePath = new Path ();
-				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius+2.5);
+				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + (this.isRoot ? 4.5 : 2.5));
 
 				Misc.DrawPathDash (graphics, circlePath, 1, 5, 5, false, colorFrame);
 			}
@@ -1062,7 +1058,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		private static readonly double			frameRadius = 25;
-		private static readonly double			shadowOffset = 6;
 		private static readonly double			extendedHeight = 90;
 
 		private bool							isRoot;

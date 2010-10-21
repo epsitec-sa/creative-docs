@@ -162,6 +162,10 @@
     <EmbeddedResource Include="Images\Reset.icon" />
     <EmbeddedResource Include="Images\RadioNo.icon" />
     <EmbeddedResource Include="Images\RadioYes.icon" />
+    <EmbeddedResource Include="Images\CursorHorizontalMove.icon" />
+    <EmbeddedResource Include="Images\CursorMove.icon" />
+    <EmbeddedResource Include="Images\CursorMoveOrEdit.icon" />
+    <EmbeddedResource Include="Images\CursorVerticalMove.icon" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

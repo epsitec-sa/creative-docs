@@ -521,6 +521,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double		arrowAngle = 25;
 		protected static readonly double		commentMinWidth = 50;
 		protected static readonly double		infoMinWidth = 50;
+		protected static readonly double		shadowOffset = 6;
 
 		protected readonly Editor				editor;
 		protected readonly AbstractEntity		entity;

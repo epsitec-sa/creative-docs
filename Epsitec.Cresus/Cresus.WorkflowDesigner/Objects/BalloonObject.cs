@@ -125,8 +125,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect = Rectangle.Union (rect, rh);
 			}
 			rect.Inflate (2);
-			rect.Offset (8, -8);
-			this.DrawRoundShadow (graphics, rect, 8, 8, 0.2);
+			rect.Offset (AbstractObject.shadowOffset, -AbstractObject.shadowOffset);
+			this.DrawRoundShadow (graphics, rect, 4, (int) AbstractObject.shadowOffset, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)

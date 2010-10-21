@@ -39,6 +39,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			Finger,
 			Grid,
 			Move,
+			MoveOrEdit,
+			HorizontalMove,
+			VerticalMove,
 			Hand,
 			IBeam,
 			Locate,
@@ -833,7 +836,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						if (this.LinkableObjectsCount > 1)
 						{
-							type = MouseCursorType.Move;
+							type = MouseCursorType.MoveOrEdit;
 						}
 						else
 						{
@@ -865,7 +868,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					else if (this.hilitedObject.HilitedElement >= ActiveElement.InfoLine1 &&
 							 this.hilitedObject.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 					{
-						type = MouseCursorType.Move;
+						type = MouseCursorType.VerticalMove;
 					}
 					else
 					{
@@ -1423,7 +1426,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					break;
 
 				case MouseCursorType.Move:
-					this.MouseCursor = MouseCursor.AsSizeAll;
+					this.SetMouseCursorImage (ref this.mouseCursorMove, Misc.Icon ("CursorMove"));
+					break;
+
+				case MouseCursorType.MoveOrEdit:
+					this.SetMouseCursorImage (ref this.mouseCursorMoveOrEdit, Misc.Icon ("CursorMoveOrEdit"));
+					break;
+
+				case MouseCursorType.HorizontalMove:
+					this.SetMouseCursorImage (ref this.mouseCursorHorizontalMove, Misc.Icon ("CursorHorizontalMove"));
+					break;
+
+				case MouseCursorType.VerticalMove:
+					this.SetMouseCursorImage (ref this.mouseCursorVerticalMove, Misc.Icon ("CursorVerticalMove"));
 					break;
 
 				case MouseCursorType.Hand:
@@ -1431,7 +1446,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					break;
 
 				case MouseCursorType.IBeam:
-					this.MouseCursor = MouseCursor.AsIBeam;
+					this.SetMouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
 					break;
 
 				case MouseCursorType.Locate:
@@ -1578,6 +1593,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private MouseCursorType					lastCursor = MouseCursorType.Unknown;
 		private Image							mouseCursorFinger;
 		private Image							mouseCursorHand;
+		private Image							mouseCursorEdit;
+		private Image							mouseCursorMove;
+		private Image							mouseCursorMoveOrEdit;
+		private Image							mouseCursorHorizontalMove;
+		private Image							mouseCursorVerticalMove;
 		private Image							mouseCursorGrid;
 		private Image							mouseCursorLocate;
 		private VScroller						vscroller;
