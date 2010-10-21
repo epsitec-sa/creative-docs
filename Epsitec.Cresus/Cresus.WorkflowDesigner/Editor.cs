@@ -63,8 +63,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			this.nodes    = new List<ObjectNode> ();
 			this.edges    = new List<ObjectEdge> ();
-			this.comments = new List<ObjectComment> ();
-			this.infos    = new List<ObjectInfo> ();
+			this.balloons = new List<BalloonObject> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
@@ -264,26 +263,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.edges.Add (edge);
 		}
 
-		public void AddComment(ObjectComment comment)
+		public void AddBalloon(BalloonObject balloon)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
-			this.comments.Add (comment);
+			this.balloons.Add (balloon);
 		}
 
-		public void AddInfo(ObjectInfo info)
+		public void RemoveBalloon(BalloonObject balloon)
 		{
-			//	Ajoute une nouvelle information dans l'éditeur.
-			this.infos.Add (info);
-		}
-
-		public void RemoveComment(ObjectComment comment)
-		{
-			this.comments.Remove (comment);
-		}
-
-		public void RemoveInfo(ObjectInfo info)
-		{
-			this.infos.Remove (info);
+			this.balloons.Remove (balloon);
 		}
 
 
@@ -305,8 +293,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.nodes.Clear ();
 			this.edges.Clear ();
-			this.comments.Clear ();
-			this.infos.Clear ();
+			this.balloons.Clear ();
 			this.LockObject(null);
 		}
 
@@ -432,6 +419,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateObjects ();
 			this.UpdateLinks ();
 			this.RedimArea ();
+			this.UpdateLinks ();
 		}
 
 		public void UpdateAfterCommentChanged()
@@ -439,9 +427,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Appelé lorsqu'un commentaire ou une information a changé.
 			this.UpdateObjects ();
 			this.RedimArea ();
-
-			this.UpdateLinks();
+			this.UpdateLinks ();
 			this.RedimArea();
+			this.UpdateLinks ();
 		}
 
 		public void UpdateAfterGeometryChanged(LinkableObject node)
@@ -450,9 +438,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateObjects ();
 			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
 			this.RedimArea ();
-
 			this.UpdateLinks ();
 			this.RedimArea ();
+			this.UpdateLinks ();
 		}
 
 		public void UpdateObjects()
@@ -1248,12 +1236,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					yield return obj;
 				}
 
-				foreach (var obj in this.comments)
-				{
-					yield return obj;
-				}
-
-				foreach (var obj in this.infos)
+				foreach (var obj in this.balloons)
 				{
 					yield return obj;
 				}
@@ -1578,8 +1561,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private WorkflowDefinitionEntity		workflowDefinitionEntity;
 		private List<ObjectNode>				nodes;
 		private List<ObjectEdge>				edges;
-		private List<ObjectComment>				comments;
-		private List<ObjectInfo>				infos;
+		private List<BalloonObject>				balloons;
 		private ObjectCartridge					cartridge;
 
 		private Size							areaSize;
