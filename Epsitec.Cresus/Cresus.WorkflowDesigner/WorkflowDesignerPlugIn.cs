@@ -80,13 +80,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (e.Command == ApplicationCommands.New)
 				{
-					var entity = this.orchestrator.DefaultBusinessContext.CreateEntity<WorkflowDefinitionEntity> ();
+//                    var entity = this.orchestrator.DefaultBusinessContext.CreateEntity<WorkflowDefinitionEntity> ();
 					
-					this.orchestrator.DefaultBusinessContext.SaveChanges ();
-//-					this.orchestrator.MainViewController.BrowserViewController.SelectActiveEntity (entity);
+//                    this.orchestrator.DefaultBusinessContext.SaveChanges ();
+////-					this.orchestrator.MainViewController.BrowserViewController.SelectActiveEntity (entity);
 					
-					e.Cancel = true;
-				}
+//                    e.Cancel = true;
+                }
 			}
 		}
 

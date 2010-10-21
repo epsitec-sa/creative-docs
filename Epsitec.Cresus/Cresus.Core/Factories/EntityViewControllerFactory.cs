@@ -45,7 +45,10 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <param name="navigationPathElement">The navigation path element.</param>
 		/// <returns>The <see cref="EntityViewController"/> if one could be found.</returns>
 		/// <exception cref="System.InvalidOperationException">Throws <see cref="System.InvalidOperationException"/> if no controller could be found.</exception>
-		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1, NavigationPathElement navigationPathElement = null)
+		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator,
+			int                   controllerSubTypeId   = -1,
+			NavigationPathElement navigationPathElement = null,
+			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
 		{
 			if (entity == null)
 			{
@@ -58,12 +61,13 @@ namespace Epsitec.Cresus.Core.Factories
 			{
 				Orchestrator = orchestrator,
 				Mode = mode,
+				ControllerSubTypeId = controllerSubTypeId,
 				NavigationPathElement = navigationPathElement,
 			};
 
 			try
 			{
-				return EntityViewControllerResolver.Resolve (orchestrator, name, entity, mode, controllerSubTypeId, navigationPathElement);
+				return EntityViewControllerResolver.Resolve (name, entity, mode, controllerSubTypeId, resolutionMode);
 			}
 			finally
 			{
@@ -88,6 +92,12 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public ViewControllerMode			Mode
+			{
+				get;
+				set;
+			}
+
+			public int							ControllerSubTypeId
 			{
 				get;
 				set;

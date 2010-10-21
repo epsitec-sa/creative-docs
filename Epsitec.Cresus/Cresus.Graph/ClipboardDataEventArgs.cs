@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Graph
 	/// The <c>ClipboardDataEventArgs</c> class represents the data stored in the
 	/// clipboard, associated with a <c>ClipboardDataChanged</c> event.
 	/// </summary>
-	public class ClipboardDataEventArgs
+	public class ClipboardDataEventArgs : EventArgs
 	{
 		public ClipboardDataEventArgs(string text)
 		{

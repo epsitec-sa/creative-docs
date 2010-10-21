@@ -44,8 +44,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	then create the user interface to edit it:
 
 					var realEntity = this.CreateRealEntity ();
-					
-					controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, this.orchestrator);
+
+					controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, this.orchestrator,
+																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
 				}
 
 				this.orchestrator.ShowSubView (null, controller);
@@ -57,7 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				System.Diagnostics.Debug.Assert (dummyEntity != null);
 
-				var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, this.orchestrator);
+				var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, this.orchestrator,
+																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
 				var creator    = controller as ICreationController;
 
 				if (creator == null)
@@ -124,6 +126,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					case "Documents":
 					case "InvoiceDocuments":
 						return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
+
+					case "WorkflowDefinitions":
+						return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();
 				}
 
 				throw new System.NotImplementedException ();
