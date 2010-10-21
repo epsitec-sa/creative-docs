@@ -295,6 +295,14 @@ namespace Epsitec.Cresus.Core
 			return this.independentEntityContext.CreateEmptyEntity (entityId);
 		}
 
+		public void DisposeDummyEntity(AbstractEntity entity)
+		{
+			System.Diagnostics.Debug.Assert (this.IsDummyEntity (entity));
+
+			//	Nothing to do -- the entity is not referenced by the entity context; it will
+			//	simply be garbage collected.
+		}
+
 		public bool IsDummyEntity(AbstractEntity entity)
 		{
 			if (entity == null)

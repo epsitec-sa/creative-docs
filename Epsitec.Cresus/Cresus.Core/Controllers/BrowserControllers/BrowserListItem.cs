@@ -1,13 +1,11 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.DataLayer;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -24,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		public EntityKey EntityKey
+		public EntityKey						EntityKey
 		{
 			get
 			{
@@ -32,7 +30,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public AbstractEntity Entity
+		public Epsitec.Cresus.Database.DbKey	RowKey
+		{
+			get
+			{
+				return this.EntityKey.RowKey;
+			}
+		}
+
+		public AbstractEntity					Entity
 		{
 			get
 			{
@@ -40,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public FormattedText DisplayText
+		public FormattedText					DisplayText
 		{
 			get
 			{
@@ -69,8 +75,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private readonly BrowserList list;
-		private readonly AbstractEntity entity;
-		private FormattedText? text;
+		private readonly BrowserList			list;
+		private readonly AbstractEntity			entity;
+		private FormattedText?					text;
 	}
 }

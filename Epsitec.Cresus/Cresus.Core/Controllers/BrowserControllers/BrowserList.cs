@@ -1,15 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -21,11 +15,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	{
 		public BrowserList(DataContext context)
 		{
-			this.list = new List<BrowserListItem> ();
+			this.list    = new List<BrowserListItem> ();
 			this.context = context;
 		}
 
-		public int Count
+		
+		public int								Count
 		{
 			get
 			{
@@ -33,10 +28,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
 		public void DefineEntities(IEnumerable<AbstractEntity> entities)
 		{
 			this.list.Clear ();
 			this.list.AddRange (entities.Select (x => new BrowserListItem (this, x)));
+		}
+
+		public void Insert(AbstractEntity entity)
+		{
+			this.list.Add (new BrowserListItem (this, entity));
 		}
 
 		public void Invalidate()
@@ -67,9 +68,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			var rowKey = key.Value.RowKey;
 
-			return this.list.FindIndex (x => x.EntityKey.RowKey == rowKey);
+			return this.list.FindIndex (x => x.RowKey == rowKey);
 		}
 
+		
 		internal FormattedText GenerateEntityDisplayText(AbstractEntity entity)
 		{
 			if (entity == null)
@@ -81,7 +83,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return entity.GetCompactSummary ();
 			}
 		}
-
 
         internal EntityKey GetEntityKey(AbstractEntity entity)
 		{
@@ -114,8 +115,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 		
-		private readonly List<BrowserListItem> list;
-		private readonly DataContext context;
 
 		#region IEnumerable<BrowserListItem> Members
 
@@ -134,5 +133,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		#endregion
+		
+		private readonly List<BrowserListItem>	list;
+		private readonly DataContext			context;
 	}
 }
