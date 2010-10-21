@@ -701,9 +701,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
-				Rectangle rect = this.bounds;
-				rect.Top = rect.Top+50;
-				rect.Width = System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth);
+				Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top+40, System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth), 20);
 				this.comment.SetBounds (rect);
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
@@ -739,8 +737,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				//	Dessine l'ombre.
 				rect = extendedRect;
-				rect.Offset (ObjectEdge.shadowOffset, -(ObjectEdge.shadowOffset));
-				this.DrawRoundShadow (graphics, rect, ObjectEdge.frameSize.Height/2, (int) ObjectEdge.shadowOffset, 0.2);
+				rect.Offset (AbstractObject.shadowOffset, -(AbstractObject.shadowOffset));
+				this.DrawRoundShadow (graphics, rect, ObjectEdge.frameSize.Height/2, (int) AbstractObject.shadowOffset, 0.2);
 
 				rect = extendedRect;
 				rect.Deflate (0.5);
@@ -762,8 +760,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
-			rect.Offset (ObjectEdge.shadowOffset, -(ObjectEdge.shadowOffset));
-			this.DrawEdgeShadow (graphics, rect, (int) ObjectEdge.shadowOffset, 0.2);
+			rect.Offset (AbstractObject.shadowOffset, -(AbstractObject.shadowOffset));
+			this.DrawEdgeShadow (graphics, rect, (int) AbstractObject.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre.
 			rect = this.bounds;
@@ -1213,7 +1211,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public static readonly Size				frameSize = new Size (200, 36);
 		private static readonly double			extendedHeight = 80;
-		private static readonly double			shadowOffset = 6;
 
 		private string							titleString;
 		private TextLayout						title;

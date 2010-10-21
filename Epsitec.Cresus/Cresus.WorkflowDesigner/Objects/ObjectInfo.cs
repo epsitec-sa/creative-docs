@@ -281,12 +281,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
-			Color colorLine = this.colorFactory.GetColor (0.9);
-			if (dragging)
-			{
-				colorLine = this.colorFactory.GetColorMain (0.3);
-			}
-
 			//	Dessine les lignes.
 			if (this.Node != null)
 			{
@@ -311,7 +305,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					if (i < lineCount-1)
 					{
 						graphics.AddLine (rect.Left+1, rect.Bottom-0.5, rect.Right-1, rect.Bottom-0.5);
-						graphics.RenderSolid (colorLine);
+						graphics.RenderSolid (this.colorFactory.GetColor (1));
 					}
 
 					rect.Deflate (10, 0);
