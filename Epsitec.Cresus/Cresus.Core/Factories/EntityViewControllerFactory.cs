@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Factories
 				return null;
 			}
 
+			System.Diagnostics.Debug.Assert (EntityViewControllerFactory.defaults == null);
+
 			EntityViewControllerFactory.defaults = new DefaultSettings
 			{
 				Orchestrator = orchestrator,
@@ -59,25 +61,14 @@ namespace Epsitec.Cresus.Core.Factories
 				NavigationPathElement = navigationPathElement,
 			};
 
-			EntityViewController controller;
-
 			try
 			{
-				controller = EntityViewControllerResolver.Resolve (orchestrator, name, entity, mode, controllerSubTypeId, navigationPathElement);
+				return EntityViewControllerResolver.Resolve (orchestrator, name, entity, mode, controllerSubTypeId, navigationPathElement);
 			}
 			finally
 			{
+				//	Don't forget to clear the defaults before leaving:
 				EntityViewControllerFactory.defaults = null;
-			}
-
-			if ((controller == null) &&
-				(mode == ViewControllerMode.Creation))
-			{
-				return EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Summary, orchestrator, controllerSubTypeId, navigationPathElement);
-			}
-			else
-			{
-				return controller;
 			}
 		}
 

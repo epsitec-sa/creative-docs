@@ -307,19 +307,22 @@ namespace Epsitec.Cresus.Core.Business
 
 		public AbstractEntity CreateEntity(Druid entityType)
 		{
-			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntity (entityType));
+			var newEntity = this.DataContext.CreateEntity (entityType);
+			return this.ApplyRules (RuleType.Setup, newEntity);
 		}
-		
+
 		public T CreateEntity<T>()
 			where T : AbstractEntity, new ()
 		{
-			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntity<T> ());
+			T newEntity = this.DataContext.CreateEntity<T> ();
+			return this.ApplyRules (RuleType.Setup, newEntity);
 		}
 
 		public T CreateEntityAndRegisterAsEmpty<T>()
 			where T : AbstractEntity, new ()
 		{
-			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntityAndRegisterAsEmpty<T> ());
+			T newEntity = this.DataContext.CreateEntityAndRegisterAsEmpty<T> ();
+			return this.ApplyRules (RuleType.Setup, newEntity);
 		}
 
 		public bool ArchiveEntity<T>(T entity)

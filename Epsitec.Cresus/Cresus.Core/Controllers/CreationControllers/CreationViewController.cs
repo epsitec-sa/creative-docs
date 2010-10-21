@@ -29,7 +29,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#region ICreationController Members
 
-		/* no member */
+		void ICreationController.RegisterDisposeAction(System.Action disposeAction)
+		{
+			this.disposeAction = disposeAction;
+		}
+
+		void ICreationController.RegisterEntityCreator(System.Func<AbstractEntity> entityCreator)
+		{
+			this.entityCreator = entityCreator;
+		}
 
 		#endregion
 
@@ -41,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 			System.Diagnostics.Debug.Assert (business != null);
 
-			var entity = business.CreateEntity<T> ();
+			T entity = this.CreateEntity (business);
 
 			if (initializer != null)
 			{
@@ -49,6 +57,35 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 
 			this.UpgradeController (entity);
+		}
+
+		private T CreateEntity(BusinessContext business)
+		{
+			T entity;
+
+			if (this.entityCreator != null)
+			{
+				entity = this.entityCreator () as T;
+			}
+			else
+			{
+				entity = business.CreateEntity<T> ();
+			}
+			
+			return entity;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.disposeAction != null)
+				{
+					this.disposeAction ();
+				}
+			}
+
+			base.Dispose (disposing);
 		}
 
 		private void UpgradeController(T entity)
@@ -63,5 +100,9 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 			return EntityViewControllerFactory.Create (this.Name, entity, ViewControllerMode.Summary, this.Orchestrator);
 		}
+
+
+		private System.Action disposeAction;
+		private System.Func<AbstractEntity> entityCreator;
 	}
 }

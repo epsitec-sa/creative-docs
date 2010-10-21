@@ -33,6 +33,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			base.CreateUI (container);
 
+			this.CreateCommandInfrastructure (container);
+			this.CreateUINewItemIconButton (container);
+		}
+
+		private void CreateCommandInfrastructure(Widget container)
+		{
 			this.commandDispatcher = new CommandDispatcher ("BrowserSettings", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.AutoForwardCommands = true;
 
@@ -41,9 +47,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			CommandDispatcher.SetDispatcher (container, this.commandDispatcher);
 			CommandContext.SetContext (container, this.commandContext);
 
-			this.commandDispatcher.Register (ApplicationCommands.New, this.ExecuteNewCommand);
+			this.RegisterCommandHandlers ();
+		}
 
-			this.CreateUINewItemIconButton (container);
+		private void RegisterCommandHandlers()
+		{
+			this.commandDispatcher.Register (ApplicationCommands.New, this.ExecuteNewCommand);
 		}
 
 		private void CreateUINewItemIconButton(Widget container)
@@ -68,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void ExecuteNewCommand(object sender, CommandEventArgs e)
 		{
-			this.browser.CreateNewItem ();
+			this.browser.StartCreateNewItemInteraction ();
 		}
 
 		private void UpdateNewItemIconButton()

@@ -19,7 +19,7 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public sealed class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
+	public sealed partial class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
 		public BrowserViewController(Orchestrators.DataViewOrchestrator orchestrator)
 			: base ("Browser", orchestrator)
@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.data = orchestrator.Data;
 		}
 
-		
-		public FrameBox							SettingsPanel
+
+		public FrameBox SettingsPanel
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public string							DataSetName
+		public string DataSetName
 		{
 			get
 			{
@@ -60,7 +60,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public bool SelectActiveEntity()
+
+		private bool SelectActiveEntity()
 		{
 			this.Orchestrator.ClearActiveEntity ();
 
@@ -79,49 +80,31 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public void CreateNewItem()
+#if false
+		public bool SelectActiveEntity(AbstractEntity entity)
 		{
-			var dummyEntity  = this.CreateDummyEntity ();
-			var orchestrator = this.Orchestrator;
-			
-//-			orchestrator.CloseSubViews ();
-//-			orchestrator.ClearBusinessContext ();
-			orchestrator.ClearActiveEntity ();
+			var entityCtx = DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
+			var entityKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (entity);
 
-			System.Diagnostics.Debug.Assert (dummyEntity != null);
-
-			var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, orchestrator);
-
-			if (controller is ICreationController)
+			if (entityKey.HasValue)
 			{
-				//	OK, we have really been able to create a specific creation controller, which
-				//	will be used to bootstrap the entity creation...
+				this.SetActiveEntityKey (entityKey.Value);
+				this.RefreshScrollList ();
+
+				return this.SelectActiveEntity ();
 			}
 			else
 			{
-				controller.Dispose ();
-
-				//	Create the real entity, then re-create the user interface to edit it:
-
-				var realEntity = this.CreateRealEntity ();
-				controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, orchestrator);
+				return false;
 			}
-
-			orchestrator.ShowSubView (null, controller);
 		}
+#endif
 
-		public AbstractEntity GetActiveEntity(DataContext context)
+		public void StartCreateNewItemInteraction()
 		{
-			if (this.activeEntityKey.HasValue)
-			{
-				return context.ResolveEntity (this.activeEntityKey);
-			}
-			else
-			{
-				return null;
-			}
+			var creator = new BrowserViewController.ItemCreator (this);
+			creator.StartCreateNewItemInteraction ();
 		}
-
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
@@ -169,7 +152,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void CreateBrowserDataContext()
 		{
 			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
-			this.collection  = new BrowserList (this.browserDataContext);
+			this.collection         = new BrowserList (this.browserDataContext);
 
 			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
@@ -204,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.NotifySelectedItemChange ();
 			}
 		}
-		
+
 		private void SelectContentsBasedOnDataSet()
 		{
 			switch (this.dataSetName)
@@ -232,35 +215,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private AbstractEntity CreateDummyEntity()
-		{
-			return this.data.CreateDummyEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
-		}
-
-		private AbstractEntity CreateRealEntity()
-		{
-			var businessContext = this.Orchestrator.DefaultBusinessContext;
-			return businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
-		}
-
-		private static Druid GetRootEntityId(string dataSetName)
-		{
-			switch (dataSetName)
-			{
-				case "Customers":
-					return EntityInfo<RelationEntity>.GetTypeId ();
-
-				case "ArticleDefinitions":
-					return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
-
-				case "Documents":
-				case "InvoiceDocuments":
-					return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
-			}
-
-			throw new System.NotImplementedException ();
-		}
-	
 		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
@@ -286,16 +240,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return this.collectionGetter (this.browserDataContext).ToArray ();
 			}
 		}
-		
+
 		private void UpdateCollection()
 		{
-			if (this.collectionGetter != null)
+			if (this.collectionGetter == null)
 			{
-				this.collection.DefineEntities (this.GetCollectionEntities ());
-				this.RefreshScrollList (reset: true);
+				return;
 			}
+
+			this.collection.DefineEntities (this.GetCollectionEntities ());
+			this.RefreshScrollList (reset: true);
 		}
-		
+
+		private void UpdateCollectionAfterInsert(AbstractEntity entity)
+		{
+			this.collection.Insert (entity);
+			this.RefreshScrollList (reset: true);
+		}
+
 		private void NotifySelectedItemChange()
 		{
 			int active    = this.scrollList.SelectedItemIndex;
@@ -316,7 +278,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.OnCurrentChanged ();
 			}
 		}
-		
+
 		private void OnCurrentChanged()
 		{
 			var handler = this.CurrentChanged;
@@ -351,7 +313,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				handler (this);
 			}
 		}
-		
+
 		private void RefreshScrollList(bool reset = false)
 		{
 			if ((this.scrollList != null) &&
@@ -393,51 +355,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		#endregion
 
-		#region BrowserNavigationPathElement Class
-
-		private class BrowserNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
-		{
-			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
-			{
-				this.dataSetName = controller.DataSetName;
-				this.entityKey   = entityKey;
-			}
-
-			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
-			{
-				var browserViewController = navigator.BrowserViewController;
-
-				browserViewController.SelectDataSet (this.dataSetName);
-				browserViewController.SetActiveEntityKey (this.entityKey);
-				browserViewController.RefreshScrollList ();
-				
-				return browserViewController.SelectActiveEntity ();
-			}
-
-			public override string ToString()
-			{
-				return string.Concat ("<Browser:", this.dataSetName, ":", this.entityKey.RowKey.ToString (), ">");
-			}
-
-
-			private readonly string dataSetName;
-			private readonly EntityKey entityKey;
-		}
-
-		#endregion
-
 
 		public event EventHandler				DataSetSelected;
 
-		private readonly CoreData data;
-		private BrowserList collection;
-		private string dataSetName;
-		private DataContext browserDataContext;
-		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
-		private int suspendUpdates;
+		private readonly CoreData				data;
+		private BrowserList						collection;
+		private string							dataSetName;
+		private DataContext						browserDataContext;
 
-		private ScrollList scrollList;
-		private EntityKey? activeEntityKey;
-		private FrameBox settingsPanel;
+		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
+		private int								suspendUpdates;
+
+		private ScrollList						scrollList;
+		private EntityKey?						activeEntityKey;
+		private FrameBox						settingsPanel;
 	}
 }
