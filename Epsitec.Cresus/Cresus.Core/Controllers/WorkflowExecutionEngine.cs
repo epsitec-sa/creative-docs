@@ -1,6 +1,8 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -9,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class WorkflowExecutionEngine
+	public sealed class WorkflowExecutionEngine : System.IDisposable, IIsDisposed
 	{
 		public WorkflowExecutionEngine(WorkflowController controller, WorkflowEdge edge)
 		{
@@ -58,6 +60,27 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.isDisposed = true;
+		}
+
+		#endregion
+		
+		#region IIsDisposed Members
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
+		
 		private void ExecuteInContext()
 		{
 			if (this.FollowWorkflowEdge ())
@@ -108,5 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly WorkflowEdge edge;
 		private readonly WorkflowController controller;
+
+		private bool isDisposed;
 	}
 }

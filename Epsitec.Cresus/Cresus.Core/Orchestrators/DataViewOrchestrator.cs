@@ -32,12 +32,17 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="mainViewController">The main view controller.</param>
 		public DataViewOrchestrator(CoreData data, CommandContext commandContext)
 		{
-			this.data = data;
-			this.commandContext = commandContext;
-			this.workflowController = new WorkflowController (this);
+			this.data               = data;
+			this.commandContext     = commandContext;
+
+			this.CreateNewBusinessContext ();
+
 			this.mainViewController = new MainViewController (this, commandContext);
 			this.dataViewController = new DataViewController (this);
-			this.navigator = new NavigationOrchestrator (this.mainViewController);
+			this.navigator          = new NavigationOrchestrator (this.mainViewController);
+			this.workflowController = new WorkflowController (this);
+
+			this.workflowController.AttachBusinessContext (this.businessContext);
 		}
 
 
@@ -256,10 +261,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 					oldContext.ContainsChangesChanged -= this.HandleBusinessContextContainsChangesChanged;
 					this.workflowController.DetachBusinessContext (oldContext);
 				}
+				
 				if (newContext != null)
 				{
 					newContext.ContainsChangesChanged += this.HandleBusinessContextContainsChangesChanged;
-					this.workflowController.AttachBusinessContext (newContext);
+
+					if (this.workflowController == null)
+					{
+						//	Happens only while the DataViewOrchestrator is executing its constructor; we
+						//	will manually attach the business context in the constructor.
+					}
+					else
+					{
+						this.workflowController.AttachBusinessContext (newContext);
+					}
 				}
 
 				this.UpdateBusinessContextContainsChanges ();
