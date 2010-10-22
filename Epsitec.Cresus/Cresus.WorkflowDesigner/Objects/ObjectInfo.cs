@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			this.initialPos = pos;
+			base.MouseDown (message, pos);
 
 			if (this.hilitedElement == ActiveElement.InfoMove)
 			{
@@ -144,6 +144,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			base.MouseUp (message, pos);
+
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;

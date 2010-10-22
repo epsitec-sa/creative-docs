@@ -292,6 +292,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
+			if (this.isMouseDown && !this.isDragging && pos != this.initialPos)
+			{
+				this.isDragging = true;
+				this.UpdateButtonsState ();
+				this.draggingOffset = this.initialPos-this.bounds.BottomLeft;
+				this.editor.Invalidate ();
+				this.editor.LockObject (this);
+			}
+
 			if (this.isDragging)
 			{
 				this.DraggingMouseMove (pos);
@@ -305,8 +314,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
-
-			this.initialPos = pos;
 
 			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.LinkableObjectsCount > 1)
 			{
@@ -1064,7 +1071,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						title;
 
 		private bool							isDragging;
-		private Point							initialPos;
 
 		private AbstractTextField				editingTextField;
 	}

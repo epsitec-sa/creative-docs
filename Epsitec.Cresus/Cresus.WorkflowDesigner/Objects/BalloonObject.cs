@@ -846,7 +846,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected AbstractObject				attachObject;
 		protected TextLayout					textLayoutTitle;
 
-		protected Point							initialPos;
 		protected bool							isDraggingMove;
 		protected bool							isDraggingWidth;
 		protected bool							isDraggingAttach;
