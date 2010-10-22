@@ -13,10 +13,11 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public sealed class WorkflowExecutionEngine : System.IDisposable, IIsDisposed
 	{
-		public WorkflowExecutionEngine(WorkflowController controller, WorkflowEdge edge)
+		public WorkflowExecutionEngine(WorkflowController controller, WorkflowTransition transition)
 		{
 			this.controller = controller;
-			this.edge = edge;
+			this.transition = transition;
+			this.data       = this.controller.Data;
 		}
 
 		public static WorkflowExecutionEngine Current
@@ -28,11 +29,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public WorkflowEdge Edge
+		public WorkflowTransition Transition
 		{
 			get
 			{
-				return this.edge;
+				return this.transition;
 			}
 		}
 
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
-		
+
 		#region IIsDisposed Members
 
 		public bool IsDisposed
@@ -80,24 +81,107 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
-		
+
 		private void ExecuteInContext()
 		{
 			if (this.FollowWorkflowEdge ())
 			{
-				WorkflowEdgeEntity edge = this.edge.Edge;
+				WorkflowEdgeEntity edge = this.transition.Edge;
+
 				System.Diagnostics.Debug.WriteLine ("Executed " + edge.TransitionAction);
 			}
 		}
 
 		private bool FollowWorkflowEdge()
 		{
-			return WorkflowExecutionEngine.FollowThreadWorkflowEdge (this.controller.Data, this.edge.Thread, this.edge.Edge);
+			WorkflowThreadEntity thread = this.transition.Thread;
+			WorkflowEdgeEntity   edge   = this.transition.Edge;
+
+			Queue<WorkflowEdgeEntity> edges = new Queue<WorkflowEdgeEntity> ();
+			edges.Enqueue (edge);
+
+			int iterationCount = 0;
+
+			while (edges.Count > 0)
+			{
+				if (this.FollowThreadWorkflowEdge (thread, edges) == false)
+				{
+					//	Could not lock ... catastrophic failure !
+					
+					throw new System.Exception ("Fatal error: could not follow workflow edge and store the target into the database");
+				}
+
+				if (iterationCount++ > 100)
+				{
+					throw new System.Exception ("Fatal error: malformed workflow produces too many transitions at once");
+				}
+			}
+
+			return true;
 		}
 
-		private static bool FollowThreadWorkflowEdge(CoreData data, WorkflowThreadEntity thread, WorkflowEdgeEntity edge)
+		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<WorkflowEdgeEntity> edges)
 		{
-			using (var bc = data.CreateBusinessContext ())
+			var edge = edges.Dequeue ();
+
+			switch (edge.TransitionType)
+            {
+				case WorkflowTransitionType.Default:
+					break;
+				
+				case WorkflowTransitionType.Call:
+					break;
+				
+				case WorkflowTransitionType.Fork:
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
+            }
+
+			if (this.SaveStepIntoThreadHistory (thread, edge, edge.NextNode) == false)
+			{
+				return false;
+			}
+			
+			WorkflowNodeEntity node = edge.NextNode;
+				
+			if ((node == null) ||
+				(node.Edges.Count == 0))
+			{
+				//	Reached the end of the workflow. Can we "pop" an edge from the call
+				//	stack ?
+
+				int lastIndex = thread.CallGraph.Count - 1;
+
+				if (lastIndex >= 0)
+				{
+					this.SaveStepIntoThreadHistory (thread, null, thread.CallGraph[lastIndex].ReturnNode);
+					
+					thread.CallGraph.RemoveAt (lastIndex);
+				}
+			}
+			else if (node.IsAuto)
+			{
+				var standardEdges = node.Edges.Where (x => x.TransitionType == WorkflowTransitionType.Default || x.TransitionType == WorkflowTransitionType.Call).ToList ();
+
+				if (standardEdges.Count > 1)
+                {
+					throw new System.NotSupportedException ("Auto-node cannot have more than one standard edge");
+                }
+
+				foreach (var autoNode in node.Edges)
+				{
+					edges.Enqueue (autoNode);
+				}
+			}
+
+			return true;
+		}
+
+		private bool SaveStepIntoThreadHistory(WorkflowThreadEntity thread, WorkflowEdgeEntity edge, WorkflowNodeEntity node)
+		{
+			using (var bc = this.data.CreateBusinessContext ())
 			{
 				var threadKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (thread);
 
@@ -111,6 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					var step = bc.CreateEntity<WorkflowStepEntity> ();
 
 					step.Edge  = edge;
+					step.Node  = node;
 					step.Date  = System.DateTime.UtcNow;
 					step.User  = null; // TODO: ...
 					step.Owner = null; // TODO: ...
@@ -118,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					step.RelationPerson  = null; // TODO: ...
 
 					thread.History.Add (step);
-					
+
 					return true;
 				}
 			}
@@ -129,8 +214,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		[System.ThreadStatic]
 		private static WorkflowExecutionEngine current;
 
-		private readonly WorkflowEdge edge;
+		private readonly WorkflowTransition transition;
 		private readonly WorkflowController controller;
+		private readonly CoreData			data;
 
 		private bool isDisposed;
 	}

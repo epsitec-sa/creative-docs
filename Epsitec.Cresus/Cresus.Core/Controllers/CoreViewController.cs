@@ -43,8 +43,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			this.businessContext = this.orchestrator.DefaultBusinessContext;
-			
-//-			System.Diagnostics.Debug.Assert (this.BusinessContext != null);
 		}
 
 

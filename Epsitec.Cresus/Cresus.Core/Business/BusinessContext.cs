@@ -90,7 +90,6 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		
 		#region IIsDisposed Members
 		
 		public bool IsDisposed
@@ -542,32 +541,25 @@ namespace Epsitec.Cresus.Core.Business
             }
 		}
 
-        public event EventHandler<CancelEventArgs> SavingChanges;
-		public event EventHandler ContainsChangesChanged;
-		public event EventHandler MasterEntitiesChanged;
+        public event EventHandler<CancelEventArgs>	SavingChanges;
+		public event EventHandler					ContainsChangesChanged;
+		public event EventHandler					MasterEntitiesChanged;
 
-		private static int nextUniqueId;
+		private static int						nextUniqueId;
 
-		private readonly BusinessContextPool pool;
-		private readonly DataContext dataContext;
-		private readonly List<EntityRecord> entityRecords;
-		private readonly List<AbstractEntity> masterEntities;
-		private readonly CoreDataLocker locker;
+		private readonly BusinessContextPool	pool;
+		private readonly DataContext			dataContext;
+		private readonly List<EntityRecord>		entityRecords;
+		private readonly List<AbstractEntity>	masterEntities;
+		private readonly CoreDataLocker			locker;
 
-		private int dataChangedCounter;
-		private bool dataContextDirty;
-		private bool dataContextDiscarded;
-		private bool isDisposed;
-		private CoreDataLockTransaction lockTransaction;
+		private int								dataChangedCounter;
+		private bool							dataContextDirty;
+		private bool							dataContextDiscarded;
+		private bool							isDisposed;
+		private CoreDataLockTransaction			lockTransaction;
 
-		private AbstractEntity activeEntity;
-		private NavigationPathElement activeNavigationPathElement;
-	}
-	[System.Flags]
-	public enum EntitySaveMode
-	{
-		None = 0,
-
-		IncludeEmpty = 0x0001,
+		private AbstractEntity					activeEntity;
+		private NavigationPathElement			activeNavigationPathElement;
 	}
 }

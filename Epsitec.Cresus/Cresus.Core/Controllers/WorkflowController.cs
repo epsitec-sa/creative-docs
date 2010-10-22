@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.actionViewController = this.mainViewController.ActionViewController;
 			this.data                 = this.orchestrator.Data;
 			this.businessContexts     = new List<BusinessContext> ();
-			this.activeEdges          = new List<WorkflowEdge> ();
+			this.activeTransitions    = new List<WorkflowTransition> ();
 			this.dataContext          = this.data.CreateDataContext ("WorkflowController");
 		}
 
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
-			this.UpdateEnabledEdges ();
+			this.UpdateEnabledTransitions ();
 			this.isDirty = false;
 		}
 
@@ -101,10 +101,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreApplication.QueueTasklets ("WorkflowController.Update", job);
 		}
 
-		private void UpdateEnabledEdges()
+		private void UpdateEnabledTransitions()
 		{
-			this.activeEdges.Clear ();
-			this.activeEdges.AddRange (this.GetEnabledEdges ());
+			this.activeTransitions.Clear ();
+			this.activeTransitions.AddRange (this.GetEnabledTransitions ());
 
 			bool panelVisibility = this.UpdateActionButtons ();
 
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			int index = 0;
 
-			this.activeEdges.ForEach (edge => this.CreateActionButton (edge, index++));
+			this.activeTransitions.ForEach (edge => this.CreateActionButton (edge, index++));
 
 			return index > 0;
 		}
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.mainViewController.SetActionPanelVisibility (panelVisibility);
 		}
 
-		private void CreateActionButton(WorkflowEdge edge, int index)
+		private void CreateActionButton(WorkflowTransition edge, int index)
 		{
 			var buttonId    = WorkflowController.GetActionButtonId (index);
 			var title       = edge.Edge.Name;
@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.actionViewController.AddButton (buttonId, title, description, action);
 		}
 
-		private System.Action GetActionCallback(WorkflowEdge edge)
+		private System.Action GetActionCallback(WorkflowTransition transition)
 		{
-			return () => this.ExecuteAction (edge);
+			return () => this.ExecuteAction (transition);
 		}
 
 		private static string GetActionButtonId(int index)
@@ -147,14 +147,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			return string.Format ("WorkflowEdge.{0}", index);
 		}
 
-		private void ExecuteAction(WorkflowEdge edge)
+		private void ExecuteAction(WorkflowTransition transition)
 		{
-			using (var engine = new WorkflowExecutionEngine (this, edge))
+			using (var engine = new WorkflowExecutionEngine (this, transition))
 			{
 				engine.Execute ();
 			}
 			
 			orchestrator.Navigator.PreserveNavigation (() => orchestrator.ClearActiveEntity ());
+		}
+
+		private void ExecuteAutoActions()
+		{
+			
 		}
 		
 		private void HandleBusinessContextMasterEntitiesChanged(object sender)
@@ -162,20 +167,20 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.MakeDirty ();
 		}
 
-		private IEnumerable<WorkflowEdge> GetEnabledEdges()
+		private IEnumerable<WorkflowTransition> GetEnabledTransitions()
 		{
 			return from context in this.businessContexts
-				   from edge in WorkflowController.GetEnabledEdges (context)
+				   from edge in WorkflowController.GetEnabledTransitions (context)
 				   select edge;
 		}
 
 		
-		private static IEnumerable<WorkflowEdge> GetEnabledEdges(BusinessContext context)
+		private static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context)
 		{
 			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
 				   from thread in workflow.Threads
 				   from edge in WorkflowController.GetEnabledEdges (thread)
-				   select new WorkflowEdge (context, workflow, thread, edge);
+				   select new WorkflowTransition (context, workflow, thread, edge);
 		}
 
 		private static IEnumerable<WorkflowEntity> GetEnabledWorkflows(BusinessContext context)
@@ -201,7 +206,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				return WorkflowController.GetEnabledEdges (thread.History[lastIndex].Edge.NextNode) ?? thread.Definition.Edges;
+				var lastStep = thread.History[lastIndex];
+				var nextNode = lastStep.Node;
+
+				return WorkflowController.GetEnabledEdges (nextNode) ?? thread.Definition.Edges;
 			}
 		}
 
@@ -224,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly ActionViewController	actionViewController;
 		private readonly CoreData				data;
 		private readonly List<BusinessContext>	businessContexts;
-		private readonly List<WorkflowEdge>		activeEdges;
+		private readonly List<WorkflowTransition>		activeTransitions;
 		private readonly DataContext			dataContext;
 
 		private bool							isDirty;
