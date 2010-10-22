@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			this.businessContext = businessContext;
 			this.workflow = workflow;
+			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
 
 
@@ -46,6 +47,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
+		{
+			this.businessContext.DataContext.SaveChanges ();
+			this.SaveDesign ();
+		}
+
+		private void SaveDesign()
+		{
+			//	TODO: sérialiser les réglages dans l'entité 'workflow' dans le XmlBlob.
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -55,6 +68,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				this.editorUI.Dispose ();
 				this.editorUI = null;
 			}
+
+			this.businessContext.SavingChanges -= this.HandleBusinessContextSavingChanges;
 		}
 
 		#endregion
