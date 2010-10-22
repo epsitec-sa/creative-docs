@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
 				case ActiveElement.NodeClose:
-					return "<b>Supprime</b> le noeud";
+					return this.Entity.IsPublic ? "Fermer le noeud" : "<b>Supprime</b> le noeud";
 
 				case ActiveElement.NodeComment:
 					return (this.comment == null) ? "Ajoute un commentaire au noeud" : "Ferme le commentaire";
