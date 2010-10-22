@@ -44,47 +44,42 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		
 		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
-			var orchestrator = this.Orchestrator;
-			var business     = this.BusinessContext;
-
-			System.Diagnostics.Debug.Assert (business != null);
-
-			System.Action<BusinessContext, AbstractEntity> initAction;
-
-			if (initializer == null)
-			{
-				initAction = (bc, x) =>
-					{
-					};
-			}
-			else
-			{
-				initAction = (bc, x) =>
-					{
-						initializer (bc, (T) x);
-					};
-			}
+			var initAction = CreationViewController<T>.GetCompatibleInitializer (initializer);
 			
-			T entity = this.CreateEntity (business, initAction);
+			this.CreateEntityUsingEntityCreator (initAction);
 
-//-			this.UpgradeController (entity);
+			//	The simple fact of creating the real entity is sufficient to update
+			//	the user interface; usually, the entity creator is tightly related
+			//	to the BrowserViewController class. Creating an item will therefore
+			//	update the selected item in the browser and trigger the UI updates.
+
+			System.Diagnostics.Debug.Assert (this.IsDisposed);
 		}
 
-		private T CreateEntity(BusinessContext business, System.Action<BusinessContext, AbstractEntity> initializer)
+		private static System.Action<BusinessContext, AbstractEntity> GetCompatibleInitializer(System.Action<BusinessContext, T> initializer)
 		{
-			T entity;
-
-			if (this.entityCreator != null)
+			if (initializer == null)
 			{
-				entity = this.entityCreator (initializer) as T;
+				return null;
 			}
 			else
 			{
-				entity = business.CreateEntity<T> ();
-				initializer (business, entity);
+				return
+					delegate (BusinessContext businessContext, AbstractEntity entity)
+					{
+						initializer (businessContext, (T) entity);
+					};
 			}
-			
-			return entity;
+		}
+		
+		private T CreateEntityUsingEntityCreator(System.Action<BusinessContext, AbstractEntity> initializer)
+		{
+			if (this.entityCreator == null)
+			{
+				throw new System.InvalidOperationException ("Cannot create entity in CreationViewController without an entity creator");
+			}
+
+			return this.entityCreator (initializer) as T;
 		}
 
 		protected override void Dispose(bool disposing)

@@ -79,8 +79,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				if (this.businessContext == null)
                 {
-					this.SetActiveBusinessContext (this.data.CreateBusinessContext ());
-                }
+					this.CreateNewBusinessContext ();
+				}
 
 				return this.businessContext;
 			}
@@ -128,36 +128,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="navigationPathElement">The navigation path element.</param>
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
-			var e = new ActiveEntityCancelEventArgs (entityKey, navigationPathElement);
-			
-			this.OnSettingActiveEntity (e);
-			
-			if (e.Cancel)
+			if (this.CanSetActiveEntity (entityKey, navigationPathElement))
 			{
-				return;
-			}
+				this.ClearActiveEntity ();
+				this.CreateNewBusinessContext ();
 
-			if (this.activeEntityKey == entityKey)
-			{
-				return;
-			}
-
-			this.ClearActiveEntity ();
-
-			if (entityKey.HasValue)
-			{
-				var businessContext = this.DefaultBusinessContext;
-
-				businessContext.SetActiveEntity (entityKey, navigationPathElement);
+				this.businessContext.SetActiveEntity (entityKey, navigationPathElement);
 				this.activeEntityKey = entityKey;
 
-				var liveEntity = businessContext.ActiveEntity;
+				var liveEntity = this.businessContext.ActiveEntity;
 				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
 				this.dataViewController.PushViewController (controller);
 			}
 		}
-
 
 		/// <summary>
 		/// Shows the specified sub view of a given controller. The view of the
@@ -222,6 +206,42 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		#endregion
 
+		private bool CanSetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
+		{
+			var e = new ActiveEntityCancelEventArgs (entityKey, navigationPathElement);
+
+			this.OnSettingActiveEntity (e);
+
+			if (e.Cancel)
+			{
+				return false;
+			}
+
+			if (entityKey.HasValue == false)
+			{
+				this.ClearActiveEntity ();
+			}
+
+			//	If this is still exactly the same entity; we won't do anything.
+			//	If the caller really wants the UI to be re-created from scratch,
+			//	he has to invoke ClearActiveEntity before.
+
+			return (this.activeEntityKey == entityKey) ? false : true;
+		}
+
+		private void CreateNewBusinessContext()
+		{
+			if ((this.businessContext != null) &&
+				(this.businessContext.IsEmpty))
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.businessContext == null);
+
+			this.SetActiveBusinessContext (this.data.CreateBusinessContext ());
+		}
+		
 		private void SetActiveBusinessContext(BusinessContext context)
 		{
 			var oldContext = this.businessContext;

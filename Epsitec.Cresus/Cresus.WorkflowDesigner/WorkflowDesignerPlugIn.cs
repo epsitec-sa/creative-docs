@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (key.EntityId == EntityInfo<WorkflowNodeEntity>.GetTypeId ())
 				{
+					this.orchestrator.ClearActiveEntity ();
+
 					var businessContext = this.orchestrator.DefaultBusinessContext;
 
 					businessContext.SetActiveEntity (entityKey, navigationPathElement);
