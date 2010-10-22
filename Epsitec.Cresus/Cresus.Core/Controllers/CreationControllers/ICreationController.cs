@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Linq;
 using Epsitec.Common.Widgets;
 
@@ -15,6 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	public interface ICreationController
 	{
 		void RegisterDisposeAction(System.Action disposeAction);
-		void RegisterEntityCreator(System.Func<AbstractEntity> entityCreator);
+		void RegisterEntityCreator(System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity> entityCreator);
 	}
 }
