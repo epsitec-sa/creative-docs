@@ -15,8 +15,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
 
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;  // zéro en haut

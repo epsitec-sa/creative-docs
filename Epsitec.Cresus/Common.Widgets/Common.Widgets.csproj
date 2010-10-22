@@ -187,7 +187,11 @@
     <Compile Include="ClippingFrameBox.cs" />
     <Compile Include="AbstractTextField.CommandController.cs" />
     <Compile Include="GlyphShape.cs" />
+    <Compile Include="Helpers\CommandWidgetFinder.cs" />
+    <Compile Include="Helpers\HypertextInfo.cs" />
     <Compile Include="ICommandHandler.cs" />
+    <Compile Include="WidgetChildFindMode.cs" />
+    <Compile Include="WidgetInternalState.cs" />
     <Compile Include="IValidationResult.cs" />
     <Compile Include="MessageHandler.cs" />
     <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />

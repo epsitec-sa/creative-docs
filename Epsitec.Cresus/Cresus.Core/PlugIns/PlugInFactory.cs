@@ -103,6 +103,5 @@ namespace Epsitec.Cresus.Core.PlugIns
 
 		private readonly List<PlugInRecord>		records;
 		private readonly CoreApplication		application;
-		private bool							loaded;
 	}
 }

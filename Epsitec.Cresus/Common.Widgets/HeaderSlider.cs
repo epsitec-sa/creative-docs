@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public HeaderSlider()
 		{
-			this.InternalState &= ~InternalState.Engageable;
+			this.InternalState &= ~WidgetInternalState.Engageable;
 			this.headerSliderStyle = HeaderSliderStyle.Top;
 			this.MouseCursor = MouseCursor.AsVSplit;
 		}

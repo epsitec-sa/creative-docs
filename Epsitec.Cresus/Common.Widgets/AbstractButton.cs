@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets
 			this.AutoFocus  = true;
 			this.AutoEngage = true;
 			
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 		}
 		
 		public AbstractButton(Widget embedder) : this()

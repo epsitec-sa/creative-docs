@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Editor() : base()
 		{
 			this.AutoFocus = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 		}
 
 		public Editor(Widget embedder) : this()

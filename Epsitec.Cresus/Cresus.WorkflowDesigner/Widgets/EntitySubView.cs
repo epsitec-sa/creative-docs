@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Widgets
 			//	Cherche un widget EntitySubView destinataire du drag & drop.
 			mouse = this.MapClientToRoot(mouse);
 			Widget root   = this.Window.Root;
-			Widget widget = root.FindChild(mouse, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled);
+			Widget widget = root.FindChild (mouse, WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled);
 			return widget as EntitySubView;
 		}
 

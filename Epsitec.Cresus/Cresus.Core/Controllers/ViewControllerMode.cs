@@ -29,10 +29,4 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		Creation = 3,
 	}
-
-	public enum ViewControllerTypeResolutionMode
-	{
-		ThrowOnFailure,
-		NullOnFailure,
-	}
 }

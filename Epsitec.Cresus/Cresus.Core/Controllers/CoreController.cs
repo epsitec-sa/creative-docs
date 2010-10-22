@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// in the application. Note: a controller is responsible for the management
 	/// of a specific piece of UI.
 	/// </summary>
-	public abstract class CoreController : System.IDisposable
+	public abstract class CoreController : System.IDisposable, IIsDisposed
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CoreController"/> class.
@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		#region IIsDisposed Members
+
 		/// <summary>
 		/// Gets a value indicating whether this instance was disposed.
 		/// </summary>
@@ -52,7 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		
+		#endregion
+
 		/// <summary>
 		/// Gets the collection of sub-controllers (or an empty collection
 		/// if there is no child controllers used by this controller).

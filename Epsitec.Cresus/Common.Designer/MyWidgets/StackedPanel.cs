@@ -12,8 +12,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StackedPanel()
 		{
-			this.InternalState |= InternalState.PossibleContainer;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.PossibleContainer;
+			this.InternalState |= WidgetInternalState.Focusable;
 			
 			this.Padding = new Margins (StackedPanel.leftMargin+10, 10, 5-1, 5);
 

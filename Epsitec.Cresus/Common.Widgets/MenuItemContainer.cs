@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public MenuItemContainer()
 		{
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		

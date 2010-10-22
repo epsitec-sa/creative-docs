@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.WindowType   = WindowType.Document;
 			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 			
-			this.InternalState |= InternalState.PossibleContainer;
+			this.InternalState |= WidgetInternalState.PossibleContainer;
 			this.AutoDoubleClick = true;
 		}
 		

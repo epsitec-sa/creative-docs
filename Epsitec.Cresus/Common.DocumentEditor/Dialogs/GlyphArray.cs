@@ -20,8 +20,8 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 			this.AutoEngage = true;
 			this.AutoDoubleClick = true;
 			
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 			
 			this.scroller = new VScroller(this);
 			this.scroller.MinValue          = 0.0M;

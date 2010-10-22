@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support
 		/// executing).
 		/// </summary>
 		/// <value>The current <c>Tasklet</c> or <c>null</c>.</value>
-		public static Tasklet Current
+		public static Tasklet				Current
 		{
 			get
 			{
@@ -67,7 +67,14 @@ namespace Epsitec.Common.Support
 		{
 			foreach (var job in this.GetExecutableJobs ())
 			{
-				job.Action ();
+				var action = job.Action;
+				var owner  = job.Owner;
+
+				if ((owner == null) ||
+					(owner.IsDisposed == false))
+				{
+					action ();
+				}
 			}
 		}
 
@@ -184,9 +191,9 @@ namespace Epsitec.Common.Support
 
 
 		[System.ThreadStatic]
-		private static Tasklet current;
+		private static Tasklet					current;
 
-		private List<TaskletJob> jobs;
-		private int executeRecursionCount;
+		private List<TaskletJob>				jobs;
+		private int								executeRecursionCount;
 	}
 }

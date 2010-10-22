@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// point for everything which is related to them.
 	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
-	public sealed class DataContext : System.IDisposable, IEntityPersistenceManager
+	public sealed class DataContext : System.IDisposable, IEntityPersistenceManager, IIsDisposed
 	{
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
@@ -40,7 +40,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false)
 		{
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
-			this.IsDisposed = false;
 			this.DataInfrastructure = infrastructure;
 			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
@@ -56,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
 			this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
 
-			this.eventLock = new object ();
+			this.eventExclusion = new object ();
 
 			this.EntityContext.EntityAttached += this.HandleEntityCreated;
 			this.EntityContext.EntityChanged += this.HandleEntityChanged;
@@ -82,15 +81,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Tells whether this instance is disposed or not.
-		/// </summary>
-		public bool IsDisposed
-		{
-			get;
-			private set;
-		}
-
-		/// <summary>
 		/// Gets or sets the name of the <c>DataContext</c>. This is useful when
 		/// debugging.
 		/// </summary>
@@ -109,14 +99,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			add
 			{
-				lock (this.eventLock)
+				lock (this.eventExclusion)
 				{
 					this.entityChanged += value;
 				}
 			}
 			remove
 			{
-				lock (this.eventLock)
+				lock (this.eventExclusion)
 				{
 					this.entityChanged -= value;
 				}
@@ -1166,6 +1156,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		#endregion
 
+		#region IIsDisposed Members
+
+		/// <summary>
+		/// Tells whether this instance was disposed or not.
+		/// </summary>
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
+
 		
 		/// <summary>
 		/// Release all the resources kept by this instance.
@@ -1180,7 +1185,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.EntityContext.PersistenceManagers.Remove (this);
 			}
 
-			this.IsDisposed = true;
+			this.isDisposed = true;
 		}
 
 
@@ -1479,7 +1484,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			EventHandler<EntityChangedEventArgs> handler;
 
-			lock (this.eventLock)
+			lock (this.eventExclusion)
 			{
 				handler = this.entityChanged;
 			}
@@ -1541,57 +1546,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return localEntity as TEntity;
 		}
-		
 
-		/// <summary>
-		/// The cache used to cache the <see cref="AbstractEntity"/> managed by this instance.
-		/// </summary>
-		private readonly EntityCache entitiesCache;
+		private static int							nextUniqueId;			//	next unique ID
 
+		private readonly object						eventExclusion;			//	exclusion lock used to access the entityChanged event
+		private readonly EntityCache				entitiesCache;			//	entities managed by this instance
+		private readonly HashSet<AbstractEntity>	emptyEntities;			//	entities registered as empty
+		private readonly HashSet<AbstractEntity>	entitiesToDelete;		//	entities to be deleted
+		private readonly HashSet<AbstractEntity>	entitiesDeleted;		//	entities which have been deleted
+		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;		//	mapping between entities and their fields that must be re-saved, even if their value has not changed
 
-		/// <summary>
-		/// The <see cref="AbstractEntity"/> which are registered as empty.
-		/// </summary>
-		private readonly HashSet<AbstractEntity> emptyEntities;
+        private EventHandler<EntityChangedEventArgs> entityChanged;			//	fired when entities managed by this instance change
 
-
-		/// <summary>
-		/// The <see cref="AbstractEntity"/> which are to be deleted.
-		/// </summary>
-		private readonly HashSet<AbstractEntity> entitiesToDelete;
-
-
-		/// <summary>
-		/// The <see cref="AbstractEntity"/> which have been deleted.
-		/// </summary>
-		private readonly HashSet<AbstractEntity> entitiesDeleted;
-
-
-		///// <summary>
-		///// Stores the mapping between the <see cref="AbstractEntity"/> and their fields that must be
-		///// saved again event if their value has not changed.
-		///// </summary>
-		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;
-
-
-		/// <summary>
-		/// The object used as a lock for the events.
-		/// </summary>
-		private readonly object eventLock;
-
-
-		/// <summary>
-		/// The event handler used to fire events related to the <see cref="AbstractEntity"/>
-		/// managed by this instance.
-		/// </summary>
-		private EventHandler<EntityChangedEventArgs> entityChanged;
-
-
-		/// <summary>
-		/// The next unique id which will be used for the next instance of <c>DataContext</c>.
-		/// </summary>
-		private static int nextUniqueId;
-		
-
+		private bool								isDisposed;
 	}
 }

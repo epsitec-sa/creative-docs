@@ -491,7 +491,7 @@ namespace Epsitec.Common.Dialogs
 					if (this.dialogData.Mode == DialogDataMode.Search)
 					{
 						newContext = new SearchContext (this, this.dialogData.Data, EntityFieldPath.CreateRelativePath ());
-						newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder), true);
+						newContext.AnalyzePlaceholderGraph (Panel.GetParentPanel (placeholder), true);
 
 						this.searchContexts.Add (newContext);
 					}
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Dialogs
 						System.Diagnostics.Debug.Assert (rootWidget != null);
 
 						newContext = new SearchContext (this, rootData, rootPath);
-						newContext.AnalysePlaceholderGraph (rootWidget, false);
+						newContext.AnalyzePlaceholderGraph (rootWidget, false);
 
 						this.defaultSuggestion = reference.Value as AbstractEntity;
 						this.searchContexts.Add (newContext);
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Dialogs
 							System.Diagnostics.Debug.Assert (rootWidget != null);
 
 							newContext = new SearchContext (this, rootData, rootPath);
-							newContext.AnalysePlaceholderGraph (rootWidget, false);
+							newContext.AnalyzePlaceholderGraph (rootWidget, false);
 
 							this.searchContexts.Add (newContext);
 						}
@@ -1082,7 +1082,7 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			public void AnalysePlaceholderGraph(Widgets.Widget root, bool initialSearchValues)
+			public void AnalyzePlaceholderGraph(Widgets.Widget root, bool initialSearchValues)
 			{
 				Druid entityId = this.searchRootData.GetEntityStructuredTypeId ();
 				EntityContext  context = this.searchController.DialogData.Data.GetEntityContext ();

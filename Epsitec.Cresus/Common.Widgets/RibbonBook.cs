@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 			this.pageItems = new RibbonPageCollection(this);
 			this.buttonItems = new ButtonCollection (this);
 			
-			this.InternalState &= ~InternalState.PossibleContainer;
+			this.InternalState &= ~WidgetInternalState.PossibleContainer;
 
 			this.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 

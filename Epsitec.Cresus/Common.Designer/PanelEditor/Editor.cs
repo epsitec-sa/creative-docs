@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		public Editor() : base()
 		{
 			this.AutoFocus = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -2326,7 +2326,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Détecte le groupe visé par la souris.
 			if (this.IsInside(pos))
 			{
-				Widget container = this.panel.FindChild(pos, this.selectedObjects, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
+				Widget container = this.panel.FindChild(pos, this.selectedObjects, WidgetChildFindMode.Deep | WidgetChildFindMode.SkipHidden | WidgetChildFindMode.SkipNonContainer | WidgetChildFindMode.SkipEmbedded);
 				return container ?? this.panel;
 			}
 			else

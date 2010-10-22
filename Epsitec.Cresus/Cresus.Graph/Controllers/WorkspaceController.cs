@@ -632,8 +632,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void RefreshFilters()
 		{
-			var container = this.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
-			var separator = this.ToolsFrame.FindChild ("filters-sep", Widget.ChildFindMode.Deep);
+			var container = this.ToolsFrame.FindChild ("filters", WidgetChildFindMode.Deep);
+			var separator = this.ToolsFrame.FindChild ("filters-sep", WidgetChildFindMode.Deep);
 			
 			container.Children.Widgets.ForEach (x => x.Dispose ());
 
@@ -676,7 +676,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void RefreshSources()
 		{
-			var container  = this.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
+			var container  = this.ToolsFrame.FindChild ("sources", WidgetChildFindMode.Deep);
 			int numSources = this.Document.DataSourceCount;
 
 			container.Children.Widgets.ForEach (x => x.Dispose ());

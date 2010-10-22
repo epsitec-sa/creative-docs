@@ -140,9 +140,9 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
-		private readonly IPaintFilter parent;
-		private readonly List<Widget> allowed;
-		private readonly List<Widget> parents;
-		private int enableAllChildren;
+		private readonly IPaintFilter			parent;
+		private readonly List<Widget>			allowed;
+		private readonly List<Widget>			parents;
+		private int								enableAllChildren;
 	}
 }

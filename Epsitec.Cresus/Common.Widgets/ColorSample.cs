@@ -457,8 +457,8 @@ namespace Epsitec.Common.Widgets
 		private ColorSample FindDropTarget(Drawing.Point mouse)
 		{
 			//	Cherche un widget ColorSample destinataire du drag & drop.
-			
-			return this.Window.Root.FindChild (this.MapClientToRoot (mouse), Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled) as ColorSample;
+
+			return this.Window.Root.FindChild (this.MapClientToRoot (mouse), WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled) as ColorSample;
 		}
 
 		private void DragHilite(ColorSample dst, ColorSample src, bool enable)

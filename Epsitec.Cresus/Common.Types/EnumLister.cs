@@ -76,11 +76,11 @@ namespace Epsitec.Common.Types
 
 			foreach (Assembly assembly in assemblies)
 			{
-				EnumLister.Analyse (assembly);
+				EnumLister.Analyze (assembly);
 			}
 		}
 
-		private static void Analyse(Assembly assembly)
+		private static void Analyze(Assembly assembly)
 		{
 			foreach (System.Type type in assembly.GetTypes ())
 			{
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Types
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
 				EnumLister.assemblies.Add (args.LoadedAssembly);
-				EnumLister.Analyse (args.LoadedAssembly);
+				EnumLister.Analyze (args.LoadedAssembly);
 			}
 		}
 

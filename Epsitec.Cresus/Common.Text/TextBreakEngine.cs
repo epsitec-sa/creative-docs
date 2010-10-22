@@ -63,7 +63,7 @@ namespace Epsitec.Common.Text
 			this.dirty = true;
 		}
 
-		private void AnalyseTextBreaks()
+		private void AnalyzeTextBreaks()
 		{
 			ulong[] utf32;
 
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text
 
 			if (this.dirty)
 			{
-				this.AnalyseTextBreaks ();
+				this.AnalyzeTextBreaks ();
 				this.dirty = false;
 			}
 		}

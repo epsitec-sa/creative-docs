@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.items = new PanePageCollection(this);
 			
-			this.InternalState &= ~InternalState.PossibleContainer;
+			this.InternalState &= ~WidgetInternalState.PossibleContainer;
 		}
 		
 		public PaneBook(Widget embedder) : this()

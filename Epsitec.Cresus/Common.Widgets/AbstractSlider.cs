@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 			this.showScrollButtons = hasButtons;
 			this.showMinMaxButtons = false;
 			
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			if (hasButtons)
 			{

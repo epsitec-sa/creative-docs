@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document
 			this.AutoFocus       = true;
 			this.AutoDoubleClick = true;
 			
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 			
 			this.BackColor = Color.FromBrightness(1);  // fond blanc
 

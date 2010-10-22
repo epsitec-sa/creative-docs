@@ -82,11 +82,11 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.sourceWidget == null)
 				{
-					this.InternalState &= ~InternalState.Focusable;
+					this.InternalState &= ~WidgetInternalState.Focusable;
 				}
 				else
 				{
-					this.InternalState |= InternalState.Focusable;
+					this.InternalState |= WidgetInternalState.Focusable;
 				}
 
 				this.Value = "";

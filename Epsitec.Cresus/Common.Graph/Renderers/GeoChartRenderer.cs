@@ -152,7 +152,7 @@ namespace Epsitec.Common.Graph.Renderers
                 this.image = Drawing.Bitmap.FromData (b);
 
             }
-            catch (ThreadAbortException e)
+            catch (ThreadAbortException)
             {
                 this.image = null;
                 System.Diagnostics.Debug.WriteLine (string.Format("Aborting fetching image {0}", url));

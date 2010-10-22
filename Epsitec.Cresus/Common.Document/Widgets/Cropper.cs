@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			int tabIndex = 0;
 

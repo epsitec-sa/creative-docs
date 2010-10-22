@@ -1358,7 +1358,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static MenuItem DetectMenuItem(Window window, Drawing.Point pos)
 		{
-			Widget widget = window.Root.FindChild (pos, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled);
+			Widget widget = window.Root.FindChild (pos, WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled);
 			
 			//	Retrouve parmi les widgets parents si l'un d'entre eux est une
 			//	instance de MenuItem :
