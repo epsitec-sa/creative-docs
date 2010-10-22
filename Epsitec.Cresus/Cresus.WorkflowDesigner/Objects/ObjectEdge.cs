@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return "Change la largeur de la boîte";
 
 				case ActiveElement.EdgeClose:
-					return "Supprime la transition";
+					return "<b>Supprime</b> la transition";
 
 				case ActiveElement.EdgeComment:
 					return (this.comment == null) ? "Ajoute un commentaire à la transition" : "Ferme le commentaire";
