@@ -13,6 +13,12 @@ namespace Epsitec.Common.Support
 			this.action = action;
 			this.runMode = runMode;
 		}
+		
+		public TaskletJob(IIsDisposed owner, System.Action action, TaskletRunMode runMode)
+			: this (action, runMode)
+		{
+			this.Owner = owner;
+		}
 
 		
 		public TaskletRunMode					RunMode

@@ -19,34 +19,36 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// The <c>WorkflowController</c> handles the interaction between a workflow and
 	/// the other view controllers.
 	/// </summary>
-	public class WorkflowController
+	public class WorkflowController : System.IDisposable, IIsDisposed
 	{
 		internal WorkflowController(DataViewOrchestrator orchestrator)
 		{
-			this.orchestrator = orchestrator;
-			this.businessContexts = new List<BusinessContext> ();
-			this.workflowDefs = new List<WorkflowDefinitionEntity> ();
-			this.activeEdges = new List<WorkflowEdge> ();
-			this.dataContext = this.orchestrator.Data.CreateDataContext ("WorkflowController");
+			this.orchestrator         = orchestrator;
+			this.mainViewController   = this.orchestrator.MainViewController;
+			this.actionViewController = this.mainViewController.ActionViewController;
+			this.data                 = this.orchestrator.Data;
+			this.businessContexts     = new List<BusinessContext> ();
+			this.activeEdges          = new List<WorkflowEdge> ();
+			this.dataContext          = this.data.CreateDataContext ("WorkflowController");
 		}
 
 
-		public CoreData Data
+		public CoreData							Data
 		{
 			get
 			{
-				return this.orchestrator.Data;
+				return this.data;
 			}
 		}
 
 
 		public void Update()
 		{
-			this.MakeReady ();
 			this.UpdateEnabledEdges ();
 			this.isDirty = false;
 		}
 
+		
 		internal void AttachBusinessContext(BusinessContext context)
 		{
 			this.businessContexts.Add (context);
@@ -59,18 +61,28 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.businessContexts.Remove (context);
 		}
 
-		private void MakeReady()
+		#region IDisposable Members
+
+		public void Dispose()
 		{
-			if (this.isReady)
-			{
-				return;
-			}
-
-			this.UpdateWorkflowDefs ();
-
-			this.isReady = true;
+			this.isDisposed = true;
 		}
 
+		#endregion
+
+		#region IIsDisposed Members
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
+
+		
 		private void MakeDirty()
 		{
 			if (this.isDirty)
@@ -79,8 +91,14 @@ namespace Epsitec.Cresus.Core.Controllers
             }
 
 			this.isDirty = true;
+			this.QueueAsyncUpdate ();
+		}
 
-			CoreApplication.QueueTasklets ("WorkflowController.Update", new TaskletJob (() => this.Update (), TaskletRunMode.Async));
+		private void QueueAsyncUpdate()
+		{
+			var job = new TaskletJob (this, this.Update, TaskletRunMode.Async);
+
+			CoreApplication.QueueTasklets ("WorkflowController.Update", job);
 		}
 
 		private void UpdateEnabledEdges()
@@ -88,50 +106,57 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeEdges.Clear ();
 			this.activeEdges.AddRange (this.GetEnabledEdges ());
 
-			var mainViewController   = this.orchestrator.MainViewController;
-			var actionViewController = mainViewController.ActionViewController;
+			bool panelVisibility = this.UpdateActionButtons ();
 
-			actionViewController.ClearButtons ();
+			this.UpdateActionPanelVisibility (panelVisibility);
+		}
+
+		private bool UpdateActionButtons()
+		{
+			this.actionViewController.ClearButtons ();
 
 			int index = 0;
 
-			foreach (var edge in this.activeEdges)
-			{
-				this.CreateActionButton (actionViewController, edge, index++);
-			}
+			this.activeEdges.ForEach (edge => this.CreateActionButton (edge, index++));
 
-			mainViewController.SetActionPanelVisibility (index > 0);
+			return index > 0;
 		}
 
-		private void CreateActionButton(ActionViewController actionViewController, WorkflowEdge edge, int index)
+		private void UpdateActionPanelVisibility(bool panelVisibility)
 		{
-			var buttonId    = string.Format ("WorkflowEdge.{0}", index++);
+			this.mainViewController.SetActionPanelVisibility (panelVisibility);
+		}
+
+		private void CreateActionButton(WorkflowEdge edge, int index)
+		{
+			var buttonId    = WorkflowController.GetActionButtonId (index);
 			var title       = edge.Edge.Name;
 			var description = edge.Edge.Description;
-			var action      = this.CreateActionCallback (edge);
+			var action      = this.GetActionCallback (edge);
 
-			actionViewController.AddButton (buttonId, title, description, action);
+			this.actionViewController.AddButton (buttonId, title, description, action);
 		}
 
-		private System.Action CreateActionCallback(WorkflowEdge edge)
+		private System.Action GetActionCallback(WorkflowEdge edge)
 		{
 			return () => this.ExecuteAction (edge);
 		}
 
+		private static string GetActionButtonId(int index)
+		{
+			return string.Format ("WorkflowEdge.{0}", index);
+		}
+
 		private void ExecuteAction(WorkflowEdge edge)
 		{
-			var engine = new WorkflowExecutionEngine (this, edge);
-			engine.Execute ();
+			using (var engine = new WorkflowExecutionEngine (this, edge))
+			{
+				engine.Execute ();
+			}
 			
 			orchestrator.Navigator.PreserveNavigation (() => orchestrator.ClearActiveEntity ());
 		}
 		
-		private void UpdateWorkflowDefs()
-		{
-			this.workflowDefs.Clear ();
-			this.workflowDefs.AddRange (this.orchestrator.Data.GetAllEntities<WorkflowDefinitionEntity> ());
-		}
-
 		private void HandleBusinessContextMasterEntitiesChanged(object sender)
 		{
 			this.MakeDirty ();
@@ -194,13 +219,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly DataViewOrchestrator orchestrator;
-		private readonly List<BusinessContext> businessContexts;
-		private readonly List<WorkflowDefinitionEntity> workflowDefs;
-		private readonly List<WorkflowEdge> activeEdges;
-		private readonly DataContext dataContext;
+		private readonly DataViewOrchestrator	orchestrator;
+		private readonly MainViewController		mainViewController;
+		private readonly ActionViewController	actionViewController;
+		private readonly CoreData				data;
+		private readonly List<BusinessContext>	businessContexts;
+		private readonly List<WorkflowEdge>		activeEdges;
+		private readonly DataContext			dataContext;
 
-		private bool isReady;
-		private bool isDirty;
+		private bool							isDirty;
+		private bool							isDisposed;
 	}
 }

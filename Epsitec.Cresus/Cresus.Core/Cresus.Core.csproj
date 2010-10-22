@@ -175,6 +175,7 @@
     <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
+    <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />

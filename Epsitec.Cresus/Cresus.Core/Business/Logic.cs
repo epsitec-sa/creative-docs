@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default)
+		public IEnumerable<T> GetAllEntities<T>(DataExtractionMode extraction = DataExtractionMode.Default)
 			where T : AbstractEntity, new ()
 		{
 			return this.Data.GetAllEntities<T> (extraction);

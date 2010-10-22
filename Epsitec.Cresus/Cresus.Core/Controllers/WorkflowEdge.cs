@@ -53,9 +53,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly BusinessContext businessContext;
-		private readonly WorkflowEntity workflow;
-		private readonly WorkflowThreadEntity thread;
-		private readonly WorkflowEdgeEntity edge;
+		private readonly BusinessContext		businessContext;
+		private readonly WorkflowEntity			workflow;
+		private readonly WorkflowThreadEntity	thread;
+		private readonly WorkflowEdgeEntity		edge;
 	}
 }

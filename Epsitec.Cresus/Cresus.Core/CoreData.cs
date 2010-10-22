@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core
 		private static ItemRankComparer itemRankComparer = new ItemRankComparer ();
 
 
-		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default, DataContext dataContext = null)
+		public IEnumerable<T> GetAllEntities<T>(DataExtractionMode extraction = DataExtractionMode.Default, DataContext dataContext = null)
 			where T : AbstractEntity, new ()
 		{
 			var repository = this.GetRepository<T> (dataContext);
@@ -229,12 +229,12 @@ namespace Epsitec.Cresus.Core
 			{
 				var all = repository.GetAllEntities ();
 
-				if ((extraction & Extraction.IncludeArchives) == 0)
+				if ((extraction & DataExtractionMode.IncludeArchives) == 0)
 				{
 					all = all.Where (x => (x is ILifetime) ? !((ILifetime) x).IsArchive : true);
 				}
 
-				if ((extraction & Extraction.Sorted) != 0)
+				if ((extraction & DataExtractionMode.Sorted) != 0)
 				{
 					if (EntityInfo<T>.Implements<IItemRank> ())
 					{
@@ -609,15 +609,5 @@ namespace Epsitec.Cresus.Core
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;
 		private DataContext activeDataContext;
-	}
-
-	[System.Flags]
-	public enum Extraction
-	{
-		Default = 0,
-		
-		Sorted			= 0x0001,
-
-		IncludeArchives = 0x00010000,
 	}
 }
