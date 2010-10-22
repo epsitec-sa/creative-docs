@@ -23,7 +23,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public sealed partial class BrowserViewController
 	{
-		private class ItemCreator
+		/// <summary>
+		/// The <c>ItemCreator</c> manages the creation of new entities, based
+		/// on the <see cref="BrowserViewController"/> selected data set.
+		/// </summary>
+		private sealed class ItemCreator : System.IDisposable
 		{
 			public ItemCreator(BrowserViewController browser)
 			{
@@ -33,7 +37,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 
-			public void StartCreateNewItemInteraction()
+			/// <summary>
+			/// Creates a new item. This will either launch the creation process
+			/// through a <c>Creation..ViewController</c> or directly create the
+			/// item in the browser list.
+			/// </summary>
+			public void Create()
 			{
 				this.orchestrator.ClearActiveEntity ();
 
@@ -45,17 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	which will add it to the browser list, then make it active (which will in
 					//	turn create the controller needed to view/edit it).
 
-					var realEntity = this.CreateRealEntity (null);
-
-#if false
-					controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, this.orchestrator,
-																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
-
-					if (controller == null)
-                    {
-						return;
-                    }
-#endif
+					this.CreateRealEntity (null);
 				}
 				else
 				{
@@ -63,6 +62,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 			}
 
+
+			#region IDisposable Members
+
+			void System.IDisposable.Dispose()
+			{
+			}
+
+			#endregion
+			
+			
 			private EntityViewController CreateCreationEntityViewController()
 			{
 				var dummyEntity = this.CreateDummyEntity ();
@@ -92,16 +101,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 				
 				return controller;
-			}
-
-			private void DisposeCreationEntityViewController(EntityViewController controller)
-			{
-				if (controller != null)
-				{
-					this.DisposeDummyEntity (controller.GetEntity ());
-					
-					controller.Dispose ();
-				}
 			}
 
 			private AbstractEntity CreateDummyEntity()
@@ -178,9 +177,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				throw new System.NotImplementedException ();
 			}
 
-			private readonly BrowserViewController browser;
-			private readonly DataViewOrchestrator orchestrator;
-			private readonly string dataSetName;
+			
+			private readonly BrowserViewController	browser;
+			private readonly DataViewOrchestrator	orchestrator;
+			private readonly string					dataSetName;
 		}
 	}
 }

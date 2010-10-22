@@ -11,5 +11,9 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class WorkflowDefinitionEntity
 	{
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.WorkflowName);
+		}
 	}
 }
