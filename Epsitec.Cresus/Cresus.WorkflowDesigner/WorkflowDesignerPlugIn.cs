@@ -58,15 +58,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				{
 					this.orchestrator.ClearActiveEntity ();
 
-					var businessContext = this.orchestrator.DefaultBusinessContext;
+					var businessContext    = this.orchestrator.DefaultBusinessContext;
+					var workflowDefinition = businessContext.SetActiveEntity<WorkflowDefinitionEntity> (entityKey, navigationPathElement);
 
-					businessContext.SetActiveEntity (entityKey, navigationPathElement);
+					System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflowDefinition.Name + ">");
 
-					var workflow = businessContext.ActiveEntity as WorkflowDefinitionEntity;
-
-					System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflow.Name + ">");
-
-					this.CreateWorkflowDesigner (businessContext, workflow);
+					this.CreateWorkflowDesigner (businessContext, workflowDefinition);
+					
 					e.Cancel = true;
 				}
 				else

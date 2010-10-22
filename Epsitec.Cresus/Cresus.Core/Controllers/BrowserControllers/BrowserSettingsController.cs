@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void ExecuteNewCommand(object sender, CommandEventArgs e)
 		{
-			this.browser.StartCreateNewItemInteraction ();
+			this.browser.AddNewEntity ();
 		}
 
 		private void UpdateNewItemIconButton()

@@ -16,6 +16,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
+	using InitializerAction		= System.Action<BusinessContext, AbstractEntity>;
+	using EntityCreatorFunction	= System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity>;
+
 	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationController
 		where T : AbstractEntity, new ()
 	{
@@ -34,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			this.disposeAction = disposeAction;
 		}
 
-		void ICreationController.RegisterEntityCreator(System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity> entityCreator)
+		void ICreationController.RegisterEntityCreator(EntityCreatorFunction entityCreator)
 		{
 			this.entityCreator = entityCreator;
 		}
@@ -56,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			System.Diagnostics.Debug.Assert (this.IsDisposed);
 		}
 
-		private static System.Action<BusinessContext, AbstractEntity> GetCompatibleInitializer(System.Action<BusinessContext, T> initializer)
+		private static InitializerAction GetCompatibleInitializer(System.Action<BusinessContext, T> initializer)
 		{
 			if (initializer == null)
 			{
@@ -71,8 +74,8 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 					};
 			}
 		}
-		
-		private T CreateEntityUsingEntityCreator(System.Action<BusinessContext, AbstractEntity> initializer)
+
+		private T CreateEntityUsingEntityCreator(InitializerAction initializer)
 		{
 			if (this.entityCreator == null)
 			{
@@ -95,21 +98,8 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			base.Dispose (disposing);
 		}
 
-		private void UpgradeController(T entity)
-		{
-			var orchestrator = this.Orchestrator;
-			var replacementController = this.CreateReplacementController (entity);
-
-			orchestrator.ReplaceView (this, replacementController);
-		}
-
-		private CoreViewController CreateReplacementController(T entity)
-		{
-			return EntityViewControllerFactory.Create (this.Name, entity, ViewControllerMode.Summary, this.Orchestrator);
-		}
-
 
 		private System.Action					disposeAction;
-		private System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity>		entityCreator;
+		private EntityCreatorFunction			entityCreator;
 	}
 }

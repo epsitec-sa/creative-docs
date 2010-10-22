@@ -19,6 +19,13 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
+	using CollectionGetterFunction = System.Func<DataContext, IEnumerable<AbstractEntity>>;
+
+	/// <summary>
+	/// The <c>BrowserViewController</c> manages the browser view, which lists
+	/// entities in a compact form (this is used as the entity selector in the
+	/// UI).
+	/// </summary>
 	public sealed partial class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
 		public BrowserViewController(Orchestrators.DataViewOrchestrator orchestrator)
@@ -28,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		public FrameBox SettingsPanel
+		public FrameBox							SettingsPanel
 		{
 			get
 			{
@@ -36,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public string DataSetName
+		public string							DataSetName
 		{
 			get
 			{
@@ -60,51 +67,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-
-		private bool SelectActiveEntity()
+		public void AddNewEntity()
 		{
-			if (this.activeEntityKey.HasValue)
+			using (var creator = new BrowserViewController.ItemCreator (this))
 			{
-				var activeEntityKey       = this.activeEntityKey.Value;
-				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
-
-				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
-
-				return true;
-			}
-			else
-			{
-				this.Orchestrator.ClearActiveEntity ();
-				return false;
+				creator.Create ();
 			}
 		}
 
-#if false
-		public bool SelectActiveEntity(AbstractEntity entity)
-		{
-			var entityCtx = DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
-			var entityKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (entity);
-
-			if (entityKey.HasValue)
-			{
-				this.SetActiveEntityKey (entityKey.Value);
-				this.RefreshScrollList ();
-
-				return this.SelectActiveEntity ();
-			}
-			else
-			{
-				return false;
-			}
-		}
-#endif
-
-		public void StartCreateNewItemInteraction()
-		{
-			var creator = new BrowserViewController.ItemCreator (this);
-			creator.StartCreateNewItemInteraction ();
-		}
-
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -214,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
+		private void SetContents(CollectionGetterFunction collectionGetter)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -225,6 +196,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.collectionGetter = collectionGetter;
 			this.data.SetupDataContext (this.Orchestrator.DefaultDataContext);
 			this.UpdateCollection ();
+		}
+
+		private bool SelectActiveEntity()
+		{
+			if (this.activeEntityKey.HasValue)
+			{
+				var activeEntityKey       = this.activeEntityKey.Value;
+				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
+
+				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
+
+				return true;
+			}
+			else
+			{
+				this.Orchestrator.ClearActiveEntity ();
+				return false;
+			}
 		}
 
 
@@ -333,6 +322,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+
 		#region IWidgetUpdater Members
 
 		public void Update()
@@ -358,11 +348,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData				data;
+		
 		private BrowserList						collection;
 		private string							dataSetName;
 		private DataContext						browserDataContext;
 
-		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
+		private CollectionGetterFunction		collectionGetter;
 		private int								suspendUpdates;
 
 		private ScrollList						scrollList;

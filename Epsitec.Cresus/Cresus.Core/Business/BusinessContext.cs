@@ -152,6 +152,13 @@ namespace Epsitec.Cresus.Core.Business
 			this.SetNavigationPathElement (navigationPathElement);
 		}
 
+		public T SetActiveEntity<T>(EntityKey? entityKey, NavigationPathElement navigationPathElement = null)
+			where T : AbstractEntity
+		{
+			this.SetActiveEntity (entityKey, navigationPathElement);
+			return this.ActiveEntity as T;
+		}
+
 		/// <summary>
 		/// Adds a master entity of a specific type. See <seealso cref="GerMasterEntity{T}"/>.
 		/// </summary>
