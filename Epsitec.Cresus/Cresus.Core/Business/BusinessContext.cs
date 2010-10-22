@@ -64,18 +64,6 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		#region IIsDisposed Members
-		
-		public bool IsDisposed
-		{
-			get
-			{
-				return this.isDisposed;
-			}
-		}
-
-		#endregion
-
 		public bool								IsDiscarded
 		{
 			get
@@ -101,6 +89,19 @@ namespace Epsitec.Cresus.Core.Business
 				return this.activeEntity;
 			}
 		}
+
+		
+		#region IIsDisposed Members
+		
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
 
 		
 		public bool ContainsChanges()
@@ -247,9 +248,16 @@ namespace Epsitec.Cresus.Core.Business
 				{
 					this.dataContext.UpdateEmptyEntityStatus (entity, isEmptyEntity (entity));
 				}
-				
 
-				this.dataContext.SaveChanges ();
+				var e = new CancelEventArgs ();
+
+				this.OnSavingChanges (e);
+
+				if (e.Cancel == false)
+				{
+					this.dataContext.SaveChanges ();
+				}
+
 				this.OnContainsChangesChanged ();
 			}
 		}
@@ -504,6 +512,16 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
+		private void OnSavingChanges(CancelEventArgs e)
+		{
+			var handler = this.SavingChanges;
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
 		private void OnContainsChangesChanged()
 		{
 			var handler = this.ContainsChangesChanged;
@@ -524,6 +542,7 @@ namespace Epsitec.Cresus.Core.Business
             }
 		}
 
+        public event EventHandler<CancelEventArgs> SavingChanges;
 		public event EventHandler ContainsChangesChanged;
 		public event EventHandler MasterEntitiesChanged;
 
