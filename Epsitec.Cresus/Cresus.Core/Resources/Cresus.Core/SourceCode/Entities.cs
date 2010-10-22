@@ -9758,6 +9758,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Node</c> field.
+		///	designer:fld/L0AHJ/L0AML
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AML]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity Node
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AML]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Node;
+				if (oldValue != value)
+				{
+					this.OnNodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AML]", oldValue, value);
+					this.OnNodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Date</c> field.
 		///	designer:fld/L0AHJ/L0A0K
 		///	</summary>
@@ -9870,6 +9892,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnEdgeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
 		partial void OnEdgeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity newValue);
+		partial void OnNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnUserChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
@@ -9961,28 +9985,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>LaunchStep</c> field.
-		///	designer:fld/L0AMJ/L0A7K
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A7K]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity LaunchStep
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity> ("[L0A7K]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue = this.LaunchStep;
-				if (oldValue != value)
-				{
-					this.OnLaunchStepChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity> ("[L0A7K]", oldValue, value);
-					this.OnLaunchStepChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>History</c> field.
 		///	designer:fld/L0AMJ/L0ANJ
 		///	</summary>
@@ -10011,8 +10013,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
 		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
-		partial void OnLaunchStepChanging(global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity newValue);
-		partial void OnLaunchStepChanged(global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10038,18 +10038,30 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowCallEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>ReturnEdges</c> field.
+		///	The <c>ReturnNode</c> field.
 		///	designer:fld/L0AUJ/L0AVJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AVJ]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ReturnEdges
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity ReturnNode
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0AVJ]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVJ]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.ReturnNode;
+				if (oldValue != value)
+				{
+					this.OnReturnNodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVJ]", oldValue, value);
+					this.OnReturnNodeChanged (oldValue, value);
+				}
 			}
 		}
 		
+		partial void OnReturnNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnReturnNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

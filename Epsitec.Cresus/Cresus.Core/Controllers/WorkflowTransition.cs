@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class WorkflowEdge
+	public class WorkflowTransition
 	{
-		public WorkflowEdge(BusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowEdgeEntity workflowEdge)
+		public WorkflowTransition(BusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowEdgeEntity workflowEdge)
 		{
 			this.businessContext = businessContext;
 			this.workflow = workflow;
