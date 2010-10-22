@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -204,6 +204,11 @@ namespace Epsitec.Cresus.Database
 		public override string ToString()
 		{
 			return this.value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+		public static DbId Parse(string value)
+		{
+			return new DbId (long.Parse (value, System.Globalization.CultureInfo.InvariantCulture));
 		}
 		
 		#region IComparable Members

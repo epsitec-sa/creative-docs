@@ -118,6 +118,31 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
 		}
+
+		/// <summary>
+		/// Parses the value into an <see cref="EntityKey"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if the value is empty.</returns>
+		public static EntityKey? Parse(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+            {
+				return null;
+            }
+
+			int separator = value.IndexOf ("]/");
+
+			if (separator < 2)
+			{
+				throw new System.FormatException ("Invalid entity key format");
+			}
+
+			string entityIdValue = value.Substring (0, separator+1);
+			string rowKeyValue   = value.Substring (separator+2);
+
+			return new EntityKey (Druid.Parse (entityIdValue), new DbKey (DbId.Parse (rowKeyValue)));
+		}
 		
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are equal.
