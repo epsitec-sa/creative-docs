@@ -114,6 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var controllers = this.GetSubControllers ().Where (controller => controller.IsDisposed == false).ToList ();
 			controllers.ForEach (controller => controller.Dispose ());
 		}
+		
 		private void OnDisposing()
 		{
 			var handler = this.Disposing;
