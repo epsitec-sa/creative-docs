@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 		{
 			get
 			{
-				int sel = this.listEntties.SelectedItemIndex;
+				int sel = this.listNodes.SelectedItemIndex;
 
 				if (sel == -1)
 				{
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			if (sel != -1)
 			{
 				var def = this.workflowDefinitionEntities[sel];
-				var list = Entity.DeepSearch (def);
+				var list = Entity.DeepSearch (def).Where (x => x is WorkflowNodeEntity).Cast<WorkflowNodeEntity> ().OrderBy (x => x.Name);
 
 				foreach (var entity in list)
 				{
