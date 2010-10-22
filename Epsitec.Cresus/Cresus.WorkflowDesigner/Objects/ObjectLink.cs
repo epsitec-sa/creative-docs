@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 				case ActiveElement.LinkCreateDst:
-					return (this.srcObject is ObjectNode) ? "Crée une nouvelle transition" : "Crée un nouveau noeud";
+					return (this.srcObject is ObjectNode) ? "Crée une nouvelle transition" : "Crée un nouveau noeud<br/>Ctrl+clic choisi un noeud public";
 
 				case ActiveElement.LinkClose:
 					return "Supprime la connexion";
@@ -262,7 +262,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.srcObject is ObjectEdge)
 				{
-					this.CreateNode ();
+					if (message.IsControlPressed)
+					{
+						this.InsertPublicNode ();
+					}
+					else
+					{
+						this.CreateNode ();
+					}
 				}
 			}
 		}
@@ -363,6 +370,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.UpdateGeometry ();
 
 			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
+		}
+
+		private void InsertPublicNode()
+		{
+			// TODO:
 		}
 
 
@@ -623,8 +635,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				else
 				{
-					graphics.Rasterizer.AddOutline (this.Path, 2);
-					graphics.RenderSolid (color);
+					if (this.IsForkDash)
+					{
+						Misc.DrawPathDash (graphics, this.Path, 2, 5, 5, true, color);
+					}
+					else
+					{
+						graphics.Rasterizer.AddOutline (this.Path, 2);
+						graphics.RenderSolid (color);
+					}
 				}
 
 				this.DrawArrow (graphics, this.startVector, this.endVector, color);
@@ -648,6 +667,20 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else
 			{
 				this.DrawCircle (graphics, this.startVector.Origin, 4);
+			}
+		}
+
+		private bool IsForkDash
+		{
+			get
+			{
+				if (this.dstObject != null && this.dstObject is ObjectEdge)
+				{
+					var edge = this.dstObject as ObjectEdge;
+					return edge.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork;
+				}
+
+				return false;
 			}
 		}
 

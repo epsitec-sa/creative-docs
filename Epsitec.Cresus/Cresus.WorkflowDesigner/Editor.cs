@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CloseObject(LinkableObject obj)
 		{
-			//	Ferme une boîte.
+			//	Ferme une boîte et supprme l'entité associés.
 			foreach (var link in this.LinkObjects.ToArray ())
 			{
 				if (link.DstObject == obj)
@@ -503,6 +503,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				this.edges.Remove (obj as ObjectEdge);
 			}
+
+			//	Supprime l'entité dans la base.
+			this.businessContext.DataContext.DeleteEntity (obj.AbstractEntity);
 
 			this.SetLocalDirty ();
 		}
