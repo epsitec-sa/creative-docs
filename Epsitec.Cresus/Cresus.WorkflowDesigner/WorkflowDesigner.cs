@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				Padding = new Margins (5),
 			};
 
-			var controller = new MainController (this.businessContext, workflow);
-			controller.CreateUI (box);
+			this.mainController = new MainController (this.businessContext, workflow);
+			this.mainController.CreateUI (box);
 
 			return box;
 		}
@@ -55,7 +55,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void SaveDesign()
 		{
-			//	TODO: sérialiser les réglages dans l'entité 'workflow' dans le XmlBlob.
+			//	Sérialise les réglages de l'entité 'workflow' dans le XmlBlob.
+			this.mainController.SaveDesign ();
 		}
 
 
@@ -79,5 +80,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private readonly WorkflowDefinitionEntity workflow;
 
 		private Widget editorUI;
+		private MainController mainController;
 	}
 }

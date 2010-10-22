@@ -9,11 +9,9 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Core.Entities;
 
-using System.Xml;
-using System.Xml.Serialization;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -1263,6 +1261,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return d < 50;
 			}
 		}
+
+
+		#region Serialize
+		public override XElement Serialize(string xmlNodeName)
+		{
+			return null;
+		}
+
+		public override void Deserialize(XElement xml)
+		{
+		}
+		#endregion
 
 
 		private LinkableObject					srcObject;

@@ -9,11 +9,9 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Core.Entities;
 
-using System.Xml;
-using System.Xml.Serialization;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -24,21 +22,52 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			System.Diagnostics.Debug.Assert (this.entity != null);
 
-			this.title = new TextLayout ();
-			this.title.DefaultFontSize = 12;
-			this.title.Alignment = ContentAlignment.MiddleCenter;
-			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.textLayoutHeader = new TextLayout ();
+			this.textLayoutHeader.DefaultFontSize = 14;
+			this.textLayoutHeader.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
+			this.textLayoutHeader.Alignment = ContentAlignment.MiddleCenter;
+			this.textLayoutHeader.Text = "Cartouche";
 
-			this.subtitle = new TextLayout ();
-			this.subtitle.DefaultFontSize = 9;
-			this.subtitle.Alignment = ContentAlignment.MiddleLeft;
-			this.subtitle.BreakMode = TextBreakMode.Hyphenate;
+			this.textLayoutTitle = new TextLayout ();
+			this.textLayoutTitle.DefaultFontSize = 12;
+			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
+			this.textLayoutTitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+			this.textLayoutSubtitle = new TextLayout ();
+			this.textLayoutSubtitle.DefaultFontSize = 9;
+			this.textLayoutSubtitle.Alignment = ContentAlignment.MiddleLeft;
+			this.textLayoutSubtitle.BreakMode = TextBreakMode.Hyphenate;
 
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
+
+			this.SetBounds (new Rectangle (Point.Zero, ObjectCartridge.frameSize));
 		}
 
 
+		public override void SetBounds(Rectangle bounds)
+		{
+			this.bounds = bounds;
+			this.UpdateButtonsGeometry ();
+		}
+
+		public override Rectangle Bounds
+		{
+			//	Retourne la boîte de l'objet.
+			get
+			{
+				return this.bounds;
+			}
+		}
+
+		public override void Move(double dx, double dy)
+		{
+			//	Déplace l'objet.
+			this.bounds.Offset (dx, dy);
+			this.UpdateButtonsGeometry ();
+		}
+
+	
 		public override void AcceptEdition()
 		{
 			if (this.editingElement == ActiveElement.CartridgeEditName)
@@ -127,14 +156,85 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void UpdateTitle()
 		{
-			this.title.Text = Misc.Bold (this.Entity.WorkflowName.ToString ());
+			this.textLayoutTitle.Text = Misc.Bold (this.Entity.WorkflowName.ToString ());
 		}
 
 		private void UpdateSubtitle()
 		{
-			this.subtitle.Text = this.Entity.WorkflowDescription.ToString ();
+			this.textLayoutSubtitle.Text = this.Entity.WorkflowDescription.ToString ();
 		}
 
+
+		protected override string GetToolTipText(ActiveElement element)
+		{
+			//	Retourne le texte pour le tooltip.
+			if (this.isDraggingMove || this.isDraggingWidth)
+			{
+				return null;  // pas de tooltip
+			}
+
+			switch (element)
+			{
+				case ActiveElement.CartridgeWidth:
+					return "Change la largeur du cartouche";
+			}
+
+			return base.GetToolTipText (element);
+		}
+
+
+		public override bool MouseMove(Message message, Point pos)
+		{
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			if (this.isDraggingMove)
+			{
+				Rectangle bounds = this.bounds;
+
+				bounds.Offset (pos-this.draggingPos);
+				this.draggingPos = pos;
+
+				this.SetBounds (bounds);
+				this.editor.Invalidate ();
+				return true;
+			}
+			else if (this.isDraggingWidth)
+			{
+				Rectangle bounds = this.bounds;
+
+				bounds.Right = pos.X;
+				bounds.Width = System.Math.Max (bounds.Width, AbstractObject.commentMinWidth);
+
+				this.SetBounds (bounds);
+				this.editor.Invalidate ();
+				return true;
+			}
+			else
+			{
+				return base.MouseMove (message, pos);
+			}
+		}
+
+		public override void MouseDown(Message message, Point pos)
+		{
+			//	Le bouton de la souris est pressé.
+			base.MouseDown (message, pos);
+
+			if (this.hilitedElement == ActiveElement.CartridgeMove)
+			{
+				this.isDraggingMove = true;
+				this.UpdateButtonsState ();
+				this.draggingPos = pos;
+				this.editor.LockObject (this);
+			}
+
+			if (this.hilitedElement == ActiveElement.CartridgeWidth)
+			{
+				this.isDraggingWidth = true;
+				this.UpdateButtonsState ();
+				this.editor.LockObject (this);
+			}
+		}
 
 		public override void MouseUp(Message message, Point pos)
 		{
@@ -147,11 +247,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.StartEdition (this.hilitedElement);
 				return;
 			}
+
+			if (this.isDraggingMove)
+			{
+				this.isDraggingMove = false;
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
+				this.editor.UpdateAfterGeometryChanged (this);
+				this.editor.SetLocalDirty ();
+			}
+			else if (this.isDraggingWidth)
+			{
+				this.isDraggingWidth = false;
+				this.UpdateButtonsState ();
+				this.editor.LockObject (null);
+				this.editor.UpdateAfterGeometryChanged (this);
+				this.editor.SetLocalDirty ();
+			}
+			else
+			{
+			}
 		}
 
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
+			if (this.RectangleHeader.Contains (pos))
+			{
+				return ActiveElement.CartridgeMove;
+			}
+
 			if (this.RectangleTitle.Contains (pos))
 			{
 				return ActiveElement.CartridgeEditName;
@@ -165,43 +290,102 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return ActiveElement.None;
 		}
 
+		public override ActiveElement MouseDetectForeground(Point pos)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			if (pos.IsZero || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			{
+				return ActiveElement.None;
+			}
+
+			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
+			{
+				return this.DetectButtons (pos);
+			}
+
+			return ActiveElement.None;
+		}
+
+
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
 			Rectangle rect;
-			Color color = Color.FromBrightness (0);
+			Color textColor = Color.FromBrightness (0);
+			Color frameColor = (this.hilitedElement == ActiveElement.None) ? Color.FromBrightness (1) : Color.FromBrightness (0.9);
+
+			Rectangle rh = Rectangle.Empty;
+			if (this.hilitedElement != ActiveElement.None)
+			{
+				rh = this.RectangleHeader;
+			}
+
+			//	Dessine l'en-tête.
+			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth)
+			{
+				rect = rh;
+				rect.Offset (0.5, 0.5);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.colorFactory.GetColor (0.5));
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (this.colorFactory.GetColor (0));
+
+				rect.Offset (0, 1);
+				this.textLayoutHeader.LayoutSize = rect.Size;
+				this.textLayoutHeader.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (1), GlyphPaintStyle.Normal);
+			}
+
+			//	Dessine le cartouche.
+			graphics.AddFilledRectangle (this.RectangleTitle);
+			graphics.AddFilledRectangle (this.RectangleSubtitle);
+			graphics.RenderSolid (frameColor);
 
 			rect = this.RectangleTitle;
 			rect.Deflate (4, 2);
-			this.title.LayoutSize = rect.Size;
-			this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
+			rect.Offset (0, 1);
+			this.textLayoutTitle.LayoutSize = rect.Size;
+			this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, textColor, GlyphPaintStyle.Normal);
 
 			rect = this.RectangleSubtitle;
 			rect.Deflate (4, 2);
-			this.subtitle.LayoutSize = rect.Size;
-			this.subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
-
-			rect = new Rectangle (Point.Zero, this.editor.AreaSize);
-			rect.Deflate (0.5);
-			graphics.AddRectangle (rect);
+			rect.Offset (0, 1);
+			this.textLayoutSubtitle.LayoutSize = rect.Size;
+			this.textLayoutSubtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, textColor, GlyphPaintStyle.Normal);
 
 			rect = this.RectangleTitle;
-			rect.Inflate (0.5);
+			rect.Offset (0.5, 0.5);
 			graphics.AddRectangle (rect);
 
 			rect = this.RectangleSubtitle;
-			rect.Inflate (0.5);
+			rect.Offset (0.5, 0.5);
 			graphics.AddRectangle (rect);
 			
-			graphics.RenderSolid ();
+			graphics.RenderSolid (textColor);
+		}
+
+		public override void DrawForeground(Graphics graphics)
+		{
+			//	Dessine le dessus de l'objet.
+			this.DrawButtons (graphics);
+		}
+
+
+		protected Rectangle RectangleHeader
+		{
+			get
+			{
+				Rectangle rect = this.bounds;
+				rect.Bottom = rect.Top;
+				rect.Height = ObjectCartridge.headerHeight;
+				return rect;
+			}
 		}
 
 		private Rectangle RectangleTitle
 		{
 			get
 			{
-				var bounds = this.CartridgeBounds;
-				return new Rectangle (bounds.Left, bounds.Top-ObjectCartridge.titleHeight, bounds.Width, ObjectCartridge.titleHeight);
+				return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectCartridge.titleHeight, this.bounds.Width, ObjectCartridge.titleHeight);
 			}
 		}
 
@@ -209,18 +393,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				var bounds = this.CartridgeBounds;
-				return new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, ObjectCartridge.frameSize.Height-ObjectCartridge.titleHeight-1);
+				return new Rectangle (this.bounds.Left, this.bounds.Bottom, this.bounds.Width, ObjectCartridge.frameSize.Height-ObjectCartridge.titleHeight);
 			}
 		}
 
-		private Rectangle CartridgeBounds
-		{
-			get
-			{
-				return new Rectangle (this.editor.AreaSize.Width-ObjectCartridge.frameSize.Width-1, 1, ObjectCartridge.frameSize.Width, ObjectCartridge.frameSize.Height);
-			}
-		}
 
 		public WorkflowDefinitionEntity Entity
 		{
@@ -231,13 +407,80 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		private bool IsHeaderHilite
+		{
+			//	Indique si la souris est dans l'en-tête.
+			get
+			{
+				return (this.hilitedElement == ActiveElement.CartridgeMove ||
+						this.hilitedElement == ActiveElement.CartridgeWidth ||
+						this.hilitedElement == ActiveElement.CartridgeEditName ||
+						this.hilitedElement == ActiveElement.CartridgeEditDescription);
+			}
+		}
+
+
+		protected Point PositionWidthButton
+		{
+			//	Retourne la position du bouton pour modifier la largeur.
+			get
+			{
+				return new Point (this.bounds.Right, this.bounds.Center.Y);
+			}
+		}
+
+	
+		protected override void CreateButtons()
+		{
+			this.buttons.Add (new ActiveButton (ActiveElement.CartridgeWidth, this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryWidth, this.UpdateButtonStateWidth));
+		}
+
+		private void UpdateButtonGeometryWidth(ActiveButton button)
+		{
+			button.Center = this.PositionWidthButton;
+		}
+
+		private void UpdateButtonStateWidth(ActiveButton button)
+		{
+			button.State.Hilited = this.hilitedElement == button.Element;
+			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging);
+		}
+
+		private bool IsDragging
+		{
+			get
+			{
+				return this.isDraggingMove || this.isDraggingWidth || this.editor.IsEditing;
+			}
+		}
+
+	
+		#region Serialize
+		public override XElement Serialize(string xmlNodeName)
+		{
+			return null;
+		}
+
+		public override void Deserialize(XElement xml)
+		{
+		}
+		#endregion
+
+
 		private static readonly Size			frameSize = new Size (250, 70);
 		private static readonly double			titleHeight = 20;
+		private static readonly double			headerHeight = 24;
 
-		private TextLayout						title;
-		private TextLayout						subtitle;
+		private Rectangle						bounds;
+		private TextLayout						textLayoutHeader;
+		private TextLayout						textLayoutTitle;
+		private TextLayout						textLayoutSubtitle;
 
 		private ActiveElement					editingElement;
 		private AbstractTextField				editingTextField;
+
+		private bool							isDraggingMove;
+		private bool							isDraggingWidth;
+		private Point							draggingPos;
 	}
 }

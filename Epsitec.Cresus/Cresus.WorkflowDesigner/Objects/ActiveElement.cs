@@ -93,6 +93,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		InfoLine19,
 		InfoLine20,
 
+		CartridgeMove,
+		CartridgeWidth,
 		CartridgeEditName,
 		CartridgeEditDescription,
 	}
