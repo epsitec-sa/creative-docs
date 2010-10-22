@@ -12,11 +12,10 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WorkflowDesigner.Objects;
 
-using System.Xml;
-using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner
 {
@@ -125,10 +124,50 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public void SaveDesign()
+		{
+#if false
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XComment ("Saved on " + timeStamp),
+				new XElement ("store",
+				//-						this.StateManager.SaveStates ("stateManager"),
+					UI.SaveWindowPositions ("windowPositions"),
+					this.persistenceManager.Save ("uiSettings")));
+
+			doc.Save (CoreApplication.Paths.SettingsPath);
+			System.Diagnostics.Debug.WriteLine ("Save done.");
+#endif
+		}
+
+		public void RestoreDesign()
+		{
+#if false
+			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
+			{
+				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
+				XElement store = doc.Element ("store");
+
+				//-				this.stateManager.RestoreStates (store.Element ("stateManager"));
+				UI.RestoreWindowPositions (store.Element ("windowPositions"));
+				this.persistenceManager.Restore (store.Element ("uiSettings"));
+			}
+
+			this.persistenceManager.DiscardChanges ();
+			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
+
+			//-			this.UpdateCommandsAfterStateChange ();
+#endif
+		}
+
+
 		public void CreateInitialWorkflow()
 		{
-			this.initialNodePos = new Point (0, 0);
-			this.initialEdgePos = new Point (150, 80);
+			this.initialNodePos = new Point (0, 100);
+			this.initialEdgePos = new Point (150, 100);
 
 			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
 			bool isRoot = true;
@@ -414,7 +453,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateLinks ();
 		}
 
-		public void UpdateAfterGeometryChanged(LinkableObject node)
+		public void UpdateAfterGeometryChanged(AbstractObject node)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateObjects ();
@@ -515,7 +554,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		private void PushLayout(LinkableObject exclude, PushDirection direction, double margin)
+		private void PushLayout(AbstractObject exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
@@ -523,7 +562,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				bool push = false;
 
-				foreach (var obj in this.LinkableObjects)
+				foreach (var obj in this.PushableObjects)
 				{
 					var inter = this.PushSearch (obj, exclude, margin);
 					if (inter != null)
@@ -541,13 +580,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private LinkableObject PushSearch(LinkableObject node, LinkableObject exclude, double margin)
+		private AbstractObject PushSearch(AbstractObject node, AbstractObject exclude, double margin)
 		{
 			//	Cherche une boîte qui chevauche 'node'.
 			Rectangle rect = node.Bounds;
 			rect.Inflate (margin);
 
-			foreach (var obj in this.LinkableObjects)
+			foreach (var obj in this.PushableObjects)
 			{
 				if (obj != node && obj != exclude)
 				{
@@ -561,7 +600,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return null;
 		}
 
-		private void PushAction(LinkableObject node, LinkableObject inter, PushDirection direction, double margin)
+		private void PushAction(AbstractObject node, AbstractObject inter, PushDirection direction, double margin)
 		{
 			//	Pousse 'inter' pour venir après 'node' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
@@ -854,7 +893,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						type = MouseCursorType.IBeam;
 					}
 					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentMove ||
-							 this.hilitedObject.HilitedElement == ActiveElement.InfoMove)
+							 this.hilitedObject.HilitedElement == ActiveElement.InfoMove ||
+							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeMove)
 					{
 						type = MouseCursorType.Move;
 					}
@@ -1244,6 +1284,22 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		public IEnumerable<AbstractObject> PushableObjects
+		{
+			get
+			{
+				if (this.cartridge != null)
+				{
+					yield return this.cartridge;
+				}
+
+				foreach (var obj in this.LinkableObjects)
+				{
+					yield return obj;
+				}
+			}
+		}
+
 		public IEnumerable<ObjectLink> LinkObjects
 		{
 			get
@@ -1295,85 +1351,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 #endregion
-
-		#region Serialization
-		public string Serialize()
-		{
-			//	Sérialise la vue éditée et retourne le résultat dans un string.
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
-			XmlTextWriter writer = new XmlTextWriter(stringWriter);
-			writer.Formatting = Formatting.None;
-
-			this.WriteXml(writer);
-
-			writer.Flush();
-			writer.Close();
-			return buffer.ToString();
-		}
-
-		public void Deserialize(string data)
-		{
-			//	Désérialise la vue à partir d'un string de données.
-			System.IO.StringReader stringReader = new System.IO.StringReader(data);
-			XmlTextReader reader = new XmlTextReader(stringReader);
-			
-			this.ReadXml(reader);
-
-			reader.Close();
-		}
-
-		private void WriteXml(XmlWriter writer)
-		{
-#if false
-			//	Sérialise toutes les boîtes.
-			writer.WriteStartDocument();
-
-			writer.WriteStartElement(Xml.Boxes);
-			foreach (ObjectBox box in this.boxes)
-			{
-				box.WriteXml(writer);
-			}
-			writer.WriteEndElement();
-			
-			writer.WriteEndDocument();
-#endif
-		}
-
-		private void ReadXml(XmlReader reader)
-		{
-#if false
-			//	Désérialise toutes les boîtes.
-			this.Clear();
-
-			while (reader.ReadToFollowing(Xml.Box))
-			{
-				ObjectBox box = new ObjectBox (this);
-				box.ReadXml (reader);
-				
-				if (box.CultureMap == null)
-				{
-					//	Somebody deleted the referenced entity; simply discard the box from
-					//	the entity graph and let the user clean up the mess (there might be
-					//	visible comments and other entities pointed to by the missing one).
-
-					continue;
-				}
-				
-				this.boxes.Add (box);
-			}
-
-			foreach (ObjectBox box in this.boxes)
-			{
-				box.AdjustAfterRead();
-			}
-
-			this.CloseBox(null);  // voir ObjectBox.AdjustAfterRead, commentaire (*)
-			this.UpdateAfterAddOrRemoveConnexion(null);
-			this.UpdateAfterOpenOrCloseBox();
-#endif
-		}
-		#endregion
 
 		#region Helpers.IToolTipHost
 		public object GetToolTipCaption(Point pos)

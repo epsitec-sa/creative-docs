@@ -7,12 +7,12 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
-using System.Xml;
-using System.Xml.Serialization;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 		}
 
-		public void SetBounds(Rectangle bounds)
+		public override void SetBounds(Rectangle bounds)
 		{
 			//	Modifie la boîte de l'objet.
 			bounds = new Rectangle(Point.GridAlign (bounds.BottomLeft), Point.GridAlign (bounds.TopRight));
@@ -387,6 +387,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 		}
+
+
+		#region Serialize
+		public override XElement Serialize(string xmlNodeName)
+		{
+			var key = this.editor.BusinessContext.DataContext.GetNormalizedEntityKey (this.AbstractEntity);
+
+			return new XElement ("LinkableObject",
+					new XAttribute ("Bounds", this.bounds.ToString ()));
+		}
+
+		public override void Deserialize(XElement xml)
+		{
+			string b = (string) xml.Attribute ("Bounds");
+
+			this.bounds = Rectangle.Parse (b);
+		}
+		#endregion
 
 
 		protected Rectangle						bounds;

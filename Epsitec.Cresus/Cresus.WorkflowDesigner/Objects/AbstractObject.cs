@@ -7,11 +7,11 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
-using System.Xml;
-using System.Xml.Serialization;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -57,6 +57,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				return this.colorFactory;
 			}
+		}
+
+		public virtual void SetBounds(Rectangle bounds)
+		{
 		}
 
 		public virtual Rectangle Bounds
@@ -520,6 +524,41 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		#region Serialize
+		public virtual XElement Serialize(string xmlNodeName)
+		{
+			string entityKey;
+			if (this.entity.UnwrapNullEntity () == null)
+			{
+				entityKey = "null";
+			}
+			else
+			{
+				var key = this.editor.BusinessContext.DataContext.GetNormalizedEntityKey (this.entity);
+				entityKey = key.ToString ();
+			}
+
+			return new XElement ("AbstractObject",
+					new XAttribute ("Entity", entityKey),
+					new XAttribute ("Color", this.colorFactory.ColorItem.ToString ()));
+		}
+
+		public virtual void Deserialize(XElement xml)
+		{
+			string k = (string) xml.Attribute ("Entity");
+			string c = (string) xml.Attribute ("Color");
+
+			if (k != "null")
+			{
+				EntityKey? key = EntityKey.Parse (k);
+				this.entity = this.editor.BusinessContext.DataContext.ResolveEntity (key);
+			}
+
+			this.colorFactory.ColorItem = (ColorItem) System.Enum.Parse (typeof (ColorItem), c);
+		}
+		#endregion
+
+
 		protected static readonly double		lengthStumpLink = 60;
 		protected static readonly double		arrowLength = 12;
 		protected static readonly double		arrowAngle = 25;
@@ -528,7 +567,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double		shadowOffset = 6;
 
 		protected readonly Editor				editor;
-		protected readonly AbstractEntity		entity;
+		protected AbstractEntity				entity;
 
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;

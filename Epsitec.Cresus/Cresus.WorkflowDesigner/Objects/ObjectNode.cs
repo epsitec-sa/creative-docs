@@ -9,11 +9,9 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Core.Entities;
 
-using System.Xml;
-using System.Xml.Serialization;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -934,132 +932,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		#region Serialization
-		public void WriteXml(XmlWriter writer)
+		#region Serialize
+		public override XElement Serialize(string xmlNodeName)
 		{
-			//	Sérialise toutes les informations de la boîte et de ses champs.
-#if false
-			writer.WriteStartElement(Xml.Box);
-			
-			writer.WriteElementString(Xml.Druid, this.cultureMap.Id.ToString());
-			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
-			writer.WriteElementString(Xml.IsExtended, this.isExtended.ToString(System.Globalization.CultureInfo.InvariantCulture));
-
-			if (this.columnsSeparatorRelative1 != 0.5)
-			{
-				writer.WriteElementString(Xml.ColumnsSeparatorRelative1, this.columnsSeparatorRelative1.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			}
-			
-			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
-
-			foreach (Field field in this.fields)
-			{
-				field.WriteXml(writer);
-			}
-
-			if (this.comment != null && this.comment.IsVisible)  // commentaire associé ?
-			{
-				this.comment.WriteXml(writer);
-			}
-			
-			if (this.info != null && this.info.IsVisible)  // informations associées ?
-			{
-				this.info.WriteXml(writer);
-			}
-			
-			writer.WriteEndElement();
-#endif
+			return null;
 		}
 
-		public void ReadXml(XmlReader reader)
+		public override void Deserialize(XElement xml)
 		{
-#if false
-			this.fields.Clear();
-
-			reader.Read();
-
-			while (true)
-			{
-				if (reader.NodeType == XmlNodeType.Element)
-				{
-					string name = reader.LocalName;
-
-					if (name == Xml.Field)
-					{
-						Field field = new Field(this.editor);
-						field.ReadXml(reader);
-						reader.Read();
-						this.fields.Add(field);
-					}
-					else if (name == Xml.Comment)
-					{
-						this.comment = new ObjectComment(this.editor);
-						this.comment.ReadXml(reader);
-						this.comment.AttachObject = this;
-						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
-						this.editor.AddComment(this.comment);
-						reader.Read();
-					}
-					else if (name == Xml.Info)
-					{
-						this.info = new ObjectInfo(this.editor);
-						this.info.ReadXml(reader);
-						this.info.AttachObject = this;
-						this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
-						this.editor.AddInfo(this.info);
-						reader.Read();
-					}
-					else
-					{
-						string element = reader.ReadElementString();
-
-						if (name == Xml.Druid)
-						{
-							Druid druid = Druid.Parse(element);
-							if (druid.IsValid)
-							{
-								Module module = this.SearchModule(druid);
-								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
-							}
-						}
-						else if (name == Xml.Bounds)
-						{
-							this.bounds = Rectangle.Parse(element);
-						}
-						else if (name == Xml.IsExtended)
-						{
-							this.isExtended = bool.Parse(element);
-						}
-						else if (name == Xml.ColumnsSeparatorRelative1)
-						{
-							this.columnsSeparatorRelative1 = double.Parse(element);
-						}
-						else if (name == Xml.Color)
-						{
-							this.boxColor = (ColorItem) System.Enum.Parse(typeof(ColorItem), element);
-						}
-						else
-						{
-							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in box", name));
-						}
-					}
-				}
-				else if (reader.NodeType == XmlNodeType.EndElement)
-				{
-					System.Diagnostics.Debug.Assert(reader.Name == Xml.Box);
-					break;
-				}
-				else
-				{
-					reader.Read();
-				}
-			}
-#endif
-		}
-
-		public void AdjustAfterRead()
-		{
-			//	Ajuste le contenu de la boîte après sa désérialisation.
 		}
 		#endregion
 

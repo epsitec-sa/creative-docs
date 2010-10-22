@@ -9,11 +9,9 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Core.Entities;
 
-using System.Xml;
-using System.Xml.Serialization;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
@@ -83,7 +81,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public void SetBounds(Rectangle bounds)
+		public override void SetBounds(Rectangle bounds)
 		{
 			//	Modifie la boîte de l'objet.
 			this.bounds = bounds;
@@ -777,63 +775,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		#region Serialization
-		public void WriteXml(XmlWriter writer)
+		#region Serialize
+		public override XElement Serialize(string xmlNodeName)
 		{
-#if false
-			//	Sérialise toutes les informations du commentaire.
-			//	Utilisé seulement pour les commentaires associés à des boîtes.
-			//	Les commentaires associés à des connexions sont sérialisés par Field.
-			writer.WriteStartElement(Xml.Comment);
-			
-			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
-			writer.WriteElementString(Xml.Text, this.textLayoutComment.Text);
-			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
-
-			writer.WriteEndElement();
-#endif
+			return null;
 		}
 
-		public void ReadXml(XmlReader reader)
+		public override void Deserialize(XElement xml)
 		{
-#if false
-			reader.Read();
-			
-			while (true)
-			{
-				if (reader.NodeType == XmlNodeType.Element)
-				{
-					string name = reader.LocalName;
-					string element = reader.ReadElementString();
-
-					if (name == Xml.Bounds)
-					{
-						this.bounds = Rectangle.Parse(element);
-					}
-					else if (name == Xml.Text)
-					{
-						this.textLayoutComment.Text = element;
-					}
-					else if (name == Xml.Color)
-					{
-						this.boxColor = (ColorItem) System.Enum.Parse (typeof (ColorItem), element);
-					}
-					else
-					{
-						throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in comment", name));
-					}
-				}
-				else if (reader.NodeType == XmlNodeType.EndElement)
-				{
-					System.Diagnostics.Debug.Assert(reader.Name == Xml.Comment);
-					break;
-				}
-				else
-				{
-					reader.Read();
-				}
-			}
-#endif
 		}
 		#endregion
 
