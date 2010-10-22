@@ -374,7 +374,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void InsertPublicNode()
 		{
-			// TODO:
+			var dialog = new Dialogs.SelectPublicNodeDialog (this.editor, this.editor.BusinessContext);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
+
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
+
+			var obj = new ObjectNode (this.editor, dialog.NodeEntity);
+
+			this.dstObject = obj;
+			this.srcObject.AddEntityLink (obj);
+
+			this.startManual = false;
+			this.endManual = false;
+
+			this.editor.EditableObject = obj;
+			this.editor.AddNode (obj);
+			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
+			this.editor.UpdateGeometry ();
+
+			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
 		}
 
 
@@ -674,6 +696,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
+				//	Retourne true s'il s'agit d'une connexion entrante sur un edge de type fork.
 				if (this.dstObject != null && this.dstObject is ObjectEdge)
 				{
 					var edge = this.dstObject as ObjectEdge;

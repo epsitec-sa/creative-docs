@@ -130,10 +130,32 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.initialNodePos = new Point (0, 0);
 			this.initialEdgePos = new Point (150, 80);
 
-			var firstNodeEntity = this.workflowDefinitionEntity as WorkflowNodeEntity;
+			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
+			bool isRoot = true;
 
-			List<AbstractEntity> alreadyCreated = new List<AbstractEntity> ();
-			this.CreateInitialWorkflow (alreadyCreated, firstNodeEntity, isRoot: true);
+			foreach (var entity in list)
+			{
+				if (entity is WorkflowEdgeEntity)
+				{
+					var edge = new ObjectEdge (this, entity as WorkflowEdgeEntity);
+					this.AddEdge (edge);
+
+					edge.SetBounds (new Rectangle (this.initialEdgePos, edge.Bounds.Size));
+					this.initialEdgePos.Y += 80;
+				}
+
+				if (entity is WorkflowNodeEntity)
+				{
+					var node = new ObjectNode (this, entity as WorkflowNodeEntity);
+					node.IsRoot = isRoot;
+					this.AddNode (node);
+
+					node.SetBounds (new Rectangle (this.initialNodePos, node.Bounds.Size));
+					this.initialNodePos.Y += 80;
+
+					isRoot = false;
+				}
+			}
 
 			foreach (var obj in this.LinkableObjects)
 			{
@@ -143,49 +165,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 
 			this.UpdateAfterGeometryChanged (null);
-		}
-
-		private void CreateInitialWorkflow(List<AbstractEntity> alreadyCreated, WorkflowEdgeEntity edgeEntity)
-		{
-			if (alreadyCreated.Contains (edgeEntity))
-			{
-				return;
-			}
-
-			alreadyCreated.Add (edgeEntity);
-
-			var edge = new ObjectEdge (this, edgeEntity);
-			this.AddEdge (edge);
-
-			edge.SetBounds (new Rectangle (this.initialEdgePos, edge.Bounds.Size));
-			this.initialEdgePos.Y += 80;
-
-			if (edgeEntity.NextNode.IsNotNull ())
-			{
-				this.CreateInitialWorkflow (alreadyCreated, edgeEntity.NextNode);
-			}
-		}
-
-		private void CreateInitialWorkflow(List<AbstractEntity> alreadyCreated, WorkflowNodeEntity nodeEntity, bool isRoot = false)
-		{
-			if (alreadyCreated.Contains (nodeEntity))
-			{
-				return;
-			}
-
-			alreadyCreated.Add (nodeEntity);
-
-			var node = new ObjectNode (this, nodeEntity);
-			node.IsRoot = isRoot;
-			this.AddNode (node);
-
-			node.SetBounds (new Rectangle (this.initialNodePos, node.Bounds.Size));
-			this.initialNodePos.Y += 80;
-
-			foreach (var edgeEntity in nodeEntity.Edges)
-			{
-				this.CreateInitialWorkflow (alreadyCreated, edgeEntity);
-			}
 		}
 
 
@@ -505,7 +484,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Supprime l'entité dans la base.
-			this.businessContext.DataContext.DeleteEntity (obj.AbstractEntity);
+			bool isPublic = false;
+
+			if (obj is ObjectNode)
+			{
+				var node = obj as ObjectNode;
+				isPublic = node.Entity.IsPublic;
+			}
+
+			if (!isPublic)
+			{
+				this.businessContext.DataContext.DeleteEntity (obj.AbstractEntity);
+			}
 
 			this.SetLocalDirty ();
 		}
@@ -697,7 +687,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				case MessageType.KeyUp:
 					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
 					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
-					if (!this.IsEditing && this.editableObject != null)
+					if (!message.IsControlPressed && !this.IsEditing && this.editableObject != null)
 					{
 						this.editableObject.StartEdition ();
 					}
