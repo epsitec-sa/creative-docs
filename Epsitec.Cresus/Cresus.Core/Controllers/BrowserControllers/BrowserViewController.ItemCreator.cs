@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	which will add it to the browser list, then make it active (which will in
 					//	turn create the controller needed to view/edit it).
 
-					var realEntity = this.CreateRealEntity ();
+					var realEntity = this.CreateRealEntity (null);
 
 #if false
 					controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, this.orchestrator,
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	will be used to bootstrap the entity creation...
 
 					creator.RegisterDisposeAction (() => this.DisposeDummyEntity (dummyEntity));
-					creator.RegisterEntityCreator (() => this.CreateRealEntity ());
+					creator.RegisterEntityCreator (initializer => this.CreateRealEntity (initializer));
 				}
 				
 				return controller;
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				data.DisposeDummyEntity (entity);
 			}
 
-			private AbstractEntity CreateRealEntity()
+			private AbstractEntity CreateRealEntity(System.Action<BusinessContext, AbstractEntity> initializer)
 			{
 				var rootEntityId = this.GetRootEntityId ();
 				
@@ -128,12 +128,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				//	Create a real entity which will immediately be persisted to the database,
 				//	so that it has an entity key. Saving an empty entity would do nothing, so
-				//	we have to mark the entity as the active entity in the business context:
+				//	we have to specify that we want to save all entities, even empty ones...
 				
 				var entity = context.CreateEntity (rootEntityId);
 
-				context.SetActiveEntity (entity);
-				context.SaveChanges (EntitySaveMode.IncludeEmptyActive);
+				if (initializer != null)
+				{
+					initializer (context, entity);
+				}
+
+				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 
 				//	Load the new entity in the browser context (in order to pick it up in the
 				//	list) and in the current business context (so that the user can work on it).
@@ -145,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				data.DisposeBusinessContext (context);
 
-				this.browser.UpdateCollectionAfterInsert (browserEntity);
+				this.browser.InsertIntoCollection (browserEntity);
 				this.browser.SetActiveEntityKey (localEntityKey);
 				this.browser.SelectActiveEntity ();
 				this.browser.RefreshScrollList ();

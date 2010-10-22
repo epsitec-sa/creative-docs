@@ -63,8 +63,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private bool SelectActiveEntity()
 		{
-			this.Orchestrator.ClearActiveEntity ();
-
 			if (this.activeEntityKey.HasValue)
 			{
 				var activeEntityKey       = this.activeEntityKey.Value;
@@ -76,6 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
+				this.Orchestrator.ClearActiveEntity ();
 				return false;
 			}
 		}
@@ -252,10 +251,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.RefreshScrollList (reset: true);
 		}
 
-		private void UpdateCollectionAfterInsert(AbstractEntity entity)
+		private void InsertIntoCollection(AbstractEntity entity)
 		{
 			this.collection.Insert (entity);
-			this.RefreshScrollList (reset: true);
+//-			this.RefreshScrollList (reset: true);
 		}
 
 		private void NotifySelectedItemChange()

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			this.disposeAction = disposeAction;
 		}
 
-		void ICreationController.RegisterEntityCreator(System.Func<AbstractEntity> entityCreator)
+		void ICreationController.RegisterEntityCreator(System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity> entityCreator)
 		{
 			this.entityCreator = entityCreator;
 		}
@@ -49,27 +49,39 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 			System.Diagnostics.Debug.Assert (business != null);
 
-			T entity = this.CreateEntity (business);
+			System.Action<BusinessContext, AbstractEntity> initAction;
 
-			if (initializer != null)
+			if (initializer == null)
 			{
-				initializer (business, entity);
+				initAction = (bc, x) =>
+					{
+					};
 			}
+			else
+			{
+				initAction = (bc, x) =>
+					{
+						initializer (bc, (T) x);
+					};
+			}
+			
+			T entity = this.CreateEntity (business, initAction);
 
-			this.UpgradeController (entity);
+//-			this.UpgradeController (entity);
 		}
 
-		private T CreateEntity(BusinessContext business)
+		private T CreateEntity(BusinessContext business, System.Action<BusinessContext, AbstractEntity> initializer)
 		{
 			T entity;
 
 			if (this.entityCreator != null)
 			{
-				entity = this.entityCreator () as T;
+				entity = this.entityCreator (initializer) as T;
 			}
 			else
 			{
 				entity = business.CreateEntity<T> ();
+				initializer (business, entity);
 			}
 			
 			return entity;
@@ -103,6 +115,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 
 		private System.Action					disposeAction;
-		private System.Func<AbstractEntity>		entityCreator;
+		private System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity>		entityCreator;
 	}
 }

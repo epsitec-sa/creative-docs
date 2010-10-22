@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// </summary>
 		public void ClearActiveEntity()
 		{
+			this.activeEntityKey = null;
 			this.dataViewController.PopAllViewControllers ();
 			this.ClearBusinessContext ();
 		}
@@ -136,6 +137,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				return;
 			}
 
+			if (this.activeEntityKey == entityKey)
+			{
+				return;
+			}
+
 			this.ClearActiveEntity ();
 
 			if (entityKey.HasValue)
@@ -143,6 +149,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				var businessContext = this.DefaultBusinessContext;
 
 				businessContext.SetActiveEntity (entityKey, navigationPathElement);
+				this.activeEntityKey = entityKey;
 
 				var liveEntity = businessContext.ActiveEntity;
 				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
@@ -283,5 +290,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private BusinessContext					businessContext;
+		private EntityKey?						activeEntityKey;
 	}
 }

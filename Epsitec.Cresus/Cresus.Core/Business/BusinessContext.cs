@@ -225,17 +225,18 @@ namespace Epsitec.Cresus.Core.Business
 			if (this.ContainsChanges ())
 			{
 				var notYetPersistedEntities = new HashSet<AbstractEntity> (this.dataContext.GetEntities ().Where (x => !this.dataContext.IsPersistent (x)));
+				System.Predicate<AbstractEntity> isEmptyEntity = x => x.IsEntityEmpty;
 
-				foreach (var entity in notYetPersistedEntities)
+				if (entitySaveMode.HasFlag (EntitySaveMode.IncludeEmpty))
 				{
-					this.dataContext.UpdateEmptyEntityStatus (entity, entity.IsEntityEmpty);
+					isEmptyEntity = x => false;
 				}
 				
-				if ((entitySaveMode.HasFlag (EntitySaveMode.IncludeEmptyActive)) &&
-					(this.activeEntity != null))
+				foreach (var entity in notYetPersistedEntities)
 				{
-					this.dataContext.UpdateEmptyEntityStatus (this.activeEntity, false);
+					this.dataContext.UpdateEmptyEntityStatus (entity, isEmptyEntity (entity));
 				}
+				
 
 				this.dataContext.SaveChanges ();
 				this.OnContainsChangesChanged ();
@@ -537,6 +538,6 @@ namespace Epsitec.Cresus.Core.Business
 	{
 		None = 0,
 
-		IncludeEmptyActive = 0x0001,
+		IncludeEmpty = 0x0001,
 	}
 }
