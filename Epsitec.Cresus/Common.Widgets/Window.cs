@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer, Support.Platform.IFileOperationWindow
+	public class Window : Types.DependencyObject, Support.Data.IContainer, Support.Platform.IFileOperationWindow, Support.IIsDisposed
 	{
 		public Window()
 			: this (null)
@@ -608,12 +608,16 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		public bool								IsDisposed
+
+		#region IIsDisposed Members
+
+		public bool IsDisposed
 		{
 			get { return (this.window == null); }
 		}
-		
+
+		#endregion
+
 		public bool								IsFocused
 		{
 			get
@@ -1202,7 +1206,7 @@ namespace Epsitec.Common.Widgets
 
 			if (message != null)
 			{
-				Widget child = this.Root.FindChild (message.Cursor, Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipHidden);
+				Widget child = this.Root.FindChild (message.Cursor, WidgetChildFindMode.Deep | WidgetChildFindMode.SkipHidden);
 				Widget.UpdateEntered (this, child, message);
 			}
 		}
@@ -2552,7 +2556,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Widget DetectWidget(Drawing.Point pos)
 		{
-			return this.root.FindChild (pos, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep) ?? this.root;
+			return this.root.FindChild (pos, WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep) ?? this.root;
 		}
 		
 		

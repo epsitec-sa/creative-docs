@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Cherche un widget MiniatureFrame destinataire du drag & drop.
 			//	Si on est dans le Viewer ou le StaticText enfant du MiniatureFrame, considère que l'on
 			//	est dans le MiniatureFrame parent.
-			Widget widget = this.Window.Root.FindChild(this.MapClientToRoot(mouse), Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled);
+			Widget widget = this.Window.Root.FindChild (this.MapClientToRoot (mouse), WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled);
 			MiniatureFrame finded = null;
 
 			if (widget != null)

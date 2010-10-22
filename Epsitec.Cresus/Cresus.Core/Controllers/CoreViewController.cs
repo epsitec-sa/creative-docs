@@ -206,11 +206,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		private readonly DataViewOrchestrator orchestrator;
-		private readonly CoreViewController parentController;
-		private readonly ViewControllerMode viewControllerMode;
-		private readonly NavigationPathElement navigationPathElement;
+		private readonly DataViewOrchestrator	orchestrator;
+		private readonly CoreViewController		parentController;
+		private readonly ViewControllerMode		viewControllerMode;
+		private readonly NavigationPathElement	navigationPathElement;
 
-		private readonly BusinessContext businessContext;
+		private readonly BusinessContext		businessContext;
 	}
 }

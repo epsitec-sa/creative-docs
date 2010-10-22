@@ -25,7 +25,7 @@ namespace Epsitec.Common.UI
 		public ItemPanel()
 		{
 			this.AutoDoubleClick = true;
-			this.InternalState |= Widgets.InternalState.Focusable;
+			this.InternalState |= Widgets.WidgetInternalState.Focusable;
 		}
 
 		public ItemPanel(Widgets.Widget embedder)

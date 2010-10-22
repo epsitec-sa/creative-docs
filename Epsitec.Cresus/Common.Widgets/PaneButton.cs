@@ -15,9 +15,9 @@ namespace Epsitec.Common.Widgets
 	{
 		public PaneButton()
 		{
-			this.InternalState &= ~InternalState.Engageable;
+			this.InternalState &= ~WidgetInternalState.Engageable;
 			this.AutoFocus = false;
-			this.InternalState &= ~InternalState.Focusable;
+			this.InternalState &= ~WidgetInternalState.Focusable;
 
 			this.color[0] = Drawing.Color.FromName("ControlLightLight");
 			this.color[1] = Drawing.Color.FromName("ControlLight");

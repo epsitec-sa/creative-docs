@@ -13,9 +13,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AutoFocus = false;
 			
-			this.InternalState &= ~InternalState.PossibleContainer;
-			this.InternalState &= ~InternalState.Engageable;
-			this.InternalState &= ~InternalState.Focusable;
+			this.InternalState &= ~WidgetInternalState.PossibleContainer;
+			this.InternalState &= ~WidgetInternalState.Engageable;
+			this.InternalState &= ~WidgetInternalState.Focusable;
 
 			this.MouseCursor = this.IsVertical ? MouseCursor.AsVSplit : MouseCursor.AsHSplit;
 			this.dragBehavior = new Behaviors.DragBehavior (this, false, false);

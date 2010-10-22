@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (Assembly assembly in assemblies)
 			{
-				this.Analyse (assembly);
+				this.Analyze (assembly);
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		private void Analyse(Assembly assembly)
+		private void Analyze(Assembly assembly)
 		{
 			DependencyClassManager.analyseCount++;
 
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Types.Serialization
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
 				this.assemblies.Add (args.LoadedAssembly);
-				this.Analyse (args.LoadedAssembly);
+				this.Analyze (args.LoadedAssembly);
 			}
 		}
 		

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 		}
 
 		
-		public TaskletRunMode RunMode
+		public TaskletRunMode					RunMode
 		{
 			get
 			{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool IsBefore
+		public bool								IsBefore
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool IsAsync
+		public bool								IsAsync
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool IsAfter
+		public bool								IsAfter
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public System.Action Action
+		public System.Action					Action
 		{
 			get
 			{
@@ -55,8 +55,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public IIsDisposed						Owner
+		{
+			get;
+			set;
+		}
+
 		
-		private readonly System.Action action;
-		private readonly TaskletRunMode runMode;
+		private readonly System.Action			action;
+		private readonly TaskletRunMode			runMode;
 	}
 }

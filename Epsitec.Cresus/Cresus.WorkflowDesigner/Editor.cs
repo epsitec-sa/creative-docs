@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.nodes    = new List<ObjectNode> ();
 			this.edges    = new List<ObjectEdge> ();

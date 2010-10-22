@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Core
 
 		public static Button CreateColumnTileCloseButton(TileContainer container)
 		{
-			Button closeButton = container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) as Button;
+			Button closeButton = container.FindChild ("ColumnTileCloseButton", WidgetChildFindMode.Deep) as Button;
 
 			if (closeButton != null)
 			{
@@ -541,7 +541,7 @@ namespace Epsitec.Cresus.Core
 
 		private static bool ContainsWidget(TileContainer container, string columnTileCloseButton)
 		{
-			return container.FindChild (columnTileCloseButton, Widget.ChildFindMode.Deep) != null;
+			return container.FindChild (columnTileCloseButton, WidgetChildFindMode.Deep) != null;
 		}
 
 		public StaticText CreateWarning(EditionTile tile)

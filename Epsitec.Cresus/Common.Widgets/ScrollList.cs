@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 			this.Padding = new Margins (2, 2, 2, 2);
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 			this.AutomaticScrollEnable = true;
 
 			this.selectItemBehavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);

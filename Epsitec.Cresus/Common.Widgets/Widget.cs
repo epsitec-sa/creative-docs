@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -10,43 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	public delegate bool WidgetWalkChildrenCallback(Widget widget);
-	
-	#region InternalState enum
-	[System.Flags] public enum InternalState : uint
-	{
-		None				= 0,
-		
-		Disposing			= 0x00000001,
-		Disposed			= 0x00000002,
-		
-		WasValid			= 0x00000004,
-		
-		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
-		
-		Focusable			= 0x00000010,
-		Selectable			= 0x00000020,
-		Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
-		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
-		
-		ExecCmdOnPressed	= 0x00001000,		//	=> exécute la commande quand on presse le widget
-		
-		AutoMnemonic		= 0x00100000,
-		AutoFitWidth		= 0x00200000,
-		
-		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
-		EditionEnabled		= 0x02000000,		//	widget peut être édité
-		
-		DebugActive			= 0x80000000		//	widget marqué pour le debug
-	}
-	#endregion
-	
-	
 	/// <summary>
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, Collections.IShortcutCollectionHost
+	public class Widget : Visual, Collections.IShortcutCollectionHost, Support.IIsDisposed
 	{
 		public Widget()
 		{
@@ -55,8 +24,8 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.GetVisualSerialId ()));
 			}
 
-			this.InternalState |= InternalState.WasValid;
-			this.InternalState |= InternalState.AutoMnemonic;
+			this.InternalState |= WidgetInternalState.WasValid;
+			this.InternalState |= WidgetInternalState.AutoMnemonic;
 
 			lock (Widget.aliveWidgets)
 			{
@@ -84,7 +53,7 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Types.Serialization.DependencyClassManager.ExecuteInitializationCode (
 				delegate ()
 				{
-					Helpers.FontPreviewer.Initialize ();
+					FontPreviewer.Initialize ();
 
 					Platform.Window.Initialize ();
 					Res.Initialize ();
@@ -125,7 +94,7 @@ namespace Epsitec.Common.Widgets
 				//	ce qui évite de générer un événement ShortcutChanged avant
 				//	l'heure :
 				
-				this.internalState &= ~InternalState.AutoMnemonic;
+				this.internalState &= ~WidgetInternalState.AutoMnemonic;
 			}
 			
 			this.OnShortcutChanged ();
@@ -141,7 +110,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
-				this.internalState |= InternalState.Disposing;
+				this.internalState |= WidgetInternalState.Disposing;
 				
 				if (this.HasChildren)
 				{
@@ -164,7 +133,7 @@ namespace Epsitec.Common.Widgets
 					this.Disposed = null;
 				}
 				
-				this.internalState |= InternalState.Disposed;
+				this.internalState |= WidgetInternalState.Disposed;
 			}
 		}
 		
@@ -174,17 +143,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internalState & InternalState.DebugActive) != 0;
+				return (this.internalState & WidgetInternalState.DebugActive) != 0;
 			}
 			set
 			{
 				if (value)
 				{
-					this.internalState |= InternalState.DebugActive;
+					this.internalState |= WidgetInternalState.DebugActive;
 				}
 				else
 				{
-					this.internalState &= ~ InternalState.DebugActive;
+					this.internalState &= ~ WidgetInternalState.DebugActive;
 				}
 			}
 		}
@@ -334,7 +303,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internalState & InternalState.Frozen) != 0)
+				if ((this.internalState & WidgetInternalState.Frozen) != 0)
 				{
 					return true;
 				}
@@ -354,7 +323,7 @@ namespace Epsitec.Common.Widgets
 			//	Voir le constructeur Widget(Widget) et Widget.SetEmbedder.
 			get
 			{
-				return (this.internalState & InternalState.Embedded) != 0;
+				return (this.internalState & WidgetInternalState.Embedded) != 0;
 			}
 		}
 		
@@ -362,7 +331,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internalState & InternalState.EditionEnabled) != 0)
+				if ((this.internalState & WidgetInternalState.EditionEnabled) != 0)
 				{
 					return true;
 				}
@@ -376,17 +345,17 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				bool enabled = (this.internalState & InternalState.EditionEnabled) != 0;
+				bool enabled = (this.internalState & WidgetInternalState.EditionEnabled) != 0;
 				
 				if (enabled != value)
 				{
 					if (value)
 					{
-						this.internalState |= InternalState.EditionEnabled;
+						this.internalState |= WidgetInternalState.EditionEnabled;
 					}
 					else
 					{
-						this.internalState &= ~InternalState.EditionEnabled;
+						this.internalState &= ~WidgetInternalState.EditionEnabled;
 					}
 				}
 			}
@@ -396,33 +365,37 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internalState & InternalState.Disposing) != 0;
+				return (this.internalState & WidgetInternalState.Disposing) != 0;
 			}
 		}
 
-		public bool									IsDisposed
+		#region IIsDisposed Members
+
+		public bool IsDisposed
 		{
 			get
 			{
-				return (this.internalState & InternalState.Disposed) != 0;
+				return (this.internalState & WidgetInternalState.Disposed) != 0;
 			}
 		}
-		
+
+		#endregion
+
 		public bool									ExecuteCommandOnPressed
 		{
 			get
 			{
-				return (this.InternalState & InternalState.ExecCmdOnPressed) != 0;
+				return (this.InternalState & WidgetInternalState.ExecCmdOnPressed) != 0;
 			}
 			set
 			{
 				if (value)
 				{
-					this.InternalState |= InternalState.ExecCmdOnPressed;
+					this.InternalState |= WidgetInternalState.ExecCmdOnPressed;
 				}
 				else
 				{
-					this.InternalState &= ~ InternalState.ExecCmdOnPressed;
+					this.InternalState &= ~ WidgetInternalState.ExecCmdOnPressed;
 				}
 			}
 		}
@@ -432,7 +405,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internalState & InternalState.AutoMnemonic) != 0;
+				return (this.internalState & WidgetInternalState.AutoMnemonic) != 0;
 			}
 			set
 			{
@@ -440,11 +413,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (value)
 					{
-						this.internalState |= InternalState.AutoMnemonic;
+						this.internalState |= WidgetInternalState.AutoMnemonic;
 					}
 					else
 					{
-						this.internalState &= ~InternalState.AutoMnemonic;
+						this.internalState &= ~WidgetInternalState.AutoMnemonic;
 					}
 
 					this.ResetMnemonicShortcut ();
@@ -456,7 +429,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internalState & InternalState.AutoFitWidth) != 0;
+				return (this.internalState & WidgetInternalState.AutoFitWidth) != 0;
 			}
 			set
 			{
@@ -464,17 +437,17 @@ namespace Epsitec.Common.Widgets
 				{
 					if (value)
 					{
-						this.internalState |= InternalState.AutoFitWidth;
+						this.internalState |= WidgetInternalState.AutoFitWidth;
 					}
 					else
 					{
-						this.internalState &= ~InternalState.AutoFitWidth;
+						this.internalState &= ~WidgetInternalState.AutoFitWidth;
 					}
 				}
 			}
 		}
 
-		protected InternalState InternalState
+		protected WidgetInternalState				InternalState
 		{
 			get
 			{
@@ -566,22 +539,23 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									CanSelect
 		{
-			get { return ((this.internalState & InternalState.Selectable) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & WidgetInternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool									CanEngage
 		{
-			get { return ((this.internalState & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
+			get { return ((this.internalState & WidgetInternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 
 		public virtual bool							AcceptsFocus
 		{
 			get
 			{
-				return ((this.internalState & InternalState.Focusable) != 0)
+				return ((this.internalState & WidgetInternalState.Focusable) != 0)
 					&& (!this.IsFrozen);
 			}
 		}
+		
 		public virtual bool							AcceptsDefocus
 		{
 			get
@@ -592,7 +566,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									PossibleContainer
 		{
-			get { return ((this.internalState & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & WidgetInternalState.PossibleContainer) != 0) && !this.IsFrozen; }
 		}
 		
 		
@@ -612,7 +586,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Helpers.VisualTree.GetOpletQueue (this);
+				return VisualTree.GetOpletQueue (this);
 			}
 			set
 			{
@@ -962,7 +936,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internalState & InternalState.Embedded) == 0)
+				if ((this.internalState & WidgetInternalState.Embedded) == 0)
 				{
 					return null;
 				}
@@ -1057,7 +1031,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Validate()
 		{
-			bool oldValid = (this.internalState & InternalState.WasValid) != 0;
+			bool oldValid = (this.internalState & WidgetInternalState.WasValid) != 0;
 			bool newValid;
 
 			using (ValidationContext.ValidationInProgress (this))
@@ -1069,22 +1043,22 @@ namespace Epsitec.Common.Widgets
 			{
 				if (newValid)
 				{
-					this.internalState |= InternalState.WasValid;
+					this.internalState |= WidgetInternalState.WasValid;
 				}
 				else
 				{
-					this.internalState &= ~InternalState.WasValid;
+					this.internalState &= ~WidgetInternalState.WasValid;
 				}
 
 				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
 				
 				this.SetError (newValid == false);
 
-				string validationGroups = Helpers.VisualTree.GetValidationGroups (this);
+				string validationGroups = VisualTree.GetValidationGroups (this);
 				
 				if (validationGroups != null)
 				{
-					Helpers.VisualTree.UpdateCommandEnable (this);
+					VisualTree.UpdateCommandEnable (this);
 				}
 			}
 		}
@@ -1148,11 +1122,11 @@ namespace Epsitec.Common.Widgets
 
 		public virtual void SetFrozen(bool frozen)
 		{
-			if ((this.internalState & InternalState.Frozen) == 0)
+			if ((this.internalState & WidgetInternalState.Frozen) == 0)
 			{
 				if (frozen)
 				{
-					this.internalState |= InternalState.Frozen;
+					this.internalState |= WidgetInternalState.Frozen;
 					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
@@ -1160,7 +1134,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!frozen)
 				{
-					this.internalState &= ~ InternalState.Frozen;
+					this.internalState &= ~ WidgetInternalState.Frozen;
 					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
@@ -1269,7 +1243,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.internalState & InternalState.Engageable) == 0)
+			if ((this.internalState & WidgetInternalState.Engageable) == 0)
 			{
 				return;
 			}
@@ -1346,7 +1320,7 @@ namespace Epsitec.Common.Widgets
 		public void SetEmbedder(Widget embedder)
 		{
 			this.SetParent (embedder);
-			this.internalState |= InternalState.Embedded;
+			this.internalState |= WidgetInternalState.Embedded;
 		}
 		
 		
@@ -1451,7 +1425,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget candidate = Widget.enteredWidgets[i];
 				
-				if (Helpers.VisualTree.IsAncestor (widget, candidate) == false)
+				if (VisualTree.IsAncestor (widget, candidate) == false)
 				{
 					//	Ce candidat n'est pas un ancêtre (parent direct ou indirect) du widget
 					//	considéré; il faut donc changer son état Entered pour refléter le fait
@@ -1572,7 +1546,7 @@ namespace Epsitec.Common.Widgets
 						{
 							window.SynchronousRepaint ();
 
-							using (window.PushPaintFilter (new Helpers.WidgetSyncPaintFilter (this, window.PaintFilter)))
+							using (window.PushPaintFilter (new WidgetSyncPaintFilter (this, window.PaintFilter)))
 							{
 								window.MarkForRepaint (this.MapClientToRoot (rect));
 								window.SynchronousRepaint ();
@@ -1919,20 +1893,20 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget FindChild(Drawing.Point point)
 		{
-			return this.FindChild (point, null, ChildFindMode.SkipHidden);
+			return this.FindChild (point, null, WidgetChildFindMode.SkipHidden);
 		}
 
 		public Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore)
 		{
-			return this.FindChild (point, ignore, ChildFindMode.SkipHidden);
+			return this.FindChild (point, ignore, WidgetChildFindMode.SkipHidden);
 		}
 
-		public Widget FindChild(Drawing.Point point, ChildFindMode mode)
+		public Widget FindChild(Drawing.Point point, WidgetChildFindMode mode)
 		{
 			return this.FindChild (point, null, mode);
 		}
 
-		public virtual Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore, ChildFindMode mode)
+		public virtual Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore, WidgetChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -1948,23 +1922,23 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
+				if ((mode & WidgetChildFindMode.SkipMask) != WidgetChildFindMode.All)
 				{
-					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					if ((mode & WidgetChildFindMode.SkipDisabled) != 0)
 					{
 						if (widget.IsEnabled == false)
 						{
 							continue;
 						}
 					}
-					if ((mode & ChildFindMode.SkipHidden) != 0)
+					if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.Visibility == false)
 						{
 							continue;
 						}
 					}
-					if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					if ((mode & WidgetChildFindMode.SkipNonContainer) != 0)
 					{
 						if (widget.PossibleContainer == false)
 						{
@@ -1980,12 +1954,12 @@ namespace Epsitec.Common.Widgets
 
 				if (widget.HitTest (point))
 				{
-					if ((mode & ChildFindMode.SkipTransparent) != 0)
+					if ((mode & WidgetChildFindMode.SkipTransparent) != 0)
 					{
 						//	TODO: vérifier que le point en question n'est pas transparent
 					}
 					
-					if ((mode & ChildFindMode.Deep) != 0)
+					if ((mode & WidgetChildFindMode.Deep) != 0)
 					{
 						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
 						//	un descendant du widget trouvé...
@@ -2001,7 +1975,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					if ((mode & ChildFindMode.SkipEmbedded) != 0)
+					if ((mode & WidgetChildFindMode.SkipEmbedded) != 0)
 					{
 						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
 						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
@@ -2021,12 +1995,12 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		public Widget FindChild(Drawing.Rectangle rect, ChildFindMode mode)
+		public Widget FindChild(Drawing.Rectangle rect, WidgetChildFindMode mode)
 		{
 			return this.FindChild (rect, null, mode);
 		}
 		
-		public virtual Widget FindChild(Drawing.Rectangle rect, IEnumerable<Widget> ignore, ChildFindMode mode)
+		public virtual Widget FindChild(Drawing.Rectangle rect, IEnumerable<Widget> ignore, WidgetChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -2042,23 +2016,23 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
+				if ((mode & WidgetChildFindMode.SkipMask) != WidgetChildFindMode.All)
 				{
-					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					if ((mode & WidgetChildFindMode.SkipDisabled) != 0)
 					{
 						if (widget.IsEnabled == false)
 						{
 							continue;
 						}
 					}
-					if ((mode & ChildFindMode.SkipHidden) != 0)
+					if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.Visibility == false)
 						{
 							continue;
 						}
 					}
-					if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					if ((mode & WidgetChildFindMode.SkipNonContainer) != 0)
 					{
 						if (widget.PossibleContainer == false)
 						{
@@ -2074,12 +2048,12 @@ namespace Epsitec.Common.Widgets
 
 				if (widget.HitTest (rect.BottomLeft) && widget.HitTest (rect.TopRight))
 				{
-					if ((mode & ChildFindMode.SkipTransparent) != 0)
+					if ((mode & WidgetChildFindMode.SkipTransparent) != 0)
 					{
 						//	TODO: vérifier que le point en question n'est pas transparent
 					}
 					
-					if ((mode & ChildFindMode.Deep) != 0)
+					if ((mode & WidgetChildFindMode.Deep) != 0)
 					{
 						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
 						//	un descendant du widget trouvé...
@@ -2095,7 +2069,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					if ((mode & ChildFindMode.SkipEmbedded) != 0)
+					if ((mode & WidgetChildFindMode.SkipEmbedded) != 0)
 					{
 						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
 						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
@@ -2117,10 +2091,10 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget			FindChild(string name)
 		{
-			return this.FindChild (name, ChildFindMode.All);
+			return this.FindChild (name, WidgetChildFindMode.All);
 		}
 		
-		public virtual Widget	FindChild(string name, ChildFindMode mode)
+		public virtual Widget	FindChild(string name, WidgetChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -2136,23 +2110,23 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
+				if ((mode & WidgetChildFindMode.SkipMask) != WidgetChildFindMode.All)
 				{
-					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					if ((mode & WidgetChildFindMode.SkipDisabled) != 0)
 					{
 						if (widget.IsEnabled == false)
 						{
 							continue;
 						}
 					}
-					else if ((mode & ChildFindMode.SkipHidden) != 0)
+					else if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.Visibility == false)
 						{
 							continue;
 						}
 					}
-					else if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					else if ((mode & WidgetChildFindMode.SkipNonContainer) != 0)
 					{
 						if (widget.PossibleContainer == false)
 						{
@@ -2168,7 +2142,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ((widget.Name == null) ||
 					(widget.Name.Length == 0) ||
-					((mode & ChildFindMode.Deep) != 0))
+					((mode & WidgetChildFindMode.Deep) != 0))
 				{
 					Widget child = widget.FindChild (name, mode);
 					
@@ -2246,7 +2220,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
+			this.WalkChildren (finder.Analyze);
 			
 			if (finder.Widgets.Length > 0)
 			{
@@ -2263,7 +2237,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
+			this.WalkChildren (finder.Analyze);
 			
 			if (finder.Widgets.Length > 0)
 			{
@@ -2313,7 +2287,7 @@ namespace Epsitec.Common.Widgets
 					return this;
 				}
 				
-				if (Helpers.VisualTree.IsDescendant (this, focused))
+				if (VisualTree.IsDescendant (this, focused))
 				{
 					return focused;
 				}
@@ -2409,89 +2383,6 @@ namespace Epsitec.Common.Widgets
 			return widgets;
 		}
 		
-		
-		#region CommandWidgetFinder class
-		protected class CommandWidgetFinder
-		{
-			public CommandWidgetFinder()
-			{
-			}
-			
-			public CommandWidgetFinder(string filter)
-			{
-				this.filter = filter;
-			}
-
-			public CommandWidgetFinder(Command command)
-			{
-				this.command = command;
-			}
-			
-			public CommandWidgetFinder(System.Text.RegularExpressions.Regex regex)
-			{
-				this.regex = regex;
-			}
-			
-			
-			public bool Analyse(Widget widget)
-			{
-				if (widget.HasCommand)
-				{
-					if (this.regex == null)
-					{
-						if (this.command == null)
-						{
-							if (this.filter == null)
-							{
-								this.list.Add (widget);
-							}
-							else if (this.filter == widget.CommandName)
-							{
-								this.list.Add (widget);
-							}
-						}
-						else if (this.command == widget.CommandObject)
-						{
-							this.list.Add (widget);
-						}
-					}
-					else
-					{
-						//	Une expression régulière a été définie pour filtrer les widgets en
-						//	fonction de leur nom. On applique cette expression pour voir si le
-						//	nom de la commande est conforme...
-						
-						System.Text.RegularExpressions.Match match = this.regex.Match (widget.CommandName);
-						
-						//	...en cas de succès, on prend note du widget, sinon on passe simplement
-						//	au suivant.
-						
-						if (match.Success)
-						{
-							this.list.Add (widget);
-						}
-					}
-				}
-				
-				return true;
-			}
-			
-			
-			public Widget[]					Widgets
-			{
-				get
-				{
-					return this.list.ToArray ();
-				}
-			}
-			
-			
-			List<Widget>							list = new List<Widget> ();
-			System.Text.RegularExpressions.Regex	regex;
-			string									filter;
-			Command									command;
-		}
-		#endregion
 		
 		public void SetFocusOnTabWidget()
 		{
@@ -2652,7 +2543,7 @@ namespace Epsitec.Common.Widgets
 
 			if (mode == TabNavigationMode.ActivateOnCursorX)
 			{
-				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+				GroupController controller = GroupController.GetGroupController (this);
 
 				find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
 
@@ -2674,7 +2565,7 @@ namespace Epsitec.Common.Widgets
 
 			if (mode == TabNavigationMode.ActivateOnCursorY)
 			{
-				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+				GroupController controller = GroupController.GetGroupController (this);
 
 				find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
 
@@ -3157,8 +3048,8 @@ namespace Epsitec.Common.Widgets
 				//	donner le focus, mais ce n'est pas adéquat; mieux vaut mettre
 				//	le focus sur le frère qui est actuellement activé :
 				
-				Helpers.GroupController controller    = Helpers.GroupController.GetGroupController (this);
-				Widget                  activeWidget = controller.FindActiveWidget ();
+				GroupController controller    = GroupController.GetGroupController (this);
+				Widget          activeWidget = controller.FindActiveWidget ();
 				
 				if (activeWidget != null)
 				{
@@ -3195,7 +3086,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool WalkChildren(WidgetWalkChildrenCallback callback)
+		public virtual bool WalkChildren(System.Predicate<Widget> callback)
 		{
 			//	Retourne true si on a parcouru tous les enfants.
 			
@@ -3453,7 +3344,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.hypertextList == null)
 			{
-				this.hypertextList = new System.Collections.ArrayList ();
+				this.hypertextList = new List<HypertextInfo> ();
 			}
 
 			this.hypertextList.Add (info);
@@ -3675,7 +3566,7 @@ namespace Epsitec.Common.Widgets
 				Widget[] children = this.Children.Widgets;
 				int  childrenNum = children.Length;
 
-				WindowRoot root = message.WindowRoot ?? Helpers.VisualTree.GetWindowRoot (this);
+				WindowRoot root = message.WindowRoot ?? VisualTree.GetWindowRoot (this);
 				bool childEntered = false;
 				
 				for (int i = 0; i < childrenNum; i++)
@@ -4045,8 +3936,8 @@ namespace Epsitec.Common.Widgets
 				this.AboutToBecomeOrphan ();
 			}
 			
-			Window oldWindow = oldParent == null ? null : Helpers.VisualTree.GetWindow (oldParent);
-			Window newWindow = newParent == null ? null : Helpers.VisualTree.GetWindow (newParent);
+			Window oldWindow = oldParent == null ? null : VisualTree.GetWindow (oldParent);
+			Window newWindow = newParent == null ? null : VisualTree.GetWindow (newParent);
 			
 			if (oldWindow != newWindow)
 			{
@@ -4207,7 +4098,7 @@ namespace Epsitec.Common.Widgets
 				this.Pressed (this, e);
 			}
 			
-			if ((this.InternalState & InternalState.ExecCmdOnPressed) != 0)
+			if ((this.InternalState & WidgetInternalState.ExecCmdOnPressed) != 0)
 			{
 				if (this.ExecuteCommand ())
 				{
@@ -4257,7 +4148,7 @@ namespace Epsitec.Common.Widgets
 				this.Clicked (this, e);
 			}
 
-			if ((this.InternalState & InternalState.ExecCmdOnPressed) == 0)
+			if ((this.InternalState & WidgetInternalState.ExecCmdOnPressed) == 0)
 			{
 				if (this.ExecuteCommand ())
 				{
@@ -4468,7 +4359,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Eteint les autres boutons du groupe (s'il y en a) :
 				
-				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+				GroupController controller = GroupController.GetGroupController (this);
 				
 				controller.TurnOffAllButOne (this);
 				controller.SetActiveIndex (this.Index);
@@ -4570,91 +4461,7 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 		
-		#region Various enums
-		public enum Setting : byte
-		{
-			None				= 0,
-			IncludeChildren		= 1
-		}
 		
-		[System.Flags] public enum ChildFindMode
-		{
-			All					= 0,
-			SkipHidden			= 0x00000001,
-			SkipDisabled		= 0x00000002,
-			SkipTransparent		= 0x00000004,
-			SkipEmbedded		= 0x00000008,
-			SkipNonContainer	= 0x00000010,
-			SkipMask			= 0x000000ff,
-			
-			Deep				= 0x00010000
-		}
-		#endregion
-		
-		#region HypertextInfo class
-		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
-		{
-			internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
-			{
-				this.layout = layout;
-				this.bounds = bounds;
-				this.index  = index;
-			}
-			
-			
-			#region ICloneable Members
-			public object Clone()
-			{
-				return new HypertextInfo (this.layout, this.bounds, this.index);
-			}
-			#endregion
-
-			#region IComparable Members
-			public int CompareTo(object obj)
-			{
-				if (obj == null)
-				{
-					return 1;
-				}
-				
-				HypertextInfo that = obj as HypertextInfo;
-				
-				if ((that == null) || (that.layout != this.layout))
-				{
-					throw new System.ArgumentException ("Invalid argument");
-				}
-				
-				return this.index.CompareTo (that.index);
-			}
-			#endregion
-			
-			public override bool Equals(object obj)
-			{
-				return this.CompareTo (obj) == 0;
-			}
-		
-			public override int GetHashCode()
-			{
-				return this.index;
-			}
-			
-			
-			public Drawing.Rectangle		Bounds
-			{
-				get { return this.bounds; }
-			}
-			
-			public string					Anchor
-			{
-				get { return this.layout.FindAnchor (this.index); }
-			}
-			
-			
-			private TextLayout				layout;
-			private Drawing.Rectangle		bounds;
-			private int						index;
-		}
-		#endregion
 
 		private static void SetTextValue(DependencyObject o, object value)
 		{
@@ -4702,25 +4509,26 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
 		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty IconUriProperty = DependencyProperty.Register ("IconUri", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconUriChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IconUriProperty = DependencyProperty.Register ("IconUri", typeof (string), typeof (Widget), new VisualPropertyMetadata (null, Widget.NotifyIconUriChanged, VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty TabNavigationModeProperty = DependencyProperty.Register ("TabNavigationMode", typeof (TabNavigationMode), typeof (Widget), new DependencyPropertyMetadata (TabNavigationMode.None));
 
 		public static readonly DependencyProperty ForwardTabOverrideProperty  = DependencyProperty.Register ("ForwardTabOverride", typeof (Widget), typeof (Widget));
 		public static readonly DependencyProperty BackwardTabOverrideProperty = DependencyProperty.Register ("BackwardTabOverride", typeof (Widget), typeof (Widget));
 		public static readonly DependencyProperty ForwardEnterTabOverrideProperty = DependencyProperty.Register ("ForwardEnterTabOverride", typeof (Widget), typeof (Widget));
 		public static readonly DependencyProperty BackwardEnterTabOverrideProperty = DependencyProperty.Register ("BackwardEnterTabOverride", typeof (Widget), typeof (Widget));
+
+
+		static readonly List<Widget>			enteredWidgets = new List<Widget> ();
+		static List<System.WeakReference>		aliveWidgets   = new List<System.WeakReference> ();
+		static bool								debugDispose;
+
+		private WidgetInternalState				internalState;
 		
-		private InternalState					internalState;
-		
-		private System.Collections.ArrayList	hypertextList;
+		private List<HypertextInfo>				hypertextList;
 		private HypertextInfo					hypertext;
 		
 		private TextLayout						textLayout;
 		private Collections.ShortcutCollection	shortcuts;
 		private MouseCursor						mouseCursor;
-		
-		static List<Widget>						enteredWidgets = new List<Widget> ();
-		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();
-		static bool								debugDispose;
 	}
 }

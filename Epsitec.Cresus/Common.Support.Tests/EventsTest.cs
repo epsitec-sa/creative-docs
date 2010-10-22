@@ -10,11 +10,11 @@ namespace Epsitec.Common.Support
 			Source s = new Source ();
 			Target t = new Target ();
 
-			s.Event += new EventHandler<System.EventArgs> (t.Handler);
+			s.Event += new EventHandler<EventArgs> (t.Handler);
 
 			System.GC.Collect ();
 			
-			s.Send (System.EventArgs.Empty);
+			s.Send (EventArgs.Empty);
 
 			Assert.AreEqual (1, t.Count);
 			
@@ -35,11 +35,11 @@ namespace Epsitec.Common.Support
 			Source s = new Source ();
 			Target t = new Target ();
 
-			s.Event += new EventHandler<System.EventArgs> (t.Handler);
+			s.Event += new EventHandler<EventArgs> (t.Handler);
 
 			System.GC.Collect ();
 
-			s.Send (System.EventArgs.Empty);
+			s.Send (EventArgs.Empty);
 
 			Assert.AreEqual (1, t.Count);
 
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Support
 			Source s = new Source ();
 			Target t = new Target ();
 
-			s.Event += new EventHandler<System.EventArgs> (t.Handler);
-			s.Event += new EventHandler<System.EventArgs> (t.Handler);
+			s.Event += new EventHandler<EventArgs> (t.Handler);
+			s.Event += new EventHandler<EventArgs> (t.Handler);
 
-			s.Send (System.EventArgs.Empty);
+			s.Send (EventArgs.Empty);
 
 			Assert.AreEqual (2, t.Count);
 			
@@ -85,12 +85,12 @@ namespace Epsitec.Common.Support
 			{
 			}
 
-			public void Send(System.EventArgs e)
+			public void Send(EventArgs e)
 			{
 				this.Event.Invoke (this, e);
 			}
 
-			public WeakDelegate<System.EventArgs> Event = new WeakDelegate<System.EventArgs> ();
+			public WeakDelegate<EventArgs> Event = new WeakDelegate<EventArgs> ();
 		}
 		
 		private class Target : IWeakDelegateTarget
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			public void Handler(object sender, System.EventArgs args)
+			public void Handler(object sender, EventArgs args)
 			{
 				System.Console.Out.WriteLine ("Target.Handler executed");
 				this.count++;

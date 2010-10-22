@@ -15,5 +15,8 @@ namespace Epsitec.Common.Support
 		public EventArgs()
 		{
 		}
+
+
+		public static readonly EventArgs Empty = new EventArgs ();
 	}
 }

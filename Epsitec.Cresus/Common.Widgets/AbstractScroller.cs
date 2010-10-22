@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
 			
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);

@@ -400,12 +400,12 @@ namespace Epsitec.Common.Support
 			string localId;
 			ResourceModuleId module;
 
-			this.AnalyseFullId (id, out prefix, out localId, out module);
+			this.AnalyzeFullId (id, out prefix, out localId, out module);
 
 			return module;
 		}
 
-		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleId module)
+		public void AnalyzeFullId(string id, out string prefix, out string localId, out ResourceModuleId module)
 		{
 			if (!string.IsNullOrEmpty (id))
 			{
@@ -1550,7 +1550,7 @@ namespace Epsitec.Common.Support
 				string localId;
 				ResourceModuleId module;
 
-				this.AnalyseFullId (name, out prefix, out localId, out module);
+				this.AnalyzeFullId (name, out prefix, out localId, out module);
 
 				string key = Resources.CreateBundleKey (prefix, module, localId, level, culture, this.GetKeySuffix ());
 
@@ -1581,7 +1581,7 @@ namespace Epsitec.Common.Support
 			string localId;
 			ResourceModuleId module;
 
-			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
+			this.AnalyzeFullId (bundleName, out prefix, out localId, out module);
 
 			string key = Resources.CreateBundleKey (prefix, module, localId, level, culture, this.GetKeySuffix ());
 
@@ -1628,7 +1628,7 @@ namespace Epsitec.Common.Support
 		{
 			string prefix;
 
-			this.AnalyseFullId (fullId, out prefix, out localId, out module);
+			this.AnalyzeFullId (fullId, out prefix, out localId, out module);
 
 			if (string.IsNullOrEmpty (localId))
 			{

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets.Feel
 			
 			System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly (typeof (Factory));
 			
-			Factory.AnalyseAssembly (assembly);
+			Factory.AnalyzeAssembly (assembly);
 			
 			Factory.SetActive ("Default");
 			
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets.Feel
 		}
 		
 		
-		internal static int AnalyseAssembly(System.Reflection.Assembly assembly)
+		internal static int AnalyzeAssembly(System.Reflection.Assembly assembly)
 		{
 			int n = 0;
 			

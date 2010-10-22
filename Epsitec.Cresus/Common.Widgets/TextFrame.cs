@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 			
 			this.opletQueue = new Epsitec.Common.Support.OpletQueue ();
 			
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 			
 			this.opletQueue = story.OpletQueue;
 			

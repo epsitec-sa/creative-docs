@@ -17,7 +17,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class BusinessContext : System.IDisposable
+	public sealed class BusinessContext : System.IDisposable, IIsDisposed
 	{
 		public BusinessContext(BusinessContextPool pool)
 		{
@@ -64,13 +64,17 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public bool								IsDisposed
+		#region IIsDisposed Members
+		
+		public bool IsDisposed
 		{
 			get
 			{
 				return this.isDisposed;
 			}
 		}
+
+		#endregion
 
 		public bool								IsDiscarded
 		{

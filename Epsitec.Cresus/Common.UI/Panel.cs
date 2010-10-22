@@ -593,7 +593,7 @@ namespace Epsitec.Common.UI
 							if (this.isMouseDown)
 							{
 								this.isMouseDown = false;
-								this.StartEdition (message, this.FindChild (pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipDisabled), panelStack);
+								this.StartEdition (message, this.FindChild (pos, Widgets.WidgetChildFindMode.Deep | Widgets.WidgetChildFindMode.SkipHidden | Widgets.WidgetChildFindMode.SkipDisabled), panelStack);
 							}
 						}
 					}

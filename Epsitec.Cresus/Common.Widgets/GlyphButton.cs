@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ButtonStyle = ButtonStyle.Icon;
 			this.AutoFocus = false;
-			this.InternalState &= ~InternalState.Focusable;
+			this.InternalState &= ~WidgetInternalState.Focusable;
 			this.glyphSize = Size.Zero;
 		}
 

@@ -46,8 +46,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();

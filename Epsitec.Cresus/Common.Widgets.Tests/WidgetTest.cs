@@ -2169,17 +2169,17 @@ namespace Epsitec.Common.Widgets
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;
-			
-			tag = parent.FindChild ("tag1", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag1", WidgetChildFindMode.Deep) as Tag;
 			tag.Color = color;
-			
-			tag = parent.FindChild ("tag2", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag2", WidgetChildFindMode.Deep) as Tag;
 			tag.Color = color;
-			
-			tag = parent.FindChild ("tag3", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag3", WidgetChildFindMode.Deep) as Tag;
 			tag.Color = color;
-			
-			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag4", WidgetChildFindMode.Deep) as Tag;
 			tag.Color = color;
 		}
 
@@ -2190,17 +2190,17 @@ namespace Epsitec.Common.Widgets
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;
-			
-			tag = parent.FindChild ("tag1", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag1", WidgetChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
-			
-			tag = parent.FindChild ("tag2", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag2", WidgetChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
-			
-			tag = parent.FindChild ("tag3", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag3", WidgetChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
-			
-			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
+
+			tag = parent.FindChild ("tag4", WidgetChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
 		}
 

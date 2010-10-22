@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//this.internalState &= ~InternalState.Engageable;
 			this.AutoFocus = false;
-			this.InternalState &= ~InternalState.Focusable;
+			this.InternalState &= ~WidgetInternalState.Focusable;
 			this.headerButtonStyle = HeaderButtonStyle.Top;
 		}
 		

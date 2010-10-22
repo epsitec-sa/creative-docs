@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			this.ButtonStyle = ButtonStyle.Icon;
 			this.AutoEngage  = true;
 			
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.MouseCursor = MouseCursor.AsSizeNWSE;
 		}

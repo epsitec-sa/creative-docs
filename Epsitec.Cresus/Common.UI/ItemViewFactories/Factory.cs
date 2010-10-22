@@ -90,11 +90,11 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 			foreach (Assembly assembly in assemblies)
 			{
-				Factory.Analyse (assembly);
+				Factory.Analyze (assembly);
 			}
 		}
 
-		private static void Analyse(Assembly assembly)
+		private static void Analyze(Assembly assembly)
 		{
 			foreach (KeyValuePair<System.Type, System.Type> pair in ItemViewFactoryAttribute.GetRegisteredTypes (assembly))
 			{
@@ -112,7 +112,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
 				Factory.assemblies.Add (args.LoadedAssembly);
-				Factory.Analyse (args.LoadedAssembly);
+				Factory.Analyze (args.LoadedAssembly);
 			}
 		}
 

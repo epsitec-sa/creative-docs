@@ -13,8 +13,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractGroup()
 		{
-			this.InternalState |= InternalState.PossibleContainer;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.PossibleContainer;
+			this.InternalState |= WidgetInternalState.Focusable;
 			
 			base.TabNavigationMode  = TabNavigationMode.ForwardTabPassive;
 		}

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldComboMenu()
 		{
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Focusable;
 
 			this.AddEventHandler (Visual.MaxWidthProperty, this.HandleMaxWidthChanged);
 			this.AddEventHandler (Visual.MaxHeightProperty, this.HandleMaxHeightChanged);

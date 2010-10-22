@@ -116,6 +116,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
+    <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />

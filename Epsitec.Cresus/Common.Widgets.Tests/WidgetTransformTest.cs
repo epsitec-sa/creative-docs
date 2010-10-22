@@ -39,8 +39,8 @@ namespace Epsitec.Common.Widgets
 			this.AutoEngage = true;
 			this.AutoToggle = true;
 			
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)

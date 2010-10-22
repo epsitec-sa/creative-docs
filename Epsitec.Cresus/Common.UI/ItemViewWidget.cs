@@ -18,7 +18,7 @@ namespace Epsitec.Common.UI
 		public ItemViewWidget(ItemView view)
 		{
 			this.view = view;
-			this.InternalState |= Widgets.InternalState.Focusable;
+			this.InternalState |= Widgets.WidgetInternalState.Focusable;
 
 			this.AddEventHandler (Widgets.Visual.KeyboardFocusProperty, this.HandleKeyboardFocusChanged);
 		}

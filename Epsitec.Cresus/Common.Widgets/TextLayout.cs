@@ -2458,7 +2458,7 @@ namespace Epsitec.Common.Widgets
 			if ( offset < 0 )  return null;
 			
 			string[] tags;
-			if ( !this.AnalyseTagsAtOffset(offset, out tags) )  return null;
+			if ( !this.AnalyzeTagsAtOffset(offset, out tags) )  return null;
 			for ( int i=0 ; i<tags.Length ; i++ )
 			{
 				if ( !tags[i].StartsWith("<a ") )  continue;
@@ -3119,7 +3119,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 
-		public bool AnalyseTagsAtOffset(int offset, out string[] tags)
+		public bool AnalyzeTagsAtOffset(int offset, out string[] tags)
 		{
 			//	Parcourt le texte et accumule les informations sur les tags <>
 			//	reconnus.

@@ -42,14 +42,14 @@ namespace Epsitec.Common.Types.Converters
 			private set;
 		}
 
-		
+
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
 		/// <typeparam name="T1">The type of the data source.</typeparam>
 		/// <typeparam name="T2">The type of the marshaled data.</typeparam>
 		/// <param name="source">The data source.</param>
-		/// <param name="getter">The getter.</param>
+		/// <param name="getterExpression">The getter expression.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <typeparam name="T1">The type of the data source.</typeparam>
 		/// <typeparam name="T2">The type of the marshaled data.</typeparam>
 		/// <param name="source">The data source.</param>
-		/// <param name="getter">The getter.</param>
+		/// <param name="getterExpression">The getter expression.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
@@ -84,23 +84,27 @@ namespace Epsitec.Common.Types.Converters
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
 		/// <typeparam name="T">The underlying type.</typeparam>
-		/// <param name="getter">The getter.</param>
+		/// <param name="getterExpression">The getter expression.</param>
 		/// <param name="setter">The setter.</param>
-		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
+		/// <returns>
+		/// The <see cref="Marshaler"/> for the underlying type.
+		/// </returns>
 		public static Marshaler<T> Create<T>(Expression<System.Func<T>> getterExpression, System.Action<T> setter)
 		{
 			var getter = getterExpression.Compile ();
 
 			return Marshaler.CreateInternal (getter, setter, getterExpression);
 		}
-		
+
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
 		/// <typeparam name="T">The underlying type.</typeparam>
-		/// <param name="getter">The getter.</param>
+		/// <param name="getterExpression">The getter expression.</param>
 		/// <param name="setter">The setter.</param>
-		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
+		/// <returns>
+		/// The <see cref="Marshaler"/> for the underlying type.
+		/// </returns>
 		public static Marshaler<T?> Create<T>(Expression<System.Func<T?>> getterExpression, System.Action<T?> setter)
 			where T : struct
 		{

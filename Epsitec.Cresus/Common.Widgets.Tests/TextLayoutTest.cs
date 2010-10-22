@@ -264,31 +264,31 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual("x", anchor);
 		}
 		
-		[Test] public void CheckAnalyseTagsAtOffset()
+		[Test] public void CheckAnalyzeTagsAtOffset()
 		{
 			TextLayout layout = this.NewTextLayout();
 			string[] tags;
-			layout.AnalyseTagsAtOffset(30, out tags);
+			layout.AnalyzeTagsAtOffset(30, out tags);
 			Assert.AreEqual(tags.Length, 1);
 			Assert.AreEqual(tags[0], "<b>");
 
 			layout.Text = "<b><u>abc</u></b> <b><i>abc</i></b> abc";
-			layout.AnalyseTagsAtOffset(6, out tags);
+			layout.AnalyzeTagsAtOffset(6, out tags);
 			Assert.AreEqual(tags.Length, 2);
 			Assert.AreEqual(tags[0], "<b>");
 			Assert.AreEqual(tags[1], "<u>");
-			layout.AnalyseTagsAtOffset(24, out tags);
+			layout.AnalyzeTagsAtOffset(24, out tags);
 			Assert.AreEqual(tags.Length, 2);
 			Assert.AreEqual(tags[0], "<b>");
 			Assert.AreEqual(tags[1], "<i>");
-			layout.AnalyseTagsAtOffset(27, out tags);
+			layout.AnalyzeTagsAtOffset(27, out tags);
 			Assert.AreEqual(tags.Length, 2);
 			Assert.AreEqual(tags[0], "<b>");
 			Assert.AreEqual(tags[1], "<i>");
-			layout.AnalyseTagsAtOffset(31, out tags);
+			layout.AnalyzeTagsAtOffset(31, out tags);
 			Assert.AreEqual(tags.Length, 1);
 			Assert.AreEqual(tags[0], "<b>");
-			layout.AnalyseTagsAtOffset(35, out tags);
+			layout.AnalyzeTagsAtOffset(35, out tags);
 			Assert.AreEqual(tags.Length, 0);
 		}
 

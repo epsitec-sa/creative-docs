@@ -17,8 +17,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.staticTexts = new List<StaticText>();
 			this.glyphButtons = new List<GlyphButton>();

@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
 #endif
 		}
-		private void CreateUIComments(TileContainerController.TileContainerControllerInitializer data)
+		private void CreateUIComments(TileContainerController.Initializer data)
 		{
 			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}

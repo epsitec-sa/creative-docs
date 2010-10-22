@@ -104,11 +104,11 @@ namespace Epsitec.Common.Support.PlugIns
 
 			foreach (Assembly assembly in assemblies)
 			{
-				PlugInFactory<TClass, TAttribute, TId>.Analyse (assembly);
+				PlugInFactory<TClass, TAttribute, TId>.Analyze (assembly);
 			}
 		}
 
-		private static void Analyse(Assembly assembly)
+		private static void Analyze(Assembly assembly)
 		{
 			foreach (TAttribute attribute in PlugInFactory<TClass, TAttribute, TId>.GetRegisteredAttributes (assembly))
 			{
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Support.PlugIns
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
 				PlugInFactory<TClass, TAttribute, TId>.assemblies.Add (args.LoadedAssembly);
-				PlugInFactory<TClass, TAttribute, TId>.Analyse (args.LoadedAssembly);
+				PlugInFactory<TClass, TAttribute, TId>.Analyze (args.LoadedAssembly);
 			}
 		}
 

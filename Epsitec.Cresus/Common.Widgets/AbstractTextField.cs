@@ -24,8 +24,8 @@ namespace Epsitec.Common.Widgets
 			this.AutoRepeat = true;
 			this.AutoDoubleClick = true;
 
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.MouseCursor = MouseCursor.AsIBeam;
 

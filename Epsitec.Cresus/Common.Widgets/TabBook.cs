@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 			this.arrows = TabBookArrows.Right;
 			this.items = new TabPageCollection(this);
 			
-			this.InternalState &= ~InternalState.PossibleContainer;
+			this.InternalState &= ~WidgetInternalState.PossibleContainer;
 			this.InternalPadding = new Drawing.Margins (2, 2, 2, 2);
 
 			this.arrowLeft = new GlyphButton(this);

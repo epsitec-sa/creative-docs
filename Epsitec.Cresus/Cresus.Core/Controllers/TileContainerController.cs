@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
 	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
-	public sealed class TileContainerController : System.IDisposable, IClickSimulator, IWidgetUpdater
+	public sealed partial class TileContainerController : System.IDisposable, IClickSimulator, IWidgetUpdater, IIsDisposed
 	{
 		private TileContainerController(TileContainer container, Widget parent = null)
 		{
@@ -63,17 +63,34 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public static TileContainerControllerInitializer Setup(EntityViewController controller)
+		public SummaryDataItems					DataItems
+		{
+			get
+			{
+				return this.dataItems;
+			}
+		}
+
+		public EntityViewController				EntityViewController
+		{
+			get
+			{
+				return this.controller;
+			}
+		}
+
+
+		public static Initializer Setup(EntityViewController controller)
 		{
 			return TileContainerController.Setup (controller.TileContainer);
 		}
 
-		public static TileContainerControllerInitializer Setup(TileContainer container)
+		public static Initializer Setup(TileContainer container)
 		{
-			return new TileContainerControllerInitializer (new TileContainerController (container));
+			return new Initializer (new TileContainerController (container));
 		}
 
-		public static TileContainerControllerInitializer Setup(UIBuilder builder)
+		public static Initializer Setup(UIBuilder builder)
 		{
 			var frame = new FrameBox
 			{
@@ -82,71 +99,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			builder.Add (frame);
 
-			return new TileContainerControllerInitializer (new TileContainerController (builder.TileContainer, frame));
+			return new Initializer (new TileContainerController (builder.TileContainer, frame));
 		}
 
-
-		public class TileContainerControllerInitializer : System.IDisposable
-		{
-			public TileContainerControllerInitializer(TileContainerController controller)
-			{
-				this.controller = controller;
-			}
-
-			public void Add(SummaryData item)
-			{
-				this.controller.DataItems.Add (item);
-			}
-
-			public void Add(CollectionAccessor item)
-			{
-				this.controller.DataItems.Add (item);
-			}
-
-			public static implicit operator SummaryDataItems(TileContainerControllerInitializer x)
-			{
-				return x.controller.DataItems;
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				this.ValidateCreation ();
-			}
-
-			#endregion
-
-			private void ValidateCreation()
-			{
-				this.controller.GenerateTiles ();
-
-				var viewController = this.controller.controller;
-				
-				using (var builder = new UIBuilder (viewController))
-				{
-					builder.CreateFooterEditorTile ();
-				}
-			}
-			
-			private readonly TileContainerController controller;
-		}
-
-		public SummaryDataItems DataItems
-		{
-			get
-			{
-				return this.dataItems;
-			}
-		}
-
-		public EntityViewController EntityViewController
-		{
-			get
-			{
-				return this.controller;
-			}
-		}
 
 		public SummaryData FindSummaryData(string name)
 		{
@@ -204,7 +159,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.refreshNeeded = true;
 		}
 
-
 		public void ShowSubView(int index, string itemName)
 		{
 			this.QueueTasklets ("CreateNewTile",
@@ -244,8 +198,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Dispose()
 		{
+			this.isDisposed = true;
 			this.refreshTimer.Stop ();
-
+			
 			this.navigator.Unregister (this);
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
@@ -258,14 +213,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
+
+		#region IIsDisposed Members
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
+
 		
 		private void QueueTasklets(string name, params TaskletJob[] jobs)
 		{
 			//	TODO: use another thread to run the asynchronous work
 
+			jobs.ForEach (job => job.Owner = this);
+
 			Application.QueueTasklets (name, jobs);
 		}
-
 		
 		private void RefreshCollectionItems()
 		{
@@ -342,7 +311,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				title.Dispose ();
 			}
 		}
-
 		
 		private void SortLiveItems()
 		{
@@ -769,5 +737,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly Button					closeButton;
 
 		private bool							refreshNeeded;
+		private bool							isDisposed;
 	}
 }
