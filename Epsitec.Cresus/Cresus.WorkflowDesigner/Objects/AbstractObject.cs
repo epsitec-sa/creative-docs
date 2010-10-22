@@ -182,11 +182,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public virtual void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			this.initialPos = pos;
+			this.isMouseDown = true;
+
 		}
 
 		public virtual void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			this.isMouseDown = false;
 		}
 
 		public virtual ActiveElement MouseDetectBackground(Point pos)
@@ -531,5 +535,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected bool							isHilitedForLinkChanging;
 		protected bool							isDimmed;
 		protected ColorFactory					colorFactory;
+		protected Point							initialPos;
+		protected bool							isMouseDown;
 	}
 }
