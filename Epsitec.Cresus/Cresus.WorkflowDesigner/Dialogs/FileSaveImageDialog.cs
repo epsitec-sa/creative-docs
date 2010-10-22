@@ -265,19 +265,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 		//	Tous les réglages sont conservés dans des variables statiques,
 		//	ce qui est une solution rapide et provisoire !
-		private static Settings settings = new Settings ();
-		private static string initialDirectory = null;
-		private static string initialFilename = null;
-		private static double zoom = 1;
-		private static bool showOptions = true;
+		private static Settings			settings = new Settings ();
+		private static string			initialDirectory = null;
+		private static string			initialFilename = null;
+		private static double			zoom = 1;
+		private static bool				showOptions = true;
 
-		private readonly Widget parent;
+		private readonly Widget			parent;
 
-		private GlyphButton optionsExtend;
-		private Widget optionsContainer;
-		private RadioButton optionsZoom1;
-		private RadioButton optionsZoom2;
-		private RadioButton optionsZoom3;
-		private RadioButton optionsZoom4;
+		private GlyphButton				optionsExtend;
+		private Widget					optionsContainer;
+		private RadioButton				optionsZoom1;
+		private RadioButton				optionsZoom2;
+		private RadioButton				optionsZoom3;
+		private RadioButton				optionsZoom4;
 	}
 }
