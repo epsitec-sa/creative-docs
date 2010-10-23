@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.UpdateTitle ();
 
-			this.SetBounds (new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2));
+			this.Bounds = new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
 		}
 
 
@@ -57,16 +57,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.Entity.Name = value.ToString ();
 				this.UpdateTitle ();
-			}
-		}
-
-		public override Rectangle Bounds
-		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
-			get
-			{
-				return this.bounds;
 			}
 		}
 
@@ -118,7 +108,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point center = Point.Move (end, start, -ObjectNode.frameRadius);
 			Rectangle rect = new Rectangle (center.X-ObjectNode.frameRadius, center.Y-ObjectNode.frameRadius, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
 
-			this.SetBounds (rect);
+			this.Bounds = rect;
 		}
 
 
@@ -519,7 +509,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.AttachObject = this;
 
 				Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top+40, 200, 20);
-				this.comment.SetBounds (rect);
+				this.comment.Bounds = rect;
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
 				this.editor.AddBalloon (this.comment);
@@ -543,7 +533,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.info.AttachObject = this;
 
 				Rectangle rect = new Rectangle (this.bounds.Right+40, this.bounds.Bottom+15, 200, 20);
-				this.info.SetBounds (rect);
+				this.info.Bounds = rect;
 				this.info.UpdateAfterAttachChanged ();
 
 				this.editor.AddBalloon (this.info);

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateSubtitle ();
 			this.UpdateDescription ();
 
-			this.SetBounds (new Rectangle (Point.Zero, ObjectEdge.frameSize));
+			this.Bounds = new Rectangle (Point.Zero, ObjectEdge.frameSize);
 
 			//	Crée la liaison unique.
 			this.CreateInitialLinks ();
@@ -99,15 +99,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override Rectangle Bounds
-		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
-			get
-			{
-				return this.bounds;
-			}
-		}
 
 		public override Rectangle ExtendedBounds
 		{
@@ -158,7 +149,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Point center = Point.Move (end, start, -d);
 			Rectangle rect = new Rectangle (center.X-ObjectEdge.frameSize.Width/2, center.Y-ObjectEdge.frameSize.Height/2, ObjectEdge.frameSize.Width, ObjectEdge.frameSize.Height);
 
-			this.SetBounds (rect);
+			this.Bounds = rect;
 		}
 
 
@@ -490,7 +481,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				Rectangle bounds = this.Bounds;
 				bounds.Width = this.editor.GridAlign (System.Math.Max (pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
-				this.SetBounds (bounds);
+				this.Bounds = bounds;
 				this.editor.UpdateLinks ();
 				return true;
 			}
@@ -707,7 +698,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment.AttachObject = this;
 
 				Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top+40, System.Math.Max (this.bounds.Width, AbstractObject.infoMinWidth), 20);
-				this.comment.SetBounds (rect);
+				this.comment.Bounds = rect;
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
 				this.editor.AddBalloon (this.comment);

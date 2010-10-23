@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					var edge = new ObjectEdge (this, entity as WorkflowEdgeEntity);
 					this.AddEdge (edge);
 
-					edge.SetBounds (new Rectangle (this.initialEdgePos, edge.Bounds.Size));
+					edge.Bounds = new Rectangle (this.initialEdgePos, edge.Bounds.Size);
 					this.initialEdgePos.Y += 80;
 				}
 
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					node.IsRoot = isRoot;
 					this.AddNode (node);
 
-					node.SetBounds (new Rectangle (this.initialNodePos, node.Bounds.Size));
+					node.Bounds = new Rectangle (this.initialNodePos, node.Bounds.Size);
 					this.initialNodePos.Y += 80;
 
 					isRoot = false;
@@ -652,7 +652,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				rect.Offset (0, -db);
 			}
 
-			inter.SetBounds (rect);
+			inter.Bounds = rect;
 		}
 
 
