@@ -501,11 +501,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Serialize(XElement xml)
 		{
 			base.Serialize (xml);
+
+			xml.Add (new XAttribute ("Text", this.textLayoutComment.Text));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
+
+			this.textLayoutComment.Text = (string) xml.Attribute ("Text");
 		}
 		#endregion
 

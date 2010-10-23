@@ -762,11 +762,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Serialize(XElement xml)
 		{
 			base.Serialize (xml);
+
+			xml.Add (new XAttribute ("AttachObject", (this.attachObject == null) ? 0 : this.attachObject.UniqueId));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
+
+			this.attachObject = this.editor.Search ((int) xml.Attribute ("AttachObject"));
 		}
 		#endregion
 
@@ -775,7 +779,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected static readonly double		textMargin = 5;
 		protected static readonly double		queueThickness = 5;
 
-		protected Rectangle						bounds;
 		protected AbstractObject				attachObject;
 		protected TextLayout					textLayoutTitle;
 

@@ -926,11 +926,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Serialize(XElement xml)
 		{
 			base.Serialize (xml);
+
+			xml.Add (new XAttribute ("IsRoot", this.isRoot));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
+
+			this.isRoot = (bool) xml.Attribute ("IsRoot");
 		}
 		#endregion
 
