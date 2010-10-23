@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.areaOffset = Point.Zero;
 			this.gridStep = 20;
 			this.gridSubdiv = 5;
+			this.nextUniqueId = 1;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -126,8 +127,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateInitialWorkflow()
 		{
+			//	Crée le workflow initial, soit en désérialisant le diagramme, soit un injectant toutes
+			//	les entités pointées à partir de la définition.
 			if (!this.RestoreDesign ())
 			{
+				//	Désérialisation échouée.
 				this.initialNodePos = new Point (0, 100);
 				this.initialEdgePos = new Point (150, 100);
 
@@ -159,19 +163,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 
 				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
-			}
 
-			foreach (var obj in this.LinkableObjects)
-			{
-				obj.CreateInitialLinks ();
+				foreach (var obj in this.LinkableObjects)
+				{
+					obj.CreateInitialLinks ();
+				}
 			}
-
 
 			this.UpdateAfterGeometryChanged (null);
 		}
 
 		private bool RestoreDesign()
 		{
+			//	Recrée tout le diagramme à partir des données sérialisées.
 			string s = this.RestoreData (this.workflowDefinitionEntity);
 
 			if (string.IsNullOrEmpty (s))
@@ -190,7 +194,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				AbstractEntity entity = null;
 				AbstractObject obj = null;
 
-				if (key != "null")
+				if (!string.IsNullOrEmpty (key))
 				{
 					EntityKey? entityKey = EntityKey.Parse (key);
 					entity = this.BusinessContext.DataContext.ResolveEntity (entityKey);
@@ -208,6 +212,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 					case "ObjectEdge":
 						obj = new ObjectEdge (this, entity);
+						break;
+
+					case "ObjectLink":
+						obj = new ObjectLink (this, entity);
 						break;
 
 					case "ObjectComment":
@@ -241,14 +249,40 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.AddEdge (obj as ObjectEdge);
 				}
 
+				if (obj is ObjectLink)
+				{
+					var link = obj as ObjectLink;
+					link.SrcObject.ObjectLinks.Add (link);
+				}
+
 				if (obj is ObjectComment)
 				{
-					this.AddBalloon (obj as ObjectComment);
+					var balloon = obj as ObjectComment;
+					this.AddBalloon (balloon);
+
+					if (balloon.AttachObject is LinkableObject)
+					{
+						var linkable = balloon.AttachObject as LinkableObject;
+						linkable.Comment = balloon;
+					}
+
+					if (balloon.AttachObject is ObjectLink)
+					{
+						var link = balloon.AttachObject as ObjectLink;
+						link.Comment = balloon;
+					}
 				}
 
 				if (obj is ObjectInfo)
 				{
-					this.AddBalloon (obj as ObjectInfo);
+					var balloon = obj as ObjectInfo;
+					this.AddBalloon (balloon);
+
+					if (balloon.AttachObject is LinkableObject)
+					{
+						var linkable = balloon.AttachObject as LinkableObject;
+						linkable.Info = balloon;
+					}
 				}
 			}
 
@@ -257,46 +291,41 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void SaveDesign()
 		{
+			//	Sauve tout le diagramme.
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
-			XDocument doc = new XDocument (
+			XDocument doc = new XDocument
+			(
 				new XDeclaration ("1.0", "utf-8", "yes"),
 				new XComment ("Saved on " + timeStamp),
-				new XElement ("Store", this.ObjectsElements));
+				new XElement ("Store", this.GetSaveObjectsElements ())
+			);
 
 			string s = doc.ToString (SaveOptions.DisableFormatting);
 
 			this.SaveData (this.workflowDefinitionEntity, s);
 		}
 
-		private IEnumerable<XElement> ObjectsElements
+		private IEnumerable<XElement> GetSaveObjectsElements()
 		{
-			get
+			foreach (var obj in this.ObjectsToSave)
 			{
-				foreach (var obj in this.AllObjects)
+				var xml = new XElement ("Object");
+
+				string type = obj.GetType ().ToString ();
+				string[] types = type.Split ('.');
+				xml.Add (new XAttribute ("Type", types.Last ()));
+
+				if (obj.AbstractEntity.UnwrapNullEntity () != null)
 				{
-					var xml = new XElement ("Object");
-
-					string type = obj.GetType ().ToString ();
-					string[] types = type.Split ('.');
-					xml.Add (new XAttribute ("Type", types.Last ()));
-
-					string entityKey;
-					if (obj.AbstractEntity.UnwrapNullEntity () == null)
-					{
-						entityKey = "null";
-					}
-					else
-					{
-						entityKey = this.GetEntityKey (obj.AbstractEntity);
-					}
+					string entityKey = this.GetEntityKey (obj.AbstractEntity);
 					xml.Add (new XAttribute ("Entity", entityKey));
-
-					obj.Serialize (xml);
-
-					yield return xml;
 				}
+
+				obj.Serialize (xml);
+
+				yield return xml;
 			}
 		}
 
@@ -336,6 +365,25 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity);
 			return key.ToString ();
+		}
+
+
+		public int GetNextUniqueId()
+		{
+			return this.nextUniqueId++;
+		}
+
+		public AbstractObject Search(int uniqueId)
+		{
+			//	Retourne un objet quelconque d'après son identificateur unique.
+			if (uniqueId == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.AllObjects.Where (x => x.UniqueId == uniqueId).FirstOrDefault ();
+			}
 		}
 
 
@@ -1373,6 +1421,32 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		#region Enumerators
+		private IEnumerable<AbstractObject> ObjectsToSave
+		{
+			get
+			{
+				if (this.cartridge != null)
+				{
+					yield return this.cartridge;
+				}
+
+				foreach (var obj in this.LinkableObjects)
+				{
+					yield return obj;
+				}
+
+				foreach (var obj in this.LinkObjects)
+				{
+					yield return obj;
+				}
+
+				foreach (var obj in this.balloons)
+				{
+					yield return obj;
+				}
+			}
+		}
+
 		private IEnumerable<AbstractObject> AllObjects
 		{
 			//	Cet énumérateur détermine, entre autres, l'ordre dans lequel sont dessinés les objets.
@@ -1721,5 +1795,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private AbstractObject					editableObject;
 		private Point							initialNodePos;
 		private Point							initialEdgePos;
+		private int								nextUniqueId;
 	}
 }

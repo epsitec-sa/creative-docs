@@ -1267,11 +1267,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Serialize(XElement xml)
 		{
 			base.Serialize (xml);
+
+			xml.Add (new XAttribute ("SrcObject", (this.srcObject == null) ? 0 : this.srcObject.UniqueId));
+			xml.Add (new XAttribute ("DstObject", (this.dstObject == null) ? 0 : this.dstObject.UniqueId));
+			xml.Add (new XAttribute ("Comment",   (this.comment   == null) ? 0 : this.comment.UniqueId));
+
+			xml.Add (new XAttribute ("StartAngle",    this.startAngle));
+			xml.Add (new XAttribute ("EndAngle",      this.endAngle));
+			xml.Add (new XAttribute ("StartDistance", this.startDistance));
+			xml.Add (new XAttribute ("EndDistance",   this.endDistance));
+			xml.Add (new XAttribute ("StartManual",   this.startManual));
+			xml.Add (new XAttribute ("EndManual",     this.endManual));
+			xml.Add (new XAttribute ("CommentAttach", this.commentAttach));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
+
+			this.srcObject = this.editor.Search ((int) xml.Attribute ("SrcObject")) as LinkableObject;
+			this.dstObject = this.editor.Search ((int) xml.Attribute ("DstObject")) as LinkableObject;
+			this.comment   = this.editor.Search ((int) xml.Attribute ("Comment"  )) as ObjectComment;
+
+			this.startAngle    = (double) xml.Attribute ("StartAngle");
+			this.endAngle      = (double) xml.Attribute ("EndAngle");
+			this.startDistance = (double) xml.Attribute ("StartDistance");
+			this.endDistance   = (double) xml.Attribute ("EndDistance");
+			this.startManual   = (bool)   xml.Attribute ("StartManual");
+			this.endManual     = (bool)   xml.Attribute ("EndManual");
+			this.commentAttach = (double) xml.Attribute ("CommentAttach");
 		}
 		#endregion
 

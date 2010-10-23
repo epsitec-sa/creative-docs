@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor = editor;
 			this.entity = entity;
 
+			this.uniqueId = this.editor.GetNextUniqueId ();
+
 			this.colorFactory = new ColorFactory (ColorItem.Blue);
 			this.hilitedElement = ActiveElement.None;
 
@@ -40,6 +42,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				return this.editor;
+			}
+		}
+
+		public int UniqueId
+		{
+			get
+			{
+				return this.uniqueId;
 			}
 		}
 
@@ -536,12 +546,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#region Serialize
 		public virtual void Serialize(XElement xml)
 		{
+			xml.Add (new XAttribute ("UniqueId", this.uniqueId));
 			xml.Add (new XAttribute ("Bounds", this.bounds.ToString ()));
 			xml.Add (new XAttribute ("Color", this.colorFactory.ColorItem.ToString ()));
 		}
 
 		public virtual void Deserialize(XElement xml)
 		{
+			this.uniqueId = (int) xml.Attribute ("UniqueId");
+
 			string bounds = (string) xml.Attribute ("Bounds");
 			if (!string.IsNullOrEmpty (bounds))
 			{
@@ -567,6 +580,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected readonly Editor				editor;
 		protected AbstractEntity				entity;
 
+		protected int							uniqueId;
 		protected Rectangle						bounds;
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
