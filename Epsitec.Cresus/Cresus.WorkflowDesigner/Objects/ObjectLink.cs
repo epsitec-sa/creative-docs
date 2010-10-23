@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			bounds.Deflate (Editor.pushMargin);
 
 			bounds = this.editor.NodeGridAlign (bounds);
-			obj.SetBounds (bounds);
+			obj.Bounds = bounds;
 
 			this.dstObject = obj;
 			this.editor.UpdateAfterGeometryChanged (obj);
@@ -615,7 +615,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					rect = new Rectangle(attach.X-20-Editor.defaultWidth, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
 
-				this.comment.SetBounds(rect);
+				this.comment.Bounds = rect;
 				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
 				this.editor.AddBalloon(this.comment);

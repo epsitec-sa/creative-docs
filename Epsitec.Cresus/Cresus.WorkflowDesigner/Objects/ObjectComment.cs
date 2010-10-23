@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				bounds.Offset(pos-this.draggingPos);
 				this.draggingPos = pos;
 
-				this.SetBounds(bounds);
+				this.Bounds = bounds;
 				this.editor.Invalidate();
 				return true;
 			}
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				bounds.Right = pos.X;
 				bounds.Width = System.Math.Max(bounds.Width, AbstractObject.commentMinWidth);
 
-				this.SetBounds(bounds);
+				this.Bounds = bounds;
 				this.UpdateHeight();
 				this.editor.Invalidate();
 				return true;
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					Rectangle bounds = this.bounds;
 					bounds.Offset(newPos-oldPos);
-					this.SetBounds(bounds);  // déplace le commentaire
+					this.Bounds = bounds;  // déplace le commentaire
 
 					this.editor.Invalidate();
 				}

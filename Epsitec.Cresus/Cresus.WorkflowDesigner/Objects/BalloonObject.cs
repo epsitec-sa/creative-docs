@@ -55,23 +55,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override Rectangle Bounds
-		{
-			//	Retourne la boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
-			get
-			{
-				return this.bounds;
-			}
-		}
-
-		public override void Move(double dx, double dy)
-		{
-			//	Déplace l'objet.
-			this.bounds.Offset(dx, dy);
-			this.UpdateButtonsGeometry ();
-		}
-
 		public Rectangle InternalBounds
 		{
 			//	Retourne la boîte de l'objet.
@@ -81,10 +64,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public override void SetBounds(Rectangle bounds)
+		public override void Move(double dx, double dy)
 		{
-			//	Modifie la boîte de l'objet.
-			this.bounds = bounds;
+			//	Déplace l'objet.
+			this.bounds.Offset (dx, dy);
 			this.UpdateButtonsGeometry ();
 		}
 

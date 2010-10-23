@@ -41,24 +41,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
 
-			this.SetBounds (new Rectangle (Point.Zero, ObjectCartridge.frameSize));
+			this.Bounds = new Rectangle (Point.Zero, ObjectCartridge.frameSize);
 		}
 
-
-		public override void SetBounds(Rectangle bounds)
-		{
-			this.bounds = bounds;
-			this.UpdateButtonsGeometry ();
-		}
-
-		public override Rectangle Bounds
-		{
-			//	Retourne la boîte de l'objet.
-			get
-			{
-				return this.bounds;
-			}
-		}
 
 		public override void Move(double dx, double dy)
 		{
@@ -194,7 +179,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				bounds.Offset (pos-this.draggingPos);
 				this.draggingPos = pos;
 
-				this.SetBounds (bounds);
+				this.Bounds = bounds;
 				this.editor.Invalidate ();
 				return true;
 			}
@@ -205,7 +190,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				bounds.Right = pos.X;
 				bounds.Width = System.Math.Max (bounds.Width, AbstractObject.commentMinWidth);
 
-				this.SetBounds (bounds);
+				this.Bounds = bounds;
 				this.editor.Invalidate ();
 				return true;
 			}
@@ -471,7 +456,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double			titleHeight = 20;
 		private static readonly double			headerHeight = 24;
 
-		private Rectangle						bounds;
 		private TextLayout						textLayoutHeader;
 		private TextLayout						textLayoutTitle;
 		private TextLayout						textLayoutSubtitle;

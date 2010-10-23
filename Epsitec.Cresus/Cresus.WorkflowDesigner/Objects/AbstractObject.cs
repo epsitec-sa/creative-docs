@@ -59,16 +59,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public virtual void SetBounds(Rectangle bounds)
-		{
-		}
-
 		public virtual Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.
 			get
 			{
-				return Rectangle.Empty;
+				return this.bounds;
+			}
+			set
+			{
+				this.bounds = value;
+				this.UpdateButtonsGeometry ();
 			}
 		}
 
@@ -569,6 +570,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected readonly Editor				editor;
 		protected AbstractEntity				entity;
 
+		protected Rectangle						bounds;
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
 		protected bool							isHilitedForLinkChanging;

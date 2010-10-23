@@ -87,40 +87,47 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override Rectangle Bounds
+		{
+			get
+			{
+				return this.bounds;
+			}
+			set
+			{
+				bounds = new Rectangle (Point.GridAlign (bounds.BottomLeft), Point.GridAlign (bounds.TopRight));
+
+				Point p1 = this.bounds.TopLeft;
+				this.bounds = value;
+				Point p2 = this.bounds.TopLeft;
+
+				//	S'il existe un commentaire associé, il doit aussi être déplacé.
+				if (this.comment != null)
+				{
+					Rectangle rect = this.comment.InternalBounds;
+					rect.Offset (p2-p1);
+					this.comment.Bounds = rect;
+				}
+
+				//	S'il existe une information associée, elle doit aussi être déplacée.
+				if (this.info != null)
+				{
+					Rectangle rect = this.info.InternalBounds;
+					rect.Offset (p2-p1);
+					this.info.Bounds = rect;
+				}
+
+				this.UpdateButtonsGeometry ();
+			}
+		}
+
+
 		public virtual void UpdateObject()
 		{
 		}
 
 		public virtual void SetBoundsAtEnd(Point start, Point end)
 		{
-		}
-
-		public override void SetBounds(Rectangle bounds)
-		{
-			//	Modifie la boîte de l'objet.
-			bounds = new Rectangle(Point.GridAlign (bounds.BottomLeft), Point.GridAlign (bounds.TopRight));
-			
-			Point p1 = this.bounds.TopLeft;
-			this.bounds = bounds;
-			Point p2 = this.bounds.TopLeft;
-
-			//	S'il existe un commentaire associé, il doit aussi être déplacé.
-			if (this.comment != null)
-			{
-				Rectangle rect = this.comment.InternalBounds;
-				rect.Offset (p2-p1);
-				this.comment.SetBounds (rect);
-			}
-
-			//	S'il existe une information associée, elle doit aussi être déplacée.
-			if (this.info != null)
-			{
-				Rectangle rect = this.info.InternalBounds;
-				rect.Offset (p2-p1);
-				this.info.SetBounds (rect);
-			}
-
-			this.UpdateButtonsGeometry ();
 		}
 
 
@@ -321,7 +328,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Déplace l'objet.
 			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
-			this.SetBounds (bounds);
+			this.Bounds = bounds;
 			this.editor.UpdateLinks ();
 
 			int i = 0;
@@ -407,7 +414,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		protected Rectangle						bounds;
 		protected List<ObjectLink>				objectLinks;
 		protected ObjectComment					comment;
 		protected ObjectInfo					info;
