@@ -246,6 +246,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (obj is ObjectEdge)
 				{
+					var edge = obj as ObjectEdge;
+					edge.ObjectLinks.Clear ();
+
 					this.AddEdge (obj as ObjectEdge);
 				}
 
@@ -736,7 +739,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void PushLayout(AbstractObject exclude, PushDirection direction, double margin)
 		{
-			return; //?
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
 			for (int max=0; max<100; max++)
