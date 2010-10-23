@@ -157,6 +157,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						isRoot = false;
 					}
 				}
+
+				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 			}
 
 			foreach (var obj in this.LinkableObjects)
@@ -164,14 +166,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.CreateInitialLinks ();
 			}
 
-			this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 
 			this.UpdateAfterGeometryChanged (null);
 		}
 
 		private bool RestoreDesign()
 		{
-			string s = this.workflowDefinitionEntity.SerializedDesign.Data;
+			string s = this.RestoreData (this.workflowDefinitionEntity);
 
 			if (string.IsNullOrEmpty (s))
 			{
@@ -197,6 +198,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				switch (type)
 				{
+					case "ObjectCartridge":
+						obj = new ObjectCartridge (this, entity);
+						break;
+
 					case "ObjectNode":
 						obj = new ObjectNode (this, entity);
 						break;
@@ -204,9 +209,27 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					case "ObjectEdge":
 						obj = new ObjectEdge (this, entity);
 						break;
+
+					case "ObjectComment":
+						obj = new ObjectComment (this, entity);
+						break;
+
+					case "ObjectInfo":
+						obj = new ObjectInfo (this, entity);
+						break;
+				}
+
+				if (obj == null)
+				{
+					continue;
 				}
 
 				obj.Deserialize (element);
+
+				if (obj is ObjectCartridge)
+				{
+					this.cartridge = (obj as ObjectCartridge);
+				}
 
 				if (obj is ObjectNode)
 				{
@@ -216,6 +239,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				if (obj is ObjectEdge)
 				{
 					this.AddEdge (obj as ObjectEdge);
+				}
+
+				if (obj is ObjectComment)
+				{
+					this.AddBalloon (obj as ObjectComment);
+				}
+
+				if (obj is ObjectInfo)
+				{
+					this.AddBalloon (obj as ObjectInfo);
 				}
 			}
 
@@ -234,8 +267,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			string s = doc.ToString (SaveOptions.DisableFormatting);
 
-			//?this.workflowDefinitionEntity.SerializedDesign.Id = "WorkflowDesigner";
-			//?this.workflowDefinitionEntity.SerializedDesign.Data = s;
+			this.SaveData (this.workflowDefinitionEntity, s);
 		}
 
 		private IEnumerable<XElement> ObjectsElements
@@ -257,8 +289,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					}
 					else
 					{
-						var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (obj.AbstractEntity);
-						entityKey = key.ToString ();
+						entityKey = this.GetEntityKey (obj.AbstractEntity);
 					}
 					xml.Add (new XAttribute ("Entity", entityKey));
 
@@ -267,6 +298,44 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					yield return xml;
 				}
 			}
+		}
+
+		private void SaveData(WorkflowDefinitionEntity def, string s)
+		{
+#if false
+			this.workflowDefinitionEntity.SerializedDesign.Id = "WorkflowDesigner";
+			this.workflowDefinitionEntity.SerializedDesign.Data = s;
+#else
+			string key = this.GetEntityKey (def);
+			Editor.serializedData[key] = s;
+#endif
+		}
+
+		private string RestoreData(WorkflowDefinitionEntity def)
+		{
+#if false
+			return this.workflowDefinitionEntity.SerializedDesign.Data = s;
+#else
+			string key = this.GetEntityKey (def);
+
+			if (Editor.serializedData.ContainsKey (key))
+			{
+				return Editor.serializedData[key];
+			}
+			else
+			{
+				return null;
+			}
+#endif
+		}
+
+		// TODO: Provisoire !
+		private static Dictionary<string, string> serializedData = new Dictionary<string,string>();
+
+		private string GetEntityKey(AbstractEntity entity)
+		{
+			var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity);
+			return key.ToString ();
 		}
 
 
@@ -619,6 +688,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void PushLayout(AbstractObject exclude, PushDirection direction, double margin)
 		{
+			return; //?
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
 			for (int max=0; max<100; max++)
@@ -985,6 +1055,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Met à jour tous les objets suite à un déplacement de la souris.
 			//	On parcourt les objets dans le même ordre que le dessin.
 			//	Il faut parcourir tous les objets, pour les mettre à jour.
+			if (pos.IsZero)
+			{
+				return;
+			}
+
 			this.hilitedObject = null;
 			ActiveElement hilitedElement = ActiveElement.None;
 

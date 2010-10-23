@@ -923,12 +923,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		#region Serialize
-		public virtual void Serialize(XElement xml)
+		public override void Serialize(XElement xml)
 		{
+			base.Serialize (xml);
 		}
 
 		public override void Deserialize(XElement xml)
 		{
+			base.Deserialize (xml);
 		}
 		#endregion
 
