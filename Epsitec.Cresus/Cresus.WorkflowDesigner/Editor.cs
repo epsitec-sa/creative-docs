@@ -660,12 +660,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
-			rect.Inflate(Editor.frameMargin);
 
+#if false
 			bool iGrid = this.grid;
 			this.grid = true;
 			rect = this.AreaGridAlign (rect);
 			this.grid = iGrid;
+#endif
 
 			this.MoveObjects(-rect.Left, -rect.Bottom);
 			this.UpdateObjectButtonsGeometry ();
@@ -681,7 +682,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			foreach (var obj in this.AllObjects)
 			{
-				bounds = Rectangle.Union (bounds, obj.ExtendedBounds);
+				Rectangle b = obj.ExtendedBounds;
+				b.Inflate (obj.RedimMargin);
+
+				bounds = Rectangle.Union (bounds, b);
 			}
 
 			return bounds;
@@ -864,7 +868,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				else
 				{
 					if (this.hilitedObject.HilitedElement == ActiveElement.EdgeHeader ||
-						this.hilitedObject.HilitedElement == ActiveElement.NodeHeader)
+						this.hilitedObject.HilitedElement == ActiveElement.NodeHeader ||
+						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditName ||
+						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditDescription)
 					{
 						if (this.LinkableObjectsCount > 1)
 						{
@@ -882,9 +888,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription ||
-							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditName ||
-							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditDescription)
+					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription)
 					{
 						type = MouseCursorType.IBeam;
 					}
@@ -1539,7 +1543,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public static readonly double			defaultWidth = 200;
 		public static readonly double			pushMargin = 10;
-		private static readonly double			frameMargin = 40;
 
 		private Core.Business.BusinessContext	businessContext;
 
