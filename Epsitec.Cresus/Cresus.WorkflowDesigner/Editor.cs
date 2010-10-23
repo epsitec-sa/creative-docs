@@ -124,75 +124,38 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public void SaveDesign()
-		{
-#if false
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
-			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
-
-			XDocument doc = new XDocument (
-				new XDeclaration ("1.0", "utf-8", "yes"),
-				new XComment ("Saved on " + timeStamp),
-				new XElement ("store",
-				//-						this.StateManager.SaveStates ("stateManager"),
-					UI.SaveWindowPositions ("windowPositions"),
-					this.persistenceManager.Save ("uiSettings")));
-
-			doc.Save (CoreApplication.Paths.SettingsPath);
-			System.Diagnostics.Debug.WriteLine ("Save done.");
-#endif
-		}
-
-		public void RestoreDesign()
-		{
-#if false
-			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
-			{
-				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
-				XElement store = doc.Element ("store");
-
-				//-				this.stateManager.RestoreStates (store.Element ("stateManager"));
-				UI.RestoreWindowPositions (store.Element ("windowPositions"));
-				this.persistenceManager.Restore (store.Element ("uiSettings"));
-			}
-
-			this.persistenceManager.DiscardChanges ();
-			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
-
-			//-			this.UpdateCommandsAfterStateChange ();
-#endif
-		}
-
-
 		public void CreateInitialWorkflow()
 		{
-			this.initialNodePos = new Point (0, 100);
-			this.initialEdgePos = new Point (150, 100);
-
-			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
-			bool isRoot = true;
-
-			foreach (var entity in list)
+			if (!this.RestoreDesign ())
 			{
-				if (entity is WorkflowEdgeEntity)
+				this.initialNodePos = new Point (0, 100);
+				this.initialEdgePos = new Point (150, 100);
+
+				var list = Entity.DeepSearch (this.workflowDefinitionEntity);
+				bool isRoot = true;
+
+				foreach (var entity in list)
 				{
-					var edge = new ObjectEdge (this, entity as WorkflowEdgeEntity);
-					this.AddEdge (edge);
+					if (entity is WorkflowEdgeEntity)
+					{
+						var edge = new ObjectEdge (this, entity as WorkflowEdgeEntity);
+						this.AddEdge (edge);
 
-					edge.Bounds = new Rectangle (this.initialEdgePos, edge.Bounds.Size);
-					this.initialEdgePos.Y += 80;
-				}
+						edge.Bounds = new Rectangle (this.initialEdgePos, edge.Bounds.Size);
+						this.initialEdgePos.Y += 80;
+					}
 
-				if (entity is WorkflowNodeEntity)
-				{
-					var node = new ObjectNode (this, entity as WorkflowNodeEntity);
-					node.IsRoot = isRoot;
-					this.AddNode (node);
+					if (entity is WorkflowNodeEntity)
+					{
+						var node = new ObjectNode (this, entity as WorkflowNodeEntity);
+						node.IsRoot = isRoot;
+						this.AddNode (node);
 
-					node.Bounds = new Rectangle (this.initialNodePos, node.Bounds.Size);
-					this.initialNodePos.Y += 80;
+						node.Bounds = new Rectangle (this.initialNodePos, node.Bounds.Size);
+						this.initialNodePos.Y += 80;
 
-					isRoot = false;
+						isRoot = false;
+					}
 				}
 			}
 
@@ -204,6 +167,106 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 
 			this.UpdateAfterGeometryChanged (null);
+		}
+
+		private bool RestoreDesign()
+		{
+			string s = this.workflowDefinitionEntity.SerializedDesign.Data;
+
+			if (string.IsNullOrEmpty (s))
+			{
+				return false;
+			}
+
+			XDocument doc = XDocument.Parse (s, LoadOptions.None);
+			XElement store = doc.Element ("Store");
+
+			foreach (var element in store.Elements ("Object"))
+			{
+				string key  = (string) element.Attribute ("Entity");
+				string type = (string) element.Attribute ("Type");
+
+				AbstractEntity entity = null;
+				AbstractObject obj = null;
+
+				if (key != "null")
+				{
+					EntityKey? entityKey = EntityKey.Parse (key);
+					entity = this.BusinessContext.DataContext.ResolveEntity (entityKey);
+				}
+
+				switch (type)
+				{
+					case "ObjectNode":
+						obj = new ObjectNode (this, entity);
+						break;
+
+					case "ObjectEdge":
+						obj = new ObjectEdge (this, entity);
+						break;
+				}
+
+				obj.Deserialize (element);
+
+				if (obj is ObjectNode)
+				{
+					this.AddNode (obj as ObjectNode);
+				}
+
+				if (obj is ObjectEdge)
+				{
+					this.AddEdge (obj as ObjectEdge);
+				}
+			}
+
+			return true;
+		}
+
+		public void SaveDesign()
+		{
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XComment ("Saved on " + timeStamp),
+				new XElement ("Store", this.ObjectsElements));
+
+			string s = doc.ToString (SaveOptions.DisableFormatting);
+
+			//?this.workflowDefinitionEntity.SerializedDesign.Id = "WorkflowDesigner";
+			//?this.workflowDefinitionEntity.SerializedDesign.Data = s;
+		}
+
+		private IEnumerable<XElement> ObjectsElements
+		{
+			get
+			{
+				foreach (var obj in this.AllObjects)
+				{
+					var xml = new XElement ("Object");
+
+					string type = obj.GetType ().ToString ();
+					string[] types = type.Split ('.');
+					xml.Add (new XAttribute ("Type", types.Last ()));
+
+					string entityKey;
+					if (obj.AbstractEntity.UnwrapNullEntity () == null)
+					{
+						entityKey = "null";
+					}
+					else
+					{
+						var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (obj.AbstractEntity);
+						entityKey = key.ToString ();
+					}
+					xml.Add (new XAttribute ("Entity", entityKey));
+
+					obj.Serialize (xml);
+
+					yield return xml;
+				}
+			}
 		}
 
 

@@ -397,18 +397,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		#region Serialize
-		public override XElement Serialize(string xmlNodeName)
+		public override void Serialize(XElement xml)
 		{
-			var key = this.editor.BusinessContext.DataContext.GetNormalizedEntityKey (this.AbstractEntity);
+			base.Serialize (xml);
 
-			return new XElement ("LinkableObject",
-					new XAttribute ("Bounds", this.bounds.ToString ()));
+			xml.Add (new XAttribute ("Bounds", this.bounds.ToString ()));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
-			string b = (string) xml.Attribute ("Bounds");
+			base.Deserialize (xml);
 
+			string b = (string) xml.Attribute ("Bounds");
 			this.bounds = Rectangle.Parse (b);
 		}
 		#endregion
