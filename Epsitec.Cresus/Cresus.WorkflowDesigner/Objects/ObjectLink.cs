@@ -1270,7 +1270,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			xml.Add (new XAttribute ("SrcObject", (this.srcObject == null) ? 0 : this.srcObject.UniqueId));
 			xml.Add (new XAttribute ("DstObject", (this.dstObject == null) ? 0 : this.dstObject.UniqueId));
-			xml.Add (new XAttribute ("Comment",   (this.comment   == null) ? 0 : this.comment.UniqueId));
 
 			xml.Add (new XAttribute ("StartAngle",    this.startAngle));
 			xml.Add (new XAttribute ("EndAngle",      this.endAngle));
@@ -1287,7 +1286,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.srcObject = this.editor.Search ((int) xml.Attribute ("SrcObject")) as LinkableObject;
 			this.dstObject = this.editor.Search ((int) xml.Attribute ("DstObject")) as LinkableObject;
-			this.comment   = this.editor.Search ((int) xml.Attribute ("Comment"  )) as ObjectComment;
 
 			this.startAngle    = (double) xml.Attribute ("StartAngle");
 			this.endAngle      = (double) xml.Attribute ("EndAngle");
