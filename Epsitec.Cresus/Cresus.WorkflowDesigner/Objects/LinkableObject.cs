@@ -400,16 +400,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void Serialize(XElement xml)
 		{
 			base.Serialize (xml);
-
-			xml.Add (new XAttribute ("Bounds", this.bounds.ToString ()));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
-
-			string b = (string) xml.Attribute ("Bounds");
-			this.bounds = Rectangle.Parse (b);
 		}
 		#endregion
 

@@ -536,13 +536,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#region Serialize
 		public virtual void Serialize(XElement xml)
 		{
+			xml.Add (new XAttribute ("Bounds", this.bounds.ToString ()));
 			xml.Add (new XAttribute ("Color", this.colorFactory.ColorItem.ToString ()));
 		}
 
 		public virtual void Deserialize(XElement xml)
 		{
-			string c = (string) xml.Attribute ("Color");
-			this.colorFactory.ColorItem = (ColorItem) System.Enum.Parse (typeof (ColorItem), c);
+			string bounds = (string) xml.Attribute ("Bounds");
+			if (!string.IsNullOrEmpty (bounds))
+			{
+				this.bounds = Rectangle.Parse (bounds);
+			}
+
+			string color = (string) xml.Attribute ("Color");
+			if (!string.IsNullOrEmpty (color))
+			{
+				this.colorFactory.ColorItem = (ColorItem) System.Enum.Parse (typeof (ColorItem), color);
+			}
 		}
 		#endregion
 
