@@ -759,9 +759,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		#region Serialize
-		public override XElement Serialize(string xmlNodeName)
+		public virtual void Serialize(XElement xml)
 		{
-			return null;
 		}
 
 		public override void Deserialize(XElement xml)

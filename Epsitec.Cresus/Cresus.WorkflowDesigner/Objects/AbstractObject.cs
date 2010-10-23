@@ -534,35 +534,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		#region Serialize
-		public virtual XElement Serialize(string xmlNodeName)
+		public virtual void Serialize(XElement xml)
 		{
-			string entityKey;
-			if (this.entity.UnwrapNullEntity () == null)
-			{
-				entityKey = "null";
-			}
-			else
-			{
-				var key = this.editor.BusinessContext.DataContext.GetNormalizedEntityKey (this.entity);
-				entityKey = key.ToString ();
-			}
-
-			return new XElement ("AbstractObject",
-					new XAttribute ("Entity", entityKey),
-					new XAttribute ("Color", this.colorFactory.ColorItem.ToString ()));
+			xml.Add (new XAttribute ("Color", this.colorFactory.ColorItem.ToString ()));
 		}
 
 		public virtual void Deserialize(XElement xml)
 		{
-			string k = (string) xml.Attribute ("Entity");
 			string c = (string) xml.Attribute ("Color");
-
-			if (k != "null")
-			{
-				EntityKey? key = EntityKey.Parse (k);
-				this.entity = this.editor.BusinessContext.DataContext.ResolveEntity (key);
-			}
-
 			this.colorFactory.ColorItem = (ColorItem) System.Enum.Parse (typeof (ColorItem), c);
 		}
 		#endregion
