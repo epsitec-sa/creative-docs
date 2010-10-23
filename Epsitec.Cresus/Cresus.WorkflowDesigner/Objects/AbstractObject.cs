@@ -82,6 +82,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public virtual double RedimMargin
+		{
+			get
+			{
+				return 40;
+			}
+		}
+
 		public virtual void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.

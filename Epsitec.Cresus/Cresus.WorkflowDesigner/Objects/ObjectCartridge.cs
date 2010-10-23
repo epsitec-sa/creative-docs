@@ -45,6 +45,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override double RedimMargin
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
@@ -172,6 +180,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
+			if (this.isMouseDown && !this.isDraggingMove && !this.isDraggingWidth && pos != this.initialPos)
+			{
+				this.isDraggingMove = true;
+				this.UpdateButtonsState ();
+				this.draggingPos = this.initialPos;
+				this.editor.LockObject (this);
+			}
+
 			if (this.isDraggingMove)
 			{
 				Rectangle bounds = this.bounds;
@@ -183,7 +199,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate ();
 				return true;
 			}
-			else if (this.isDraggingWidth)
+
+			if (this.isDraggingWidth)
 			{
 				Rectangle bounds = this.bounds;
 
@@ -194,10 +211,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate ();
 				return true;
 			}
-			else
-			{
-				return base.MouseMove (message, pos);
-			}
+
+			return base.MouseMove (message, pos);
 		}
 
 		public override void MouseDown(Message message, Point pos)
@@ -226,11 +241,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.hilitedElement == ActiveElement.CartridgeEditName ||
-				this.hilitedElement == ActiveElement.CartridgeEditDescription)
+			if (pos == this.initialPos)
 			{
-				this.StartEdition (this.hilitedElement);
-				return;
+				if (this.hilitedElement == ActiveElement.CartridgeEditName ||
+					this.hilitedElement == ActiveElement.CartridgeEditDescription)
+				{
+					if (this.isDraggingMove)
+					{
+						this.isDraggingMove = false;
+						this.UpdateButtonsState ();
+						this.editor.LockObject (null);
+						this.editor.UpdateAfterGeometryChanged (this);
+						this.editor.SetLocalDirty ();
+					}
+
+					this.StartEdition (this.hilitedElement);
+					return;
+				}
 			}
 
 			if (this.isDraggingMove)
@@ -299,17 +326,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color textColor = Color.FromBrightness (0);
 			Color frameColor = (this.hilitedElement == ActiveElement.None) ? Color.FromBrightness (1) : Color.FromBrightness (0.9);
 
-			Rectangle rh = Rectangle.Empty;
-			if (this.hilitedElement != ActiveElement.None)
-			{
-				rh = this.RectangleHeader;
-			}
-
 			//	Dessine l'en-tête.
-			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth)
+			if (this.hilitedElement != ActiveElement.None && !this.isDraggingMove && !this.isDraggingWidth)
 			{
-				rect = rh;
-				rect.Offset (0.5, 0.5);
+				rect = this.RectangleHeader;
+				rect.Inflate (-0.5, -0.5, 0.5, 0.5);
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.colorFactory.GetColor (0.5));
 				graphics.AddRectangle (rect);
@@ -321,29 +342,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine le cartouche.
-			graphics.AddFilledRectangle (this.RectangleTitle);
-			graphics.AddFilledRectangle (this.RectangleSubtitle);
+			Rectangle titleRect    = this.RectangleTitle;
+			Rectangle subtitleRect = this.RectangleSubtitle;
+
+			titleRect   .Inflate (-0.5, -0.5, -0.5, -0.5);
+			subtitleRect.Inflate (-0.5, -0.5,  0.5, -0.5);
+
+			graphics.AddFilledRectangle (titleRect);
+			graphics.AddFilledRectangle (subtitleRect);
 			graphics.RenderSolid (frameColor);
 
-			rect = this.RectangleTitle;
-			rect.Deflate (4, 2);
-			rect.Offset (0, 1);
+			rect = titleRect;
+			rect.Inflate (-4, -4, -2, -4);
 			this.textLayoutTitle.LayoutSize = rect.Size;
 			this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, textColor, GlyphPaintStyle.Normal);
 
-			rect = this.RectangleSubtitle;
-			rect.Deflate (4, 2);
-			rect.Offset (0, 1);
+			rect = subtitleRect;
+			rect.Inflate (-4, -4, -2, -4);
 			this.textLayoutSubtitle.LayoutSize = rect.Size;
 			this.textLayoutSubtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, textColor, GlyphPaintStyle.Normal);
 
-			rect = this.RectangleTitle;
-			rect.Offset (0.5, 0.5);
-			graphics.AddRectangle (rect);
-
-			rect = this.RectangleSubtitle;
-			rect.Offset (0.5, 0.5);
-			graphics.AddRectangle (rect);
+			graphics.AddRectangle (titleRect);
+			graphics.AddRectangle (subtitleRect);
 			
 			graphics.RenderSolid (textColor);
 		}
