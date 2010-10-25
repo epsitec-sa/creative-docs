@@ -25,7 +25,7 @@ namespace Epsitec.Common.UI
 
 			StructuredType type = new StructuredType ();
 			
-			type.Fields.Add ("A", StringType.Default);
+			type.Fields.Add ("A", StringType.NativeDefault);
 			type.Fields.Add ("B", IntegerType.Default);
 
 			metadata.DefaultDataType = type;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.UI
 			string xml;
 			DataSourceMetadata metadata = new DataSourceMetadata ();
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.Default));
+			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
 			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
 
 			xml = DataSourceMetadataTest.SerializeToString (metadata);
@@ -99,7 +99,7 @@ namespace Epsitec.Common.UI
 			panel.DataSource = new DataSource ();
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.Default));
+			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
 			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
 
 			xml = Panel.SerializePanel (panel);
@@ -127,7 +127,7 @@ namespace Epsitec.Common.UI
 			panel.ResourceManager = manager;
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.Default));
+			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.NativeDefault));
 			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
 
 			xml = Panel.SerializePanel (panel);

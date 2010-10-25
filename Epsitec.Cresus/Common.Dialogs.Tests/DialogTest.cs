@@ -82,7 +82,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
 
-			StringType.Default.DefineMaximumLength (40);
+			StringType.NativeDefault.DefineMaximumLength (40);
 
 			//	Mask with :
 			//	- Rue

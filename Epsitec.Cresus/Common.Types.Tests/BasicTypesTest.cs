@@ -28,9 +28,9 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckDefaultTypes()
 		{
-			Assert.IsNotNull (StringType.Default);
-			Assert.AreEqual ("Default.String", StringType.Default.Name);
-			Assert.IsTrue (StringType.Default.IsNullable);
+			Assert.IsNotNull (StringType.NativeDefault);
+			Assert.AreEqual ("Default.String", StringType.NativeDefault.Name);
+			Assert.IsTrue (StringType.NativeDefault.IsNullable);
 			
 			Assert.IsNotNull (IntegerType.Default);
 			Assert.AreEqual ("Default.Integer", IntegerType.Default.Name);

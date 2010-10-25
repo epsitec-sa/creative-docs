@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// The <c>CoreViewController</c> class is the base class for every view
 	/// controller in the application.
 	/// </summary>
-	public abstract class CoreViewController : CoreController
+	public abstract class CoreViewController : CoreController, INavigationPathElementProvider
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CoreViewController"/> class.

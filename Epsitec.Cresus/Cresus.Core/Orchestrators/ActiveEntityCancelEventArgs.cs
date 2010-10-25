@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// </summary>
 	public class ActiveEntityCancelEventArgs : CancelEventArgs
 	{
+		public ActiveEntityCancelEventArgs()
+		{
+			this.entityKey = null;
+			this.navigationPathElement = null;
+		}
+
 		public ActiveEntityCancelEventArgs(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
 			this.entityKey = entityKey;

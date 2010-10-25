@@ -182,7 +182,7 @@ namespace Epsitec.Common.UI
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields.Add ("Label", Types.StringType.Default);
+			type.Fields.Add ("Label", Types.StringType.NativeDefault);
 			data.SetValue ("Label", "Hello");
 
 			panel.DataSource = collection;
@@ -216,10 +216,10 @@ namespace Epsitec.Common.UI
 			StructuredData data1 = new StructuredData (type1);
 			StructuredData data2 = new StructuredData (type2);
 
-			type1.Fields.Add ("A", Types.StringType.Default);
+			type1.Fields.Add ("A", Types.StringType.NativeDefault);
 			type1.Fields.Add ("R", type2);
 
-			type2.Fields.Add ("B", Types.StringType.Default);
+			type2.Fields.Add ("B", Types.StringType.NativeDefault);
 			
 			data1.SetValue ("A", "a");
 			data1.SetValue ("R", data2);

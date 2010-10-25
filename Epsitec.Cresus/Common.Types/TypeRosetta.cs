@@ -128,7 +128,7 @@ namespace Epsitec.Common.Types
 									break;
 
 								case System.TypeCode.String:
-									namedType = StringType.Default;
+									namedType = StringType.NativeDefault;
 									break;
 							}
 
@@ -909,7 +909,7 @@ namespace Epsitec.Common.Types
 			TypeRosetta.AddType (DoubleType.Default);
 			TypeRosetta.AddType (IntegerType.Default);
 			TypeRosetta.AddType (LongIntegerType.Default);
-			TypeRosetta.AddType (StringType.Default);
+			TypeRosetta.AddType (StringType.NativeDefault);
 			TypeRosetta.AddType (VoidType.Default);
 			TypeRosetta.AddType (DruidType.Default);
 		}

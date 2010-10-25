@@ -1,13 +1,13 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.PlugIns;
 
 using System.Collections.Generic;
@@ -50,8 +50,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			var entityKey = e.EntityKey;
 			var navigationPathElement = e.NavigationPathElement;
 
-            if (entityKey.HasValue)
+			if (entityKey.HasValue)
 			{
+				if (this.isDesignerDisabled)
+				{
+					this.DisposeWorkflowDesigner ();
+				}
+
 				var key = entityKey.Value;
 
 				if (key.EntityId == EntityInfo<WorkflowNodeEntity>.GetTypeId ())
@@ -63,14 +68,22 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 					System.Diagnostics.Debug.WriteLine ("EVENT: Edit workflow <" + workflowDefinition.Name + ">");
 
-					this.CreateWorkflowDesigner (businessContext, workflowDefinition);
-					
+					this.CreateWorkflowDesigner (businessContext, workflowDefinition, navigationPathElement);
+
 					e.Cancel = true;
 				}
 				else
 				{
 					this.DisposeWorkflowDesigner ();
 				}
+			}
+			else
+			{
+				//	We may not dispose the designer, since it might still be needed in the very
+				//	near future, for instance to save the design (layout) of the workflow. This
+				//	is why we simply disable the designer for now :
+
+				this.DisableWorkflowDesigner ();
 			}
 		}
 
@@ -80,23 +93,34 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (e.Command == ApplicationCommands.New)
 				{
-//                    var entity = this.orchestrator.DefaultBusinessContext.CreateEntity<WorkflowDefinitionEntity> ();
-					
-//                    this.orchestrator.DefaultBusinessContext.SaveChanges ();
-////-					this.orchestrator.MainViewController.BrowserViewController.SelectActiveEntity (entity);
-					
-//                    e.Cancel = true;
+					//	No need to do anything: the WorkflowDesigner intercepts the save event generated
+					//	by the active BusinessContext.
                 }
 			}
 		}
 
-		private void CreateWorkflowDesigner(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
+		private void CreateWorkflowDesigner(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow, NavigationPathElement navigationPath)
 		{
 			this.DisposeWorkflowDesigner ();
 
-			this.activeDesigner = new WorkflowDesigner (businessContext, workflow);
+			this.activeDesigner   = new WorkflowDesigner (businessContext, workflow);
+			this.activeController = new DummyWorkflowController (this.orchestrator.Navigator, navigationPath);
 
 			this.orchestrator.DataViewController.SetCustomUI (this.activeDesigner.CreateUI ());
+		}
+
+		private void DisableWorkflowDesigner()
+		{
+			if (this.activeDesigner != null)
+			{
+				this.isDesignerDisabled = true;
+			}
+			
+			if (this.activeController != null)
+			{
+				this.activeController.Dispose ();
+				this.activeController = null;
+			}
 		}
 
 		private void DisposeWorkflowDesigner()
@@ -106,6 +130,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				this.activeDesigner.Dispose ();
 				this.activeDesigner = null;
 			}
+
+			this.DisableWorkflowDesigner ();
+			this.isDesignerDisabled = false;
 		}
 
 		
@@ -114,5 +141,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private readonly DataViewOrchestrator	orchestrator;
 
 		private WorkflowDesigner				activeDesigner;
+		private DummyWorkflowController			activeController;
+		private bool							isDesignerDisabled;
 	}
 }

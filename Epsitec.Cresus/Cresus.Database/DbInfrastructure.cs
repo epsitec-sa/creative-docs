@@ -3379,9 +3379,11 @@ namespace Epsitec.Cresus.Database
 
 			public void InitializeDefaultTypes()
 			{
+				var defaultStringType = Epsitec.Common.Types.Res.Types.Default.String;
+
 				this.defaultInteger		= new DbTypeDef (IntegerType.Default);
 				this.defaultLongInteger = new DbTypeDef (LongIntegerType.Default);
-				this.defaultString = new DbTypeDef (StringType.Default);
+				this.defaultString      = new DbTypeDef (StringType.Default);
 
 				this.infrastructure.internalTypes.Add (this.defaultInteger);
 				this.infrastructure.internalTypes.Add (this.defaultLongInteger);

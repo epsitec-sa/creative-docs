@@ -70,5 +70,5 @@
   <data id="AG">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text'}}" /&gt;</data>
   <data id="AH">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text (multiline)'}}" /&gt;</data>
   <data id="AI">&lt;s:data id="_0" f:Labels="{Collection {Text 'Byte array type'}}" /&gt;</data>
-  <data id="AJ">&lt;s:data id="_0" f:Labels="{Collection {Text 'String Type (.NET)'}}" /&gt;</data>
+  <data id="AJ">&lt;s:data id="_0" f:Labels="{Collection {Text 'String Type (.NET, native)'}}" /&gt;</data>
 </bundle>
