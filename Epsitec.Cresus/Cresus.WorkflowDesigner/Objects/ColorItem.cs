@@ -17,6 +17,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		Blue,
 		Green,
 		Grey,
-		DarkGrey,
 	}
 }

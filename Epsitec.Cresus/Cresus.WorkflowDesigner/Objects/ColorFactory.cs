@@ -44,15 +44,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public bool IsDarkColorMain
-		{
-			//	Indique si la couleur pour les mises en évidence est foncée.
-			get
-			{
-				return this.colorItem == ColorItem.DarkGrey;
-			}
-		}
-
 		public Color GetColorMain()
 		{
 			//	Retourne la couleur pour les mises en évidence.
@@ -72,26 +63,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			switch (colorItem)
 			{
-				case ColorItem.Blue:
-					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 90.0/255.0, 160.0/255.0);
-					break;
-
-				case ColorItem.Green:
-					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 130.0/255.0, 20.0/255.0);
-					break;
-
-				case ColorItem.Red:
-					color = Color.FromAlphaRgb (alpha, 140.0/255.0, 30.0/255.0, 0.0/255.0);
-					break;
-
-				case ColorItem.Grey:
-					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
-					break;
-
-				case ColorItem.DarkGrey:
-					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
-					break;
-
 				case ColorItem.Yellow:
 					color = Color.FromAlphaRgb (alpha, 200.0/255.0, 200.0/255.0, 0.0/255.0);
 					break;
@@ -100,12 +71,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					color = Color.FromAlphaRgb (alpha, 200.0/255.0, 150.0/255.0, 0.0/255.0);
 					break;
 
+				case ColorItem.Red:
+					color = Color.FromAlphaRgb (alpha, 140.0/255.0, 30.0/255.0, 0.0/255.0);
+					break;
+
 				case ColorItem.Lilac:
 					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 0.0/255.0, 150.0/255.0);
 					break;
 
 				case ColorItem.Purple:
 					color = Color.FromAlphaRgb (alpha, 30.0/255.0, 0.0/255.0, 200.0/255.0);
+					break;
+
+				case ColorItem.Blue:
+					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 90.0/255.0, 160.0/255.0);
+					break;
+
+				case ColorItem.Green:
+					color = Color.FromAlphaRgb (alpha, 0.0/255.0, 130.0/255.0, 20.0/255.0);
+					break;
+
+				case ColorItem.Grey:
+					color = Color.FromAlphaRgb (alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 			}
 
@@ -141,6 +128,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else
 			{
 				return this.GetColorLighter (color, factor);
+			}
+		}
+
+		private bool IsDarkColorMain
+		{
+			//	Indique si la couleur pour les mises en évidence est foncée.
+			get
+			{
+				return false;
 			}
 		}
 
