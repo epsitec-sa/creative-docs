@@ -176,14 +176,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private bool RestoreDesign()
 		{
 			//	Recrée tout le diagramme à partir des données sérialisées.
-			string s = this.RestoreData (this.workflowDefinitionEntity);
+			string xmlSource = Editor.RestoreData (this.workflowDefinitionEntity);
 
-			if (string.IsNullOrEmpty (s))
+			if (string.IsNullOrEmpty (xmlSource))
 			{
 				return false;
 			}
 
-			XDocument doc = XDocument.Parse (s, LoadOptions.None);
+			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
 			XElement store = doc.Element ("Store");
 
 			foreach (var element in store.Elements ("Object"))
@@ -200,32 +200,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					entity = this.BusinessContext.DataContext.ResolveEntity (entityKey);
 				}
 
-				switch (type)
-				{
-					case "ObjectCartridge":
-						obj = new ObjectCartridge (this, entity);
-						break;
-
-					case "ObjectNode":
-						obj = new ObjectNode (this, entity);
-						break;
-
-					case "ObjectEdge":
-						obj = new ObjectEdge (this, entity);
-						break;
-
-					case "ObjectLink":
-						obj = new ObjectLink (this, entity);
-						break;
-
-					case "ObjectComment":
-						obj = new ObjectComment (this, entity);
-						break;
-
-					case "ObjectInfo":
-						obj = new ObjectInfo (this, entity);
-						break;
-				}
+				obj = this.CreateObject (type, entity);
 
 				if (obj == null)
 				{
@@ -234,62 +209,96 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				obj.Deserialize (element);
 
-				if (obj is ObjectCartridge)
-				{
-					this.cartridge = (obj as ObjectCartridge);
-				}
+				dynamic dynamicObj = obj;
 
-				if (obj is ObjectNode)
-				{
-					this.AddNode (obj as ObjectNode);
-				}
-
-				if (obj is ObjectEdge)
-				{
-					var edge = obj as ObjectEdge;
-					edge.ObjectLinks.Clear ();
-
-					this.AddEdge (obj as ObjectEdge);
-				}
-
-				if (obj is ObjectLink)
-				{
-					var link = obj as ObjectLink;
-					link.SrcObject.ObjectLinks.Add (link);
-				}
-
-				if (obj is ObjectComment)
-				{
-					var balloon = obj as ObjectComment;
-					this.AddBalloon (balloon);
-
-					if (balloon.AttachObject is LinkableObject)
-					{
-						var linkable = balloon.AttachObject as LinkableObject;
-						linkable.Comment = balloon;
-					}
-
-					if (balloon.AttachObject is ObjectLink)
-					{
-						var link = balloon.AttachObject as ObjectLink;
-						link.Comment = balloon;
-					}
-				}
-
-				if (obj is ObjectInfo)
-				{
-					var balloon = obj as ObjectInfo;
-					this.AddBalloon (balloon);
-
-					if (balloon.AttachObject is LinkableObject)
-					{
-						var linkable = balloon.AttachObject as LinkableObject;
-						linkable.Info = balloon;
-					}
-				}
+				this.AddDeserializedObject (dynamicObj);
 			}
 
 			return true;
+		}
+
+		private void AddDeserializedObject(ObjectCartridge cartridge)
+		{
+			this.cartridge = cartridge;
+		}
+
+		private void AddDeserializedObject(ObjectNode node)
+		{
+			this.AddNode (node);
+		}
+
+		private void AddDeserializedObject(ObjectEdge edge)
+		{
+			edge.ObjectLinks.Clear ();
+
+			this.AddEdge (edge);
+		}
+
+		private void AddDeserializedObject(ObjectLink link)
+		{
+			link.SrcObject.ObjectLinks.Add (link);
+		}
+
+		private void AddDeserializedObject(ObjectComment balloon)
+		{
+			this.AddBalloon (balloon);
+
+			if (balloon.AttachObject is LinkableObject)
+			{
+				var linkable = balloon.AttachObject as LinkableObject;
+				linkable.Comment = balloon;
+			}
+
+			if (balloon.AttachObject is ObjectLink)
+			{
+				var link = balloon.AttachObject as ObjectLink;
+				link.Comment = balloon;
+			}
+		}
+
+		private void AddDeserializedObject(ObjectInfo balloon)
+		{
+			this.AddBalloon (balloon);
+
+			if (balloon.AttachObject is LinkableObject)
+			{
+				var linkable = balloon.AttachObject as LinkableObject;
+				linkable.Info = balloon;
+			}
+		}
+
+		private AbstractObject CreateObject(string type, AbstractEntity entity)
+		{
+			AbstractObject obj = null;
+
+			switch (type)
+			{
+				case "ObjectCartridge":
+					obj = new ObjectCartridge (this, entity);
+					break;
+
+				case "ObjectNode":
+					obj = new ObjectNode (this, entity);
+					break;
+
+				case "ObjectEdge":
+					obj = new ObjectEdge (this, entity);
+					break;
+
+				case "ObjectLink":
+					obj = new ObjectLink (this, entity);
+					break;
+
+				case "ObjectComment":
+					obj = new ObjectComment (this, entity);
+					break;
+
+				case "ObjectInfo":
+					obj = new ObjectInfo (this, entity);
+					break;
+			}
+
+			return obj;
 		}
 
 		public void SaveDesign()
@@ -305,9 +314,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				new XElement ("Store", this.GetSaveObjectsElements ())
 			);
 
-			string s = doc.ToString (SaveOptions.DisableFormatting);
+			string xmlSource = doc.ToString (SaveOptions.DisableFormatting);
 
-			this.SaveData (this.workflowDefinitionEntity, s);
+			Editor.SaveData (this.workflowDefinitionEntity, xmlSource);
 		}
 
 		private IEnumerable<XElement> GetSaveObjectsElements()
@@ -332,37 +341,43 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private void SaveData(WorkflowDefinitionEntity def, string s)
+		private static void SaveData(WorkflowDefinitionEntity def, string xmlSource)
 		{
-#if false
-			this.workflowDefinitionEntity.SerializedDesign.Id = "WorkflowDesigner";
-			this.workflowDefinitionEntity.SerializedDesign.Data = s;
-#else
-			string key = this.GetEntityKey (def);
-			Editor.serializedData[key] = s;
-#endif
+			def.SerializedDesign.Id = "WorkflowDesigner";
+			def.SerializedDesign.Data = Editor.EncodeString (xmlSource);
 		}
 
-		private string RestoreData(WorkflowDefinitionEntity def)
+		private static string RestoreData(WorkflowDefinitionEntity def)
 		{
-#if false
-			return this.workflowDefinitionEntity.SerializedDesign.Data = s;
-#else
-			string key = this.GetEntityKey (def);
+			byte[] binaryData = def.SerializedDesign.Data;
+			return Editor.DecodeString (binaryData);
+		}
 
-			if (Editor.serializedData.ContainsKey (key))
+
+		private static byte[] EncodeString(string value)
+		{
+			if (string.IsNullOrEmpty (value))
 			{
-				return Editor.serializedData[key];
+				return new byte[0];
 			}
 			else
 			{
-				return null;
+				return System.Text.Encoding.UTF8.GetBytes (value);
 			}
-#endif
 		}
 
-		// TODO: Provisoire !
-		private static Dictionary<string, string> serializedData = new Dictionary<string,string>();
+		private static string DecodeString(byte[] value)
+		{
+			if ((value == null) ||
+				(value.Length == 0))
+			{
+				return "";
+			}
+			else
+			{
+				return System.Text.Encoding.UTF8.GetString (value);
+			}
+		}
 
 		private string GetEntityKey(AbstractEntity entity)
 		{

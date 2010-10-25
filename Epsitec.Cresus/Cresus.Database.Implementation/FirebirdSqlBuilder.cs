@@ -1586,7 +1586,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 
 				case DbRawType.ByteArray:
-					basicType = "BLOB SUB_TYPE 0 SEGMENT SIZE 1024";
+					basicType = "BLOB SUB_TYPE 0 SEGMENT SIZE 2048";
 					break;
 
 				//	Tous les types ne sont pas gérés ici, seuls ceux supportés en natif par

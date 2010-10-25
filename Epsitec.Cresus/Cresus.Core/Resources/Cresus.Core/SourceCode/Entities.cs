@@ -10536,19 +10536,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A1L/L0A2L
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A2L]")]
-		public string Data
+		public global::System.Byte[] Data
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A2L]");
+				return this.GetField<global::System.Byte[]> ("[L0A2L]");
 			}
 			set
 			{
-				string oldValue = this.Data;
+				global::System.Byte[] oldValue = this.Data;
 				if (oldValue != value)
 				{
 					this.OnDataChanging (oldValue, value);
-					this.SetField<string> ("[L0A2L]", oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0A2L]", oldValue, value);
 					this.OnDataChanged (oldValue, value);
 				}
 			}
@@ -10556,8 +10556,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnIdChanging(string oldValue, string newValue);
 		partial void OnIdChanged(string oldValue, string newValue);
-		partial void OnDataChanging(string oldValue, string newValue);
-		partial void OnDataChanged(string oldValue, string newValue);
+		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
