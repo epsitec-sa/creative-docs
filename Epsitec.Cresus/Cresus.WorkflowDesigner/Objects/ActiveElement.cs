@@ -10,7 +10,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 	{
 		None,
 
-		NodeInside,
 		NodeHeader,
 		NodeComment,
 		NodeClose,

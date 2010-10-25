@@ -280,13 +280,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
-			if (this.isMouseDown && !this.isDragging && pos != this.initialPos)
+			base.MouseMove (message, pos);
+
+			if (this.isMouseDownForDrag && !this.isDragging && this.HilitedElement == ActiveElement.NodeHeader)
 			{
 				this.isDragging = true;
 				this.UpdateButtonsState ();
 				this.draggingOffset = this.initialPos-this.bounds.BottomLeft;
 				this.editor.Invalidate ();
-				this.editor.LockObject (this);
 			}
 
 			if (this.isDragging)
@@ -295,22 +296,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return true;
 			}
 
-			return base.MouseMove (message, pos);
+			return false;
 		}
 
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
-
-			if (this.hilitedElement == ActiveElement.NodeHeader && this.editor.LinkableObjectsCount > 1)
-			{
-				this.isDragging = true;
-				this.UpdateButtonsState ();
-				this.draggingOffset = pos-this.bounds.BottomLeft;
-				this.editor.Invalidate();
-				this.editor.LockObject(this);
-			}
 		}
 
 		public override void MouseUp(Message message, Point pos)
@@ -318,22 +310,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (pos == this.initialPos)
+			if (this.HilitedElement == ActiveElement.NodeHeader && !this.isDragging)
 			{
-				if (this.hilitedElement == ActiveElement.NodeHeader)
-				{
-					if (this.isDragging)
-					{
-						this.editor.UpdateAfterGeometryChanged (this);
-						this.isDragging = false;
-						this.UpdateButtonsState ();
-						this.editor.LockObject (null);
-						this.editor.SetLocalDirty ();
-					}
-
-					this.StartEdition (this.hilitedElement);
-					return;
-				}
+				this.StartEdition (this.HilitedElement);
+				return;
 			}
 
 			if (this.isDragging)
@@ -341,12 +321,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.isDragging = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeExtend)
+			if (this.HilitedElement == ActiveElement.NodeExtend)
 			{
 				if (this.IsExtended)
 				{
@@ -360,7 +339,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterCommentChanged ();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeOpenLink)
+			if (this.HilitedElement == ActiveElement.NodeOpenLink)
 			{
 				//	Crée un moignon de lien o--->
 				var link = new ObjectLink (this.editor, this.entity);
@@ -372,12 +351,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeComment)
+			if (this.HilitedElement == ActiveElement.NodeComment)
 			{
 				this.AddComment();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeClose)
+			if (this.HilitedElement == ActiveElement.NodeClose)
 			{
 				if (!this.isRoot)
 				{
@@ -386,61 +365,61 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeInfo)
+			if (this.HilitedElement == ActiveElement.NodeInfo)
 			{
 				this.AddInfo ();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeAuto)
+			if (this.HilitedElement == ActiveElement.NodeAuto)
 			{
 				this.Entity.IsAuto = !this.Entity.IsAuto;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodePublic)
+			if (this.HilitedElement == ActiveElement.NodePublic)
 			{
 				this.Entity.IsPublic = !this.Entity.IsPublic;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor1)
+			if (this.HilitedElement == ActiveElement.NodeColor1)
 			{
 				this.BackgroundColorItem = ColorItem.Yellow;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor2)
+			if (this.HilitedElement == ActiveElement.NodeColor2)
 			{
 				this.BackgroundColorItem = ColorItem.Orange;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor3)
+			if (this.HilitedElement == ActiveElement.NodeColor3)
 			{
 				this.BackgroundColorItem = ColorItem.Red;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor4)
+			if (this.HilitedElement == ActiveElement.NodeColor4)
 			{
 				this.BackgroundColorItem = ColorItem.Lilac;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor5)
+			if (this.HilitedElement == ActiveElement.NodeColor5)
 			{
 				this.BackgroundColorItem = ColorItem.Purple;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor6)
+			if (this.HilitedElement == ActiveElement.NodeColor6)
 			{
 				this.BackgroundColorItem = ColorItem.Blue;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor7)
+			if (this.HilitedElement == ActiveElement.NodeColor7)
 			{
 				this.BackgroundColorItem = ColorItem.Green;
 			}
 
-			if (this.hilitedElement == ActiveElement.NodeColor8)
+			if (this.HilitedElement == ActiveElement.NodeColor8)
 			{
 				this.BackgroundColorItem = ColorItem.Grey;
 			}
@@ -452,11 +431,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.ExtendedBounds.Contains (pos))
 			{
 				return ActiveElement.NodeHeader;
-			}
-
-			if (this.ExtendedBounds.Contains (pos))
-			{
-				return ActiveElement.NodeInside;
 			}
 
 			return ActiveElement.None;

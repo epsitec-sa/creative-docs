@@ -199,6 +199,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public virtual bool MouseMove(Message message, Point pos)
 		{
+			if (this.isMouseDown && !this.isMouseDownForDrag)
+			{
+				double mx = System.Math.Abs (pos.X-this.initialPos.X);
+				double my = System.Math.Abs (pos.Y-this.initialPos.Y);
+				double mm = System.Math.Max (mx, my);
+
+				if (mm >= AbstractObject.minimalMove)
+				{
+					this.isMouseDownForDrag = true;
+				}
+			}
+
 			return false;
 		}
 
@@ -207,13 +219,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			this.initialPos = pos;
 			this.isMouseDown = true;
-
+			this.isMouseDownForDrag = false;
 		}
 
 		public virtual void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 			this.isMouseDown = false;
+			this.isMouseDownForDrag = false;
 		}
 
 		public virtual ActiveElement MouseDetectBackground(Point pos)
@@ -571,23 +584,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		protected static readonly double		lengthStumpLink = 60;
-		protected static readonly double		arrowLength = 12;
-		protected static readonly double		arrowAngle = 25;
+		private static readonly double			arrowLength = 12;
+		private static readonly double			arrowAngle = 25;
 		protected static readonly double		commentMinWidth = 50;
 		protected static readonly double		infoMinWidth = 50;
 		protected static readonly double		shadowOffset = 6;
+		private static readonly double			minimalMove = 3;
 
 		protected readonly Editor				editor;
 		protected AbstractEntity				entity;
 
-		protected int							uniqueId;
+		private int								uniqueId;
 		protected Rectangle						bounds;
 		protected List<ActiveButton>			buttons;
 		protected ActiveElement					hilitedElement;
 		protected bool							isHilitedForLinkChanging;
-		protected bool							isDimmed;
+		private bool							isDimmed;
 		protected ColorFactory					colorFactory;
 		protected Point							initialPos;
-		protected bool							isMouseDown;
+		private bool							isMouseDown;
+		protected bool							isMouseDownForDrag;
 	}
 }

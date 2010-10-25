@@ -60,6 +60,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
+			base.MouseMove (message, pos);
+
+			if (this.isMouseDownForDrag && !this.isDraggingMove && this.HilitedElement == ActiveElement.InfoMove)
+			{
+				this.isDraggingMove = true;
+				this.UpdateButtonsState ();
+				this.draggingPos = this.initialPos;
+			}
+
 			if (this.isDraggingMove)
 			{
 				Rectangle bounds = this.bounds;
@@ -104,7 +113,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				return base.MouseMove (message, pos);
+				return false;
 			}
 		}
 
@@ -113,28 +122,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
 
-			if (this.hilitedElement == ActiveElement.InfoMove)
-			{
-				this.isDraggingMove = true;
-				this.UpdateButtonsState ();
-				this.draggingPos = pos;
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.InfoWidth)
+			if (this.HilitedElement == ActiveElement.InfoWidth)
 			{
 				this.isDraggingWidth = true;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (this);
 			}
 
-			if (this.hilitedElement >= ActiveElement.InfoLine1 &&
-				this.hilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
+			if (this.HilitedElement >= ActiveElement.InfoLine1 &&
+				this.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 			{
 				this.isDraggingLine = true;
-				this.draggingLineInitialRank = this.hilitedElement - ActiveElement.InfoLine1;
+				this.draggingLineInitialRank = this.HilitedElement - ActiveElement.InfoLine1;
 				this.draggingLineCurrentRank = -1;
-				this.editor.LockObject (this);
 				this.editor.Invalidate ();
 			}
 		}
@@ -148,7 +147,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDraggingMove = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
@@ -156,7 +154,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDraggingWidth = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
@@ -180,13 +177,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				this.isDraggingLine = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged ();
 				this.editor.SetLocalDirty ();
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.InfoClose)
+				if (this.HilitedElement == ActiveElement.InfoClose)
 				{
 					if (this.Node != null)
 					{
