@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Déplace l'objet.
 			this.SetPathDirty ();
 			this.UpdateVectors ();
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 
@@ -330,6 +330,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override MouseCursorType MouseCursor
+		{
+			get
+			{
+				return MouseCursorType.Finger;
+			}
+		}
+
+
 		private void CreateEdge()
 		{
 			var edgeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
@@ -479,7 +488,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.SetPathDirty ();
 			this.UpdateVectors ();
 			this.UpdateDistances ();
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 
 			this.startManual = true;
 			this.endManual = true;
@@ -501,7 +510,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateAngles ();
 			this.UpdateVectors ();
 			this.UpdateDistances ();
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 		private void UpdateAngles()
@@ -637,6 +646,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine l'objet.
 			//	Dessine la connexion en blanc.
+			base.DrawBackground (graphics);
+
 			if (this.IsUsablePath)
 			{
 				graphics.Rasterizer.AddOutline (this.Path, 6);
@@ -761,7 +772,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine tous les boutons.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
 		}
 
 
@@ -889,7 +900,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.SetPathDirty ();
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 			this.editor.Invalidate ();
 		}
 
@@ -898,7 +909,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.isDraggingCustomize = false;
 			this.UpdateButtonsState ();
 			this.SetPathDirty ();
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 			this.editor.UpdateGeometry ();
 			this.editor.SetLocalDirty ();
 			this.editor.Invalidate ();
@@ -1095,7 +1106,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.SetPathDirty ();
 				this.UpdateVectors ();
 				this.UpdateDistances ();
-				this.UpdateButtonsGeometry ();
+				this.UpdateGeometry ();
 
 				this.startManual = true;
 				this.endManual = true;

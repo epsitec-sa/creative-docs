@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.info.Bounds = rect;
 				}
 
-				this.UpdateButtonsGeometry ();
+				this.UpdateGeometry ();
 			}
 		}
 
@@ -308,6 +308,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected void DraggingMouseMove(Point pos)
 		{
+			this.editor.DetectMagnetConstrains (pos, this);
+
 			var commentList = new List<Point> ();
 
 			//	Mémorise la position de tous les liens qui partent.
@@ -329,7 +331,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Déplace l'objet.
-			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (pos-this.draggingOffset, this.Bounds.Size));
+			Point center = Point.GridAlign (this.editor.MagnetConstrainCenter (pos-this.draggingOffset));
+			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (center.X-this.Bounds.Width/2, center.Y-this.Bounds.Height/2, this.Bounds.Width, this.Bounds.Height));
 			this.Bounds = bounds;
 			this.editor.UpdateLinks ();
 
@@ -415,6 +418,5 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected ObjectComment					comment;
 		protected ObjectInfo					info;
 		protected bool							isExtended;
-		protected Point							draggingOffset;
 	}
 }

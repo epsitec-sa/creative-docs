@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset (dx, dy);
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 	
@@ -298,9 +298,38 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override MouseCursorType MouseCursor
+		{
+			get
+			{
+				if (this.HilitedElement == ActiveElement.CartridgeEditName ||
+					this.HilitedElement == ActiveElement.CartridgeEditDescription)
+				{
+					if (this.isDraggingMove)
+					{
+						return MouseCursorType.Move;
+					}
+					else
+					{
+						return MouseCursorType.MoveOrEdit;
+					}
+				}
+
+				if (this.HilitedElement == ActiveElement.CartridgeMove)
+				{
+					return MouseCursorType.Move;
+				}
+
+				return MouseCursorType.Finger;
+			}
+		}
+
+
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
+			base.DrawBackground (graphics);
+
 			Rectangle rect;
 			Color textColor = Color.FromBrightness (0);
 			Color frameColor = (this.hilitedElement == ActiveElement.None) ? Color.FromBrightness (1) : Color.FromBrightness (0.9);
@@ -350,7 +379,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
 		}
 
 

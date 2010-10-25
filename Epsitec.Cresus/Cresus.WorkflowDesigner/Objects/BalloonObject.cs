@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset (dx, dy);
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 
@@ -92,6 +92,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
+			base.DrawBackground (graphics);
+
 			Rectangle rect;
 			Rectangle rh = Rectangle.Empty;
 			if (this.hilitedElement != ActiveElement.None)
@@ -138,7 +140,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
 		}
 
 		private Path GetFramePath()

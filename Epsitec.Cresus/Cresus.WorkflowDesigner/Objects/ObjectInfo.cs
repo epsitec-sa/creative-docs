@@ -243,6 +243,26 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override MouseCursorType MouseCursor
+		{
+			get
+			{
+				if (this.HilitedElement == ActiveElement.InfoMove)
+				{
+					return MouseCursorType.Move;
+				}
+
+				if (this.HilitedElement >= ActiveElement.InfoLine1 &&
+					this.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
+				{
+					return MouseCursorType.VerticalMove;
+				}
+
+				return MouseCursorType.Finger;
+			}
+		}
+
+
 		public void UpdateHeight()
 		{
 			//	Adapte la hauteur de l'information en fonction de sa largeur et du contenu.
@@ -260,7 +280,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.bounds.Bottom = this.bounds.Top-h;
 			}
 
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 
@@ -328,7 +348,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
 		}
 
 		private void DrawGradientLine(Graphics graphics, Point p1, Point p2)

@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Déplace l'objet.
 			this.bounds.Offset(dx, dy);
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 		public override void CreateInitialLinks()
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDragging = true;
 				this.UpdateButtonsState ();
-				this.draggingOffset = this.initialPos-this.bounds.BottomLeft;
+				this.draggingOffset = this.initialPos-this.bounds.Center;
 				this.editor.Invalidate ();
 			}
 
@@ -360,6 +360,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (!this.isRoot)
 				{
+					if (!this.Entity.IsPublic)
+					{
+						var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer le noeud ?", this.editor.Window);
+						if (result != Common.Dialogs.DialogResult.Yes)
+						{
+							return;
+						}
+					}
+
 					this.editor.CloseObject (this);
 					this.editor.UpdateAfterGeometryChanged (null);
 				}
@@ -448,6 +457,27 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override MouseCursorType MouseCursor
+		{
+			get
+			{
+				if (this.HilitedElement == ActiveElement.NodeHeader)
+				{
+					if (this.isDragging)
+					{
+						return MouseCursorType.Move;
+					}
+					else
+					{
+						return MouseCursorType.MoveOrEdit;
+					}
+				}
+
+				return MouseCursorType.Finger;
+			}
+		}
+
+
 		private void UpdateAttachObject()
 		{
 			if (this.info != null)
@@ -528,6 +558,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Dessine le fond de l'objet.
 			//	Héritage	->	Traitillé
 			//	Interface	->	Trait plein avec o---
+			base.DrawBackground (graphics);
+
 			Rectangle rect;
 			Color c1, c2;
 
@@ -621,7 +653,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine tous les boutons.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
+		}
+
+		protected override void DrawAsOriginForMagnetConstrain(Graphics graphics)
+		{
+			//	Dessine l'objet comme étant l'origine d'une contrainte.
+			var rect = this.bounds;
+			rect.Deflate (1);
+			Path path = this.PathNodeRectangle (rect);
+
+			graphics.Rasterizer.AddOutline (path, 1);
+			graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 		}
 
 
@@ -899,6 +942,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected override void UpdateMagnetConstrains()
+		{
+			this.magnetConstrains.Clear ();
+
+			this.magnetConstrains.Add (new MagnetConstrain (this.bounds.Center.X, isVertical: true));
+			this.magnetConstrains.Add (new MagnetConstrain (this.bounds.Center.Y, isVertical: false));
+		}
+
+	
 		#region Serialize
 		public override void Serialize(XElement xml)
 		{
