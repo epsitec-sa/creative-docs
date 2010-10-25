@@ -88,4 +88,5 @@
   <data name="Val.FieldOptions.PrivateRelation" id="AF">&lt;s:data id="_0" f:Name="PrivateRelation" /&gt;</data>
   <data name="Typ.Default.Text" id="AG">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Types.StringType" /&gt;&lt;s:data id="_0" f:Name="Default.Text" f:_1.SystemType="C:System.String" f:_1.IsNullable="True" f:_1.DefaultController="String" f:_2.UseFormattedText="True" f:Labels="{Collection {Text 'Texte formatté'}}" /&gt;</data>
   <data name="Typ.Default.TextMultiline" id="AH">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Types.StringType" /&gt;&lt;s:data id="_0" f:Name="Default.TextMultiline" f:_1.SystemType="C:System.String" f:_1.IsNullable="True" f:_1.DefaultController="String" f:_1.DefaultControllerParameters="Mode=Multiline" f:_2.UseFormattedText="True" f:Labels="{Collection {Text 'Texte formatté (multiligne)'}}" /&gt;</data>
+  <data name="Typ.Default.ByteArray" id="AI">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:Name="Default.ByteArray" f:_1.SystemType="C:System.Byte[]" f:Labels="{Collection {Text 'Type tableau de bytes'}}" /&gt;</data>
 </bundle>

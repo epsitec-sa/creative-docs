@@ -69,4 +69,5 @@
   <data id="0K">&lt;s:data id="_0" f:Labels="{Collection {Text 'DRUID Type'}}" /&gt;</data>
   <data id="AG">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text'}}" /&gt;</data>
   <data id="AH">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text (multiline)'}}" /&gt;</data>
+  <data id="AI">&lt;s:data id="_0" f:Labels="{Collection {Text 'Byte array type'}}" /&gt;</data>
 </bundle>
