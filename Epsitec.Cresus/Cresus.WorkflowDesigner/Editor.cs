@@ -31,21 +31,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			Unlocked,
 		}
 
-		private enum MouseCursorType
-		{
-			Unknown,
-			Arrow,
-			Finger,
-			Grid,
-			Move,
-			MoveOrEdit,
-			HorizontalMove,
-			VerticalMove,
-			Hand,
-			IBeam,
-			Locate,
-		}
-
 		private enum PushDirection
 		{
 			Automatic,
@@ -66,6 +51,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.nodes    = new List<ObjectNode> ();
 			this.edges    = new List<ObjectEdge> ();
 			this.balloons = new List<BalloonObject> ();
+
+			this.verticalMagnetConstrains   = new List<MagnetConstrain> ();
+			this.horizontalMagnetConstrains = new List<MagnetConstrain> ();
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
@@ -833,7 +821,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 #endif
 
 			this.MoveObjects(-rect.Left, -rect.Bottom);
-			this.UpdateObjectButtonsGeometry ();
+			this.UpdateObjectGeometry ();
 
 			this.AreaSize = rect.Size;
 			this.OnAreaSizeChanged();
@@ -869,11 +857,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private void UpdateObjectButtonsGeometry()
+		private void UpdateObjectGeometry()
 		{
 			foreach (var obj in this.AllObjects)
 			{
-				obj.UpdateButtonsGeometry ();
+				obj.UpdateGeometry ();
 			}
 		}
 
@@ -1005,7 +993,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else if (this.lockObject != null)
 			{
-				this.lockObject.MouseMove(message, pos);
+				this.ChangeMouseCursor (this.lockObject.MouseCursor);
+				this.lockObject.MouseMove (message, pos);
 			}
 			else
 			{
@@ -1031,41 +1020,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 				else
 				{
-					if (this.hilitedObject.HilitedElement == ActiveElement.EdgeHeader ||
-						this.hilitedObject.HilitedElement == ActiveElement.NodeHeader ||
-						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditName ||
-						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditDescription)
-					{
-						type = MouseCursorType.MoveOrEdit;
-					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.None ||
-							 this.hilitedObject.HilitedElement == ActiveElement.EdgeInside ||
-							 this.hilitedObject.HilitedElement == ActiveElement.EdgeHilited)
+					if (this.hilitedObject.HilitedElement == ActiveElement.None)
 					{
 						type = MouseCursorType.Arrow;
 					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.EdgeEditDescription)
-					{
-						type = MouseCursorType.IBeam;
-					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentEdit)
-					{
-						type = MouseCursorType.IBeam;
-					}
-					else if (this.hilitedObject.HilitedElement == ActiveElement.CommentMove ||
-							 this.hilitedObject.HilitedElement == ActiveElement.InfoMove ||
-							 this.hilitedObject.HilitedElement == ActiveElement.CartridgeMove)
-					{
-						type = MouseCursorType.Move;
-					}
-					else if (this.hilitedObject.HilitedElement >= ActiveElement.InfoLine1 &&
-							 this.hilitedObject.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
-					{
-						type = MouseCursorType.VerticalMove;
-					}
 					else
 					{
-						type = MouseCursorType.Finger;
+						type = this.hilitedObject.MouseCursor;
 					}
 				}
 
@@ -1178,6 +1139,94 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				}
 			}
 		}
+
+
+		#region Magnet constrains
+		public Point MagnetConstrainCenter(Point center)
+		{
+			//	Contraint la position du centre d'un objet.
+			if (this.verticalMagnetConstrains.Count != 0)
+			{
+				center.X = this.verticalMagnetConstrains[0].Position;
+			}
+
+			if (this.horizontalMagnetConstrains.Count != 0)
+			{
+				center.Y = this.horizontalMagnetConstrains[0].Position;
+			}
+
+			return center;
+		}
+		
+		public void DetectMagnetConstrains(Point pos, AbstractObject obj)
+		{
+			//	Active toutes les contraintes qui doivent l'être, selon la position de la souris.
+			Point center = obj.GetCenter (pos);
+
+			double vMax = double.MaxValue;
+			double hMax = double.MaxValue;
+			MagnetConstrain h = null;
+			MagnetConstrain v = null;
+
+			foreach (var mc in this.MagnetConstrains (obj))
+			{
+				if (mc.IsVertical)
+				{
+					double d = System.Math.Abs (center.X-mc.Position);
+					if (vMax > d && d <= Editor.magnetConstrainMargin)
+					{
+						vMax = d;
+						v = mc;
+					}
+				}
+				else
+				{
+					double d = System.Math.Abs (center.Y-mc.Position);
+					if (hMax > d && d <= Editor.magnetConstrainMargin)
+					{
+						hMax = d;
+						h = mc;
+					}
+				}
+			}
+
+			this.verticalMagnetConstrains.Clear ();
+			this.horizontalMagnetConstrains.Clear ();
+
+			foreach (var mc in this.MagnetConstrains (obj).ToArray ())
+			{
+				if (v != null && v.IsVertical == mc.IsVertical && v.Position == mc.Position)
+				{
+					mc.Active = true;
+					this.verticalMagnetConstrains.Add (mc);
+				}
+				else if (h != null && h.IsVertical == mc.IsVertical && h.Position == mc.Position)
+				{
+					mc.Active = true;
+					this.horizontalMagnetConstrains.Add (mc);
+				}
+				else
+				{
+					mc.Active = false;
+				}
+			}
+		}
+
+		private IEnumerable<MagnetConstrain> MagnetConstrains(AbstractObject filteredObject)
+		{
+			//	Retourne toutes les contraintes de tous les objets, sauf celui qui est filtré.
+			foreach (var obj in this.AllObjects)
+			{
+				if (obj != filteredObject)
+				{
+					foreach (var mc in obj.MagnetConstrains)
+					{
+						yield return mc;
+					}
+				}
+			}
+		}
+		#endregion
 
 
 		public Rectangle NodeGridAlign(Rectangle rect)
@@ -1605,10 +1654,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.SetMouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
 					break;
 
-				case MouseCursorType.Locate:
-					this.SetMouseCursorImage(ref this.mouseCursorLocate, Misc.Icon("CursorLocate"));
-					break;
-
 				default:
 					this.MouseCursor = MouseCursor.AsArrow;
 					break;
@@ -1725,6 +1770,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public static readonly double			defaultWidth = 200;
 		public static readonly double			pushMargin = 10;
+		private static readonly double			magnetConstrainMargin = 10;
 
 		private Core.Business.BusinessContext	businessContext;
 
@@ -1754,10 +1800,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Image							mouseCursorHorizontalMove;
 		private Image							mouseCursorVerticalMove;
 		private Image							mouseCursorGrid;
-		private Image							mouseCursorLocate;
 		private VScroller						vscroller;
 		private AbstractObject					hilitedObject;
-		private bool							dirtySerialization;
 		private bool							grid;
 		private double							gridStep;
 		private double							gridSubdiv;
@@ -1766,5 +1810,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Point							initialNodePos;
 		private Point							initialEdgePos;
 		private int								nextUniqueId;
+		private List<MagnetConstrain>			verticalMagnetConstrains;
+		private List<MagnetConstrain>			horizontalMagnetConstrains;
 	}
 }

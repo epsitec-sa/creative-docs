@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.colorFactory = new ColorFactory (ColorItem.Blue);
 			this.hilitedElement = ActiveElement.None;
 
+			this.magnetConstrains = new List<MagnetConstrain> ();
 			this.buttons = new List<ActiveButton> ();
 			this.CreateButtons ();
 			this.UpdateButtonsState ();
@@ -69,6 +70,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public List<MagnetConstrain> MagnetConstrains
+		{
+			get
+			{
+				return this.magnetConstrains;
+			}
+		}
+
 		public virtual Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.
@@ -79,7 +88,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.bounds = value;
-				this.UpdateButtonsGeometry ();
+				this.UpdateGeometry ();
 			}
 		}
 
@@ -130,6 +139,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public virtual void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
+			this.DrawMagnetConstrains (graphics);
+			this.DrawButtons (graphics);
+		}
+
+		protected virtual void DrawAsOriginForMagnetConstrain(Graphics graphics)
+		{
+			//	Dessine l'objet comme étant l'origine d'une contrainte.
 		}
 
 
@@ -239,6 +255,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Détecte l'élément actif visé par la souris.
 			return ActiveElement.None;
+		}
+
+
+		public virtual MouseCursorType MouseCursor
+		{
+			get
+			{
+				return MouseCursorType.Finger;
+			}
 		}
 
 
@@ -547,11 +572,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public void UpdateGeometry()
+		{
+			this.UpdateButtonsGeometry ();
+			this.UpdateMagnetConstrains ();
+		}
+
+
 		protected virtual void CreateButtons()
 		{
 		}
 
-		public void UpdateButtonsGeometry()
+		private void UpdateButtonsGeometry()
 		{
 			foreach (var button in this.buttons)
 			{
@@ -559,7 +591,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public void UpdateButtonsState()
+		protected void UpdateButtonsState()
 		{
 			foreach (var button in this.buttons)
 			{
@@ -567,7 +599,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		protected void DrawButtons(Graphics graphics)
+		private void DrawButtons(Graphics graphics)
 		{
 			foreach (var button in this.buttons)
 			{
@@ -590,6 +622,49 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			return ActiveElement.None;
 		}
+
+
+		#region Magnet constrains
+		public Point GetCenter(Point pos)
+		{
+			return pos-this.draggingOffset;
+		}
+
+		private void DrawMagnetConstrains(Graphics graphics)
+		{
+			bool origin = false;
+
+			foreach (var mc in this.magnetConstrains)
+			{
+				this.DrawMagnetConstrains (graphics, mc);
+				origin |= mc.Active;
+			}
+
+			if (origin)
+			{
+				this.DrawAsOriginForMagnetConstrain (graphics);
+			}
+		}
+
+		private void DrawMagnetConstrains(Graphics graphics, MagnetConstrain mc)
+		{
+			if (mc.Active)
+			{
+				Point p1 = mc.P1 (this.editor.AreaSize);
+				Point p2 = mc.P2 (this.editor.AreaSize);
+
+				p1 = Point.GridAlign (p1, 0.5, 1);
+				p2 = Point.GridAlign (p2, 0.5, 1);
+
+				graphics.AddLine (p1, p2);
+				graphics.RenderSolid (Color.FromAlphaRgb (0.3, 1, 0, 0));  // rouge semi-transparent
+			}
+		}
+
+		protected virtual void UpdateMagnetConstrains()
+		{
+		}
+		#endregion
 
 
 		#region Serialize
@@ -619,26 +694,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		protected static readonly double		lengthStumpLink = 60;
-		private static readonly double			arrowLength = 12;
-		private static readonly double			arrowAngle = 25;
-		protected static readonly double		commentMinWidth = 50;
-		protected static readonly double		infoMinWidth = 50;
-		protected static readonly double		shadowOffset = 6;
-		private static readonly double			minimalMove = 3;
+		protected static readonly double			lengthStumpLink = 60;
+		private static readonly double				arrowLength = 12;
+		private static readonly double				arrowAngle = 25;
+		protected static readonly double			commentMinWidth = 50;
+		protected static readonly double			infoMinWidth = 50;
+		protected static readonly double			shadowOffset = 6;
+		private static readonly double				minimalMove = 3;
 
-		protected readonly Editor				editor;
-		protected AbstractEntity				entity;
+		protected readonly Editor					editor;
+		protected AbstractEntity					entity;
 
-		private int								uniqueId;
-		protected Rectangle						bounds;
-		protected List<ActiveButton>			buttons;
-		protected ActiveElement					hilitedElement;
-		protected bool							isHilitedForLinkChanging;
-		private bool							isDimmed;
-		protected ColorFactory					colorFactory;
-		protected Point							initialPos;
-		private bool							isMouseDown;
-		protected bool							isMouseDownForDrag;
+		private int									uniqueId;
+		protected Rectangle							bounds;
+		protected readonly List<MagnetConstrain>	magnetConstrains;
+		protected readonly List<ActiveButton>		buttons;
+		protected ActiveElement						hilitedElement;
+		protected bool								isHilitedForLinkChanging;
+		private bool								isDimmed;
+		protected ColorFactory						colorFactory;
+		protected Point								initialPos;
+		private bool								isMouseDown;
+		protected bool								isMouseDownForDrag;
+		protected Point								draggingOffset;
 	}
 }

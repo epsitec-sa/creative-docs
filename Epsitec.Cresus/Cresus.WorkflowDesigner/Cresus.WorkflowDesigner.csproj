@@ -61,12 +61,14 @@
     <Compile Include="Geometry.cs" />
     <Compile Include="MainController.cs" />
     <Compile Include="Misc.cs" />
+    <Compile Include="MouseCursorType.cs" />
     <Compile Include="Objects\AbstractObject.cs" />
     <Compile Include="Objects\ActiveElement.cs" />
     <Compile Include="Objects\ActiveButton.cs" />
     <Compile Include="Objects\ColorFactory.cs" />
     <Compile Include="Objects\ActiveButtonState.cs" />
     <Compile Include="Objects\BalloonObject.cs" />
+    <Compile Include="Objects\MagnetConstrain.cs" />
     <Compile Include="Objects\ObjectInfo.cs" />
     <Compile Include="Objects\ObjectCartridge.cs" />
     <Compile Include="Objects\LinkableObject.cs" />

@@ -355,6 +355,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override MouseCursorType MouseCursor
+		{
+			get
+			{
+				if (this.HilitedElement == ActiveElement.CommentEdit)
+				{
+					return MouseCursorType.IBeam;
+				}
+
+				if (this.HilitedElement == ActiveElement.CommentMove)
+				{
+					return MouseCursorType.Move;
+				}
+
+				return MouseCursorType.Finger;
+			}
+		}
+
+
 		public void UpdateHeight()
 		{
 			//	Adapte la hauteur du commentaire en fonction de sa largeur et du contenu.
@@ -374,7 +393,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.bounds.Bottom = this.bounds.Top-h;
 			}
 
-			this.UpdateButtonsGeometry ();
+			this.UpdateGeometry ();
 		}
 
 
@@ -393,7 +412,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			this.DrawButtons (graphics);
+			base.DrawForeground (graphics);
 		}
 
 		private bool IsHeaderHilite
