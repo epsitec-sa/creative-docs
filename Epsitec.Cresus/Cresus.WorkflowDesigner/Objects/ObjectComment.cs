@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (this.HilitedElement == ActiveElement.CommentColor8)
 				{
-					this.BackgroundColorItem = ColorItem.DarkGrey;
+					this.BackgroundColorItem = ColorItem.Grey;
 				}
 			}
 		}
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var rect = this.bounds;
 			rect.Deflate (ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (this.colorFactory.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (0), GlyphPaintStyle.Normal);
 		}
 
 		public override void DrawForeground(Graphics graphics)
