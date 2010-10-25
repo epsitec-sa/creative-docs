@@ -163,6 +163,8 @@ namespace Epsitec.Common.Types
 				{
 					return true;
 				}
+
+				return false;
 			}
 			
 			return false;
@@ -307,7 +309,7 @@ namespace Epsitec.Common.Types
 
 				if (StringType.defaultValue == null)
 				{
-					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1008]"));
+					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[10AJ]"));	//	StringUnlimited
 				}
 				
 				return StringType.defaultValue;
