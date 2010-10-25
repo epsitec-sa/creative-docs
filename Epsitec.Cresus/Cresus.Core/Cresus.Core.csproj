@@ -180,6 +180,7 @@
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
+    <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />

@@ -102,10 +102,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void SetLocalDirty()
 		{
-			//	TODO: Remplacer cette horrible magouille par qq chose de propre !!!
-			bool i = this.workflowDefinitionEntity.IsPublic;
-			this.workflowDefinitionEntity.IsPublic = !i;
-			this.workflowDefinitionEntity.IsPublic = i;
+			//	Force the business context to consider the data as dirty, even if the entities
+			//	have not been edited (yet):
+
+			this.businessContext.NotifyExternalChanges ();
 		}
 
 		public Core.Business.BusinessContext BusinessContext

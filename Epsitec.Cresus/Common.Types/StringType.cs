@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Types
 					return true;
 				}
 
-				return false;
+				System.Diagnostics.Debug.Fail (string.Format ("String length {0} not between {1} and {2}", length, this.MinimumLength, this.MaximumLength));
 			}
 			
 			return false;
@@ -203,6 +203,7 @@ namespace Epsitec.Common.Types
 				return value;
 			}
 		}
+
 
 		public void DefineMinimumLength(int value)
 		{
@@ -267,6 +268,7 @@ namespace Epsitec.Common.Types
 			StringType.SetDefaultComparisonBehavior (this.Caption, value);
 		}
 
+	
 		public static StringSearchBehavior GetDefaultSearchBehavior(DependencyObject obj)
 		{
 			return (StringSearchBehavior) obj.GetValue (StringType.DefaultSearchBehaviorProperty);
@@ -300,8 +302,9 @@ namespace Epsitec.Common.Types
 				obj.SetValue (StringType.DefaultComparisonBehaviorProperty, value);
 			}
 		}
+
 		
-		public static StringType Default
+		public static StringType					Default
 		{
 			get
 			{
@@ -309,23 +312,40 @@ namespace Epsitec.Common.Types
 
 				if (StringType.defaultValue == null)
 				{
-					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[10AJ]"));	//	StringUnlimited
+					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1008]"));	//	Default.String
 				}
-				
+
 				return StringType.defaultValue;
 			}
 		}
 
-		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaxLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (1000000));
+		public static StringType					NativeDefault
+		{
+			get
+			{
+				TypeRosetta.InitializeKnownTypes ();
+
+				if (StringType.defaultNativeValue == null)
+				{
+					StringType.defaultNativeValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[10AJ]"));			//	Default.StringNative
+				}
+				
+				return StringType.defaultNativeValue;
+			}
+		}
+
 		
-		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty UseFormattedTextProperty       = DependencyProperty.RegisterAttached ("UseFormattedText",       typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty	MinimumLengthProperty = DependencyProperty<StringType>.RegisterAttached ("MinLength", typeof (int), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty	MaximumLengthProperty = DependencyProperty<StringType>.RegisterAttached ("MaxLength", typeof (int), new DependencyPropertyMetadata (1000000));
 
-		public static readonly DependencyProperty DefaultSearchBehaviorProperty     = DependencyProperty.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), typeof (StringType), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
-		public static readonly DependencyProperty DefaultComparisonBehaviorProperty = DependencyProperty.RegisterAttached ("DefaultComparisonBehavior", typeof (StringComparisonBehavior), typeof (StringType), new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
+		public static readonly DependencyProperty	UseFixedLengthStorageProperty  = DependencyProperty<StringType>.RegisterAttached ("UseFixedLengthStorage", typeof (bool), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty	UseMultilingualStorageProperty = DependencyProperty<StringType>.RegisterAttached ("UseMultilingualStorage", typeof (bool), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty	UseFormattedTextProperty       = DependencyProperty<StringType>.RegisterAttached ("UseFormattedText", typeof (bool), new DependencyPropertyMetadata (false));
 
-		private static StringType defaultValue;
+		public static readonly DependencyProperty	DefaultSearchBehaviorProperty     = DependencyProperty<StringType>.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
+		public static readonly DependencyProperty	DefaultComparisonBehaviorProperty = DependencyProperty<StringType>.RegisterAttached ("DefaultComparisonBehavior", typeof (StringComparisonBehavior), new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
+
+		private static StringType					defaultNativeValue;
+		private static StringType					defaultValue;
 	}
 }

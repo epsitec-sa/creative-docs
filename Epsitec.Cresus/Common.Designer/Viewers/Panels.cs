@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Name", StringType.NativeDefault);
 
 			this.table.SourceType = cultureMapType;
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));

@@ -106,7 +106,7 @@ namespace Epsitec.Common.Types
 			ContainerX a = new ContainerX ();
 			ContainerX b = new ContainerX ();
 			
-			a.Type = StringType.Default;
+			a.Type = StringType.NativeDefault;
 			b.Type = IntegerType.Default;
 
 			string xmlA = Serialization.SimpleSerialization.SerializeToString (a);
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 		public void CheckINamedTypeSerializationInCollectionType()
 		{
 			CollectionType type = new CollectionType ();
-			type.DefineItemType (StringType.Default);
+			type.DefineItemType (StringType.NativeDefault);
 
 			string  xml     = Serialization.SimpleSerialization.SerializeToString (type.Caption);
 			Caption caption = Serialization.SimpleSerialization.DeserializeFromString (xml) as Caption;
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
-			st.Fields.Add ("Name", StringType.Default);
+			st.Fields.Add ("Name", StringType.NativeDefault);
 			st.Fields.Add ("Age", IntegerType.Default);
 
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
-			st.Fields.Add ("Name", StringType.Default);
+			st.Fields.Add ("Name", StringType.NativeDefault);
 			st.Fields.Add ("Angle", IntegerType.Default, Support.Druid.Parse ("[4002]"));
 
 			string serial = st.Caption.SerializeToString ();

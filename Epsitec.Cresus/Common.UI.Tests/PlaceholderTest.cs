@@ -85,7 +85,7 @@ namespace Epsitec.Common.UI
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields.Add ("x", StringType.Default);
+			type.Fields.Add ("x", StringType.NativeDefault);
 			data.SetValue ("x", "abc");
 
 			DataObject.SetDataContext (root, new Binding (data));

@@ -53,6 +53,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="DummyWorkflowController.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Dialogs\SelectPublicNodeDialog.cs" />
     <Compile Include="Dialogs\FileSaveImageDialog.cs" />

@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private IList<INamedType> GetNamedTypesUsedInStructuredTypes(IList<StructuredType> structuredTypes)
 		{
-			IDictionary<Druid, INamedType> namedTypes = new Dictionary<Druid, INamedType> ();
+			var namedTypes = new Dictionary<Druid, INamedType> ();
 
 			foreach (StructuredType structuredType in structuredTypes)
 			{
@@ -175,7 +175,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					INamedType namedType = field.Type;
 					Druid namedTypeId = namedType.CaptionId;
 
-					namedTypes[namedTypeId] = namedType;
+					if (namedTypes.ContainsKey (namedTypeId) == false)
+					{
+						namedTypes[namedTypeId] = namedType;
+					}
 				}
 			}
 

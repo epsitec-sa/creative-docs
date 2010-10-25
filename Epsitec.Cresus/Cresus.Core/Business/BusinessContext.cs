@@ -105,6 +105,11 @@ namespace Epsitec.Cresus.Core.Business
 		
 		public bool ContainsChanges()
 		{
+			if (this.hasExternalChanges)
+			{
+				return true;
+			}
+
 			if ((this.isDisposed) ||
 				(this.IsDiscarded))
 			{
@@ -119,6 +124,15 @@ namespace Epsitec.Cresus.Core.Business
 		public bool AreAllLocksAvailable()
 		{
 			return this.locker.AreAllLocksAvailable (this.GetLockNames ());
+		}
+
+		public void NotifyExternalChanges()
+		{
+			if (this.hasExternalChanges == false)
+			{
+				this.hasExternalChanges = true;
+				this.OnContainsChangesChanged ();
+			}
 		}
 
 		
@@ -250,6 +264,7 @@ namespace Epsitec.Cresus.Core.Business
 
 				var e = new CancelEventArgs ();
 
+				this.hasExternalChanges = false;
 				this.OnSavingChanges (e);
 
 				if (e.Cancel == false)
@@ -557,6 +572,7 @@ namespace Epsitec.Cresus.Core.Business
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
+		private bool							hasExternalChanges;
 		private CoreDataLockTransaction			lockTransaction;
 
 		private AbstractEntity					activeEntity;

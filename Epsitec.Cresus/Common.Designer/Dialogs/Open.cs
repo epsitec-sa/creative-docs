@@ -53,11 +53,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Tableau principal.
 				StructuredType st = new StructuredType();
-				st.Fields.Add("Name",  StringType.Default);
-				st.Fields.Add("Id",    StringType.Default);
-				st.Fields.Add("State", StringType.Default);
-				st.Fields.Add("Icon",  StringType.Default);
-				st.Fields.Add("Patch", StringType.Default);
+				st.Fields.Add("Name",  StringType.NativeDefault);
+				st.Fields.Add("Id",    StringType.NativeDefault);
+				st.Fields.Add("State", StringType.NativeDefault);
+				st.Fields.Add("Icon",  StringType.NativeDefault);
+				st.Fields.Add("Patch", StringType.NativeDefault);
 
 				this.table = new UI.ItemTable(this.window.Root);
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;

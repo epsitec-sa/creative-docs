@@ -707,7 +707,7 @@ namespace Epsitec.Common.UI
 
 				EnumType categoryType = new EnumType (typeof (Category));
 
-				ItemPanelTest.structuredType.Fields.Add ("Article", StringType.Default);
+				ItemPanelTest.structuredType.Fields.Add ("Article", StringType.NativeDefault);
 				ItemPanelTest.structuredType.Fields.Add ("Stock", IntegerType.Default);
 				ItemPanelTest.structuredType.Fields.Add ("Price", new DecimalType (0.00M, 999999.95M, 0.05M));
 				ItemPanelTest.structuredType.Fields.Add ("Category", categoryType);

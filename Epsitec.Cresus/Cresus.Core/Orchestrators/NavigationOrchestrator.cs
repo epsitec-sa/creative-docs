@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
 			this.history = new NavigationHistory (this);
-			this.clickSimulators = new Dictionary<Key, ClickSimulatorCollection> ();
+			this.clickSimulators = new KeyedClickSimulators ();
 			
 			this.MakeDirty ();
 		}
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// </summary>
 		/// <param name="parentController">The parent controller.</param>
 		/// <param name="controller">The controller which was just opened.</param>
-		public void Add(CoreViewController parentController, CoreViewController controller)
+		public void Add(INavigationPathElementProvider parentController, INavigationPathElementProvider controller)
 		{
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// </summary>
 		/// <param name="parentController">The parent controller.</param>
 		/// <param name="controller">The controller which was just closed.</param>
-		public void Remove(CoreViewController parentController, CoreViewController controller)
+		public void Remove(INavigationPathElementProvider parentController, INavigationPathElementProvider controller)
 		{
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
@@ -133,10 +133,27 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
+		/// <summary>
+		/// Gets the navigation path of the leaf controller (the one on the right, which has
+		/// itself no children).
+		/// </summary>
+		/// <returns>The navigation path.</returns>
 		public NavigationPath GetLeafNavigationPath()
 		{
-			var dataViewController = this.DataViewController;
-			var leafViewController = dataViewController.GetLeafViewController ();
+			INavigationPathElementProvider leafViewController = this.DataViewController.GetLeafViewController ();
+
+			if ((leafViewController == null) &&
+				(this.liveNodes.Count > 0))
+			{
+				//	There is no leaf view controller; maybe this is because we don't rely on the
+				//	data view controller to manage the active controllers? If so, try to extract
+				//	the navigation path of the active 'controller' by walking the live nodes:
+
+				this.Refresh ();
+				this.SortLiveNodes ();
+
+				leafViewController = this.liveNodes[0].Item;
+			}
 
 			return this.GetNavigationPath (leafViewController);
 		}
@@ -227,9 +244,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private Key GetLeafViewControllerKey()
 		{
-			var dataViewController = this.DataViewController;
-			var leafViewController = dataViewController.GetLeafViewController ();
+			var leafViewController = this.DataViewController.GetLeafViewController ();
 
+			//	TODO: what to do when there is no leafViewController ?
+			
 			int level = leafViewController == null ? -1 : leafViewController.GetNavigationLevel ();
 
 			return new Key (level);
@@ -269,7 +287,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		private NavigationPath GetNavigationPath(CoreViewController topController)
+		private NavigationPath GetNavigationPath(INavigationPathElementProvider topController)
 		{
 			var fullPath = new NavigationPath ();
 
@@ -278,7 +296,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return fullPath;
 		}
 
-		private IEnumerable<Node> WalkToRoot(CoreViewController controller)
+		private IEnumerable<Node> WalkToRoot(INavigationPathElementProvider controller)
 		{
 			this.Refresh ();
 
@@ -303,32 +321,49 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				foreach (var node in this.liveNodes)
 				{
-					node.Link = this.liveNodes.Find (x => x.Item == node.Parent);
+					node.Depth = -1;
+					node.Link  = this.liveNodes.Find (x => x.Item == node.Parent);
 				}
 
 				this.isDirty = false;
 			}
 		}
 
+		private void SortLiveNodes()
+		{
+			System.Diagnostics.Debug.Assert (this.isDirty == false);
+
+			//	Update in turn the depth of every node; then sort them so that the deepest one
+			//	will be the first in the list...
+
+			this.liveNodes.ForEach (node => node.UpdateDepth ());
+			this.liveNodes.Sort ((a, b) => b.Depth - a.Depth);
+		}
+
 		#region Node Class
 
 		private class Node
 		{
-			public Node(CoreViewController parent, CoreViewController item, long id)
+			public Node(INavigationPathElementProvider parent, INavigationPathElementProvider item, long id)
 			{
 				this.parent = parent;
 				this.item   = item;
 				this.id     = id;
 			}
 
-			
-			public Node Link
+			public int								Depth
 			{
 				get;
 				set;
 			}
 			
-			public CoreViewController Parent
+			public Node								Link
+			{
+				get;
+				set;
+			}
+
+			public INavigationPathElementProvider	Parent
 			{
 				get
 				{
@@ -336,7 +371,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				}
 			}
 
-			public CoreViewController Item
+			public INavigationPathElementProvider	Item
 			{
 				get
 				{
@@ -344,7 +379,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				}
 			}
 
-			public long Id
+			public long								Id
 			{
 				get
 				{
@@ -353,9 +388,26 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 
 
-			private readonly CoreViewController		parent;
-			private readonly CoreViewController		item;
-			private readonly long					id;
+			public void UpdateDepth()
+			{
+				if (this.Depth == -1)
+				{
+					if (this.Link == null)
+					{
+						this.Depth = 0;
+					}
+					else
+					{
+						this.Link.UpdateDepth ();
+						this.Depth = this.Link.Depth;
+					}
+				}
+			}
+
+
+			private readonly INavigationPathElementProvider	parent;
+			private readonly INavigationPathElementProvider	item;
+			private readonly long							id;
 		}
 
 		#endregion
@@ -452,6 +504,13 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		#endregion
 
+		#region KeyedClickSimulators Class
+
+		private class KeyedClickSimulators : Dictionary<Key, ClickSimulatorCollection>
+		{
+		}
+		
+		#endregion
 
 		private static long GetCurrentActionId()
 		{
@@ -460,13 +519,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
-		private readonly List<Node> liveNodes;
-		private readonly Dictionary<Key, ClickSimulatorCollection> clickSimulators;
-		private readonly MainViewController mainViewController;
-		private readonly NavigationHistory history;
-		private bool isDirty;
-		private long currentActionId;
-		private long currentHistoryId;
-		private long recordedHistoryId;
+		private readonly List<Node>				liveNodes;
+		private readonly KeyedClickSimulators	clickSimulators;
+		private readonly MainViewController		mainViewController;
+		private readonly NavigationHistory		history;
+		
+		private bool							isDirty;
+		private long							currentActionId;
+		private long							currentHistoryId;
+		private long							recordedHistoryId;
 	}
 }

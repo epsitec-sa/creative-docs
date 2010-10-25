@@ -40,15 +40,15 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add("Prefix", StringType.Default);
-			cultureMapType.Fields.Add("Name", StringType.Default);
-			cultureMapType.Fields.Add("Primary", StringType.Default);
-			cultureMapType.Fields.Add("Secondary", StringType.Default);
-			cultureMapType.Fields.Add("Source", StringType.Default);
-			cultureMapType.Fields.Add("Druid", StringType.Default);
-			cultureMapType.Fields.Add("Local", StringType.Default);
-			cultureMapType.Fields.Add("Identity", StringType.Default);
-			cultureMapType.Fields.Add("PatchLevel", StringType.Default);
+			cultureMapType.Fields.Add("Prefix", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Name", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Primary", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Secondary", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Source", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Druid", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Local", StringType.NativeDefault);
+			cultureMapType.Fields.Add("Identity", StringType.NativeDefault);
+			cultureMapType.Fields.Add("PatchLevel", StringType.NativeDefault);
 
 			this.table.SourceType = cultureMapType;
 

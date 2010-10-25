@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types
 			TypeRosettaTest.CreateTypeObject (DoubleType.Default);
 			TypeRosettaTest.CreateTypeObject (IntegerType.Default);
 			TypeRosettaTest.CreateTypeObject (LongIntegerType.Default);
-			TypeRosettaTest.CreateTypeObject (StringType.Default);
+			TypeRosettaTest.CreateTypeObject (StringType.NativeDefault);
 			TypeRosettaTest.CreateTypeObject (VoidType.Default);
 		}
 
@@ -233,9 +233,9 @@ namespace Epsitec.Common.Types
 		{
 			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), IntegerType.Default));
 			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), typeof (int)));
-			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), StringType.Default));
+			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), StringType.NativeDefault));
 			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), typeof (string)));
-			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<string> (), StringType.Default));
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<string> (), StringType.NativeDefault));
 			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<string> (), IntegerType.Default));
 
 			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<A> (), typeof (A)));
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Types
 			StructuredType typeA = new StructuredType ();
 			StructuredType typeB = new StructuredType ();
 
-			typeA.Fields.Add (new StructuredTypeField ("Text", StringType.Default));
+			typeA.Fields.Add (new StructuredTypeField ("Text", StringType.NativeDefault));
 			typeB.Fields.Add (new StructuredTypeField ("Number", IntegerType.Default));
 
 			StructuredData dataA = new StructuredData (typeA);
@@ -269,13 +269,13 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckVerifyValueValidityWithNullable()
 		{
-			Assert.IsTrue (StringType.Default.IsNullable);
+			Assert.IsTrue (StringType.NativeDefault.IsNullable);
 			Assert.IsFalse (IntegerType.Default.IsNullable);
 
-			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
 
 			int? numNull = null;
 			int? num1234 = 1234;
