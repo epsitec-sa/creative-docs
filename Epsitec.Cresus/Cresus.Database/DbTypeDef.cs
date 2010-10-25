@@ -57,6 +57,9 @@ namespace Epsitec.Cresus.Database
 
 			if (stringType != null)
 			{
+				//	Firebird 2.x does not support VARCHAR > 32KB and in UTF8, this means less than 8192 characters...
+				//	Firebird 2.x does not allow more than 64KB (uncompressed) in a table row...
+
 				this.length         = System.Math.Min (1000, stringType.MaximumLength);
 				this.isFixedLength  = stringType.UseFixedLengthStorage;
 				this.isMultilingual = stringType.UseMultilingualStorage;
