@@ -173,6 +173,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateAfterGeometryChanged (null);
 		}
 
+		#region Serialization
 		private bool RestoreDesign()
 		{
 			//	Recrée tout le diagramme à partir des données sérialisées.
@@ -210,11 +211,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				obj.Deserialize (element);
 
 				dynamic dynamicObj = obj;
-
 				this.AddDeserializedObject (dynamicObj);
 			}
 
 			return true;
+		}
+
+		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
+		{
+			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects." + typeName;
+			System.Type type = System.Type.GetType (fullTypeName);
+
+			if (type == null)
+			{
+				return null;
+			}
+
+			object[] constructorArguments = new object[] { this, entity };
+			return System.Activator.CreateInstance (type, constructorArguments) as AbstractObject;
 		}
 
 		private void AddDeserializedObject(ObjectCartridge cartridge)
@@ -267,20 +281,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
-		{
-			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects." + typeName;
-			System.Type type = System.Type.GetType (fullTypeName);
-
-			if (type == null)
-			{
-				return null;
-			}
-
-			object[] constructorArguments = new object[] { this, entity };
-			return System.Activator.CreateInstance (type, constructorArguments) as AbstractObject;
-		}
-
+	
 		public void SaveDesign()
 		{
 			//	Sauve tout le diagramme.
@@ -320,6 +321,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		private string GetEntityKey(AbstractEntity entity)
+		{
+			var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity);
+			return key.ToString ();
+		}
+
+
 		private static void SaveData(WorkflowDefinitionEntity def, string xmlSource)
 		{
 			def.SerializedDesign.Id = "WorkflowDesigner";
@@ -357,12 +365,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return System.Text.Encoding.UTF8.GetString (value);
 			}
 		}
-
-		private string GetEntityKey(AbstractEntity entity)
-		{
-			var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity);
-			return key.ToString ();
-		}
+		#endregion
 
 
 		public int GetNextUniqueId()
@@ -380,16 +383,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			else
 			{
 				return this.AllObjects.Where (x => x.UniqueId == uniqueId).FirstOrDefault ();
-			}
-		}
-
-
-		public int LinkableObjectsCount
-		{
-			//	Retourne le nombre de boîtes existantes.
-			get
-			{
-				return this.LinkableObjects.Count ();
 			}
 		}
 
@@ -483,16 +476,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			return number + 1;
-		}
-
-
-		public void Clear()
-		{
-			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
-			this.nodes.Clear ();
-			this.edges.Clear ();
-			this.balloons.Clear ();
-			this.LockObject(null);
 		}
 
 
@@ -1049,17 +1032,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditName ||
 						this.hilitedObject.HilitedElement == ActiveElement.CartridgeEditDescription)
 					{
-						if (this.LinkableObjectsCount > 1)
-						{
-							type = MouseCursorType.MoveOrEdit;
-						}
-						else
-						{
-							type = MouseCursorType.Arrow;
-						}
+						type = MouseCursorType.MoveOrEdit;
 					}
 					else if (this.hilitedObject.HilitedElement == ActiveElement.None ||
-							 this.hilitedObject.HilitedElement == ActiveElement.NodeInside ||
 							 this.hilitedObject.HilitedElement == ActiveElement.EdgeInside ||
 							 this.hilitedObject.HilitedElement == ActiveElement.EdgeHilited)
 					{
@@ -1175,6 +1150,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (this.hilitedObject != null)
 				{
+					this.lockObject = this.hilitedObject;
 					this.hilitedObject.MouseDown (message, pos);
 				}
 			}
@@ -1193,6 +1169,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				if (this.hilitedObject != null)
 				{
+					this.lockObject = null;
 					this.hilitedObject.MouseUp (message, pos);
 				}
 			}
@@ -1276,13 +1253,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				return ModifyMode.Unlocked;
 			}
-		}
-
-
-		public void LockObject(AbstractObject obj)
-		{
-			//	Indique l'objet en cours de drag.
-			this.lockObject = obj;
 		}
 
 

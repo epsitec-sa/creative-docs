@@ -230,6 +230,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override bool MouseMove(Message message, Point pos)
 		{
+			base.MouseMove (message, pos);
+
 			foreach (var obj in this.objectLinks)
 			{
 				if (obj.MouseMove (message, pos))
@@ -238,7 +240,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			return base.MouseMove (message, pos);
+			return false;
 		}
 
 		public override void MouseDown(Message message, Point pos)

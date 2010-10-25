@@ -186,6 +186,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override bool MouseMove(Message message, Point pos)
 		{
 			//	La souris est bougée.
+			base.MouseMove (message, pos);
+
 			if (this.isDraggingDst)
 			{
 				this.DraggingDstMouseMove (pos);
@@ -198,7 +200,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				return base.MouseMove (message, pos);
+				return false;
 			}
 		}
 
@@ -871,7 +873,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.isDraggingCustomize = true;
 			this.UpdateButtonsState ();
 			this.SetPathDirty ();
-			this.editor.LockObject (this);
 			this.editor.Invalidate ();
 		}
 
@@ -896,7 +897,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.isDraggingCustomize = false;
 			this.UpdateButtonsState ();
-			this.editor.LockObject (null);
 			this.SetPathDirty ();
 			this.UpdateButtonsGeometry ();
 			this.editor.UpdateGeometry ();
@@ -1028,7 +1028,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateButtonsState ();
 			this.startManual = false;
 			this.endManual = false;
-			this.editor.LockObject (this);
 
 			this.DraggingDstMouseMove(pos);
 		}
@@ -1110,7 +1109,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.editor.UpdateGeometry ();
-			this.editor.LockObject (null);
 			this.editor.SetLocalDirty ();
 		}
 		#endregion

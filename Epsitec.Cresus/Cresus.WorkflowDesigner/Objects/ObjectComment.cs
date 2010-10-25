@@ -147,6 +147,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
+			base.MouseMove (message, pos);
+
+			if (this.isMouseDownForDrag && !this.isDraggingMove && this.hilitedElement == ActiveElement.CommentMove)
+			{
+				this.isDraggingMove = true;
+				this.UpdateButtonsState ();
+				this.draggingPos = this.initialPos;
+			}
+
 			if (this.isDraggingMove)
 			{
 				Rectangle bounds = this.bounds;
@@ -191,7 +200,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				return base.MouseMove(message, pos);
+				return false;
 			}
 		}
 
@@ -200,26 +209,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
 
-			if (this.hilitedElement == ActiveElement.CommentMove)
-			{
-				this.isDraggingMove = true;
-				this.UpdateButtonsState ();
-				this.draggingPos = pos;
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentWidth)
+			if (this.HilitedElement == ActiveElement.CommentWidth)
 			{
 				this.isDraggingWidth = true;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (this);
 			}
 
-			if (this.hilitedElement == ActiveElement.CommentAttachTo)
+			if (this.HilitedElement == ActiveElement.CommentAttachTo)
 			{
 				this.isDraggingAttach = true;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (this);
 			}
 		}
 
@@ -228,20 +227,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (pos == this.initialPos)
+			if (this.HilitedElement == ActiveElement.CommentEdit && !this.isDraggingMove)
 			{
-				if (this.hilitedElement == ActiveElement.CommentEdit)
-				{
-					this.StartEdition (this.hilitedElement);
-					return;
-				}
+				this.StartEdition (this.HilitedElement);
+				return;
 			}
 
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
@@ -249,7 +244,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDraggingWidth = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
@@ -257,13 +251,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDraggingAttach = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.CommentClose)
+				if (this.HilitedElement == ActiveElement.CommentClose)
 				{
 					ObjectLink link = this.attachObject as ObjectLink;
 					if (link != null)
@@ -280,42 +273,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.editor.RemoveBalloon (this);
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor1)
+				if (this.HilitedElement == ActiveElement.CommentColor1)
 				{
 					this.BackgroundColorItem = ColorItem.Yellow;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor2)
+				if (this.HilitedElement == ActiveElement.CommentColor2)
 				{
 					this.BackgroundColorItem = ColorItem.Orange;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor3)
+				if (this.HilitedElement == ActiveElement.CommentColor3)
 				{
 					this.BackgroundColorItem = ColorItem.Red;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor4)
+				if (this.HilitedElement == ActiveElement.CommentColor4)
 				{
 					this.BackgroundColorItem = ColorItem.Lilac;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor5)
+				if (this.HilitedElement == ActiveElement.CommentColor5)
 				{
 					this.BackgroundColorItem = ColorItem.Purple;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor6)
+				if (this.HilitedElement == ActiveElement.CommentColor6)
 				{
 					this.BackgroundColorItem = ColorItem.Blue;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor7)
+				if (this.HilitedElement == ActiveElement.CommentColor7)
 				{
 					this.BackgroundColorItem = ColorItem.Green;
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor8)
+				if (this.HilitedElement == ActiveElement.CommentColor8)
 				{
 					this.BackgroundColorItem = ColorItem.DarkGrey;
 				}

@@ -180,12 +180,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
-			if (this.isMouseDown && !this.isDraggingMove && !this.isDraggingWidth && pos != this.initialPos)
+			base.MouseMove (message, pos);
+
+			if (this.isMouseDownForDrag && !this.isDraggingMove &&
+				(this.HilitedElement == ActiveElement.CartridgeMove ||
+				 this.HilitedElement == ActiveElement.CartridgeEditName ||
+				 this.HilitedElement == ActiveElement.CartridgeEditDescription))
 			{
 				this.isDraggingMove = true;
 				this.UpdateButtonsState ();
 				this.draggingPos = this.initialPos;
-				this.editor.LockObject (this);
 			}
 
 			if (this.isDraggingMove)
@@ -212,7 +216,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return true;
 			}
 
-			return base.MouseMove (message, pos);
+			return false;
 		}
 
 		public override void MouseDown(Message message, Point pos)
@@ -220,19 +224,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
 
-			if (this.hilitedElement == ActiveElement.CartridgeMove)
-			{
-				this.isDraggingMove = true;
-				this.UpdateButtonsState ();
-				this.draggingPos = pos;
-				this.editor.LockObject (this);
-			}
-
-			if (this.hilitedElement == ActiveElement.CartridgeWidth)
+			if (this.HilitedElement == ActiveElement.CartridgeWidth)
 			{
 				this.isDraggingWidth = true;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (this);
 			}
 		}
 
@@ -241,30 +236,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (pos == this.initialPos)
+			if ((this.HilitedElement == ActiveElement.CartridgeEditName ||
+				 this.HilitedElement == ActiveElement.CartridgeEditDescription) &&
+				!this.isDraggingMove)
 			{
-				if (this.hilitedElement == ActiveElement.CartridgeEditName ||
-					this.hilitedElement == ActiveElement.CartridgeEditDescription)
-				{
-					if (this.isDraggingMove)
-					{
-						this.isDraggingMove = false;
-						this.UpdateButtonsState ();
-						this.editor.LockObject (null);
-						this.editor.UpdateAfterGeometryChanged (this);
-						this.editor.SetLocalDirty ();
-					}
-
-					this.StartEdition (this.hilitedElement);
-					return;
-				}
+				this.StartEdition (this.HilitedElement);
+				return;
 			}
 
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.editor.SetLocalDirty ();
 			}
@@ -272,12 +255,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				this.isDraggingWidth = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.editor.SetLocalDirty ();
-			}
-			else
-			{
 			}
 		}
 

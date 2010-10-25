@@ -462,13 +462,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
-			if (this.isMouseDown && !this.isDragging && pos != this.initialPos)
+			base.MouseMove (message, pos);
+
+			if (this.isMouseDownForDrag && !this.isDragging && this.HilitedElement == ActiveElement.EdgeHeader)
 			{
 				this.isDragging = true;
 				this.UpdateButtonsState ();
 				this.draggingOffset = this.initialPos-this.bounds.BottomLeft;
 				this.editor.Invalidate ();
-				this.editor.LockObject (this);
 			}
 
 			if (this.isDragging)
@@ -486,7 +487,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return true;
 			}
 
-			return base.MouseMove (message, pos);
+			return false;
 		}
 
 		public override void MouseDown(Message message, Point pos)
@@ -494,22 +495,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est pressé.
 			base.MouseDown (message, pos);
 
-			if (this.hilitedElement == ActiveElement.EdgeHeader && this.editor.LinkableObjectsCount > 1)
-			{
-				this.isDragging = true;
-				this.UpdateButtonsState ();
-				this.draggingOffset = pos-this.bounds.BottomLeft;
-				this.editor.Invalidate();
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.EdgeChangeWidth)
+			if (this.HilitedElement == ActiveElement.EdgeChangeWidth)
 			{
 				this.isChangeWidth = true;
 				this.UpdateButtonsState ();
 				this.changeWidthPos = pos.X;
 				this.changeWidthInitial = this.bounds.Width;
-				this.editor.LockObject (this);
 			}
 		}
 
@@ -518,23 +509,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (pos == this.initialPos)
+			if ((this.HilitedElement == ActiveElement.EdgeHeader ||
+				 this.HilitedElement == ActiveElement.EdgeEditDescription) &&
+				!this.isDragging)
 			{
-				if (this.hilitedElement == ActiveElement.EdgeHeader ||
-					this.hilitedElement == ActiveElement.EdgeEditDescription)
-				{
-					if (this.isDragging)
-					{
-						this.editor.UpdateAfterGeometryChanged (this);
-						this.isDragging = false;
-						this.UpdateButtonsState ();
-						this.editor.LockObject (null);
-						this.editor.SetLocalDirty ();
-					}
-
-					this.StartEdition (this.hilitedElement);
-					return;
-				}
+				this.StartEdition (this.HilitedElement);
+				return;
 			}
 
 			if (this.isDragging)
@@ -542,7 +522,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.isDragging = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
 			}
@@ -552,12 +531,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterGeometryChanged (this);
 				this.isChangeWidth = false;
 				this.UpdateButtonsState ();
-				this.editor.LockObject (null);
 				this.editor.SetLocalDirty ();
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeExtend)
+			if (this.HilitedElement == ActiveElement.EdgeExtend)
 			{
 				if (this.IsExtended)
 				{
@@ -571,18 +549,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.UpdateAfterCommentChanged ();
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeClose)
+			if (this.HilitedElement == ActiveElement.EdgeClose)
 			{
 				this.editor.CloseObject (this);
 				this.editor.UpdateAfterGeometryChanged (null);
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeComment)
+			if (this.HilitedElement == ActiveElement.EdgeComment)
 			{
 				this.AddComment ();
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeType)
+			if (this.HilitedElement == ActiveElement.EdgeType)
 			{
 				if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
 				{
@@ -598,42 +576,42 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor1)
+			if (this.HilitedElement == ActiveElement.EdgeColor1)
 			{
 				this.BackgroundColorItem = ColorItem.Yellow;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor2)
+			if (this.HilitedElement == ActiveElement.EdgeColor2)
 			{
 				this.BackgroundColorItem = ColorItem.Orange;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor3)
+			if (this.HilitedElement == ActiveElement.EdgeColor3)
 			{
 				this.BackgroundColorItem = ColorItem.Red;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor4)
+			if (this.HilitedElement == ActiveElement.EdgeColor4)
 			{
 				this.BackgroundColorItem = ColorItem.Lilac;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor5)
+			if (this.HilitedElement == ActiveElement.EdgeColor5)
 			{
 				this.BackgroundColorItem = ColorItem.Purple;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor6)
+			if (this.HilitedElement == ActiveElement.EdgeColor6)
 			{
 				this.BackgroundColorItem = ColorItem.Blue;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor7)
+			if (this.HilitedElement == ActiveElement.EdgeColor7)
 			{
 				this.BackgroundColorItem = ColorItem.Green;
 			}
 
-			if (this.hilitedElement == ActiveElement.EdgeColor8)
+			if (this.HilitedElement == ActiveElement.EdgeColor8)
 			{
 				this.BackgroundColorItem = ColorItem.Grey;
 			}
