@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (this.ExtendedBounds.Contains (pos))
+			if (AbstractObject.DetectRoundRectangle (this.ExtendedBounds, ObjectNode.frameRadius, pos))
 			{
 				return ActiveElement.NodeHeader;
 			}
@@ -670,7 +670,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton.
 			get
 			{
-				return this.bounds.Center;
+				Point c = this.bounds.Center;
+				double a = this.ComputeBestStumpAngle ();
+
+				return Transform.RotatePointDeg (c, a+52, new Point (c.X+ObjectNode.frameRadius, c.Y));
 			}
 		}
 

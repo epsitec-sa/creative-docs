@@ -275,8 +275,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			bool dragging = (this.hilitedElement == ActiveElement.InfoInside);
 
-			Color colorFrame = dragging ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
-
 			//	Dessine les lignes.
 			if (this.Node != null)
 			{
@@ -300,8 +298,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					if (i < lineCount-1)
 					{
-						graphics.AddLine (rect.Left+1, rect.Bottom-0.5, rect.Right-1, rect.Bottom-0.5);
-						graphics.RenderSolid (this.colorFactory.GetColor (1));
+						this.DrawGradientLine (graphics, new Point (rect.Left+1, rect.Bottom-0.5), new Point (rect.Right-1, rect.Bottom-0.5));
 					}
 
 					rect.Deflate (10, 0);
@@ -332,6 +329,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			//	Dessine le dessus de l'objet.
 			this.DrawButtons (graphics);
+		}
+
+		private void DrawGradientLine(Graphics graphics, Point p1, Point p2)
+		{
+			Color c1 = this.colorFactory.GetColor (0, 0.0);  // noir transparent
+			Color c2 = this.colorFactory.GetColor (0, 0.5);  // noir semi-opaque
+
+			Rectangle rect;
+
+			//	Dessine la moitié gauche.
+			rect = new Rectangle (p1.X, p1.Y-0.5, (p2.X-p1.X)/2, 1);
+			graphics.AddFilledRectangle (rect);
+			this.RenderHorizontalGradient (graphics, this.bounds, c1, c2);
+
+			//	Dessine la moitié droite.
+			rect.Offset (rect.Width, 0);
+			graphics.AddFilledRectangle (rect);
+			this.RenderHorizontalGradient (graphics, this.bounds, c2, c1);
 		}
 
 		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)

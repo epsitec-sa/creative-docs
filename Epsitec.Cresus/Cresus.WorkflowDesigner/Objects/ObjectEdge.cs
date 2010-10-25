@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (element == ActiveElement.EdgeHeader)
 			{
 				rect = this.RectangleTitle;
-				rect.Deflate (4, 6);
+				rect.Deflate (-4, 6);
 
 				text = this.Entity.Name.ToString ();
 				text2 = (this.Entity.TransitionAction == null) ? "" : this.Entity.TransitionAction;
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
 			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
-			double width  = System.Math.Max (p2.X-p1.X, 175);
+			double width  = System.Math.Max (p2.X-p1.X, 150);
 			double height = System.Math.Max (p1.Y-p2.Y, 20);
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (this.RectangleTitle.Contains (pos))
+			if (AbstractObject.DetectRoundRectangle (this.bounds, ObjectEdge.frameSize.Height/2, pos))
 			{
 				return ActiveElement.EdgeHeader;
 			}
@@ -630,7 +630,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				return ActiveElement.EdgeEditDescription;
 			}
 
-			if (this.ExtendedBounds.Contains (pos))
+			if (AbstractObject.DetectRoundRectangle (this.ExtendedBounds, ObjectEdge.frameSize.Height/2, pos))
 			{
 				return ActiveElement.EdgeInside;
 			}
@@ -756,7 +756,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 
 			rect = this.RectangleTitle;
-			rect.Deflate (16, 2);
+			rect.Deflate (0, 2);
 
 			if (string.IsNullOrEmpty (this.subtitleString))
 			{
@@ -850,7 +850,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			get
 			{
-				return this.bounds;
+				Rectangle rect = this.bounds;
+				rect.Deflate (ObjectEdge.frameSize.Height/2, 0);
+
+				return rect;
 			}
 		}
 
