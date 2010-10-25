@@ -1208,6 +1208,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite && !this.IsDragging;
+			button.State.Detectable = button.State.Visible;
 		}
 
 		private void UpdateButtonStateComment(ActiveButton button)
@@ -1232,15 +1233,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateCustomizeStart(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = (this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && this.dstObject != null && !this.IsDragging && !this.IsTooShortLink);
-			button.State.Detectable = !this.IsTooShortLink;
+			button.State.Visible = this.dstObject != null && ((this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && !this.IsDragging && !this.IsTooShortLink));
+			button.State.Detectable = this.dstObject != null && !this.IsTooShortLink;
 		}
 
 		private void UpdateButtonStateCustomizeEnd(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = (this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && this.dstObject != null && !this.IsDragging && !this.IsTooShortLink);
-			button.State.Detectable = !this.IsTooShortLink;
+			button.State.Visible = this.dstObject != null && ((this.hilitedElement == ActiveElement.LinkCustomizeStart || this.hilitedElement == ActiveElement.LinkCustomizeEnd) || (this.IsHilite && !this.IsDragging && !this.IsTooShortLink));
+			button.State.Detectable = this.dstObject != null && !this.IsTooShortLink;
 		}
 
 		private bool IsDragging

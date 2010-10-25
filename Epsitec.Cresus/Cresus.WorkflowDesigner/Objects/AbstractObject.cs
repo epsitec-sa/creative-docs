@@ -289,6 +289,62 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected static  bool DetectRoundRectangle(Rectangle rect, double radius, Point pos)
+		{
+			//	Détecte si une position est à l'intérieur d'un rectangle arrondi.
+			radius = System.Math.Min (radius, System.Math.Min (rect.Width, rect.Height) / 2);
+
+			if (!rect.Contains (pos))
+			{
+				return false;
+			}
+
+			Rectangle r;
+
+			r = rect;
+			r.Deflate (radius, 0);
+			if (r.Contains (pos))
+			{
+				return true;
+			}
+
+			r = rect;
+			r.Deflate (0, radius);
+			if (r.Contains (pos))
+			{
+				return true;
+			}
+
+			if (AbstractObject.DetectCircle (new Point (rect.Left+radius, rect.Bottom+radius), radius, pos))
+			{
+				return true;
+			}
+
+			if (AbstractObject.DetectCircle (new Point (rect.Left+radius, rect.Top-radius), radius, pos))
+			{
+				return true;
+			}
+
+			if (AbstractObject.DetectCircle (new Point (rect.Right-radius, rect.Bottom+radius), radius, pos))
+			{
+				return true;
+			}
+
+			if (AbstractObject.DetectCircle (new Point (rect.Right-radius, rect.Top-radius), radius, pos))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		protected static bool DetectCircle(Point center, double radius, Point pos)
+		{
+			//	Détecte si une position est à l'intérieur d'un cercle.
+			return Point.Distance (center, pos) <= radius;
+		}
+
+
 		protected void DrawEdgeShadow(Graphics graphics, Rectangle rect, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce pour un objet edge (ObjectEdge).
@@ -343,33 +399,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public static void DrawEndingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type.
-			AbstractObject.DrawArrowBase(graphics, start, end);
+			Point p = Point.Move (end, start, AbstractObject.arrowLength);
 
-#if false
-			if (false)
-			{
-				Point p1 = Point.Move(end, start, AbstractObject.arrowLength);
-				Point p2 = Point.Move(end, start, AbstractObject.arrowLength*0.75);
-				AbstractObject.DrawArrowBase(graphics, p1, p2);
-			}
+			Point e1 = Transform.RotatePointDeg (end, AbstractObject.arrowAngle, p);
+			Point e2 = Transform.RotatePointDeg (end, -AbstractObject.arrowAngle, p);
 
-			if (false)
-			{
-				AbstractObject.DrawArrowStar(graphics, start, end);
-			}
-#endif
-		}
-
-		protected static void DrawArrowBase(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche à l'extrémité 'end'.
-			Point p = Point.Move(end, start, AbstractObject.arrowLength);
-
-			Point e1 = Transform.RotatePointDeg(end, AbstractObject.arrowAngle, p);
-			Point e2 = Transform.RotatePointDeg(end, -AbstractObject.arrowAngle, p);
-
-			graphics.AddLine(end, e1);
-			graphics.AddLine(end, e2);
+			graphics.AddLine (end, e1);
+			graphics.AddLine (end, e2);
 		}
 
 		protected static void DrawArrowStar(Graphics graphics, Point start, Point end)
