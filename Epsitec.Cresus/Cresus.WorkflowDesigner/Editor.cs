@@ -267,38 +267,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private AbstractObject CreateObject(string type, AbstractEntity entity)
+		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
 		{
-			AbstractObject obj = null;
+			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects." + typeName;
+			System.Type type = System.Type.GetType (fullTypeName);
 
-			switch (type)
+			if (type == null)
 			{
-				case "ObjectCartridge":
-					obj = new ObjectCartridge (this, entity);
-					break;
-
-				case "ObjectNode":
-					obj = new ObjectNode (this, entity);
-					break;
-
-				case "ObjectEdge":
-					obj = new ObjectEdge (this, entity);
-					break;
-
-				case "ObjectLink":
-					obj = new ObjectLink (this, entity);
-					break;
-
-				case "ObjectComment":
-					obj = new ObjectComment (this, entity);
-					break;
-
-				case "ObjectInfo":
-					obj = new ObjectInfo (this, entity);
-					break;
+				return null;
 			}
 
-			return obj;
+			object[] constructorArguments = new object[] { this, entity };
+			return System.Activator.CreateInstance (type, constructorArguments) as AbstractObject;
 		}
 
 		public void SaveDesign()
@@ -325,11 +305,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				var xml = new XElement ("Object");
 
-				string type = obj.GetType ().ToString ();
-				string[] types = type.Split ('.');
-				xml.Add (new XAttribute ("Type", types.Last ()));
+				System.Type type = obj.GetType ();
+				xml.Add (new XAttribute ("Type", type.Name));
 
-				if (obj.AbstractEntity.UnwrapNullEntity () != null)
+				if (obj.AbstractEntity.IsNotNull ())
 				{
 					string entityKey = this.GetEntityKey (obj.AbstractEntity);
 					xml.Add (new XAttribute ("Entity", entityKey));
