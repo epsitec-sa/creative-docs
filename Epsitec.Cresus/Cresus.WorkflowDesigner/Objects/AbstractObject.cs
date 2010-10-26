@@ -109,6 +109,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public bool IsVerticalMagneted
+		{
+			get;
+			set;
+		}
+
+		public bool IsHorizontalMagneted
+		{
+			get;
+			set;
+		}
+
 		public virtual void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.
@@ -643,6 +655,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (origin)
 			{
 				this.DrawAsOriginForMagnetConstrain (graphics);
+			}
+
+			//	Dessine les contraintes imposées sur l'objet.
+			if (this.IsVerticalMagneted)
+			{
+				var rect = new Rectangle (this.bounds.Center.X-1, this.bounds.Bottom, 2, this.bounds.Height);
+				rect.Inflate (1.5, 0);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
+			}
+
+			if (this.IsHorizontalMagneted)
+			{
+				var rect = new Rectangle (this.bounds.Left, this.bounds.Center.Y-1, this.bounds.Width, 2);
+				rect.Inflate (0, 1.5);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
 			}
 		}
 

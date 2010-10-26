@@ -10,10 +10,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 {
 	public class MagnetConstrain
 	{
-		public MagnetConstrain(double position, bool isVertical)
+		public MagnetConstrain(bool isVertical)
 		{
-			this.position = position;
 			this.isVertical = isVertical;
+		}
+
+		public bool IsVertical
+		{
+			get
+			{
+				return this.isVertical;
+			}
 		}
 
 		public double Position
@@ -22,13 +29,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				return this.position;
 			}
-		}
-
-		public bool IsVertical
-		{
-			get
+			set
 			{
-				return this.isVertical;
+				this.position = value;
 			}
 		}
 
@@ -63,7 +66,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private readonly double position;
-		private readonly bool isVertical;
+		private readonly bool			isVertical;
+		private double					position;
 	}
 }
