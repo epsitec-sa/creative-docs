@@ -1137,22 +1137,43 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.lockObject = null;
 					this.hilitedObject.MouseUp (message, pos);
 				}
+
+				this.MagnetConstrainClear ();
 			}
 		}
 
 
 		#region Magnet constrains
-		public Point MagnetConstrainCenter(Point center)
+		private void MagnetConstrainClear()
+		{
+			foreach (var obj in this.AllObjects)
+			{
+				obj.IsVerticalMagneted   = false;
+				obj.IsHorizontalMagneted = false;
+			}
+
+			foreach (var mc in this.MagnetConstrains (null).ToArray ())
+			{
+				mc.Active = false;
+			}
+		}
+
+		public Point MagnetConstrainCenter(Point center, AbstractObject obj)
 		{
 			//	Contraint la position du centre d'un objet.
+			obj.IsVerticalMagneted   = false;
+			obj.IsHorizontalMagneted = false;
+
 			if (this.verticalMagnetConstrains.Count != 0)
 			{
 				center.X = this.verticalMagnetConstrains[0].Position;
+				obj.IsVerticalMagneted = true;
 			}
 
 			if (this.horizontalMagnetConstrains.Count != 0)
 			{
 				center.Y = this.horizontalMagnetConstrains[0].Position;
+				obj.IsHorizontalMagneted = true;
 			}
 
 			return center;

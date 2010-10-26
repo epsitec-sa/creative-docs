@@ -34,6 +34,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.UpdateTitle ();
 
+			this.magnetConstrains.Add (new MagnetConstrain (isVertical: true));
+			this.magnetConstrains.Add (new MagnetConstrain (isVertical: false));
+
 			this.Bounds = new Rectangle (0, 0, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
 		}
 
@@ -663,8 +666,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			rect.Deflate (1);
 			Path path = this.PathNodeRectangle (rect);
 
-			graphics.Rasterizer.AddOutline (path, 1);
-			graphics.RenderSolid (Color.FromRgb (1, 0, 0));
+			graphics.Rasterizer.AddOutline (path, 3);
+			graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
 		}
 
 
@@ -944,10 +947,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		protected override void UpdateMagnetConstrains()
 		{
-			this.magnetConstrains.Clear ();
-
-			this.magnetConstrains.Add (new MagnetConstrain (this.bounds.Center.X, isVertical: true));
-			this.magnetConstrains.Add (new MagnetConstrain (this.bounds.Center.Y, isVertical: false));
+			this.magnetConstrains[0].Position = this.bounds.Center.X;
+			this.magnetConstrains[1].Position = this.bounds.Center.Y;
 		}
 
 	
