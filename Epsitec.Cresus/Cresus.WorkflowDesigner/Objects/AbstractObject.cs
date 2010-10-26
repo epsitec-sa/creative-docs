@@ -194,7 +194,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.isDimmed = value;
-				this.colorFactory.IsDimmed = this.isDimmed && !this.isHilitedForLinkChanging;
 			}
 		}
 
@@ -208,7 +207,32 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.isHilitedForLinkChanging = value;
-				this.colorFactory.IsDimmed = this.isDimmed && !this.isHilitedForLinkChanging;
+			}
+		}
+
+		public bool ProcessDimmed(double step)
+		{
+			//	Fait évoluer l'intensité de l'objet. Retourne true si un changement est intervenu.
+			double newIntensity;
+
+			if (this.isDimmed)
+			{
+				newIntensity = System.Math.Min (this.dimmedIntensity+step, 1);
+			}
+			else
+			{
+				newIntensity = System.Math.Max (this.dimmedIntensity-step, 0);
+			}
+
+			if (this.dimmedIntensity == newIntensity)
+			{
+				return false;
+			}
+			else
+			{
+				this.dimmedIntensity = newIntensity;
+				this.colorFactory.DimmedIntensity = this.isHilitedForLinkChanging ? 0 : this.dimmedIntensity;
+				return true;
 			}
 		}
 
@@ -768,6 +792,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected ActiveElement						hilitedElement;
 		protected bool								isHilitedForLinkChanging;
 		private bool								isDimmed;
+		private double								dimmedIntensity;
 		protected ColorFactory						colorFactory;
 		protected DraggingMode						draggingMode;
 		protected Point								initialPos;

@@ -31,15 +31,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public bool IsDimmed
+		public double DimmedIntensity
 		{
 			get
 			{
-				return this.isDimmed;
+				return this.dimmedIntensity;
 			}
 			set
 			{
-				this.isDimmed = value;
+				this.dimmedIntensity = value;
 			}
 		}
 
@@ -96,9 +96,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					break;
 			}
 
-			if (this.isDimmed)
+			if (this.dimmedIntensity != 0)
 			{
-				color = this.GetColorLighter (color, 0.3);
+				color = this.GetColorLighter (color, 0.2+0.8*(1-this.dimmedIntensity));
 			}
 
 			return color;
@@ -110,9 +110,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color color = Color.FromBrightness (brightness);
 			color = Color.FromAlphaRgb (alpha, color.R, color.G, color.B);
 
-			if (this.isDimmed)
+			if (this.dimmedIntensity != 0)
 			{
-				color = this.GetColorLighter (color, 0.3);
+				color = this.GetColorLighter (color, 0.2+0.8*(1-this.dimmedIntensity));
 			}
 
 			return color;
@@ -155,6 +155,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		private ColorItem		colorItem;
-		private bool			isDimmed;
+		private double			dimmedIntensity;
 	}
 }
