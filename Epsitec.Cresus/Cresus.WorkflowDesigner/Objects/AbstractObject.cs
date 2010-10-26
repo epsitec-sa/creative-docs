@@ -215,13 +215,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Fait évoluer l'intensité de l'objet. Retourne true si un changement est intervenu.
 			double newIntensity;
 
-			if (this.isDimmed)
+			if (this.isDimmed && !this.isHilitedForLinkChanging)
 			{
-				newIntensity = System.Math.Min (this.dimmedIntensity+step, 1);
+				newIntensity = System.Math.Min (this.dimmedIntensity+step, 1);  // diminue l'intensité
 			}
 			else
 			{
-				newIntensity = System.Math.Max (this.dimmedIntensity-step, 0);
+				newIntensity = System.Math.Max (this.dimmedIntensity-step*2, 0);  // augmente l'intensité
 			}
 
 			if (this.dimmedIntensity == newIntensity)
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			else
 			{
 				this.dimmedIntensity = newIntensity;
-				this.colorFactory.DimmedIntensity = this.isHilitedForLinkChanging ? 0 : this.dimmedIntensity;
+				this.colorFactory.DimmedIntensity = this.dimmedIntensity;
 				return true;
 			}
 		}
