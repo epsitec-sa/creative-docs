@@ -98,11 +98,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingMove || this.isDraggingWidth || this.isDraggingAttach)
-			{
-				return null;  // pas de tooltip
-			}
-
 			switch (element)
 			{
 				case ActiveElement.CommentAttachTo:
@@ -149,14 +144,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Si la souris est dans cette boîte, retourne true.
 			base.MouseMove (message, pos);
 
-			if (this.isMouseDownForDrag && !this.isDraggingMove && this.hilitedElement == ActiveElement.CommentMove)
+			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.hilitedElement == ActiveElement.CommentMove)
 			{
-				this.isDraggingMove = true;
+				this.draggingMode = DraggingMode.MoveObject;
 				this.UpdateButtonsState ();
 				this.draggingPos = this.initialPos;
 			}
 
-			if (this.isDraggingMove)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				Rectangle bounds = this.bounds;
 
@@ -167,19 +162,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isDraggingWidth)
+			else if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
-				Rectangle bounds = this.bounds;
-
-				bounds.Right = pos.X;
-				bounds.Width = System.Math.Max(bounds.Width, AbstractObject.commentMinWidth);
-
-				this.Bounds = bounds;
+				this.ChangeBoundsWidth (pos.X, AbstractObject.commentMinWidth);
 				this.UpdateHeight();
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isDraggingAttach)
+			else if (this.draggingMode == DraggingMode.MoveCommentAttach)
 			{
 				ObjectLink link = this.attachObject as ObjectLink;
 
@@ -211,13 +201,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.HilitedElement == ActiveElement.CommentWidth)
 			{
-				this.isDraggingWidth = true;
+				this.draggingMode = DraggingMode.ChangeWidth;
 				this.UpdateButtonsState ();
 			}
 
 			if (this.HilitedElement == ActiveElement.CommentAttachTo)
 			{
-				this.isDraggingAttach = true;
+				this.draggingMode = DraggingMode.MoveCommentAttach;
 				this.UpdateButtonsState ();
 			}
 		}
@@ -227,29 +217,29 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.HilitedElement == ActiveElement.CommentEdit && !this.isDraggingMove)
+			if (this.HilitedElement == ActiveElement.CommentEdit && this.draggingMode == DraggingMode.None)
 			{
 				this.StartEdition (this.HilitedElement);
 				return;
 			}
 
-			if (this.isDraggingMove)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
-				this.isDraggingMove = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
-			else if (this.isDraggingWidth)
+			else if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
-				this.isDraggingWidth = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
-			else if (this.isDraggingAttach)
+			else if (this.draggingMode == DraggingMode.MoveCommentAttach)
 			{
-				this.isDraggingAttach = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
@@ -499,14 +489,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Selected = this.colorFactory.ColorItem == button.ColorItem;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
-		}
-
-		private bool IsDragging
-		{
-			get
-			{
-				return this.isDraggingMove || this.isDraggingWidth || this.isDraggingAttach || this.editor.IsEditing;
-			}
 		}
 
 

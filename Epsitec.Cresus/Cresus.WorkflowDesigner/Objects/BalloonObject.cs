@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
-			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
+			if (this.draggingMode == DraggingMode.None)
 			{
 				rect = Rectangle.Union (rect, rh);
 			}
@@ -112,16 +112,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.DrawRoundShadow (graphics, rect, 4, (int) AbstractObject.shadowOffset, 0.2);
 
 			//	Dessine l'en-tête.
-			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
+			if (!rh.IsEmpty)
 			{
 				rect = rh;
 				rect.Inflate (0.5);
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.ColorCommentHeader (this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
+				graphics.RenderSolid (this.ColorCommentHeader (this.hilitedElement == ActiveElement.CommentMove, this.draggingMode != DraggingMode.None));
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (this.colorFactory.GetColor (0));
+				graphics.RenderSolid (this.colorFactory.GetColor (0, (this.draggingMode == DraggingMode.None) ? 1 : 0.2));
 
-				rect.Width -= rect.Height;
+				rect.Width -= rect.Height;  // place pur le bouton 'x' à droite
 				rect.Offset (0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
 				this.textLayoutTitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, this.colorFactory.GetColor (1), GlyphPaintStyle.Normal);
@@ -747,7 +747,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (dragging)
 			{
-				return this.colorFactory.GetColorMain (0.9);
+				return this.colorFactory.GetColorMain (0.1);
 			}
 			else if (hilited)
 			{
@@ -784,9 +784,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected AbstractObject				attachObject;
 		protected TextLayout					textLayoutTitle;
 
-		protected bool							isDraggingMove;
-		protected bool							isDraggingWidth;
-		protected bool							isDraggingAttach;
 		protected Point							draggingPos;
 	}
 }
