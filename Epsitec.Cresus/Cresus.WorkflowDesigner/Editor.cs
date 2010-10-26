@@ -60,6 +60,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.gridStep = 20;
 			this.gridSubdiv = 5;
 			this.nextUniqueId = 1;
+
+			this.timer = new System.Timers.Timer (1000.0/Editor.dimmedFrequency);
+			this.timer.Elapsed += new System.Timers.ElapsedEventHandler (this.HandleTimerElapsed);
+			this.timer.Start ();
 		}
 
 		public Editor(Widget embedder) : this()
@@ -121,7 +125,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Crée le workflow initial, soit en désérialisant le diagramme, soit un injectant toutes
 			//	les entités pointées à partir de la définition.
-			if (!this.RestoreDesign ())
+			if (this.RestoreDesign ())
+			{
+				this.UpdateUniqueId ();
+			}
+			else
 			{
 				//	Désérialisation échouée.
 				this.initialNodePos = new Point (0, 100);
@@ -378,6 +386,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		private void UpdateUniqueId()
+		{
+			//	Réinitialise le générateur d'identificateurs uniques.
+			int max = 0;
+
+			foreach (var obj in this.AllObjects)
+			{
+				max = System.Math.Max (obj.UniqueId, max);
+			}
+
+			this.nextUniqueId = max+1;
+		}
+
 
 		public LinkableObject SearchInitialObject(AbstractEntity entity)
 		{
@@ -388,23 +409,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				var searchedKey = this.businessContext.DataContext.GetNormalizedEntityKey (entity);
 
-				foreach (var node in this.nodes)
+				foreach (var obj in this.LinkableObjects)
 				{
-					var key = this.businessContext.DataContext.GetNormalizedEntityKey (node.AbstractEntity);
+					var key = this.businessContext.DataContext.GetNormalizedEntityKey (obj.AbstractEntity);
 
 					if (key == searchedKey)
 					{
-						return node;
-					}
-				}
-
-				foreach (var edge in this.edges)
-				{
-					var key = this.businessContext.DataContext.GetNormalizedEntityKey (edge.AbstractEntity);
-
-					if (key == searchedKey)
-					{
-						return edge;
+						return obj;
 					}
 				}
 			}
@@ -437,24 +448,32 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
+			this.StopTimer ();
 			this.nodes.Add (node);
+			this.StartTimer ();
 		}
 
 		public void AddEdge(ObjectEdge edge)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
+			this.StopTimer ();
 			this.edges.Add (edge);
+			this.StartTimer ();
 		}
 
 		public void AddBalloon(BalloonObject balloon)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
+			this.StopTimer ();
 			this.balloons.Add (balloon);
+			this.StartTimer ();
 		}
 
 		public void RemoveBalloon(BalloonObject balloon)
 		{
+			this.StopTimer ();
 			this.balloons.Remove (balloon);
+			this.StartTimer ();
 		}
 
 
@@ -654,6 +673,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void CloseObject(LinkableObject obj)
 		{
 			//	Ferme une boîte et supprme l'entité associés.
+			this.StopTimer ();
+
 			foreach (var link in this.LinkObjects.ToArray ())
 			{
 				if (link.DstObject == obj)
@@ -689,6 +710,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.SetLocalDirty ();
+			this.StartTimer ();
 		}
 
 
@@ -1460,6 +1482,73 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		#region Timer
+		private void StopTimer()
+		{
+			this.timer.Stop ();
+		}
+
+		private void StartTimer()
+		{
+			this.timer.Start ();
+		}
+
+		private void HandleTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			bool changing = false;
+			double step = 1.0/Editor.dimmedFrequency;
+
+#if true
+			foreach (var obj in this.AllObjects.ToArray ())
+			{
+				changing |= obj.ProcessDimmed (step);
+			}
+#else
+			if (this.cartridge != null)
+			{
+				changing |= this.cartridge.ProcessDimmed (step);
+			}
+
+			for (int i = 0; i < this.nodes.Count; i++)
+			{
+				var obj = this.nodes[i];
+				changing |= obj.ProcessDimmed (step);
+
+				for (int j = 0; j < obj.ObjectLinks.Count; j++)
+				{
+					var link = obj.ObjectLinks[j];
+					changing |= link.ProcessDimmed (step);
+				}
+			}
+
+			for (int i = 0; i < this.edges.Count; i++)
+			{
+				var obj = this.edges[i];
+				changing |= obj.ProcessDimmed (step);
+
+				for (int j = 0; j < obj.ObjectLinks.Count; j++)
+				{
+					var link = obj.ObjectLinks[j];
+					changing |= link.ProcessDimmed (step);
+				}
+			}
+
+			for (int i = 0; i < this.balloons.Count; i++)
+			{
+				var obj = this.balloons[i];
+				changing |= obj.ProcessDimmed (step);
+			}
+#endif
+
+			if (changing)
+			{
+				this.Invalidate ();
+			}
+
+			this.timer.Start ();
+		}
+		#endregion
+
 		#region Enumerators
 		private IEnumerable<AbstractObject> ObjectsToSave
 		{
@@ -1791,6 +1880,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public static readonly double			defaultWidth = 200;
 		public static readonly double			pushMargin = 10;
 		private static readonly double			magnetConstrainMargin = 10;
+		private static readonly double			dimmedFrequency = 20;
 
 		private Core.Business.BusinessContext	businessContext;
 
@@ -1832,5 +1922,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private int								nextUniqueId;
 		private List<MagnetConstrain>			verticalMagnetConstrains;
 		private List<MagnetConstrain>			horizontalMagnetConstrains;
+		private System.Timers.Timer				timer;
 	}
 }
