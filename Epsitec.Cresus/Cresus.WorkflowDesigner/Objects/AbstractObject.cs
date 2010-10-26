@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				newIntensity = System.Math.Max (this.dimmedIntensity-step*2, 0);  // augmente l'intensité
+				newIntensity = System.Math.Max (this.dimmedIntensity-step, 0);  // augmente l'intensité
 			}
 
 			if (this.dimmedIntensity == newIntensity)
