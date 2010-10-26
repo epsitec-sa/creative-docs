@@ -414,11 +414,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDragging || this.isChangeWidth)
-			{
-				return null;  // pas de tooltip
-			}
-
 			switch (element)
 			{
 				case ActiveElement.EdgeChangeWidth:
@@ -482,25 +477,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Si la souris est dans cette boîte, retourne true.
 			base.MouseMove (message, pos);
 
-			if (this.isMouseDownForDrag && !this.isDragging && this.HilitedElement == ActiveElement.EdgeHeader)
+			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.EdgeHeader)
 			{
-				this.isDragging = true;
+				this.draggingMode = DraggingMode.MoveObject;
 				this.UpdateButtonsState ();
 				this.draggingOffset = this.initialPos-this.bounds.Center;
 				this.editor.Invalidate ();
 			}
 
-			if (this.isDragging)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				this.DraggingMouseMove (pos);
 				return true;
 			}
-			
-			if (this.isChangeWidth)
+
+			if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
-				Rectangle bounds = this.Bounds;
-				bounds.Width = this.editor.GridAlign (System.Math.Max (pos.X-this.changeWidthPos+this.changeWidthInitial, 120));
-				this.Bounds = bounds;
+				this.ChangeBoundsWidth (pos.X, 120);
 				this.editor.UpdateLinks ();
 				return true;
 			}
@@ -515,10 +508,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.HilitedElement == ActiveElement.EdgeChangeWidth)
 			{
-				this.isChangeWidth = true;
+				this.draggingMode = DraggingMode.ChangeWidth;
 				this.UpdateButtonsState ();
-				this.changeWidthPos = pos.X;
-				this.changeWidthInitial = this.bounds.Width;
 			}
 		}
 
@@ -529,25 +520,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if ((this.HilitedElement == ActiveElement.EdgeHeader ||
 				 this.HilitedElement == ActiveElement.EdgeEditDescription) &&
-				!this.isDragging)
+				this.draggingMode == DraggingMode.None)
 			{
 				this.StartEdition (this.HilitedElement);
 				return;
 			}
 
-			if (this.isDragging)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				this.editor.UpdateAfterGeometryChanged (this);
-				this.isDragging = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 				return;
 			}
 
-			if (this.isChangeWidth)
+			if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
 				this.editor.UpdateAfterGeometryChanged (this);
-				this.isChangeWidth = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 				return;
@@ -680,7 +671,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.HilitedElement == ActiveElement.EdgeHeader)
 				{
-					if (this.isDragging)
+					if (this.draggingMode == DraggingMode.MoveObject)
 					{
 						return MouseCursorType.Move;
 					}
@@ -818,8 +809,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (string.IsNullOrEmpty (this.subtitleString))
 			{
-				this.title.LayoutSize = rect.Size;
-				this.title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+				var r = rect;
+				r.Deflate (0, 6);
+				this.title.LayoutSize = r.Size;
+				this.title.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
 			else
 			{
@@ -1116,14 +1109,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Detectable = this.isExtended;
 		}
 
-		private bool IsDragging
-		{
-			get
-			{
-				return this.isDragging || this.isChangeWidth || this.editor.IsEditing;
-			}
-		}
-
 
 		protected override void UpdateMagnetConstrains()
 		{
@@ -1154,11 +1139,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						subtitle;
 		private string							descriptionString;
 		private TextLayout						description;
-
-		private bool							isDragging;
-		private bool							isChangeWidth;
-		private double							changeWidthPos;
-		private double							changeWidthInitial;
 
 		private ActiveElement					editingElement;
 		private AbstractTextField				editingTextField;

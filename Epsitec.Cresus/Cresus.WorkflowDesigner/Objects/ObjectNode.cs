@@ -238,11 +238,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDragging)
-			{
-				return null;  // pas de tooltip
-			}
-
 			switch (element)
 			{
 				case ActiveElement.NodeExtend:
@@ -300,15 +295,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Si la souris est dans cette boîte, retourne true.
 			base.MouseMove (message, pos);
 
-			if (this.isMouseDownForDrag && !this.isDragging && this.HilitedElement == ActiveElement.NodeHeader)
+			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.NodeHeader)
 			{
-				this.isDragging = true;
+				this.draggingMode = DraggingMode.MoveObject;
 				this.UpdateButtonsState ();
 				this.draggingOffset = this.initialPos-this.bounds.Center;
 				this.editor.Invalidate ();
 			}
 
-			if (this.isDragging)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				this.DraggingMouseMove (pos);
 				return true;
@@ -328,16 +323,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.HilitedElement == ActiveElement.NodeHeader && !this.isDragging)
+			if (this.HilitedElement == ActiveElement.NodeHeader && this.draggingMode == DraggingMode.None)
 			{
 				this.StartEdition (this.HilitedElement);
 				return;
 			}
 
-			if (this.isDragging)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				this.editor.UpdateAfterGeometryChanged (this);
-				this.isDragging = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.SetLocalDirty ();
 				return;
@@ -481,7 +476,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.HilitedElement == ActiveElement.NodeHeader)
 				{
-					if (this.isDragging)
+					if (this.draggingMode == DraggingMode.MoveObject)
 					{
 						return MouseCursorType.Move;
 					}
@@ -951,14 +946,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Detectable = this.isExtended;
 		}
 
-		private bool IsDragging
-		{
-			get
-			{
-				return this.isDragging || this.editor.IsEditing;
-			}
-		}
-
 
 		protected override void UpdateMagnetConstrains()
 		{
@@ -989,8 +976,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private bool							isRoot;
 		private TextLayout						title;
-
-		private bool							isDragging;
 
 		private AbstractTextField				editingTextField;
 	}

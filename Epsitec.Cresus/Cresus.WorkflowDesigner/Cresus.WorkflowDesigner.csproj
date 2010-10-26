@@ -68,6 +68,7 @@
     <Compile Include="Objects\ColorFactory.cs" />
     <Compile Include="Objects\ActiveButtonState.cs" />
     <Compile Include="Objects\BalloonObject.cs" />
+    <Compile Include="Objects\DraggingMode.cs" />
     <Compile Include="Objects\MagnetConstrain.cs" />
     <Compile Include="Objects\ObjectInfo.cs" />
     <Compile Include="Objects\ObjectCartridge.cs" />

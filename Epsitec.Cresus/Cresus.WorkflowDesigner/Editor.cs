@@ -1624,8 +1624,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				pos = this.ConvWidgetToEditor(pos);
-				return this.hilitedObject.GetToolTipText(pos);
+				return this.hilitedObject.GetToolTipText();
 			}
 		}
 		#endregion

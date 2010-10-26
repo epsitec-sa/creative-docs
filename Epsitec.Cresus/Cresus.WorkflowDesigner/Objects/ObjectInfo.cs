@@ -38,11 +38,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingMove || this.isDraggingWidth || this.isDraggingLine)
-			{
-				return null;  // pas de tooltip
-			}
-
 			switch (element)
 			{
 				case ActiveElement.InfoClose:
@@ -62,14 +57,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Si la souris est dans cette boîte, retourne true.
 			base.MouseMove (message, pos);
 
-			if (this.isMouseDownForDrag && !this.isDraggingMove && this.HilitedElement == ActiveElement.InfoMove)
+			if (this.isMouseDownForDrag && this.draggingMode == DraggingMode.None && this.HilitedElement == ActiveElement.InfoMove)
 			{
-				this.isDraggingMove = true;
+				this.draggingMode = DraggingMode.MoveObject;
 				this.UpdateButtonsState ();
 				this.draggingPos = this.initialPos;
 			}
 
-			if (this.isDraggingMove)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
 				Rectangle bounds = this.bounds;
 
@@ -80,19 +75,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isDraggingWidth)
+			else if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
-				Rectangle bounds = this.bounds;
-
-				bounds.Right = pos.X;
-				bounds.Width = System.Math.Max(bounds.Width, AbstractObject.commentMinWidth);
-
-				this.Bounds = bounds;
+				this.ChangeBoundsWidth (pos.X, AbstractObject.commentMinWidth);
 				this.UpdateHeight();
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isDraggingLine)
+			else if (this.draggingMode == DraggingMode.MoveInfoLine)
 			{
 				int lineCount = this.LineCount;
 				int sel = -1;
@@ -124,16 +114,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.HilitedElement == ActiveElement.InfoWidth)
 			{
-				this.isDraggingWidth = true;
+				this.draggingMode = DraggingMode.ChangeWidth;
 				this.UpdateButtonsState ();
 			}
 
 			if (this.HilitedElement >= ActiveElement.InfoLine1 &&
 				this.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 			{
-				this.isDraggingLine = true;
+				this.draggingMode = DraggingMode.MoveInfoLine;
 				this.draggingLineInitialRank = this.HilitedElement - ActiveElement.InfoLine1;
 				this.draggingLineCurrentRank = -1;
+				this.UpdateButtonsState ();
 				this.editor.Invalidate ();
 			}
 		}
@@ -143,21 +134,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.isDraggingMove)
+			if (this.draggingMode == DraggingMode.MoveObject)
 			{
-				this.isDraggingMove = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
-			else if (this.isDraggingWidth)
+			else if (this.draggingMode == DraggingMode.ChangeWidth)
 			{
-				this.isDraggingWidth = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.SetLocalDirty ();
 			}
-			else if (this.isDraggingLine)
+			else if (this.draggingMode == DraggingMode.MoveInfoLine)
 			{
 				if (this.draggingLineCurrentRank != -1 && this.draggingLineInitialRank != -1)
 				{
@@ -175,7 +166,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				this.isDraggingLine = false;
+				this.draggingMode = DraggingMode.None;
 				this.UpdateButtonsState ();
 				this.editor.UpdateAfterCommentChanged ();
 				this.editor.SetLocalDirty ();
@@ -308,7 +299,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					rect = this.RectangleLine (sel);
 
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.colorFactory.GetColorMain (this.isDraggingLine ? 0.3 : 1.0));
+					graphics.RenderSolid (this.colorFactory.GetColorMain (this.draggingMode == DraggingMode.MoveInfoLine ? 0.3 : 1.0));
 				}
 
 				int lineCount = this.LineCount;
@@ -329,7 +320,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			//	Dessine la flèche pendant un déplacement de ligne.
-			if (this.isDraggingLine && this.draggingLineCurrentRank != -1)
+			if (this.draggingMode == DraggingMode.MoveInfoLine && this.draggingLineCurrentRank != -1)
 			{
 				if (this.draggingLineCurrentRank <= this.draggingLineInitialRank-1 ||
 					this.draggingLineCurrentRank >= this.draggingLineInitialRank+2)
@@ -426,7 +417,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				var textLayout = new TextLayout ();
 				textLayout.DefaultFontSize = 10;
-				textLayout.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
+				textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				textLayout.Alignment = ContentAlignment.MiddleLeft;
 
 				this.textLayouts.Add (textLayout);
@@ -517,14 +508,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Visible = button.State.Hilited || (this.IsHeaderHilite && !this.IsDragging);
 		}
 
-		private bool IsDragging
-		{
-			get
-			{
-				return this.isDraggingMove || this.isDraggingWidth || this.editor.IsEditing;
-			}
-		}
-
 
 		#region Serialize
 		public override void Serialize(XElement xml)
@@ -544,7 +527,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private List<TextLayout>				textLayouts;
 
-		private bool							isDraggingLine;
 		private int								draggingLineInitialRank;
 		private int								draggingLineCurrentRank;
 	}

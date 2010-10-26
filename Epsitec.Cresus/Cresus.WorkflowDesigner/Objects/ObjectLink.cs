@@ -149,11 +149,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingDst)
-			{
-				return null;  // pas de tooltip
-			}
-
 			switch (element)
 			{
 				case ActiveElement.LinkChangeDst:
@@ -188,12 +183,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	La souris est bougée.
 			base.MouseMove (message, pos);
 
-			if (this.isDraggingDst)
+			if (this.draggingMode == DraggingMode.MoveLinkDst)
 			{
 				this.DraggingDstMouseMove (pos);
 				return true;
 			}
-			else if (this.isDraggingCustomize)
+			else if (this.draggingMode == DraggingMode.MoveLinkCustomize)
 			{
 				this.CustomizeMouseMove (pos);
 				return true;
@@ -226,12 +221,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.isDraggingDst)
+			if (this.draggingMode == DraggingMode.MoveLinkDst)
 			{
 				this.DraggingDstMouseUp ();
 			}
 
-			if (this.isDraggingCustomize)
+			if (this.draggingMode == DraggingMode.MoveLinkCustomize)
 			{
 				this.CustomizeMouseUp (pos);
 			}
@@ -519,11 +514,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			Point dst;
 
-			if (this.isDraggingDst && this.hilitedDstObject != null)
+			if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject != null)
 			{
 				dst = this.hilitedDstObject.Bounds.Center;
 			}
-			else if (this.isDraggingDst)
+			else if (this.draggingMode == DraggingMode.MoveLinkDst)
 			{
 				dst = this.draggingStumpPos;
 			}
@@ -553,11 +548,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			this.startVector = this.srcObject.GetLinkVector (this.startAngle, isDst: false);
 
-			if (this.isDraggingDst && this.hilitedDstObject != null)
+			if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject != null)
 			{
 				this.endVector = this.hilitedDstObject.GetLinkVector (this.endAngle, isDst: true);
 			}
-			else if (this.isDraggingDst)
+			else if (this.draggingMode == DraggingMode.MoveLinkDst)
 			{
 				this.endVector = new Vector (this.draggingStumpPos, this.endAngle);
 			}
@@ -654,15 +649,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				//	Dessine les contraintes utilisateur.
-				if (this.dstObject != null && (this.isDraggingCustomize || this.IsHilite))
+				if (this.dstObject != null && (this.draggingMode == DraggingMode.MoveLinkCustomize || this.IsHilite))
 				{
 					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.colorFactory.GetColorMain ());
 				}
 
 				//	Dessine la connexion et la flèche.
-				Color color = (this.IsHilite || this.isDraggingDst) ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
+				Color color = (this.IsHilite || this.draggingMode == DraggingMode.MoveLinkDst) ? this.colorFactory.GetColorMain () : this.colorFactory.GetColor (0);
 
-				if (this.isDraggingDst && this.hilitedDstObject == null)
+				if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject == null)
 				{
 					Misc.DrawPathDash (graphics, this.Path, 2, 1, 4, true, color);
 				}
@@ -781,7 +776,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Indique si la souris est dans l'en-tête.
 			get
 			{
-				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked || this.isDraggingDst)
+				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked || this.draggingMode == DraggingMode.MoveLinkDst)
 				{
 					return false;
 				}
@@ -881,7 +876,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#region Customize utilities
 		private void CustomizeMouseDown(Point pos)
 		{
-			this.isDraggingCustomize = true;
+			this.draggingMode = DraggingMode.MoveLinkCustomize;
 			this.UpdateButtonsState ();
 			this.SetPathDirty ();
 			this.editor.Invalidate ();
@@ -906,7 +901,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void CustomizeMouseUp(Point pos)
 		{
-			this.isDraggingCustomize = false;
+			this.draggingMode = DraggingMode.None;
 			this.UpdateButtonsState ();
 			this.SetPathDirty ();
 			this.UpdateGeometry ();
@@ -1035,7 +1030,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#region Draggind destination
 		private void DraggingDstMouseDown(Point pos)
 		{
-			this.isDraggingDst = true;
+			this.draggingMode = DraggingMode.MoveLinkDst;
 			this.UpdateButtonsState ();
 			this.startManual = false;
 			this.endManual = false;
@@ -1087,7 +1082,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void DraggingDstMouseUp()
 		{
-			this.isDraggingDst = false;
+			this.draggingMode = DraggingMode.None;
 			this.UpdateButtonsState ();
 			this.draggingStumpPos = Point.Zero;
 
@@ -1255,14 +1250,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Detectable = this.dstObject != null && !this.IsTooShortLink;
 		}
 
-		private bool IsDragging
-		{
-			get
-			{
-				return this.isDraggingCustomize || this.isDraggingDst;
-			}
-		}
-
 		private bool IsTooShortLink
 		{
 			get
@@ -1321,10 +1308,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private bool							endManual;
 		private Path							path;
 
-		private bool							isDraggingCustomize;
-
 		private bool							isSrcHilited;
-		private bool							isDraggingDst;
 		private LinkableObject					hilitedDstObject;
 		private Point							draggingStumpPos;
 

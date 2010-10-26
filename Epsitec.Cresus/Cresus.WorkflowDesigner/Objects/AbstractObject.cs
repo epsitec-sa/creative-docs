@@ -126,6 +126,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Déplace l'objet.
 		}
 
+		protected void ChangeBoundsWidth(double posx, double minWidth)
+		{
+			double width = System.Math.Max (posx-this.bounds.Left, minWidth);
+			width = System.Math.Floor (width/2)*2;  // la largeur doit être pair
+
+			this.Bounds = new Rectangle (this.bounds.Left, this.bounds.Bottom, width, this.bounds.Height);
+		}
+
 		public virtual ColorItem BackgroundColorItem
 		{
 			//	Couleur de fond de la boîte.
@@ -214,10 +222,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public string GetToolTipText(Point pos)
+		public string GetToolTipText()
 		{
 			//	Retourne le texte pour le tooltip.
-			return this.GetToolTipText (this.hilitedElement);
+			if (this.draggingMode == DraggingMode.None)
+			{
+				return this.GetToolTipText (this.hilitedElement);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		protected virtual string GetToolTipText(ActiveElement element)
@@ -636,6 +651,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		protected bool IsDragging
+		{
+			get
+			{
+				return this.draggingMode != DraggingMode.None || this.editor.IsEditing;
+			}
+		}
+
+
 		#region Magnet constrains
 		public Point GetCenter(Point pos)
 		{
@@ -745,6 +769,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		protected bool								isHilitedForLinkChanging;
 		private bool								isDimmed;
 		protected ColorFactory						colorFactory;
+		protected DraggingMode						draggingMode;
 		protected Point								initialPos;
 		private bool								isMouseDown;
 		protected bool								isMouseDownForDrag;
