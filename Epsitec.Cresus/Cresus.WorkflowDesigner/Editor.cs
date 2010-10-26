@@ -59,8 +59,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.areaOffset = Point.Zero;
 			this.nextUniqueId = 1;
 
-			this.timer = new System.Timers.Timer (1000.0/Editor.dimmedFrequency);
-			this.timer.Elapsed += new System.Timers.ElapsedEventHandler (this.HandleTimerElapsed);
+			//	Le Widgets.Timer s'exécute dans la bouche d'événement, à l'inverse de System.Timer qui
+			//	s'exécute dans un autre Thread. Il n'y a donc aucun souci d'exécution simultanée du code.
+			this.timer = new Timer ();
+			this.timer.AutoRepeat = 1.0/Editor.dimmedFrequency;
+			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
 			this.timer.Start ();
 		}
 
@@ -446,32 +449,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
-			this.StopTimer ();
 			this.nodes.Add (node);
-			this.StartTimer ();
 		}
 
 		public void AddEdge(ObjectEdge edge)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
-			this.StopTimer ();
 			this.edges.Add (edge);
-			this.StartTimer ();
 		}
 
 		public void AddBalloon(BalloonObject balloon)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
-			this.StopTimer ();
 			this.balloons.Add (balloon);
-			this.StartTimer ();
 		}
 
 		public void RemoveBalloon(BalloonObject balloon)
 		{
-			this.StopTimer ();
 			this.balloons.Remove (balloon);
-			this.StartTimer ();
 		}
 
 
@@ -655,8 +650,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void CloseObject(LinkableObject obj)
 		{
 			//	Ferme une boîte et supprme l'entité associés.
-			this.StopTimer ();
-
 			foreach (var link in this.LinkObjects.ToArray ())
 			{
 				if (link.DstObject == obj)
@@ -692,7 +685,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.SetLocalDirty ();
-			this.StartTimer ();
 		}
 
 
@@ -872,6 +864,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.lastMessagePos = pos;
 
 			//-System.Diagnostics.Debug.WriteLine(string.Format("Type={0}", message.MessageType));
+
+			this.TryProcessDimmed ();
 
 			switch (message.MessageType)
 			{
@@ -1338,69 +1332,42 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 
 		#region Timer
-		private void StopTimer()
+		private void HandleTimerElapsed(object sender)
 		{
-			this.timer.Stop ();
+			this.ProcessDimmed ();
 		}
 
-		private void StartTimer()
+		private void TryProcessDimmed()
 		{
-			this.timer.Start ();
+			//	Comme le timer passe par la boucle d'événements, celui-ci est quasiment stoppé lorsque
+			//	la boucle d'événements est surchargée, par exemple lorsque la souris bouge rapidement.
+			//	Cette exécution, faite lors de la réception de chaque événement, essaie de palier à ce
+			//	problème.
+			long deltaTicks = System.DateTime.Now.Ticks - this.lastTick;
+			double delta = deltaTicks / 10000000.0;  // temps écoulé en en secondes
+
+			if (delta >= 1.0/Editor.dimmedFrequency)  // le timer aurait dû s'exécuter ?
+			{
+				this.ProcessDimmed ();
+			}
 		}
 
-		private void HandleTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+		private void ProcessDimmed()
 		{
 			bool changing = false;
-			double step = 1.0/Editor.dimmedFrequency;
+			double step = 1.0/Editor.dimmedFrequency*4.0;  // durée de l'effet = 1/4 s
 
-#if true
-			foreach (var obj in this.AllObjects.ToArray ())
+			foreach (var obj in this.AllObjects)
 			{
 				changing |= obj.ProcessDimmed (step);
 			}
-#else
-			if (this.cartridge != null)
-			{
-				changing |= this.cartridge.ProcessDimmed (step);
-			}
-
-			for (int i = 0; i < this.nodes.Count; i++)
-			{
-				var obj = this.nodes[i];
-				changing |= obj.ProcessDimmed (step);
-
-				for (int j = 0; j < obj.ObjectLinks.Count; j++)
-				{
-					var link = obj.ObjectLinks[j];
-					changing |= link.ProcessDimmed (step);
-				}
-			}
-
-			for (int i = 0; i < this.edges.Count; i++)
-			{
-				var obj = this.edges[i];
-				changing |= obj.ProcessDimmed (step);
-
-				for (int j = 0; j < obj.ObjectLinks.Count; j++)
-				{
-					var link = obj.ObjectLinks[j];
-					changing |= link.ProcessDimmed (step);
-				}
-			}
-
-			for (int i = 0; i < this.balloons.Count; i++)
-			{
-				var obj = this.balloons[i];
-				changing |= obj.ProcessDimmed (step);
-			}
-#endif
 
 			if (changing)
 			{
 				this.Invalidate ();
 			}
 
-			this.timer.Start ();
+			this.lastTick = System.DateTime.Now.Ticks;
 		}
 		#endregion
 
@@ -1731,7 +1698,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public static readonly double			defaultWidth = 200;
 		public static readonly double			pushMargin = 10;
 		private static readonly double			magnetConstrainMargin = 10;
-		private static readonly double			dimmedFrequency = 20;
+		private static readonly double			dimmedFrequency = 10;
 
 		private Core.Business.BusinessContext	businessContext;
 
@@ -1769,6 +1736,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private int								nextUniqueId;
 		private List<MagnetConstrain>			verticalMagnetConstrains;
 		private List<MagnetConstrain>			horizontalMagnetConstrains;
-		private System.Timers.Timer				timer;
+		private Timer							timer;
+		private long							lastTick;
 	}
 }
