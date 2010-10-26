@@ -332,8 +332,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			//	Déplace l'objet.
 			Point center = Point.GridAlign (this.editor.MagnetConstrainCenter (pos-this.draggingOffset, this));
-			Rectangle bounds = this.editor.NodeGridAlign (new Rectangle (center.X-this.Bounds.Width/2, center.Y-this.Bounds.Height/2, this.Bounds.Width, this.Bounds.Height));
-			this.Bounds = bounds;
+			this.Bounds = new Rectangle (center.X-this.Bounds.Width/2, center.Y-this.Bounds.Height/2, this.Bounds.Width, this.Bounds.Height);
 			this.editor.UpdateLinks ();
 
 			int i = 0;
