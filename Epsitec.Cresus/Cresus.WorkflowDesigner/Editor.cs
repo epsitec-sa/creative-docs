@@ -1344,9 +1344,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	Cette exécution, faite lors de la réception de chaque événement, essaie de palier à ce
 			//	problème.
 			long deltaTicks = System.DateTime.Now.Ticks - this.lastTick;
-			double delta = deltaTicks / 10000000.0;  // temps écoulé en en secondes
+			double delta = deltaTicks / 10000000.0;  // temps écoulé en secondes
 
-			if (delta >= 1.0/Editor.dimmedFrequency)  // le timer aurait dû s'exécuter ?
+			if (delta >= 1.0/Editor.dimmedFrequency)  // est-ce que le timer aurait dû s'exécuter ?
 			{
 				this.ProcessDimmed ();
 			}
@@ -1354,6 +1354,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void ProcessDimmed()
 		{
+			//	Fait avancer d'un 'step' tous les objets.
 			bool changing = false;
 			double step = 1.0/Editor.dimmedFrequency*4.0;  // durée de l'effet = 1/4 s
 
@@ -1362,7 +1363,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				changing |= obj.ProcessDimmed (step);
 			}
 
-			if (changing)
+			if (changing)  // y a-t-il eu un changement ?
 			{
 				this.Invalidate ();
 			}
