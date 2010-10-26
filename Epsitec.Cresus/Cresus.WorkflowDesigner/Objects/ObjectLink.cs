@@ -463,8 +463,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			bounds.Deflate (Editor.pushMargin);
-
-			bounds = this.editor.NodeGridAlign (bounds);
 			obj.Bounds = bounds;
 
 			this.dstObject = obj;

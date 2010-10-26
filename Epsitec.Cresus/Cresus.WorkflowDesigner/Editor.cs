@@ -57,8 +57,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
-			this.gridStep = 20;
-			this.gridSubdiv = 5;
 			this.nextUniqueId = 1;
 
 			this.timer = new System.Timers.Timer (1000.0/Editor.dimmedFrequency);
@@ -524,22 +522,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool Grid
-		{
-			get
-			{
-				return this.grid;
-			}
-			set
-			{
-				if (this.grid != value)
-				{
-					this.grid = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
 		public Size AreaSize
 		{
 			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
@@ -628,7 +610,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateObjects ();
-			this.PushLayout (node, PushDirection.Automatic, this.gridStep);
+			this.PushLayout (node, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea ();
 			this.UpdateLinks ();
 			this.RedimArea ();
@@ -834,13 +816,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
-
-#if false
-			bool iGrid = this.grid;
-			this.grid = true;
-			rect = this.AreaGridAlign (rect);
-			this.grid = iGrid;
-#endif
 
 			this.MoveObjects(-rect.Left, -rect.Bottom);
 			this.UpdateObjectGeometry ();
@@ -1272,56 +1247,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#endregion
 
 
-		public Rectangle NodeGridAlign(Rectangle rect)
-		{
-			//	Aligne un rectangle d'une boîte (ObjectNode) sur son coin supérieur/gauche,
-			//	en ajustant également sa largeur, mais pas sa hauteur.
-			if (this.grid)
-			{
-				Point topLeft = this.GridAlign (rect.TopLeft);
-				double width  = this.GridAlign (rect.Width);
-
-				rect = new Rectangle (topLeft.X, topLeft.Y-rect.Height, width, rect.Height);
-			}
-
-			return rect;
-		}
-
-		private Rectangle AreaGridAlign(Rectangle rect)
-		{
-			if (this.grid)
-			{
-				Point bottomLeft = this.GridAlign (rect.BottomLeft);
-				double width     = this.GridAlign (rect.Width);
-				double height    = this.GridAlign (rect.Height);
-
-				rect = new Rectangle (bottomLeft.X, bottomLeft.Y, width, height);
-			}
-
-			return rect;
-		}
-
-		public Point GridAlign(Point pos)
-		{
-			if (this.grid)
-			{
-				pos = Point.GridAlign (pos, 0, this.gridStep);
-			}
-
-			return pos;
-		}
-
-		public double GridAlign(double value)
-		{
-			if (this.grid)
-			{
-				value = Point.GridAlign (new Point (value, 0), 0, this.gridStep).X;
-			}
-
-			return value;
-		}
-
-
 		public void ClearHilited()
 		{
 			foreach (var obj in this.AllObjects)
@@ -1366,12 +1291,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			graphics.AddFilledRectangle(rect);  // surface de dessin
 			graphics.RenderSolid(Color.FromBrightness(1));
 
-			//	Dessine la grille.
-			if (this.grid)
-			{
-				this.PaintGrid (graphics, clipRect);
-			}
-
 			//	Dessine les surfaces hors de la zone utile.
 			Point bl = this.ConvWidgetToEditor(this.Client.Bounds.BottomLeft);
 			Point tr = this.ConvWidgetToEditor(this.Client.Bounds.TopRight);
@@ -1400,70 +1319,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
-		}
-
-		private void PaintGrid(Graphics graphics, Rectangle clipRect)
-		{
-			//	Dessine la grille magnétique.
-			double initialWidth = graphics.LineWidth;
-			graphics.LineWidth = 1.0/this.zoom;
-
-			double ix = 0.5/this.zoom;
-			double iy = 0.5/this.zoom;
-
-			int mul = (int) System.Math.Max (10.0/(this.gridStep*this.zoom), 1.0);
-
-			//	Dessine les traits verticaux.
-			double step = this.gridStep*mul;
-			int subdiv = (int) this.gridSubdiv;
-			int rank = 0;
-			for (double pos=0; pos<=this.AreaSize.Width; pos+=step)
-			{
-				double x = pos;
-				double y = 0;
-				graphics.Align (ref x, ref y);
-				x += ix;
-				y += iy;
-				graphics.AddLine (x, y, x, this.AreaSize.Height);
-
-				if (rank%subdiv == 0)
-				{
-					graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.6, 0.6, 0.6));  // gris
-				}
-				else
-				{
-					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.6, 0.6, 0.6));  // gris
-				}
-
-				rank++;
-			}
-
-			//	Dessine les traits horizontaux.
-			step = this.gridStep*mul;
-			subdiv = (int) this.gridSubdiv;
-			rank = 0;
-			for (double pos=0; pos<=this.AreaSize.Height; pos+=step)
-			{
-				double x = 0;
-				double y = pos;
-				graphics.Align (ref x, ref y);
-				x += ix;
-				y += iy;
-				graphics.AddLine (x, y, this.AreaSize.Width, y);
-
-				if (rank%subdiv == 0)
-				{
-					graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.6, 0.6, 0.6));  // gris
-				}
-				else
-				{
-					graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.6, 0.6, 0.6));  // gris
-				}
-
-				rank++;
-			}
-
-			graphics.LineWidth = initialWidth;
 		}
 
 		public void PaintObjects(Graphics graphics)
@@ -1735,10 +1590,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					this.SetMouseCursorImage(ref this.mouseCursorFinger, Misc.Icon("CursorFinger"));
 					break;
 
-				case MouseCursorType.Grid:
-					this.SetMouseCursorImage(ref this.mouseCursorGrid, Misc.Icon("CursorGrid"));
-					break;
-
 				case MouseCursorType.Move:
 					this.SetMouseCursorImage (ref this.mouseCursorMove, Misc.Icon ("CursorMove"));
 					break;
@@ -1909,12 +1760,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Image							mouseCursorMoveOrEdit;
 		private Image							mouseCursorHorizontalMove;
 		private Image							mouseCursorVerticalMove;
-		private Image							mouseCursorGrid;
 		private VScroller						vscroller;
 		private AbstractObject					hilitedObject;
-		private bool							grid;
-		private double							gridStep;
-		private double							gridSubdiv;
 		private AbstractObject					editingObject;
 		private AbstractObject					editableObject;
 		private Point							initialNodePos;
