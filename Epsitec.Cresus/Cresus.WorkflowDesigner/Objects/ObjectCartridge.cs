@@ -45,11 +45,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override double RedimMargin
+		public override Margins RedimMargin
 		{
 			get
 			{
-				return 0;
+				return new Margins (0);
 			}
 		}
 

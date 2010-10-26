@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public virtual double RedimMargin
+		public virtual Margins RedimMargin
 		{
 			get
 			{
-				return 40;
+				return new Margins (AbstractObject.redimMargin);
 			}
 		}
 
@@ -661,7 +661,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.IsVerticalMagneted)
 			{
 				var rect = new Rectangle (this.bounds.Center.X-1, this.bounds.Bottom, 2, this.bounds.Height);
-				rect.Inflate (1.5, 0);
+				rect.Inflate (0.5, 0);
 
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
@@ -670,7 +670,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.IsHorizontalMagneted)
 			{
 				var rect = new Rectangle (this.bounds.Left, this.bounds.Center.Y-1, this.bounds.Width, 2);
-				rect.Inflate (0, 1.5);
+				rect.Inflate (0, 0.5);
 
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
@@ -730,6 +730,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double				arrowAngle = 25;
 		protected static readonly double			commentMinWidth = 50;
 		protected static readonly double			infoMinWidth = 50;
+		protected static readonly double			redimMargin = 40;
 		protected static readonly double			shadowOffset = 6;
 		private static readonly double				minimalMove = 3;
 
