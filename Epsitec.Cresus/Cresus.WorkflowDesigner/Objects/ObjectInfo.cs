@@ -190,6 +190,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 					this.editor.RemoveBalloon (this);
+					this.editor.UpdateAfterCommentChanged ();
 				}
 			}
 		}

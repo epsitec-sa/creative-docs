@@ -79,6 +79,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
+		public override Margins RedimMargin
+		{
+			get
+			{
+				if (this.isExtended)
+				{
+					return new Margins (AbstractObject.redimMargin, AbstractObject.redimMargin, AbstractObject.redimMargin, 0);
+				}
+				else
+				{
+					return new Margins (AbstractObject.redimMargin);
+				}
+			}
+		}
+
 		public override void Move(double dx, double dy)
 		{
 			//	Déplace l'objet.

@@ -271,6 +271,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 
 					this.editor.RemoveBalloon (this);
+					this.editor.UpdateAfterCommentChanged ();
 				}
 
 				if (this.HilitedElement == ActiveElement.CommentColor1)
