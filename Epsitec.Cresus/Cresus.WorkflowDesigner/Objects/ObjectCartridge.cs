@@ -38,6 +38,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.textLayoutSubtitle.Alignment = ContentAlignment.MiddleLeft;
 			this.textLayoutSubtitle.BreakMode = TextBreakMode.Hyphenate;
 
+			if (this.Entity.WorkflowName.IsNullOrWhiteSpace)
+			{
+				this.Entity.WorkflowName = "Nouveau workflow";
+			}
+
+			if (this.Entity.WorkflowDescription.IsNullOrWhiteSpace)
+			{
+				this.Entity.WorkflowDescription = "Cliquez ici pour entrer une description...";
+			}
+
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
 
@@ -149,12 +159,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void UpdateTitle()
 		{
-			this.textLayoutTitle.Text = Misc.Bold (this.Entity.WorkflowName.ToString ());
+			string text = this.Entity.WorkflowName.ToString ();
+
+			this.textLayoutTitle.Text = Misc.Bold (text);
 		}
 
 		private void UpdateSubtitle()
 		{
-			this.textLayoutSubtitle.Text = this.Entity.WorkflowDescription.ToString ();
+			string text = this.Entity.WorkflowDescription.ToString ();
+
+			this.textLayoutSubtitle.Text = text;
 		}
 
 
