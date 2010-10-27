@@ -157,11 +157,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			orchestrator.Navigator.PreserveNavigation (() => orchestrator.ClearActiveEntity ());
 		}
 
-		private void ExecuteAutoActions()
-		{
-			
-		}
-		
 		private void HandleBusinessContextMasterEntitiesChanged(object sender)
 		{
 			this.MakeDirty ();
