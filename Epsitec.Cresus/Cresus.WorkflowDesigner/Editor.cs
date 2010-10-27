@@ -61,8 +61,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			//	Le Widgets.Timer s'exécute dans la bouche d'événement, à l'inverse de System.Timer qui
 			//	s'exécute dans un autre Thread. Il n'y a donc aucun souci d'exécution simultanée du code.
+			double delay = 1.0/Editor.dimmedFrequency;
+
 			this.timer = new Timer ();
-			this.timer.AutoRepeat = 1.0/Editor.dimmedFrequency;
+			this.timer.AutoRepeat = delay;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
 			this.timer.Start ();
 		}
@@ -75,8 +77,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
+				this.timer.Dispose ();
 			}
 			
 			base.Dispose(disposing);
@@ -1365,7 +1368,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			if (changing)  // y a-t-il eu un changement ?
 			{
-				this.Invalidate ();
+				Application.Invoke (this.Invalidate);
 			}
 
 			this.lastTick = System.DateTime.Now.Ticks;
@@ -1704,9 +1707,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Core.Business.BusinessContext	businessContext;
 
 		private WorkflowDefinitionEntity		workflowDefinitionEntity;
-		private List<ObjectNode>				nodes;
-		private List<ObjectEdge>				edges;
-		private List<BalloonObject>				balloons;
+		private readonly List<ObjectNode>		nodes;
+		private readonly List<ObjectEdge>		edges;
+		private readonly List<BalloonObject>	balloons;
 		private ObjectCartridge					cartridge;
 
 		private Size							areaSize;
@@ -1735,9 +1738,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Point							initialNodePos;
 		private Point							initialEdgePos;
 		private int								nextUniqueId;
-		private List<MagnetConstrain>			verticalMagnetConstrains;
-		private List<MagnetConstrain>			horizontalMagnetConstrains;
-		private Timer							timer;
+		private readonly List<MagnetConstrain>	verticalMagnetConstrains;
+		private readonly List<MagnetConstrain>	horizontalMagnetConstrains;
+		private readonly Timer					timer;
 		private long							lastTick;
 	}
 }
