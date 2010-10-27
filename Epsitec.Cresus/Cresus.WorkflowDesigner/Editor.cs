@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			this.timer = new Timer ();
 			this.timer.AutoRepeat = delay;
+			this.timer.HigherAccuracy = true;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
 			this.timer.Start ();
 		}
@@ -1337,7 +1338,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#region Timer
 		private void HandleTimerElapsed(object sender)
 		{
-			this.ProcessDimmed ();
+			double period = 1.0/Editor.dimmedFrequency;
+			double step = period*2.0;  // durée de l'effet = 1/2 s
+
+			this.ProcessDimmed (step);
 		}
 
 		private void TryProcessDimmed()
@@ -1348,18 +1352,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	problème.
 			long deltaTicks = System.DateTime.Now.Ticks - this.lastTick;
 			double delta = deltaTicks / 10000000.0;  // temps écoulé en secondes
+			double period = 1.0/Editor.dimmedFrequency;
 
-			if (delta >= 1.0/Editor.dimmedFrequency)  // est-ce que le timer aurait dû s'exécuter ?
+			if (delta >= period)  // est-ce que le timer aurait dû s'exécuter ?
 			{
-				this.ProcessDimmed ();
+				double step = period*2.0;  // durée de l'effet = 1/2 s
+				step *= delta/period;
+
+				this.ProcessDimmed (step);
 			}
 		}
 
-		private void ProcessDimmed()
+		private void ProcessDimmed(double step)
 		{
 			//	Fait avancer d'un 'step' tous les objets.
 			bool changing = false;
-			double step = 1.0/Editor.dimmedFrequency*4.0;  // durée de l'effet = 1/4 s
 
 			foreach (var obj in this.AllObjects)
 			{
