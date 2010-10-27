@@ -297,7 +297,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (angles.Count == 0)
 			{
-				return 270;  // de haut en bas
+				//?return 270;  // de haut en bas
+				return 0;  // de gauche à droite
 			}
 			else
 			{

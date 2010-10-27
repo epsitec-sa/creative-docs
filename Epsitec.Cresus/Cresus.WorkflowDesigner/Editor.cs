@@ -137,8 +137,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			else
 			{
 				//	Désérialisation échouée.
-				this.initialNodePos = new Point (0, 100);
-				this.initialEdgePos = new Point (150, 100);
+				this.initialNodePos = new Point (  0, 150);
+				this.initialEdgePos = new Point (150, 150);
 
 				var list = Entity.DeepSearch (this.workflowDefinitionEntity);
 				bool isRoot = true;
