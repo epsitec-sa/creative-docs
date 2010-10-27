@@ -191,6 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					thread = bc.GetLocalEntity (thread);
 					edge   = bc.GetLocalEntity (edge);
+					node   = bc.GetLocalEntity (node);
 
 					var step = bc.CreateEntity<WorkflowStepEntity> ();
 
