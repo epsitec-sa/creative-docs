@@ -265,6 +265,40 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		}
 
 
+		[TestMethod]
+		public void ParseArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.FormatException>
+			(
+				() => EntityKey.Parse ("wrong format")
+			);
+
+			ExceptionAssert.Throw<System.FormatException>
+			(
+				() => EntityKey.Parse ("]/wrong format")
+			);
+			ExceptionAssert.Throw<System.FormatException>
+			(
+				() => EntityKey.Parse ("[L0AM]/wrong format")
+			);
+			
+			ExceptionAssert.Throw<System.FormatException>
+			(
+				() => EntityKey.Parse ("[wrong format]/2")
+			);
+		}
+
+
+		[TestMethod]
+		public void ParseTest()
+		{
+			Assert.IsNull (EntityKey.Parse (null));
+			Assert.IsNull (EntityKey.Parse (""));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[L0AM]"), new DbKey (new DbId (2))), EntityKey.Parse ("[L0AM]/2"));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[L0A11]"), new DbKey (new DbId (43))), EntityKey.Parse ("[L0A11]/43"));
+		}
+
+
 		private IEnumerable<System.Tuple<DbKey, Druid>> GetTestData()
 		{
 			int count = 25;
