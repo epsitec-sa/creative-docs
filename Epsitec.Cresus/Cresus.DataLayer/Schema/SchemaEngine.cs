@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Gets the <see cref="SchemaBuilder"/> used by this instance to build the schemas of the
 		/// <see cref="AbstractEntity"/>
 		/// </summary>
-		private SchemaBuilder SchemaBuilder
+		internal SchemaBuilder SchemaBuilder
 		{
 			get;
 			set;
