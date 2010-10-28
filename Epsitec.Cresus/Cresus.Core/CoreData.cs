@@ -447,8 +447,38 @@ namespace Epsitec.Cresus.Core
 
 		private void VerifyDatabaseSchemas()
 		{
-			// TODO
+			this.VerifyDatabaseSchema<RelationEntity> ();
+			this.VerifyDatabaseSchema<NaturalPersonEntity> ();
+			this.VerifyDatabaseSchema<AbstractPersonEntity> ();
+			this.VerifyDatabaseSchema<MailContactEntity> ();
+			this.VerifyDatabaseSchema<TelecomContactEntity> ();
+			this.VerifyDatabaseSchema<UriContactEntity> ();
+			this.VerifyDatabaseSchema<ArticleDefinitionEntity> ();
+			this.VerifyDatabaseSchema<VatDefinitionEntity> ();
+			this.VerifyDatabaseSchema<BusinessDocumentEntity> ();
+			this.VerifyDatabaseSchema<ArticleDocumentItemEntity> ();
+			this.VerifyDatabaseSchema<TextDocumentItemEntity> ();
+			this.VerifyDatabaseSchema<PriceDocumentItemEntity> ();
+			this.VerifyDatabaseSchema<TaxDocumentItemEntity> ();
+			this.VerifyDatabaseSchema<EnumValueArticleParameterDefinitionEntity> ();
+			this.VerifyDatabaseSchema<NumericValueArticleParameterDefinitionEntity> ();
+			this.VerifyDatabaseSchema<AffairEntity> ();
+			this.VerifyDatabaseSchema<DocumentMetadataEntity> ();
+			this.VerifyDatabaseSchema<WorkflowEntity> ();
+			this.VerifyDatabaseSchema<TotalDocumentItemEntity> ();
+			this.VerifyDatabaseSchema<SoftwareUserEntity> ();
+			this.VerifyDatabaseSchema<BusinessSettingsEntity> ();
 		}
+
+
+		private void VerifyDatabaseSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		{
+			if (!this.dataInfrastructure.CheckSchema<TEntity> ())
+			{
+				throw new System.Exception ("Invalid database schema : schema for " + typeof(TEntity).FullName + " or one of its dependency does not exist or is incorrect");
+			}
+		}
+
 
 		private void CreateDatabaseSchemas()
 		{
