@@ -24,10 +24,19 @@ namespace Cresus.Database.UnitTests
 		}
 
 
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			UnitTestDatabaseConnection.DeleteDatabase ();
+
+			TestHelper.CreateDatabase ();
+		}
+
+
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			this.DeleteDatabase ();
+			UnitTestDatabaseConnection.DeleteDatabase ();
 
 			TestHelper.CreateDatabase ();
 		}
@@ -48,7 +57,7 @@ namespace Cresus.Database.UnitTests
 		[TestMethod]
 		public void MissingDatabase()
 		{
-			this.DeleteDatabase ();
+			UnitTestDatabaseConnection.DeleteDatabase ();
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
@@ -376,7 +385,7 @@ namespace Cresus.Database.UnitTests
 		}
 
 
-		private void DeleteDatabase()
+		private static void DeleteDatabase()
 		{
 			DbAccess access = TestHelper.CreateDbAccess ();
 
