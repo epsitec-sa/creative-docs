@@ -2,12 +2,14 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -136,7 +138,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// by the given <see cref="Druid"/>.
 		/// </summary>
 		/// <param name="typeId">The <see cref="Druid"/> defined the type of the <see cref="AbstractEntity"/>.</param>
-		/// <returns>The sequence of <see cref="StructuredTypes"/>.</returns>
+		/// <returns>The sequence of <see cref="StructuredType"/>.</returns>
 		private IList<StructuredType> GetStructuredTypesUsedInSchema(Druid typeId)
 		{
 			IDictionary<Druid, StructuredType> types = new Dictionary<Druid, StructuredType> ();
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		/// <summary>
 		/// Adds the given <see cref="Druid"/> and the corresponding <see cref="StructuredType"/> if
-		/// it is not already in the <see cref="IDictionnary"/> and recursively adds the same data
+		/// it is not already in the <see cref="IDictionary"/> and recursively adds the same data
 		/// for its base type and its fields.
 		/// </summary>
 		/// <param name="types">The <see cref="IDictionary"/> that contains the <see cref="Druid"/> and the <see cref="StructuredType"/>.</param>
@@ -347,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		/// <summary>
 		/// Builds the sequence of <see cref="DbTable"/> that corresponds to the given sequence of
-		/// <see cref="StructuredTypes"/>. In order to build them, this method takes a sequence of
+		/// <see cref="StructuredType"/>. In order to build them, this method takes a sequence of
 		/// the <see cref="DbTable"/> that already exists and the sequence of <see cref="DbTypeDef"/>
 		/// that will be used to build the <see cref="DbTable"/>.
 		/// </summary>
@@ -404,7 +406,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// created <see cref="DbTable"/> will only contains a name, comment and the metadata columns.
 		/// </summary>
 		/// <param name="tableType">The <see cref="StructuredType"/> corresponding to the <see cref="DbTable"/> to create.</param>
-		/// <returns>The newly created <see cref="DbTable."/></returns>
+		/// <returns>The newly created <see cref="DbTable"/>.</returns>
 		private DbTable BuildBasicTable(StructuredType tableType)
 		{
 			DbTable table = this.DbInfrastructure.CreateDbTable (tableType.CaptionId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges, (tableType.BaseType == null));
@@ -450,7 +452,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Builds the <see cref="DbColumn"/> that corresponds to the given relation
 		/// <see cref="StructuredTypeField"/>.
 		/// </summary>
-		/// <param name="dbTypeDefs">The mapping of <see cref="Druid"/>  to<see cref="DbTable"/> that can be referenced by the <see cref="DbColumn"/>.</param>
+		/// <param name="newTables">The mapping of <see cref="Druid"/>  to<see cref="DbTable"/> that can be referenced by the <see cref="DbColumn"/>.</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbColumn"/> to create.</param>
 		/// <returns>The newly created <see cref="DbColumn"/>.</returns>
 		private DbColumn BuildRelationColumn(Dictionary<Druid, DbTable> newTables, StructuredTypeField field)
