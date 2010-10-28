@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
+using System.Collections;
 
 [assembly: DependencyClass (typeof (DataInfrastructure))]
 
@@ -291,6 +292,19 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.InvalidOperationException ("This instance is not connected.");
 			}
 		}
+
+
+		/// <summary>
+		/// Checks that the given <see cref="AbstractEntity"/> given by <typeparamref name="TEntity"/>
+		/// is properly defined in the database.
+		/// </summary>
+		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to check.</typeparam>
+		/// <returns><c>true</c> if the type of the <see cref="AbstractEntity"/> is properly defined in the database, <c>false</c> if it is not.</returns>
+		public bool CheckSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		{
+			return this.SchemaEngine.SchemaBuilder.CheckSchema (new TEntity ().GetEntityStructuredTypeId ());
+		}
+
 		
 		/// <summary>
 		/// Some obscure property :-P Ask Pierre if you want to know more about it...
