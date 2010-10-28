@@ -1338,10 +1338,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#region Timer
 		private void HandleTimerElapsed(object sender)
 		{
-			double period = 1.0/Editor.dimmedFrequency;
-			double step = period*2.0;  // durée de l'effet = 1/2 s
-
-			this.ProcessDimmed (step);
+			this.ProcessDimmed ();
 		}
 
 		private void TryProcessDimmed()
@@ -1356,16 +1353,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			if (delta >= period)  // est-ce que le timer aurait dû s'exécuter ?
 			{
-				double step = period*2.0;  // durée de l'effet = 1/2 s
-				step *= delta/period;
-
-				this.ProcessDimmed (step);
+				this.ProcessDimmed ();
 			}
 		}
 
-		private void ProcessDimmed(double step)
+		private void ProcessDimmed()
 		{
 			//	Fait avancer d'un 'step' tous les objets.
+			long ticks = System.DateTime.Now.Ticks;
+			long deltaTicks = ticks - this.lastTick;
+			double delta = deltaTicks / 10000000.0;  // temps écoulé en secondes
+			double period = 1.0/Editor.dimmedFrequency;
+
+			double step = period*2.0;  // durée de l'effet = 1/2 s
+			step *= delta/period;
+			
 			bool changing = false;
 
 			foreach (var obj in this.AllObjects)
@@ -1378,7 +1380,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				Application.Invoke (this.Invalidate);
 			}
 
-			this.lastTick = System.DateTime.Now.Ticks;
+			this.lastTick = ticks;
 		}
 		#endregion
 
