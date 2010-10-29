@@ -15,9 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers
 	{
 		public WorkflowExecutionEngine(WorkflowController controller, WorkflowTransition transition)
 		{
-			this.controller = controller;
-			this.transition = transition;
-			this.data       = this.controller.Data;
+			this.controller      = controller;
+			this.transition      = transition;
+			this.data            = this.controller.Data;
+			this.businessContext = this.transition.BusinessContext;
 		}
 
 		public static WorkflowExecutionEngine Current
@@ -94,21 +95,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool FollowWorkflowEdge()
 		{
-			WorkflowThreadEntity thread = this.transition.Thread;
-			WorkflowEdgeEntity   edge   = this.transition.Edge;
+			WorkflowThreadEntity thread   = this.transition.Thread;
+			WorkflowEdgeEntity   edge     = this.transition.Edge;
+			WorkflowEntity       workflow = this.transition.Workflow;
+			WorkflowNodeEntity   node     = this.transition.Node;
 
-			Queue<WorkflowEdgeEntity> edges = new Queue<WorkflowEdgeEntity> ();
-			edges.Enqueue (edge);
+			Queue<Arc> arcs = new Queue<Arc> ();
+			arcs.Enqueue (new Arc (node, edge));
 
 			int iterationCount = 0;
 
-			while (edges.Count > 0)
+			while (arcs.Count > 0)
 			{
-				if (this.FollowThreadWorkflowEdge (thread, edges) == false)
+				using (this.businessContext.AutoLock (workflow))
 				{
-					//	Could not lock ... catastrophic failure !
-					
-					throw new System.Exception ("Fatal error: could not follow workflow edge and store the target into the database");
+					this.FollowThreadWorkflowEdge (thread, arcs);
+					this.businessContext.SaveChanges ();
 				}
 
 				if (iterationCount++ > 100)
@@ -120,9 +122,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			return true;
 		}
 
-		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<WorkflowEdgeEntity> edges)
+		private struct Arc
 		{
-			var edge = edges.Dequeue ();
+			public Arc(WorkflowNodeEntity node, WorkflowEdgeEntity edge)
+			{
+				this.node = node;
+				this.edge = edge;
+			}
+
+
+			public WorkflowNodeEntity Node
+			{
+				get
+				{
+					return this.node;
+				}
+			}
+
+			public WorkflowEdgeEntity Edge
+			{
+				get
+				{
+					return this.edge;
+				}
+			}
+
+			private readonly WorkflowNodeEntity node;
+			private readonly WorkflowEdgeEntity edge;
+		}
+
+		private void FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs)
+		{
+			var arc  = arcs.Dequeue ();
+			var edge = arc.Edge;
 
 			switch (edge.TransitionType)
             {
@@ -130,6 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				
 				case WorkflowTransitionType.Call:
+					this.PushNodeToThreadCallGraph (thread, arc.Node);
 					break;
 				
 				case WorkflowTransitionType.Fork:
@@ -139,10 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
             }
 
-			if (this.SaveStepIntoThreadHistory (thread, edge, edge.NextNode) == false)
-			{
-				return false;
-			}
+			this.AddStepToThreadHistory (thread, edge, edge.NextNode);
 			
 			WorkflowNodeEntity node = edge.NextNode;
 				
@@ -152,14 +182,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Reached the end of the workflow. Can we "pop" an edge from the call
 				//	stack ?
 
-				int lastIndex = thread.CallGraph.Count - 1;
-
-				if (lastIndex >= 0)
-				{
-					this.SaveStepIntoThreadHistory (thread, null, thread.CallGraph[lastIndex].ReturnNode);
-					
-					thread.CallGraph.RemoveAt (lastIndex);
-				}
+				this.PopNodeFromCallGraph (thread);
 			}
 			else if (node.IsAuto)
 			{
@@ -170,46 +193,47 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException ("Auto-node cannot have more than one standard edge");
                 }
 
-				foreach (var autoNode in node.Edges)
+				foreach (var autoEdges in node.Edges)
 				{
-					edges.Enqueue (autoNode);
+					arcs.Enqueue (new Arc (node, autoEdges));
 				}
 			}
-
-			return true;
 		}
 
-		private bool SaveStepIntoThreadHistory(WorkflowThreadEntity thread, WorkflowEdgeEntity edge, WorkflowNodeEntity node)
+		private void PushNodeToThreadCallGraph(WorkflowThreadEntity thread, WorkflowNodeEntity returnNode)
 		{
-			using (var bc = this.data.CreateBusinessContext ())
+			WorkflowCallEntity call = this.businessContext.CreateEntity<WorkflowCallEntity> ();
+
+			call.ReturnNode = returnNode;
+
+			thread.CallGraph.Add (call);
+		}
+
+		private void PopNodeFromCallGraph(WorkflowThreadEntity thread)
+		{
+			int lastIndex = thread.CallGraph.Count - 1;
+
+			if (lastIndex >= 0)
 			{
-				var threadKey = DataLayer.Context.DataContextPool.Instance.FindEntityKey (thread);
+				this.AddStepToThreadHistory (thread, null, thread.CallGraph[lastIndex].ReturnNode);
 
-				bc.SetActiveEntity (threadKey);
-
-				if (bc.AcquireLock ())
-				{
-					thread = bc.GetLocalEntity (thread);
-					edge   = bc.GetLocalEntity (edge);
-					node   = bc.GetLocalEntity (node);
-
-					var step = bc.CreateEntity<WorkflowStepEntity> ();
-
-					step.Edge  = edge;
-					step.Node  = node;
-					step.Date  = System.DateTime.UtcNow;
-					step.User  = null; // TODO: ...
-					step.Owner = null; // TODO: ...
-					step.RelationContact = null; // TODO: ...
-					step.RelationPerson  = null; // TODO: ...
-
-					thread.History.Add (step);
-
-					return true;
-				}
+				thread.CallGraph.RemoveAt (lastIndex);
 			}
+		}
 
-			return false;
+		private void AddStepToThreadHistory(WorkflowThreadEntity thread, WorkflowEdgeEntity edge, WorkflowNodeEntity node)
+		{
+			var step = this.businessContext.CreateEntity<WorkflowStepEntity> ();
+
+			step.Edge  = edge;
+			step.Node  = node;
+			step.Date  = System.DateTime.UtcNow;
+			step.User  = null; // TODO: ...
+			step.Owner = null; // TODO: ...
+			step.RelationContact = null; // TODO: ...
+			step.RelationPerson  = null; // TODO: ...
+
+			thread.History.Add (step);
 		}
 
 		[System.ThreadStatic]
@@ -218,6 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly WorkflowTransition transition;
 		private readonly WorkflowController controller;
 		private readonly CoreData			data;
+		private readonly BusinessContext	businessContext;
 
 		private bool isDisposed;
 	}

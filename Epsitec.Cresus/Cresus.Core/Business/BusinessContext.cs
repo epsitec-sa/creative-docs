@@ -160,7 +160,66 @@ namespace Epsitec.Cresus.Core.Business
 			lockTransaction.Dispose ();
 			return false;
 		}
-		
+
+		public bool ReleaseLock()
+		{
+			if (this.IsLocked == false)
+			{
+				return false;
+			}
+
+			System.Diagnostics.Debug.WriteLine ("*** LOCK RELEASED ***");
+			this.lockTransaction.Dispose ();
+			this.lockTransaction = null;
+
+			return true;
+		}
+
+		public System.IDisposable AutoLock<T>(T entity)
+			where T : AbstractEntity
+		{
+			if (this.IsLocked)
+			{
+				throw new System.InvalidOperationException ("Cannot acquire new lock when business context is already locked");
+			}
+			if (entity.IsNull ())
+            {
+				throw new System.ArgumentNullException ("Cannot acquire lock on null entity");
+            }
+
+			this.lockEntity = entity;
+
+			if (this.AcquireLock ())
+			{
+				return new Unlocker (this);
+			}
+
+			throw new System.InvalidOperationException ("Could not acquire lock");
+		}
+
+		private class Unlocker : System.IDisposable
+		{
+			public Unlocker(BusinessContext context)
+			{
+				this.context = context;
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				if (this.context != null)
+				{
+					this.context.ReleaseLock ();
+					this.context.lockEntity = null;
+				}
+			}
+
+			#endregion
+
+			private readonly BusinessContext	context;
+		}
+
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement = null)
 		{
 			System.Diagnostics.Debug.Assert (this.activeEntity == null);
@@ -419,9 +478,7 @@ namespace Epsitec.Cresus.Core.Business
 
 				if (this.lockTransaction != null)
 				{
-					System.Diagnostics.Debug.WriteLine ("*** LOCK RELEASED ***");
-					this.lockTransaction.Dispose ();
-					this.lockTransaction = null;
+					this.ReleaseLock ();
 				}
 
 				System.GC.SuppressFinalize (this);
@@ -523,6 +580,10 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
 			}
+			if (this.lockEntity != null)
+			{
+				yield return CoreDataLocker.GetLockName (this.dataContext, this.lockEntity);
+			}
 		}
 
 
@@ -576,6 +637,7 @@ namespace Epsitec.Cresus.Core.Business
 		private CoreDataLockTransaction			lockTransaction;
 
 		private AbstractEntity					activeEntity;
+		private AbstractEntity					lockEntity;
 		private NavigationPathElement			activeNavigationPathElement;
 	}
 }
