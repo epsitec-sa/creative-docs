@@ -174,8 +174,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
 				   from thread in workflow.Threads
-				   from edge in WorkflowController.GetEnabledEdges (thread)
-				   select new WorkflowTransition (context, workflow, thread, edge);
+				   let  node = WorkflowController.GetCurrentNode (thread)
+				   from edge in WorkflowController.GetEnabledEdges (thread, node)
+				   select new WorkflowTransition (context, workflow, thread, node, edge);
 		}
 
 		private static IEnumerable<WorkflowEntity> GetEnabledWorkflows(BusinessContext context)
@@ -191,21 +192,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				   select workflow;
 		}
 
-		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowThreadEntity thread)
+		private static WorkflowNodeEntity GetCurrentNode(WorkflowThreadEntity thread)
 		{
 			int lastIndex = thread.History.Count - 1;
 
 			if (lastIndex < 0)
 			{
-				return thread.Definition.Edges;
+				return thread.Definition;
 			}
 			else
 			{
 				var lastStep = thread.History[lastIndex];
-				var nextNode = lastStep.Node;
-
-				return WorkflowController.GetEnabledEdges (nextNode) ?? thread.Definition.Edges;
+				return lastStep.Node;
 			}
+		}
+
+		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowThreadEntity thread, WorkflowNodeEntity node)
+		{
+			return WorkflowController.GetEnabledEdges (node) ?? thread.Definition.Edges;
 		}
 
 		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowNodeEntity node)
