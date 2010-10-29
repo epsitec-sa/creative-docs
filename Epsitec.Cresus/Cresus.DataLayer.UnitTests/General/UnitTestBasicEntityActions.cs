@@ -618,6 +618,51 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		public void DoubleAddEntityCollection()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+
+					albert.Firstname = "Albert";
+					albert.Lastname = "Levert";
+					
+					dataContext.SaveChanges ();
+
+					albert.Contacts.Add (contact1);
+
+					dataContext.SaveChanges ();
+
+					albert.Contacts.Add (contact2);
+
+					dataContext.SaveChanges ();
+				}
+
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+
+					Assert.AreEqual ("Albert", albert.Firstname);
+					Assert.AreEqual ("Levert", albert.Lastname);
+					Assert.IsNull (albert.BirthDate);
+					Assert.IsNull (albert.Gender);
+					Assert.IsNull (albert.Title);
+					Assert.IsNull (albert.PreferredLanguage);
+					Assert.AreEqual (2, albert.Contacts.Count);
+					Assert.AreEqual (contact1, albert.Contacts[0]);
+					Assert.AreEqual (contact2, albert.Contacts[1]);
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void RemoveEntityCollection()
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
