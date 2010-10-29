@@ -268,46 +268,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 
-						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-						LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					language1.Name = "new name";
 
-						language1.Name = "new name";
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (language1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-
-						Assert.IsTrue (eventArgs2.Count == 1);
-						Assert.AreSame (language2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);
-					}
+					Assert.IsTrue (eventArgs2.Count == 1);
+					Assert.AreSame (language2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 				}
 			}
 		}
@@ -321,47 +310,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					PersonGenderEntity gender = dataContext1.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
 
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						PersonGenderEntity gender = dataContext1.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					person1.Gender = gender;
 
-						person1.Gender = gender;
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (person1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (person1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-
-						Assert.IsTrue (eventArgs2.Count == 1);
-						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);
-					}
+					Assert.IsTrue (eventArgs2.Count == 1);
+					Assert.AreSame (person2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 				}
 			}
 		}
@@ -375,47 +353,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					AbstractContactEntity contact = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
 
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						AbstractContactEntity contact = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					person1.Contacts.Add (contact);
 
-						person1.Contacts.Add (contact);
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (person1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (person1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-
-						Assert.IsTrue (eventArgs2.Count == 1);
-						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);	
-					}				
+					Assert.IsTrue (eventArgs2.Count == 1);
+					Assert.AreSame (person2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 				}
 			}
 		}
@@ -429,45 +396,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 
-						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-						LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.DeleteEntity (language1);
 
-						dataContext1.DeleteEntity (language1);
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (language1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
-
-						Assert.IsTrue (eventArgs2.Count == 1);
-						Assert.AreSame (language2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);
-					}
+					Assert.IsTrue (eventArgs2.Count == 1);
+					Assert.AreSame (language2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 				}
 			}
 		}
@@ -481,50 +437,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language2 = person2.PreferredLanguage;
 
-						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						LanguageEntity language2 = person2.PreferredLanguage;
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.DeleteEntity (language1);
 
-						dataContext1.DeleteEntity (language1);
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (language1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
+					Assert.IsTrue (eventArgs2.Count == 2);
+					Assert.AreSame (person2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 
-						Assert.IsTrue (eventArgs2.Count == 2);
-						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-
-						Assert.AreSame (language2, eventArgs2[1].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);	
-					}
+					Assert.AreSame (language2, eventArgs2[1].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
 				}
 			}
 		}
@@ -538,50 +483,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					DataContextPool.Instance.Add (dataContext1);
-					DataContextPool.Instance.Add (dataContext2);
+					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
-					try
-					{
-						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
-						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
+					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					AbstractContactEntity contact2 = person2.Contacts[0];
 
-						AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1)));
-						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						AbstractContactEntity contact2 = person2.Contacts[0];
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.DeleteEntity (contact1);
 
-						dataContext1.DeleteEntity (contact1);
+					Assert.IsTrue (eventArgs1.Count == 0);
+					Assert.IsTrue (eventArgs2.Count == 0);
 
-						Assert.IsTrue (eventArgs1.Count == 0);
-						Assert.IsTrue (eventArgs2.Count == 0);
+					dataContext1.SaveChanges ();
 
-						dataContext1.SaveChanges ();
+					Assert.IsTrue (eventArgs1.Count == 1);
+					Assert.AreSame (contact1, eventArgs1[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
-						Assert.IsTrue (eventArgs1.Count == 1);
-						Assert.AreSame (contact1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
+					Assert.IsTrue (eventArgs2.Count == 2);
+					Assert.AreSame (person2, eventArgs2[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 
-						Assert.IsTrue (eventArgs2.Count == 2);
-						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
-
-						Assert.AreSame (contact2, eventArgs2[1].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
-					}
-					finally
-					{
-						DataContextPool.Instance.Remove (dataContext1);
-						DataContextPool.Instance.Remove (dataContext2);
-					}	
+					Assert.AreSame (contact2, eventArgs2[1].Entity);
+					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
 				}
 			}
 		}

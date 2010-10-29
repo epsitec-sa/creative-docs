@@ -65,7 +65,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -92,14 +91,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.AreEqual (firstName2, naturalPersons[i].Firstname);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -118,7 +109,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -148,14 +138,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.AreEqual (gender2, naturalPersons[i].Gender.Name);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -174,7 +156,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -207,14 +188,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					Assert.AreEqual (contact1, ((UriContactEntity) naturalPersons[i].Contacts[1]).Uri);
 					Assert.AreEqual (contact2, ((UriContactEntity) naturalPersons[i].Contacts[0]).Uri);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -233,7 +206,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -257,14 +229,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.IsNull (naturalPersons[i].Gender);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -283,7 +247,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -312,14 +275,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -338,7 +293,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -362,14 +316,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.IsNull (naturalPersons[i].BirthDate);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -388,7 +334,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -412,14 +357,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.IsNull (naturalPersons[i].Gender);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -438,7 +375,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -462,14 +398,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -488,7 +416,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -515,14 +442,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					Assert.AreEqual ("E.T.", naturalPersons[i].Gender.Name);
 				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
-				}
 			}
 		}
 
@@ -541,7 +460,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					DataContext dataContext = dataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
-					DataContextPool.Instance.Add (dataContext);
 				}
 
 				DbKey dbKey = new DbKey (new DbId (1));
@@ -567,14 +485,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				for (int i = 0; i < nbDataContexts; i++)
 				{
 					Assert.AreEqual ("new@uri.com", ((UriContactEntity) naturalPersons[i].Contacts[2]).Uri);
-				}
-
-				for (int i = 0; i < nbDataContexts; i++)
-				{
-					DataContext dataContext = dataContexts[i];
-
-					DataContextPool.Instance.Remove (dataContext);
-					dataContext.Dispose ();
 				}
 			}
 		}

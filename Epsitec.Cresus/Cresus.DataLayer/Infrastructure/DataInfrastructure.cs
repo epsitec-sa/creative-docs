@@ -11,8 +11,10 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+
+using System.Linq;
 
 [assembly: DependencyClass (typeof (DataInfrastructure))]
 
@@ -40,6 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
 			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure);
+			this.DataContextPool = new DataContextPool ();
 		}
 		
 		/// <summary>
@@ -51,6 +54,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				return this.dbInfrastructure;
 			}
+		}
+
+		/// <summary>
+		/// The <see cref="DataContextPool"/> associated with this instance.
+		/// </summary>
+		public DataContextPool DataContextPool
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>
@@ -263,8 +275,19 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public DataContext CreateDataContext(bool enableNullVirtualization = false)
 		{
-			return new DataContext (this, enableNullVirtualization);
+			DataContext dataContext = new DataContext (this, enableNullVirtualization);
+
+			this.DataContextPool.Add (dataContext);
+
+			return dataContext;
 		}
+
+		public bool DeleteDataContext(DataContext dataContext)
+		{
+			dataContext.Dispose ();
+
+			return this.DataContextPool.Remove (dataContext);
+		} 
 
 		/// <summary>
 		/// Does the real job of disposing this instance.
@@ -275,6 +298,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			if (disposing)
 			{
 				this.dbInfrastructure.ClearValue (DataInfrastructure.DbInfrastructureProperty);
+
+				foreach (DataContext dataContext in this.DataContextPool.ToList ())
+				{
+					this.DeleteDataContext (dataContext);
+				}
 			}
 
 			base.Dispose (disposing);

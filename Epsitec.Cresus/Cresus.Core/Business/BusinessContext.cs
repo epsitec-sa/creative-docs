@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				this.entity = entity;
 				this.businessContext = businessContext;
-				this.dataContext = DataContextPool.Instance.FindDataContext (entity);
+				this.dataContext = CoreProgram.Application.Data.DataContextPool.FindDataContext (entity);
 			}
 
 			public DataContext DataContext
