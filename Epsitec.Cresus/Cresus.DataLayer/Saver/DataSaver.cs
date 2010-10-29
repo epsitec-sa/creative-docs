@@ -248,9 +248,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				this.DataContext.RemoveAllReferences (entity, EntityChangedEventSource.Internal);
 				this.DataContext.MarkAsDeleted (entity);
-			}
 
-			this.DataContext.ClearEntitiesToDelete ();
+				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Deleted);
+			}
 		}
 
 

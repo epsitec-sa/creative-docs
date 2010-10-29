@@ -639,9 +639,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 
 			this.entitiesDeleted.Add (entity);
-			this.entitiesCache.Remove (entity);
 
-			this.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Deleted);
+			this.entitiesCache.Remove (entity);
+			this.entitiesToDelete.Remove (entity);
+			this.emptyEntities.Remove (entity);
+			this.fieldsToResave.Remove (entity);
 		}
 
 
@@ -896,6 +898,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
+				this.MarkAsDeleted (entity);
 				this.RemoveAllReferences (entity, EntityChangedEventSource.Synchronization);
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
@@ -1055,7 +1058,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="fieldId">The <see cref="Druid"/> of the field to clean up.</param>
 		/// <param name="target">The <see cref="AbstractEntity"/> that must be removed from the field.</param>
 		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
-		private void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
+		internal void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
 		{
 			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
 
