@@ -490,6 +490,42 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
+		[TestMethod]
+		public void DeleteEntity()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				int nbDataContexts = 10;
+
+				List<DataContext> dataContexts = new List<DataContext> ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+
+					dataContexts.Add (dataContext);
+				}
+
+				DbKey dbKey = new DbKey (new DbId (1));
+
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
+
+				dataContexts.First ().DeleteEntity (naturalPersons.First ());
+				dataContexts.First ().SaveChanges ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.IsTrue (dataContexts[i].IsDeleted (naturalPersons[i]));
+				}
+			}
+		}
+
+
 	}
 
 
