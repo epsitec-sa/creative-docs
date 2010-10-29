@@ -1364,11 +1364,16 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
 			{
+				if (modifiedValue is IEntityCollection)
+				{
+					((IEntityCollection) modifiedValue).ResetCopyOnWrite ();
+				}
+				
 				originalValues.SetValue (fieldName, modifiedValue, ValueStoreSetMode.ShortCircuit);
 				modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
 			}
 		}
-		
+
 
 		#region Helper Classes
 
