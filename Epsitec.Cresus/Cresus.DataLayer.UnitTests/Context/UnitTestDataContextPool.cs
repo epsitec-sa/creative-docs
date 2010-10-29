@@ -51,14 +51,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void DataContextPoolConstructorTest()
 		{
-			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+			DataContextPool dataContextPool = new DataContextPool ();
 		}
 
 
 		[TestMethod]
 		public void AddTest()
 		{
-			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+			DataContextPool dataContextPool = new DataContextPool ();
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new DataContextPool_Accessor ().Add (null)
+				() => new DataContextPool ().Add (null)
 			);
 		}
 
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void ContainsTest()
 		{
-			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+			DataContextPool dataContextPool = new DataContextPool ();
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new DataContextPool_Accessor ().Contains (null)
+				() => new DataContextPool ().Contains (null)
 			);
 		}
 
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void FindDataContextTest2()
 		{
-			DataContext dataContext = new DataContextPool_Accessor ().FindDataContext (null);
+			DataContext dataContext = new DataContextPool ().FindDataContext (null);
 
 			Assert.IsNull (dataContext);
 		}
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
@@ -435,23 +435,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new DataContextPool_Accessor ().Remove (null)
+				() => new DataContextPool ().Remove (null)
 
 			);
-		}
-
-		
-		[TestMethod]
-		public void InstanceTest()
-		{
-			DataContextPool dataContextPool1 = DataContextPool.Instance;
-			
-			for (int i = 0; i < 10; i++)
-			{
-				DataContextPool dataContextPool2 = DataContextPool.Instance;
-
-				Assert.AreSame (dataContextPool1, dataContextPool2);
-			}
 		}
 
 
@@ -460,7 +446,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
-				DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+				DataContextPool dataContextPool = new DataContextPool ();
 
 				DataContext dataContext1 = dataInfrastructure.CreateDataContext ();
 				DataContext dataContext2 = dataInfrastructure.CreateDataContext ();

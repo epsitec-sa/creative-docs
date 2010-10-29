@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpgradeEmptyEntity()
 		{
 			var entity  = this.Entity;
-			var context = DataContextPool.Instance.FindDataContext (entity);
+			var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (entity);
 
 			bool isEmpty = (this.GetEditionStatus () & EntityStatus.Empty) != 0;
 

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return DataContextPool.Instance.AreEqualDatabaseInstances (that, other);
+				return CoreProgram.Application.Data.DataContextPool.AreEqualDatabaseInstances (that, other);
 			}
 		}
 

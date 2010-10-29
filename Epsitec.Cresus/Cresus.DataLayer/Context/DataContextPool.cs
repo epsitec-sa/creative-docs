@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Builds a new empty <c>DataContext</c>.
 		/// </summary>
-		private DataContextPool()
+		internal DataContextPool()
 		{
 			this.dataContexts = new HashSet<DataContext> ();
 		}
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="dataContext">The <see cref="DataContext"/> to add.</param>
 		/// <returns><c>true</c> if the <see cref="DataContext"/> was not present in the pool, <c>false</c> if it was.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
-		public bool Add(DataContext dataContext)
+		internal bool Add(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="dataContext">The <see cref="DataContext"/> to remove.</param>
 		/// <returns><c>true</c> if the <see cref="DataContext"/> was present in the pool, <c>false</c> if it was not.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
-		public bool Remove(DataContext dataContext)
+		internal bool Remove(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="jobs">The sequence of <see cref="AbstractSynchronizationJob"/> to synchronize.</param>
 		internal void Synchronize(DataContext dataContext, IEnumerable<AbstractSynchronizationJob> jobs)
 		{
-			if (DataContextPool.Instance.Contains (dataContext))
+			if (this.Contains (dataContext))
 			{
 				List<DataContext> otherDataContexts = this
 					.Where (d => d != dataContext)
@@ -205,24 +205,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		#endregion
-
-
-		/// <summary>
-		/// Get the single instance of <see cref="DataContextPool"/>.
-		/// </summary>
-		public static DataContextPool Instance
-		{
-			get
-			{
-				return DataContextPool.instance;
-			}
-		}
-
-
-		/// <summary>
-		/// The single instance of <see cref="DataContextPool"/>.
-		/// </summary>
-		private static readonly DataContextPool instance = new DataContextPool ();
 
 
 		/// <summary>

@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public void Print()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreProgram.Application.Data.DataContextPool.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Preview()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreProgram.Application.Data.DataContextPool.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (node != null)
 					{
 						var entity = node.GetEntity ();
-						var context = DataContextPool.Instance.FindDataContext (entity);
+						var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (entity);
 
 						if (context.IsPersistent (entity))
 						{

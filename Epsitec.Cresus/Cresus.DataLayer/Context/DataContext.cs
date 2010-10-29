@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return entity;
 			}
 
-			var key = DataContextPool.Instance.FindEntityKey (entity);
+			var key = this.DataInfrastructure.DataContextPool.FindEntityKey (entity);
 
 			System.Diagnostics.Debug.Assert (key.HasValue);
 
@@ -861,7 +861,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			IEnumerable<AbstractSynchronizationJob> jobs = this.DataSaver.SaveChanges ();
 			
-			DataContextPool.Instance.Synchronize (this, jobs);
+			this.DataInfrastructure.DataContextPool.Synchronize (this, jobs);
 		}
 
 		/// <summary>
@@ -1540,7 +1540,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public TEntity ResolveEntity<TEntity>(TEntity model)
 			where TEntity : AbstractEntity
 		{
-			var sourceContext = DataContextPool.Instance.FindDataContext (model);
+			var sourceContext = this.DataInfrastructure.DataContextPool.FindDataContext (model);
 			var sourceEntityKey = sourceContext.GetNormalizedEntityKey (model);
 			var localEntity = this.ResolveEntity (sourceEntityKey);
 

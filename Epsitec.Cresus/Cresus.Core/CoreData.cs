@@ -60,6 +60,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public DataContextPool DataContextPool
+		{
+			get
+			{
+				return this.DataInfrastructure.DataContextPool;
+			}
+		}
+
 		public CoreDataLocker DataLocker
 		{
 			get
@@ -262,17 +270,13 @@ namespace Epsitec.Cresus.Core
 			var context = this.dataInfrastructure.CreateDataContext (true);
 			context.Name = name;
 
-			DataContextPool.Instance.Add (context);
-
 			return context;
 		}
 
 		public void DisposeDataContext(DataContext context)
 		{
-			if (DataContextPool.Instance.Remove (context))
+			if (this.dataInfrastructure.DeleteDataContext (context))
 			{
-				context.Dispose ();
-
 				if (this.activeDataContext == context)
 				{
 					this.activeDataContext = null;

@@ -192,8 +192,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = SummaryDataType.CollectionItem;
-			
-			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (source);
+
+			var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (source);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (source)))
