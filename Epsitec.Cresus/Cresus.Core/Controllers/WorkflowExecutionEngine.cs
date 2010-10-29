@@ -85,15 +85,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ExecuteInContext()
 		{
-			if (this.FollowWorkflowEdge ())
-			{
-				WorkflowEdgeEntity edge = this.transition.Edge;
+			this.FollowWorkflowEdges (
+				arc =>
+				{
+					System.Diagnostics.Debug.WriteLine ("Executed " + arc.Edge.TransitionAction);
+					return true;
+				});
 
-				System.Diagnostics.Debug.WriteLine ("Executed " + edge.TransitionAction);
-			}
 		}
 
-		private bool FollowWorkflowEdge()
+		private void FollowWorkflowEdges(System.Func<Arc, bool> executor)
 		{
 			WorkflowThreadEntity thread   = this.transition.Thread;
 			WorkflowEdgeEntity   edge     = this.transition.Edge;
@@ -104,12 +105,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			arcs.Enqueue (new Arc (node, edge));
 
 			int iterationCount = 0;
+			bool run = true;
 
-			while (arcs.Count > 0)
+			while ((arcs.Count > 0) && run)
 			{
 				using (this.businessContext.AutoLock (workflow))
 				{
-					this.FollowThreadWorkflowEdge (thread, arcs);
+					run = this.FollowThreadWorkflowEdge (thread, arcs, executor);
 					this.businessContext.SaveChanges ();
 				}
 
@@ -118,8 +120,6 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.Exception ("Fatal error: malformed workflow produces too many transitions at once");
 				}
 			}
-
-			return true;
 		}
 
 		private struct Arc
@@ -151,10 +151,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			private readonly WorkflowEdgeEntity edge;
 		}
 
-		private void FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs)
+		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Func<Arc, bool> executor)
 		{
 			var arc  = arcs.Dequeue ();
 			var edge = arc.Edge;
+
+			if (executor != null)
+			{
+				bool result = executor (arc);
+
+				if (result == false)
+				{
+					System.Diagnostics.Debug.Assert (arcs.Count == 0);
+					return false;
+				}
+			}
 
 			switch (edge.TransitionType)
             {
@@ -166,7 +177,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				
 				case WorkflowTransitionType.Fork:
-					break;
+					this.StartNewThread (arc);
+					return true;
 
 				default:
 					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
@@ -198,6 +210,23 @@ namespace Epsitec.Cresus.Core.Controllers
 					arcs.Enqueue (new Arc (node, autoEdges));
 				}
 			}
+
+			return true;
+		}
+
+		private void StartNewThread(Arc arc)
+		{
+			WorkflowThreadEntity thread = this.businessContext.CreateEntity<WorkflowThreadEntity> ();
+
+			thread.Definition = null;
+
+			this.AddThreadToWorkflow (thread);
+			this.AddStepToThreadHistory (thread, arc.Edge, arc.Edge.NextNode);
+		}
+
+		private void AddThreadToWorkflow(WorkflowThreadEntity thread)
+		{
+			this.transition.Workflow.Threads.Add (thread);
 		}
 
 		private void PushNodeToThreadCallGraph(WorkflowThreadEntity thread, WorkflowNodeEntity returnNode)
@@ -213,7 +242,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			int lastIndex = thread.CallGraph.Count - 1;
 
-			if (lastIndex >= 0)
+			if (lastIndex < 0)
+			{
+				//	We have reached the end of the graph...
+			}
+			else
 			{
 				this.AddStepToThreadHistory (thread, null, thread.CallGraph[lastIndex].ReturnNode);
 
