@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
 				this.Append ("AS ");
 				this.Append ("BEGIN ");
-				this.Append ("NEW." + column.Name + " = GEN_ID(" + generatorName + ", 1); ");
+				this.Append ("IF (NEW." + column.Name + " IS NULL) THEN NEW." + column.Name + " = GEN_ID(" + generatorName + ", 1); ");
 				this.Append ("END;\n");
 			}
 		}
