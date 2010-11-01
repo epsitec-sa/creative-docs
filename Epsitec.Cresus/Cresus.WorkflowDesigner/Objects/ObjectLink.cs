@@ -563,6 +563,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				Vector s = this.startVector;
 				this.endVector = new Vector (s.GetPoint (ObjectLink.lengthStumpLink), s.Origin);
 			}
+
+			this.endVectorArrow = this.AdjustEndVectorForArrow ();
 		}
 
 		private void UpdateDistances()
@@ -672,7 +674,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					}
 				}
 
-				this.DrawArrow (graphics, this.startVector, this.endVector, color);
+				this.DrawArrow (graphics, color);
 			}
 
 			//	Dessine la pastille au départ.
@@ -711,19 +713,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private void DrawArrow(Graphics graphics, Vector startVector, Vector endVector, Color color)
+		private Vector AdjustEndVectorForArrow()
+		{
+			Point p = Point.Move (this.endVector.Origin, this.endVector.End, ObjectLink.arrowLength);
+			return new Vector (p, this.endVector.Direction);
+		}
+
+		private void DrawArrow(Graphics graphics, Color color)
 		{
 			graphics.LineWidth = 2;
 
-			if (startVector.IsValid && startVector.HasDirection)
-			{
-				AbstractObject.DrawStartingArrow (graphics, startVector.Origin, startVector.End);
-			}
+			Point e1 = Transform.RotatePointDeg (this.endVector.Origin,  ObjectLink.arrowAngle, this.endVectorArrow.Origin);
+			Point e2 = Transform.RotatePointDeg (this.endVector.Origin, -ObjectLink.arrowAngle, this.endVectorArrow.Origin);
 
-			if (endVector.IsValid && endVector.HasDirection)
-			{
-				AbstractObject.DrawEndingArrow (graphics, endVector.End, endVector.Origin);
-			}
+			graphics.AddLine (this.endVector.Origin, this.endVectorArrow.Origin);
+			graphics.AddLine (this.endVector.Origin, e1);
+			graphics.AddLine (this.endVector.Origin, e2);
 
 			graphics.RenderSolid (color);
 			graphics.LineWidth = 1;
@@ -1161,7 +1166,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var path = new Path ();
 
 			path.MoveTo (this.startVector.Origin);
-			path.CurveTo (this.CustomizeStartPos, this.CustomizeEndPos, this.endVector.Origin);
+			path.CurveTo (this.CustomizeStartPos, this.CustomizeEndPos, this.endVectorArrow.Origin);
 
 			return path;
 		}
@@ -1293,24 +1298,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private LinkableObject					srcObject;
-		private LinkableObject					dstObject;
+		private static readonly double				arrowLength = 12;
+		private static readonly double				arrowAngle = 25;
 
-		private double							startAngle;
-		private double							endAngle;
-		private double							startDistance;
-		private double							endDistance;
-		private Vector							startVector;
-		private Vector							endVector;
-		private bool							startManual;
-		private bool							endManual;
-		private Path							path;
+		private LinkableObject						srcObject;
+		private LinkableObject						dstObject;
 
-		private bool							isSrcHilited;
-		private LinkableObject					hilitedDstObject;
-		private Point							draggingStumpPos;
+		private double								startAngle;
+		private double								endAngle;
+		private double								startDistance;
+		private double								endDistance;
+		private Vector								startVector;
+		private Vector								endVector;
+		private Vector								endVectorArrow;
+		private bool								startManual;
+		private bool								endManual;
+		private Path								path;
 
-		private double							commentAttach;
-		private ObjectComment					comment;
+		private bool								isSrcHilited;
+		private LinkableObject						hilitedDstObject;
+		private Point								draggingStumpPos;
+
+		private double								commentAttach;
+		private ObjectComment						comment;
 	}
 }

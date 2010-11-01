@@ -467,38 +467,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public static void DrawStartingArrow(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche selon le type.
-		}
-
-		public static void DrawEndingArrow(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche selon le type.
-			Point p = Point.Move (end, start, AbstractObject.arrowLength);
-
-			Point e1 = Transform.RotatePointDeg (end, AbstractObject.arrowAngle, p);
-			Point e2 = Transform.RotatePointDeg (end, -AbstractObject.arrowAngle, p);
-
-			graphics.AddLine (end, e1);
-			graphics.AddLine (end, e2);
-		}
-
-		protected static void DrawArrowStar(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une étoile à l'extrémité 'end'.
-			Point p = Point.Move(end, start, AbstractObject.arrowLength*0.85);
-			Point e = Transform.RotatePointDeg(end, AbstractObject.arrowAngle*2.5, p);
-			Point q = Point.Move(e, new Point(e.X, e.Y+1), AbstractObject.arrowLength*0.25);
-
-			for (int i=0; i<5; i++)
-			{
-				Point f = Transform.RotatePointDeg(e, 360.0/5.0*i, q);
-				graphics.AddLine(e, f);
-			}
-		}
-
-
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
@@ -774,8 +742,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		protected static readonly double			lengthStumpLink = 60;
-		private static readonly double				arrowLength = 12;
-		private static readonly double				arrowAngle = 25;
 		protected static readonly double			commentMinWidth = 50;
 		protected static readonly double			infoMinWidth = 50;
 		protected static readonly double			redimMargin = 40;
