@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					Assert.AreEqual (gender1, naturalPersons[i].Gender.Name);
 				}
 
-				DbKey newGenderKey = new DbKey (new DbId (2));
+				DbKey newGenderKey = new DbKey (new DbId (1000000002));
 				PersonGenderEntity newGender = dataContexts.First ().ResolveEntity<PersonGenderEntity> (newGenderKey);
 
 				naturalPersons.First ().Gender = newGender;
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 
@@ -506,7 +506,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContexts.Add (dataContext);
 				}
 
-				DbKey dbKey = new DbKey (new DbId (1));
+				DbKey dbKey = new DbKey (new DbId (1000000001));
 
 				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
 

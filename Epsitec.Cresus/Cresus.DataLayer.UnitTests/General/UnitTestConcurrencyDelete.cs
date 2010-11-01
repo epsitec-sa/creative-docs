@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DoubleDelete()
 		{
-			DbKey key = new DbKey (new DbId (1));
+			DbKey key = new DbKey (new DbId (1000000001));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -82,8 +82,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndUseAsTarget1()
 		{
-			DbKey keyPerson = new DbKey (new DbId (1));
-			DbKey keycontact = new DbKey (new DbId (4));
+			DbKey keyPerson = new DbKey (new DbId (1000000001));
+			DbKey keycontact = new DbKey (new DbId (1000000004));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -135,8 +135,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndUseAsTarget2()
 		{
-			DbKey keyPerson = new DbKey (new DbId (3));
-			DbKey keycontact = new DbKey (new DbId (1));
+			DbKey keyPerson = new DbKey (new DbId (1000000003));
+			DbKey keycontact = new DbKey (new DbId (1000000001));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -187,10 +187,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndUseAsTarget3()
 		{
-			DbKey keyPerson = new DbKey (new DbId (3));
-			DbKey keycontactA = new DbKey (new DbId (1));
-			DbKey keycontactB = new DbKey (new DbId (2));
-			DbKey keycontactC = new DbKey (new DbId (3));
+			DbKey keyPerson = new DbKey (new DbId (1000000003));
+			DbKey keycontactA = new DbKey (new DbId (1000000001));
+			DbKey keycontactB = new DbKey (new DbId (1000000002));
+			DbKey keycontactC = new DbKey (new DbId (1000000003));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndModify1()
 		{
-			DbKey keyPerson = new DbKey (new DbId (1));
+			DbKey keyPerson = new DbKey (new DbId (1000000001));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -287,8 +287,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndModify2()
 		{
-			DbKey keyPerson = new DbKey (new DbId (1));
-			DbKey keyTitle = new DbKey (new DbId (1));
+			DbKey keyPerson = new DbKey (new DbId (1000000001));
+			DbKey keyTitle = new DbKey (new DbId (1000000001));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{
@@ -334,8 +334,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteAndModify3()
 		{
-			DbKey keyPerson = new DbKey (new DbId (1));
-			DbKey keyContact = new DbKey (new DbId (4));
+			DbKey keyPerson = new DbKey (new DbId (1000000001));
+			DbKey keyContact = new DbKey (new DbId (1000000004));
 
 			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
 			{

@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 						person1.Gender = gender2;
 
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
 						NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
-						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 						person1.Gender = gender2;
 
@@ -103,8 +103,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 						person1.Contacts.Add (contact2);
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
 						NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 						person1.Contacts.Add (contact2);
 
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					{
 						NaturalPersonEntity person = new NaturalPersonEntity ();
 
-						person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))));
+						person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
 
 						Request request = new Request ()
 						{
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
+						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 
 						Request request = new Request ()
 						{
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
+						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 						Request request = new Request ()
 						{
 							RootEntity = contact1,
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					{
 						AbstractContactEntity contact = new AbstractContactEntity ()
 						{
-							NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))),
+							NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
 						};
 
 						ExceptionAssert.Throw<System.InvalidOperationException>
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity	person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity	person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -502,7 +502,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						ExceptionAssert.Throw<System.ArgumentException>
 						(

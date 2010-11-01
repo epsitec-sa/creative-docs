@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					DeletePersistenceJob job1 = new DeletePersistenceJob (entity);
 					var job2 = converter.Convert (job1).ToList ();
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
 					{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
 					{
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0A11]");
 					PersonGenderEntity target = entity.Gender;
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0A11]");
 					PersonGenderEntity target = entity.Gender;
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0A11]");
 					PersonGenderEntity target = null;
@@ -331,13 +331,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<AbstractEntity> targets = new List<AbstractEntity> ()
 				{
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 				};
 					PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -359,13 +359,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<AbstractEntity> targets = new List<AbstractEntity> ()
 				{
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 				};
 					PersistenceJobType jobType = PersistenceJobType.Update;
 

@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 					
@@ -158,26 +158,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 					valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
 					
 					ReferenceData referenceData = new ReferenceData ();
-					referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (2));
-					referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1));
+					referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (1000000002));
+					referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1000000001));
 
 					CollectionData collectionData = new CollectionData ();
-					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (2)));
-					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1)));
+					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000002)));
+					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000001)));
 
-					EntityData data = new EntityData (new DbKey (new DbId (1)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), valueData, referenceData, collectionData);
+					EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), valueData, referenceData, collectionData);
 
 					new EntitySerializationManager (dataContext).Deserialize (alfred, data);
 
 					Assert.AreEqual ("Albert", alfred.Firstname);
 					Assert.IsNull (alfred.Lastname);
 					Assert.AreEqual (new Date (1995, 1, 1), alfred.BirthDate);
-					Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2))), alfred.PreferredLanguage);
-					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1))), alfred.Title);
+					Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))), alfred.PreferredLanguage);
+					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
 					Assert.IsNull (alfred.Gender);
 					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))), alfred.Contacts[0]);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))), alfred.Contacts[1]);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[0]);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))), alfred.Contacts[1]);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
-					alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
@@ -305,25 +305,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 		private IEnumerable<AbstractEntity> GetSampleEntities(DataContext dataContext)
 		{
-			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+			yield return dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
-			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
-			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2)));
-			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (3)));
-			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000003)));
+			yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
-			yield return dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-			yield return dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2)));
+			yield return dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+			yield return dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002)));
 
-			yield return dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
-			yield return dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (2)));
+			yield return dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
+			yield return dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000002)));
 
-			yield return dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
-			yield return dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+			yield return dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
+			yield return dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
-			yield return dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1)));
+			yield return dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 		}
 
 

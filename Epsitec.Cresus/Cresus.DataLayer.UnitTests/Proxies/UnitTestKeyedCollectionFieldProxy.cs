@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext1.GetNormalizedEntityKey (c).Value).ToList ();
 
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					IList contacts1 = person.Contacts as IList;
 
 					Druid fieldId = Druid.Parse ("[L0AS]");
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					IList contacts1 = person.Contacts as IList;
 					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = new List<EntityKey> ()
 					{
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<EntityKey> targetKeys = new List<EntityKey> ()
 					{

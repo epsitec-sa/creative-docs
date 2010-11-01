@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
 					{
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 			
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsNull (entity);
 				}
@@ -212,8 +212,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
 					{
@@ -241,8 +241,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsNotNull (entity);
 					Assert.IsNotNull (entity.Title);
@@ -261,11 +261,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 					{
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
 					};
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
@@ -294,11 +294,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 				{
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
 				};
 
 					Assert.IsNotNull (entity);
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
 					{
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsNotNull (entity);
 					Assert.AreEqual ("firstname", entity.Firstname);
@@ -372,8 +372,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
 					{
@@ -409,8 +409,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsNotNull (entity);
 					Assert.IsNotNull (entity.Title);
@@ -430,11 +430,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 					{
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2))),
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
 					};
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
@@ -463,11 +463,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 					{
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2))),
-						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
 					};
 
 					Assert.IsNotNull (entity);
@@ -492,16 +492,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-					NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-					NaturalPersonEntity person3 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+					NaturalPersonEntity person3 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					NaturalPersonEntity person4 = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 					PersonGenderEntity gender2 = dataContext.CreateEntity<PersonGenderEntity> ();
 
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002)));
 					UriContactEntity contact3 = dataContext.CreateEntity<UriContactEntity> ();
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
@@ -630,16 +630,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-					NaturalPersonEntity person3 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+					NaturalPersonEntity person3 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					NaturalPersonEntity person4 = dataContext.ResolveEntity<NaturalPersonEntity> (key1);
 
-					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 					PersonGenderEntity gender2 = dataContext.ResolveEntity<PersonGenderEntity> (key2);
 
-					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
-					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2)));
+					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
 					UriContactEntity contact3 = dataContext.ResolveEntity<UriContactEntity> (key3);
 
 					Assert.IsNotNull (person1);

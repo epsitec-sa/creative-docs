@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreEqual ("Alfred", alfred.Firstname);
 
@@ -77,9 +77,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreSame (french, alfred.PreferredLanguage);
 
@@ -102,9 +102,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
-					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.AreEqual (2, alfred.Contacts.Count);
 					Assert.AreSame (contact1, alfred.Contacts[0]);
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 						dataContext1.SaveChanges ();
 
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (5)));
+						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 
 						Assert.IsFalse (dataContext1.IsDeleted (contact1));
 						Assert.IsFalse (dataContext2.IsDeleted (contact2));
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreEqual ("Alfred", alfred.Firstname);
 
@@ -196,9 +196,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreSame (french, alfred.PreferredLanguage);
 
@@ -221,9 +221,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
-					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.AreEqual (2, alfred.Contacts.Count);
 					Assert.AreSame (contact1, alfred.Contacts[0]);

@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (eventArgs.Count == 0);
 
@@ -113,8 +113,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsTrue (eventArgs.Count == 0);
 
@@ -143,8 +143,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						eventArgs.Add (a);
 					};
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsTrue (eventArgs.Count == 0);
 
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (eventArgs.Count == 0);
 
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					LanguageEntity language = person.PreferredLanguage;
 
 					Assert.IsTrue (eventArgs.Count == 0);
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						eventArgs.Add (a);
 					};
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					AbstractContactEntity contact = person.Contacts[0];
 
 					Assert.IsTrue (eventArgs.Count == 0);
@@ -276,8 +276,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (eventArgs1.Count == 0);
 					Assert.IsTrue (eventArgs2.Count == 0);
@@ -318,9 +318,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonGenderEntity gender = dataContext1.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender = dataContext1.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsTrue (eventArgs1.Count == 0);
 					Assert.IsTrue (eventArgs2.Count == 0);
@@ -361,9 +361,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					AbstractContactEntity contact = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					AbstractContactEntity contact = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsTrue (eventArgs1.Count == 0);
 					Assert.IsTrue (eventArgs2.Count == 0);
@@ -404,8 +404,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (eventArgs1.Count == 0);
 					Assert.IsTrue (eventArgs2.Count == 0);
@@ -445,8 +445,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					LanguageEntity language2 = person2.PreferredLanguage;
 
 					Assert.IsTrue (eventArgs1.Count == 0);
@@ -491,8 +491,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 					dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
-					AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					AbstractContactEntity contact2 = person2.Contacts[0];
 
 					Assert.IsTrue (eventArgs1.Count == 0);
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					alfred.Firstname = "Albert";
 
@@ -564,8 +564,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					using (DataContext dataContext1 = dataInfrastructure1.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure2.CreateDataContext ())
 					{
-						NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-						NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+						NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						dataContext1.DeleteEntity (alfred1);
 						dataContext1.SaveChanges ();
@@ -593,7 +593,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					alfred.Firstname = "Albert";
 

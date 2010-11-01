@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					entity.Lastname = "new last name";
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
@@ -325,8 +325,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 					entity.Title = target;
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
@@ -352,12 +352,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 				{
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (2))),
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
 				};
 
 					entity.Contacts.Add (targets.Last ());
@@ -385,14 +385,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					entity.BirthDate = null;
 
 					entity.Gender = null;
 
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
 				{
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
 				};
 
 					entity.Contacts.RemoveAt (1);
@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					AbstractPersistenceJob job = generator.CreateDeletionJob (entity);
 

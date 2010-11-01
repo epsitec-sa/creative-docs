@@ -308,9 +308,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 					dataContextPool.Add (dataContext);
 				}
 
-				NaturalPersonEntity person1 = dataContexts[1].ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				NaturalPersonEntity person2 = dataContexts[2].ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-				NaturalPersonEntity person3 = dataContext11.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+				NaturalPersonEntity person1 = dataContexts[1].ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity person2 = dataContexts[2].ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+				NaturalPersonEntity person3 = dataContext11.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
 				Assert.AreSame (dataContexts[1], dataContextPool.FindDataContext (person1));
 				Assert.AreSame (dataContexts[2], dataContextPool.FindDataContext (person2));
@@ -354,9 +354,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 					dataContextPool.Add (dataContext);
 				}
 
-				DbKey dbKey1 = new DbKey (new DbId (1));
-				DbKey dbKey2 = new DbKey (new DbId (2));
-				DbKey dbKey3 = new DbKey (new DbId (3));
+				DbKey dbKey1 = new DbKey (new DbId (1000000001));
+				DbKey dbKey2 = new DbKey (new DbId (1000000002));
+				DbKey dbKey3 = new DbKey (new DbId (1000000003));
 
 				NaturalPersonEntity person1 = dataContexts[1].ResolveEntity<NaturalPersonEntity> (dbKey1);
 				NaturalPersonEntity person2 = dataContexts[2].ResolveEntity<NaturalPersonEntity> (dbKey2);
@@ -455,8 +455,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 				dataContextPool.Add (dataContext1);
 				dataContextPool.Add (dataContext2);
 
-				DbKey dbKey1 = new DbKey (new DbId (1));
-				DbKey dbKey2 = new DbKey (new DbId (2));
+				DbKey dbKey1 = new DbKey (new DbId (1000000001));
+				DbKey dbKey2 = new DbKey (new DbId (1000000002));
 
 				NaturalPersonEntity person11 = dataContext1.ResolveEntity<NaturalPersonEntity> (dbKey1);
 				NaturalPersonEntity person12 = dataContext1.ResolveEntity<NaturalPersonEntity> (dbKey2);

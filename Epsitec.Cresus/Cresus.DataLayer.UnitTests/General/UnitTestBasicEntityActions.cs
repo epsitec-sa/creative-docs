@@ -76,10 +76,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					UriContactEntity[] contacts =
 					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (3))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000003))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004))),
 					};
 
 					Assert.AreEqual (4, contacts.Length);
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNotNull (person);
 				}
@@ -124,9 +124,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert1 = dataContext.CreateEntity<NaturalPersonEntity> ();
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					albert1.Firstname = "Albert";
 					albert1.Lastname = "Levert";
@@ -153,15 +153,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					dataContext.SaveChanges ();
 
-					NaturalPersonEntity albert2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreSame (albert1, albert2);
 				}
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.BirthDate = new Common.Types.Date (1954, 12, 31);
 
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Lastname = "Lebleu";
 
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Lebleu", albert.Lastname);
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.BirthDate = null;
 
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -315,8 +315,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					albert.Gender = gender;
 
@@ -325,8 +325,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -360,8 +360,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 					albert.Gender = gender;
 
@@ -370,8 +370,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Gender = null;
 
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -445,8 +445,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Contacts.Add (contact);
 
@@ -455,8 +455,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -490,9 +490,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					albert.Contacts.Add (contact);
 
@@ -501,9 +501,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -527,7 +527,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -538,9 +538,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					albert.Contacts[0] = contact;
 
@@ -549,8 +549,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -573,8 +573,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -586,10 +586,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					albert.Contacts[0] = contact2;
 					albert.Contacts[1] = contact1;
@@ -599,9 +599,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -625,8 +625,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -644,9 +644,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact2 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -670,7 +670,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -681,7 +681,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Contacts.RemoveAt (0);
 
@@ -690,7 +690,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -712,7 +712,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -723,7 +723,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Contacts.Add (null);
 
@@ -732,8 +732,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
@@ -756,7 +756,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					albert.Firstname = "Albert";
 					albert.Lastname = "Levert";
@@ -769,7 +769,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 					Assert.AreEqual ("Albert", albert.Firstname);
 					Assert.AreEqual ("Levert", albert.Lastname);
 					Assert.IsNull (albert.BirthDate);
@@ -779,7 +779,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					Assert.AreEqual (2, albert.Contacts.Count);
 
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.AreSame (contact, albert.Contacts[0]);
 					Assert.AreSame (contact, albert.Contacts[1]);
@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
@@ -809,7 +809,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (alfred.Contacts.Count == 1);
 					Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -827,11 +827,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					UriContactEntity[] contacts = 
 					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
 
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					dataContext.DeleteEntity (alfred);
 
 					Assert.IsTrue (contacts.All (c => c.NaturalPerson == alfred));
@@ -845,8 +845,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					UriContactEntity[] contacts =
 					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
 
 					Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
@@ -862,12 +862,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 					dataContext.DeleteEntity (contact);
 
 					dataContext.SaveChanges ();
 
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (alfred.Contacts.Count == 1);
 					Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -875,7 +875,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (alfred.Contacts.Count == 1);
 					Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -891,15 +891,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					dataContext.DeleteEntity (alfred);
 
 					dataContext.SaveChanges ();
 
 					UriContactEntity[] contacts =
 					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
 
 					Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
@@ -909,8 +909,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					UriContactEntity[] contacts =
 					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
 
 					Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
@@ -929,7 +929,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Assert.AreEqual (firstName1, alfred.Firstname);
 
 					alfred.Firstname = firstName2;
@@ -947,7 +947,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Assert.AreEqual (firstName1, alfred.Firstname);
 				}
 			}

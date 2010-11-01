@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 		public void DeleteSynchronizationJobConstructorTest()
 		{
 			int dataContextId = 0;
-			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 
 			var job = new DeleteSynchronizationJob (dataContextId, entityKey);
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 		public void SynchronizeArgumentCheck()
 		{
 			int dataContextId = 0;
-			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(

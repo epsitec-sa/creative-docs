@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsNotNull (gertrude);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
@@ -97,14 +97,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsNotNull (gertrude);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.IsNotNull (language);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNotNull (contact);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
@@ -170,14 +170,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNotNull (contact);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.IsNotNull (language);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsNotNull (gertrude);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
@@ -232,14 +232,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
 					Assert.IsNotNull (gertrude);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.IsNotNull (language);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNotNull (contact);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
@@ -315,14 +315,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 				{
-					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNotNull (contact);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (contact));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (contact));
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (contact));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000003)));
 
 					Assert.IsNotNull (language);
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));

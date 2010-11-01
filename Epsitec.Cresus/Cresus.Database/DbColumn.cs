@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.Database
 {
@@ -417,6 +418,22 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		public long AutoIncrementStartIndex
+		{
+			get
+			{
+				return this.autoIncrementStartIndex;
+			}
+			set
+			{
+				value.ThrowIf (v => v < 0, "Value cannot be lower than zero.");
+
+				this.autoIncrementStartIndex = value;
+			}
+		}
+
+
 		public bool IsNullable
 		{
 			get;
@@ -816,6 +833,7 @@ namespace Epsitec.Cresus.Database
 			column.IsNullable = this.IsNullable || this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
 			column.IsAutoIncremented = this.IsAutoIncremented;
+			column.AutoIncrementStartIndex = this.AutoIncrementStartIndex;
 	
 			return column;
 		}
@@ -1002,6 +1020,7 @@ namespace Epsitec.Cresus.Database
 		
 		private bool							isPrimaryKey;
 		private bool							isAutoIncremented;
+		private long							autoIncrementStartIndex;
 		private string							comment;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
