@@ -16,19 +16,23 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-
 namespace Epsitec.Cresus.DataLayer.Saver
 {
 
 
-	// TODO Comment this class
-	// Marc
-
-
+	/// <summary>
+	/// The <c>PersistenceJobProcessor</c> class is used to execute the <see cref="AbstractPersistenceJob"/>
+	/// in order to persist them to the database.
+	/// </summary>
 	internal sealed class PersistenceJobProcessor
 	{
 		
 
+		/// <summary>
+		/// Creates a new <c>PersistenceJobProcessor</c>.
+		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> used by this instance.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		public PersistenceJobProcessor(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
@@ -37,6 +41,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="DataContext"/> used by this instance.
+		/// </summary>
 		private DataContext DataContext
 		{
 			get;
@@ -44,6 +51,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="EntityContext"/> used by this instance.
+		/// </summary>
 		private EntityContext EntityContext
 		{
 			get
@@ -53,6 +63,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="SchemaEngine"/> used by this instance.
+		/// </summary>
 		private SchemaEngine SchemaEngine
 		{
 			get
@@ -62,6 +75,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="DbInfrastructure"/> used by this instance.
+		/// </summary>
 		private DbInfrastructure DbInfrastructure
 		{
 			get
@@ -71,6 +87,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="DataConverter"/> used by this instance.
+		/// </summary>
 		private DataConverter DataConverter
 		{
 			get
@@ -80,6 +99,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Executes the given sequence of <see cref="AbstractPersistenceJob"/> in order to persist
+		/// them to the database. In addition, this method returns a mapping from <see cref="AbstractEntity"/>
+		/// to <see cref="DbKey"/> that contain the new <see cref="DbKey"/> that has been assigned to
+		/// each <see cref="AbstractEntity"/> which has been inserted to the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> that must be used for the operation.</param>
+		/// <param name="jobs">The sequence of <see cref="AbstractPersistenceJob"/> to execute.</param>
+		/// <returns>The mapping from the <see cref="AbstractEntity"/> that have been inserted in the database to their newly assigned <see cref="DbKey"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="transaction"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="jobs"/> is <c>null</c>.</exception>
 		public IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessJobs(DbTransaction transaction, IEnumerable<AbstractPersistenceJob> jobs)
 		{
 			jobs.ThrowIfNull ("jobs");
@@ -117,6 +147,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Executes the given <see cref="DeletePersistenceJob"/> to the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="job">The <see cref="DeletePersistenceJob"/> to execute.</param>
 		private void ProcessJob(DbTransaction transaction, DeletePersistenceJob job)
 		{
 			AbstractEntity entity = job.Entity;
@@ -128,6 +163,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Deletes all the value rows in the database for the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose values to delete.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the given <see cref="AbstractEntity"/>.</param>
 		private void DeleteEntityValues(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -139,6 +180,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Deletes the value row in the database for the given <see cref="AbstractEntity"/> and the
+		/// given type.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the type of the value row to remove.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</param>
 		private void DeleteEntityValues(DbTransaction transaction, Druid localEntityId, DbKey dbKey)
 		{
 			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
@@ -154,6 +202,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Removes all the relations from a given <see cref="AbstractEntity"/> to other
+		/// <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose outward relations to remove.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</param>
 		private void DeleteEntitySourceRelations(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -172,6 +227,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Removes all the relations from any <see cref="AbstractEntity"/> to the given
+		/// <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose inward relations to remove.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</param>
 		private void DeleteEntityTargetRelations(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -188,6 +250,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Removes all the relations from a given field of other <see cref="AbstractEntity"/> to the
+		/// given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> whose inward relation to remove.</param>
+		/// <param name="fieldPath">The <see cref="EntityFieldPath"/> defining the field of the relation to remove.</param>
 		private void DeleteEntityTargetRelation(DbTransaction transaction, DbKey dbKey, EntityFieldPath fieldPath)
 		{
 			Druid localEntityId = fieldPath.EntityId;
@@ -197,6 +266,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Executes the given <see cref="ValuePersistenceJob"/> in order to persist it to the
+		/// database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
 		private void ProcessJob(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, ValuePersistenceJob job)
 		{
 			switch (job.JobType)
@@ -215,6 +291,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Executes the given <see cref="ReferencePersistenceJob"/> in order to persist it to the
+		/// database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to execute.</param>
 		private void ProcessJob(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, ReferencePersistenceJob job)
 		{
 			switch (job.JobType)
@@ -231,12 +314,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Executes the given <see cref="CollectionPersistenceJob"/> in order to persist it to the
+		/// database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to execute.</param>
 		private void ProcessJob(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, CollectionPersistenceJob job)
 		{
 			switch (job.JobType)
 			{
 				case PersistenceJobType.Insert:
-					this.InserCollectionData (transaction, newEntityKeys, job);
+					this.InsertCollectionData (transaction, newEntityKeys, job);
 					break;
 				case PersistenceJobType.Update:
 					this.UpdateCollectionData (transaction, newEntityKeys, job);
@@ -247,6 +337,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Inserts the value data the given <see cref="ValuePersistenceJob"/> in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
 		private void InsertValueData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, ValuePersistenceJob job)
 		{
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
@@ -287,6 +383,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Updates the value data for the given <see cref="ValuePersistenceJob"/> in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
 		private void UpdateValueData(DbTransaction transaction, ValuePersistenceJob job)
 		{
 			var fieldIdsWithValues = job.GetFieldIdsWithValues ().ToList ();
@@ -311,6 +412,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Inserts the reference data for the given <see cref="ReferencePersistenceJob"/> in the database .
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to execute.</param>
 		private void InsertReferenceData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, ReferencePersistenceJob job)
 		{
 			DbKey sourceKey = this.GetEntityDbKey (job.Entity, newEntityKeys);
@@ -320,6 +427,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Updates the reference data for the given <see cref="ReferencePersistenceJob"/> in the database .
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to execute.</param>
 		private void UpdateReferenceData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, ReferencePersistenceJob job)
 		{
 			// TODO This function might be optimized in the following way. I'm not too sure if it
@@ -345,7 +458,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void InserCollectionData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, CollectionPersistenceJob job)
+		/// <summary>
+		/// Inserts the collection data for the given <see cref="CollectionPersistenceJob"/> in the database .
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to execute.</param>
+		private void InsertCollectionData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, CollectionPersistenceJob job)
 		{
 			DbKey sourceKey = this.GetEntityDbKey (job.Entity, newEntityKeys);
 			var targetKeys = job.Targets.Select (t => this.GetEntityDbKey (t, newEntityKeys));
@@ -354,6 +473,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Updates the collection data for the given <see cref="CollectionPersistenceJob"/> in the database .
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
+		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to execute.</param>
 		private void UpdateCollectionData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, CollectionPersistenceJob job)
 		{
 			// TODO This function might be optimized by having a better policy to delete/update/Insert
@@ -374,6 +499,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Inserts the relation from an <see cref="AbstractEntity"/> to another in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the local type of the <see cref="AbstractEntity"/> that contains the field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the relation</param>
+		/// <param name="sourceKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> that is the source of the relation.</param>
+		/// <param name="targetKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> that is the target of the relation.</param>
 		private void InsertEntityRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey, DbKey targetKey)
 		{
 			List<DbKey> targetKeys = new List<DbKey> () { targetKey };
@@ -382,6 +515,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Inserts the relation from an <see cref="AbstractEntity"/> to a sequence of
+		/// <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the local type of the <see cref="AbstractEntity"/> that contains the field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the relation</param>
+		/// <param name="sourceKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> that is the source of the relation.</param>
+		/// <param name="targetKeys">The sequence of <see cref="DbKey"/> of the <see cref="AbstractEntity"/> that are the target of the relation.</param>
 		private void InsertEntityRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey, IEnumerable<DbKey> targetKeys)
 		{
 			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
@@ -406,6 +548,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Deletes all items of the relation defined by the given field that have a given source in
+		/// the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/> owning the field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <param name="sourceKey">The <see cref="DbKey"/> of the source of the relation.</param>
 		private void DeleteEntitySourceRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey)
 		{
 			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
@@ -419,6 +569,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Deletes all items of the relation defined by the given field that have a given target in
+		/// the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/> owning the field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <param name="targetKey">The <see cref="DbKey"/> of the target of the relation.</param>
 		private void DeleteEntityTargetRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey targetKey)
 		{
 			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
@@ -433,6 +591,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds a <see cref="SqlField"/> that contains the condition that holds true when the
+		/// id of a row is equal to the given <see cref="DbKey"/> for the given <see cref="DbTable"/>.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the condition.</param>
+		/// <param name="dbKey">The value of the <see cref="DbKey"/> of the condition.</param>
+		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForRowId(DbTable table, DbKey dbKey)
 		{
 			DbColumn column = table.Columns[Tags.ColumnId];
@@ -442,6 +607,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds a <see cref="SqlField"/> that contains the condition that holds true when the
+		/// source id  field of a row is equal to the given <see cref="DbKey"/> for the given
+		/// relation <see cref="DbTable"/>.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the condition.</param>
+		/// <param name="dbKey">The value of the <see cref="DbKey"/> of the condition.</param>
+		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForSourceId(DbTable table, DbKey dbKey)
 		{
 			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
@@ -451,6 +624,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds a <see cref="SqlField"/> that contains the condition that holds true when the
+		/// target id  field of a row is equal to the given <see cref="DbKey"/> for the given
+		/// relation <see cref="DbTable"/>.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the condition.</param>
+		/// <param name="dbKey">The value of the <see cref="DbKey"/> of the condition.</param>
+		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForTargetId(DbTable table, DbKey dbKey)
 		{
 			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
@@ -460,6 +641,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds a <see cref="SqlField"/> that contains the condition that holds true when the
+		/// given <see cref="DbColumn"/> has the given value.
+		/// </summary>
+		/// <param name="column">The <see cref="DbColumn"/> that is targeted by the condition.</param>
+		/// <param name="value">The value that the <see cref="DbColumn"/> must have in order to satisfy the condition.</param>
+		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForField(DbColumn column, object value)
 		{
 			string columnName = column.GetSqlName ();
@@ -485,6 +673,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the sequence of <see cref="SqlField"/> that are used to set the values of the
+		/// <see cref="AbstractEntity"/> in an INSERT or an UPDATE SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> in which to insert the values.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the local type of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="fieldIdsWithValues">The mapping from the field ids to their values.</param>
+		/// <returns>The sequence of the <see cref="SqlField"/> that are used within the SQl Request.</returns>
 		private IEnumerable<SqlField> CreateSqlFields(DbTable table, Druid localEntityId, IEnumerable<KeyValuePair<Druid, object>> fieldIdsWithValues)
 		{
 			foreach (var fieldIdWithValue in fieldIdsWithValues)
@@ -507,6 +703,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of the row of a row in a SQL
+		/// request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="key">The value of the <see cref="DbKey"/>.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForKey(DbTable table, DbKey key)
 		{
 			DbColumn column = table.Columns[Tags.ColumnId];
@@ -516,6 +719,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of the status of a row in a
+		/// SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="status">The value of the <see cref="DbRowStatus"/>.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForStatus(DbTable table, DbRowStatus status)
 		{
 			DbColumn column = table.Columns[Tags.ColumnStatus];
@@ -525,6 +735,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of the instance type of a row in
+		/// a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="leafEntityId">The value of the instance type.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForType(DbTable table, Druid leafEntityId)
 		{
 			DbColumn column = table.Columns[Tags.ColumnInstanceType];
@@ -534,6 +751,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of log of a row in a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForLog(DbTable table)
 		{
 			// TODO Get the real value for the log
@@ -546,6 +768,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of source key of a relation row
+		/// in a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="key">The value of the source key.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForSourceId(DbTable table, DbKey key)
 		{
 			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
@@ -555,6 +784,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of target key of a relation row
+		/// in a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="key">The value of the target key.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForTargetId(DbTable table, DbKey key)
 		{
 			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
@@ -564,6 +800,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of rank of a relation row
+		/// in a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="rank">The value of the rank.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForRank(DbTable table, int rank)
 		{
 			DbColumn column = table.Columns[Tags.ColumnRefRank];
@@ -573,6 +816,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of an <see cref="AbstractEntity"/>
+		/// field of a row in a SQL request.
+		/// </summary>
+		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the id of the field.</param>
+		/// <param name="value">The value of the field.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForEntityValueField(DbTable table, Druid fieldId, object value)
 		{
 			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
@@ -582,6 +833,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlField"/> used to set the value of a <see cref="DbColumn"/> in a
+		/// row in a SQL request.
+		/// </summary>
+		/// <param name="column">The <see cref="DbColumn"/> whose value to set.</param>
+		/// <param name="value">The value that must be set.</param>
+		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForColumn(DbColumn column, object value)
 		{
 			DbTypeDef type = column.Type;
@@ -601,18 +859,38 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// Retrieves the <see cref="DbKey"/> of an <see cref="AbstractEntity"/> that is persistent
+		/// within the <see cref="DataContext"/> used by this instance.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="DbKey"/> to obtain.</param>
+		/// <returns>The <see cref="DbKey"/> of the given <see cref="AbstractEntity"/>.</returns>
 		private DbKey GetPersistentEntityDbKey(AbstractEntity entity)
 		{
 			return this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 		}
 
 
+		/// <summary>
+		/// Retrieves the <see cref="DbKey"/> of an <see cref="AbstractEntity"/> that is not persistent
+		/// within the <see cref="DataContext"/> used by this instance but is defined in the given
+		/// <see cref="Dictionary{AbstractEntity,DbKey}"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="DbKey"/> to obtain.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping between the newly inserted <see cref="AbstractEntity"/> and their <see cref="DbKey"/>.</param>
+		/// <returns>The <see cref="DbKey"/> of the given <see cref="AbstractEntity"/>.</returns>
 		private DbKey GetNonPersistentEntityDbKey(AbstractEntity entity, Dictionary<AbstractEntity, DbKey> newEntityKeys)
 		{
 			return newEntityKeys[entity];
 		}
 
 
+		/// <summary>
+		/// Retrieves the <see cref="DbKey"/> of an <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="DbKey"/> to obtain.</param>
+		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping between the newly inserted <see cref="AbstractEntity"/> and their <see cref="DbKey"/>.</param>
+		/// <returns>The <see cref="DbKey"/> of the given <see cref="AbstractEntity"/>.</returns>
 		private DbKey GetEntityDbKey(AbstractEntity entity, Dictionary<AbstractEntity, DbKey> newEntityKeys)
 		{
 			if (this.DataContext.IsPersistent (entity))
