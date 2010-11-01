@@ -1,6 +1,9 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -72,6 +75,9 @@ namespace Epsitec.Cresus.Database
 			this.Name = name;
 			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode);
 			this.IsNullable = (nullability == DbNullability.Yes);
+			this.isAutoIncremented = false;
+			this.autoIncrementStartIndex = 0;
+			this.comment = null;
 		}
 
 
@@ -177,7 +183,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public string Comment
+		/// <summary>
+		/// The comment associated with this instance.
+		/// </summary>
+		public string							Comment
 		{
 			get
 			{
@@ -189,8 +198,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		public bool IsAutoIncremented
+		/// <summary>
+		/// Indicates whether this column is auto incremented or not.
+		/// </summary>
+		public bool								IsAutoIncremented
 		{
 			get
 			{
@@ -202,9 +213,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// The first value that will be used for this column if it is auto incremented.
+		/// </summary>
+		public long								AutoIncrementStartIndex
+		{
+			get
+			{
+				return this.autoIncrementStartIndex;
+			}
+			set
+			{
+				value.ThrowIf (v => v < 0, "Value cannot be lower than zero.");
 
-
-
+				this.autoIncrementStartIndex = value;
+			}
+		}
+		
 		/// <summary>
 		/// Sets the type.
 		/// </summary>
@@ -257,6 +282,7 @@ namespace Epsitec.Cresus.Database
 		private DbRawType						type;
 		private bool							isNullable;
 		private bool							isAutoIncremented;
+		private long							autoIncrementStartIndex;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
 		private DbCharacterEncoding				encoding;
