@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing.Platform;
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Drawing
@@ -367,20 +369,10 @@ namespace Epsitec.Common.Drawing
 				list.Add (parameter);
 			}
 
-			if (format == ImageFormat.WindowsIcon)
+			if ((format == ImageFormat.WindowsIcon) ||
+				(format == ImageFormat.WindowsVistaIcon))
 			{
-				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
-				{
-					return image.CreateIcon ();
-				}
-			}
-			
-			if (format == ImageFormat.WindowsVistaIcon)
-			{
-				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
-				{
-					return image.CreateHighResolutionIcon ();
-				}
+				return this.SaveIcon (format);
 			}
 			
 			System.Drawing.Imaging.ImageCodecInfo    encoderInfo    = Bitmap.GetCodecInfo (format);
@@ -407,10 +399,10 @@ namespace Epsitec.Common.Drawing
 					return null;
 				}
 
+#if false
 				//	Supprimé l'appel à FreeImage pour le format PNG, car il plante (version du 06.10.10).
 				//	Reste à espérer que Windows fasse mieux le travail que les versions précédentes de .NET,
 				//	notamment au niveau de la gestion de la transparence !
-#if false
 				if (format == ImageFormat.Png)
 				{
 					//	FreeImage does a better job than Windows for the PNG compression.
@@ -441,9 +433,32 @@ namespace Epsitec.Common.Drawing
 					}
 				}
 #endif
-				
+
 				return data;
 			}
+
+			return null;
+		}
+
+		private byte[] SaveIcon(ImageFormat format)
+		{
+#if false
+			if (format == ImageFormat.WindowsIcon)
+			{
+				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				{
+					return image.CreateIcon ();
+				}
+			}
+
+			if (format == ImageFormat.WindowsVistaIcon)
+			{
+				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				{
+					return image.CreateHighResolutionIcon ();
+				}
+			}
+#endif
 
 			return null;
 		}
@@ -462,7 +477,7 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 
-		public static Image FromImage(Opac.FreeImage.ImageClient image)
+		public static Image FromImage(ImageClient image)
 		{
 			if (image == null)
 			{

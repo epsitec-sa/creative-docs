@@ -1,4 +1,6 @@
 using NUnit.Framework;
+
+using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Drawing
@@ -104,18 +106,18 @@ namespace Epsitec.Common.Drawing
 		private static Pixmap CreatePixmapUsingFreeImage(string path, int size, bool copyBits)
 		{
 			Pixmap pixmap = new Pixmap ();
-			Opac.FreeImage.ImageClient image = null;
+			ImageClient image = null;
 
 			try
 			{
 				if (size > 0)
 				{
-					image = Opac.FreeImage.ImageClient.Load (path);
+					image = ImageClient.Load (path);
 					image = image.MakeThumbnail (size);
 				}
 				else
 				{
-					image = Opac.FreeImage.ImageClient.Load (path);
+					image = ImageClient.Load (path);
 				}
 
 				pixmap.AllocatePixmap (image);

@@ -1,6 +1,8 @@
 //	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing.Platform;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
@@ -126,33 +128,34 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, Opac.FreeImage.ImageClient image)
+		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, ImageClient image)
 		{
-			Opac.FreeImage.ImageClient temp = null;
+			ImageClient temp = null;
 			string extension = null;
 			byte[] memory = null;
 
-			if (image.BitsPerPixel > 8)
+			if ((image.BitsPerPixel > 8) &&
+				(image.IsTransparent == false))
 			{
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
+				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 90 });
 				extension = ".jpg";
 			}
-			else
+			else if (image.BitsPerPixel <= 8)
 			{
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Gif, Opac.FreeImage.LoadSaveMode.GifDefault);
+				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Gif });
 				extension = ".gif";
 			}
 			
 			if ((memory == null) &&
 				(image.BitsPerPixel == 32))
 			{
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Png, Opac.FreeImage.LoadSaveMode.PngDefault);
+				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Png });
 				extension = ".png";
 			}
 			if (memory == null)
 			{
 				temp = image.ConvertTo24Bits ();
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
+				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 90 });
 				extension = ".jpg";
 			}
 

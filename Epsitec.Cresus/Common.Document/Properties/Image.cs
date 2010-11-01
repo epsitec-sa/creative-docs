@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
+using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Document.Properties
 {
@@ -301,33 +302,18 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region ImageFilter
-		public static Opac.FreeImage.Filter FilterToFreeImage(ImageFilter filter)
-		{
-			//	Conversion du type de filtre pour la librairie FreeImage.
-			switch (filter.Mode)
-			{
-				case ImageFilteringMode.None:      return Opac.FreeImage.Filter.Box;
-				case ImageFilteringMode.Bilinear:  return Opac.FreeImage.Filter.Bilinear;
-				case ImageFilteringMode.Bicubic:   return Opac.FreeImage.Filter.Bicubic;
-				default:                           return Opac.FreeImage.Filter.Bilinear;
-			}
-		}
 
-		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
+		public static FileFormat FilterQualityToMode(double quality)
 		{
-#if false
-			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
-		         if (quality >= 0.87)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // nominal = 1.00
-			else if (quality >= 0.62)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // nominal = 0.75
-			else if (quality >= 0.37)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // nominal = 0.50
-			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
-			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
-#else
 			int n = (int) (quality*100);
 			n = System.Math.Min(100, n);
 			n = System.Math.Max(10, n);
-			return (Opac.FreeImage.LoadSaveMode) n;
-#endif
+			
+			return new FileFormat ()
+			{
+				Type = FileFormatType.Jpeg,
+				Quality = n
+			};
 		}
 
 		public static int FilterNameToIndex(string name)

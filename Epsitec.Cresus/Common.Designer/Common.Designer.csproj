@@ -55,14 +55,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OPaC.FreeImage.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\FreeImage\OPaC.FreeImage.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="OPaC.FreeImage.Service, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\FreeImage\OPaC.FreeImage.Service.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

@@ -2,12 +2,15 @@ using NUnit.Framework;
 
 namespace Epsitec.Common.Drawing
 {
+#if false
 	using ColorChannel=Opac.FreeImage.ColorChannel;
 	using FileFormat=Opac.FreeImage.FileFormat;
 	using SaveMode=Opac.FreeImage.LoadSaveMode;
+#endif
 	[TestFixture]
 	public class FreeImageTest
 	{
+#if false
 		[Test]
 		public void TestRgbTiff()
 		{
@@ -187,5 +190,6 @@ namespace Epsitec.Common.Drawing
 			imageGray.Dispose ();
 			imageRgb.Dispose ();
 		}
+#endif
 	}
 }

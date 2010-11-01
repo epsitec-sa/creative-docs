@@ -137,6 +137,10 @@
       <Project>{FD37B74B-455D-4706-9ED3-BD210EB91975}</Project>
       <Name>Common.Drawing.Images</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Drawing.Platform\Common.Drawing.Platform.csproj">
+      <Project>{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}</Project>
+      <Name>Common.Drawing.Platform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
       <Name>Common.Drawing</Name>
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
