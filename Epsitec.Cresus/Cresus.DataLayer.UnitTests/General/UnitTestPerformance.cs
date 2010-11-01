@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1)));
+					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
 					UriContactEntity example = new UriContactEntity ()
 					{
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1)));
+					CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000001)));
 
 					LocationEntity example = new LocationEntity ()
 					{
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1)));
+					LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000001)));
 
 					LegalPersonEntity example = new LegalPersonEntity ()
 					{
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					AbstractContactEntity example = new AbstractContactEntity ()
 					{
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1)));
+					LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000001)));
 
 					NaturalPersonEntity example = new NaturalPersonEntity ();
 					example.Contacts.Add (new MailContactEntity ()
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
+					LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (100000000 + UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
 					MailContactEntity example = new MailContactEntity ()
 					{
@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (id)));
+					EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (1000000000 + id)));
 
 					TestHelper.MeasureAndWriteTime (
 						TestHelper.extendString (entity.GetType ().Name, 30),

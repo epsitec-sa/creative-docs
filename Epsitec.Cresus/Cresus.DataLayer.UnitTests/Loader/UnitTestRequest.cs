@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			Request request = new Request ();
 			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
 
-			DbKey dbKey = new DbKey (new DbId (1));
+			DbKey dbKey = new DbKey (new DbId (1000000001));
 
 			Assert.IsFalse (requestAccessor.RootEntityKey.HasValue);
 

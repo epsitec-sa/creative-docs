@@ -184,14 +184,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		public Dictionary<DbTable, System.Data.DataTable> SchemasCache
 		{
 			get;
 			private set;
 		}
-
-
+		
 		public IEnumerable<EntityFieldPath> GetSourceReferences(Druid targetEntity)
 		{
 			this.EnsureSourceReferenceResolverIsBuilt ();
@@ -205,16 +203,14 @@ namespace Epsitec.Cresus.Database
 				return new EntityFieldPath[0];
 			}
 		}
-
-
+		
 		/// <summary>
 		/// Creates a new database using the specified database access. This
 		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
 		/// to any database.
 		/// </summary>
 		/// <param name="access">The database access.</param>
-		/// <param name="isServer">If set to <c>true</c> creates the database for a server.</param>
-		public bool CreateDatabase(DbAccess access, bool isServer = false)
+		public bool CreateDatabase(DbAccess access)
 		{
 			if (this.access.IsValid)
 			{
@@ -269,7 +265,7 @@ namespace Epsitec.Cresus.Database
 
 			return true;
 		}
-
+		
 		public void DropDatabase()
 		{
 			IDbAbstraction abstraction = this.abstraction;
@@ -324,7 +320,7 @@ namespace Epsitec.Cresus.Database
 				this.ConnectToDatabase (access);
 				this.LoadCoreTables ();
 				this.LoadServicesTables ();
-				this.AttachServices ();
+				this.AttachServices ();		
 			}
 			catch
 			{
@@ -1457,6 +1453,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 			{
 				IsAutoIncremented = autoIncrementedId,
+				AutoIncrementStartIndex = 1000000000,
 			};
 			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
 			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
@@ -3433,8 +3430,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		#endregion
-
-
+		
 		private DbAccess						access;
 		private IDbAbstraction					abstraction;
 
@@ -3461,7 +3457,7 @@ namespace Epsitec.Cresus.Database
 
 		private List<DbTransaction>				liveTransactions;
 		private List<IDbAbstraction>			releaseRequested;
-		
+
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 

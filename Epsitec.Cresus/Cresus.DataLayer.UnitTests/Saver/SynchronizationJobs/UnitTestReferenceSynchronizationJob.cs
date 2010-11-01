@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 		public void ReferenceSynchronizationJobConstructorTest()
 		{
 			int dataContextId = 0;
-			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 			Druid fieldId = Druid.FromLong (1);
-			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1)));
+			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1000000001)));
 
 			var job = new ReferenceSynchronizationJob (dataContextId, entityKey, fieldId, targetKey);
 
@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 		public void ReferenceSynchronizationJobConstructorArgumentCheck()
 		{
 			int dataContextId = 0;
-			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 			Druid fieldId = Druid.FromLong (1);
-			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1)));
+			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1000000001)));
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 		public void SynchronizeArgumentCheck()
 		{
 			int dataContextId = 0;
-			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 			Druid fieldId = Druid.FromLong(1);
-			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1)));
+			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1000000001)));
 			
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(

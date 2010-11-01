@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ThreadConflictingValueUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
 		{
-			NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+			NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 			for (int i = startIndex; i < startIndex + nbInsertions; i++)
 			{
@@ -478,11 +478,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ThreadConflictingReferenceUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
 		{
-			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 			List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
             {
-                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
-                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
+                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
+                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002))),
             };
 
 			System.Random dice = new System.Random ();
@@ -607,12 +607,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ThreadConflictingCollectionUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext, int nbTotalContacts, int nbContactsToUse)
 		{
-			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 			List<UriContactEntity> contacts = new List<UriContactEntity> ();
 
 			for (int i = 0; i < nbTotalContacts; i++)
 			{
-				contacts.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (i + 1))));
+				contacts.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000 + i + 1))));
 			}
 
 			System.Random dice = new System.Random ();
@@ -644,7 +644,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				{
 					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 					{
-						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 						Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
 					}
@@ -757,7 +757,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 10; i++)
 			{
-				addresses.Add (dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (dice.Next (1, 151)))));
+				addresses.Add (dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 151)))));
 			}
 
 			for (int i = 0; i < addresses.Count; i++)
@@ -785,7 +785,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 10; i++)
 			{
-				persons.Add (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (dice.Next (1, 101)))));
+				persons.Add (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 101)))));
 			}
 
 			foreach (NaturalPersonEntity person in persons)
@@ -815,7 +815,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 25; i++)
 			{
-				contacts.Add (dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (dice.Next (1, 601)))));
+				contacts.Add (dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 601)))));
 			}
 
 			for (int i = 0; i < contacts.Count; i++)
@@ -847,17 +847,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 25; i++)
 			{
-				contacts.Add (dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (dice.Next (1, 601)))));
+				contacts.Add (dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 601)))));
 			}
 
 			for (int i = 0; i < 5; i++)
 			{
-				uriSchemes.Add (dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (dice.Next (1, 6)))));
+				uriSchemes.Add (dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 6)))));
 			}
 
 			for (int i = 0; i < 5; i++)
 			{
-				telecomTypes.Add (dataContext.ResolveEntity<TelecomTypeEntity> (new DbKey (new DbId (dice.Next (1, 6)))));
+				telecomTypes.Add (dataContext.ResolveEntity<TelecomTypeEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 6)))));
 			}
 
 			foreach (UriContactEntity contact in contacts.OfType<UriContactEntity> ())
@@ -884,17 +884,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 10; i++)
 			{
-				persons.Add (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (dice.Next (1, 100)))));
+				persons.Add (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 100)))));
 			}
 
 			for (int i = 0; i < 2; i++)
 			{
-				genders.Add (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (dice.Next (1, 3)))));
+				genders.Add (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 3)))));
 			}
 
 			for (int i = 0; i < 5; i++)
 			{
-				titles.Add (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (dice.Next (1, 16)))));
+				titles.Add (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000000 + dice.Next (1, 16)))));
 			}
 
 			foreach (NaturalPersonEntity person in persons)
@@ -916,7 +916,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < 10; i++)
 			{
-				mailContacts.Add (dataContext.ResolveEntity<MailContactEntity> (new DbKey (new DbId (dice.Next (401, 601)))));
+				mailContacts.Add (dataContext.ResolveEntity<MailContactEntity> (new DbKey (new DbId (1000000000 + dice.Next (401, 601)))));
 			}
 
 			for (int i = 0; i < mailContacts.Count; i++)

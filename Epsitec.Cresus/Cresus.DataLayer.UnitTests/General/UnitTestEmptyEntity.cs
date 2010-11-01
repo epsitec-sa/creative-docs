@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					alfred.Contacts.Add (contact);
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (2, alfred.Contacts.Count);
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					dataContext.RegisterEmptyEntity (contact);
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (2, alfred.Contacts.Count);
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					dataContext.RegisterEmptyEntity (contact);
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					dataContext.RegisterEmptyEntity (contact);
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					alfred.Contacts.Add (contact);
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					dataContext.RegisterEmptyEntity (contact);
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					dataContext.RegisterEmptyEntity (contact);
@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
 					alfred.Contacts.Add (contact);
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 					Assert.AreEqual (3, alfred.Contacts.Count);

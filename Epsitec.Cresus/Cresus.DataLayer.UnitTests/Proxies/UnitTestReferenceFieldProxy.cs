@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
 					var proxy = new ReferenceFieldProxy_Accessor (dataContext, person, fieldId);
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
 					var proxy = new ReferenceFieldProxy (dataContext, person, fieldId);
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
 					var proxy = new ReferenceFieldProxy (dataContext, person, fieldId);
@@ -184,8 +184,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
 					Druid fieldId = Druid.Parse ("[L0A11]");
 
