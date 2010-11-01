@@ -1476,7 +1476,7 @@ namespace Epsitec.Cresus.Database
 		/// Registers a table for this database. This creates both the metadata and
 		/// the database table itself (if needed), but does not initialize the
 		/// relations between the columns and their target tables. See also the
-		/// <see cref="RegisterColumnRelations"/> method.
+		/// <see cref="RegisterColumnRelations(DbTable)"/> method.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table.</param>

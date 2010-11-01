@@ -116,7 +116,7 @@ namespace Epsitec.Common.Drawing
 			this.discarded = true;
 		}
 
-		public FileFormat GetFileFormat()
+		public BitmapFileFormat GetFileFormat()
 		{
 			if (this.fileFormat == null)
 			{
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedThumbnail == null) &&
 				(this.thumbnail != null))
 			{
-				this.compressedThumbnail = this.thumbnail.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 75 });
+				this.compressedThumbnail = this.thumbnail.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Jpeg, Quality = 75 });
 
 				if (this.compressedThumbnail != null)
 				{
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedSampleImage == null) &&
 				(this.sampleImage != null))
 			{
-				this.compressedSampleImage = this.sampleImage.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 75 });
+				this.compressedSampleImage = this.sampleImage.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Jpeg, Quality = 75 });
 
 				if (this.compressedSampleImage != null)
 				{
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Drawing
 				else
 				{
 					this.fullImage  = null;
-					this.fileFormat = new FileFormat ();
+					this.fileFormat = new BitmapFileFormat ();
 					this.imageDataTimestamp = 0;
 				}
 			}
@@ -715,7 +715,7 @@ namespace Epsitec.Common.Drawing
 		private NativeBitmap thumbnail;
 		private NativeBitmap sampleImage;
 		private NativeBitmap fullImage;
-		private FileFormat fileFormat;
+		private BitmapFileFormat fileFormat;
 		private int width;
 		private int height;
 		private bool discarded;

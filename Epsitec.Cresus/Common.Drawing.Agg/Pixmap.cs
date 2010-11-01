@@ -98,7 +98,7 @@ namespace Epsitec.Common.Drawing
 
 				if (image.BitsPerPixel < 24)
 				{
-					temp  = image.ConvertTo32Bits ();
+					temp  = image.ConvertToPremultipliedArgb32 ();
 					image = temp;
 				}
 
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Drawing
 				int bufferSize   = pitch * height;
 				var bufferMemory = System.Runtime.InteropServices.Marshal.AllocHGlobal (bufferSize);
 
-				image.ExtractPixels (bufferMemory, bufferSize, pitch);
+				image.CopyPixelsToBuffer (bufferMemory, bufferSize, pitch);
 
 				this.aggBuffer = AntiGrain.Buffer.NewFrom (width, height, bitsPerPixel, pitch, bufferMemory, copyBits: true);
 

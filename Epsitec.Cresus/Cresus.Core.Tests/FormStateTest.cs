@@ -64,11 +64,11 @@ namespace Epsitec.Cresus.Core
 				loc2.Numéro = "1400";
 			}
 
+#if false
 			DialogData    data = new DialogData (adr, DialogDataMode.Isolated);
 			AdresseEntity temp = data.Data as AdresseEntity;
 			XElement element;
 
-#if false
 
 			//	No changes :
 			element = States.FormState.SaveDialogData (data);
@@ -132,11 +132,12 @@ namespace Epsitec.Cresus.Core
 
 			DialogData    data = new DialogData (adr, DialogDataMode.Isolated);
 			AdresseEntity temp = data.Data as AdresseEntity;
-			XElement element;
-
+			
 			Assert.AreEqual ("Case postale 16", temp.CasePostale);
 			Assert.AreEqual ("Yvonand", temp.Localité.Nom);
 #if false
+			XElement element;
+
 			//	Restore CasePostale (value) and Localité (reference)
 			element = XElement.Parse (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>");
 			States.FormState.RestoreDialogData (data, element);

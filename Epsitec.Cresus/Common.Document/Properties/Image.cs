@@ -303,15 +303,15 @@ namespace Epsitec.Common.Document.Properties
 
 		#region ImageFilter
 
-		public static FileFormat FilterQualityToMode(double quality)
+		public static BitmapFileFormat FilterQualityToMode(double quality)
 		{
 			int n = (int) (quality*100);
 			n = System.Math.Min(100, n);
 			n = System.Math.Max(10, n);
 			
-			return new FileFormat ()
+			return new BitmapFileFormat ()
 			{
-				Type = FileFormatType.Jpeg,
+				Type = BitmapFileType.Jpeg,
 				Quality = n
 			};
 		}

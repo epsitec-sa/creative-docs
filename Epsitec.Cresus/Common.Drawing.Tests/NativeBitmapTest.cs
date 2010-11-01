@@ -14,18 +14,18 @@ namespace Epsitec.Common.Drawing
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\images\rgb.tif");
 
-			NativeBitmap imageR    = image.GetChannel (ColorChannel.Red);
-			NativeBitmap imageG    = image.GetChannel (ColorChannel.Green);
-			NativeBitmap imageB    = image.GetChannel (ColorChannel.Blue);
-			NativeBitmap imageGray = image.GetChannel (ColorChannel.Grayscale);
+			NativeBitmap imageR    = image.GetChannel (BitmapColorChannel.Red);
+			NativeBitmap imageG    = image.GetChannel (BitmapColorChannel.Green);
+			NativeBitmap imageB    = image.GetChannel (BitmapColorChannel.Blue);
+			NativeBitmap imageGray = image.GetChannel (BitmapColorChannel.Grayscale);
 			NativeBitmap imageCmyk = image.ConvertToCmyk32 ();
 
-			Assert.AreEqual (ColorType.Rgb, image.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageR.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageG.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageB.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageGray.ColorType);
-			Assert.AreEqual (ColorType.Cmyk, imageCmyk.ColorType);
+			Assert.AreEqual (BitmapColorType.Rgb, image.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageR.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageG.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageB.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (BitmapColorType.Cmyk, imageCmyk.ColorType);
 
 			Assert.AreEqual (32, image.BitsPerPixel);
 			Assert.AreEqual (8, imageR.BitsPerPixel);
@@ -34,11 +34,11 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (8, imageGray.BitsPerPixel);
 			Assert.AreEqual (32, imageCmyk.BitsPerPixel);
 
-			System.IO.File.WriteAllBytes ("rgb-R.png", imageR.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgb-G.png",    imageG.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgb-B.png",    imageB.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgb-gray.png", imageGray.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgb-cmyk.tif", imageCmyk.SaveToMemory (new FileFormat () { Type = FileFormatType.Tiff, TiffCompression = TiffCompressionOption.Lzw, TiffCmyk = true }));
+			System.IO.File.WriteAllBytes ("rgb-R.png", imageR.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgb-G.png",    imageG.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgb-B.png",    imageB.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgb-gray.png", imageGray.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgb-cmyk.tif", imageCmyk.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Tiff, TiffCompression = TiffCompressionOption.Lzw, TiffCmyk = true }));
 
 			image.Dispose ();
 			imageR.Dispose ();
@@ -53,16 +53,16 @@ namespace Epsitec.Common.Drawing
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\images\rgba.tif");
 
-			NativeBitmap imageR = image.GetChannel (ColorChannel.Red);
-			NativeBitmap imageG = image.GetChannel (ColorChannel.Green);
-			NativeBitmap imageB = image.GetChannel (ColorChannel.Blue);
-			NativeBitmap imageA = image.GetChannel (ColorChannel.Alpha);
+			NativeBitmap imageR = image.GetChannel (BitmapColorChannel.Red);
+			NativeBitmap imageG = image.GetChannel (BitmapColorChannel.Green);
+			NativeBitmap imageB = image.GetChannel (BitmapColorChannel.Blue);
+			NativeBitmap imageA = image.GetChannel (BitmapColorChannel.Alpha);
 			
-			Assert.AreEqual (ColorType.RgbAlpha, image.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageR.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageG.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageB.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageA.ColorType);
+			Assert.AreEqual (BitmapColorType.RgbAlpha, image.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageR.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageG.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageB.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageA.ColorType);
 
 			Assert.AreEqual (32, image.BitsPerPixel);
 			Assert.AreEqual (8, imageR.BitsPerPixel);
@@ -70,12 +70,12 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (8, imageB.BitsPerPixel);
 			Assert.AreEqual (8, imageA.BitsPerPixel);
 
-			System.IO.File.WriteAllBytes ("rgba-R.png", imageR.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgba-G.png", imageG.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgba-B.png", imageB.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("rgba-A.png", imageA.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
+			System.IO.File.WriteAllBytes ("rgba-R.png", imageR.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgba-G.png", imageG.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgba-B.png", imageB.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("rgba-A.png", imageA.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
 			
-			byte[] memory = image.GetChannel (ColorChannel.Alpha).GetRawImageDataInCompactFormFor8BitImage ();
+			byte[] memory = image.GetChannel (BitmapColorChannel.Alpha).GetRawImageDataInCompactFormFor8BitImage ();
 
 			Assert.AreEqual (128*128, memory.Length);
 
@@ -91,22 +91,22 @@ namespace Epsitec.Common.Drawing
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\images\cmyk.tif");
 
-			NativeBitmap imageC = image.GetChannel (ColorChannel.Cyan);
-			NativeBitmap imageM = image.GetChannel (ColorChannel.Magenta);
-			NativeBitmap imageY = image.GetChannel (ColorChannel.Yellow);
-			NativeBitmap imageK = image.GetChannel (ColorChannel.Black);
-			NativeBitmap imageGray = image.GetChannel (ColorChannel.Grayscale);
-			NativeBitmap imageRgb32 = image.ConvertToRgb32 ();
-			NativeBitmap imageRgb24 = image.ConvertTo24Bits ();
+			NativeBitmap imageC = image.GetChannel (BitmapColorChannel.Cyan);
+			NativeBitmap imageM = image.GetChannel (BitmapColorChannel.Magenta);
+			NativeBitmap imageY = image.GetChannel (BitmapColorChannel.Yellow);
+			NativeBitmap imageK = image.GetChannel (BitmapColorChannel.Black);
+			NativeBitmap imageGray = image.GetChannel (BitmapColorChannel.Grayscale);
+			NativeBitmap imageRgb32 = image.ConvertToArgb32 ();
+			NativeBitmap imageRgb24 = image.ConvertToRgb24 ();
 
-			Assert.AreEqual (ColorType.Cmyk,       image.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageC.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageM.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageY.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageK.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageGray.ColorType);
-			Assert.AreEqual (ColorType.RgbAlpha,   imageRgb32.ColorType);
-			Assert.AreEqual (ColorType.Rgb,        imageRgb24.ColorType);
+			Assert.AreEqual (BitmapColorType.Cmyk,       image.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageC.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageM.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageY.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageK.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (BitmapColorType.RgbAlpha,   imageRgb32.ColorType);
+			Assert.AreEqual (BitmapColorType.Rgb,        imageRgb24.ColorType);
 
 			Assert.AreEqual (32, image.BitsPerPixel);
 			Assert.AreEqual (8, imageC.BitsPerPixel);
@@ -117,13 +117,13 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (32, imageRgb32.BitsPerPixel);
 			Assert.AreEqual (24, imageRgb24.BitsPerPixel);
 
-			System.IO.File.WriteAllBytes ("cmyk-C.png", imageC.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-M.png", imageM.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-Y.png", imageY.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-K.png", imageK.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-G.tif", imageGray.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-RGB32.tif", imageRgb32.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyk-RGB24.tif", imageRgb24.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-C.png", imageC.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-M.png", imageM.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-Y.png", imageY.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-K.png", imageK.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-G.tif", imageGray.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-RGB32.tif", imageRgb32.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyk-RGB24.tif", imageRgb24.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
 
 			image.Dispose ();
 			imageC.Dispose ();
@@ -140,22 +140,22 @@ namespace Epsitec.Common.Drawing
 		{
 			NativeBitmap image = NativeBitmap.Load (@"..\..\images\cmyka.tif");
 
-			NativeBitmap imageC = image.GetChannel (ColorChannel.Cyan);
-			NativeBitmap imageM = image.GetChannel (ColorChannel.Magenta);
-			NativeBitmap imageY = image.GetChannel (ColorChannel.Yellow);
-			NativeBitmap imageK = image.GetChannel (ColorChannel.Black);
-			NativeBitmap imageA = image.GetChannel (ColorChannel.Alpha);
-			NativeBitmap imageGray = image.GetChannel (ColorChannel.Grayscale);
-			NativeBitmap imageRgb = image.ConvertToRgb32 ();
+			NativeBitmap imageC = image.GetChannel (BitmapColorChannel.Cyan);
+			NativeBitmap imageM = image.GetChannel (BitmapColorChannel.Magenta);
+			NativeBitmap imageY = image.GetChannel (BitmapColorChannel.Yellow);
+			NativeBitmap imageK = image.GetChannel (BitmapColorChannel.Black);
+			NativeBitmap imageA = image.GetChannel (BitmapColorChannel.Alpha);
+			NativeBitmap imageGray = image.GetChannel (BitmapColorChannel.Grayscale);
+			NativeBitmap imageRgb = image.ConvertToArgb32 ();
 
-			Assert.AreEqual (ColorType.Cmyk, image.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageC.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageM.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageY.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageK.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageGray.ColorType);
-			Assert.AreEqual (ColorType.MinIsBlack, imageA.ColorType);
-			Assert.AreEqual (ColorType.Rgb, imageRgb.ColorType);
+			Assert.AreEqual (BitmapColorType.Cmyk, image.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageC.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageM.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageY.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageK.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (BitmapColorType.MinIsBlack, imageA.ColorType);
+			Assert.AreEqual (BitmapColorType.Rgb, imageRgb.ColorType);
 
 			Assert.AreEqual (32, image.BitsPerPixel);
 			Assert.AreEqual (8, imageC.BitsPerPixel);
@@ -166,13 +166,13 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (8, imageA.BitsPerPixel);
 			Assert.AreEqual (24, imageRgb.BitsPerPixel);
 
-			System.IO.File.WriteAllBytes ("cmyka-C.png", imageC.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-M.png", imageM.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-Y.png", imageY.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-K.png", imageK.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-G.png", imageGray.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-RGB.png", imageRgb.SaveToMemory (new FileFormat () { Type = FileFormatType.Png }));
-			System.IO.File.WriteAllBytes ("cmyka-A.jpg", imageA.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 80 }));
+			System.IO.File.WriteAllBytes ("cmyka-C.png", imageC.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-M.png", imageM.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-Y.png", imageY.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-K.png", imageK.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-G.png", imageGray.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-RGB.png", imageRgb.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png }));
+			System.IO.File.WriteAllBytes ("cmyka-A.jpg", imageA.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Jpeg, Quality = 80 }));
 
 			image.Dispose ();
 			imageC.Dispose ();

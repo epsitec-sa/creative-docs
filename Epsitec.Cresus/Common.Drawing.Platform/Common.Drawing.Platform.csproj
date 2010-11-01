@@ -50,7 +50,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
@@ -119,8 +119,42 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Color32.cs" />
+    <Compile Include="BitmapFileType.cs" />
+    <Compile Include="BitmapColorChannel.cs" />
+    <Compile Include="BitmapColorType.cs" />
+    <Compile Include="IconLib\AuthorAttribute.cs" />
+    <Compile Include="IconLib\BitmapEncoders\BmpEncoder.cs" />
+    <Compile Include="IconLib\BitmapEncoders\ImageEncoder.cs" />
+    <Compile Include="IconLib\BitmapEncoders\PngEncoder.cs" />
+    <Compile Include="IconLib\Enums.cs" />
+    <Compile Include="IconLib\Exceptions\IconNameAlreadyExistException.cs" />
+    <Compile Include="IconLib\Exceptions\ImageAlreadyExistsException.cs" />
+    <Compile Include="IconLib\Exceptions\ImageTooBigException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidFileException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidICLFileException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidIconFormatSelectionException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidIconSelectionException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidMultiIconFileException.cs" />
+    <Compile Include="IconLib\Exceptions\InvalidMultiIconMaskBitmap.cs" />
+    <Compile Include="IconLib\IconImage.cs" />
+    <Compile Include="IconLib\LibraryFormats\IconFormat.cs" />
+    <Compile Include="IconLib\LibraryFormats\ILibraryFormat.cs" />
+    <Compile Include="IconLib\LibraryFormats\NEFormat.cs" />
+    <Compile Include="IconLib\LibraryFormats\PEFormat.cs" />
+    <Compile Include="IconLib\MultiIcon.cs" />
+    <Compile Include="IconLib\Resource.Designer.cs" />
+    <Compile Include="IconLib\SingleIcon.cs" />
+    <Compile Include="IconLib\Structs.cs" />
+    <Compile Include="IconLib\Tools.cs" />
+    <Compile Include="IconLib\Win32.cs" />
+    <Compile Include="BitmapFileFormat.cs" />
+    <Compile Include="SystemDrawingBitmapHelper.cs" />
     <Compile Include="NativeBitmap.cs" />
     <Compile Include="MetafileHelper.cs" />
+    <Compile Include="NativeIcon.cs" />
+    <Compile Include="Octree.cs" />
+    <Compile Include="OctreeQuantizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -129,6 +163,7 @@
     <Compile Include="ImageDisabler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TiffCompressionOption.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
@@ -151,6 +186,14 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IconLib\Resource.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IconLib\Resources\EmptyDll.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

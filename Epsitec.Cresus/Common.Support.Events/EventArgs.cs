@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -17,6 +17,6 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public static readonly EventArgs Empty = new EventArgs ();
+		public static readonly new EventArgs Empty = new EventArgs ();
 	}
 }
