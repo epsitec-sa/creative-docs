@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.Cresus.WorkflowDesigner.Objects;
 
@@ -653,7 +654,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CloseObject(LinkableObject obj)
 		{
-			//	Ferme une boîte et supprme l'entité associés.
+			//	Ferme une boîte et supprime l'entité associée.
 			foreach (var link in this.LinkObjects.ToArray ())
 			{
 				if (link.DstObject == obj)
@@ -675,20 +676,60 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Supprime l'entité dans la base.
-			bool isPublic = false;
+			bool delete = true;
 
 			if (obj is ObjectNode)
 			{
 				var node = obj as ObjectNode;
-				isPublic = node.Entity.IsPublic;
+				delete = this.IsDeletePossible (node.Entity);
 			}
 
-			if (!isPublic)
+			if (delete)
 			{
 				this.businessContext.DataContext.DeleteEntity (obj.AbstractEntity);
 			}
 
 			this.SetLocalDirty ();
+		}
+
+		private bool IsDeletePossible(WorkflowNodeEntity nodeEntity)
+		{
+			//	Les noeuds publiques ne sont jamais supprimés dans la base.
+			if (nodeEntity.IsPublic)
+			{
+				return false;
+			}
+
+			//	Si le noeud est référencé par un 'edge' qui ne fait pas partie de ce diagramme,
+			//	il ne faut pas le supprimer.
+			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
+
+			var edgeEntities = this.FindEdges (nodeEntity);
+			foreach (var edgeEntity in edgeEntities)
+			{
+				if (!list.Contains (edgeEntity))  // edge d'un autre diagramme ?
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private List<WorkflowEdgeEntity> FindEdges(WorkflowNodeEntity nodeEntity)
+		{
+			//	Cherche toutes les entités 'edge' qui pointent un 'node' donné.
+			WorkflowEdgeEntity example = new WorkflowEdgeEntity ()
+			{
+				NextNode = nodeEntity,
+			};
+
+			Request request = new Request ()
+			{
+				RootEntity = example,
+			};
+
+			return this.businessContext.DataContext.GetByRequest<WorkflowEdgeEntity> (request).ToList ();
 		}
 
 
