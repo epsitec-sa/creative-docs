@@ -210,11 +210,67 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 			this.DataContext.DefineRowKey (entity, rowKey);
 
+			this.DeserializeEntityFields (data, entity);
+
+			return entity;
+		}
+
+
+		/// <summary>
+		/// Clears the data of the given <see cref="AbstractEntity"/> and then deserializes the given
+		/// <see cref="EntityData"/> into it.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to set.</param>
+		/// <param name="data">The <see cref="EntityData"/> to put in the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="data"/> is <c>null</c>.</exception>
+		public void Deserialize(AbstractEntity entity, EntityData data)
+		{
+			entity.ThrowIfNull ("entity");
+			data.ThrowIfNull ("data");
+
+			entity.ResetValueStores ();
+
+			this.DeserializeEntityFields (data, entity);
+		}
+
+
+		/// <summary>
+		/// Replaces the value of the given field of the given <see cref="AbstractEntity"/> by a
+		/// proxy.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to replace by a proxy.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining whose field to replace by a proxy.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
+		public void ReplaceFieldByProxy(AbstractEntity entity, Druid fieldId)
+		{
+			entity.ThrowIfNull ("entity");
+			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+
+			entity.ResetValue (fieldId);
+
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			string fieldIdString = fieldId.ToResourceId ();
+
+			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldIdString);
+
+			this.InsertProxyForField (entity, field);
+		}
+
+		
+		/// <summary>
+		/// Deserializes the given <see cref="EntityData"/> in the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="data">The <see cref="EntityData"/> to deserialize.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> in which to deserialize the data.</param>
+		private void DeserializeEntityFields(EntityData data, AbstractEntity entity)
+		{
 			using (entity.DefineOriginalValues ())
 			{
 				using (entity.DisableEvents ())
 				{
-					List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
+					List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()).ToList ();
 
 					foreach (Druid currentId in entityIds.TakeWhile (id => id != data.LoadedEntityId))
 					{
@@ -227,8 +283,6 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 					}
 				}
 			}
-
-			return entity;
 		}
 
 
@@ -242,10 +296,22 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId))
 			{
-				object proxy = this.GetProxyForField (entity, field);
-
-				entity.InternalSetValue (field.Id, proxy);
+				this.InsertProxyForField (entity, field);
 			}
+		}
+
+
+		/// <summary>
+		/// Sets the value of the given field of the given <see cref="AbstractEntity"/> to the
+		/// appropriate proxy.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to set.</param>
+		/// <param name="field">The field to set.</param>
+		private void InsertProxyForField(AbstractEntity entity, StructuredTypeField field)
+		{
+			object proxy = this.GetProxyForField (entity, field);
+
+			entity.InternalSetValue (field.Id, proxy);
 		}
 
 

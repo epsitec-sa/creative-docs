@@ -1375,6 +1375,32 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		internal void ResetValueStores()
+		{
+			IEnumerable<string> fieldIds = this.context.GetEntityFieldIds (this);
+
+			using (this.UseSilentUpdates ())
+			{
+				foreach (Druid fieldId in fieldIds.Select (id => Druid.Parse (id)))
+				{
+					this.ResetValue (fieldId);
+				}
+			}
+		}
+
+
+		internal void ResetValue(Druid fieldId)
+		{
+			string fieldName = fieldId.ToResourceId ();
+
+			IValueStore originalValues = this.GetOriginalValues ();
+			IValueStore modifiedValues = this.GetModifiedValues ();
+
+			originalValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
+			modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
+		}
+
+
 		#region Helper Classes
 
 

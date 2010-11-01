@@ -810,6 +810,56 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
+		/// Reloads all the data of the given <see cref="AbstractEntity"/> so that it is consistent
+		/// with its value in the database. This will erase all modifications to the given
+		/// <see cref="AbstractEntity"/> and might even delete it if it has been deleted in the
+		/// database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to reload.</param>
+		public void ReloadEntity(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return;
+			}
+
+			this.AssertDataContextIsNotDisposed ();
+			this.AssertEntityIsNotForeign (entity);
+
+			using (entity.UseSilentUpdates ())
+			using (entity.DefineOriginalValues ())
+			using (entity.DisableEvents ())
+			{
+				this.DataLoader.ReloadEntity (entity);
+			}
+		}
+
+		/// <summary>
+		/// Reloads the value of a given field of a given <see cref="AbstractEntity"/> so that it is
+		/// consistent with its value in the database. This will erase any modification that has been
+		/// made to that field.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to reload.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining which field to reload.</param>
+		public void ReloadEntityField(AbstractEntity entity, Druid fieldId)
+		{
+			if (entity == null)
+			{
+				return;
+			}
+
+			this.AssertDataContextIsNotDisposed ();
+			this.AssertEntityIsNotForeign (entity);
+
+			using (entity.UseSilentUpdates ())
+			using (entity.DefineOriginalValues ())
+			using (entity.DisableEvents ())
+			{
+				this.DataLoader.ReloadEntityField (entity, fieldId);
+			}
+		}
+
+		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which match the
 		/// given example.
 		/// </summary>
