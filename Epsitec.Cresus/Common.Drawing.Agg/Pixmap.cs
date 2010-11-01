@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing.Platform;
+
 namespace Epsitec.Common.Drawing
 {
 	using PixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -58,7 +60,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public Opac.FreeImage.ImageClient		AssociatedImage
+		public ImageClient						AssociatedImage
 		{
 			get
 			{
@@ -87,12 +89,12 @@ namespace Epsitec.Common.Drawing
 		/// <param name="copyImageBits">Specifies if the image bits must be copied.</param>
 		/// <returns><c>true</c> if the image bits were inherited directly, without any copy (the
 		/// image must stay alive as long as the pixmap in that case).</returns>
-		public bool AllocatePixmap(Opac.FreeImage.ImageClient image)
+		public bool AllocatePixmap(ImageClient image)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.aggBuffer == System.IntPtr.Zero))
 			{
-				Opac.FreeImage.ImageClient temp = null;
+				ImageClient temp = null;
 
 				if (image.BitsPerPixel < 24)
 				{
@@ -104,13 +106,14 @@ namespace Epsitec.Common.Drawing
 				int width        = image.Width;
 				int height       = image.Height;
 				int pitch        = width * 4;
+				int bufferSize   = pitch * height;
+				var bufferMemory = System.Runtime.InteropServices.Marshal.AllocHGlobal (bufferSize);
 
-				image.OperateOnRawImage (32,
-					bits => 
-					{
-						bool copyBits = true;
-						this.aggBuffer = AntiGrain.Buffer.NewFrom (width, height, bitsPerPixel, pitch, bits, copyBits);
-					});
+				image.ExtractPixels (bufferMemory, bufferSize, pitch);
+
+				this.aggBuffer = AntiGrain.Buffer.NewFrom (width, height, bitsPerPixel, pitch, bufferMemory, copyBits: true);
+
+				System.Runtime.InteropServices.Marshal.FreeHGlobal (bufferMemory);
 				
 				this.size       = new System.Drawing.Size (width, height);
 				this.isOsBitmap = true;
@@ -552,7 +555,7 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr					aggBuffer;
 		protected System.Drawing.Size			size;
 		protected bool							isOsBitmap;
-		protected Opac.FreeImage.ImageClient	associatedImage;
+		protected ImageClient					associatedImage;
 
 	}
 }

@@ -104,14 +104,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\nunit-2.4.x\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OPaC.FreeImage.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\FreeImage\OPaC.FreeImage.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="OPaC.FreeImage.Library, Version=1.0.1002.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\FreeImage\OPaC.FreeImage.Library.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -134,6 +126,10 @@
       <Name>Common.Drawing.Agg</Name>
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Drawing.Platform\Common.Drawing.Platform.csproj">
+      <Project>{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}</Project>
+      <Name>Common.Drawing.Platform</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
       <Name>Common.Drawing</Name>
