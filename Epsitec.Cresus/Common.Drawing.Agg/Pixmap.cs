@@ -60,7 +60,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public ImageClient						AssociatedImage
+		public NativeBitmap						AssociatedImage
 		{
 			get
 			{
@@ -89,12 +89,12 @@ namespace Epsitec.Common.Drawing
 		/// <param name="copyImageBits">Specifies if the image bits must be copied.</param>
 		/// <returns><c>true</c> if the image bits were inherited directly, without any copy (the
 		/// image must stay alive as long as the pixmap in that case).</returns>
-		public bool AllocatePixmap(ImageClient image)
+		public bool AllocatePixmap(NativeBitmap image)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.aggBuffer == System.IntPtr.Zero))
 			{
-				ImageClient temp = null;
+				NativeBitmap temp = null;
 
 				if (image.BitsPerPixel < 24)
 				{
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr					aggBuffer;
 		protected System.Drawing.Size			size;
 		protected bool							isOsBitmap;
-		protected ImageClient					associatedImage;
+		protected NativeBitmap					associatedImage;
 
 	}
 }

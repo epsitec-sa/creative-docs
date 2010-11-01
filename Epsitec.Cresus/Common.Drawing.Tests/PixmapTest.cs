@@ -46,7 +46,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 		[Test]
-		public void CheckAllocatePixmapFromFreeImage()
+		public void CheckAllocatePixmapFromImageClient()
 		{
 			string path = @"..\..\images\picture.png";
 
@@ -56,12 +56,12 @@ namespace Epsitec.Common.Drawing
 			Pixmap pixmap2;
 
 			watch.Start ();
-			pixmap0 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, true);
+			pixmap0 = PixmapTest.CreatePixmapUsingImageClient (path, -1, true);
 			watch.Stop ();
 			watch.Reset ();
 			
 			watch.Start ();
-			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, false);
+			pixmap1 = PixmapTest.CreatePixmapUsingImageClient (path, -1, false);
 			watch.Stop ();
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Drawing
 			path = @"..\..\images\photo.jpg";
 
 			watch.Start ();
-			pixmap2 = PixmapTest.CreatePixmapUsingFreeImage (path, 200, false);
+			pixmap2 = PixmapTest.CreatePixmapUsingImageClient (path, 200, false);
 			watch.Stop ();
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing
 
 			Window window = new Window ();
 			window.ClientSize = new Size (640, 220);
-			window.Text = "CheckAllocatePixmapFromFreeImage";
+			window.Text = "CheckAllocatePixmapFromImageClient";
 			window.Root.PaintForeground += delegate (object sender, PaintEventArgs e)
 			{
 				Bitmap bitmap0 = Bitmap.FromPixmap (pixmap0).BitmapImage;
@@ -103,21 +103,21 @@ namespace Epsitec.Common.Drawing
 			pixmap2.Dispose ();
 		}
 
-		private static Pixmap CreatePixmapUsingFreeImage(string path, int size, bool copyBits)
+		private static Pixmap CreatePixmapUsingImageClient(string path, int size, bool copyBits)
 		{
 			Pixmap pixmap = new Pixmap ();
-			ImageClient image = null;
+			NativeBitmap image = null;
 
 			try
 			{
 				if (size > 0)
 				{
-					image = ImageClient.Load (path);
+					image = NativeBitmap.Load (path);
 					image = image.MakeThumbnail (size);
 				}
 				else
 				{
-					image = ImageClient.Load (path);
+					image = NativeBitmap.Load (path);
 				}
 
 				pixmap.AllocatePixmap (image);

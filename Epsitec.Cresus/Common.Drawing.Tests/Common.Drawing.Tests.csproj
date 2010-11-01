@@ -207,7 +207,7 @@
     <Compile Include="FontTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FreeImageTest.cs" />
+    <Compile Include="NativeBitmapTest.cs" />
     <Compile Include="GraphicsTest.cs">
       <SubType>Code</SubType>
     </Compile>
