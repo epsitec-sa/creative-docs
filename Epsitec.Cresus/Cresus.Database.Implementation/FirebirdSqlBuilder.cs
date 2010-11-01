@@ -295,31 +295,33 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (query);
 			}
 		}
-		
+
 		private void BuildAutoIncrementTriggerForColumn(string tableName, SqlColumn column)
 		{
 			// Firebird does not support directly the auto incremented columns, so we need to use
 			// a workaround described here : http://www.firebirdfaq.org/faq29/ . Basically, we need
 			// to create an sequence generator and call that generator in a trigger before a row is
 			// inserted in the table.
-			
+
 			if (column.IsAutoIncremented)
 			{
 				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
 				string triggerName = this.GetAutoIncrementTriggerName (tableName, column);
-
+				string columnName = column.Name;
+				long generatorInitialValue = column.AutoIncrementStartIndex;
+				
 				this.commandCount++;
 				this.Append ("CREATE GENERATOR " + generatorName + ";\n");
 
 				this.commandCount++;
-				this.Append ("SET GENERATOR " + generatorName + " TO 0;\n");
+				this.Append ("SET GENERATOR " + generatorName + " TO " + generatorInitialValue + ";\n");
 
 				this.commandCount++;
 				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
 				this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
 				this.Append ("AS ");
 				this.Append ("BEGIN ");
-				this.Append ("IF (NEW." + column.Name + " IS NULL) THEN NEW." + column.Name + " = GEN_ID(" + generatorName + ", 1); ");
+				this.Append ("IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = GEN_ID(" + generatorName + ", 1); ");
 				this.Append ("END;\n");
 			}
 		}
