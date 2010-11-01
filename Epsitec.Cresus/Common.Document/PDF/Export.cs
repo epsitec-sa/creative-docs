@@ -1888,18 +1888,18 @@ namespace Epsitec.Common.Document.PDF
 				{
 					switch (fi.ColorType)
 					{
-						case ColorType.MinIsBlack:
-						case ColorType.MinIsWhite:
+						case BitmapColorType.MinIsBlack:
+						case BitmapColorType.MinIsWhite:
 							writer.WriteString("/ColorSpace /DeviceGray ");
 							break;
 						
-						case ColorType.Rgb:
-						case ColorType.RgbAlpha:
-						case ColorType.Palette:
+						case BitmapColorType.Rgb:
+						case BitmapColorType.RgbAlpha:
+						case BitmapColorType.Palette:
 							writer.WriteString("/ColorSpace /DeviceRGB ");
 							break;
 						
-						case ColorType.Cmyk:
+						case BitmapColorType.Cmyk:
 							if (compression == ImageCompression.JPEG)
 							{
 								writer.WriteString("/ColorSpace /DeviceRGB ");
@@ -1943,14 +1943,14 @@ namespace Epsitec.Common.Document.PDF
 				bool isGray = false;
 				if ( this.colorConversion == PDF.ColorConversion.ToGray )   isGray = true;
 				if ( baseType == TypeComplexSurface.XObjectMask )           isGray = true;
-				if ( fi.ColorType == ColorType.MinIsBlack )  isGray = true;
-				if ( fi.ColorType == ColorType.MinIsWhite )  isGray = true;
+				if ( fi.ColorType == BitmapColorType.MinIsBlack )  isGray = true;
+				if ( fi.ColorType == BitmapColorType.MinIsWhite )  isGray = true;
 
 				byte[] jpeg;
 
 				if ( baseType == TypeComplexSurface.XObjectMask )
 				{
-					var mask = fi.GetChannel (ColorChannel.Alpha);
+					var mask = fi.GetChannel (BitmapColorChannel.Alpha);
 					jpeg = mask.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
 					mask.Dispose();
 				}
@@ -1962,8 +1962,8 @@ namespace Epsitec.Common.Document.PDF
 				}
 				else
 				{
-					var rgb = fi.ConvertToRgb32 ();
-					var rgb24 = rgb.ConvertTo24Bits ();
+					var rgb = fi.ConvertToArgb32 ();
+					var rgb24 = rgb.ConvertToRgb24 ();
 					jpeg = rgb24.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
 					rgb24.Dispose();
 					rgb.Dispose();
@@ -2008,18 +2008,18 @@ namespace Epsitec.Common.Document.PDF
 					{
 						switch (fi.ColorType)
 						{
-							case ColorType.MinIsBlack:
-							case ColorType.MinIsWhite:
+							case BitmapColorType.MinIsBlack:
+							case BitmapColorType.MinIsWhite:
 								bpp = 1;
 								break;
 							
-							case ColorType.Rgb:
-							case ColorType.RgbAlpha:
-							case ColorType.Palette:
+							case BitmapColorType.Rgb:
+							case BitmapColorType.RgbAlpha:
+							case BitmapColorType.Palette:
 								bpp = 3;
 								break;
 							
-							case ColorType.Cmyk:
+							case BitmapColorType.Cmyk:
 								bpp = 4;
 								break;
 							
@@ -2037,19 +2037,19 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == -1 )  // alpha ?
 				{
-					data = this.CreateImageSurfaceChannel(fi, ColorChannel.Alpha, image.Filter);
+					data = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Alpha, image.Filter);
 				}
 
 				if ( bpp == 1 )
 				{
-					data = this.CreateImageSurfaceChannel(fi, ColorChannel.Grayscale, image.Filter);
+					data = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Grayscale, image.Filter);
 				}
 
 				if ( bpp == 3 )
 				{
-					byte[] bufferRed   = this.CreateImageSurfaceChannel(fi, ColorChannel.Red, image.Filter);
-					byte[] bufferGreen = this.CreateImageSurfaceChannel(fi, ColorChannel.Green, image.Filter);
-					byte[] bufferBlue  = this.CreateImageSurfaceChannel(fi, ColorChannel.Blue, image.Filter);
+					byte[] bufferRed   = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Red, image.Filter);
+					byte[] bufferGreen = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Green, image.Filter);
+					byte[] bufferBlue  = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Blue, image.Filter);
 
 					data = new byte[dx*dy*3];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -2062,10 +2062,10 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == 4 )
 				{
-					byte[] bufferCyan    = this.CreateImageSurfaceChannel(fi, ColorChannel.Cyan, image.Filter);
-					byte[] bufferMagenta = this.CreateImageSurfaceChannel(fi, ColorChannel.Magenta, image.Filter);
-					byte[] bufferYellow  = this.CreateImageSurfaceChannel(fi, ColorChannel.Yellow, image.Filter);
-					byte[] bufferBlack   = this.CreateImageSurfaceChannel(fi, ColorChannel.Black, image.Filter);
+					byte[] bufferCyan    = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Cyan, image.Filter);
+					byte[] bufferMagenta = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Magenta, image.Filter);
+					byte[] bufferYellow  = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Yellow, image.Filter);
+					byte[] bufferBlack   = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Black, image.Filter);
 
 					data = new byte[dx*dy*4];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -2110,15 +2110,15 @@ namespace Epsitec.Common.Document.PDF
 			return useMask;
 		}
 
-		protected byte[] CreateImageSurfaceChannel(NativeBitmap fi, ColorChannel channel, ImageFilter filter)
+		protected byte[] CreateImageSurfaceChannel(NativeBitmap fi, BitmapColorChannel channel, ImageFilter filter)
 		{
 			var plan = fi.GetChannel (channel);
 			bool invert = false;
 
 			if ((plan == null) &&
-				(channel == ColorChannel.Alpha))
+				(channel == BitmapColorChannel.Alpha))
 			{
-				plan = fi.GetChannel (ColorChannel.Red);
+				plan = fi.GetChannel (BitmapColorChannel.Red);
 				invert = true;
 			}
 

@@ -1266,7 +1266,7 @@ namespace Epsitec.Common.Document
 
             if (info.Format == Settings.ICOFormat.Vista)
             {
-                format = ImageFormat.WindowsVistaIcon;
+                format = ImageFormat.WindowsPngIcon;
                 dpi = 256 * 2 * 254 / pageSize.Height;  // bitmap d'une hauteur de 256*2 pixels
             }
             else

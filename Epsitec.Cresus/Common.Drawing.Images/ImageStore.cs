@@ -137,25 +137,25 @@ namespace Epsitec.Common.Drawing
 			if ((image.BitsPerPixel > 8) &&
 				(image.IsTransparent == false))
 			{
-				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 90 });
+				memory = image.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Jpeg, Quality = 90 });
 				extension = ".jpg";
 			}
 			else if (image.BitsPerPixel <= 8)
 			{
-				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Gif });
+				memory = image.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Gif });
 				extension = ".gif";
 			}
 			
 			if ((memory == null) &&
 				(image.BitsPerPixel == 32))
 			{
-				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Png });
+				memory = image.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Png });
 				extension = ".png";
 			}
 			if (memory == null)
 			{
-				temp = image.ConvertTo24Bits ();
-				memory = image.SaveToMemory (new FileFormat () { Type = FileFormatType.Jpeg, Quality = 90 });
+				temp = image.ConvertToRgb24 ();
+				memory = image.SaveToMemory (new BitmapFileFormat () { Type = BitmapFileType.Jpeg, Quality = 90 });
 				extension = ".jpg";
 			}
 

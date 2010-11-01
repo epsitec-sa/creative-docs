@@ -370,7 +370,7 @@ namespace Epsitec.Common.Drawing
 			}
 
 			if ((format == ImageFormat.WindowsIcon) ||
-				(format == ImageFormat.WindowsVistaIcon))
+				(format == ImageFormat.WindowsPngIcon))
 			{
 				return this.SaveIcon (format);
 			}
@@ -407,25 +407,19 @@ namespace Epsitec.Common.Drawing
 
 		private byte[] SaveIcon(ImageFormat format)
 		{
-#if false
-			if (format == ImageFormat.WindowsIcon)
-			{
-				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
-				{
-					return image.CreateIcon ();
-				}
-			}
+			byte[] imageBytes = this.GetRawBitmapBytes ();
 
-			if (format == ImageFormat.WindowsVistaIcon)
+			switch (format)
 			{
-				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
-				{
-					return image.CreateHighResolutionIcon ();
-				}
-			}
-#endif
+				case ImageFormat.WindowsIcon:
+					return NativeIcon.CreateIcon (imageBytes, this.Stride, this.PixelWidth, this.PixelHeight);
+			
+				case ImageFormat.WindowsPngIcon:
+					return NativeIcon.CreatePngIcon (imageBytes, this.Stride, this.PixelWidth, this.PixelHeight);
 
-			return null;
+				default:
+					return null;
+			}
 		}
 		
 		
