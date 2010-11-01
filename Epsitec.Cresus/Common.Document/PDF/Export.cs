@@ -1806,7 +1806,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Crée une image.
 			byte[] imageData = image.Cache.GetImageData();
-			var fi = ImageClient.Load(imageData);
+			var fi = NativeBitmap.Load(imageData);
 			image.Cache.FreeImage();
 			imageData = null;
 
@@ -2110,7 +2110,7 @@ namespace Epsitec.Common.Document.PDF
 			return useMask;
 		}
 
-		protected byte[] CreateImageSurfaceChannel(ImageClient fi, ColorChannel channel, ImageFilter filter)
+		protected byte[] CreateImageSurfaceChannel(NativeBitmap fi, ColorChannel channel, ImageFilter filter)
 		{
 			var plan = fi.GetChannel (channel);
 			bool invert = false;

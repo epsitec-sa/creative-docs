@@ -399,41 +399,6 @@ namespace Epsitec.Common.Drawing
 					return null;
 				}
 
-#if false
-				//	Supprimé l'appel à FreeImage pour le format PNG, car il plante (version du 06.10.10).
-				//	Reste à espérer que Windows fasse mieux le travail que les versions précédentes de .NET,
-				//	notamment au niveau de la gestion de la transparence !
-				if (format == ImageFormat.Png)
-				{
-					//	FreeImage does a better job than Windows for the PNG compression.
-
-					using (Opac.FreeImage.ImageClient fi = Opac.FreeImage.ImageClient.Load (data))
-					{
-						switch (depth)
-						{
-							case 24:
-								using (Opac.FreeImage.ImageClient fi24 = fi.ConvertTo24Bits ())
-								{
-									fi24.DotsPerInchX = dpi;
-									fi24.DotsPerInchY = dpi;
-									fi24.InplaceSetDotsPerInch ();
-									data = fi24.SaveToMemory (Opac.FreeImage.FileFormat.Png);
-								}
-								break;
-							case 32:
-								using (Opac.FreeImage.ImageClient fi32 = fi.ConvertTo32Bits ())
-								{
-									fi32.DotsPerInchX = dpi;
-									fi32.DotsPerInchY = dpi;
-									fi32.InplaceSetDotsPerInch ();
-									data = fi32.SaveToMemory (Opac.FreeImage.FileFormat.Png);
-								}
-								break;
-						}
-					}
-				}
-#endif
-
 				return data;
 			}
 
@@ -477,7 +442,7 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 
-		public static Image FromImage(ImageClient image)
+		public static Image FromImage(NativeBitmap image)
 		{
 			if (image == null)
 			{

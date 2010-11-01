@@ -126,9 +126,9 @@ namespace Epsitec.Common.Drawing
 			return this.fileFormat;
 		}
 
-		public ImageClient GetAsyncThumbnail()
+		public NativeBitmap GetAsyncThumbnail()
 		{
-			ImageClient thumbnail;
+			NativeBitmap thumbnail;
 
 			thumbnail = this.Thumbnail;
 
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Drawing
 			return thumbnail;
 		}
 
-		public ImageClient GetAsyncSampleImage()
+		public NativeBitmap GetAsyncSampleImage()
 		{
-			ImageClient sampleImage;
+			NativeBitmap sampleImage;
 
 			sampleImage = this.SampleImage;
 
@@ -154,9 +154,9 @@ namespace Epsitec.Common.Drawing
 			return sampleImage;
 		}
 
-		public ImageClient GetThumbnail()
+		public NativeBitmap GetThumbnail()
 		{
-			ImageClient thumbnail;
+			NativeBitmap thumbnail;
 
 			thumbnail = this.Thumbnail;
 
@@ -169,9 +169,9 @@ namespace Epsitec.Common.Drawing
 			return thumbnail;
 		}
 
-		public ImageClient GetSampleImage()
+		public NativeBitmap GetSampleImage()
 		{
-			ImageClient sampleImage;
+			NativeBitmap sampleImage;
 
 			sampleImage = this.SampleImage;
 
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Drawing
 			return sampleImage;
 		}
 
-		public ImageClient Thumbnail
+		public NativeBitmap Thumbnail
 		{
 			get
 			{
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public ImageClient SampleImage
+		public NativeBitmap SampleImage
 		{
 			get
 			{
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		private static int GetMemorySize(ImageClient image)
+		private static int GetMemorySize(NativeBitmap image)
 		{
 			int dx = image.Pitch;
 			int dy = image.Height;
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Drawing
 					return;
 				}
 
-				ImageClient image = null;
+				NativeBitmap image = null;
 
 				switch (mode)
 				{
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedThumbnail != null) &&
 				(this.thumbnail == null))
 			{
-				this.Thumbnail = ImageClient.Load (this.compressedThumbnail);
+				this.Thumbnail = NativeBitmap.Load (this.compressedThumbnail);
 			}
 		}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedSampleImage != null) &&
 				(this.sampleImage == null))
 			{
-				this.SampleImage = ImageClient.Load (this.compressedSampleImage);
+				this.SampleImage = NativeBitmap.Load (this.compressedSampleImage);
 			}
 		}
 		
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Drawing
 
 			try
 			{
-				ImageClient sampleImage = this.SampleImage;
+				NativeBitmap sampleImage = this.SampleImage;
 				
 				if (sampleImage == null)
 				{
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						sampleImage = ImageClient.Load (cachedSampleImageData);
+						sampleImage = NativeBitmap.Load (cachedSampleImageData);
 						this.compressedSampleImage = cachedSampleImageData;
 
 						if (this.compressedSampleImage != null)
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Drawing
 					this.SampleImage = sampleImage;
 				}
 
-				ImageClient thumbnail = this.Thumbnail;
+				NativeBitmap thumbnail = this.Thumbnail;
 
 				if (thumbnail == null)
 				{
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						thumbnail = ImageClient.Load (cachedThumbnailData);
+						thumbnail = NativeBitmap.Load (cachedThumbnailData);
 						
 						this.compressedThumbnail = cachedThumbnailData;
 						
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Drawing
 			lock (this.exclusion)
 			{
 				byte[] data = this.engine.ReadAllBytes (this.imageFilePath);
-				ImageClient image = ImageClient.Load (data, this.imageFilePath);
+				NativeBitmap image = NativeBitmap.Load (data, this.imageFilePath);
 
 				if ((image != null) &&
 					(image.IsValid))
@@ -590,7 +590,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.ReleaseImageData ();
 
-			ImageClient image;
+			NativeBitmap image;
 
 			image = this.thumbnail;
 
@@ -712,9 +712,9 @@ namespace Epsitec.Common.Drawing
 		private long thumbnailTimestamp;
 		private long sampleImageTimestamp;
 
-		private ImageClient thumbnail;
-		private ImageClient sampleImage;
-		private ImageClient fullImage;
+		private NativeBitmap thumbnail;
+		private NativeBitmap sampleImage;
+		private NativeBitmap fullImage;
 		private FileFormat fileFormat;
 		private int width;
 		private int height;

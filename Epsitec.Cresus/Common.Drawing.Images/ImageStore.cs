@@ -128,9 +128,9 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, ImageClient image)
+		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, NativeBitmap image)
 		{
-			ImageClient temp = null;
+			NativeBitmap temp = null;
 			string extension = null;
 			byte[] memory = null;
 

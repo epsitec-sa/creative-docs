@@ -8,16 +8,17 @@ using System.Windows.Media;
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	public class ImageClient : System.IDisposable
+	public class NativeBitmap : System.IDisposable
 	{
-		public ImageClient()
+		public NativeBitmap()
 		{
 		}
 
-		private ImageClient(BitmapSource bitmapSource, FileFormat fileFormat = null)
+		private NativeBitmap(BitmapSource bitmapSource, FileFormat fileFormat = null, ColorType? colorType = null)
 		{
 			this.bitmapSource = bitmapSource;
 			this.fileFormat   = fileFormat;
+			this.colorType    = colorType;
 
 			int height = this.Height;
 			int pitch  = this.Pitch;
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Drawing.Platform
 			temp.CopyPixels (sourceRect, bufferMemory, bufferSize, pitch);
 		}
 
-		public ImageClient ConvertTo32Bits()
+		public NativeBitmap ConvertTo32Bits()
 		{
 			FormatConvertedBitmap converter = new FormatConvertedBitmap ();
 			converter.BeginInit ();
@@ -97,10 +98,10 @@ namespace Epsitec.Common.Drawing.Platform
 			converter.DestinationFormat = System.Windows.Media.PixelFormats.Pbgra32;
 			converter.EndInit ();
 
-			return new ImageClient (converter, this.fileFormat);
+			return new NativeBitmap (converter, this.fileFormat);
 		}
 
-		public ImageClient ConvertTo24Bits()
+		public NativeBitmap ConvertTo24Bits()
 		{
 			FormatConvertedBitmap converter = new FormatConvertedBitmap ();
 			converter.BeginInit ();
@@ -108,7 +109,7 @@ namespace Epsitec.Common.Drawing.Platform
 			converter.DestinationFormat = System.Windows.Media.PixelFormats.Bgr24;
 			converter.EndInit ();
 
-			return new ImageClient (converter, this.fileFormat);
+			return new NativeBitmap (converter, this.fileFormat);
 		}
 		
 		public int MemorySize
@@ -134,7 +135,7 @@ namespace Epsitec.Common.Drawing.Platform
 			set;
 		}
 
-		public static ImageClient Load(byte[] buffer, string path = null)
+		public static NativeBitmap Load(byte[] buffer, string path = null)
 		{
 #if false
 			using (var imageStreamSource = new System.IO.MemoryStream (buffer))
@@ -149,8 +150,8 @@ namespace Epsitec.Common.Drawing.Platform
 				image.BeginInit ();
 				image.StreamSource = imageStreamSource;
 				image.EndInit ();
-				FileFormat fileFormat = ImageClient.GuessFileFormat (path);
-				return new ImageClient (image, fileFormat);
+				FileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
+				return new NativeBitmap (image, fileFormat);
 			}
 #endif
 		}
@@ -208,11 +209,19 @@ namespace Epsitec.Common.Drawing.Platform
 
 		private void SaveToMemoryTiff(FileFormat fileFormat, System.IO.MemoryStream stream)
 		{
-			var encoder = new TiffBitmapEncoder ();
+			if ((this.ColorType != Platform.ColorType.Cmyk) &&
+				(fileFormat.TiffCmyk))
+			{
+				this.ConvertToCmyk32 ().SaveToMemoryTiff (fileFormat, stream);
+			}
+			else
+			{
+				var encoder = new TiffBitmapEncoder ();
 
-			encoder.Compression = (System.Windows.Media.Imaging.TiffCompressOption)(int) fileFormat.TiffCompression;
-			encoder.Frames.Add (BitmapFrame.Create (this.bitmapSource));
-			encoder.Save (stream);
+				encoder.Compression = (System.Windows.Media.Imaging.TiffCompressOption) (int) fileFormat.TiffCompression;
+				encoder.Frames.Add (BitmapFrame.Create (this.bitmapSource));
+				encoder.Save (stream);
+			}
 		}
 
 		private void SaveToMemoryBmp(FileFormat fileFormat, System.IO.MemoryStream stream)
@@ -240,7 +249,7 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
-		public ImageClient Rescale(int dx, int dy)
+		public NativeBitmap Rescale(int dx, int dy)
 		{
 			double scaleX = ((double) dx) / this.Width;
 			double scaleY = ((double) dy) / this.Height;
@@ -248,10 +257,10 @@ namespace Epsitec.Common.Drawing.Platform
 			var transform = new System.Windows.Media.ScaleTransform (scaleX, scaleY);
 			var bitmap = new TransformedBitmap (this.bitmapSource, transform);
 
-			return new ImageClient (bitmap, this.fileFormat);
+			return new NativeBitmap (bitmap, this.fileFormat);
 		}
 
-		public ImageClient MakeThumbnail(int size)
+		public NativeBitmap MakeThumbnail(int size)
 		{
 			double scaleX;
 			double scaleY;
@@ -270,21 +279,24 @@ namespace Epsitec.Common.Drawing.Platform
 			var transform = new System.Windows.Media.ScaleTransform (scaleX, scaleY);
 			var bitmap = new TransformedBitmap (this.bitmapSource, transform);
 
-			return new ImageClient (bitmap, this.fileFormat);
+			return new NativeBitmap (bitmap, this.fileFormat);
 		}
 
-		public static ImageClient Load(string path)
+		public static NativeBitmap Load(string path)
 		{
+			path = System.IO.Path.GetFullPath (path);
+
 			try
 			{
 				BitmapImage bitmap = new BitmapImage ();
 
 				bitmap.BeginInit ();
 				bitmap.UriSource = new System.Uri (path);
+				bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
 				bitmap.EndInit ();
 
-				FileFormat fileFormat = ImageClient.GuessFileFormat (path);
-				return new ImageClient (bitmap, fileFormat);
+				FileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
+				return new NativeBitmap (bitmap, fileFormat);
 			}
 			catch
 			{
@@ -326,30 +338,37 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 			return fileFormat;
 		}
+		
 		private FileFormat fileFormat;
+		private ColorType? colorType;
+		
 		public ColorType ColorType
 		{
 			get
 			{
+				if (this.colorType.HasValue)
+                {
+					return this.colorType.Value;
+                }
 				var format = this.bitmapSource.Format;
 				
-				if (ImageClient.GetRgbAlphaPixelFormats ().Any (x => x == format))
+				if (NativeBitmap.GetRgbAlphaPixelFormats ().Any (x => x == format))
                 {
 					return ColorType.RgbAlpha;
                 }
-				if (ImageClient.GetRgbPixelFormats ().Any (x => x == format))
+				if (NativeBitmap.GetRgbPixelFormats ().Any (x => x == format))
                 {
 					return ColorType.Rgb;
                 }
-				if (ImageClient.GetGrayscalePixelFormats ().Any (x => x == format))
+				if (NativeBitmap.GetGrayscalePixelFormats ().Any (x => x == format))
                 {
 					return ColorType.MinIsBlack;
                 }
-				if (ImageClient.GetIndexedPixelFormats ().Any (x => x == format))
+				if (NativeBitmap.GetIndexedPixelFormats ().Any (x => x == format))
                 {
 					return ColorType.Palette;
                 }
-				if (ImageClient.GetCmykPixelFormats ().Any (x => x == format))
+				if (NativeBitmap.GetCmykPixelFormats ().Any (x => x == format))
                 {
 					return ColorType.Cmyk;
                 }
@@ -419,7 +438,7 @@ namespace Epsitec.Common.Drawing.Platform
 			yield return PixelFormats.Indexed8;
 		}
 
-		public ImageClient GetChannel(ColorChannel channel)
+		public NativeBitmap GetChannel(ColorChannel channel)
 		{
 			switch (channel)
 			{
@@ -445,7 +464,7 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
-		private ImageClient GetChannelAlpha()
+		private NativeBitmap GetChannelAlpha()
 		{
 			if (this.bitmapSource.Format == PixelFormats.Bgra32)
 			{
@@ -457,14 +476,14 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
-		private ImageClient ExtractChannelFrom32BitSource(int offset)
+		private NativeBitmap ExtractChannelFrom32BitSource(int offset)
 		{
 			byte[] fullImage = new byte[this.Height * this.Pitch];
 			this.bitmapSource.CopyPixels (fullImage, this.Pitch, 0);
-			return ImageClient.CreateGrayscaleFrom32BitPixels (fullImage, this.Width, this.Height, this.Pitch, offset);
+			return NativeBitmap.CreateGrayscaleFrom32BitPixels (fullImage, this.Width, this.Height, this.Pitch, offset);
 		}
 
-		private static ImageClient CreateGrayscaleFrom32BitPixels(byte[] rgb32Pixels, int dx, int dy, int pitch, int byteOffset)
+		private static NativeBitmap CreateGrayscaleFrom32BitPixels(byte[] rgb32Pixels, int dx, int dy, int pitch, int byteOffset)
 		{
 			byte[] monoPixels = new byte[dx*dy];
 
@@ -486,10 +505,10 @@ namespace Epsitec.Common.Drawing.Platform
 			WriteableBitmap bitmap = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Gray8, null);
 			bitmap.WritePixels (new System.Windows.Int32Rect (0, 0, dx, dy), monoPixels, dx, 0);
 
-			return new ImageClient (bitmap);
+			return new NativeBitmap (bitmap, colorType: ColorType.MinIsBlack);
 		}
 
-		private ImageClient GetChannelGrayscale()
+		private NativeBitmap GetChannelGrayscale()
 		{
 			if (this.bitmapSource.Format == PixelFormats.Gray8)
 			{
@@ -501,7 +520,7 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
-		private ImageClient GetChannelCmyk(ColorChannel channel)
+		private NativeBitmap GetChannelCmyk(ColorChannel channel)
 		{
 			if (this.bitmapSource.Format == PixelFormats.Cmyk32)
 			{
@@ -525,7 +544,7 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
-		private ImageClient GetChannelRgb(ColorChannel channel)
+		private NativeBitmap GetChannelRgb(ColorChannel channel)
 		{
 			if ((this.bitmapSource.Format == PixelFormats.Bgra32) ||
 				(this.bitmapSource.Format == PixelFormats.Bgr32))
@@ -563,7 +582,7 @@ namespace Epsitec.Common.Drawing.Platform
 			return buffer;
 		}
 
-		public ImageClient ConvertToGrayscale()
+		public NativeBitmap ConvertToGrayscale()
 		{
 			FormatConvertedBitmap bitmap = new FormatConvertedBitmap ();
 
@@ -572,10 +591,10 @@ namespace Epsitec.Common.Drawing.Platform
 			bitmap.DestinationFormat = System.Windows.Media.PixelFormats.Gray8;
 			bitmap.EndInit ();
 
-			return new ImageClient (bitmap, this.fileFormat);
+			return new NativeBitmap (bitmap, this.fileFormat, ColorType.MinIsBlack);
 		}
 
-		public ImageClient ConvertToRgb32()
+		public NativeBitmap ConvertToRgb32()
 		{
 			FormatConvertedBitmap bitmap = new FormatConvertedBitmap ();
 
@@ -584,10 +603,10 @@ namespace Epsitec.Common.Drawing.Platform
 			bitmap.DestinationFormat = System.Windows.Media.PixelFormats.Bgra32;
 			bitmap.EndInit ();
 
-			return new ImageClient (bitmap, this.fileFormat);
+			return new NativeBitmap (bitmap, this.fileFormat);
 		}
 
-		public ImageClient ConvertToCmyk32()
+		public NativeBitmap ConvertToCmyk32()
 		{
 			FormatConvertedBitmap bitmap = new FormatConvertedBitmap ();
 
@@ -596,16 +615,16 @@ namespace Epsitec.Common.Drawing.Platform
 			bitmap.DestinationFormat = System.Windows.Media.PixelFormats.Cmyk32;
 			bitmap.EndInit ();
 
-			return new ImageClient (bitmap, this.fileFormat);
+			return new NativeBitmap (bitmap, this.fileFormat);
 		}
 
-		public ImageClient Crop(int x, int y, int dx, int dy)
+		public NativeBitmap Crop(int x, int y, int dx, int dy)
 		{
 			CroppedBitmap cropped = new CroppedBitmap(this.bitmapSource, new System.Windows.Int32Rect (x, y, dx, dy));
 
 			//	TODO: check that the rectangle size is correct
 
-			return new ImageClient (cropped, this.fileFormat);
+			return new NativeBitmap (cropped, this.fileFormat);
 		}
 
 		public bool IsTransparent
@@ -614,7 +633,7 @@ namespace Epsitec.Common.Drawing.Platform
 			{
 				var format = this.bitmapSource.Format;
 				
-				return ImageClient.GetRgbAlphaPixelFormats ().Any (x => x == format);
+				return NativeBitmap.GetRgbAlphaPixelFormats ().Any (x => x == format);
 			}
 		}
 	}
@@ -705,6 +724,12 @@ namespace Epsitec.Common.Drawing.Platform
 		}
 
 		public int Quality
+		{
+			get;
+			set;
+		}
+
+		public bool TiffCmyk
 		{
 			get;
 			set;
