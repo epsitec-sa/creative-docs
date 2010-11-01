@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
@@ -226,6 +227,61 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 
 			return entity;
+		}
+
+
+		/// <summary>
+		/// Erases the data of the given <see cref="AbstractEntity"/> and replaces it by its data as
+		/// stored in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to reload.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		public void ReloadEntity(AbstractEntity entity)
+		{
+			entity.ThrowIfNull ("entity");
+			
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+
+			Request request = new Request ()
+			{
+				RootEntity = EntityClassFactory.CreateEmptyEntity (entityId),
+				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey
+			};
+
+			EntityData data = this.LoaderQueryGenerator.GetEntitiesData (request).FirstOrDefault ();
+
+			if (data != null)
+			{
+				this.DataContext.SerializationManager.Deserialize (entity, data);
+
+				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);
+			}
+			else
+			{
+				this.DataContext.RemoveAllReferences (entity, EntityChangedEventSource.Internal);
+				this.DataContext.MarkAsDeleted (entity);
+
+				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Deleted);
+			}
+		}
+
+
+		/// <summary>
+		/// Erases the data of the given field of the given <see cref="AbstractEntity"/> and replaces
+		/// it by its data as stored in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to reload.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining which field to reload.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
+		public void ReloadEntityField(AbstractEntity entity, Druid fieldId)
+		{
+			entity.ThrowIfNull ("entity");
+			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+			
+			this.DataContext.SerializationManager.ReplaceFieldByProxy (entity, fieldId);
+
+			this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);			
 		}
 		
 

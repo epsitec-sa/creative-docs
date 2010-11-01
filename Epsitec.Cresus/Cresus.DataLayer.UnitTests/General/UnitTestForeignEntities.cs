@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 
@@ -484,6 +485,50 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						ExceptionAssert.Throw<System.ArgumentException>
 						(
 							() => dataContext2.UpdateEmptyEntityStatus (person1, false)
+						);
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadEntity()
+		{
+			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				{
+					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
+					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					{
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+						ExceptionAssert.Throw<System.ArgumentException>
+						(
+							() => dataContext2.ReloadEntity (person1)
+						);
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadEntityField()
+		{
+			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				{
+					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
+					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					{
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+						ExceptionAssert.Throw<System.ArgumentException>
+						(
+							() => dataContext2.ReloadEntityField (person1, Druid.Parse("[L0AS]"))
 						);
 					}
 				}

@@ -1,4 +1,5 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support;
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -8,6 +9,7 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.General
@@ -516,6 +518,95 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					Assert.AreSame (contact2, eventArgs2[1].Entity);
 					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
 					Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityReloadUpdateEvent()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+					alfred.Firstname = "Albert";
+
+					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+
+					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+
+					dataContext.ReloadEntity (alfred);
+
+					Assert.AreEqual (1, eventArgs.Count);
+					Assert.AreSame (alfred, eventArgs[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityReloadDeleteEvent()
+		{
+			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			{
+				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
+
+				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
+				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
+				{
+					using (DataContext dataContext1 = dataInfrastructure1.CreateDataContext ())
+					using (DataContext dataContext2 = dataInfrastructure2.CreateDataContext ())
+					{
+						NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+						NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+						dataContext1.DeleteEntity (alfred1);
+						dataContext1.SaveChanges ();
+
+						List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+
+						dataContext2.EntityChanged += (s, a) => eventArgs.Add (a);
+
+						dataContext2.ReloadEntity (alfred2);
+
+						Assert.AreEqual (1, eventArgs.Count);
+						Assert.AreSame (alfred2, eventArgs[0].Entity);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityReloadFieldUpdateEvent()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+					alfred.Firstname = "Albert";
+
+					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+
+					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+
+					dataContext.ReloadEntityField (alfred, Druid.Parse("[L0AV]"));
+
+					Assert.AreEqual (1, eventArgs.Count);
+					Assert.AreSame (alfred, eventArgs[0].Entity);
+					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+					Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 				}
 			}
 		}

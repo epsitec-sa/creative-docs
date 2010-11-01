@@ -29,6 +29,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// is created or deleted.
 		/// </summary>
 		External,
+
+
+		/// <summary>
+		/// The event has been fired because the data of the <see cref="AbstractEntity"/> has been
+		/// reloaded from the database, and its data was not the same as the reloaded data.
+		/// </summary>
+		Reload,
 		
 		
 		/// <summary>

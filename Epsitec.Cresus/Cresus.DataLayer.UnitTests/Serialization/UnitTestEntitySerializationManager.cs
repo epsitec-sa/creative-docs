@@ -87,9 +87,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					ExceptionAssert.Throw<System.ArgumentNullException>
-						(
+					(
 					   () => new EntitySerializationManager (dataContext).Serialize (null)
-						);
+					);
 				}
 			}
 		}
@@ -103,16 +103,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					ExceptionAssert.Throw<System.ArgumentNullException>
-						(
+					(
 					   () => new EntitySerializationManager (dataContext).Deserialize (null)
-						);
+					);
+
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+					   () => new EntitySerializationManager (dataContext).Deserialize (null, new EntityData (new DbKey (new DbId (1)), Druid.FromLong (1), Druid.FromLong (1), new ValueData (), new ReferenceData (), new CollectionData ()))
+					);
+
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => new EntitySerializationManager (dataContext).Deserialize (new NaturalPersonEntity (), null)
+					);
 				}
 			}
 		}
 
 
 		[TestMethod]
-		public void SimpleTest()
+		public void SerializeAndDeserialize()
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -127,6 +137,86 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 						this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
 					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void Deserialize()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+					
+					ValueData valueData = new ValueData ();
+					valueData[Druid.Parse("[L0AV]")] = "Albert";
+					valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
+					
+					ReferenceData referenceData = new ReferenceData ();
+					referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (2));
+					referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1));
+
+					CollectionData collectionData = new CollectionData ();
+					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (2)));
+					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1)));
+
+					EntityData data = new EntityData (new DbKey (new DbId (1)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), valueData, referenceData, collectionData);
+
+					new EntitySerializationManager (dataContext).Deserialize (alfred, data);
+
+					Assert.AreEqual ("Albert", alfred.Firstname);
+					Assert.IsNull (alfred.Lastname);
+					Assert.AreEqual (new Date (1995, 1, 1), alfred.BirthDate);
+					Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2))), alfred.PreferredLanguage);
+					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1))), alfred.Title);
+					Assert.IsNull (alfred.Gender);
+					Assert.AreEqual (2, alfred.Contacts.Count);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))), alfred.Contacts[0]);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))), alfred.Contacts[1]);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ReplaceFieldByProxy()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+
+					alfred.Firstname = "coucou";
+
+					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+
+					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse("[L0AV]"));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+
+					alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+
+					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+
+					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0A11]"));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+					
+					alfred.Contacts.Clear ();
+
+					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+
+					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AS]"));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 				}
 			}
 		}

@@ -54,6 +54,7 @@
     <Compile Include="General\UnitTestConcurrencyDelete.cs" />
     <Compile Include="General\UnitTestEmptyEntity.cs" />
     <Compile Include="General\UnitTestEntityCopy.cs" />
+    <Compile Include="General\UnitTestEntityReload.cs" />
     <Compile Include="General\UnitTestForeignEntities.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\DatabaseCreator1.cs" />
