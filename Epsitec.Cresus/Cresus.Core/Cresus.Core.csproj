@@ -73,21 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Modules\Cresus.AddressBook\SourceCode\Entities.cs">
-      <Link>Modules\Cresus.AddressBook\Entities.cs</Link>
-    </Compile>
-    <Compile Include="..\Modules\Cresus.AddressBook\SourceCode\Forms.cs">
-      <Link>Modules\Cresus.AddressBook\Forms.cs</Link>
-    </Compile>
-    <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Entities.cs">
-      <Link>Modules\Cresus.Mai2008\Entities.cs</Link>
-    </Compile>
-    <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Forms.cs">
-      <Link>Modules\Cresus.Mai2008\Forms.cs</Link>
-    </Compile>
-    <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Res.cs">
-      <Link>Modules\Cresus.Mai2008\Res.cs</Link>
-    </Compile>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
