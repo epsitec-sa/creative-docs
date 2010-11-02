@@ -8,21 +8,18 @@ using System.Windows.Media;
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	public class NativeBitmap : System.IDisposable
+	public sealed class NativeBitmap : System.IDisposable
 	{
 		internal NativeBitmap(BitmapSource bitmapSource, BitmapFileFormat fileFormat = null, BitmapColorType? colorType = null)
 		{
-			this.bitmapSource = bitmapSource;
+			//	We really must create a copy of the bitmap source, and not just a
+			//	CachedBitmap, but really a WriteableBitmap, or else WPF will keep
+			//	alive the full bitmap chain, which rapidly leads to memory errors.
+
+			this.bitmapSource = new WriteableBitmap (bitmapSource);
 			this.fileFormat   = fileFormat;
 			this.colorType    = colorType;
 
-			int height = this.Height;
-			int pitch  = this.Pitch;
-
-			byte[] pixels = new byte[pitch * height];
-
-			this.bitmapSource.CopyPixels (pixels, pitch, 0);
-			
 			if (this.bitmapSource.CanFreeze)
 			{
 				this.bitmapSource.Freeze ();
@@ -140,6 +137,14 @@ namespace Epsitec.Common.Drawing.Platform
 				}
 
 				return BitmapColorType.Unsupported;
+			}
+		}
+
+		public long								ByteCount
+		{
+			get
+			{
+				return this.Pitch * (long)this.Height;
 			}
 		}
 
@@ -379,6 +384,7 @@ namespace Epsitec.Common.Drawing.Platform
 				BitmapImage image = new BitmapImage ();
 				image.BeginInit ();
 				image.StreamSource = imageStreamSource;
+				image.CacheOption = BitmapCacheOption.OnLoad;
 				image.EndInit ();
 				BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
 				return new NativeBitmap (image, fileFormat);

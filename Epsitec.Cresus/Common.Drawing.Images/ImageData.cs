@@ -391,6 +391,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (this.fullImage != null)
 			{
+				this.engine.RemoveMemoryPressure (this.fullImage.ByteCount);
 				this.fullImage.Dispose ();
 				this.fullImage = null;
 				this.imageDataTimestamp = 0;
@@ -557,6 +558,7 @@ namespace Epsitec.Common.Drawing
 					this.fullImage  = image;
 					this.fileFormat = image.FileFormat;
 					this.imageDataTimestamp = System.DateTime.Now.Ticks;
+					this.engine.AddMemoryPressure (this.fullImage.ByteCount);
 				}
 				else
 				{
