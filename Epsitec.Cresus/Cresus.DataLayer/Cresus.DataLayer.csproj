@@ -132,6 +132,7 @@
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
@@ -141,6 +142,7 @@
     <Compile Include="Context\EntityChangedEventArgs.cs" />
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
+    <Compile Include="ImportExport\XmlEntitySerializer.cs" />
     <Compile Include="Infrastructure\ConnectionInformation.cs" />
     <Compile Include="Infrastructure\ConnectionStatus.cs" />
     <Compile Include="Infrastructure\DataInfrastructure.cs" />
