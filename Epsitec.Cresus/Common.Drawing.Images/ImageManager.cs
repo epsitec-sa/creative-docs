@@ -599,33 +599,7 @@ namespace Epsitec.Common.Drawing
 			Callback callback = null;
 			IQueueable queueable = null;
 
-			if (this.isCacheTrimmingRequested)
-			{
-				lock (this.cacheExclusion)
-				{
-					if (this.isCacheTrimmingRequested)
-					{
-						this.localMemoryPressure = 0;
-
-						System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess ();
-
-						System.Diagnostics.Debug.WriteLine ("Trimming... VM = "+(process.VirtualMemorySize64/(1024*1024L))+"MB");
-
-						this.TrimCaches (CacheClearing.ReleaseLargeBuffers, this.memoryPressureThreshold, true);
-
-						if (this.totalMemoryPressure > this.memoryPressureThreshold)
-						{
-							this.TrimCaches (CacheClearing.ReleaseMediumBuffers, this.memoryPressureThreshold, true);
-						}
-						if (this.totalMemoryPressure > this.memoryPressureThreshold)
-						{
-							this.TrimCaches (CacheClearing.ReleaseSmallBuffers, this.memoryPressureThreshold, true);
-						}
-
-						this.isCacheTrimmingRequested = false;
-					}
-				}
-			}
+			this.TrimCache ();
 
 			lock (this.localExclusion)
 			{
@@ -676,6 +650,37 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+
+		private void TrimCache()
+		{
+			if (this.isCacheTrimmingRequested)
+			{
+				lock (this.cacheExclusion)
+				{
+					if (this.isCacheTrimmingRequested)
+					{
+						this.localMemoryPressure = 0;
+
+						System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess ();
+
+						System.Diagnostics.Debug.WriteLine ("Trimming... VM = "+(process.VirtualMemorySize64/(1024*1024L))+"MB");
+
+						this.TrimCaches (CacheClearing.ReleaseLargeBuffers, this.memoryPressureThreshold, true);
+
+						if (this.totalMemoryPressure > this.memoryPressureThreshold)
+						{
+							this.TrimCaches (CacheClearing.ReleaseMediumBuffers, this.memoryPressureThreshold, true);
+						}
+						if (this.totalMemoryPressure > this.memoryPressureThreshold)
+						{
+							this.TrimCaches (CacheClearing.ReleaseSmallBuffers, this.memoryPressureThreshold, true);
+						}
+
+						this.isCacheTrimmingRequested = false;
+					}
+				}
+			}
+		}
 
 		private static ImageManager instance;
 		private static object globalExclusion = new object ();
