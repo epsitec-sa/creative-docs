@@ -765,8 +765,9 @@ namespace Epsitec.Common.Drawing
 							return image;
 						}
 					}
-					catch (System.OutOfMemoryException)
+					catch
 					{
+						Bitmap.OnOutOfMemoryEncountered ();
 						System.Diagnostics.Debug.WriteLine ("Out of memory in GDI - attempt " + attempt);
 						System.GC.Collect ();
 						System.Threading.Thread.Sleep (1);
@@ -776,6 +777,18 @@ namespace Epsitec.Common.Drawing
 				return null;
 			}
 		}
+
+		private static void OnOutOfMemoryEncountered()
+		{
+			var handler = Bitmap.OutOfMemoryEncountered;
+
+			if (handler != null)
+			{
+				handler (null);
+			}
+		}
+
+		public static event Support.EventHandler OutOfMemoryEncountered;
 		
 		public static Image FromFile(string fileName)
 		{
