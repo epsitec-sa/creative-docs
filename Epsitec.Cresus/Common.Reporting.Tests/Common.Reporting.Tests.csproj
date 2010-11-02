@@ -91,10 +91,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Reporting\Common.Reporting.csproj">
-      <Project>{15AFFB15-01DC-43B0-8A0C-9E2D7A52A177}</Project>
-      <Name>Common.Reporting</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>
