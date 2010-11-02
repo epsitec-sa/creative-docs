@@ -150,6 +150,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return Point.Zero;
 		}
 
+		public virtual double GetLinkAngle(Point pos, bool isDst)
+		{
+			return 0;
+		}
+
 
 		public string DebugInformationsObjectLinks
 		{

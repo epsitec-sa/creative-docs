@@ -163,6 +163,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return Transform.RotatePointDeg (c, angle, new Point (c.X+ObjectNode.frameRadius+ObjectLink.lengthStumpLink, c.Y));
 		}
 
+		public override double GetLinkAngle(Point pos, bool isDst)
+		{
+			return Point.ComputeAngleDeg (this.bounds.Center, pos);
+		}
+
 
 		public bool IsRoot
 		{

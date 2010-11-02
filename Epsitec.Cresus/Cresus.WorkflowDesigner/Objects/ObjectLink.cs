@@ -403,6 +403,30 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
 		}
 
+		private void MoveObjectToFreeArea(LinkableObject obj, Point start, Point end)
+		{
+			//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+			Point offset = Point.Move (start, end, 2);
+
+			Rectangle bounds = obj.Bounds;
+			bounds.Inflate (Editor.pushMargin);
+
+			for (int i=0; i<1000; i++)
+			{
+				if (this.editor.IsEmptyArea (bounds, obj))
+				{
+					break;
+				}
+				bounds.Offset (offset);
+			}
+
+			bounds.Deflate (Editor.pushMargin);
+			obj.Bounds = bounds;
+
+			this.dstObject = obj;
+			this.editor.UpdateAfterGeometryChanged (obj);
+		}
+
 
 		public override string DebugInformations
 		{
@@ -445,31 +469,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private void MoveObjectToFreeArea(LinkableObject obj, Point start, Point end)
-		{
-			//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-			Point offset = Point.Move (start, end, 2);
-
-			Rectangle bounds = obj.Bounds;
-			bounds.Inflate (Editor.pushMargin);
-
-			for (int i=0; i<1000; i++)
-			{
-				if (this.editor.IsEmptyArea (bounds, obj))
-				{
-					break;
-				}
-				bounds.Offset (offset);
-			}
-
-			bounds.Deflate (Editor.pushMargin);
-			obj.Bounds = bounds;
-
-			this.dstObject = obj;
-			this.editor.UpdateAfterGeometryChanged (obj);
-		}
-
-
 		public void SetStumpAngle(double angle)
 		{
 			this.startAngle = angle;
@@ -509,7 +508,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateAngles()
 		{
 			Point src = this.srcObject.Bounds.Center;
-
 			Point dst;
 
 			if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject != null)
@@ -640,9 +638,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine l'objet.
-			//	Dessine la connexion en blanc.
 			base.DrawBackground (graphics);
 
+			//	Dessine la connexion en blanc.
 			if (this.IsUsablePath)
 			{
 				graphics.Rasterizer.AddOutline (this.Path, 6);
@@ -939,7 +937,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			set
 			{
-				this.startAngle = Point.ComputeAngleDeg (this.srcObject.Bounds.Center, value);
+				this.startAngle = this.srcObject.GetLinkAngle (value, isDst: false);
 				this.UpdateVectors ();
 				this.startDistance = Point.Distance (this.startVector.Origin, value);
 				this.startManual = true;
@@ -954,80 +952,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			set
 			{
-				this.endAngle = Point.ComputeAngleDeg (this.dstObject.Bounds.Center, value);
+				this.endAngle = this.dstObject.GetLinkAngle (value, isDst: true);
 				this.UpdateVectors ();
 				this.endDistance = Point.Distance (this.endVector.Origin, value);
 				this.endManual = true;
 			}
 		}
-
-#if false
-		private Point CustomizeRelToAsb(Point pos)
-		{
-			Vector startVector = this.startVector;
-			Vector endVector   = this.endVector;
-
-			if (startVector.IsZero || endVector.IsZero)
-			{
-				return Point.Zero;
-			}
-
-			double x, y;
-
-			if (startVector.Origin.X == endVector.Origin.X)
-			{
-				x = startVector.Origin.X;
-			}
-			else
-			{
-				x = startVector.Origin.X + pos.X*(endVector.Origin.X-startVector.Origin.X);
-			}
-
-			if (startVector.Origin.Y == endVector.Origin.Y)
-			{
-				y = startVector.Origin.Y;
-			}
-			else
-			{
-				y = startVector.Origin.Y + pos.Y*(endVector.Origin.Y-startVector.Origin.Y);
-			}
-
-			return new Point (x, y);
-		}
-
-		private Point CustomizeAbsToRel(Point pos)
-		{
-			Vector startVector = this.startVector;
-			Vector endVector   = this.endVector;
-
-			if (startVector.IsZero || endVector.IsZero)
-			{
-				return Point.Zero;
-			}
-
-			double x, y;
-
-			if (startVector.Origin.X == endVector.Origin.X)
-			{
-				x = 0.5;
-			}
-			else
-			{
-				x = (pos.X-startVector.Origin.X) / (endVector.Origin.X-startVector.Origin.X);
-			}
-
-			if (startVector.Origin.Y == endVector.Origin.Y)
-			{
-				y = 0.5;
-			}
-			else
-			{
-				y = (pos.Y-startVector.Origin.Y) / (endVector.Origin.Y-startVector.Origin.Y);
-			}
-
-			return new Point (x, y);
-		}
-#endif
 		#endregion
 
 		#region Draggind destination
