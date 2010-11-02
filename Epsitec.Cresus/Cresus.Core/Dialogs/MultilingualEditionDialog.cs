@@ -22,12 +22,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 {
 	class MultilingualEditionDialog : AbstractDialog
 	{
-		public MultilingualEditionDialog(AbstractTextField textField)
+		public MultilingualEditionDialog(AbstractTextField textField, MultilingualText multilingualText)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			this.textField = textField;
-			this.multilingualText = new MultilingualText (this.textField.FormattedText);
+			this.multilingualText = multilingualText;
 
 			this.textFields = new List<AbstractTextField> ();
 		}
@@ -64,19 +64,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupWidgets(Window window)
 		{
+			int tabIndex = 1;
+
 			var frame = new FrameBox
 			{
 				Parent = window.Root,
 				Anchor = AnchorStyles.All,
 				Margins = new Margins (10, 10, 10, 40),
+				TabIndex = tabIndex++,
 			};
+
+			this.textFields.Clear ();
 
 			foreach (var id in this.multilingualText.GetContainedLanguageIds ())
 			{
 				var label = new StaticText
 				{
 					Parent = frame,
-					Text = string.Format ("Id langue = {0} :", id.ToString ()),
+					Text = string.Format ("{0} :", MultilingualEditionDialog.GetDescription (id.ToString ())),
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
@@ -87,6 +92,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					FormattedText = this.multilingualText.GetTextOrDefault (id),
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = tabIndex++,
 				};
 
 				this.textFields.Add (textField);
@@ -98,6 +104,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredHeight = 20,
 				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
 				Margins = new Margins (10, 10, 0, 10),
+				TabIndex = tabIndex++,
 			};
 
 			this.closeButton = new Button ()
@@ -106,8 +113,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Text = "Fermer",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAcceptAndCancel,
 				Dock = DockStyle.Right,
-				TabIndex = 1,
+				TabIndex = tabIndex++,
 			};
+
+			if (this.textFields.Count != 0)
+			{
+				this.textFields[0].SelectAll ();
+				this.textFields[0].Focus ();
+			}
 		}
 
 		protected void SetupEvents(Window window)
@@ -116,6 +129,30 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.CloseDialog ();
 			};
+		}
+
+
+		private static string GetDescription(string languageId)
+		{
+			switch (languageId)
+			{
+				case "*":
+					return "Langue par défaut (français)";
+
+				case "fr":
+					return "Français";
+
+				case "de":
+					return "Allemand";
+
+				case "us":
+					return "Anglais";
+
+				case "it":
+					return "Italien";
+			}
+
+			return languageId;
 		}
 
 

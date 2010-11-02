@@ -285,9 +285,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var textField = sender as AbstractTextField;
 
-			var dialog = new Dialogs.MultilingualEditionDialog (textField);
-			dialog.IsModal = true;
-			dialog.OpenDialog ();
+			string value = this.marshaler.GetStringValue ();
+
+			if (marshaler.MarshaledType == typeof (FormattedText))
+			{
+				FormattedText formattedText = new FormattedText (value);
+
+				if (MultilingualText.IsMultilingual (formattedText))
+				{
+					MultilingualText multilingual = new MultilingualText (formattedText);
+
+					var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
+					dialog.IsModal = true;
+					dialog.OpenDialog ();
+				}
+			}
 		}
 
 
