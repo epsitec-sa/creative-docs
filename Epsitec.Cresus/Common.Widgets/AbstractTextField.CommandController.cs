@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				// TODO: ...
+				this.host.OnMultilingualEditionCalled ();
 			}
 
 			
