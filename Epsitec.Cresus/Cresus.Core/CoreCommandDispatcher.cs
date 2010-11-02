@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Core
 			this.application.SetEnable (ApplicationCommands.Underlined, false);
 			this.application.SetEnable (ApplicationCommands.Subscript, false);
 			this.application.SetEnable (ApplicationCommands.Superscript, false);
+			this.application.SetEnable (ApplicationCommands.MultilingualEdition, false);
 		}
 
 

@@ -1337,7 +1337,9 @@ namespace Epsitec.Common.Widgets
 			context.SetLocalEnable (ApplicationCommands.Bold,       sel & readWrite);
 			context.SetLocalEnable (ApplicationCommands.Italic,     sel & readWrite);
 			context.SetLocalEnable (ApplicationCommands.Underlined, sel & readWrite);
-			context.SetLocalEnable (ApplicationCommands.SelectAll,  true);
+			context.SetLocalEnable (ApplicationCommands.SelectAll, true);
+			context.SetLocalEnable (ApplicationCommands.MultilingualEdition, this.IsMultilingualText);
+			
 
 			this.contextMenu.Items.AddItem (ApplicationCommands.Cut);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Copy);
@@ -1348,6 +1350,11 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.AddItem (ApplicationCommands.Italic);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Underlined);
 			this.contextMenu.Items.AddSeparator ();
+			if (this.IsMultilingualText)
+			{
+				this.contextMenu.Items.AddItem (ApplicationCommands.MultilingualEdition);
+				this.contextMenu.Items.AddSeparator ();
+			}
 			this.contextMenu.Items.AddItem (ApplicationCommands.SelectAll);
 
 			if (this.acceptsNullValue)

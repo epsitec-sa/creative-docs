@@ -890,6 +890,7 @@
     <EmbeddedResource Include="Images\Flags.FlagIT.icon" />
     <EmbeddedResource Include="Images\Flags.FlagUS.icon" />
     <EmbeddedResource Include="Images\Cursor.Hand.icon" />
+    <EmbeddedResource Include="Images\Cmd.MultilingualEdition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
