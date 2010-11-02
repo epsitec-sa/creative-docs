@@ -78,6 +78,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.widget = widget;
 
+			widget.MultilingualEditionCalled += new Common.Support.EventHandler (this.HandleTextFieldMultilingualEditionCalled);
+
 			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 
 			this.SetupFieldBinder ();
@@ -253,7 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.widget != null)
 			{
-				AbstractTextField textField = this.widget as AbstractTextField;
+				var textField = this.widget as AbstractTextField;
 
 				if (textField != null)
 				{
@@ -278,6 +280,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.SetWidgetText (text);
 			}
 		}
+
+		private void HandleTextFieldMultilingualEditionCalled(object sender)
+		{
+			var textField = sender as AbstractTextField;
+
+			var dialog = new Dialogs.MultilingualEditionDialog (textField);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
+		}
+
 
 		#region IWidgetUpdater Members
 
