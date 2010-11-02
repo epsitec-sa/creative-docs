@@ -49,6 +49,8 @@ namespace Epsitec.Common.Document
 		{
 			GlobalImageCache.imageManager = ImageManager.Instance;
 			GlobalImageCache.imageManager.RegisterProtocol(GlobalImageCache.ZipProtocolPrefix, GlobalImageCache.ReadZippedDocument);
+
+			Bitmap.OutOfMemoryEncountered += sender => GlobalImageCache.FreeEverything ();
 		}
 
 		private static void ShutDown()
@@ -273,6 +275,31 @@ namespace Epsitec.Common.Document
 			GlobalImageCache.FreeOldest(ref total, ImagePart.SmallOriginal);
 			GlobalImageCache.FreeOldest(ref total, ImagePart.Lowres);
 			GlobalImageCache.FreeOldest(ref total, ImagePart.Data);
+		}
+
+		internal static void FreeEverything()
+		{
+			GlobalImageCache.FreeEverything (ImagePart.LargeOriginal);
+			GlobalImageCache.FreeEverything (ImagePart.SmallOriginal);
+			GlobalImageCache.FreeEverything (ImagePart.Lowres);
+			GlobalImageCache.FreeEverything (ImagePart.Data);
+			
+			System.GC.Collect ();
+		}
+
+		private static void FreeEverything(ImagePart part)
+		{
+			while (true)
+			{
+				Item older = GlobalImageCache.SearchOlder (part);
+				
+				if (older == null)
+				{
+					break;
+				}
+
+				older.Free (part);
+			}
 		}
 
 		private static void FreeOldest(ref long total, ImagePart part)

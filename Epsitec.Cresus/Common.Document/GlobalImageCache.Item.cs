@@ -363,17 +363,17 @@ namespace Epsitec.Common.Document
 				}
 				if (this.originalImage != null)
 				{
-					System.Diagnostics.Debug.WriteLine ("GC collected image {0}", this.filename);
+					System.Diagnostics.Debug.WriteLine (string.Format ("GC collected image {0}", this.filename));
 				}
 
-				try
-				{
-					image = Bitmap.FromData (this.data);
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine ("ReadOriginalImage failed: " + ex.Message);
-					image = null;
+				image = this.TryLoadImageFromData ();
+
+				if (image == null)
+                {
+					//	We really need to make more memory available; try to free everything we can here
+
+					GlobalImageCache.FreeEverything ();
+					image = this.TryLoadImageFromData ();
 				}
 				
 				if (image != null)
@@ -389,6 +389,23 @@ namespace Epsitec.Common.Document
 					this.originalImage = null;
 				}
 
+				return image;
+			}
+
+			private Drawing.Image TryLoadImageFromData()
+			{
+				Drawing.Image image;
+				
+				try
+				{
+					image = Bitmap.FromData (this.data);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine ("ReadOriginalImage failed: " + ex.Message);
+					image = null;
+				}
+				
 				return image;
 			}
 
@@ -410,6 +427,7 @@ namespace Epsitec.Common.Document
 						this.data = null;
 						this.date = System.DateTime.MinValue;
 
+						GlobalImageCache.FreeEverything ();
 						System.GC.Collect ();
 						System.Threading.Thread.Sleep (10);
 
