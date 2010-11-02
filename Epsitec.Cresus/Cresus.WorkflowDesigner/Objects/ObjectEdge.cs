@@ -245,6 +245,45 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return this.bounds.Center;
 		}
 
+		public override double GetLinkAngle(Point pos, bool isDst)
+		{
+			double xMargin = ObjectEdge.frameSize.Height/2 * (isDst ? 2.5 : 1.5);
+			double yMargin = ObjectEdge.frameSize.Height/2;
+
+			if (pos.Y >= this.bounds.Bottom && pos.Y <= this.bounds.Top)
+			{
+				pos.Y = System.Math.Max (pos.Y, this.bounds.Bottom+yMargin);
+				pos.Y = System.Math.Min (pos.Y, this.bounds.Top   -yMargin);
+
+				if (pos.X < this.bounds.Left)
+				{
+					pos.X = this.bounds.Left;
+				}
+
+				if (pos.X > this.bounds.Right)
+				{
+					pos.X = this.bounds.Right;
+				}
+			}
+			else
+			{
+				pos.X = System.Math.Max (pos.X, this.bounds.Left +xMargin);
+				pos.X = System.Math.Min (pos.X, this.bounds.Right-xMargin);
+
+				if (pos.Y < this.bounds.Bottom)
+				{
+					pos.Y = this.bounds.Bottom;
+				}
+
+				if (pos.Y > this.bounds.Top)
+				{
+					pos.Y = this.bounds.Top;
+				}
+			}
+
+			return Point.ComputeAngleDeg (this.bounds.Center, pos);
+		}
+
 		private Segment GetIntersect(Point c, Point p)
 		{
 			Point i;
