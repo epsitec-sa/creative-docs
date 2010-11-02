@@ -221,6 +221,17 @@ namespace Epsitec.Common.Widgets
 				this.host.OnTextEdited ();
 			}
 
+			[Command (Res.CommandIds.MultilingualEdition)]
+			public void CommandMultilingualEdition(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+				// TODO: ...
+			}
+
 			
 			public void NotifyIsFocusedChanged(bool focused)
 			{

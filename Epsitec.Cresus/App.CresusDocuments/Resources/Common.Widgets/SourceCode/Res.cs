@@ -34,6 +34,8 @@ namespace Epsitec.Common.Widgets
 			public static readonly global::Epsitec.Common.Widgets.Command Help = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
 			//	designer:cap/00K1
 			public static readonly global::Epsitec.Common.Widgets.Command Italic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+			//	designer:cap/00K5
+			public static readonly global::Epsitec.Common.Widgets.Command MultilingualEdition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 			//	designer:cap/000H
 			public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 17));
 			//	designer:cap/000I
@@ -124,6 +126,8 @@ namespace Epsitec.Common.Widgets
 			public const long Help = 0x10L;
 			//	designer:cap/00K1
 			public const long Italic = 0x14000001L;
+			//	designer:cap/00K5
+			public const long MultilingualEdition = 0x14000005L;
 			//	designer:cap/000H
 			public const long New = 0x11L;
 			//	designer:cap/000I
