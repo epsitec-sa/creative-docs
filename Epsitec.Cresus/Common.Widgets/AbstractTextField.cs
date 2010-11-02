@@ -1642,7 +1642,17 @@ namespace Epsitec.Common.Widgets
 			}
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextEdited");
-			
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		protected virtual void OnMultilingualEditionCalled()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("MultilingualEditionCalled");
+
 			if (handler != null)
 			{
 				handler (this);
@@ -2228,6 +2238,18 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler ("TextDeleted", value);
+			}
+		}
+
+		public event EventHandler MultilingualEditionCalled
+		{
+			add
+			{
+				this.AddUserEventHandler ("MultilingualEditionCalled", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("MultilingualEditionCalled", value);
 			}
 		}
 
