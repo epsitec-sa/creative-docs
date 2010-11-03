@@ -1,7 +1,6 @@
 //	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
@@ -12,6 +11,11 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public static class InvariantConverter
 	{
+		static InvariantConverter()
+		{
+			InvariantConverter.OverrideSerializationConverter (typeof (byte[]), new Converters.ByteArrayConverter ());
+		}
+
 		public static ISerializationConverter GetSerializationConverter(System.Type type)
 		{
 			ISerializationConverter converter;
@@ -50,6 +54,7 @@ namespace Epsitec.Common.Types
 				return converter;
 			}
 		}
+		
 		public static void OverrideSerializationConverter(System.Type type, ISerializationConverter converter)
 		{
 			InvariantConverter.typeConverters[type] = converter;
@@ -59,6 +64,7 @@ namespace Epsitec.Common.Types
 		{
 			return (string) Converters.AutomaticValueConverter.Instance.Convert (value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);
 		}
+		
 		public static T ConvertFromString<T>(string value)
 		{
 			return (T) Converters.AutomaticValueConverter.Instance.ConvertBack (value, typeof (T), null, System.Globalization.CultureInfo.InvariantCulture);

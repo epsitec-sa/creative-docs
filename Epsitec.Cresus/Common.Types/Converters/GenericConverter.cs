@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>GenericConverter</c> class is the base class for every type converter
 	/// in the <c>Epsitec.Common.Types.Converters</c> namespace.
 	/// </summary>
-	public class GenericConverter
+	public abstract class GenericConverter : ISerializationConverter
 	{
 		/// <summary>
 		/// Gets the converter for the specified type.
@@ -45,5 +45,23 @@ namespace Epsitec.Common.Types.Converters
 
 			return types.FirstOrDefault ();
 		}
+
+		#region ISerializationConverter Members
+
+		string ISerializationConverter.ConvertToString(object value, IContextResolver context)
+		{
+			return this.ConvertObjectToString (value);
+		}
+
+		object ISerializationConverter.ConvertFromString(string value, IContextResolver context)
+		{
+			return this.ConvertObjectFromString (value);
+		}
+
+		#endregion
+		
+		protected abstract string ConvertObjectToString(object value);
+
+		protected abstract object ConvertObjectFromString(string value);
 	}
 }
