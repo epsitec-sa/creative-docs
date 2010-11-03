@@ -22,7 +22,21 @@ namespace Epsitec.Common.Types.Converters
 
 		protected override object ConvertObjectFromString(string value)
 		{
-			return this.ConvertFromString (value);
+			var result = this.ConvertFromString (value);
+
+			if (result.IsInvalid)
+			{
+				throw new System.FormatException ();
+			}
+
+			if (result.IsNull)
+			{
+				return null;
+			}
+			else
+			{
+				return result.Value;
+			}
 		}
 
 		protected override string ConvertObjectToString(object value)

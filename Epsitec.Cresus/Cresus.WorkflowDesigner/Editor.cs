@@ -1798,5 +1798,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
 			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, this.workflowDefinitionEntity, e => true);
 		}
+
+		internal void Import(string path)
+		{
+			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
+			this.businessContext.Data.DataInfrastructure.Import (file);
+		}
 	}
 }
