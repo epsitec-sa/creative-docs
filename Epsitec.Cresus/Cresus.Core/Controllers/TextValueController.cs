@@ -278,6 +278,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTextFieldMultilingualEditionCalled(object sender)
 		{
+			//	Appelé lorsque le commande 'MultilingualEdition' est exécutée, par exemple
+			//	depuis le menu contextuel de AbstractTextField.
 			var textField = sender as AbstractTextField;
 
 			string value = this.marshaler.GetStringValue ();
