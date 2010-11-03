@@ -8,11 +8,14 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections;
 using System.Collections.Generic;
+
+using System.IO;
 
 using System.Linq;
 
@@ -321,7 +324,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-
 		/// <summary>
 		/// Checks that the given <see cref="AbstractEntity"/> given by <typeparamref name="TEntity"/>
 		/// is properly defined in the database.
@@ -333,6 +335,48 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return this.SchemaEngine.SchemaBuilder.CheckSchema (new TEntity ().GetEntityStructuredTypeId ());
 		}
 
+		/// <summary>
+		/// Exports a set of <see cref="AbstractEntity"/> to an xml file. The set of exported
+		/// <see cref="AbstractEntity"/> is defined by the given <see cref="AbstractEntity"/> and
+		/// the given predicate. The algorithm will explore the graph of the <see cref="AbstractEntity"/>
+		/// by recursively following all the relations that target an <see cref="AbstractEntity"/>
+		/// which satisfies the given predicate, starting with the given <see cref="AbstractEntity"/>.
+		/// The resulting subset of the graph will be exported.
+		/// </summary>
+		/// <param name="file">The file that will contain the exported data.</param>
+		/// <param name="dataContext">The <see cref="DataContext"/> that owns the given <see cref="AbstractEntity"/>.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> which is the root of the graph.</param>
+		/// <param name="predicate">The predicate used to determine whether to export an <see cref="AbstractEntity"/> or not.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="dataContext"/> has not been created by this instance.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is foreign to <paramref name="dataContext"/>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="predicate"/> is <c>null</c>.</exception>
+		public void Export(FileInfo file, DataContext dataContext, AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
+		{
+			file.ThrowIfNull ("file");
+			dataContext.ThrowIfNull ("dataContext");
+			dataContext.ThrowIf (d => d.DataInfrastructure != this, "dataContext has not been created by this instance.");
+			entity.ThrowIfNull ("entity");
+			entity.ThrowIf (e => dataContext.IsForeignEntity (e), "entity is not owned by dataContext.");
+			predicate.ThrowIfNull ("predicate");
+			
+			ImportExportManager.Export (file, dataContext, entity, predicate);
+		}
+
+		/// <summary>
+		/// Imports a set of <see cref="AbstractEntity"/> from an xml file that has been written by
+		/// the <see cref="DataInfrastructure.Export"/> method.
+		/// </summary>
+		/// <param name="file">The file containing the data to import.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
+		public void Import(FileInfo file)
+		{
+			file.ThrowIfNull ("file");
+
+			ImportExportManager.Import (file, this);
+		}
 		
 		/// <summary>
 		/// Some obscure property :-P Ask Pierre if you want to know more about it...
