@@ -278,9 +278,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				var selectLanaugage3 = new IconButton ()
 				{
 					Parent = frame2,
-					Name = "language=us",
+					Name = "language=en",
 					Dock = DockStyle.Stacked,
-					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagUS.icon""/>",
+					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
 				};
 
 				var selectLanaugage4 = new IconButton ()
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				selectLanaugage3.Clicked += delegate
 				{
-					UI.Settings.CultureForData.SelectLanguage ("us");
+					UI.Settings.CultureForData.SelectLanguage ("en");
 					selectLanaugage1.ActiveState = ActiveState.No;
 					selectLanaugage2.ActiveState = ActiveState.No;
 					selectLanaugage3.ActiveState = ActiveState.Yes;
