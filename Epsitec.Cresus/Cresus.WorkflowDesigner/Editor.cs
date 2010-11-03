@@ -1792,5 +1792,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private readonly List<MagnetConstrain>	horizontalMagnetConstrains;
 		private readonly Timer					timer;
 		private long							lastTick;
+
+		internal void Export(string path)
+		{
+			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
+			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, this.workflowDefinitionEntity, e => true);
+		}
 	}
 }
