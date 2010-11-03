@@ -67,11 +67,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (this.IsMulti)
 				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (17+MultilingualEditionDialog.multiHeight);
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (MultilingualEditionDialog.labelHeight+MultilingualEditionDialog.multiHeight);
 				}
 				else
 				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (17+22);
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (MultilingualEditionDialog.labelHeight+22);
 				}
 			}
 		}
@@ -84,8 +84,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var frame = new FrameBox
 			{
 				Parent = window.Root,
-				Anchor = AnchorStyles.All,
-				Margins = new Margins (10, 10, 10, 40),
+				Dock = DockStyle.Fill,
 				TabIndex = tabIndex++,
 			};
 
@@ -97,16 +96,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var leftFrame = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 64,
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
+				Padding = new Margins (10),
 				TabIndex = tabIndex++,
+			};
+
+			new Separator
+			{
+				Parent = frame,
+				PreferredWidth = 1,
+				Dock = DockStyle.Left,
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
+				Padding = new Margins (10, 10, 10, 0),
 				TabIndex = tabIndex++,
 			};
 
@@ -167,6 +173,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 					};
 				}
 
+				textField.TextChanged += delegate
+				{
+					this.isDirty = true;
+					this.UpdateButtons ();
+				};
+
 				this.textFields.Add (textField);
 
 				if (MultilingualEditionDialog.IsCurrentLanguage (id))
@@ -180,8 +192,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = window.Root,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-				Margins = new Margins (10, 10, 0, 10),
+				Dock = DockStyle.Bottom,
+				Padding = new Margins (10),
 				TabIndex = tabIndex++,
 			};
 
@@ -201,7 +213,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Text = "D'accord",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
-				Margins = new Margins (64+10, 0, 0, 0),
+				Margins = new Margins (64+10+10, 0, 0, 0),
 				TabIndex = 100,
 			};
 
@@ -219,6 +231,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.CloseDialog ();
 			};
 
+			new Separator
+			{
+				Parent = window.Root,
+				PreferredHeight = 1,
+				Dock = DockStyle.Bottom,
+			};
+
+			this.UpdateButtons ();
+
 			//	Initialise le focus.
 			if (focusedTextField == null)
 			{
@@ -230,12 +251,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private void UpdateButtons()
+		{
+			this.acceptButton.Enable = this.isDirty;
+		}
+
 		private void AdjustGeometry(double height)
 		{
 			if (this.IsMulti)
 			{
-				double h = System.Math.Floor (((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds.Count ()) - 17);
-				h = System.Math.Max (h, MultilingualEditionDialog.multiHeight);
+				double h = ((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds.Count ()) - MultilingualEditionDialog.labelHeight;
+				h = System.Math.Floor (h);
+				h = System.Math.Max (h, 10+14*3);  // 3 lignes au minimum
 
 				foreach (var textField in this.textFields)
 				{
@@ -331,6 +358,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static IEnumerable<string> GetLanguageIds
 		{
+			//	Retourne la liste des langues éditables dans le dialogue.
 			get
 			{
 				yield return "*";
@@ -342,12 +370,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private static readonly double					multiHeight = 10+14*4;  // hauteur pour 4 lignes
-		private static readonly double					fixHeight = 64;
+		private static readonly double					labelHeight = 18;
+		private static readonly double					fixHeight = 10+10+10+22+10;
 
 		private readonly AbstractTextField				textField;
 		private readonly MultilingualText				multilingualText;
 		private readonly List<AbstractTextField>		textFields;
 
+		private bool									isDirty;
 		private Button									acceptButton;
 		private Button									cancelButton;
 	}

@@ -240,7 +240,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			{
-				var frame = new FrameBox
+				var frame1 = new FrameBox
+				{
+					Parent = section,
+					Dock = DockStyle.StackBegin,
+					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+					PreferredWidth = 21,
+				};
+
+				var frame2 = new FrameBox
 				{
 					Parent = section,
 					Dock = DockStyle.StackBegin,
@@ -252,7 +260,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				var selectLanaugage1 = new IconButton ()
 				{
-					Parent = frame,
+					Parent = frame1,
 					Name = "language=fr",
 					Dock = DockStyle.Stacked,
 					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
@@ -261,10 +269,26 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				var selectLanaugage2 = new IconButton ()
 				{
-					Parent = frame,
+					Parent = frame1,
 					Name = "language=de",
 					Dock = DockStyle.Stacked,
 					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
+				};
+
+				var selectLanaugage3 = new IconButton ()
+				{
+					Parent = frame2,
+					Name = "language=us",
+					Dock = DockStyle.Stacked,
+					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagUS.icon""/>",
+				};
+
+				var selectLanaugage4 = new IconButton ()
+				{
+					Parent = frame2,
+					Name = "language=it",
+					Dock = DockStyle.Stacked,
+					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
 				};
 
 				selectLanaugage1.Clicked += delegate
@@ -272,6 +296,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					UI.Settings.CultureForData.SelectLanguage (null);
 					selectLanaugage1.ActiveState = ActiveState.Yes;
 					selectLanaugage2.ActiveState = ActiveState.No;
+					selectLanaugage3.ActiveState = ActiveState.No;
+					selectLanaugage4.ActiveState = ActiveState.No;
 				};
 
 				selectLanaugage2.Clicked += delegate
@@ -279,6 +305,26 @@ namespace Epsitec.Cresus.Core.Controllers
 					UI.Settings.CultureForData.SelectLanguage ("de");
 					selectLanaugage1.ActiveState = ActiveState.No;
 					selectLanaugage2.ActiveState = ActiveState.Yes;
+					selectLanaugage3.ActiveState = ActiveState.No;
+					selectLanaugage4.ActiveState = ActiveState.No;
+				};
+
+				selectLanaugage3.Clicked += delegate
+				{
+					UI.Settings.CultureForData.SelectLanguage ("us");
+					selectLanaugage1.ActiveState = ActiveState.No;
+					selectLanaugage2.ActiveState = ActiveState.No;
+					selectLanaugage3.ActiveState = ActiveState.Yes;
+					selectLanaugage4.ActiveState = ActiveState.No;
+				};
+
+				selectLanaugage4.Clicked += delegate
+				{
+					UI.Settings.CultureForData.SelectLanguage ("it");
+					selectLanaugage1.ActiveState = ActiveState.No;
+					selectLanaugage2.ActiveState = ActiveState.No;
+					selectLanaugage3.ActiveState = ActiveState.No;
+					selectLanaugage4.ActiveState = ActiveState.Yes;
 				};
 			}
 
