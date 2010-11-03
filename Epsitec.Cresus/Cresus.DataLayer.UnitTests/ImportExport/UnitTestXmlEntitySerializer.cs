@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void TestAllExported()
 		{
-			XElement xEntities;
+			XDocument xDocument;
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					entities.Add (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))));
 					entities.Add (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))));
 
-					xEntities = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
 				}
 			}
 
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					dataContext.CreateSchema<UriContactEntity> ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xEntities);
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void TestNotAllExported()
 		{
-			XElement xEntities;
+			XDocument xDocument;
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -118,14 +118,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					
 					entities.Add (uriContact);
 
-					xEntities = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
 
 					dataContext.DeleteEntity (uriContact);
 
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xEntities);
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void TestInwardBrokenRelations()
 		{
-			XElement xEntities;
+			XDocument xDocument;
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -154,14 +154,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 					entities.Add (uriScheme);
 
-					xEntities = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
 
 					dataContext.DeleteEntity (uriScheme);
 
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xEntities);
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void TestOutwardBrokenReference()
 		{
-			XElement xEntities;
+			XDocument xDocument;
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -203,14 +203,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 					entities.Add (uriContact);
 
-					xEntities = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
 
 					dataContext.DeleteEntity (uriScheme);
 
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xEntities);
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void TestOutwardBrokenCollection()
 		{
-			XElement xEntities;
+			XDocument xDocument;
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -238,14 +238,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 					entities.Add (person);
 
-					xEntities = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
 
 					dataContext.DeleteEntity (uriContact);
 
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xEntities);
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
