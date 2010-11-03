@@ -20,7 +20,19 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static XElement Serialize(DataContext dataContext, ISet<AbstractEntity> entities)
+		public static XDocument Serialize(DataContext dataContext, ISet<AbstractEntity> entities)
+		{
+			XDocument xDocument = new XDocument ();
+
+			XElement xEntities = XmlEntitySerializer.SerializeEntities (dataContext, entities);
+
+			xDocument.Add (xEntities);
+
+			return xDocument;
+		}
+
+
+		private static XElement SerializeEntities(DataContext dataContext, ISet<AbstractEntity> entities)
 		{
 			IDictionary<AbstractEntity, int> entitiesWithIds = XmlEntitySerializer.BuildEntitiesToIds (entities);
 			
@@ -224,13 +236,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 					
 		
-		public static void Deserialize(DataInfrastructure dataInfrastructure, XElement xEntities)
+		public static void Deserialize(DataInfrastructure dataInfrastructure, XDocument xDocument)
 		{
 			DataContext dataContext = null;
 
 			try
 			{
 				dataContext = dataInfrastructure.CreateDataContext ();
+
+				XElement xEntities = xDocument.Element (XmlEntitySerializer.CreateXName (XmlConstants.EntitiesTag));
 
 				IDictionary<int, AbstractEntity> idsToEntities = XmlEntitySerializer.BuildEmptyEntities (dataContext, xEntities);
 
@@ -269,7 +283,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void PopulateEntities(DataContext dataContext, XElement xEntities, IDictionary<int, AbstractEntity> idsToEntities)
+		private static void PopulateEntities(DataContext dataContext, XElement xEntities, IDictionary<int, AbstractEntity> idsToEntities)
 		{
 			foreach (XElement xEntity in xEntities.Elements (XmlEntitySerializer.CreateXName (XmlConstants.EntityTag)))
 			{
