@@ -29,7 +29,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.textField = textField;
 			this.multilingualText = multilingualText;
 
+			this.lines      = new List<FrameBox> ();
 			this.textFields = new List<AbstractTextField> ();
+			this.glyphs     = new List<Widgets.StaticGlyph> ();
+			this.toolbars   = new List<FrameBox> ();
 		}
 
 
@@ -121,13 +124,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = leftFrame,
 				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Cmd.MultilingualEdition.icon"" dx=""64"" dy=""64""/>",
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				PreferredSize = new Size (64, 64),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 20, 0),
+			};
+
+			var checkButton = new CheckButton
+			{
+				Parent = leftFrame,
+				Text = "Traductions",
+				ActiveState = MultilingualEditionDialog.isTraduceVisible ? ActiveState.Yes : ActiveState.No,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
+			checkButton.Clicked += delegate
+			{
+				MultilingualEditionDialog.isTraduceVisible = !MultilingualEditionDialog.isTraduceVisible;
+				this.UpdateButtons ();
+			};
+
 			//	Rempli le panneau principal de droite.
+			this.lines.Clear ();
 			this.textFields.Clear ();
+			this.glyphs.Clear ();
+			this.toolbars.Clear ();
 
 			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
 			{
@@ -147,28 +169,39 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
 
+				var line = new FrameBox
+				{
+					Parent = rightFrame,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = tabIndex++,
+				};
+
+				this.lines.Add (line);
+
 				AbstractTextField textField;
 
 				if (this.IsMulti)
 				{
+					line.PreferredHeight = MultilingualEditionDialog.multiHeight;
+
 					textField = new TextFieldMulti
 					{
-						Parent = rightFrame,
+						Parent = line,
 						FormattedText = text.GetValueOrDefault (),
-						PreferredHeight = MultilingualEditionDialog.multiHeight,
-						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+						Dock = DockStyle.Fill,
 						TabIndex = tabIndex++,
 					};
 				}
 				else
 				{
+					line.PreferredHeight = 22;
+
 					textField = new TextField
 					{
-						Parent = rightFrame,
+						Parent = line,
 						FormattedText = text.GetValueOrDefault (),
-						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+						Dock = DockStyle.Fill,
 						TabIndex = tabIndex++,
 					};
 				}
@@ -180,6 +213,53 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 
 				this.textFields.Add (textField);
+
+				var toolbar = new FrameBox
+				{
+					Parent = line,
+					DrawFullFrame = true,
+					PreferredWidth = 20*3,
+					Dock = DockStyle.Right,
+				};
+
+				this.toolbars.Add (toolbar);
+
+				foreach (var translateId in MultilingualEditionDialog.GetLanguageIds)
+				{
+					if (translateId != id)
+					{
+						string src = MultilingualEditionDialog.NormalizeId (id);
+						string dst = MultilingualEditionDialog.NormalizeId (translateId);
+
+						var translateButton = new IconButton
+						{
+							Parent = toolbar,
+							Text = MultilingualEditionDialog.GetIcon (translateId),
+							Name = string.Concat ((this.textFields.Count-1).ToString (), "-", src, "-", dst),
+							Dock = DockStyle.Left,
+						};
+
+						translateButton.Clicked += delegate
+						{
+							this.Translate (translateButton.Name);
+						};
+
+						string srcLanguage = MultilingualEditionDialog.GetDescription (src);
+						string dstLanguage = MultilingualEditionDialog.GetDescription (dst);
+						ToolTip.Default.SetToolTip (translateButton, string.Format ("Traduction {0} -> {1}", srcLanguage, dstLanguage));
+					}
+				}
+
+				var glyph = new Widgets.StaticGlyph
+				{
+					Parent = line,
+					GlyphShape = GlyphShape.TriangleRight,
+					PreferredWidth = 22,
+					Dock = DockStyle.Right,
+					Margins = new Margins (5, 0, 0, 0),
+				};
+
+				this.glyphs.Add (glyph);
 
 				if (MultilingualEditionDialog.IsCurrentLanguage (id))
 				{
@@ -253,6 +333,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateButtons()
 		{
+			foreach (var toolbar in this.toolbars)
+			{
+				toolbar.Visibility = MultilingualEditionDialog.isTraduceVisible;
+			}
+
+			foreach (var glyph in this.glyphs)
+			{
+				glyph.Visibility = MultilingualEditionDialog.isTraduceVisible;
+			}
+
 			this.acceptButton.Enable = this.isDirty;
 		}
 
@@ -264,11 +354,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 				h = System.Math.Floor (h);
 				h = System.Math.Max (h, 10+14*3);  // 3 lignes au minimum
 
-				foreach (var textField in this.textFields)
+				foreach (var line in this.lines)
 				{
-					textField.PreferredHeight = h;
+					line.PreferredHeight = h;
 				}
 			}
+		}
+
+		private void Translate(string name)
+		{
+			//	Fait appel aux services de 'google translate' pour traduire le texte.
+			var t = name.Split ('-');
+			int index = int.Parse (t[0]);
+			string srcLanguage = t[1];
+			string dstLanguage = t[2];
+
+			string text = this.textFields[index].Text;
+			text = text.Replace ("<br/>", " ");
+
+			string url = string.Format ("http://www.google.com/translate_t?langpair={0}|{1}&text={2}", srcLanguage, dstLanguage, text);
+			System.Diagnostics.Process.Start (url);
 		}
 
 		private void SaveTexts()
@@ -323,8 +428,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				case "de":
 					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>";
 
-				case "us":
-					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagUS.icon""/>";
+				case "en":
+					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>";
 
 				case "it":
 					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>";
@@ -346,11 +451,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 				case "de":
 					return "Allemand";
 
-				case "us":
+				case "en":
 					return "Anglais";
 
 				case "it":
 					return "Italien";
+			}
+
+			return languageId;
+		}
+
+		private static string NormalizeId(string languageId)
+		{
+			if (languageId == "*")
+			{
+				languageId = "fr";
 			}
 
 			return languageId;
@@ -363,7 +478,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				yield return "*";
 				yield return "de";
-				yield return "us";
+				yield return "en";
 				yield return "it";
 			}
 		}
@@ -373,9 +488,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static readonly double					labelHeight = 18;
 		private static readonly double					fixHeight = 10+10+10+22+10;
 
+		private static bool								isTraduceVisible;
+
 		private readonly AbstractTextField				textField;
 		private readonly MultilingualText				multilingualText;
+		private readonly List<FrameBox>					lines;
 		private readonly List<AbstractTextField>		textFields;
+		private readonly List<Widgets.StaticGlyph>		glyphs;
+		private readonly List<FrameBox>					toolbars;
 
 		private bool									isDirty;
 		private Button									acceptButton;

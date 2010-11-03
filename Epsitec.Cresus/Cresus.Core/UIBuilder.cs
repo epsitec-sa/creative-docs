@@ -465,17 +465,21 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static FrameBox CreateMiniToolbar(Widget parent, double height)
+		public static FrameBox CreateMiniToolbar(Widget parent, double height=0)
 		{
 			var toolbar = new FrameBox
 			{
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = ArrowedFrame.SurfaceColors.First (),
-				PreferredHeight = height,
 				Padding = new Margins (2),
 				Dock = DockStyle.Top,
 			};
+
+			if (height != 0)
+			{
+				toolbar.PreferredHeight = height;
+			}
 
 			return toolbar;
 		}
