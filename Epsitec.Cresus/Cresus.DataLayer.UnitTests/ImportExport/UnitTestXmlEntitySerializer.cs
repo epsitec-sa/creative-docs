@@ -85,10 +85,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					dataContext.CreateSchema<NaturalPersonEntity> ();
-					dataContext.CreateSchema<MailContactEntity> ();
-					dataContext.CreateSchema<TelecomContactEntity> ();
-					dataContext.CreateSchema<UriContactEntity> ();
+					DatabaseCreator2.RegisterSchema (dataContext);
 				}
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
