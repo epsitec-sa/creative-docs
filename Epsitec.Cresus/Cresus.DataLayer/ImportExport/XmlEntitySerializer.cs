@@ -16,6 +16,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 {
 
 	
+	// TODO Comment this class.
+	// Marc
+
+
 	internal static class XmlEntitySerializer
 	{
 
