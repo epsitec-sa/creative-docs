@@ -22,6 +22,20 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	// Marc
 
 
+	// HACK The methods Export(...) and Import(...) have been designed to be used only for development
+	// purposes. Therefore, they are unsuitable for production use. Problems and limitation include
+	// - All the entities that are exported and their direct children are loaded in the DataContext
+	//   at the same time, which might require a lot of memory and slow everything for a high number
+	//   of exported entities.
+	// - The xml file is completely loaded in memory, which might be problematic for large files.
+	// - The xml format used contain a lot a redundancy and is not human readable.
+	// - No checks are made so ensure that the schema of the exported data is compatible with the
+	//   importing database and that the data in the xml file is compatible to the schema in the xml
+	//   file.
+	// - All the problems that I might not thought about.
+	// Marc
+
+
 	internal static class ImportExportManager
 	{
 
