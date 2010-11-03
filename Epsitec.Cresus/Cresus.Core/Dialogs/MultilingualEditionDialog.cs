@@ -39,20 +39,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.SetupWindow  (window);
 			this.SetupWidgets (window);
-			this.SetupEvents  (window);
 
 			window.AdjustWindowSize ();
 
 			return window;
 		}
 
-		protected void SetupWindow(Window window)
+		private void SetupWindow(Window window)
 		{
 			this.OwnerWindow = this.textField.Window;
 
 			window.Icon = this.textField.Window.Icon;
 			window.Text = "Edition multilingue";
-			window.ClientSize = new Size (600, 400);
+			window.ClientSize = new Size (this.IsMulti ? 500 : 400, this.RequiredHeight);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate
@@ -62,8 +61,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 		}
 
-		protected void SetupWidgets(Window window)
+		private double RequiredHeight
 		{
+			get
+			{
+				if (this.IsMulti)
+				{
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (17+MultilingualEditionDialog.multiHeight);
+				}
+				else
+				{
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (17+22);
+				}
+			}
+		}
+
+		private void SetupWidgets(Window window)
+		{
+			AbstractTextField focusedTextField = null;
 			int tabIndex = 1;
 
 			var frame = new FrameBox
@@ -74,31 +89,94 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = tabIndex++,
 			};
 
+			frame.SizeChanged += delegate
+			{
+				this.AdjustGeometry (10 + frame.ActualHeight + 40);
+			};
+
+			var leftFrame = new FrameBox
+			{
+				Parent = frame,
+				PreferredWidth = 64,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 10, 0, 0),
+				TabIndex = tabIndex++,
+			};
+
+			var rightFrame = new FrameBox
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				TabIndex = tabIndex++,
+			};
+
+			//	Rempli le panneau de gauche.
+			var icon = new StaticText
+			{
+				Parent = leftFrame,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Cmd.MultilingualEdition.icon"" dx=""64"" dy=""64""/>",
+				PreferredSize = new Size (64, 64),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			//	Rempli le panneau principal de droite.
 			this.textFields.Clear ();
 
-			foreach (var id in this.multilingualText.GetContainedLanguageIds ())
+			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
 			{
+				var desc = string.Format ("{0} {1} :", MultilingualEditionDialog.GetIcon (id), MultilingualEditionDialog.GetDescription (id));
+				var text = this.multilingualText.GetText (id);
+
+				if (MultilingualEditionDialog.IsCurrentLanguage (id))
+				{
+					desc = string.Concat ("<b>", desc, "</b>");
+				}
+
 				var label = new StaticText
 				{
-					Parent = frame,
-					Text = string.Format ("{0} :", MultilingualEditionDialog.GetDescription (id.ToString ())),
+					Parent = rightFrame,
+					Text = desc,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
 
-				var textField = new TextField
+				AbstractTextField textField;
+
+				if (this.IsMulti)
 				{
-					Parent = frame,
-					FormattedText = this.multilingualText.GetTextOrDefault (id),
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
-					TabIndex = tabIndex++,
-				};
+					textField = new TextFieldMulti
+					{
+						Parent = rightFrame,
+						FormattedText = text.GetValueOrDefault (),
+						PreferredHeight = MultilingualEditionDialog.multiHeight,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+						TabIndex = tabIndex++,
+					};
+				}
+				else
+				{
+					textField = new TextField
+					{
+						Parent = rightFrame,
+						FormattedText = text.GetValueOrDefault (),
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+						TabIndex = tabIndex++,
+					};
+				}
 
 				this.textFields.Add (textField);
+
+				if (MultilingualEditionDialog.IsCurrentLanguage (id))
+				{
+					focusedTextField = textField;
+				}
 			}
 
-			this.footer = new FrameBox
+			//	Rempli le pied de page.
+			var footer = new FrameBox
 			{
 				Parent = window.Root,
 				PreferredHeight = 20,
@@ -107,37 +185,133 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = tabIndex++,
 			};
 
-			this.closeButton = new Button ()
+			this.cancelButton = new Button ()
 			{
-				Parent = this.footer,
-				Text = "Fermer",
-				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAcceptAndCancel,
+				Parent = footer,
+				Text = "Annuler",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
-				TabIndex = tabIndex++,
+				Margins = new Margins (10, 0, 0, 0),
+				TabIndex = 101,
 			};
 
-			if (this.textFields.Count != 0)
+			this.acceptButton = new Button ()
 			{
-				this.textFields[0].SelectAll ();
-				this.textFields[0].Focus ();
+				Parent = footer,
+				Text = "D'accord",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
+				Dock = DockStyle.Right,
+				Margins = new Margins (64+10, 0, 0, 0),
+				TabIndex = 100,
+			};
+
+			this.acceptButton.Clicked += delegate
+			{
+				this.SaveTexts ();
+
+				this.Result = DialogResult.Accept;
+				this.CloseDialog ();
+			};
+
+			this.cancelButton.Clicked += delegate
+			{
+				this.Result = DialogResult.Cancel;
+				this.CloseDialog ();
+			};
+
+			//	Initialise le focus.
+			if (focusedTextField == null)
+			{
+				focusedTextField = this.textFields[0];
+			}
+
+			focusedTextField.SelectAll ();
+			focusedTextField.Focus ();
+		}
+
+
+		private void AdjustGeometry(double height)
+		{
+			if (this.IsMulti)
+			{
+				double h = System.Math.Floor (((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds.Count ()) - 17);
+				h = System.Math.Max (h, MultilingualEditionDialog.multiHeight);
+
+				foreach (var textField in this.textFields)
+				{
+					textField.PreferredHeight = h;
+				}
 			}
 		}
 
-		protected void SetupEvents(Window window)
+		private void SaveTexts()
 		{
-			this.closeButton.Clicked += delegate
+			int index = 0;
+
+			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
 			{
-				this.CloseDialog ();
-			};
+				this.multilingualText.SetText (id, this.textFields[index++].FormattedText);
+			}
 		}
 
+		protected override void OnDialogClosed()
+		{
+			base.OnDialogClosed ();
+		}
+
+
+		private bool IsMulti
+		{
+			get
+			{
+				return this.textField is TextFieldMulti ||
+					   this.textField is TextFieldMultiEx;
+			}
+		}
+
+
+		private static bool IsCurrentLanguage (string languageId)
+		{
+			if (languageId == UI.Settings.CultureForData.LanguageId)
+			{
+				return true;
+			}
+
+			if (MultilingualText.DefaultLanguageId == languageId && !UI.Settings.CultureForData.HasLanguageId)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private static string GetIcon(string languageId)
+		{
+			switch (languageId)
+			{
+				case "*":
+				case "fr":
+					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>";
+
+				case "de":
+					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>";
+
+				case "us":
+					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagUS.icon""/>";
+
+				case "it":
+					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>";
+			}
+
+			return languageId;
+		}
 
 		private static string GetDescription(string languageId)
 		{
 			switch (languageId)
 			{
 				case "*":
-					return "Langue par défaut (français)";
+					return "Français (par défaut)";
 
 				case "fr":
 					return "Français";
@@ -155,19 +329,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return languageId;
 		}
 
-
-		protected override void OnDialogClosed()
+		private static IEnumerable<string> GetLanguageIds
 		{
-			base.OnDialogClosed ();
+			get
+			{
+				yield return "*";
+				yield return "de";
+				yield return "us";
+				yield return "it";
+			}
 		}
 
 
+		private static readonly double					multiHeight = 10+14*4;  // hauteur pour 4 lignes
+		private static readonly double					fixHeight = 64;
 
 		private readonly AbstractTextField				textField;
 		private readonly MultilingualText				multilingualText;
 		private readonly List<AbstractTextField>		textFields;
 
-		private FrameBox								footer;
-		private Button									closeButton;
+		private Button									acceptButton;
+		private Button									cancelButton;
 	}
 }

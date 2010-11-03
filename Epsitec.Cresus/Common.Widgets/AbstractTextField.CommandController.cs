@@ -264,6 +264,8 @@ namespace Epsitec.Common.Widgets
 				commandContext.GetCommandState (ApplicationCommands.Underlined ).Enable = canFormat;
 				commandContext.GetCommandState (ApplicationCommands.Subscript  ).Enable = canFormat;
 				commandContext.GetCommandState (ApplicationCommands.Superscript).Enable = canFormat;
+
+				commandContext.GetCommandState (ApplicationCommands.MultilingualEdition).Enable = canFormat;
 			}
 
 			private void UpdateCommandStatesActiveState()
