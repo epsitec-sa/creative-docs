@@ -259,11 +259,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (textField != null)
 				{
-					//	TODO: faire en sorte que si on utilise une source multilingue, le menu contextuel
-					//	de la ligne éditable contienne la commande "voir toutes les langues"; les langues
-					//	peuvent être accédées en s'inspirant de ce que font les méthodes GetMarshalerText
-					//	et SetMarshalerText. La classe MultilingualText offre les services d'accès.
-
 					if (this.CheckIfMarshalerIsUsingFormattedText ())
 					{
 						textField.IsFormattedText    = true;
@@ -290,14 +285,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (marshaler.MarshaledType == typeof (FormattedText))
 			{
 				FormattedText formattedText = new FormattedText (value);
+				MultilingualText multilingual = new MultilingualText (formattedText);
 
-				if (MultilingualText.IsMultilingual (formattedText))
+				var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
+
+				if (dialog.Result == Common.Dialogs.DialogResult.Accept)
 				{
-					MultilingualText multilingual = new MultilingualText (formattedText);
-
-					var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
-					dialog.IsModal = true;
-					dialog.OpenDialog ();
+					var text = multilingual.ToString ();
+					this.marshaler.SetStringValue (text);
 				}
 			}
 		}
