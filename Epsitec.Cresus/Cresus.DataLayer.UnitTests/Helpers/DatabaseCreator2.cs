@@ -10,14 +10,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 	internal static class DatabaseCreator2
 	{
+		
 
-
-		public static void PupulateDatabase(DataContext dataContext)
+		public static void RegisterSchema(DataContext dataContext)
 		{
 			dataContext.CreateSchema<NaturalPersonEntity> ();
 			dataContext.CreateSchema<MailContactEntity> ();
 			dataContext.CreateSchema<TelecomContactEntity> ();
 			dataContext.CreateSchema<UriContactEntity> ();
+		}
+
+
+		public static void PupulateDatabase(DataContext dataContext)
+		{
+			DatabaseCreator2.RegisterSchema (dataContext);
 
 			UriSchemeEntity mailScheme = DatabaseHelper.CreateUriScheme (dataContext, "mailto:", "email");
 
