@@ -20,6 +20,16 @@ namespace Epsitec.Common.Types.Converters
 
 		public static readonly GenericConverter<T> Instance;
 
+		protected override object ConvertObjectFromString(string value)
+		{
+			return this.ConvertFromString (value);
+		}
+
+		protected override string ConvertObjectToString(object value)
+		{
+			return this.ConvertToString ((T) value);
+		}
+
 		static GenericConverter()
 		{
 			var converterType = GenericConverter.FindConverterType<T> ();
