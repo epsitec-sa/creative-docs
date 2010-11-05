@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.title = new TextLayout();
 			this.title.DefaultFontSize = 20;
 			this.title.Alignment = ContentAlignment.MiddleCenter;
-			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 
 			if (this.Entity.Name.IsNullOrWhiteSpace)
 			{
@@ -651,9 +651,17 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			Color titleColor = dragging ? this.colorFactory.GetColor (1) : this.colorFactory.GetColor (0);
 
 			rect = this.bounds;
-			rect.Offset (0, 2);
+			rect.Deflate (3);
 			this.title.LayoutSize = rect.Size;
-			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+			double length = this.title.SingleLineSize.Width;
+			double zoom = System.Math.Max (System.Math.Min (rect.Width/length/1.5, 1), 0.5);
+			var zoomRect = new Rectangle (rect.Center.X-rect.Width/2/zoom, rect.Center.Y-rect.Height/2/zoom+2, rect.Width/zoom, rect.Height/zoom);
+			this.title.LayoutSize = zoomRect.Size;
+
+			var t = graphics.Transform;
+			graphics.Transform = graphics.Transform.MultiplyByPostfix (Transform.CreateScaleTransform (zoom, zoom, rect.Center.X, rect.Center.Y));
+			this.title.Paint (zoomRect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+			graphics.Transform = t;
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
@@ -720,7 +728,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			get
 			{
 				Rectangle rect = this.bounds;
-				rect.Deflate (10, 15);
+				rect.Deflate (-10, 15);
 
 				return rect;
 			}
