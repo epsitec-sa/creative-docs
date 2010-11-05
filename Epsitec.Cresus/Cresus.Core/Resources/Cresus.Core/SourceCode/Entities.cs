@@ -9504,6 +9504,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0A5J/L0KI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0KI]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0KI]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0KI]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>IsAuto</c> field.
 		///	designer:fld/L0A5J/L0AEL
 		///	</summary>
@@ -9562,6 +9584,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnIsAutoChanging(bool oldValue, bool newValue);
 		partial void OnIsAutoChanged(bool oldValue, bool newValue);
 		partial void OnIsPublicChanging(bool oldValue, bool newValue);
