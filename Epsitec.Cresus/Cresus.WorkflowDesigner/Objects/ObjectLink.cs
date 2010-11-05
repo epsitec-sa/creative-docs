@@ -340,6 +340,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			edgeEntity.Name = "Nouveau";
 
 			var obj = new ObjectEdge (this.editor, edgeEntity);
+			obj.ColorFartory.ColorItem = this.srcObject.ColorFartory.ColorItem;
 			obj.ObjectLinks[0].SetStumpAngle (this.GetAngle ());
 
 			this.dstObject = obj;
@@ -361,6 +362,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var nodeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowNodeEntity> ();
 
 			var obj = new ObjectNode (this.editor, nodeEntity);
+			obj.ColorFartory.ColorItem = this.srcObject.ColorFartory.ColorItem;
 
 			this.dstObject = obj;
 			this.srcObject.AddEntityLink (obj);
