@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbInfrastructure : DependencyObject, System.IDisposable
 	{
+		
 		public DbInfrastructure()
 		{
 			this.localizations    = "fr";
@@ -1453,7 +1454,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 			{
 				IsAutoIncremented = autoIncrementedId,
-				AutoIncrementStartIndex = 1000000000,
+				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex,
 			};
 			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
 			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
@@ -3462,5 +3463,7 @@ namespace Epsitec.Cresus.Database
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 
 		private Dictionary<Druid, HashSet<EntityFieldPath>> sourceReferenceResolver;
+
+		public static readonly int AutoIncrementStartIndex = 1000000000;
 	}
 }
