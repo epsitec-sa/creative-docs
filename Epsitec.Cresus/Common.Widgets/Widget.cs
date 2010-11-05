@@ -482,6 +482,10 @@ namespace Epsitec.Common.Widgets
 				{
 					state |= WidgetPaintState.Error;
 				}
+				if (this.UndefinedLanguage)
+				{
+					state |= WidgetPaintState.UndefinedLanguage;
+				}
 				if (this.IsEnabled)
 				{
 					state |= WidgetPaintState.Enabled;
@@ -1139,7 +1143,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
 		public virtual void SetError(bool value)
 		{
 			if (this.InError != value)
@@ -1147,7 +1151,15 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.InErrorProperty, value);
 			}
 		}
-		
+
+		public virtual void SetUndefinedLanguage(bool value)
+		{
+			if (this.UndefinedLanguage != value)
+			{
+				this.SetValue (Visual.UndefinedLanguageProperty, value);
+			}
+		}
+
 		public bool Focus()
 		{
 			Window window = this.Window;

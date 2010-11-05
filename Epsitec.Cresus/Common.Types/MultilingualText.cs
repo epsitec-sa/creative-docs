@@ -348,7 +348,7 @@ namespace Epsitec.Common.Types
 			return new KeyValuePair<string, string> (languageId, languageText);
 		}
 
-		
+
 		public static readonly string DefaultLanguageId = "*";
 		
 		private const string DivBeginWithLanguageAttribute = MultilingualText.DivBegin + MultilingualText.LanguageAttribute;

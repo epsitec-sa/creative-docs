@@ -734,6 +734,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								UndefinedLanguage
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.UndefinedLanguageProperty);
+			}
+		}
+
 
 		public IValidator						Validator
 		{
@@ -2174,6 +2182,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty SelectedProperty				= DependencyProperty.Register ("Selected", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
 		public static readonly DependencyProperty EngagedProperty				= DependencyProperty.Register ("Engaged", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
 		public static readonly DependencyProperty InErrorProperty				= DependencyProperty.Register ("InError", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
+		public static readonly DependencyProperty UndefinedLanguageProperty		= DependencyProperty.Register ("UndefinedLanguage", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
 
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 

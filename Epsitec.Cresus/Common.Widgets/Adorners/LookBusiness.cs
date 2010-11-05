@@ -14,29 +14,30 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs.
-			this.colorBlack           = Drawing.Color.FromHexa ("000000");  // noir
-			this.colorGlyph           = Drawing.Color.FromHexa ("5b6473");  // violet foncé
-			this.colorWindow          = Drawing.Color.FromHexa ("ebe9ed");  // violet très clair
-			this.colorFrame           = Drawing.Color.FromHexa ("fafbff");  // violet très très clair
-			this.colorControl         = Drawing.Color.FromHexa ("6b90bd");  // bleu sombre
-			this.colorGreen           = Drawing.Color.FromHexa ("21a121");  // vert foncé
-			this.colorBorder          = Drawing.Color.FromHexa ("8599b1");  // bleu terne
-			this.colorBorderLight     = Drawing.Color.FromHexa ("d2d2d4");  // gris-bleu clair
-			this.colorBorderButton    = Drawing.Color.FromHexa ("2b4f82");  // bleu foncé
-			this.colorEntered         = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
-			this.colorDefault         = Drawing.Color.FromHexa ("ffba01");  // orange
-			this.colorSelected        = Drawing.Color.FromHexa ("ffba01");  // orange
-			this.colorDisabled        = Drawing.Color.FromHexa ("c6c5c9");  // gris-bleu
-			this.colorCaption         = Drawing.Color.FromHexa ("ffd672");  // orange
-			this.colorCaptionNF       = Drawing.Color.FromHexa ("ffba49");  // orange soutenu
-			this.colorCaptionLight    = Drawing.Color.FromHexa ("ffe39d");  // orange léger
-			this.colorCaptionText     = Drawing.Color.FromHexa ("000000");  // noir
-			this.colorCaptionProposal = Drawing.Color.FromHexa ("9a774a");  // brun
-			this.colorHilite          = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
-			this.colorWhite           = Drawing.Color.FromHexa ("ffffff");  // blanc
-			this.colorError           = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
-			this.colorTextBackground  = Drawing.Color.FromHexa ("f7f6f8");  // violet très très clair
-			this.colorInfo            = Drawing.Color.FromName ("Info");  // jaune pâle
+			this.colorBlack             = Drawing.Color.FromHexa ("000000");  // noir
+			this.colorGlyph             = Drawing.Color.FromHexa ("5b6473");  // violet foncé
+			this.colorWindow            = Drawing.Color.FromHexa ("ebe9ed");  // violet très clair
+			this.colorFrame             = Drawing.Color.FromHexa ("fafbff");  // violet très très clair
+			this.colorControl           = Drawing.Color.FromHexa ("6b90bd");  // bleu sombre
+			this.colorGreen             = Drawing.Color.FromHexa ("21a121");  // vert foncé
+			this.colorBorder            = Drawing.Color.FromHexa ("8599b1");  // bleu terne
+			this.colorBorderLight       = Drawing.Color.FromHexa ("d2d2d4");  // gris-bleu clair
+			this.colorBorderButton      = Drawing.Color.FromHexa ("2b4f82");  // bleu foncé
+			this.colorEntered           = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
+			this.colorDefault           = Drawing.Color.FromHexa ("ffba01");  // orange
+			this.colorSelected          = Drawing.Color.FromHexa ("ffba01");  // orange
+			this.colorDisabled          = Drawing.Color.FromHexa ("c6c5c9");  // gris-bleu
+			this.colorCaption           = Drawing.Color.FromHexa ("ffd672");  // orange
+			this.colorCaptionNF         = Drawing.Color.FromHexa ("ffba49");  // orange soutenu
+			this.colorCaptionLight      = Drawing.Color.FromHexa ("ffe39d");  // orange léger
+			this.colorCaptionText       = Drawing.Color.FromHexa ("000000");  // noir
+			this.colorCaptionProposal   = Drawing.Color.FromHexa ("9a774a");  // brun
+			this.colorHilite            = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
+			this.colorWhite             = Drawing.Color.FromHexa ("ffffff");  // blanc
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromHexa ("f7f6f8");  // violet très très clair
+			this.colorInfo              = Drawing.Color.FromName ("Info");  // jaune pâle
 		}
 		
 
@@ -936,12 +937,17 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
 						graphics.Rasterizer.AddSurface (frame);
 						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.Rasterizer.AddSurface (frame);
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.Rasterizer.AddSurface (frame);
 						graphics.RenderSolid(color);
@@ -2735,6 +2741,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorFrame;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorSelected;
