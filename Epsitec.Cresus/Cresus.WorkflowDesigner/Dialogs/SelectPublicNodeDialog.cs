@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 		protected override Window CreateWindow()
 		{
-			this.CreateUserInterface ("SelectPublicNode", new Size (400, 300), "Choix d'un noeud public", this.parent.Window);
+			this.CreateUserInterface ("SelectPublicNode", new Size (600, 400), "Choix d'un noeud public", this.parent.Window);
 			this.UpdateLists ();
 			this.UpdateButtons ();
 
@@ -106,15 +106,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			var leftBox = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 200,
+				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
 			var rightBox = new FrameBox
 			{
 				Parent = parent,
-				PreferredWidth = 100,
-				Dock = DockStyle.Right,
+				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
@@ -246,11 +246,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 						if (node.IsPublic)
 						{
 							this.workflowNodeEntities.Add (node);
-							this.listNodes.Items.Add (node.Name.ToString ());
+							this.listNodes.Items.Add (this.GetNodeDescription (node));
 						}
 					}
 				}
 			}
+		}
+
+		private string GetNodeDescription(WorkflowNodeEntity node)
+		{
+			string text = node.Name.ToString ();
+
+			if (!node.Description.IsNullOrWhiteSpace)
+			{
+				string desc = node.Description.ToString ().Replace ("<br/>", ", ");
+				text += string.Concat (" (", desc, ")");
+			}
+
+			return text;
 		}
 
 		private void UpdateButtons()

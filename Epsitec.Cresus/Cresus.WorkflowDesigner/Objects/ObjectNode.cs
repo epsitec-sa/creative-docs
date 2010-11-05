@@ -530,6 +530,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
+				if (!this.Entity.Description.IsNullOrWhiteSpace)
+				{
+					this.comment.Text = this.Entity.Description.ToString ();
+				}
+
 				Rectangle rect = new Rectangle (this.bounds.Left, this.bounds.Top+40, 200, 20);
 				this.comment.Bounds = rect;
 				this.comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
@@ -539,6 +544,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
+				this.comment.AttachedNodeDescription = null;
 				this.editor.RemoveBalloon (this.comment);
 				this.comment = null;
 			}
