@@ -53,6 +53,8 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\FileImportDialog.cs" />
+    <Compile Include="Dialogs\FileExportDialog.cs" />
     <Compile Include="DummyWorkflowController.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Dialogs\SelectPublicNodeDialog.cs" />
@@ -172,6 +174,8 @@
     <EmbeddedResource Include="Images\CursorMove.icon" />
     <EmbeddedResource Include="Images\CursorMoveOrEdit.icon" />
     <EmbeddedResource Include="Images\CursorVerticalMove.icon" />
+    <EmbeddedResource Include="Images\Export.icon" />
+    <EmbeddedResource Include="Images\Import.icon" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
