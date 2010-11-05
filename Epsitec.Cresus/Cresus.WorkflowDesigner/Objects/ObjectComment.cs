@@ -41,6 +41,32 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			set
 			{
 				this.textLayoutComment.Text = value;
+				this.AttachedNodeDescription = value;
+			}
+		}
+
+		public string AttachedNodeDescription
+		{
+			//	Texte de la description du noeud auquel est rattaché le commentaire.
+			get
+			{
+				if (this.attachObject is ObjectNode)
+				{
+					var node = this.attachObject as ObjectNode;
+
+					return node.Entity.Description.ToString ();
+				}
+
+				return null;
+			}
+			set
+			{
+				if (this.attachObject is ObjectNode)
+				{
+					var node = this.attachObject as ObjectNode;
+
+					node.Entity.Description = value;
+				}
 			}
 		}
 
@@ -260,6 +286,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						obj.Comment = null;
 					}
 
+					this.AttachedNodeDescription = null;
 					this.editor.RemoveBalloon (this);
 					this.editor.UpdateAfterCommentChanged ();
 				}
