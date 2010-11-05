@@ -21,7 +21,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		// TODO All this conversion stuff is kind of low level and it might make sense to move it (or
-		// part of it) somewhere else, like in the Database name space.
+		// part of it) somewhere else, like in the Database name space. I suspect that we need this
+		// because when we execute a query, the data is returned unchanged, but if we could somehow
+		// intercept the data sets and convert them to something else like some kind of improved
+		// "List<List<object>>", then we could do all this nasty conversion stuff at lower level and
+		// would not be bothered by that here or anywhere else. That would be kind of cool.
 		// Marc
 
 
