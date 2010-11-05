@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.SetupFieldBinder ();
 			this.AttachFieldBinder (validator);
 			
-			this.UpdateTextField ();
+			this.UpdateWidgetForMultilingualText ();
 
 			widget.EditionAccepted += this.HandleEditionAccepted;
 		}
@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private string GetMarshalerText()
 		{
 			string value = this.marshaler.GetStringValue ();
+			MultilingualText multilingual = null;
 
 			if (marshaler.MarshaledType == typeof (FormattedText))
 			{
@@ -190,7 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				
 				if (MultilingualText.IsMultilingual (formattedText))
 				{
-					MultilingualText multilingual = new MultilingualText (formattedText);
+					multilingual = new MultilingualText (formattedText);
 
 					if (multilingual.ContainsLocalizations)
 					{
@@ -199,13 +200,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
+			this.UpdateWidgetAfterTextChanged (multilingual);
+
 			return this.ConvertToUI (value);
 		}
 
 		private void SetMarshalerText(string text)
 		{
 			text = this.ConvertFromUI (text);
-			
+			MultilingualText multilingual = null;
+
 			if (this.marshaler.MarshaledType == typeof (FormattedText))
 			{
 				var originalValue = this.marshaler.GetStringValue ();
@@ -217,14 +221,17 @@ namespace Epsitec.Cresus.Core.Controllers
 				if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
 					(MultilingualText.IsDefaultLanguageId (this.LanguageId) == false))
 				{
-					var multilingual = new MultilingualText (originalFormattedText);
+					multilingual = new MultilingualText (originalFormattedText);
 
 					multilingual.SetText (this.LanguageId, new FormattedText (text));
 					text = multilingual.ToString ();
+
+					this.marshaler.SetStringValue (text);
 				}
 			}
 			
 			this.marshaler.SetStringValue (text);
+			this.UpdateWidgetAfterTextChanged (multilingual);
 		}
 
 		private string ConvertToUI(string value)
@@ -251,7 +258,36 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void UpdateTextField()
+
+		private void HandleTextFieldMultilingualEditionCalled(object sender)
+		{
+			//	Appelé lorsque le commande 'MultilingualEdition' est exécutée, par exemple
+			//	depuis le menu contextuel de AbstractTextField.
+			var textField = sender as AbstractTextField;
+
+			string value = this.marshaler.GetStringValue ();
+
+			if (marshaler.MarshaledType == typeof (FormattedText))
+			{
+				FormattedText formattedText = new FormattedText (value);
+				MultilingualText multilingual = new MultilingualText (formattedText);
+
+				var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
+
+				if (dialog.Result == Common.Dialogs.DialogResult.Accept)
+				{
+					var text = multilingual.ToString ();
+					this.marshaler.SetStringValue (text);
+
+					this.UpdateWidgetAfterTextChanged (multilingual);
+				}
+			}
+		}
+
+
+		private void UpdateWidgetForMultilingualText()
 		{
 			if (this.widget != null)
 			{
@@ -276,27 +312,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void HandleTextFieldMultilingualEditionCalled(object sender)
+		private void UpdateWidgetAfterTextChanged(MultilingualText multilingualText)
 		{
-			//	Appelé lorsque le commande 'MultilingualEdition' est exécutée, par exemple
-			//	depuis le menu contextuel de AbstractTextField.
-			var textField = sender as AbstractTextField;
-
-			string value = this.marshaler.GetStringValue ();
-
-			if (marshaler.MarshaledType == typeof (FormattedText))
+			if (this.widget != null)
 			{
-				FormattedText formattedText = new FormattedText (value);
-				MultilingualText multilingual = new MultilingualText (formattedText);
+				var textField = this.widget as AbstractTextField;
 
-				var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
-				dialog.IsModal = true;
-				dialog.OpenDialog ();
-
-				if (dialog.Result == Common.Dialogs.DialogResult.Accept)
+				if (textField != null && textField.IsMultilingualText)
 				{
-					var text = multilingual.ToString ();
-					this.marshaler.SetStringValue (text);
+					if (multilingualText == null)
+					{
+						textField.SetUndefinedLanguage (UI.Settings.CultureForData.HasLanguageId);
+					}
+					else
+					{
+						textField.SetUndefinedLanguage (UI.Settings.CultureForData.HasLanguageId && !multilingualText.ContainsLanguage (UI.Settings.CultureForData.LanguageId));
+					}
 				}
 			}
 		}
@@ -306,7 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		void IWidgetUpdater.Update()
 		{
-			this.UpdateTextField ();
+			this.UpdateWidgetForMultilingualText ();
 		}
 
 		#endregion

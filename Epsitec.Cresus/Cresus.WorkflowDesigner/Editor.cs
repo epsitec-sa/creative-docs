@@ -1376,6 +1376,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		#region IO actions
 		internal void Import(string path)
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
@@ -1435,7 +1436,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			graphics.Dispose ();
 		}
-
+		#endregion
 
 		#region Timer
 		private void HandleTimerElapsed(object sender)
