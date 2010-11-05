@@ -26,7 +26,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionNF         = Drawing.Color.FromName("ControlDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
-			this.colorError             = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
 
 			r = 1-(1-this.colorControlLight.R)/2;
 			g = 1-(1-this.colorControlLight.G)/2;
@@ -708,6 +709,10 @@ namespace Epsitec.Common.Widgets.Adorners
 					if ( (state&WidgetPaintState.Error) != 0 )
 					{
 						graphics.RenderSolid(this.colorError);
+					}
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
 					}
 					else
 					{
@@ -2094,6 +2099,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorControlReadOnly;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 	}
 }

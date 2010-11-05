@@ -35,12 +35,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorCaption        = Drawing.Color.FromRgb( 58.0/255.0, 167.0/255.0, 233.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRgb(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRgb( 23.0/255.0, 132.0/255.0, 198.0/255.0);
-			this.colorError          = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRgb(250.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRgb(198.0/255.0, 226.0/255.0, 234.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb ( 58.0/255.0, 167.0/255.0, 233.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRgb (250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder            = Drawing.Color.FromRgb ( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromRgb (250.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb (198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
 
@@ -778,14 +779,21 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						radius = this.RetRadiusFrame(rect);
-						path = this.PathRoundRectangle(rect, radius);
-						graphics.Rasterizer.AddSurface(path);
-						graphics.RenderSolid(this.colorError);
+						radius = this.RetRadiusFrame (rect);
+						path = this.PathRoundRectangle (rect, radius);
+						graphics.Rasterizer.AddSurface (path);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						radius = this.RetRadiusFrame (rect);
+						path = this.PathRoundRectangle (rect, radius);
+						graphics.Rasterizer.AddSurface (path);
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						radius = this.RetRadiusFrame(rect);
 						path = this.PathRoundRectangle(rect, radius);
@@ -812,14 +820,21 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						radius = this.RetRadiusFrame(rect);
-						path = this.PathRoundRectangle(rect, radius);
-						graphics.Rasterizer.AddSurface(path);
-						graphics.RenderSolid(this.colorError);
+						radius = this.RetRadiusFrame (rect);
+						path = this.PathRoundRectangle (rect, radius);
+						graphics.Rasterizer.AddSurface (path);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						radius = this.RetRadiusFrame (rect);
+						path = this.PathRoundRectangle (rect, radius);
+						graphics.Rasterizer.AddSurface (path);
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						radius = this.RetRadiusFrame(rect);
 						path = this.PathRoundRectangle(rect, radius);
@@ -2231,6 +2246,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}

@@ -17,17 +17,18 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			this.colorBlack           = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl         = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption         = Drawing.Color.FromAlphaRgb(0.7,  0.0/255.0, 115.0/255.0, 244.0/255.0);
-			this.colorCaptionNF       = Drawing.Color.FromRgb(190.0/255.0, 190.0/255.0, 190.0/255.0);
-			this.colorCaptionText     = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorCaptionProposal = Drawing.Color.FromRgb(191.0/255.0, 128.0/255.0,  53.0/255.0);
-			this.colorInfo            = Drawing.Color.FromRgb(213.0/255.0, 233.0/255.0, 255.0/255.0);
-			this.colorBorder          = Drawing.Color.FromRgb(170.0/255.0, 170.0/255.0, 170.0/255.0);
-			this.colorDisabled        = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
-			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorWindow          = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorBlack             = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption           = Drawing.Color.FromAlphaRgb(0.7,  0.0/255.0, 115.0/255.0, 244.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb(190.0/255.0, 190.0/255.0, 190.0/255.0);
+			this.colorCaptionText       = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorCaptionProposal   = Drawing.Color.FromRgb(191.0/255.0, 128.0/255.0,  53.0/255.0);
+			this.colorInfo              = Drawing.Color.FromRgb(213.0/255.0, 233.0/255.0, 255.0/255.0);
+			this.colorBorder            = Drawing.Color.FromRgb(170.0/255.0, 170.0/255.0, 170.0/255.0);
+			this.colorDisabled          = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorWindow            = Drawing.Color.FromRgb (255.0/255.0, 255.0/255.0, 255.0/255.0);
 		}
 		
 
@@ -846,11 +847,15 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.Rasterizer.AddSurface(path);
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.RenderSolid(this.colorError);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -891,7 +896,11 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						graphics.RenderSolid(this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -2831,6 +2840,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorCaptionProposal;
 	}

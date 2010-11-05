@@ -15,26 +15,27 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Initialise les couleurs en fonction des réglages de Windows.
 			double r,g,b;
 
-			this.colorBlack           = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorGlyph           = Drawing.Color.FromRgb( 91.0/255.0, 100.0/255.0, 115.0/255.0);
-			this.colorWindow          = Drawing.Color.FromRgb(235.0/255.0, 233.0/255.0, 237.0/255.0);
-			this.colorFrame           = Drawing.Color.FromRgb(250.0/255.0, 251.0/255.0, 255.0/255.0);
-			this.colorControl         = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
-			this.colorGreen           = Drawing.Color.FromRgb( 33.0/255.0, 161.0/255.0,  33.0/255.0);
-			this.colorBorder          = Drawing.Color.FromRgb(133.0/255.0, 153.0/255.0, 177.0/255.0);
-			this.colorBorderLight     = Drawing.Color.FromRgb(210.0/255.0, 210.0/255.0, 212.0/255.0);
-			this.colorBorderButton    = Drawing.Color.FromRgb( 43.0/255.0,  79.0/255.0, 130.0/255.0);
-			this.colorEntered         = Drawing.Color.FromRgb(255.0/255.0, 200.0/255.0,  60.0/255.0);
-			this.colorDefault         = Drawing.Color.FromRgb(101.0/255.0, 151.0/255.0, 210.0/255.0);
-			this.colorDisabled        = Drawing.Color.FromRgb(198.0/255.0, 197.0/255.0, 201.0/255.0);
-			this.colorCaption         = Drawing.Color.FromRgb( 51.0/255.0,  94.0/255.0, 168.0/255.0);
-			this.colorCaptionText     = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorCaptionProposal = Drawing.Color.FromRgb(154.0/255.0, 119.0/255.0,  74.0/255.0);
-			this.colorHilite          = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);
-			this.colorWhite           = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground  = Drawing.Color.FromRgb(247.0/255.0, 246.0/255.0, 248.0/255.0);
-			this.colorInfo            = Drawing.Color.FromName("Info");
+			this.colorBlack             = Drawing.Color.FromRgb (  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorGlyph             = Drawing.Color.FromRgb ( 91.0/255.0, 100.0/255.0, 115.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb (235.0/255.0, 233.0/255.0, 237.0/255.0);
+			this.colorFrame             = Drawing.Color.FromRgb (250.0/255.0, 251.0/255.0, 255.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb (107.0/255.0, 144.0/255.0, 189.0/255.0);
+			this.colorGreen             = Drawing.Color.FromRgb ( 33.0/255.0, 161.0/255.0,  33.0/255.0);
+			this.colorBorder            = Drawing.Color.FromRgb (133.0/255.0, 153.0/255.0, 177.0/255.0);
+			this.colorBorderLight       = Drawing.Color.FromRgb (210.0/255.0, 210.0/255.0, 212.0/255.0);
+			this.colorBorderButton      = Drawing.Color.FromRgb ( 43.0/255.0,  79.0/255.0, 130.0/255.0);
+			this.colorEntered           = Drawing.Color.FromRgb (255.0/255.0, 200.0/255.0,  60.0/255.0);
+			this.colorDefault           = Drawing.Color.FromRgb (101.0/255.0, 151.0/255.0, 210.0/255.0);
+			this.colorDisabled          = Drawing.Color.FromRgb (198.0/255.0, 197.0/255.0, 201.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb ( 51.0/255.0,  94.0/255.0, 168.0/255.0);
+			this.colorCaptionText       = Drawing.Color.FromRgb (255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorCaptionProposal   = Drawing.Color.FromRgb (154.0/255.0, 119.0/255.0,  74.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRgb (255.0/255.0, 186.0/255.0,   1.0/255.0);
+			this.colorWhite             = Drawing.Color.FromRgb (255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromRgb (247.0/255.0, 246.0/255.0, 248.0/255.0);
+			this.colorInfo              = Drawing.Color.FromName ("Info");
 
 			r = 1-(1-this.colorCaption.R)*0.25;
 			g = 1-(1-this.colorCaption.G)*0.25;
@@ -930,12 +931,17 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.colorError);
+						graphics.AddFilledRectangle (rect);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.AddFilledRectangle (rect);
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(color);
@@ -2744,6 +2750,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorFrame;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorTextBackground;
 	}

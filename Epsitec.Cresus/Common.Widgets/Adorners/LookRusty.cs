@@ -14,20 +14,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			this.colorBlack          = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorWhite          = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorControl        = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption        = Drawing.Color.FromRgb(187.0/255.0, 119.0/255.0,  36.0/255.0);
-			this.colorCaptionNF      = Drawing.Color.FromRgb(240.0/255.0, 204.0/255.0, 134.0/255.0);
-			this.colorCaptionText    = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorInfo           = Drawing.Color.FromRgb(213.0/255.0, 233.0/255.0, 255.0/255.0);
-			this.colorBorder         = Drawing.Color.FromAlphaRgb(0.6, 31.0/255.0,   7.0/255.0,   8.0/255.0);
-			this.colorDisabled       = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
-			this.colorError          = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRgb( 63.0/255.0,  45.0/255.0,  15.0/255.0);
-			this.colorThreeState     = Drawing.Color.FromRgb(206.0/255.0, 182.0/255.0, 154.0/255.0);
-			this.colorActivableIcon  = Drawing.Color.FromRgb( 96.0/255.0,  70.0/255.0,  27.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRgb( 79.0/255.0,  74.0/255.0,  66.0/255.0);
+			this.colorBlack             = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorWhite             = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb(187.0/255.0, 119.0/255.0,  36.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb(240.0/255.0, 204.0/255.0, 134.0/255.0);
+			this.colorCaptionText       = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorInfo              = Drawing.Color.FromRgb(213.0/255.0, 233.0/255.0, 255.0/255.0);
+			this.colorBorder            = Drawing.Color.FromAlphaRgb(0.6, 31.0/255.0,   7.0/255.0,   8.0/255.0);
+			this.colorDisabled          = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromRgb(63.0/255.0, 45.0/255.0, 15.0/255.0);
+			this.colorThreeState        = Drawing.Color.FromRgb(206.0/255.0, 182.0/255.0, 154.0/255.0);
+			this.colorActivableIcon     = Drawing.Color.FromRgb( 96.0/255.0,  70.0/255.0,  27.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb( 79.0/255.0,  74.0/255.0,  66.0/255.0);
 		}
 		
 
@@ -2570,6 +2571,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorActivableIcon;

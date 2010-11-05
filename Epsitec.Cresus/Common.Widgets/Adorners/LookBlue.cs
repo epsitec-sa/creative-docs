@@ -28,8 +28,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionProposal   = Drawing.Color.FromRgb(133.0/255.0, 174.0/255.0, 221.0/255.0);
 			this.colorThreeState        = Drawing.Color.FromRgb(228.0/255.0, 236.0/255.0, 244.0/255.0);
 			this.colorHilite            = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);
-			this.colorError             = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorInfo              = Drawing.Color.FromName("Info");
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorInfo              = Drawing.Color.FromName ("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
@@ -788,11 +789,15 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.RenderSolid(this.colorError);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -833,7 +838,11 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						graphics.RenderSolid(this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -2301,6 +2310,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 	}
 }

@@ -14,21 +14,22 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Initialise les couleurs en fonction des réglages de Windows.
 			double r,g,b;
 
-			this.colorBlack             = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorWhite             = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow            = Drawing.Color.FromRgb( 80.0/255.0,  80.0/255.0,  90.0/255.0);
-			this.colorControl           = Drawing.Color.FromRgb( 80.0/255.0,  80.0/255.0,  90.0/255.0);
-			this.colorControlLight      = Drawing.Color.FromRgb(100.0/255.0, 100.0/255.0, 110.0/255.0);
-			this.colorControlLightLight = Drawing.Color.FromRgb(128.0/255.0, 128.0/255.0, 138.0/255.0);
-			this.colorControlDark       = Drawing.Color.FromRgb( 70.0/255.0,  70.0/255.0,  80.0/255.0);
-			this.colorControlDarkDark   = Drawing.Color.FromRgb( 60.0/255.0,  60.0/255.0,  70.0/255.0);
-			this.colorButton            = Drawing.Color.FromRgb( 50.0/255.0,  50.0/255.0,  60.0/255.0);
-			this.colorScrollerBack      = Drawing.Color.FromRgb(128.0/255.0, 128.0/255.0, 138.0/255.0);
-			this.colorCaptionNF         = Drawing.Color.FromRgb(148.0/255.0, 148.0/255.0, 158.0/255.0);
-			this.colorCaption           = Drawing.Color.FromRgb(255.0/255.0, 215.0/255.0,  89.0/255.0);
-			this.colorCaptionText       = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorError             = Drawing.Color.FromRgb(150.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorInfo              = Drawing.Color.FromName("Info");
+			this.colorBlack             = Drawing.Color.FromRgb (  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorWhite             = Drawing.Color.FromRgb (255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb ( 80.0/255.0,  80.0/255.0,  90.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb ( 80.0/255.0,  80.0/255.0,  90.0/255.0);
+			this.colorControlLight      = Drawing.Color.FromRgb (100.0/255.0, 100.0/255.0, 110.0/255.0);
+			this.colorControlLightLight = Drawing.Color.FromRgb (128.0/255.0, 128.0/255.0, 138.0/255.0);
+			this.colorControlDark       = Drawing.Color.FromRgb ( 70.0/255.0,  70.0/255.0,  80.0/255.0);
+			this.colorControlDarkDark   = Drawing.Color.FromRgb ( 60.0/255.0,  60.0/255.0,  70.0/255.0);
+			this.colorButton            = Drawing.Color.FromRgb ( 50.0/255.0,  50.0/255.0,  60.0/255.0);
+			this.colorScrollerBack      = Drawing.Color.FromRgb (128.0/255.0, 128.0/255.0, 138.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb (148.0/255.0, 148.0/255.0, 158.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb (255.0/255.0, 215.0/255.0,  89.0/255.0);
+			this.colorCaptionText       = Drawing.Color.FromRgb (  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorError             = Drawing.Color.FromRgb (150.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorUndefinedLanguage = Drawing.Color.FromRgb (  0.0/255.0,  81.0/255.0, 150.0/255.0);
+			this.colorInfo              = Drawing.Color.FromName ("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
@@ -769,11 +770,15 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.RenderSolid(this.colorError);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -2367,6 +2372,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorWindow;
 	}
 }

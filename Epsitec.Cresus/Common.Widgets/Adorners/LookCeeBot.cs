@@ -34,12 +34,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorCaption        = Drawing.Color.FromRgb(255.0/255.0, 146.0/255.0,   1.0/255.0);
-			this.colorHilite         = Drawing.Color.FromRgb(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRgb(124.0/255.0, 105.0/255.0,   0.0/255.0);
-			this.colorError          = Drawing.Color.FromRgb(248.0/255.0, 231.0/255.0,  88.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRgb(254.0/255.0, 251.0/255.0, 242.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRgb(217.0/255.0, 212.0/255.0, 197.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb (255.0/255.0, 146.0/255.0,   1.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRgb (250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder            = Drawing.Color.FromRgb (124.0/255.0, 105.0/255.0,   0.0/255.0);
+			this.colorError             = Drawing.Color.FromRgb (248.0/255.0, 231.0/255.0,  88.0/255.0);
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromRgb (254.0/255.0, 251.0/255.0, 242.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb (217.0/255.0, 212.0/255.0, 197.0/255.0);
 		}
 		
 
@@ -833,11 +834,15 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.RenderSolid(this.colorError);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -2271,6 +2276,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}
