@@ -1081,6 +1081,7 @@ namespace Epsitec.Cresus.Database
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = true,
+				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex
 			});
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
