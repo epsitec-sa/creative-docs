@@ -484,9 +484,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string GetIcon(string languageId)
 		{
-			switch (languageId)
+			switch (MultilingualEditionDialog.NormalizeId (languageId))
 			{
-				case "*":
 				case "fr":
 					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>";
 
@@ -505,9 +504,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string GetDescription(string languageId)
 		{
+			if (languageId == MultilingualText.DefaultLanguageId)
+			{
+				languageId = "default";
+			}
+
 			switch (languageId)
 			{
-				case "*":
+				case "default":
 					return "Français (par défaut)";
 
 				case "fr":
