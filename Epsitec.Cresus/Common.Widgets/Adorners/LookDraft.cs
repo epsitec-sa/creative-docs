@@ -14,16 +14,17 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			this.colorBlack          = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl        = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption        = Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorCaptionNF      = Drawing.Color.FromRgb(255.0/255.0, 242.0/255.0, 183.0/255.0);
-			this.colorInfo           = Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorBorder         = Drawing.Color.FromAlphaRgb(0.6, 128.0/255.0, 128.0/255.0, 128.0/255.0);
-			this.colorDisabled       = Drawing.Color.FromRgb(200.0/255.0, 200.0/255.0, 200.0/255.0);
-			this.colorError          = Drawing.Color.FromRgb(255.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorTextBackground = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow         = Drawing.Color.FromRgb(247.0/255.0, 247.0/255.0, 247.0/255.0);
+			this.colorBlack             = Drawing.Color.FromRgb (  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl           = Drawing.Color.FromRgb ( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb (255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb (255.0/255.0, 242.0/255.0, 183.0/255.0);
+			this.colorInfo              = Drawing.Color.FromRgb (255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorBorder            = Drawing.Color.FromAlphaRgb(0.6, 128.0/255.0, 128.0/255.0, 128.0/255.0);
+			this.colorDisabled          = Drawing.Color.FromRgb (200.0/255.0, 200.0/255.0, 200.0/255.0);
+			this.colorError             = Drawing.Color.FromRgb (255.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorUndefinedLanguage = Drawing.Color.FromRgb (  0.0/255.0, 162.0/255.0, 255.0/255.0);
+			this.colorTextBackground    = Drawing.Color.FromRgb (255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb (247.0/255.0, 247.0/255.0, 247.0/255.0);
 		}
 		
 
@@ -2361,6 +2362,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}

@@ -30,7 +30,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionText       = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorThreeState        = Drawing.Color.FromRgb(218.0/255.0, 207.0/255.0, 162.0/255.0);
 			this.colorInfo              = Drawing.Color.FromRgb(250.0/255.0, 250.0/255.0, 250.0/255.0);
-			this.colorError             = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
 		}
 		
 
@@ -635,11 +636,15 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.RenderSolid(this.colorError);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.RenderSolid(color);
 					}
@@ -1894,6 +1899,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorFrontDisabled;
 		protected Drawing.Color		colorThreeState;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
+		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}
 }

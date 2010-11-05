@@ -35,15 +35,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRgb(r,g,b);
 
-			this.colorCaption         = Drawing.Color.FromRgb(170.0/255.0, 195.0/255.0, 249.0/255.0);
-			this.colorCaptionNF       = Drawing.Color.FromRgb(210.0/255.0, 210.0/255.0, 210.0/255.0);
-			this.colorCaptionProposal = Drawing.Color.FromRgb(233.0/255.0, 194.0/255.0,  59.0/255.0);
-			this.colorHilite          = Drawing.Color.FromRgb(147.0/255.0, 172.0/255.0, 245.0/255.0);
-			this.colorBorder          = Drawing.Color.FromRgb(102.0/255.0, 102.0/255.0, 126.0/255.0);
-			this.colorDisabled        = Drawing.Color.FromRgb(176.0/255.0, 176.0/255.0, 188.0/255.0);
-			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground  = Drawing.Color.FromRgb(247.0/255.0, 247.0/255.0, 248.0/255.0);
-			this.colorWindow          = Drawing.Color.FromRgb(210.0/255.0, 213.0/255.0, 223.0/255.0);
+			this.colorCaption           = Drawing.Color.FromRgb (170.0/255.0, 195.0/255.0, 249.0/255.0);
+			this.colorCaptionNF         = Drawing.Color.FromRgb (210.0/255.0, 210.0/255.0, 210.0/255.0);
+			this.colorCaptionProposal   = Drawing.Color.FromRgb (233.0/255.0, 194.0/255.0,  59.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRgb (147.0/255.0, 172.0/255.0, 245.0/255.0);
+			this.colorBorder            = Drawing.Color.FromRgb (102.0/255.0, 102.0/255.0, 126.0/255.0);
+			this.colorDisabled          = Drawing.Color.FromRgb (176.0/255.0, 176.0/255.0, 188.0/255.0);
+			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
+			this.colorTextBackground    = Drawing.Color.FromRgb (247.0/255.0, 247.0/255.0, 248.0/255.0);
+			this.colorWindow            = Drawing.Color.FromRgb (210.0/255.0, 213.0/255.0, 223.0/255.0);
 		}
 		
 
@@ -860,12 +861,17 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
-					if ( (state&WidgetPaintState.Error) != 0 )
+					if ((state&WidgetPaintState.Error) != 0)
 					{
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.colorError);
+						graphics.AddFilledRectangle (rect);
+						graphics.RenderSolid (this.colorError);
 					}
-					else if ( !color.IsEmpty )
+					else if ((state&WidgetPaintState.UndefinedLanguage) != 0)
+					{
+						graphics.AddFilledRectangle (rect);
+						graphics.RenderSolid (this.colorUndefinedLanguage);
+					}
+					else if (!color.IsEmpty)
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(color);
@@ -2551,6 +2557,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorCaptionProposal;
 		protected Drawing.Color		colorWindow;
