@@ -1376,16 +1376,64 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		internal void Import(string path)
+		{
+			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
+			this.businessContext.Data.DataInfrastructure.Import (file);
+		}
+
 		internal void Export(string path)
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
 			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, this.workflowDefinitionEntity, e => true);
 		}
 
-		internal void Import(string path)
+		internal void SaveImage(string path, double zoom)
 		{
-			System.IO.FileInfo file = new System.IO.FileInfo (path + ".xml");
-			this.businessContext.Data.DataInfrastructure.Import (file);
+			Graphics graphics = new Graphics ();
+
+			int dx = (int) this.AreaSize.Width;
+			int dy = (int) this.AreaSize.Height;
+
+			graphics.AllocatePixmap ();
+			graphics.SetPixmapSize ((int) (dx*zoom), (int) (dy*zoom));
+			graphics.Transform = graphics.Transform.MultiplyBy (Transform.CreateTranslationTransform (0, -dy));
+			graphics.Transform = graphics.Transform.MultiplyBy (Transform.CreateScaleTransform (zoom, -zoom));
+
+			this.CompactAll ();
+			this.PaintObjects (graphics);
+
+			var bitmap = Bitmap.FromPixmap (graphics.Pixmap) as Bitmap;
+			byte[] data = null;
+
+			switch (System.IO.Path.GetExtension (path).ToLowerInvariant ())
+			{
+				case ".png":
+					data = bitmap.Save (ImageFormat.Png, 24);
+					break;
+
+				case ".tif":
+					data = bitmap.Save (ImageFormat.Tiff, 24, 100, ImageCompression.Lzw);
+					break;
+
+				case ".bmp":
+					data = bitmap.Save (ImageFormat.Bmp, 24);
+					break;
+
+				case ".jpg":
+					data = bitmap.Save (ImageFormat.Jpeg, 24, 70, ImageCompression.None);
+					break;
+			}
+
+			if (data != null)
+			{
+				using (System.IO.FileStream stream = new System.IO.FileStream (path, System.IO.FileMode.OpenOrCreate))
+				{
+					stream.Write (data, 0, data.Length);
+				}
+			}
+
+			graphics.Dispose ();
 		}
 
 
