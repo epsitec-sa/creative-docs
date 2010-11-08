@@ -97,10 +97,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.RecordStateBeforeChange ();
 
 			Node node = new Node (parentController, controller, this.currentHistoryId);
-			
 			this.liveNodes.Add (node);
 
-			System.Diagnostics.Debug.WriteLine ("Current path: " + this.GetNavigationPath (controller));
+			var path = this.GetTopNavigationPath ();
+
+			if (path != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Current path: " + path.ToString ());
+			}
 			
 			this.MakeDirty ();
 		}
@@ -279,7 +283,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				this.recordedHistoryId = this.currentHistoryId;
 
-				this.RecordTopNode (this.GetTopNode ());
+				this.RecordTopNode ();
 			}
 		}
 
@@ -291,14 +295,37 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return topNode;
 		}
 
-		private void RecordTopNode(Node topNode)
+		private INavigationPathElementProvider GetTopController()
 		{
-			if (topNode != null)
+			var topNode = this.GetTopNode ();
+
+			if (topNode == null)
 			{
-				var topController = topNode.Item;
-				var fullPath = this.GetNavigationPath (topController);
-				this.history.Record (fullPath);
+				return null;
 			}
+			else
+			{
+				return topNode.Item;
+			}
+		}
+
+		private NavigationPath GetTopNavigationPath()
+		{
+			var topController = this.GetTopController ();
+
+			if (topController == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.GetNavigationPath (topController);
+			}
+		}
+
+		private void RecordTopNode()
+		{
+			this.history.Record (this.GetTopNavigationPath ());
 		}
 
 		private NavigationPath GetNavigationPath(INavigationPathElementProvider topController)

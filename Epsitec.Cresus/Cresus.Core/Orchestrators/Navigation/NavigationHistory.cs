@@ -19,6 +19,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		public void Record(NavigationPath fullPath)
 		{
+			if (fullPath == null)
+			{
+				return;
+			}
+
 			if (this.suspendCounter > 0)
             {
 				if ((this.state == State.Neutral) ||
@@ -166,7 +171,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			{
 				this.history.state = this.oldState;
 				this.history.UpdateNavigationCommands ();
-				this.history.DebugDump ();
+//-				this.history.DebugDump ();
 			}
 
 			#endregion

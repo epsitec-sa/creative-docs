@@ -696,10 +696,6 @@ namespace Epsitec.Common.Widgets
 			{
 				Message.state.window = form.HostingWidgetWindow;
 			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Unmapped message: " + msg.ToString ());
-			}
 			
 			return message;
 		}
