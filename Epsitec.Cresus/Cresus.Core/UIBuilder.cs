@@ -264,8 +264,6 @@ namespace Epsitec.Cresus.Core
 			this.titleTile.Items.Add (tile);
 			this.titleTile.CanExpandSubTile = true;
 
-			var clickSimulator = new TileButtonClickSimulator (this.titleTile, this.controller, fullName);
-
 			tile.Controller = new SummaryTileController<T> (entity, fullName, mode, controllerSubType);
 			tile.Summary    = summary.ToString ();
 

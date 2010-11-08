@@ -17,6 +17,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.tickCount = System.Environment.TickCount;
 			this.messageId = System.Threading.Interlocked.Increment (ref Message.nextMessageId);
+			this.userMessageId = Message.currentUserMessageId;
 			
 			Message.state.buttons   = (MouseButtons) (int) System.Windows.Forms.Control.MouseButtons;
 			Message.state.modifiers = (ModifierKeys) (int) System.Windows.Forms.Control.ModifierKeys;
@@ -155,11 +156,19 @@ namespace Epsitec.Common.Widgets
 			get { return this.messageType; }
 		}
 
-		public long							MessageId
+		public long							UserMessageId
 		{
 			get
 			{
-				return this.messageId;
+				return this.userMessageId;
+			}
+		}
+
+		public static long					CurrentUserMessageId
+		{
+			get
+			{
+				return Message.currentUserMessageId;
 			}
 		}
 
@@ -599,6 +608,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message FromWndProcMessage(Platform.Window form, ref System.Windows.Forms.Message msg)
 		{
+			System.Threading.Interlocked.Increment (ref Message.currentUserMessageId);
+
 			Message message = null;
 			System.Windows.Forms.MouseButtons buttons;
 			
@@ -680,10 +691,14 @@ namespace Epsitec.Common.Widgets
 					message = new Message (MessageType.MouseLeave);
 					break;
 			}
-			
+
 			if (message != null)
 			{
 				Message.state.window = form.HostingWidgetWindow;
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Unmapped message: " + msg.ToString ());
 			}
 			
 			return message;
@@ -1077,9 +1092,11 @@ namespace Epsitec.Common.Widgets
 		private static Message				lastMessage;
 		private static Message.State		state;
 		private static long					nextMessageId = 1;
+		private static long					currentUserMessageId;
 
 		private readonly MessageType		messageType;
 		private readonly long				messageId;
+		private readonly long				userMessageId;
 		private readonly int				tickCount;
 		
 		private bool						filterNoChildren;
