@@ -81,6 +81,34 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 
+
+		/// <summary>
+		/// Gets the ADO.NET type that corresponds to a given <see cref="DbRawType"/>.
+		/// </summary>
+		/// <param name="dbRawType">The <see cref="DbRawType"/> whose ADO.NET type to obtain.</param>
+		/// <returns>The ADO.NET type that corresponds to the given <see cref="DbRawType"/>.</returns>
+		public static System.Type GetAdoType(DbRawType dbRawType)
+		{
+			switch (dbRawType)
+			{
+				case DbRawType.Null:			return typeof (System.DBNull);
+				case DbRawType.Boolean:			return typeof (System.Boolean);
+				case DbRawType.Int16:			return typeof (System.Int16);
+				case DbRawType.Int32:			return typeof (System.Int32);
+				case DbRawType.Int64:			return typeof (System.Int64);
+				case DbRawType.SmallDecimal:	return typeof (System.Decimal);
+				case DbRawType.LargeDecimal:	return typeof (System.Decimal);
+				case DbRawType.String:			return typeof (System.String);
+				case DbRawType.Date:			return typeof (System.DateTime);
+				case DbRawType.Time:			return typeof (System.DateTime);
+				case DbRawType.DateTime:		return typeof (System.DateTime);
+				case DbRawType.ByteArray:		return typeof (byte[]);
+				case DbRawType.Guid:			return typeof (System.Guid);
+				default:						throw new System.NotImplementedException ();
+			}
+		}
+
+
 		/// <summary>
 		/// Gets the simple type for a raw type.
 		/// </summary>
