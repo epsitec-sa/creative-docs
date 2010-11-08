@@ -9773,6 +9773,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ContinuationNode</c> field.
+		///	designer:fld/L0A6J/L0AVL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVL]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity ContinuationNode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVL]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.ContinuationNode;
+				if (oldValue != value)
+				{
+					this.OnContinuationNodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVL]", oldValue, value);
+					this.OnContinuationNodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>TransitionType</c> field.
 		///	designer:fld/L0A6J/L0ASJ
 		///	</summary>
@@ -9823,6 +9845,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnTransitionTypeChanging(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionTypeChanged(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionActionChanging(string oldValue, string newValue);
