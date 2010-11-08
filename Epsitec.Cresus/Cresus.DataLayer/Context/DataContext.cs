@@ -931,6 +931,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.SchemaEngine.CreateSchema<TEntity> ();
 		}
 
+		public void CreateSchema(Druid entityId)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			this.SchemaEngine.CreateSchema (entityId);
+		}
+
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>

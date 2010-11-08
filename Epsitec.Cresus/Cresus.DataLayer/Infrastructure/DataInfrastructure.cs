@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -330,9 +331,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to check.</typeparam>
 		/// <returns><c>true</c> if the type of the <see cref="AbstractEntity"/> is properly defined in the database, <c>false</c> if it is not.</returns>
-		public bool CheckSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		public bool CheckSchema<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
-			return this.SchemaEngine.SchemaBuilder.CheckSchema (new TEntity ().GetEntityStructuredTypeId ());
+			return this.SchemaEngine.SchemaBuilder.CheckSchema (EntityInfo<TEntity>.GetTypeId ());
+		}
+
+		public bool CheckSchema(Druid entityId)
+		{
+			return this.SchemaEngine.SchemaBuilder.CheckSchema (entityId);
 		}
 
 		/// <summary>

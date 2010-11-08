@@ -137,18 +137,45 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen == false);
 				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
-				var  databaseAccess = CoreData.GetDatabaseAccess ();
-				bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
+				var databaseAccess = CoreData.GetDatabaseAccess ();
+				
+				try
+				{
+					bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
 
-				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
-				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
+					System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
+					System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
-				this.SetupDataContext (this.CreateDataContext ("setup-only"));
-				this.SetupDatabase (databaseIsNew || this.ForceDatabaseCreation);
-				this.DisposeDataContext (this.activeDataContext);
+					this.SetupDataContext (this.CreateDataContext ("setup-only"));
+					this.SetupDatabase (createNewDatabase: databaseIsNew || this.ForceDatabaseCreation);
+					this.DisposeDataContext (this.activeDataContext);
 
-				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
-				System.Diagnostics.Debug.WriteLine ("Database ready");
+					System.Diagnostics.Debug.Assert (this.activeDataContext == null);
+					System.Diagnostics.Debug.WriteLine ("Database ready");
+				}
+				catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
+				{
+					System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
+
+					UI.ShowErrorMessage (
+						Res.Strings.Error.IncompatibleDatabase,
+						Res.Strings.Hint.Error.IncompatibleDatabase, ex);
+
+					this.dbInfrastructure.Dispose ();
+					this.DeleteDatabase (databaseAccess);
+
+					//	TODO: start external migration process...
+
+					System.Environment.Exit (0);
+				}
+				catch (System.Exception ex)
+				{
+					UI.ShowErrorMessage (
+						Res.Strings.Error.CannotConnectToLocalDatabase,
+						Res.Strings.Hint.Error.CannotConnectToLocalDatabase, ex);
+
+					System.Environment.Exit (0);
+				}
 			}
 
 			this.IsReady = true;
@@ -364,54 +391,23 @@ namespace Epsitec.Cresus.Core
 				{
 					this.dbInfrastructure.AttachToDatabase (access);
 					System.Diagnostics.Trace.WriteLine ("Connected to database");
-					connected = true;
+					return false;
 				}
 			}
 			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
 			{
-				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
-
-				UI.ShowErrorMessage (
-					Res.Strings.Error.IncompatibleDatabase,
-					Res.Strings.Hint.Error.IncompatibleDatabase, ex);
-
-				this.dbInfrastructure.Dispose ();
-				this.DeleteDatabase (access);
-
-				//	TODO: start external migration process...
-
-				System.Environment.Exit (0);
+				throw;
 			}
 			catch (System.Exception ex)
 			{
 				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
 			}
 
-			if (connected)
-			{
-				return false;
-			}
-			else
-			{
-				System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
+			System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
+			this.dbInfrastructure.CreateDatabase (access);
+			System.Diagnostics.Trace.WriteLine ("Created new database");
 
-				try
-				{
-					this.dbInfrastructure.CreateDatabase (access);
-				}
-				catch (System.Exception ex)
-				{
-					UI.ShowErrorMessage (
-						Res.Strings.Error.CannotConnectToLocalDatabase,
-						Res.Strings.Hint.Error.CannotConnectToLocalDatabase, ex);
-
-					System.Environment.Exit (0);
-				}
-
-				System.Diagnostics.Trace.WriteLine ("Created new database");
-
-				return true;
-			}
+			return true;
 		}
 
 		private void DeleteDatabase(DbAccess access)
@@ -451,36 +447,53 @@ namespace Epsitec.Cresus.Core
 
 		private void VerifyDatabaseSchemas()
 		{
-			this.VerifyDatabaseSchema<RelationEntity> ();
-			this.VerifyDatabaseSchema<NaturalPersonEntity> ();
-			this.VerifyDatabaseSchema<AbstractPersonEntity> ();
-			this.VerifyDatabaseSchema<MailContactEntity> ();
-			this.VerifyDatabaseSchema<TelecomContactEntity> ();
-			this.VerifyDatabaseSchema<UriContactEntity> ();
-			this.VerifyDatabaseSchema<ArticleDefinitionEntity> ();
-			this.VerifyDatabaseSchema<VatDefinitionEntity> ();
-			this.VerifyDatabaseSchema<BusinessDocumentEntity> ();
-			this.VerifyDatabaseSchema<ArticleDocumentItemEntity> ();
-			this.VerifyDatabaseSchema<TextDocumentItemEntity> ();
-			this.VerifyDatabaseSchema<PriceDocumentItemEntity> ();
-			this.VerifyDatabaseSchema<TaxDocumentItemEntity> ();
-			this.VerifyDatabaseSchema<EnumValueArticleParameterDefinitionEntity> ();
-			this.VerifyDatabaseSchema<NumericValueArticleParameterDefinitionEntity> ();
-			this.VerifyDatabaseSchema<AffairEntity> ();
-			this.VerifyDatabaseSchema<DocumentMetadataEntity> ();
-			this.VerifyDatabaseSchema<WorkflowEntity> ();
-			this.VerifyDatabaseSchema<TotalDocumentItemEntity> ();
-			this.VerifyDatabaseSchema<SoftwareUserEntity> ();
-			this.VerifyDatabaseSchema<BusinessSettingsEntity> ();
+			foreach (var entityId in this.GetManagedEntityIds ())
+			{
+				this.VerifyDatabaseSchema (entityId);
+			}
 		}
 
 
-		private void VerifyDatabaseSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		private void VerifyDatabaseSchema(Druid entityId)
 		{
-			if (!this.dataInfrastructure.CheckSchema<TEntity> ())
+			if (!this.dataInfrastructure.CheckSchema (entityId))
 			{
-				throw new System.Exception ("Invalid database schema : schema for " + typeof(TEntity).FullName + " or one of its dependency does not exist or is incorrect");
+				System.Type type = EntityClassFactory.FindType (entityId);
+				string typeName = type == null ? entityId.ToString () : type.FullName;
+
+				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException (string.Format ("Incompatible database schema: schema for {0} or one of its dependencies does not exist or is incorrect", typeName));
 			}
+		}
+
+		private IEnumerable<Druid> GetManagedEntityIds()
+		{
+			yield return EntityInfo<RelationEntity>.GetTypeId ();
+			yield return EntityInfo<NaturalPersonEntity>.GetTypeId ();
+			yield return EntityInfo<LegalPersonEntity>.GetTypeId ();
+			yield return EntityInfo<MailContactEntity>.GetTypeId ();
+			yield return EntityInfo<TelecomContactEntity>.GetTypeId ();
+			yield return EntityInfo<UriContactEntity>.GetTypeId ();
+
+			yield return EntityInfo<VatDefinitionEntity>.GetTypeId ();
+			
+			yield return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
+			yield return EntityInfo<DocumentMetadataEntity>.GetTypeId ();
+			
+			yield return EntityInfo<ArticleDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<TextDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<PriceDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<TotalDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<TaxDocumentItemEntity>.GetTypeId ();
+
+			yield return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
+			yield return EntityInfo<EnumValueArticleParameterDefinitionEntity>.GetTypeId ();
+			yield return EntityInfo<NumericValueArticleParameterDefinitionEntity>.GetTypeId ();
+			yield return EntityInfo<FreeTextValueArticleParameterDefinitionEntity>.GetTypeId ();
+			
+			yield return EntityInfo<AffairEntity>.GetTypeId ();
+			yield return EntityInfo<WorkflowEntity>.GetTypeId ();
+			yield return EntityInfo<SoftwareUserEntity>.GetTypeId ();
+			yield return EntityInfo<BusinessSettingsEntity>.GetTypeId ();
 		}
 
 
@@ -488,32 +501,10 @@ namespace Epsitec.Cresus.Core
 		{
 			var dataContext = this.DataContext;
 
-			dataContext.CreateSchema<RelationEntity> ();
-			dataContext.CreateSchema<NaturalPersonEntity> ();
-			dataContext.CreateSchema<AbstractPersonEntity> ();
-			dataContext.CreateSchema<MailContactEntity> ();
-			dataContext.CreateSchema<TelecomContactEntity> ();
-			dataContext.CreateSchema<UriContactEntity> ();
-			dataContext.CreateSchema<ArticleDefinitionEntity> ();
-			dataContext.CreateSchema<VatDefinitionEntity> ();
-			dataContext.CreateSchema<BusinessDocumentEntity> ();
-
-			dataContext.CreateSchema<ArticleDocumentItemEntity> ();
-			dataContext.CreateSchema<TextDocumentItemEntity> ();
-			dataContext.CreateSchema<PriceDocumentItemEntity> ();
-			dataContext.CreateSchema<TaxDocumentItemEntity> ();
-
-			dataContext.CreateSchema<EnumValueArticleParameterDefinitionEntity> ();
-			dataContext.CreateSchema<NumericValueArticleParameterDefinitionEntity> ();
-
-			dataContext.CreateSchema<AffairEntity> ();
-			dataContext.CreateSchema<DocumentMetadataEntity> ();
-			dataContext.CreateSchema<WorkflowEntity> ();
-//-			dataContext.CreateSchema<PaymentDetailEventEntity> ();
-			dataContext.CreateSchema<TotalDocumentItemEntity> ();
-
-			dataContext.CreateSchema<SoftwareUserEntity> ();
-			dataContext.CreateSchema<BusinessSettingsEntity> ();
+			foreach (var entityId in this.GetManagedEntityIds ())
+			{
+				dataContext.CreateSchema (entityId);
+			}
 		}
 
 		private void PopulateDatabase()

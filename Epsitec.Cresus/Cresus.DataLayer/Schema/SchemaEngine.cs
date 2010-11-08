@@ -68,10 +68,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <typeparam name="TEntity">The type whose schema to create.</typeparam>
 		/// <returns><c>true</c> if the schema was created, <c>false</c> if it already existed.</returns>
-		public bool CreateSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		public bool CreateSchema<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
-			Druid entityId = new TEntity ().GetEntityStructuredTypeId ();
+			return this.CreateSchema (EntityInfo<TEntity>.GetTypeId ());
+		}
 
+		public bool CreateSchema(Druid entityId)
+		{
 			bool createTable = (this.GetEntityTableDefinition (entityId) == null);
 
 			if (createTable)
