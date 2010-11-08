@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private void RefreshCollectionItems()
 		{
-			System.Diagnostics.Debug.WriteLine ("About to RefreshCollectionItems on DataContext #" + this.dataContext.UniqueId);
+//-			System.Diagnostics.Debug.WriteLine ("About to RefreshCollectionItems on DataContext #" + this.dataContext.UniqueId);
 
 			this.QueueTasklets ("RefreshCollectionItems",
 				new TaskletJob (() => this.dataItems.RefreshCollectionItems (), TaskletRunMode.Async),
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			TileContainerController.DisposeDataItems (obsoleteItems);
 
-			System.Diagnostics.Debug.WriteLine ("About to RefreshLiveItems on DataContext #" + this.dataContext.UniqueId);
+//-			System.Diagnostics.Debug.WriteLine ("About to RefreshLiveItems on DataContext #" + this.dataContext.UniqueId);
 
 			this.QueueTasklets ("ExecuteAccessors",
 				new TaskletJob (() => this.liveItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
