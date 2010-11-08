@@ -389,6 +389,34 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			ImportExportManager.Import (file, this);
 		}
+
+
+		/// <summary>
+		/// Exports the Epsitec data stored in the database.
+		/// </summary>
+		/// <param name="file">The file in which to write the data.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
+		public void ExportEpsitecData(FileInfo file)
+		{
+			file.ThrowIfNull ("file");
+
+			EpsitecEntitySerializer.Export (file, this.dbInfrastructure);
+		}
+
+
+		/// <summary>
+		/// Replaces the Epsitec data stored whitin the database by the one stored in the given file.
+		/// </summary>
+		/// <param name="file">The file from which to read the data.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
+		public void ImportEpsitecData(FileInfo file)
+		{
+			file.ThrowIfNull ("file");
+
+			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure);
+			EpsitecEntitySerializer.Import (file, this.dbInfrastructure);
+		}
+
 		
 		/// <summary>
 		/// Some obscure property :-P Ask Pierre if you want to know more about it...
