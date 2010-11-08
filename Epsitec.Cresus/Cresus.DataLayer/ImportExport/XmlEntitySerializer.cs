@@ -2,6 +2,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 
@@ -86,6 +88,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static XElement CreateXElementForEntity(IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity)
 		{
 			XElement xEntity = XmlEntitySerializer.CreateXElement (XmlConstants.EntityTag);
+
+			StructuredType structuredType = (StructuredType) entity.GetEntityContext ().GetStructuredType (entity);
+			string name = structuredType.Caption.Name;
+			XmlEntitySerializer.CreateAttribute (xEntity, XmlConstants.NameTag, name);
 
 			string idAsString = InvariantConverter.ConvertToString<int> (entitiesToIds[entity]);
 			XmlEntitySerializer.CreateAttribute (xEntity, XmlConstants.IdTag, idAsString);
@@ -232,6 +238,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			XElement xField = XmlEntitySerializer.CreateXElement (XmlConstants.FieldTag);
 
+			string name = DbContext.Current.ResourceManager.GetCaption (field.CaptionId).Name;
+			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.NameTag, name);
+			
 			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.DruidTag, field.CaptionId.ToResourceId ());
 
 			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.CardinalityTag, field.Relation.ToString ());
@@ -434,19 +443,20 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static XName CreateXName(string name)
 		{
-			return XName.Get (name, XmlConstants.Namespace);
+			return XName.Get (name);
 		}
 
 
 		private static class XmlConstants
 		{
-			public static readonly string Namespace = "cresus";
-
+			
 			public static readonly string EntitiesTag = "entities";
 
 			public static readonly string EntityTag = "entity";
 
 			public static readonly string IdTag = "id";
+
+			public static readonly string NameTag = "name";
 
 			public static readonly string FieldTag = "field";
 
