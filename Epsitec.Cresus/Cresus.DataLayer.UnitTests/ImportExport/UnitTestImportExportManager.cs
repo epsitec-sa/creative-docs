@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void CompleteGraph()
 		{
-			FileInfo file = new FileInfo ("test-export.xml");
+			FileInfo file = new FileInfo ("test.xml");
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void PartialGraph()
 		{
-			FileInfo file = new FileInfo ("test-export.xml");
+			FileInfo file = new FileInfo ("test.xml");
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void EmptyGraph()
 		{
-			FileInfo file = new FileInfo ("test-export.xml");
+			FileInfo file = new FileInfo ("test.xml");
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
