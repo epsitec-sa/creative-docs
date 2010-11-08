@@ -159,6 +159,35 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void ContextMenu()
+		{
+			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default, "Normal", "Edge.Normal");
+			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call,    "Call",   "Edge.Call");
+			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork,    "Fork",   "Edge.Fork");
+		}
+
+		public override void MenuAction(string name)
+		{
+			switch (name)
+			{
+				case "Edge.Normal":
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Default;
+					this.editor.SetLocalDirty ();
+					break;
+
+				case "Edge.Call":
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Call;
+					this.editor.SetLocalDirty ();
+					break;
+
+				case "Edge.Fork":
+					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
+					this.editor.SetLocalDirty ();
+					break;
+			}
+		}
+
+
 		public override void SetBoundsAtEnd(Point start, Point end)
 		{
 			double a = Point.ComputeAngleRad (start, end);
@@ -464,21 +493,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.EdgeComment:
 					return (this.comment == null) ? "Ajoute un commentaire à la transition" : "Ferme le commentaire";
 
-				case ActiveElement.EdgeType:
-					if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
-					{
-						return "Change de \"normal\" à \"call\"";
-					}
-					else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
-					{
-						return "Change de \"call\" à \"fork\"";
-					}
-					else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
-					{
-						return "Change de \"fork\" à \"normal\"";
-					}
-					break;
-
 				case ActiveElement.EdgeExtend:
 					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
@@ -612,22 +626,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.HilitedElement == ActiveElement.EdgeComment)
 			{
 				this.AddComment ();
-			}
-
-			if (this.HilitedElement == ActiveElement.EdgeType)
-			{
-				if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default)
-				{
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Call;
-				}
-				else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
-				{
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
-				}
-				else if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
-				{
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Default;
-				}
 			}
 
 			if (this.HilitedElement == ActiveElement.EdgeColor1)
@@ -932,7 +930,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.EdgeEditDescription ||
 						this.hilitedElement == ActiveElement.EdgeInside ||
 						this.hilitedElement == ActiveElement.EdgeComment ||
-						this.hilitedElement == ActiveElement.EdgeType ||
 						this.hilitedElement == ActiveElement.EdgeColor1 ||
 						this.hilitedElement == ActiveElement.EdgeColor2 ||
 						this.hilitedElement == ActiveElement.EdgeColor3 ||
@@ -996,15 +993,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		private Point PositionTypeButton
-		{
-			//	Retourne la position du bouton pour montrer le type.
-			get
-			{
-				return new Point (this.bounds.Left+ActiveButton.buttonRadius*3+8, this.bounds.Bottom-ObjectEdge.extendedHeight+ActiveButton.buttonRadius+4);
-			}
-		}
-
 		private Point PositionCloseButton
 		{
 			//	Retourne la position du bouton pour fermer.
@@ -1060,7 +1048,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeExtend,      this.colorFactory, GlyphShape.ArrowUp,        this.UpdateButtonGeometryExtend,      this.UpdateButtonStateExtend));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeClose,       this.colorFactory, GlyphShape.Close,          this.UpdateButtonGeometryClose,       this.UpdateButtonStateClose));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeComment,     this.colorFactory, "C",                       this.UpdateButtonGeometryComment,     this.UpdateButtonStateComment));
-			this.buttons.Add (new ActiveButton (ActiveElement.EdgeType,        this.colorFactory, "T",                       this.UpdateButtonGeometryType,        this.UpdateButtonStateType));
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeChangeWidth, this.colorFactory, GlyphShape.HorizontalMove, this.UpdateButtonGeometryChangeWidth, this.UpdateButtonStateChangeWidth));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.EdgeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
@@ -1086,11 +1073,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonGeometryComment(ActiveButton button)
 		{
 			button.Center = this.PositionCommentButton;
-		}
-
-		private void UpdateButtonGeometryType(ActiveButton button)
-		{
-			button.Center = this.PositionTypeButton;
 		}
 
 		private void UpdateButtonGeometryChangeWidth(ActiveButton button)
@@ -1120,13 +1102,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 		private void UpdateButtonStateComment(ActiveButton button)
-		{
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
-			button.State.Detectable = this.isExtended;
-		}
-
-		private void UpdateButtonStateType(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;

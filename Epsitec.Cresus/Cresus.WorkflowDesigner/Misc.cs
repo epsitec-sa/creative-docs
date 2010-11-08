@@ -100,7 +100,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		static public string Icon(string icon)
 		{
 			//	Retourne le nom complet d'une icône.
-			return string.Format ("manifest:Epsitec.Cresus.WorkflowDesigner.Images.{0}.icon", icon);
+			if (string.IsNullOrEmpty (icon))
+			{
+				return null;
+			}
+			else
+			{
+				return string.Format ("manifest:Epsitec.Cresus.WorkflowDesigner.Images.{0}.icon", icon);
+			}
 		}
 
 		static public string IconDyn(string name, string parameter)

@@ -944,13 +944,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 					break;
 
 				case MessageType.MouseDown:
-					this.EditorMouseDown(message, pos);
-					message.Consumer = this;
+					if (message.IsLeftButton)
+					{
+						this.EditorMouseDown (message, pos);
+						message.Consumer = this;
+					}
 					break;
 
 				case MessageType.MouseUp:
-					this.EditorMouseUp(message, pos);
-					message.Consumer = this;
+					if (message.IsLeftButton)
+					{
+						this.EditorMouseUp (message, pos);
+						message.Consumer = this;
+					}
+					if (message.IsRightButton)
+					{
+						this.EditorMouseMenu ();
+						message.Consumer = this;
+					}
 					break;
 
 				case MessageType.MouseLeave:
@@ -1176,6 +1187,51 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 				this.MagnetConstrainClear ();
 			}
+		}
+
+
+		private void EditorMouseMenu()
+		{
+			this.contextMenu = new VMenu ();
+
+			if (this.hilitedObject != null)
+			{
+				this.hilitedObject.ContextMenu ();
+			}
+
+			if (this.contextMenu.Items.Count != 0)
+			{
+				this.menuObject = this.hilitedObject;
+
+				this.contextMenu.AdjustSize ();
+				this.contextMenu.Host = this.Window;
+				this.contextMenu.ShowAsContextMenu (this, this.MapClientToScreen (this.brutPos));
+			}
+		}
+
+		public void CreateMenuItem(bool radioState, string text, string name)
+		{
+			this.CreateMenuItem (radioState ? "RadioYes" : "RadioNo", text, name);
+		}
+
+		public void CreateMenuItem(string icon, string text, string name)
+		{
+			var item = new MenuItem ("cmd", Misc.Icon (icon), text, null, name);
+			item.Pressed += new EventHandler<MessageEventArgs> (this.HandleItemPressed);
+
+			this.contextMenu.Items.Add (item);
+		}
+
+		public void CreateMenuSeparator()
+		{
+			this.contextMenu.Items.Add (new MenuSeparator ());
+		}
+
+		private void HandleItemPressed(object sender, MessageEventArgs e)
+		{
+			var item = sender as MenuItem;
+
+			this.menuObject.MenuAction (item.Name);
 		}
 
 
@@ -1845,6 +1901,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Image							mouseCursorVerticalMove;
 		private VScroller						vscroller;
 		private AbstractObject					hilitedObject;
+		private AbstractObject					menuObject;
 		private AbstractObject					editingObject;
 		private AbstractObject					editableObject;
 		private Point							initialNodePos;
@@ -1854,5 +1911,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private readonly List<MagnetConstrain>	horizontalMagnetConstrains;
 		private readonly Timer					timer;
 		private long							lastTick;
+		private VMenu							contextMenu;
 	}
 }

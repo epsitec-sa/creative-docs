@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			var leftBox = new FrameBox
 			{
 				Parent = parent,
-				PreferredWidth = 200,
+				PreferredWidth = 300,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			this.workflowDefinitionEntities = this.businessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
 			foreach (var def in this.workflowDefinitionEntities)
 			{
-				this.listEntties.Items.Add (def.WorkflowName.ToString ());
+				this.listEntties.Items.Add (this.GetDefinitionDescription (def));
 			}
 		}
 
@@ -251,6 +251,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 					}
 				}
 			}
+		}
+
+		private string GetDefinitionDescription(WorkflowDefinitionEntity def)
+		{
+			string text = def.WorkflowName.ToString ();
+
+			if (!def.WorkflowDescription.IsNullOrWhiteSpace)
+			{
+				string desc = def.WorkflowDescription.ToString ().Replace ("<br/>", ", ");
+				text += string.Concat (" (", desc, ")");
+			}
+
+			return text;
 		}
 
 		private string GetNodeDescription(WorkflowNodeEntity node)
