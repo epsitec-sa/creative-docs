@@ -70,13 +70,13 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		/// </summary>
 		public void Freeze()
 		{
-			this.frozen = true;
+			this.frozen = this.ToString ();
 		}
 
 		
 		public override string ToString()
 		{
-			return string.Join (" / ", this.elements.Select (x => x.ToString ()).ToArray ());
+			return this.frozen ?? string.Join (" / ", this.elements.Select (x => x.ToString ()).ToArray ());
 		}
 
 		public override bool Equals(object obj)
@@ -111,13 +111,13 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		{
 			get
 			{
-				return this.frozen;
+				return this.frozen != null;
 			}
 		}
 
 		#endregion
 
 		private readonly List<NavigationPathElement> elements;
-		private bool frozen;
+		private string frozen;
 	}
 }

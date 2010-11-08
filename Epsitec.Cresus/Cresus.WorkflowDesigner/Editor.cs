@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private static void SaveData(WorkflowDefinitionEntity def, string xmlSource)
 		{
-			def.SerializedDesign.Id = "WorkflowDesigner";
+			def.SerializedDesign.Code = "WorkflowDesigner";
 			def.SerializedDesign.Data = Editor.EncodeString (xmlSource);
 		}
 
