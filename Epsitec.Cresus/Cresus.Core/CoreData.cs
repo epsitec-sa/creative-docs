@@ -302,12 +302,18 @@ namespace Epsitec.Cresus.Core
 
 		public void DisposeDataContext(DataContext context)
 		{
-			if (this.dataInfrastructure.DeleteDataContext (context))
+			if (this.dataInfrastructure.ContainsDataContext (context))
 			{
 				if (this.activeDataContext == context)
 				{
 					this.activeDataContext = null;
 				}
+
+				CoreApplication.QueueAsyncCallback (
+					delegate
+					{
+						this.dataInfrastructure.DeleteDataContext (context);
+					});
 			}
 			else
 			{

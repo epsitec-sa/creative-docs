@@ -96,7 +96,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.RecordStateBeforeChange ();
 
-			this.liveNodes.Add (new Node (parentController, controller, this.currentHistoryId));
+			Node node = new Node (parentController, controller, this.currentHistoryId);
+			
+			this.liveNodes.Add (node);
+
+			System.Diagnostics.Debug.WriteLine ("Current path: " + this.GetNavigationPath (controller));
+			
 			this.MakeDirty ();
 		}
 
@@ -165,6 +170,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <returns>The click simulator.</returns>
 		public IClickSimulator GetLeafClickSimulator()
 		{
+			//	Make sure the UI is in a stable state before returning a click
+			//	simulator, or else we might work with an outdated UI:
+			CoreApplication.ExecuteAsyncCallbacks ();
+
 			var key = this.GetLeafViewControllerKey ();
 			
 			ClickSimulatorCollection collection;
@@ -270,11 +279,16 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				this.recordedHistoryId = this.currentHistoryId;
 
-				var sortedNodes = this.liveNodes.OrderByDescending (x => x.Id);
-				var topNode     = sortedNodes.FirstOrDefault ();
-
-				this.RecordTopNode (topNode);
+				this.RecordTopNode (this.GetTopNode ());
 			}
+		}
+
+		private Node GetTopNode()
+		{
+			var sortedNodes = this.liveNodes.OrderByDescending (x => x.Id);
+			var topNode     = sortedNodes.FirstOrDefault ();
+			
+			return topNode;
 		}
 
 		private void RecordTopNode(Node topNode)
@@ -514,8 +528,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private static long GetCurrentActionId()
 		{
-			var message = Epsitec.Common.Widgets.Message.GetLastMessage ();
-			return message == null ? 0 : message.MessageId;
+			return Epsitec.Common.Widgets.Message.CurrentUserMessageId;
 		}
 
 

@@ -291,7 +291,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			dataContext.Dispose ();
 
 			return this.DataContextPool.Remove (dataContext);
-		} 
+		}
+
+		public bool ContainsDataContext(DataContext dataContext)
+		{
+			return this.DataContextPool.Contains (dataContext);
+		}
 
 		/// <summary>
 		/// Does the real job of disposing this instance.
