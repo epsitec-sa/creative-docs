@@ -116,6 +116,44 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void ContextMenu()
+		{
+			this.editor.CreateMenuItem (!this.Entity.IsPublic, "Noeud privé",  "Node.Private");
+			this.editor.CreateMenuItem ( this.Entity.IsPublic, "Noeud public", "Node.Public");
+
+			this.editor.CreateMenuSeparator ();
+
+			this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
+			this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
+		}
+
+		public override void MenuAction(string name)
+		{
+			switch (name)
+            {
+				case "Node.Private":
+					this.Entity.IsPublic = false;
+					this.editor.SetLocalDirty ();
+					break;
+
+				case "Node.Public":
+					this.Entity.IsPublic = true;
+					this.editor.SetLocalDirty ();
+					break;
+
+				case "Node.Manuel":
+					this.Entity.IsAuto = false;
+					this.editor.SetLocalDirty ();
+					break;
+
+				case "Node.Auto":
+					this.Entity.IsAuto = true;
+					this.editor.SetLocalDirty ();
+					break;
+			}
+		}
+
+
 		public override void UpdateObject()
 		{
 			this.UpdateAttachObject ();
@@ -257,12 +295,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.NodeInfo:
 					return (this.info == null) ? "Monte les informations du noeud" : "Ferme les informations du noeud";
 
-				case ActiveElement.NodeAuto:
-					return this.Entity.IsAuto ? "Change de \"automatique\" à \"manuel\"" : "Change de \"manuel\" à \"automatique\"";
-
-				case ActiveElement.NodePublic:
-					return this.Entity.IsPublic ? "Change de \"public\" à \"privé\"" : "Change de \"privé\" à \"public\"";
-
 				case ActiveElement.NodeOpenLink:
 					return "Crée une nouvelle connexion";
 
@@ -395,20 +427,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.HilitedElement == ActiveElement.NodeInfo)
 			{
 				this.AddInfo ();
-			}
-
-			if (this.HilitedElement == ActiveElement.NodeAuto)
-			{
-				this.Entity.IsAuto = !this.Entity.IsAuto;
-				this.UpdateButtonsState ();
-				this.editor.SetLocalDirty ();
-			}
-
-			if (this.HilitedElement == ActiveElement.NodePublic)
-			{
-				this.Entity.IsPublic = !this.Entity.IsPublic;
-				this.UpdateButtonsState ();
-				this.editor.SetLocalDirty ();
 			}
 
 			if (this.HilitedElement == ActiveElement.NodeColor1)
@@ -715,8 +733,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						this.hilitedElement == ActiveElement.NodeComment ||
 						this.hilitedElement == ActiveElement.NodeClose ||
 						this.hilitedElement == ActiveElement.NodeInfo ||
-						this.hilitedElement == ActiveElement.NodeAuto ||
-						this.hilitedElement == ActiveElement.NodePublic ||
 						this.hilitedElement == ActiveElement.NodeColor1 ||
 						this.hilitedElement == ActiveElement.NodeColor2 ||
 						this.hilitedElement == ActiveElement.NodeColor3 ||
@@ -757,29 +773,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
-				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*5+6);
-			}
-		}
-
-		private Point PositionInfoButton
-		{
-			//	Retourne la position du bouton.
-			get
-			{
-				return new Point (this.bounds.Center.X+ActiveButton.buttonRadius+1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*5+6);
-			}
-		}
-
-		private Point PositionAutoButton
-		{
-			//	Retourne la position du bouton.
-			get
-			{
 				return new Point (this.bounds.Center.X-ActiveButton.buttonRadius-1, this.bounds.Bottom-ObjectNode.extendedHeight+ActiveButton.buttonRadius*3+4);
 			}
 		}
 
-		private Point PositionPublicButton
+		private Point PositionInfoButton
 		{
 			//	Retourne la position du bouton.
 			get
@@ -852,8 +850,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeExtend,   this.colorFactory, GlyphShape.ArrowUp, this.UpdateButtonGeometryExtend,   this.UpdateButtonStateExtend));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeComment,  this.colorFactory, "C",                this.UpdateButtonGeometryComment,  this.UpdateButtonStateComment));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeInfo,     this.colorFactory, "i",                this.UpdateButtonGeometryInfo,     this.UpdateButtonStateInfo));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodeAuto,     this.colorFactory, "A",                this.UpdateButtonGeometryAuto,     this.UpdateButtonStateAuto));
-			this.buttons.Add (new ActiveButton (ActiveElement.NodePublic,   this.colorFactory, "P",                this.UpdateButtonGeometryPublic,   this.UpdateButtonStatePublic));
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeClose,    this.colorFactory, GlyphShape.Close,   this.UpdateButtonGeometryClose,    this.UpdateButtonStateClose));
 
 			this.buttons.Add (new ActiveButton (ActiveElement.NodeColor1, this.colorFactory, ColorItem.Yellow, this.UpdateButtonGeometryColor, this.UpdateButtonStateColor));
@@ -891,16 +887,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.Center = this.PositionInfoButton;
 		}
 
-		private void UpdateButtonGeometryAuto(ActiveButton button)
-		{
-			button.Center = this.PositionAutoButton;
-		}
-
-		private void UpdateButtonGeometryPublic(ActiveButton button)
-		{
-			button.Center = this.PositionPublicButton;
-		}
-
 		private void UpdateButtonGeometryColor(ActiveButton button)
 		{
 			int rank = button.Element - ActiveElement.NodeColor1;
@@ -919,20 +905,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.Glyph = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
-		}
-
-		private void UpdateButtonStateAuto(ActiveButton button)
-		{
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
-			button.State.Detectable = this.isExtended;
-		}
-
-		private void UpdateButtonStatePublic(ActiveButton button)
-		{
-			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && this.isExtended;
-			button.State.Detectable = this.isExtended;
 		}
 
 		private void UpdateButtonStateClose(ActiveButton button)
@@ -991,7 +963,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 
 		private static readonly double			frameRadius = 25;
-		private static readonly double			extendedHeight = 90;
+		private static readonly double			extendedHeight = 70;
 
 		private bool							isRoot;
 		private TextLayout						title;

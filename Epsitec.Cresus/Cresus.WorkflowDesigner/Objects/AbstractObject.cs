@@ -134,6 +134,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.Bounds = new Rectangle (this.bounds.Left, this.bounds.Bottom, width, this.bounds.Height);
 		}
 
+		public virtual void ContextMenu()
+		{
+		}
+
+		public virtual void MenuAction(string name)
+		{
+		}
+
 		public virtual ColorItem BackgroundColorItem
 		{
 			//	Couleur de fond de la boîte.
