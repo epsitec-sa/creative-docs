@@ -78,6 +78,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A1L]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAL]", typeof (Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ANL]", typeof (Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0ATL]", typeof (Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2565,6 +2566,18 @@ namespace Epsitec.Cresus.Core.Entities
 					this.SetField<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> ("[L0AUK]", oldValue, value);
 					this.OnBusinessDocumentChanged (oldValue, value);
 				}
+			}
+		}
+		///	<summary>
+		///	The <c>SerializedDocumentVersions</c> field.
+		///	designer:fld/L0AO2/L0ASL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASL]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity> SerializedDocumentVersions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity> ("[L0ASL]");
 			}
 		}
 		
@@ -10610,30 +10623,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>XmlBlob</c> entity.
 	///	designer:cap/L0A1L
 	///	</summary>
-	public partial class XmlBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class XmlBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
 		///	<summary>
-		///	The <c>Id</c> field.
-		///	designer:fld/L0A1L/L0A4L
+		///	The <c>Code</c> field.
+		///	designer:fld/L0A1L/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A4L]")]
-		public string Id
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A4L]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Id;
-				if (oldValue != value)
-				{
-					this.OnIdChanging (oldValue, value);
-					this.SetField<string> ("[L0A4L]", oldValue, value);
-					this.OnIdChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Data</c> field.
 		///	designer:fld/L0A1L/L0A2L
@@ -10657,8 +10666,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnIdChanging(string oldValue, string newValue);
-		partial void OnIdChanged(string oldValue, string newValue);
 		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
@@ -10948,6 +10955,73 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnBusinessCodeVectorChanged(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj, string oldValue, string newValue);
 		static partial void OnBusinessCodeVectorChanging(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.SerializedDocumentBlob Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>SerializedDocumentBlob</c> entity.
+	///	designer:cap/L0ATL
+	///	</summary>
+	public partial class SerializedDocumentBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0ATL/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Data</c> field.
+		///	designer:fld/L0ATL/L0AUL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUL]")]
+		public global::System.Byte[] Data
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[L0AUL]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.Data;
+				if (oldValue != value)
+				{
+					this.OnDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0AUL]", oldValue, value);
+					this.OnDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 701);	// [L0ATL]
+		public static readonly new string EntityStructuredTypeKey = "[L0ATL]";
 	}
 }
 #endregion
