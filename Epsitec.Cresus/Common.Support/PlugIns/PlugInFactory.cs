@@ -83,6 +83,25 @@ namespace Epsitec.Common.Support.PlugIns
 		}
 
 		/// <summary>
+		/// Finds the type for the specified id.
+		/// </summary>
+		/// <param name="id">The id.</param>
+		/// <returns>The type.</returns>
+		public static System.Type FindType(TId id)
+		{
+			Record record;
+
+			if (PlugInFactory<TClass, TAttribute, TId>.types.TryGetValue (id, out record))
+			{
+				return record.Type;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Sets up the plug-in factory; scans all available assemblies for
 		/// classes marked with the dedicated attribute.
 		/// </summary>

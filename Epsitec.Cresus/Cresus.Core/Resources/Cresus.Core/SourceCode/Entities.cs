@@ -77,6 +77,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ADK]", typeof (Epsitec.Cresus.Core.Entities.BusinessDocumentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A1L]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAL]", typeof (Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0ANL]", typeof (Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1881,7 +1882,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Relation</c> entity.
 	///	designer:cap/L0AB2
 	///	</summary>
-	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
+	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IBusinessLink
 	{
 		#region IWorkflowHost Members
 		///	<summary>
@@ -1936,6 +1937,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
+		#endregion
+		#region IBusinessLink Members
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/L0AB2/L0ARL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARL]")]
+		public string BusinessCodeVector
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
 		///	<summary>
 		///	The <c>IdB</c> field.
 		///	designer:fld/L0AB2/L0AI5
@@ -2705,7 +2726,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticleDefinition</c> entity.
 	///	designer:cap/L0A63
 	///	</summary>
-	public partial class ArticleDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ArticleDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IBusinessLink
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -2742,6 +2763,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
+		#endregion
+		#region IBusinessLink Members
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/L0A63/L0ARL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARL]")]
+		public string BusinessCodeVector
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
 		///	<summary>
 		///	The <c>IdB</c> field.
 		///	designer:fld/L0A63/L0AI5
@@ -4250,7 +4291,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Affair</c> entity.
 	///	designer:cap/L0AD5
 	///	</summary>
-	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
+	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IBusinessLink
 	{
 		#region IWorkflowHost Members
 		///	<summary>
@@ -4305,6 +4346,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
+		#endregion
+		#region IBusinessLink Members
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/L0AD5/L0ARL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARL]")]
+		public string BusinessCodeVector
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
 		///	<summary>
 		///	The <c>IdB</c> field.
 		///	designer:fld/L0AD5/L0AI5
@@ -8951,8 +9012,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>BusinessSettings</c> entity.
 	///	designer:cap/L0A6H
 	///	</summary>
-	public partial class BusinessSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class BusinessSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0A6H/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Company</c> field.
 		///	designer:fld/L0A6H/L0A7H
@@ -10752,6 +10831,123 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 682);	// [L0AAL]
 		public static readonly new string EntityStructuredTypeKey = "[L0AAL]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.FreeTextValueArticleParameterDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>FreeTextValueArticleParameterDefinition</c> entity.
+	///	designer:cap/L0ANL
+	///	</summary>
+	public partial class FreeTextValueArticleParameterDefinitionEntity : global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity
+	{
+		///	<summary>
+		///	The <c>ShortText</c> field.
+		///	designer:fld/L0ANL/L0AOL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AOL]")]
+		public global::Epsitec.Common.Types.FormattedText ShortText
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AOL]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortText;
+				if (oldValue != value)
+				{
+					this.OnShortTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AOL]", oldValue, value);
+					this.OnShortTextChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LongText</c> field.
+		///	designer:fld/L0ANL/L0APL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APL]")]
+		public global::Epsitec.Common.Types.FormattedText LongText
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0APL]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.LongText;
+				if (oldValue != value)
+				{
+					this.OnLongTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0APL]", oldValue, value);
+					this.OnLongTextChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnShortTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 695);	// [L0ANL]
+		public static readonly new string EntityStructuredTypeKey = "[L0ANL]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IBusinessLink Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IBusinessLink</c> entity.
+	///	designer:cap/L0AQL
+	///	</summary>
+	public interface IBusinessLink
+	{
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/L0AQL/L0ARL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARL]")]
+		string BusinessCodeVector
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IBusinessLinkInterfaceImplementation
+	{
+		public static string GetBusinessCodeVector(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[L0ARL]");
+		}
+		public static void SetBusinessCodeVector(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.BusinessCodeVector;
+			if (oldValue != value)
+			{
+				IBusinessLinkInterfaceImplementation.OnBusinessCodeVectorChanging (obj, oldValue, value);
+				entity.SetField<string> ("[L0ARL]", oldValue, value);
+				IBusinessLinkInterfaceImplementation.OnBusinessCodeVectorChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnBusinessCodeVectorChanged(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj, string oldValue, string newValue);
+		static partial void OnBusinessCodeVectorChanging(global::Epsitec.Cresus.Core.Entities.IBusinessLink obj, string oldValue, string newValue);
 	}
 }
 #endregion
