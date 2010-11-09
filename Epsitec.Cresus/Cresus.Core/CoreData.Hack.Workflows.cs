@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core
 			workflow.Threads.Add (thread);
 
 			thread.Status = WorkflowStatus.Pending;
-			thread.Definition = this.DataContext.GetEntitiesOfType<WorkflowDefinitionEntity> (x => x.Code == "[L0AB2]").First ();
+			thread.Definition = this.DataContext.GetEntitiesOfType<WorkflowDefinitionEntity> (x => x.WorkflowName == "RelationWorkflow").First ();
 			
 			return workflow;
 		}
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core
             var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
 
 			def.InitializeDefaultValues ();
-			def.WorkflowName = "Workflow principal";
+			def.WorkflowName = "RelationWorkflow";
 			def.WorkflowDescription = "Description complète du workflow principal.";
             def.Name = FormattedText.FromSimpleText("e");
             def.Edges.Add(edgeAB);

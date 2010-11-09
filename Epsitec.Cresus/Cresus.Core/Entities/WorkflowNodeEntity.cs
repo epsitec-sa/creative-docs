@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public void InitializeDefaultValues()
 		{
-			this.Code = System.Guid.NewGuid ().ToString ("D");
+			this.Code = System.Guid.NewGuid ().ToString ("N");
 		}
 	}
 }
