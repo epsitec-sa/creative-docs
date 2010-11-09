@@ -9773,11 +9773,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ContinuationNode</c> field.
+		///	The <c>Continuation</c> field.
 		///	designer:fld/L0A6J/L0AVL
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AVL]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity ContinuationNode
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity Continuation
 		{
 			get
 			{
@@ -9785,12 +9785,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.ContinuationNode;
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Continuation;
 				if (oldValue != value)
 				{
-					this.OnContinuationNodeChanging (oldValue, value);
+					this.OnContinuationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVL]", oldValue, value);
-					this.OnContinuationNodeChanged (oldValue, value);
+					this.OnContinuationChanged (oldValue, value);
 				}
 			}
 		}
@@ -9845,8 +9845,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
-		partial void OnContinuationNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
-		partial void OnContinuationNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnTransitionTypeChanging(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionTypeChanged(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionActionChanging(string oldValue, string newValue);
@@ -10178,11 +10178,11 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class WorkflowCallEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>ReturnNode</c> field.
+		///	The <c>Continuation</c> field.
 		///	designer:fld/L0AUJ/L0AVJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AVJ]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity ReturnNode
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity Continuation
 		{
 			get
 			{
@@ -10190,18 +10190,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.ReturnNode;
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Continuation;
 				if (oldValue != value)
 				{
-					this.OnReturnNodeChanging (oldValue, value);
+					this.OnContinuationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVJ]", oldValue, value);
-					this.OnReturnNodeChanged (oldValue, value);
+					this.OnContinuationChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnReturnNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
-		partial void OnReturnNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnContinuationChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
