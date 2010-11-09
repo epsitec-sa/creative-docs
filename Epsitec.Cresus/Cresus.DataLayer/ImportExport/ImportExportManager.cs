@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	//   at the same time, which might require a lot of memory and slow everything for a high number
 	//   of exported entities.
 	// - The xml file is completely loaded in memory, which might be problematic for large files.
-	// - The xml format used contain a lot a redundancy and is not human readable.
 	// - No checks are made so ensure that the schema of the exported data is compatible with the
 	//   importing database and that the data in the xml file is compatible to the schema in the xml
 	//   file.
@@ -42,19 +41,22 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		public static void Export(FileInfo file, DataContext dataContext, AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
 		{
-			ISet<AbstractEntity> entitiesToExport = ImportExportManager.GetEntitiesToExport (entity, predicate);
+			var result = ImportExportManager.GetEntities (entity, predicate);
 
-			XDocument xDocument = XmlEntitySerializer.Serialize (dataContext, entitiesToExport);
+			ISet<AbstractEntity> exportableEntities = result.Item1;
+			ISet<AbstractEntity> externalEntities = result.Item2;
+
+			XDocument xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 
 			xDocument.Save (file.FullName);
 		}
 
 		
-		private static ISet<AbstractEntity> GetEntitiesToExport(AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
+		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
 		{
 			Stack<AbstractEntity> entitiesToProcess = new Stack<AbstractEntity> ();
-			ISet<AbstractEntity> entitiesProcessed = new HashSet<AbstractEntity> ();
-			ISet<AbstractEntity> entitiesToExport = new HashSet<AbstractEntity> ();
+			ISet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ();
+			ISet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
 
 			entitiesToProcess.Push (entity);
 
@@ -62,23 +64,26 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			{
 				AbstractEntity e = entitiesToProcess.Pop ();
 
-				if (!entitiesProcessed.Contains (e))
+				if (!exportableEntities.Contains (e) && !externalEntities.Contains (e))
 				{
-					entitiesProcessed.Add (e);
-					
+
 					if (predicate (e))
 					{
-						entitiesToExport.Add (e);
+						exportableEntities.Add (e);
 
 						foreach (AbstractEntity child in ImportExportManager.GetChildren (e))
 						{
 							entitiesToProcess.Push (child);
 						}
 					}
+					else
+					{
+						externalEntities.Add (e);
+					}
 				}
 			}
 
-			return entitiesToExport;
+			return System.Tuple.Create (exportableEntities, externalEntities);
 		}
 
 
