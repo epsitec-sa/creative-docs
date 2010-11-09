@@ -118,13 +118,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void ContextMenu()
 		{
-			this.editor.CreateMenuItem (!this.Entity.IsPublic, "Noeud privé",  "Node.Private");
-			this.editor.CreateMenuItem ( this.Entity.IsPublic, "Noeud public", "Node.Public");
+			if (this.IsSecondaryPublic)
+			{
+				return;
+			}
 
-			this.editor.CreateMenuSeparator ();
+			if (!this.Entity.IsPublic || !this.editor.IsReferencedNode (this.Entity))
+			{
+				this.editor.CreateMenuItem (!this.Entity.IsPublic, "Noeud privé",  "Node.Private");
+				this.editor.CreateMenuItem (this.Entity.IsPublic,  "Noeud public", "Node.Public");
 
-			this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
-			this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
+				this.editor.CreateMenuSeparator ();
+
+				this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
+				this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
+			}
 		}
 
 		public override void MenuAction(string name)
@@ -133,11 +141,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
             {
 				case "Node.Private":
 					this.Entity.IsPublic = false;
+					this.isOriginalPublic = false;
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Node.Public":
 					this.Entity.IsPublic = true;
+					this.isOriginalPublic = true;
 					this.editor.SetLocalDirty ();
 					break;
 
@@ -222,6 +232,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 					this.editor.Invalidate();
 				}
+			}
+		}
+
+		public bool IsOriginalPublic
+		{
+			get
+			{
+				return this.isOriginalPublic;
+			}
+		}
+
+		private bool IsSecondaryPublic
+		{
+			get
+			{
+				return this.Entity.IsPublic && !this.IsOriginalPublic;
 			}
 		}
 
@@ -548,7 +574,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
-				if (!this.Entity.Description.IsNullOrWhiteSpace)
+				if (!this.IsSecondaryPublic && !this.Entity.Description.IsNullOrWhiteSpace)
 				{
 					this.comment.Text = this.Entity.Description.ToString ();
 				}
@@ -693,10 +719,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.Entity.IsPublic)
 			{
-				var circlePath = new Path ();
-				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + (this.isRoot ? 4.5 : 2.5));
+				double offset = 2.5;
+				double width = 1;
 
-				Misc.DrawPathDash (graphics, circlePath, 1, 5, 5, false, colorFrame);
+				if (this.isRoot)
+				{
+					offset = 4.5;
+				}
+
+				if (this.isOriginalPublic)
+				{
+					offset += 2;
+					width = 3;
+				}
+
+				var circlePath = new Path ();
+				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + offset);
+
+				Misc.DrawPathDash (graphics, circlePath, width, 5, 5, false, colorFrame);
 			}
 		}
 
@@ -897,7 +937,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateOpenLink(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && !this.IsSecondaryPublic;
 		}
 
 		private void UpdateButtonStateExtend(ActiveButton button)
@@ -950,14 +990,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.Serialize (xml);
 
-			xml.Add (new XAttribute ("IsRoot", this.isRoot));
+			xml.Add (new XAttribute ("IsRoot",           this.isRoot));
+			xml.Add (new XAttribute ("IsOriginalPublic", this.isOriginalPublic));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
 
-			this.isRoot = (bool) xml.Attribute ("IsRoot");
+			this.isRoot           = (bool) xml.Attribute ("IsRoot");
+			this.isOriginalPublic = (bool) xml.Attribute ("IsOriginalPublic");
 		}
 		#endregion
 
@@ -966,6 +1008,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double			extendedHeight = 70;
 
 		private bool							isRoot;
+		private bool							isOriginalPublic;
 		private TextLayout						title;
 
 		private AbstractTextField				editingTextField;
