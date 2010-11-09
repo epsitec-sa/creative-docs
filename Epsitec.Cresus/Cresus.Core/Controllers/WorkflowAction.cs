@@ -92,6 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				IsValid = true
 			};
 
+			string code = string.Join (" / ", lines.ToArray ());
+
+			action = () => System.Diagnostics.Debug.WriteLine ("Execute: " + code);
+
 			return true;
 		}
 

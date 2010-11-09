@@ -85,13 +85,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ExecuteInContext()
 		{
-			this.FollowWorkflowEdges (
-				arc =>
-				{
-					System.Diagnostics.Debug.WriteLine ("Executed " + arc.Edge.TransitionAction);
-					return true;
-				});
+			this.FollowWorkflowEdges (arc => this.ExecuteAction (arc.Edge.TransitionAction));
+		}
 
+		private bool ExecuteAction(string transitionAction)
+		{
+			var action = WorkflowAction.Parse (transitionAction);
+			action.Execute ();
+
+			return true;
 		}
 
 		private void FollowWorkflowEdges(System.Func<Arc, bool> executor)
