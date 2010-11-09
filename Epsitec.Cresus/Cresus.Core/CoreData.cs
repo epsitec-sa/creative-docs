@@ -200,6 +200,16 @@ namespace Epsitec.Cresus.Core
 			return CoreApplication.GetController<DataViewController> (context);
 		}
 
+		/// <summary>
+		/// Finds the (normalized) entity key for the specified entity.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The (normalized) entity key or <c>null</c> if it cannot be found in the database.</returns>
+		public static EntityKey? FindEntityKey(AbstractEntity entity)
+		{
+			return CoreProgram.Application.Data.DataContextPool.FindEntityKey (entity);
+		}
+
 		public static void Sort<T>(List<T> list)
 			where T : AbstractEntity, new ()
 		{

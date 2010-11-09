@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.PlugIns;
@@ -17,12 +18,15 @@ namespace Epsitec.Cresus.WorkflowDesigner
 {
 	public sealed class WorkflowDesigner : System.IDisposable
 	{
-		public WorkflowDesigner(Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
+		public WorkflowDesigner(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, WorkflowDefinitionEntity workflow)
 		{
+			this.orchestrator    = orchestrator;
 			this.businessContext = businessContext;
-			this.workflow = workflow;
+			this.workflow        = workflow;
+			
 			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
+
 
 
 		public Widget CreateUI()
@@ -30,6 +34,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.editorUI = this.CreateWorkflowEditorUI (this.workflow);
 			
 			return this.editorUI;
+		}
+
+		public void NavigateTo(WorkflowDefinitionEntity workflow)
+		{
+			var mainViewController    = this.orchestrator.MainViewController;
+			var browserViewController = mainViewController.BrowserViewController;
+			
+			browserViewController.Select (workflow);
 		}
 
 		private Widget CreateWorkflowEditorUI(WorkflowDefinitionEntity workflow)
@@ -50,12 +62,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.businessContext.DataContext.SaveChanges ();
-			this.SaveDesign ();
+			this.SaveWorkflowDesignIntoXmlBlob ();
 		}
 
-		private void SaveDesign()
+		private void SaveWorkflowDesignIntoXmlBlob()
 		{
-			//	Sérialise les réglages de l'entité 'workflow' dans le XmlBlob.
 			this.mainController.SaveDesign ();
 		}
 
@@ -76,10 +87,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		#endregion
 
 
-		private readonly Core.Business.BusinessContext businessContext;
+		private readonly BusinessContext		  businessContext;
 		private readonly WorkflowDefinitionEntity workflow;
+		private readonly DataViewOrchestrator	  orchestrator;
 
-		private Widget editorUI;
-		private MainController mainController;
+		private Widget							editorUI;
+		private MainController					mainController;
 	}
 }

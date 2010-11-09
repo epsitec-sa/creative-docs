@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			this.DisposeWorkflowDesigner ();
 
-			this.activeDesigner   = new WorkflowDesigner (businessContext, workflow);
+			this.activeDesigner   = new WorkflowDesigner (this.orchestrator, businessContext, workflow);
 			this.activeController = new DummyWorkflowController (this.orchestrator.Navigator, navigationPath);
 
 			this.orchestrator.DataViewController.SetCustomUI (this.activeDesigner.CreateUI ());
