@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 			this.InitialDirectory = FileImportDialog.initialDirectory;
 			this.InitialFileName  = FileImportDialog.initialFilename;
-			this.FileFilterPattern = "*.xml";
+			this.FileExtension    = ".xml";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}

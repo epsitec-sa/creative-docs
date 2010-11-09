@@ -270,35 +270,56 @@ namespace Epsitec.Common.Widgets
 
 		private void OnTimeElapsed()
 		{
-			switch (this.state)
+			if (this.notifyingTimeElapsed)
 			{
-				case TimerState.Disposed:
-					return;
-				
-				case TimerState.Invalid:
-				case TimerState.Elapsed:
-				case TimerState.Suspended:
-					throw new System.InvalidOperationException (string.Format ("Timer got event while in {0} state.", this.state));
-				
-				case TimerState.Stopped:
-				case TimerState.Running:
+				this.notifyTimeElapsedMissed = true;
+				return;
+			}
+
+			do
+			{
+				this.notifyTimeElapsedMissed = false;
+
+				try
+				{
+					this.notifyingTimeElapsed = true;
+
+					switch (this.state)
+					{
+						case TimerState.Disposed:
+							return;
+
+						case TimerState.Invalid:
+						case TimerState.Elapsed:
+						case TimerState.Suspended:
+							throw new System.InvalidOperationException (string.Format ("Timer got event while in {0} state.", this.state));
+
+						case TimerState.Stopped:
+						case TimerState.Running:
+							this.state = TimerState.Elapsed;
+							break;
+					}
+
 					this.state = TimerState.Elapsed;
-					break;
+
+					if (this.TimeElapsed != null)
+					{
+						this.TimeElapsed (this);
+					}
+
+					if ((this.delaySecondsAutoRepeat > 0) &&
+						(this.state == TimerState.Elapsed))
+					{
+						this.ExpirationDate = this.ExpirationDate.AddSeconds (this.delaySecondsAutoRepeat);
+						this.Start ();
+					}
+				}
+				finally
+				{
+					this.notifyingTimeElapsed = false;
+				}
 			}
-			
-			this.state = TimerState.Elapsed;
-			
-			if (this.TimeElapsed != null)
-			{
-				this.TimeElapsed (this);
-			}
-			
-			if ((this.delaySecondsAutoRepeat > 0) &&
-				(this.state == TimerState.Elapsed))
-			{
-				this.ExpirationDate = this.ExpirationDate.AddSeconds (this.delaySecondsAutoRepeat);
-				this.Start ();
-			}
+			while (this.notifyTimeElapsedMissed);
 		}
 		
 		
@@ -313,5 +334,7 @@ namespace Epsitec.Common.Widgets
 		private double							delaySeconds;
 		private double							delaySecondsAutoRepeat;
 		private bool							higherAccuracy;
+		private bool							notifyingTimeElapsed;
+		private bool							notifyTimeElapsedMissed;
 	}
 }
