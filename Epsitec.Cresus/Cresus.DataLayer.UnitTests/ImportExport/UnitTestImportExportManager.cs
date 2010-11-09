@@ -1,5 +1,4 @@
-﻿using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
+﻿using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
@@ -11,11 +10,7 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Collections.Generic;
-
 using System.IO;
-
-using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport

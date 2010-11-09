@@ -12,8 +12,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
-using System.Linq;
-
 using System.Xml.Linq;
 
 
@@ -66,21 +64,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					HashSet<AbstractEntity> entities = new HashSet<AbstractEntity> ();
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))),
+					};
 
-					entities.Add (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))));
-					entities.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
-					entities.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))));
-					entities.Add (dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))));
-					entities.Add (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))));
-					entities.Add (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))));
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 				}
 			}
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
-			
+
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));			
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 				}
 			}
 		}
@@ -109,13 +110,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					HashSet<AbstractEntity> entities = new HashSet<AbstractEntity> ();
-
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
+					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 					
-					entities.Add (uriContact);
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						uriContact,
+					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ()
+					{
+						uriScheme,
+					};
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 
 					dataContext.DeleteEntity (uriContact);
 
@@ -145,13 +153,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					HashSet<AbstractEntity> entities = new HashSet<AbstractEntity> ();
-
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
-					entities.Add (uriScheme);
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						uriScheme,
+					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 
 					dataContext.DeleteEntity (uriScheme);
 
@@ -193,14 +204,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					HashSet<AbstractEntity> entities = new HashSet<AbstractEntity> ();
-
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
-					entities.Add (uriContact);
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						uriContact,
+					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ()
+					{
+						uriScheme,
+					};
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 
 					dataContext.DeleteEntity (uriScheme);
 
@@ -228,16 +245,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					HashSet<AbstractEntity> entities = new HashSet<AbstractEntity> ();
-
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity uriContact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity uriContact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
 
-					entities.Add (person);
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						person,
+					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, entities);
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ()
+					{
+						uriContact1,
+						uriContact2,
+						language,
+						gender,
+					};
 
-					dataContext.DeleteEntity (uriContact);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+
+					dataContext.DeleteEntity (uriContact1);
 
 					dataContext.SaveChanges ();
 				}

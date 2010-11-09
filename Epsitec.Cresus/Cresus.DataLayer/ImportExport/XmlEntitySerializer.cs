@@ -26,27 +26,129 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static XDocument Serialize(DataContext dataContext, ISet<AbstractEntity> entities)
+		public static XDocument Serialize(DataContext dataContext, ISet<AbstractEntity> exportableEntities, ISet<AbstractEntity> externalEntities)
 		{
+			var entitiesToIds = XmlEntitySerializer.AssignIdToEntities (exportableEntities, externalEntities);
+			var entityDefinitionsToIds = XmlEntitySerializer.AssignIdToEntityDefinitions (exportableEntities);
+			var fieldDefinitionsToIds = XmlEntitySerializer.AssignIdToFieldDefinitions (dataContext, exportableEntities);
+
+			XElement xData = new XElement (XName.Get (XmlConstants.DataTag));
+
+			xData.Add (XmlEntitySerializer.SerializeEntityDefinitions (dataContext, entityDefinitionsToIds, fieldDefinitionsToIds));
+			xData.Add (XmlEntitySerializer.SerializeExportableEntities (dataContext, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, exportableEntities));
+			xData.Add (XmlEntitySerializer.SerializeExternalEntities (dataContext, entitiesToIds, externalEntities));
+
 			XDocument xDocument = new XDocument ();
 
-			XElement xEntities = XmlEntitySerializer.SerializeEntities (dataContext, entities);
-
-			xDocument.Add (xEntities);
+			xDocument.Add (xData);
 
 			return xDocument;
 		}
 
 
-		private static XElement SerializeEntities(DataContext dataContext, ISet<AbstractEntity> entities)
+		private static IDictionary<AbstractEntity, int> AssignIdToEntities(ISet<AbstractEntity> entitiesToExport, ISet<AbstractEntity> entitiesNotToExport)
 		{
-			IDictionary<AbstractEntity, int> entitiesWithIds = XmlEntitySerializer.BuildEntitiesToIds (entities);
-			
-			XElement xEntities = XmlEntitySerializer.CreateXElement(XmlConstants.EntitiesTag);
+			var entities = entitiesToExport.Concat (entitiesNotToExport);
 
-			foreach (AbstractEntity entity in entities)
+			return XmlEntitySerializer.AssignId (entities);
+		}
+
+
+		private static IDictionary<Druid, int> AssignIdToEntityDefinitions(ISet<AbstractEntity> exportableEntities)
+		{
+			var entityDefinitions = exportableEntities
+				.Select (e => e.GetEntityStructuredTypeId ());
+
+			return XmlEntitySerializer.AssignId (entityDefinitions);
+		}
+
+
+		private static IDictionary<Druid, int> AssignIdToFieldDefinitions(DataContext dataContext, ISet<AbstractEntity> exportableEntities)
+		{
+			var fields = exportableEntities
+				.Select (e => e.GetEntityStructuredTypeId ())
+				.Distinct ()
+				.SelectMany (d => dataContext.EntityContext.GetEntityFieldDefinitions (d))
+				.Select (d => d.CaptionId)
+				.Distinct ();
+
+			return XmlEntitySerializer.AssignId (fields);
+		}
+
+
+		private static IDictionary<T, int> AssignId<T>(IEnumerable<T> items)
+		{
+			IDictionary<T, int> itemsToIds = new Dictionary<T, int> ();
+			
+			int id = 0;
+
+			foreach (T item in items)
 			{
-				XElement xEntity = XmlEntitySerializer.SerializeEntity (dataContext, entitiesWithIds, entity);
+				itemsToIds[item] = id;
+
+				id++;
+			}
+
+			return itemsToIds;
+		}
+
+
+		private static XElement SerializeEntityDefinitions(DataContext dataContext, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds)
+		{
+			XElement xDefinition = new XElement (XName.Get (XmlConstants.EntityDefinitionsTag));
+
+			foreach (Druid entityDruid in entityDefinitionsToIds.Keys)
+			{
+				xDefinition.Add (XmlEntitySerializer.SerializeEntityDefinition (dataContext, entityDefinitionsToIds, fieldDefinitionsToIds, entityDruid));
+			}
+
+			return xDefinition;
+		}
+
+
+		private static XElement SerializeEntityDefinition(DataContext dataContext, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, Druid entityDruid)
+		{
+			XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
+
+			StructuredType entityStructuredType = (StructuredType) dataContext.EntityContext.GetStructuredType (entityDruid);
+
+			string eId = InvariantConverter.ConvertToString (entityDefinitionsToIds[entityDruid]);
+			string eName = entityStructuredType.Caption.Name;
+			string eDruid = entityDruid.ToResourceId ();
+
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), eId);
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.NameTag), eName);
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.DruidTag), eDruid);
+
+			foreach (var field in dataContext.EntityContext.GetEntityFieldDefinitions (entityDruid))
+			{
+				Druid fieldDruid = field.CaptionId;
+				int fieldId = fieldDefinitionsToIds[fieldDruid];
+
+				XElement xField = new XElement (XName.Get (XmlConstants.FieldTag));
+
+				string fId = InvariantConverter.ConvertToString (fieldId);
+				string fName = DbContext.Current.ResourceManager.GetCaption (fieldDruid).Name;
+				string fDruid = fieldDruid.ToResourceId ();
+								
+				xField.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), fId);
+				xField.SetAttributeValue (XName.Get (XmlConstants.NameTag), fName);
+				xField.SetAttributeValue (XName.Get (XmlConstants.DruidTag), fDruid);	
+
+				xEntity.Add (xField);
+			}
+
+			return xEntity;
+		}
+
+
+		private static XElement SerializeExportableEntities(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, ISet<AbstractEntity> entitiesToExport)
+		{
+			XElement xEntities = new XElement (XName.Get (XmlConstants.ExportedEntitiesTag));
+
+			foreach (AbstractEntity entity in entitiesToExport)
+			{
+				XElement xEntity = XmlEntitySerializer.SerializeEntity (dataContext, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, entity);
 
 				xEntities.Add (xEntity);
 			}
@@ -55,75 +157,64 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IDictionary<AbstractEntity, int> BuildEntitiesToIds(ISet<AbstractEntity> entities)
+		private static XElement SerializeEntity(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity)
 		{
-			Dictionary<AbstractEntity, int> entitiesToIds = new Dictionary<AbstractEntity, int> ();
+			XElement xEntity = XmlEntitySerializer.CreateXElementForEntity (entitiesToIds, entityDefinitionsToIds, entity);
 
-			int id = 0;
-
-			foreach (AbstractEntity entity in entities)
-			{
-				entitiesToIds[entity] = id;
-
-				id++;
-			}
-
-			return entitiesToIds;
-		}
-
-
-		private static XElement SerializeEntity(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity)
-		{
-			XElement xEntity = XmlEntitySerializer.CreateXElementForEntity (entitiesToIds, entity);
-
-			foreach (XElement xField in XmlEntitySerializer.SerializeEntityFields (dataContext, entitiesToIds, entity).Where (xf => xf != null))
-			{
-				xEntity.Add (xField);
-			}
-
-			return xEntity;
-		}
-
-
-		private static XElement CreateXElementForEntity(IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity)
-		{
-			XElement xEntity = XmlEntitySerializer.CreateXElement (XmlConstants.EntityTag);
-
-			StructuredType structuredType = (StructuredType) entity.GetEntityContext ().GetStructuredType (entity);
-			string name = structuredType.Caption.Name;
-			XmlEntitySerializer.CreateAttribute (xEntity, XmlConstants.NameTag, name);
-
-			string idAsString = InvariantConverter.ConvertToString<int> (entitiesToIds[entity]);
-			XmlEntitySerializer.CreateAttribute (xEntity, XmlConstants.IdTag, idAsString);
-
-			XmlEntitySerializer.CreateAttribute (xEntity, XmlConstants.DruidTag, entity.GetEntityStructuredTypeId ().ToResourceId ());
-
-			return xEntity;
-		}
-
-
-		private static IEnumerable<XElement> SerializeEntityFields(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity)
-		{
 			foreach (StructuredTypeField field in dataContext.EntityContext.GetEntityFieldDefinitions (entity.GetEntityStructuredTypeId ()))
 			{
-				switch (field.Relation)
+				XElement xField = XmlEntitySerializer.SerializeEntityField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+
+				if (xField != null)
 				{
-					case FieldRelation.None:
-						yield return XmlEntitySerializer.SerializeEntityValueField (entity, field);
-						break;
-					case FieldRelation.Reference:
-						yield return XmlEntitySerializer.SerializeEntityReferenceField (dataContext, entitiesToIds, entity, field);
-						break;
-					case FieldRelation.Collection:
-						yield return XmlEntitySerializer.SerializeEntityCollectionField (dataContext, entitiesToIds, entity, field);
-						break;
-					default:
-						throw new System.NotImplementedException ();
+					xEntity.Add (xField);
 				}
 			}
+
+			return xEntity;
 		}
 
-		private static XElement SerializeEntityValueField(AbstractEntity entity, StructuredTypeField field)
+
+		private static XElement CreateXElementForEntity(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, AbstractEntity entity)
+		{
+			XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
+
+			string id = InvariantConverter.ConvertToString<int> (entitiesToIds[entity]);
+			string definitionId = InvariantConverter.ConvertToString (entityDefinitionsToIds[entity.GetEntityStructuredTypeId ()]);
+
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.EntityIdTag), id);
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), definitionId);
+
+			return xEntity;
+		}
+
+
+		private static XElement SerializeEntityField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
+		{
+			XElement xField;
+			
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+					xField = XmlEntitySerializer.SerializeEntityValueField (fieldDefinitionsToIds, entity, field);
+					break;
+
+				case FieldRelation.Reference:
+					xField = XmlEntitySerializer.SerializeEntityReferenceField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+					break;
+
+				case FieldRelation.Collection:
+					xField = XmlEntitySerializer.SerializeEntityCollectionField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+					break;
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+
+			return xField;
+		}
+
+		private static XElement SerializeEntityValueField(IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			object value = entity.GetField<object> (field.Id);
 
@@ -135,28 +226,20 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			}
 			else
 			{
-				xField = XmlEntitySerializer.CreateXElementForField (field);
-
-				XElement xValue = XmlEntitySerializer.CreateXElement (XmlConstants.ValueTag);
-
-				xField.Add (xValue);
-
 				System.Type systemType = field.Type.SystemType;
-
-				XmlEntitySerializer.CreateAttribute (xValue, XmlConstants.TypeTag, systemType.AssemblyQualifiedName);
 
 				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (systemType);
 
-				string valueAsString = converter.ConvertToString (value, null);
+				string fValue = converter.ConvertToString (value, null);
 
-				xValue.Add (valueAsString);
+				xField = XmlEntitySerializer.CreateXElementForField (fieldDefinitionsToIds, field, fValue);
 			}
 
 			return xField;
 		}
 
 
-		private static XElement SerializeEntityReferenceField(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity, StructuredTypeField field)
+		private static XElement SerializeEntityReferenceField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
@@ -168,18 +251,16 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			}
 			else
 			{
-				xField = XmlEntitySerializer.CreateXElementForField (field);
+				string fValue = InvariantConverter.ConvertToString (entitiesToIds[target]);
 
-				XElement xTarget = XmlEntitySerializer.SerializeRelationTarget (dataContext, entitiesToIds, target);
-
-				xField.Add (xTarget);
+				xField = XmlEntitySerializer.CreateXElementForField (fieldDefinitionsToIds, field, fValue);
 			}
 
 			return xField;
 		}
 
 
-		private static XElement SerializeEntityCollectionField(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity entity, StructuredTypeField field)
+		private static XElement SerializeEntityCollectionField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (field.Id);
 
@@ -187,68 +268,58 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (targets.Any ())
 			{
-				xField = XmlEntitySerializer.CreateXElementForField (field);
+				IEnumerable<string> targetIds = targets
+					.Where (t => t != null)
+					.Select (t => entitiesToIds[t])
+					.Select (t => InvariantConverter.ConvertToString (t));
 
-				foreach (AbstractEntity target in targets)
-				{
-					XElement xTarget = XmlEntitySerializer.SerializeRelationTarget (dataContext, entitiesToIds, target);
+				string fValue = string.Join (",", targetIds);
 
-					xField.Add (xTarget);
-				}
+				xField = XmlEntitySerializer.CreateXElementForField (fieldDefinitionsToIds, field, fValue);
 			}
 			else
 			{
-				xField = null;			
+				xField = null;
 			}
 
 			return xField;
 		}
 
 
-		private static XElement SerializeRelationTarget(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, AbstractEntity target)
+		private static XElement CreateXElementForField(IDictionary<Druid, int> fieldDefinitionsToIds, StructuredTypeField field, string value)
 		{
-			XElement xTarget = XmlEntitySerializer.CreateXElement (XmlConstants.TargetTag);
+			XElement xField = new XElement (XName.Get (XmlConstants.FieldTag));
 
-			string targetExportation;
-			string targetValue;
+			string definitionId = InvariantConverter.ConvertToString (fieldDefinitionsToIds[field.CaptionId]);
 
-			if (entitiesToIds.ContainsKey (target))
-			{
-				targetExportation = "exported";
-				targetValue = InvariantConverter.ConvertToString (entitiesToIds[target]);
-			}
-			else
-			{
-				targetExportation = "unexported";
-
-				EntityKey targetKey = dataContext.GetNormalizedEntityKey (target).Value;
-
-				targetValue = targetKey.ToString ();
-			}
-
-			XmlEntitySerializer.CreateAttribute (xTarget, XmlConstants.TargetExporationTag, targetExportation);
-
-			xTarget.Add (targetValue);
-
-			return xTarget;
-		}
-
-
-		private static XElement CreateXElementForField(StructuredTypeField field)
-		{
-			XElement xField = XmlEntitySerializer.CreateXElement (XmlConstants.FieldTag);
-
-			string name = DbContext.Current.ResourceManager.GetCaption (field.CaptionId).Name;
-			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.NameTag, name);
-			
-			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.DruidTag, field.CaptionId.ToResourceId ());
-
-			XmlEntitySerializer.CreateAttribute (xField, XmlConstants.CardinalityTag, field.Relation.ToString ());
+			xField.SetAttributeValue (XmlConstants.DefinitionIdTag, definitionId);
+			xField.SetAttributeValue (XmlConstants.ValueTag, value);
 
 			return xField;
 		}
-					
-		
+
+
+		private static XElement SerializeExternalEntities(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, ISet<AbstractEntity> externalEntities)
+		{
+			XElement xExternal = new XElement (XName.Get (XmlConstants.ExternalEntitiesTag));
+
+			foreach (AbstractEntity externalEntity in externalEntities)
+			{
+				string id = InvariantConverter.ConvertToString (entitiesToIds[externalEntity]);
+				string key = dataContext.GetNormalizedEntityKey (externalEntity).Value.ToString ();
+				
+				XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
+
+				xEntity.SetAttributeValue (XName.Get (XmlConstants.EntityIdTag), id);
+				xEntity.SetAttributeValue (XName.Get (XmlConstants.KeyTag), key);
+
+				xExternal.Add (xEntity);
+			}
+
+			return xExternal;
+		}
+
+
 		public static void Deserialize(DataInfrastructure dataInfrastructure, XDocument xDocument)
 		{
 			DataContext dataContext = null;
@@ -257,11 +328,26 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			{
 				dataContext = dataInfrastructure.CreateDataContext ();
 
-				XElement xEntities = xDocument.Element (XmlEntitySerializer.CreateXName (XmlConstants.EntitiesTag));
+				XElement xData = xDocument.Element (XName.Get (XmlConstants.DataTag));
+				XElement xEntityDefinitions = xData.Element (XName.Get (XmlConstants.EntityDefinitionsTag));
+				XElement xExportedEntities = xData.Element (XName.Get (XmlConstants.ExportedEntitiesTag));
+				XElement xExternalEntities = xData.Element (XName.Get (XmlConstants.ExternalEntitiesTag));
 
-				IDictionary<int, AbstractEntity> idsToEntities = XmlEntitySerializer.BuildEmptyEntities (dataContext, xEntities);
+				var idsToEntityDefinitions = XmlEntitySerializer.DeserializeIdsToEntityDefinitions (dataContext, xEntityDefinitions);
+				var idsToFieldDefinitions = XmlEntitySerializer.DeserializeIdsToFieldDefinitions (dataContext, xEntityDefinitions);
+				var idsToEntities =  new Dictionary<int, AbstractEntity> ();
 
-				XmlEntitySerializer.PopulateEntities (dataContext, xEntities, idsToEntities);
+				foreach (var item in XmlEntitySerializer.DeserializeIdsToExportedEntities (dataContext, idsToEntityDefinitions, xExportedEntities))
+				{
+					idsToEntities[item.Key] = item.Value;
+				}
+
+				foreach (var item in XmlEntitySerializer.DeserializeIdToExternalEntities (dataContext, xExternalEntities))
+				{
+					idsToEntities[item.Key] = item.Value;
+				}
+
+				XmlEntitySerializer.DeserializeExportedEntitiesFields (idsToEntities, idsToFieldDefinitions, xExportedEntities);
 
 				dataContext.SaveChanges ();
 			}
@@ -275,202 +361,213 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IDictionary<int, AbstractEntity> BuildEmptyEntities(DataContext dataContext, XElement xEntities)
+		private static IDictionary<int, StructuredType> DeserializeIdsToEntityDefinitions(DataContext dataContext, XElement xEntityDefinitions)
+		{
+			IDictionary<int, StructuredType> idsToEntityDefinitions = new Dictionary<int, StructuredType> ();
+
+			foreach (XElement xEntity in xEntityDefinitions.Descendants (XName.Get (XmlConstants.EntityTag)))
+			{
+				string eId = xEntity.Attribute (XName.Get (XmlConstants.DefinitionIdTag)).Value;
+				string eDruid = xEntity.Attribute (XName.Get (XmlConstants.DruidTag)).Value;
+
+				int entityId = InvariantConverter.ConvertFromString<int> (eId);
+				Druid entityDruid = Druid.Parse (eDruid);
+
+				StructuredType entityDefinition = (StructuredType) dataContext.EntityContext.GetStructuredType (entityDruid);
+
+				idsToEntityDefinitions[entityId] = entityDefinition;
+			}
+
+			return idsToEntityDefinitions;
+		}
+
+
+		private static IDictionary<int, StructuredTypeField> DeserializeIdsToFieldDefinitions(DataContext dataContext, XElement xEntityDefinitions)
+		{
+			var idsToFieldDefinitions = new Dictionary<int, StructuredTypeField> ();
+
+			foreach (XElement xEntity in xEntityDefinitions.Elements (XName.Get (XmlConstants.EntityTag)))
+			{
+				string eDruid = xEntity.Attribute (XName.Get (XmlConstants.DruidTag)).Value;
+				Druid entityDruid = Druid.Parse (eDruid);
+
+				foreach (XElement xField in xEntity.Elements (XName.Get (XmlConstants.FieldTag)))
+				{
+					string fId = xField.Attribute (XName.Get (XmlConstants.DefinitionIdTag)).Value;
+					string fDruid = xField.Attribute (XName.Get (XmlConstants.DruidTag)).Value;
+
+					int fieldId = InvariantConverter.ConvertFromString<int> (fId);
+					Druid fieldDruid = Druid.Parse (fDruid);
+
+					StructuredTypeField fieldDefinition = dataContext.EntityContext.GetEntityFieldDefinition (entityDruid, fieldDruid.ToResourceId ());
+
+					idsToFieldDefinitions[fieldId] = fieldDefinition;
+				}
+			}
+
+			return idsToFieldDefinitions;
+		}
+
+
+		private static IDictionary<int, AbstractEntity> DeserializeIdsToExportedEntities(DataContext dataContext, IDictionary<int, StructuredType> idsToEntityDefinitions, XElement xEntities)
 		{
 			Dictionary<int, AbstractEntity> idsToEntities = new Dictionary<int, AbstractEntity> ();
 
-			foreach (XElement xEntity in xEntities.Elements (XmlEntitySerializer.CreateXName (XmlConstants.EntityTag)))
+			foreach (XElement xEntity in xEntities.Elements (XName.Get (XmlConstants.EntityTag)))
 			{
-				string idAsString = xEntity.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.IdTag)).Value;
-				string typeIdAsString = xEntity.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.DruidTag)).Value;
+				string eId = xEntity.Attribute (XName.Get (XmlConstants.EntityIdTag)).Value;
+				string eDefinitionId = xEntity.Attribute (XName.Get (XmlConstants.DefinitionIdTag)).Value;
 
-				int id = InvariantConverter.ConvertFromString<int> (idAsString);
-				Druid typeId = Druid.Parse (typeIdAsString);
+				int entityId = InvariantConverter.ConvertFromString<int> (eId);
+				int entityDefinitionId = InvariantConverter.ConvertFromString<int> (eDefinitionId);
 
-				AbstractEntity entity = dataContext.CreateEntity (typeId);
+				Druid entityDruid = idsToEntityDefinitions[entityDefinitionId].CaptionId;
 
-				idsToEntities[id] = entity;
+				AbstractEntity entity = dataContext.CreateEntity (entityDruid);
+
+				idsToEntities[entityId] = entity;
 			}
 
 			return idsToEntities;
 		}
 
 
-		private static void PopulateEntities(DataContext dataContext, XElement xEntities, IDictionary<int, AbstractEntity> idsToEntities)
+		private static IDictionary<int, AbstractEntity> DeserializeIdToExternalEntities(DataContext dataContext, XElement xExternalEntities)
 		{
-			foreach (XElement xEntity in xEntities.Elements (XmlEntitySerializer.CreateXName (XmlConstants.EntityTag)))
+			Dictionary<int, AbstractEntity> idsToEntities = new Dictionary<int, AbstractEntity> ();
+
+			foreach (XElement xExternalEntity in xExternalEntities.Elements (XName.Get (XmlConstants.EntityTag)))
 			{
-				XmlEntitySerializer.PopulateEntity (dataContext, xEntity, idsToEntities);
+				string eId = xExternalEntity.Attribute (XName.Get (XmlConstants.EntityIdTag)).Value;
+				string eKey = xExternalEntity.Attribute (XName.Get (XmlConstants.KeyTag)).Value;
+
+				int entityId = InvariantConverter.ConvertFromString<int> (eId);
+				EntityKey entityKey = EntityKey.Parse (eKey).Value;
+
+				AbstractEntity entity = dataContext.ResolveEntity (entityKey.EntityId, entityKey.RowKey);
+
+				idsToEntities[entityId] = entity;
+			}
+
+			return idsToEntities;
+		}
+
+
+		private static void DeserializeExportedEntitiesFields(IDictionary<int, AbstractEntity> idsToEntities, IDictionary<int, StructuredTypeField> idsToFieldDefinitions, XElement xEntities)
+		{
+			foreach (XElement xEntity in xEntities.Elements (XName.Get (XmlConstants.EntityTag)))
+			{
+				XmlEntitySerializer.DeserializeExportedEntityFields (idsToEntities, idsToFieldDefinitions, xEntity);
 			}
 		}
 
 
-		private static void PopulateEntity(DataContext dataContext, XElement xEntity, IDictionary<int, AbstractEntity> idsToEntities)
+		private static void DeserializeExportedEntityFields(IDictionary<int, AbstractEntity> idsToEntities, IDictionary<int, StructuredTypeField> idsToFieldDefinitions, XElement xEntity)
 		{
-			string idAsString = xEntity.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.IdTag)).Value;
-			int id = InvariantConverter.ConvertFromString<int> (idAsString);
+			string eId = xEntity.Attribute (XName.Get (XmlConstants.EntityIdTag)).Value;
+			int entityId = InvariantConverter.ConvertFromString<int> (eId);
 
-			AbstractEntity entity = idsToEntities[id];
+			AbstractEntity entity = idsToEntities[entityId];
 
-			foreach (XElement xField in xEntity.Elements (XmlEntitySerializer.CreateXName (XmlConstants.FieldTag)))
+			foreach (XElement xField in xEntity.Elements (XName.Get (XmlConstants.FieldTag)))
 			{
-				XmlEntitySerializer.PopulateField (dataContext, xField, idsToEntities, entity);
+				XmlEntitySerializer.DeserializeExportedEntityField (idsToEntities, idsToFieldDefinitions, entity, xField);
 			}
 		}
 
 
-		private static void PopulateField(DataContext dataContext, XElement xField, IDictionary<int, AbstractEntity> idsToEntities, AbstractEntity entity)
+		private static void DeserializeExportedEntityField(IDictionary<int, AbstractEntity> idsToEntities, IDictionary<int, StructuredTypeField> idsToFieldDefinitions, AbstractEntity entity, XElement xField)
 		{
-			string cardinalityAsString = xField.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.CardinalityTag)).Value;
-			FieldRelation cardinality = (FieldRelation) System.Enum.Parse (typeof (FieldRelation), cardinalityAsString);
+			string fDefintionId = xField.Attribute (XName.Get (XmlConstants.DefinitionIdTag)).Value;
+			int fieldDefinitionId = InvariantConverter.ConvertFromString<int> (fDefintionId);
+			StructuredTypeField fieldDefinition = idsToFieldDefinitions[fieldDefinitionId];
 
-			switch (cardinality)
+			string fValue = xField.Attribute (XName.Get (XmlConstants.ValueTag)).Value;
+
+			switch (fieldDefinition.Relation)
 			{
 				case FieldRelation.None:
-					XmlEntitySerializer.PopulateValueField (xField, entity);
+					XmlEntitySerializer.DeserializeExportedEntityValueField (entity, fieldDefinition, fValue);
 					break;
+
 				case FieldRelation.Reference:
-					XmlEntitySerializer.PopulateReferenceField (dataContext, xField, idsToEntities, entity);
+					XmlEntitySerializer.DeserializeExportedEntityReferenceField (idsToEntities, entity, fieldDefinition, fValue);
 					break;
+
 				case FieldRelation.Collection:
-					XmlEntitySerializer.PopulateCollectionField (dataContext, xField, idsToEntities, entity);
+					XmlEntitySerializer.DeserializeExportedEntityCollectionField (idsToEntities, entity, fieldDefinition, fValue);
 					break;
+
 				default:
 					throw new System.NotImplementedException ();
 			}
 		}
 
 
-		private static void PopulateValueField(XElement xField, AbstractEntity entity)
+		private static void DeserializeExportedEntityValueField(AbstractEntity entity, StructuredTypeField fieldDefinition, string fValue)
 		{
-			string fieldIdAsString = xField.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.DruidTag)).Value;
-			Druid fieldId = Druid.Parse (fieldIdAsString);
-
-			XElement xValue = xField.Element (XmlEntitySerializer.CreateXName (XmlConstants.ValueTag));
-
-			string systemTypeAsString = xValue.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.TypeTag)).Value;
-			string valueAsString = xValue.Value;
-
-			System.Type systemType = System.Type.GetType (systemTypeAsString);
+			System.Type systemType = fieldDefinition.Type.SystemType;
 
 			ISerializationConverter converter = InvariantConverter.GetSerializationConverter (systemType);
 
-			object value = converter.ConvertFromString (valueAsString, null);
+			object fieldValue = converter.ConvertFromString (fValue, null);
 
-			entity.SetField<object> (fieldId.ToResourceId (), value);
+			entity.SetField<object> (fieldDefinition.CaptionId.ToResourceId (), fieldValue);
 		}
 
 
-		private static void PopulateReferenceField(DataContext dataContext, XElement xField, IDictionary<int, AbstractEntity> idsToEntities, AbstractEntity entity)
+		private static void DeserializeExportedEntityReferenceField(IDictionary<int, AbstractEntity> idsToEntities, AbstractEntity entity, StructuredTypeField fieldDefinition, string fValue)
 		{
-			string fieldIdAsString = xField.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.DruidTag)).Value;
-			Druid fieldId = Druid.Parse (fieldIdAsString);
+			int fieldValue = InvariantConverter.ConvertFromString<int> (fValue);
 
-			XElement xTarget = xField.Element (XmlEntitySerializer.CreateXName (XmlConstants.TargetTag));
-
-			AbstractEntity target = XmlEntitySerializer.GetTarget (dataContext, xTarget, idsToEntities);
+			AbstractEntity target = idsToEntities[fieldValue];
 
 			if (target != null)
 			{
-				entity.SetField<AbstractEntity> (fieldId.ToResourceId (), target);
+				entity.SetField<AbstractEntity> (fieldDefinition.CaptionId.ToResourceId (), target);
 			}
 		}
 
 
-		private static void PopulateCollectionField(DataContext dataContext, XElement xField, IDictionary<int, AbstractEntity> idsToEntities, AbstractEntity entity)
+		private static void DeserializeExportedEntityCollectionField(IDictionary<int, AbstractEntity> idsToEntities, AbstractEntity entity, StructuredTypeField fieldDefinition, string fValue)
 		{
-			string fieldIdAsString = xField.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.DruidTag)).Value;
-			Druid fieldId = Druid.Parse (fieldIdAsString);
+			List<int> fieldValue = fValue.Split (',').Select (v => InvariantConverter.ConvertFromString<int> (v)).ToList ();
 
-			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ());
+			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (fieldDefinition.CaptionId.ToResourceId ());
 
-			foreach (XElement xTarget in xField.Elements (XmlEntitySerializer.CreateXName (XmlConstants.TargetTag)))
+			foreach (AbstractEntity target in fieldValue.Select (t => idsToEntities[t]).Where (t => t != null))
 			{
-				AbstractEntity target = XmlEntitySerializer.GetTarget (dataContext, xTarget, idsToEntities);
-
-				if (target != null)
-				{
-					targets.Add (target);
-				}
+				targets.Add (target);
 			}
-		}
-
-
-		private static AbstractEntity GetTarget(DataContext dataContext, XElement xTarget, IDictionary<int, AbstractEntity> idsToEntities)
-		{
-			string targetExportation = xTarget.Attribute (XmlEntitySerializer.CreateXName (XmlConstants.TargetExporationTag)).Value;
-			string targetValue = xTarget.Value;
-
-			AbstractEntity target;
-
-			switch (targetExportation)
-			{
-				case "exported":
-
-					int targetId = InvariantConverter.ConvertFromString<int> (targetValue);
-
-					target = idsToEntities[targetId];
-
-					break;
-
-				case "unexported":
-
-					EntityKey targetKey = EntityKey.Parse (targetValue).Value;
-
-					target = dataContext.ResolveEntity (targetKey.EntityId, targetKey.RowKey);
-
-					break;
-
-				default:
-					throw new System.NotImplementedException ();
-			}
-
-			return target;
-		}
-
-
-		private static XElement CreateXElement(string name)
-		{
-			return new XElement (XmlEntitySerializer.CreateXName (name));
-		}
-
-
-		private static void CreateAttribute(XElement xElement, string name, string value)
-		{
-			xElement.SetAttributeValue (XmlEntitySerializer.CreateXName (name), value);
-		}
-
-
-		private static XName CreateXName(string name)
-		{
-			return XName.Get (name);
 		}
 
 
 		private static class XmlConstants
 		{
-			
-			public static readonly string EntitiesTag = "entities";
+
+			public static readonly string DataTag = "data";
+
+			public static readonly string EntityDefinitionsTag = "entityDefinitions";
+
+			public static readonly string ExportedEntitiesTag = "exportedEntities";
+
+			public static readonly string ExternalEntitiesTag = "externalEntities";
 
 			public static readonly string EntityTag = "entity";
 
-			public static readonly string IdTag = "id";
+			public static readonly string FieldTag = "field";
 
 			public static readonly string NameTag = "name";
 
-			public static readonly string FieldTag = "field";
+			public static readonly string EntityIdTag = "entityId";
+
+			public static readonly string DefinitionIdTag = "definitionId";
 
 			public static readonly string DruidTag = "druid";
 
-			public static readonly string CardinalityTag = "cardinality";
-
 			public static readonly string ValueTag = "value";
 
-			public static readonly string TypeTag = "type";
-
-			public static readonly string TargetTag = "target";
-
-			public static readonly string TargetExporationTag = "exportation";
+			public static readonly string KeyTag = "key";
 
 		}
 
