@@ -79,10 +79,12 @@
     <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
+    <Compile Include="Business\Actions\RelationActions.cs" />
+    <Compile Include="Business\ActionVerb.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
-    <Compile Include="Business\GenericBusinessAction.cs" />
+    <Compile Include="Business\ActionAttribute.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -697,9 +699,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Business\Actions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

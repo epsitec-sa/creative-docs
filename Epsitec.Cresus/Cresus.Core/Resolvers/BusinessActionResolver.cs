@@ -19,13 +19,13 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// Resolves a business rule for the specified entity and rule types. This returns a
 		/// <see cref="CompositeBusinessAction"/> with zero, one or more simple rules.
 		/// </summary>
-		public static GenericBusinessAction Resolve(string actionClass)
+		public static System.Type Resolve(string actionClass)
 		{
-			GenericBusinessAction action;
+			System.Type action;
 			
 			if (BusinessActionResolver.actionCache == null)
 			{
-				BusinessActionResolver.actionCache = new Dictionary<string, GenericBusinessAction> ();
+				BusinessActionResolver.actionCache = new Dictionary<string, System.Type> ();
 			}
 			else
 			{
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				}
 			}
 
-			action = BusinessActionResolver.CreateBusinessActions (actionClass).FirstOrDefault ();
+			action = BusinessActionResolver.FindBusinessActionSystemType (actionClass);
 
 			BusinessActionResolver.actionCache[actionClass] = action;
 			
@@ -44,23 +44,35 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		public static IEnumerable<string> GetActionClasses()
 		{
+			const string suffix = "Actions";
+			int suffixLen = suffix.Length;
+
 			return from type in BusinessActionResolver.FindBusinessActionSystemTypes ()
-				   orderby type.Name ascending
-				   select type.Name;
+				   let name = type.Name
+				   orderby name ascending
+				   select name.Substring (0, name.Length - suffixLen);
 		}
 
-		public static IEnumerable<string> GetVerbs(string actionClass)
+		public static IEnumerable<ActionVerb> GetActionVerbs(string actionClass)
 		{
-			GenericBusinessAction action = BusinessActionResolver.Resolve (actionClass);
+			System.Type type = BusinessActionResolver.Resolve (actionClass);
 
-			if (action != null)
+			if (type != null)
 			{
-				var type = action.GetType ();
-				var methods = type.GetMethods (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+				var methods = type.GetMethods (System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
 
-				foreach (var method in methods)
+				foreach (var method in methods.Where (x => (x.GetParameters ().Length == 0) && (x.ReturnType == typeof (void))))
 				{
-					yield return method.Name;
+					var attributes = method.GetCustomAttributes (typeof (ActionAttribute), inherit: false);
+
+					if (attributes.Length == 0)
+					{
+						yield return new ActionVerb (method);
+					}
+					else
+					{
+						yield return new ActionVerb (((ActionAttribute)(attributes[0])).PublishedName, method);
+					}
 				}
 			}
 		}
@@ -70,25 +82,30 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract
-						where type.BaseType == typeof (GenericBusinessAction)
+						let name = type.Name
+						where name.EndsWith ("Actions")
+						where type.IsClass && type.IsAbstract && type.IsSealed
 						select type;
 
 			return types;
 		}
 
-		private static IEnumerable<GenericBusinessAction> CreateBusinessActions(string actionClass)
+		private static System.Type FindBusinessActionSystemType(string actionClass)
 		{
-			var types   = BusinessActionResolver.FindBusinessActionSystemTypes ();
-			var actions = from type in types
-						  where type.Name == actionClass
-						  select System.Activator.CreateInstance (type, BusinessActionResolver.noArguments) as GenericBusinessAction;
+			actionClass = actionClass + "Actions";
 
-			return actions;
+			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
+						from type in assembly.GetTypes ()
+						let name = type.Name
+						where name == actionClass
+						where type.IsClass && type.IsAbstract && type.IsSealed
+						select type;
+
+			return types.FirstOrDefault ();
 		}
 
 		[System.ThreadStatic]
-		private static Dictionary<string, GenericBusinessAction> actionCache;
+		private static Dictionary<string, System.Type> actionCache;
 		private static readonly object[] noArguments = new object[] { };
 	}
 }

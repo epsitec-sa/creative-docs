@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -133,6 +135,11 @@ namespace Epsitec.Common.Types
 			}
 
 			return text.Split (separator, options);
+		}
+
+		public static FormattedText Join(string separator, IEnumerable<FormattedText> values)
+		{
+			return FormattedText.Join (separator, values.ToArray ());
 		}
 
 		public static FormattedText Join(string separator, params FormattedText[] values)

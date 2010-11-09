@@ -6,6 +6,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -34,17 +36,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		public static bool Validate(IEnumerable<string> lines, out WorkflowActionValidationResult result)
 		{
 			System.Action action;
-			return WorkflowAction.ValidateAndCompile (lines, out result, out action);
+			string[] clean;
+			return WorkflowAction.ValidateAndCompile (lines, out result, out action, out clean);
 		}
 
 		public WorkflowActionValidationResult Compile(IEnumerable<string> lines)
 		{
 			WorkflowActionValidationResult result;
 			System.Action action;
+			string[] clean;
 
-			if (WorkflowAction.ValidateAndCompile (lines, out result, out action))
+			if (WorkflowAction.ValidateAndCompile (lines, out result, out action, out clean))
 			{
-				this.sourceLines = lines.ToArray ();
+				this.sourceLines = clean;
 				this.action      = action;
 			}
 
@@ -84,31 +88,101 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static bool ValidateAndCompile(IEnumerable<string> lines, out WorkflowActionValidationResult result, out System.Action action)
+		private static bool ValidateAndCompile(IEnumerable<string> lines, out WorkflowActionValidationResult result, out System.Action action, out string[] clean)
 		{
+			List<string> errors = new List<string> ();
+			List<System.Reflection.MethodInfo> code = new List<System.Reflection.MethodInfo> ();
+
+			clean = lines.Select (x => x.Trim ()).ToArray ();
+
 			action = null;
 			result = new WorkflowActionValidationResult ()
 			{
 				IsValid = true
 			};
 
-			string code = string.Join (" / ", lines.ToArray ());
+			for (int i = 0; i < clean.Length; i++)
+			{
+				string line = clean[i];
 
-			action = () => System.Diagnostics.Debug.WriteLine ("Execute: " + code);
+				if ((line.Length == 0) ||
+					(line.StartsWith ("//")) ||
+					(line.StartsWith ("#")))
+				{
+					continue;
+				}
+				
+				string[] tokens = line.Split ('.');
+
+				if (tokens.Length == 2)
+				{
+					string actionClass = tokens[0];
+					string actionVerb  = tokens[1];
+
+					var memberInfo = BusinessActionResolver.GetActionVerbs (actionClass).Where (x => x.Name == actionVerb).Select (x => x.MemberInfo).FirstOrDefault () as System.Reflection.MethodInfo;
+
+					if (memberInfo != null)
+					{
+						code.Add (memberInfo);
+					}
+					else
+					{
+						errors.Add (string.Format ("{0}: cannot resolve {1}.{2}", i+1, actionClass, actionVerb));
+					}
+				}
+				else
+				{
+					errors.Add (string.Format ("{0}: syntax error", i+1));
+				}
+			}
+
+			if (errors.Count > 0)
+			{
+				result.IsValid = false;
+				result.ErrorMessage = FormattedText.Join ("<br/>", errors.Select (x => FormattedText.FromSimpleText (x)));
+				return false;
+			}
+
+			action = 
+				delegate
+				{
+					code.ForEach (x => x.Invoke (null, WorkflowAction.emptyParams));
+				};
 
 			return true;
 		}
+
+		private static readonly object[] emptyParams = new object[0];
 
 		private string[] sourceLines;
 		private System.Action action;
 	}
 
-	public class WorkflowActionValidationResult
+	public class WorkflowActionValidationResult : IValidationResult
 	{
+		#region IValidationResult Members
+
 		public bool IsValid
 		{
 			get;
 			set;
 		}
+
+
+		public ValidationState State
+		{
+			get
+			{
+				return this.IsValid ? ValidationState.Ok : ValidationState.Error;
+			}
+		}
+
+		public FormattedText ErrorMessage
+		{
+			get;
+			set;
+		}
+
+		#endregion
 	}
 }
