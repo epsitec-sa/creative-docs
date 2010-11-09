@@ -158,6 +158,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.objectLinks.Add (link);
 		}
 
+		private void CreateContinuationLink()
+		{
+			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+			{
+				if (this.objectLinks.Count == 1)
+				{
+					var link = new ObjectLink (this.editor, this.Entity);
+					link.IsContinuation = true;
+					link.SrcObject = this;
+					link.DstObject = this.editor.SearchInitialObject (this.Entity.Continuation);  // null si n'existe pas (et donc moignon o--->)
+
+					if (link.DstObject == null)
+					{
+						link.SetStumpAngle (270);
+					}
+
+					this.objectLinks.Add (link);
+				}
+			}
+			else
+			{
+				this.Entity.Continuation = null;
+
+				if (this.objectLinks.Count == 2)
+				{
+					this.objectLinks.RemoveAt (1);
+				}
+			}
+		}
+
 
 		public override void ContextMenu()
 		{
@@ -172,16 +202,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				case "Edge.Normal":
 					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Default;
+					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Edge.Call":
 					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Call;
+					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Edge.Fork":
 					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
+					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
 			}
@@ -200,19 +233,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override void RemoveEntityLink(LinkableObject dst)
+		public override void RemoveEntityLink(LinkableObject dst, bool isContinuation)
 		{
 			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowNodeEntity);
-			System.Diagnostics.Debug.Assert (this.Entity.NextNode == dst.AbstractEntity as WorkflowNodeEntity);
 
-			this.Entity.NextNode = null;
+			if (isContinuation)
+			{
+				System.Diagnostics.Debug.Assert (this.Entity.Continuation == dst.AbstractEntity as WorkflowNodeEntity);
+
+				this.Entity.Continuation = null;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (this.Entity.NextNode == dst.AbstractEntity as WorkflowNodeEntity);
+
+				this.Entity.NextNode = null;
+			}
 		}
 
-		public override void AddEntityLink(LinkableObject dst)
+		public override void AddEntityLink(LinkableObject dst, bool isContinuation)
 		{
 			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowNodeEntity);
 
-			this.Entity.NextNode = dst.AbstractEntity as WorkflowNodeEntity;
+			if (isContinuation)
+			{
+				this.Entity.Continuation = dst.AbstractEntity as WorkflowNodeEntity;
+			}
+			else
+			{
+				this.Entity.NextNode = dst.AbstractEntity as WorkflowNodeEntity;
+			}
 		}
 
 

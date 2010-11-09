@@ -716,7 +716,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				if (link.DstObject == obj)
 				{
 					link.DstObject = null;
-					link.SrcObject.RemoveEntityLink (obj);
+					link.SrcObject.RemoveEntityLink (obj, link.IsContinuation);
 					link.SetStumpAngle (link.GetAngle ());
 				}
 			}

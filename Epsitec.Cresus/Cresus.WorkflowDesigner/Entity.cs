@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				Entity.DeepSearch (list, alreadyFounded, edgeEntity.NextNode);
 			}
+
+			if (edgeEntity.Continuation.IsNotNull ())
+			{
+				Entity.DeepSearch (list, alreadyFounded, edgeEntity.Continuation);
+			}
 		}
 
 		static private void DeepSearch(List<AbstractEntity> list, List<AbstractEntity> alreadyFounded, WorkflowNodeEntity nodeEntity)

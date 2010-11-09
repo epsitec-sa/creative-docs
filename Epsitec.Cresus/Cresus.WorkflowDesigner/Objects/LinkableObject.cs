@@ -131,11 +131,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public virtual void RemoveEntityLink(LinkableObject dst)
+		public virtual void RemoveEntityLink(LinkableObject dst, bool isContinuation)
 		{
 		}
 
-		public virtual void AddEntityLink(LinkableObject dst)
+		public virtual void AddEntityLink(LinkableObject dst, bool isContinuation)
 		{
 		}
 
