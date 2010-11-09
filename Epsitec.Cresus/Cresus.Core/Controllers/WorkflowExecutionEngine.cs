@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				
 				case WorkflowTransitionType.Call:
-					this.PushNodeToThreadCallGraph (thread, arc.Node);
+					this.PushNodeToThreadCallGraph (thread, edge.GetContinuationOrDefault (arc.Node));
 					break;
 				
 				case WorkflowTransitionType.Fork:
@@ -229,11 +229,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.transition.Workflow.Threads.Add (thread);
 		}
 
-		private void PushNodeToThreadCallGraph(WorkflowThreadEntity thread, WorkflowNodeEntity returnNode)
+		private void PushNodeToThreadCallGraph(WorkflowThreadEntity thread, WorkflowNodeEntity continuation)
 		{
 			WorkflowCallEntity call = this.businessContext.CreateEntity<WorkflowCallEntity> ();
 
-			call.ReturnNode = returnNode;
+			call.Continuation = continuation;
 
 			thread.CallGraph.Add (call);
 		}
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				this.AddStepToThreadHistory (thread, null, thread.CallGraph[lastIndex].ReturnNode);
+				this.AddStepToThreadHistory (thread, null, thread.CallGraph[lastIndex].Continuation);
 
 				thread.CallGraph.RemoveAt (lastIndex);
 			}

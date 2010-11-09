@@ -160,6 +160,7 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
+    <Compile Include="Entities\WorkflowEdgeEntity.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="DataExtractionMode.cs" />
