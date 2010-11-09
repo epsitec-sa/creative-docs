@@ -712,6 +712,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			//	Si le noeud est référencé par un 'edge' qui ne fait pas partie de ce diagramme,
 			//	il ne faut pas le supprimer.
+			return !this.IsReferencedNode (nodeEntity);
+		}
+
+		public bool IsReferencedNode(WorkflowNodeEntity nodeEntity)
+		{
+			//	Retourne true si le noeud est référencé par un 'edge' qui ne fait pas partie de ce diagramme.
 			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
 
 			var edgeEntities = this.FindEdges (nodeEntity);
@@ -719,11 +725,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				if (!list.Contains (edgeEntity))  // edge d'un autre diagramme ?
 				{
-					return false;
+					return true;
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 		private List<WorkflowEdgeEntity> FindEdges(WorkflowNodeEntity nodeEntity)
