@@ -164,6 +164,7 @@
     <Compile Include="EntityEngine\EntityNullReferenceVirtualizer.cs" />
     <Compile Include="EntityEngine\EntityStatus.cs" />
     <Compile Include="EntityEngine\EntityStatusAccumulator.cs" />
+    <Compile Include="EntityEngine\IEntityInitializer.cs" />
     <Compile Include="EntityEngine\IEntityPersistenceManager.cs" />
     <Compile Include="EntityEngine\IValueProxy.cs" />
     <Compile Include="EntityEngine\SearchEntity.cs" />

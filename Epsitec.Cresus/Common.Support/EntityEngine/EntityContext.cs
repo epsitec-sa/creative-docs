@@ -573,6 +573,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		public static void InitializeDefaultValues(AbstractEntity entity)
+		{
+			var initializer = entity as IEntityInitializer;
+
+			if (initializer != null)
+            {
+				using (entity.DefineOriginalValues ())
+				{
+					initializer.InitializeDefaultValues ();
+				}
+            }
+		}
+
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			AbstractEntity entity = this.CreateEmptyEntity (entityId);
@@ -580,7 +593,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
-		public T CreateEntity<T>() where T : AbstractEntity, new ()
+		public T CreateEntity<T>()
+			where T : AbstractEntity, new ()
 		{
 			T entity = this.CreateEmptyEntity<T> ();
 			this.CreateRelatedEntities (entity);
