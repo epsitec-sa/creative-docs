@@ -82,6 +82,7 @@
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
+    <Compile Include="Business\GenericBusinessAction.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Resolvers\BusinessActionResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
@@ -694,7 +696,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Business\Actions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
