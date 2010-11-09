@@ -50,34 +50,40 @@ namespace Epsitec.Cresus.Core
             var edgeAC = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
             var edgeCA = this.DataContext.CreateEntity<WorkflowEdgeEntity>();
 
-			def.Code = "[L0AB2]";
+			def.InitializeDefaultValues ();
 			def.WorkflowName = "Workflow principal";
 			def.WorkflowDescription = "Description complète du workflow principal.";
             def.Name = FormattedText.FromSimpleText("e");
             def.Edges.Add(edgeAB);
             def.Edges.Add(edgeAC);
 
+			nodeA.InitializeDefaultValues ();
             nodeA.Name = FormattedText.FromSimpleText("1");
             nodeA.Edges.Add(edgeAB);
             nodeA.Edges.Add(edgeAC);
 
+			edgeAB.InitializeDefaultValues ();
             edgeAB.Name = FormattedText.FromSimpleText("Créer une nouvelle offre");
             edgeAB.Description = FormattedText.FromSimpleText("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
             edgeAB.TransitionAction = "WorkflowAction.NewAffair WorkflowAction.NewOffer";
             edgeAB.NextNode = nodeB;
 
+			edgeAC.InitializeDefaultValues ();
             edgeAC.Name = FormattedText.FromSimpleText("Créer une variante");
             edgeAC.Description = FormattedText.FromSimpleText("Crée une variante d'une offre existante");
             edgeAC.TransitionAction = "WorkflowAction.NewOfferVariant";
             edgeAC.NextNode = nodeC;
 
+			edgeCA.InitializeDefaultValues ();
             edgeCA.Name = FormattedText.FromSimpleText("Editer la variante");
             edgeCA.Description = FormattedText.FromSimpleText("Editer la variante de l'offre existante");
             edgeCA.TransitionAction = "...";
             edgeCA.NextNode = nodeA;
 
+			nodeB.InitializeDefaultValues ();
             nodeB.Name = "2";
 
+			nodeC.InitializeDefaultValues ();
             nodeC.Name = "3";
             nodeC.Edges.Add(edgeCA);
             return def;

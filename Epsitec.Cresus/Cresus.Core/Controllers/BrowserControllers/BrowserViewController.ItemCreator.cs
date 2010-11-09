@@ -131,6 +131,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				
 				var entity = context.CreateEntity (rootEntityId);
 
+				EntityContext.InitializeDefaultValues (entity);
+
 				if (initializer != null)
 				{
 					initializer (context, entity);

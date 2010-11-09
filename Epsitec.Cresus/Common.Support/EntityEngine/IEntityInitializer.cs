@@ -9,12 +9,8 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	[System.Flags]
-	public enum EntityStatus
+	public interface IEntityInitializer
 	{
-		None = 0,
-
-		Empty = 0x01,
-		Valid = 0x02,
+		void InitializeDefaultValues();
 	}
 }

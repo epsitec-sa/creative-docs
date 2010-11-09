@@ -9,16 +9,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class WorkflowEdgeEntity : IEntityInitializer
+	public partial class WorkflowNodeEntity : IEntityInitializer
 	{
 		public void InitializeDefaultValues()
 		{
 			this.Code = System.Guid.NewGuid ().ToString ("D");
-		}
-
-		public WorkflowNodeEntity GetContinuationOrDefault(WorkflowNodeEntity defaultNode)
-		{
-			return this.Continuation.IsNull () ? defaultNode : this.Continuation;
 		}
 	}
 }

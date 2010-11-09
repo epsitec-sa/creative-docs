@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void CreateEdge()
 		{
-			var edgeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowEdgeEntity> ();
+			var edgeEntity = this.editor.CreateEntity<WorkflowEdgeEntity> ();
 			edgeEntity.Name = "Nouveau";
 
 			var obj = new ObjectEdge (this.editor, edgeEntity);
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void CreateNode()
 		{
-			var nodeEntity = this.editor.BusinessContext.DataContext.CreateEntity<WorkflowNodeEntity> ();
+			var nodeEntity = this.editor.CreateEntity<WorkflowNodeEntity> ();
 
 			var obj = new ObjectNode (this.editor, nodeEntity);
 			obj.ColorFartory.ColorItem = this.srcObject.ColorFartory.ColorItem;

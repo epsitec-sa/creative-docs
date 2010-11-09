@@ -179,6 +179,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateAfterGeometryChanged (null);
 		}
 
+		public TEntity CreateEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
+		{
+			var entity = this.BusinessContext.DataContext.CreateEntity<TEntity> ();
+
+			Epsitec.Common.Support.EntityEngine.EntityContext.InitializeDefaultValues (entity);
+
+			return entity;
+		}
+
 		#region Serialization
 		private bool RestoreDesign()
 		{
@@ -722,6 +732,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			WorkflowEdgeEntity example = new WorkflowEdgeEntity ()
 			{
 				NextNode = nodeEntity,
+				Code = null,
 			};
 
 			Request request = new Request ()
