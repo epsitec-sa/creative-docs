@@ -52,6 +52,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
+		/// <summary>
+		/// Selects the specified data set.
+		/// </summary>
+		/// <param name="dataSetName">Name of the data set.</param>
 		public void SelectDataSet(string dataSetName)
 		{
 			if (this.dataSetName != dataSetName)
@@ -67,6 +71,25 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		/// <summary>
+		/// Selects the specified entity in the list.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		public void Select(AbstractEntity entity)
+		{
+			if ((this.collection == null) ||
+				(this.scrollList == null))
+			{
+				return;
+			}
+
+			this.scrollList.SelectedItemIndex = this.collection.GetIndex (CoreData.FindEntityKey (entity));
+		}
+
+		/// <summary>
+		/// Adds a new entity to the list. This will start an interactive creation if
+		/// there is an associated creation controller.
+		/// </summary>
 		public void AddNewEntity()
 		{
 			using (var creator = new BrowserViewController.ItemCreator (this))
