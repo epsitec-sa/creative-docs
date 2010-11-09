@@ -208,15 +208,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				string key  = (string) element.Attribute ("Entity");
 				string type = (string) element.Attribute ("Type");
 
-				AbstractEntity entity = null;
+				AbstractEntity entity = this.ResolveEntity (key);
 				AbstractObject obj = null;
-
-				if (!string.IsNullOrEmpty (key))
-				{
-					EntityKey? entityKey = EntityKey.Parse (key);
-					entity = this.BusinessContext.DataContext.ResolveEntity (entityKey);
-				}
-
+				
 				obj = this.CreateObject (type, entity);
 
 				if (obj == null)
@@ -337,12 +331,64 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		private const string workflowClassPrefix = "Workflow";
+		private const string workflowClassSuffix = "Entity";
+
 		private string GetEntityKey(AbstractEntity entity)
 		{
-			var key = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity);
-			return key.ToString ();
+			string typeName = entity.GetType ().Name;
+			IItemCode code  = entity as IItemCode;
+
+			System.Diagnostics.Debug.Assert (code != null);
+			System.Diagnostics.Debug.Assert (code.Code != null);
+			System.Diagnostics.Debug.Assert (typeName.StartsWith (Editor.workflowClassPrefix));
+			System.Diagnostics.Debug.Assert (typeName.EndsWith (Editor.workflowClassSuffix));
+
+			string itemName = typeName;
+			
+			itemName = itemName.Substring (Editor.workflowClassPrefix.Length);
+			itemName = itemName.Substring (0, itemName.Length - Editor.workflowClassSuffix.Length);
+
+			return string.Concat (itemName, "/", code.Code);
 		}
 
+
+		private AbstractEntity ResolveEntity(string key)
+		{
+			if (string.IsNullOrEmpty (key))
+			{
+				return null;
+			}
+
+			string[] args = key.Split ('/');
+			
+			string itemName = args[0];
+			string itemCode = args[1];
+
+			AbstractEntity example = null;
+
+			switch (itemName)
+			{
+				case "Node":
+					example = new WorkflowNodeEntity ();
+					break;
+				
+				case "Edge":
+					example = new WorkflowEdgeEntity ();
+					break;
+				
+				case "Definition":
+					example = new WorkflowDefinitionEntity ();
+					break;
+
+				default:
+					throw new System.FormatException ("Invalid entity specified by key");
+			}
+
+			((IItemCode) example).Code = itemCode;
+
+			return this.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
+		}
 
 		private static void SaveData(WorkflowDefinitionEntity def, string xmlSource)
 		{

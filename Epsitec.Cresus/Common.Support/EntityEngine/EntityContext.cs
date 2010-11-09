@@ -573,6 +573,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		/// <summary>
+		/// Initializes the default values if the entity implements the <see cref="IEntityInitializer"/>
+		/// interface.
+		/// </summary>
+		/// <param name="entity">The entity to initialize.</param>
 		public static void InitializeDefaultValues(AbstractEntity entity)
 		{
 			var initializer = entity as IEntityInitializer;
