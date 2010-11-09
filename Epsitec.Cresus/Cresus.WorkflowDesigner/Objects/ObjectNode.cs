@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		public override void RemoveEntityLink(LinkableObject dst)
+		public override void RemoveEntityLink(LinkableObject dst, bool isContinuation)
 		{
 			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowEdgeEntity);
 			System.Diagnostics.Debug.Assert (this.Entity.Edges.Contains (dst.AbstractEntity as WorkflowEdgeEntity));
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.Entity.Edges.Remove (dst.AbstractEntity as WorkflowEdgeEntity);
 		}
 
-		public override void AddEntityLink(LinkableObject dst)
+		public override void AddEntityLink(LinkableObject dst, bool isContinuation)
 		{
 			System.Diagnostics.Debug.Assert (dst.AbstractEntity is WorkflowEdgeEntity);
 

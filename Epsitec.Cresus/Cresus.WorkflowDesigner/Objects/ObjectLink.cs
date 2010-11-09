@@ -81,6 +81,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public bool IsContinuation
+		{
+			get;
+			set;
+		}
+
+
 		public bool IsSrcHilited
 		{
 			//	Indique si la boîte source est survolée par la souris.
@@ -242,7 +249,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				if (!this.IsNoneDstObject)
 				{
-					this.srcObject.RemoveEntityLink (this.dstObject);
+					this.srcObject.RemoveEntityLink (this.dstObject, this.IsContinuation);
 				}
 
 				this.editor.UpdateAfterGeometryChanged (null);
@@ -344,7 +351,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			obj.ObjectLinks[0].SetStumpAngle (this.GetAngle ());
 
 			this.dstObject = obj;
-			this.srcObject.AddEntityLink (obj);
+			this.srcObject.AddEntityLink (obj, this.IsContinuation);
 
 			this.startManual = false;
 			this.endManual = false;
@@ -365,7 +372,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			obj.ColorFartory.ColorItem = this.srcObject.ColorFartory.ColorItem;
 
 			this.dstObject = obj;
-			this.srcObject.AddEntityLink (obj);
+			this.srcObject.AddEntityLink (obj, this.IsContinuation);
 
 			this.startManual = false;
 			this.endManual = false;
@@ -392,7 +399,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			var obj = new ObjectNode (this.editor, dialog.NodeEntity);
 
 			this.dstObject = obj;
-			this.srcObject.AddEntityLink (obj);
+			this.srcObject.AddEntityLink (obj, this.IsContinuation);
 
 			this.startManual = false;
 			this.endManual = false;
@@ -663,7 +670,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				else
 				{
-					if (this.IsForkDash)
+					if (this.IsContinuation)
+					{
+						Misc.DrawPathDash (graphics, this.Path, 2, 0, 4, true, color);
+					}
+					else if (this.IsForkDash)
 					{
 						Misc.DrawPathDash (graphics, this.Path, 2, 5, 5, true, color);
 					}
@@ -688,7 +699,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 			}
 
-			if (triangle)
+			if (this.IsContinuation)
+			{
+				this.DrawSquare (graphics, this.startVector.Origin, 4);
+			}
+			else if (triangle)
 			{
 				this.DrawTriangle (graphics, this.srcObject.Bounds.Center, this.startVector.Origin, 6);
 			}
@@ -741,6 +756,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			graphics.RenderSolid (this.colorFactory.GetColor (1));
 
 			graphics.AddCircle (center, radius);
+			graphics.RenderSolid (this.colorFactory.GetColor (0));
+		}
+
+		private void DrawSquare(Graphics graphics, Point center, double radius)
+		{
+			//	Dessine un carré vide.
+			var rect = new Rectangle (new Point (center.X-radius, center.Y-radius), new Size (radius*2, radius*2));
+			rect.Deflate (0.5);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (this.colorFactory.GetColor (1));
+
+			graphics.AddRectangle (rect);
 			graphics.RenderSolid (this.colorFactory.GetColor (0));
 		}
 
@@ -1023,7 +1051,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.dstObject != null)
 			{
-				this.srcObject.RemoveEntityLink (this.dstObject);
+				this.srcObject.RemoveEntityLink (this.dstObject, this.IsContinuation);
 			}
 
 			this.dstObject = this.hilitedDstObject;
@@ -1043,7 +1071,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 			else
 			{
-				this.srcObject.AddEntityLink (this.dstObject);
+				this.srcObject.AddEntityLink (this.dstObject, this.IsContinuation);
 
 				this.hilitedDstObject.IsHilitedForLinkChanging = false;
 				this.hilitedDstObject = null;
@@ -1203,13 +1231,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			xml.Add (new XAttribute ("SrcObject", (this.srcObject == null) ? 0 : this.srcObject.UniqueId));
 			xml.Add (new XAttribute ("DstObject", (this.dstObject == null) ? 0 : this.dstObject.UniqueId));
 
-			xml.Add (new XAttribute ("StartAngle",    Misc.Truncate (this.startAngle)));
-			xml.Add (new XAttribute ("EndAngle",      Misc.Truncate (this.endAngle)));
-			xml.Add (new XAttribute ("StartDistance", Misc.Truncate (this.startDistance)));
-			xml.Add (new XAttribute ("EndDistance",   Misc.Truncate (this.endDistance)));
-			xml.Add (new XAttribute ("StartManual",   this.startManual));
-			xml.Add (new XAttribute ("EndManual",     this.endManual));
-			xml.Add (new XAttribute ("CommentAttach", this.commentAttach));
+			xml.Add (new XAttribute ("StartAngle",     Misc.Truncate (this.startAngle)));
+			xml.Add (new XAttribute ("EndAngle",       Misc.Truncate (this.endAngle)));
+			xml.Add (new XAttribute ("StartDistance",  Misc.Truncate (this.startDistance)));
+			xml.Add (new XAttribute ("EndDistance",    Misc.Truncate (this.endDistance)));
+			xml.Add (new XAttribute ("StartManual",    this.startManual));
+			xml.Add (new XAttribute ("EndManual",      this.endManual));
+			xml.Add (new XAttribute ("CommentAttach",  Misc.Truncate (this.commentAttach)));
+			xml.Add (new XAttribute ("IsContinuation", this.IsContinuation));
 		}
 
 		public override void Deserialize(XElement xml)
@@ -1226,6 +1255,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.startManual   = (bool)   xml.Attribute ("StartManual");
 			this.endManual     = (bool)   xml.Attribute ("EndManual");
 			this.commentAttach = (double) xml.Attribute ("CommentAttach");
+
+			if (xml.Attribute ("IsContinuation") != null)
+			{
+				this.IsContinuation = (bool) xml.Attribute ("IsContinuation");
+			}
 		}
 		#endregion
 
