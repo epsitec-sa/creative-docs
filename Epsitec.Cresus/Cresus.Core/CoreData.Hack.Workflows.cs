@@ -65,19 +65,19 @@ namespace Epsitec.Cresus.Core
 			edgeAB.InitializeDefaultValues ();
             edgeAB.Name = FormattedText.FromSimpleText("Créer une nouvelle offre");
             edgeAB.Description = FormattedText.FromSimpleText("Crée une nouvelle offre liée à une nouvelle affaire pour ce client.");
-            edgeAB.TransitionAction = "WorkflowAction.NewAffair WorkflowAction.NewOffer";
+            edgeAB.TransitionAction = "Relation.CreateAffair\nRelation.CreateOffer";
             edgeAB.NextNode = nodeB;
 
 			edgeAC.InitializeDefaultValues ();
             edgeAC.Name = FormattedText.FromSimpleText("Créer une variante");
             edgeAC.Description = FormattedText.FromSimpleText("Crée une variante d'une offre existante");
-            edgeAC.TransitionAction = "WorkflowAction.NewOfferVariant";
+            edgeAC.TransitionAction = "Offer.Clone";
             edgeAC.NextNode = nodeC;
 
 			edgeCA.InitializeDefaultValues ();
             edgeCA.Name = FormattedText.FromSimpleText("Editer la variante");
             edgeCA.Description = FormattedText.FromSimpleText("Editer la variante de l'offre existante");
-            edgeCA.TransitionAction = "...";
+            edgeCA.TransitionAction = "# nothing to do...";
             edgeCA.NextNode = nodeA;
 
 			nodeB.InitializeDefaultValues ();
