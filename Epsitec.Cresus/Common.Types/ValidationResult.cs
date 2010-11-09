@@ -1,9 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>ValidationResult</c> class stores the result of a validation:
@@ -24,7 +22,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if the associated widget contains valid data; otherwise, <c>false</c>.</value>
-		public bool IsValid
+		public bool								IsValid
 		{
 			get
 			{
@@ -36,7 +34,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets the validation state (basically OK or not OK).
 		/// </summary>
 		/// <value>The validation state.</value>
-		public ValidationState State
+		public ValidationState					State
 		{
 			get
 			{
@@ -48,7 +46,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets the error message explaining what is wrong with the data.
 		/// </summary>
 		/// <value>The error message.</value>
-		public FormattedText ErrorMessage
+		public FormattedText					ErrorMessage
 		{
 			get
 			{
@@ -57,7 +55,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private readonly ValidationState state;
-		private readonly FormattedText errorMessage;
+		private readonly ValidationState		state;
+		private readonly FormattedText			errorMessage;
 	}
 }

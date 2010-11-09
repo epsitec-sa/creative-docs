@@ -1,5 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.UI.Validators
 {
@@ -21,11 +23,11 @@ namespace Epsitec.Common.UI.Validators
 			if ((this.controller != null) &&
 				(this.controller.IsValidUserInterfaceValue (this.controller.GetUserInterfaceValue ())))
 			{
-				this.SetState (Widgets.ValidationState.Ok);
+				this.SetState (ValidationState.Ok);
 			}
 			else
 			{
-				this.SetState (Widgets.ValidationState.Error);
+				this.SetState (ValidationState.Error);
 			}
 		}
 		
