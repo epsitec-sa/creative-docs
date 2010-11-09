@@ -1,11 +1,11 @@
 //	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>ValidationState</c> enumeration lists all possible states for an
-	/// <see cref="IValidator"/>.
+	/// <see cref="IValidationResult"/>.
 	/// </summary>
 	public enum ValidationState
 	{

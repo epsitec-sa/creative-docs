@@ -153,6 +153,7 @@
     <Compile Include="DependencyProperty`1.cs" />
     <Compile Include="ExpressionAnalyzer.cs" />
     <Compile Include="ISuspendCollectionChanged.cs" />
+    <Compile Include="IValidationResult.cs" />
     <Compile Include="Support\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\HashSetExtensions.cs" />
     <Compile Include="Support\Extensions\IListExtensions.cs" />
@@ -173,6 +174,8 @@
     <Compile Include="IStructuredTypeResolver.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\ExceptionHelper.cs" />
+    <Compile Include="ValidationResult.cs" />
+    <Compile Include="ValidationState.cs" />
     <Compile Include="ValueStoreSetMode.cs" />
     <Compile Include="INotifyCollectionChangedProvider.cs" />
     <Compile Include="FieldOptions.cs" />

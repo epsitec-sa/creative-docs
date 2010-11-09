@@ -1,10 +1,7 @@
 //	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using System;
-
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Types
 {
     /// <summary>
 	/// The <c>IValidationResult</c> interface is used to retrieve a validation result.
@@ -13,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	{
 		/// <summary>
 		/// Gets a value indicating whether the associated widget contains valid data,
-		/// i.e. <c>State</c> is set to <c>ValidationState.Ok</c>.
+		/// i.e. <see cref="State"/> is set to <c>ValidationState.Ok</c>.
 		/// </summary>
 		/// <value><c>true</c> if the associated widget contains valid data; otherwise, <c>false</c>.</value>
 		bool IsValid

@@ -192,7 +192,6 @@
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="WidgetChildFindMode.cs" />
     <Compile Include="WidgetInternalState.cs" />
-    <Compile Include="IValidationResult.cs" />
     <Compile Include="MessageHandler.cs" />
     <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />
     <Compile Include="TextFieldMultiExPreferredLayout.cs" />
@@ -204,8 +203,6 @@
     <Compile Include="ScrollableScrollerMode.cs" />
     <Compile Include="ScrollListMultiSelect.cs" />
     <Compile Include="FlatTextField.cs" />
-    <Compile Include="ValidationResult.cs" />
-    <Compile Include="ValidationState.cs" />
     <Compile Include="Validators\MarshalerValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
     <Compile Include="WindowPlacement.cs" />
