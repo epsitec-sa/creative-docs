@@ -1506,16 +1506,56 @@ namespace Epsitec.Common.Dialogs
 			this.viewDispositionState.Enable = true;
 			this.viewSizeState.Enable = true;
 
+			string fileName = this.fieldFileName.Text.Trim ();
+
 			if (item == null)
 			{
-				okEnable = this.fieldFileName.Text.Trim ().Length > 0;
+				okEnable = fileName.Length > 0;
 			}
+			
+			if (okEnable && (this.FileDialogType == Dialogs.FileDialogType.Save) && (!string.IsNullOrWhiteSpace (this.fileFilterPattern)))
+			{
+				bool matchFolderName = false;
+
+				try
+				{
+					if (!System.IO.Path.IsPathRooted (fileName))
+					{
+						matchFolderName = System.IO.Directory.Exists (System.IO.Path.Combine (this.navigationController.ActiveDirectoryPath, fileName));
+					}
+
+				}
+				catch
+				{
+				}
+
+				if (!matchFolderName)
+				{
+					string[] validExt = this.fileFilterPattern.Split (new char[] { '*', '|' }, System.StringSplitOptions.RemoveEmptyEntries);
+					string currentExt = System.IO.Path.GetExtension (fileName);
+
+					okEnable = false;
+
+					if (currentExt.Length > 0)
+					{
+						for (int i = 0; i < validExt.Length; i++)
+						{
+							if (currentExt == validExt[i])
+							{
+								okEnable = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+
 			if (okEnable)
 			{
 				okEnable = this.MultipleSelectionContainsOnlyDataFiles ();
 			}
 
-			this.buttonOk.Enable = okEnable || ((item != null) && (item.IsSynthetic));
+			this.buttonOk.Enable = okEnable || ((item != null) && (item.IsSynthetic || item.IsDirectory));
 		}
 
 
@@ -1972,16 +2012,24 @@ namespace Epsitec.Common.Dialogs
 					name = System.IO.Path.Combine (this.navigationController.ActiveDirectoryPath, name);
 				}
 
+				bool   assumeFolderName = false;
 				string nameWithExt = name;
 
-				//	When the user specifies a file name, try adding an extension, if the
-				//	specified name does not resolve to an existing file, and if it is not
-				//	a directory.
+				//	The name ends with a path separator: this cannot be a valid file name,
+				//	but must be a folder name :
 
-				if ((!string.IsNullOrEmpty (this.fileExtension)) &&
-					(!name.ToLowerInvariant ().EndsWith (this.fileExtension)) &&
-					(!System.IO.File.Exists (name)) &&
-					(!(name.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()) || name.EndsWith (System.IO.Path.AltDirectorySeparatorChar.ToString ()))))
+				if (name.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()) ||
+					name.EndsWith (System.IO.Path.AltDirectorySeparatorChar.ToString ()))
+				{
+					assumeFolderName = true;
+				}
+
+				//	When the user specifies a file name, try adding an extension if none
+				//	was provided :
+
+				if ((!assumeFolderName) &&
+					(!string.IsNullOrEmpty (this.fileExtension)) &&
+					(!name.ToLowerInvariant ().EndsWith (this.fileExtension)))
 				{
 					nameWithExt = string.Concat (name, this.fileExtension);
 				}
@@ -1992,8 +2040,6 @@ namespace Epsitec.Common.Dialogs
 				
 				if (System.IO.Directory.Exists (name))
 				{
-					bool assumeFolderName = false;
-
 					switch (this.FileDialogType)
 					{
 						case FileDialogType.New:
@@ -2006,18 +2052,23 @@ namespace Epsitec.Common.Dialogs
 							break;
 					}
 
-					if (assumeFolderName || item != null)
+					if (item != null)
 					{
-						FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
-
-						if (folderItem.IsFolder)
-						{
-							this.navigationController.ActiveDirectory = folderItem;
-							return false;
-						}
+						assumeFolderName = true;
 					}
 				}
 
+				if (assumeFolderName)
+				{
+					FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
+
+					if (folderItem.IsFolder)
+					{
+						this.navigationController.ActiveDirectory = folderItem;
+						return false;
+					}
+				}
+				
 				this.selectedFileName = nameWithExt;
 
 				return this.PromptForOverwriting ();
