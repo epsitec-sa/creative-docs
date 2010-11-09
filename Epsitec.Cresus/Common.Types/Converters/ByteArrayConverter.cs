@@ -18,10 +18,22 @@ namespace Epsitec.Common.Types.Converters
 			{
 				return "0";
 			}
-			else
+
+			if (ByteArrayConverter.ProbeForUtf8 (value))
 			{
-				return "B" + System.Convert.ToBase64String (value);
+				try
+				{
+					var text = ByteArrayConverter.utf8Encoding.GetString (value);
+
+					return "U" + text;
+				}
+				catch
+				{
+					//	Invalid UTF-8 stream -- handle the data as plain binary...
+				}
 			}
+			
+			return "B" + System.Convert.ToBase64String (value);
 		}
 
 		public override ConversionResult<byte[]> ConvertFromString(string text)
@@ -47,6 +59,12 @@ namespace Epsitec.Common.Types.Converters
 
 					case 'B':
 						break;
+
+					case 'U':
+						return new ConversionResult<byte[]> ()
+						{
+							Value = ByteArrayConverter.utf8Encoding.GetBytes (text.Substring (1))
+						};
 
 					default:
 						return new ConversionResult<byte[]> ()
@@ -83,6 +101,7 @@ namespace Epsitec.Common.Types.Converters
 					case 'N':
 						return true;
 					
+					case 'U':
 					case 'B':
 						return this.ConvertFromString (text).IsValid;
 					
@@ -93,5 +112,29 @@ namespace Epsitec.Common.Types.Converters
 
 			return false;
 		}
+
+		private static bool ProbeForUtf8(byte[] value)
+		{
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = (char) value[i];
+
+				if ((c == '\t') ||
+							(c == '\n') ||
+							(c == '\r'))
+				{
+					continue;
+				}
+
+				if (c < 0x20)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		private static System.Text.UTF8Encoding utf8Encoding = new System.Text.UTF8Encoding (encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 	}
 }
