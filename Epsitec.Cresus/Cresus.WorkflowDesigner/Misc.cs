@@ -15,6 +15,14 @@ namespace Epsitec.Cresus.WorkflowDesigner
 	/// </summary>
 	public class Misc
 	{
+		static public double Truncate(double value, int numberOfDecimal=1)
+		{
+			//	Retourne un nombre tronqué à un certain nombre de décimales.
+			double factor = System.Math.Pow (10, numberOfDecimal);
+			return System.Math.Floor (value*factor) / factor;
+		}
+
+
 		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, bool round, Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
