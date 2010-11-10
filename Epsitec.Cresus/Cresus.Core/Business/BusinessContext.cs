@@ -152,8 +152,8 @@ namespace Epsitec.Cresus.Core.Business
 
 			if (lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
 			{
-				System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
 				this.lockTransaction = lockTransaction;
+				this.OnLockAcquired ();
 				return true;
 			}
 
@@ -537,6 +537,12 @@ namespace Epsitec.Cresus.Core.Business
 
 		#endregion
 
+		private void OnLockAcquired()
+		{
+			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
+		}
+
+		
 		private Logic CreateLogic(System.Type entityType)
 		{
 			return new Logic (entityType, this);

@@ -5,6 +5,10 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Business
 {
+	/// <summary>
+	/// The <c>ExchangeRateType</c> defines who specifies the exchange rate.
+	/// See §1.1.3.1 of the document "Info TVA 7".
+	/// </summary>
 	[DesignerVisible]
 	public enum ExchangeRateType
 	{
