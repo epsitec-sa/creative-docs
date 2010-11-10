@@ -89,8 +89,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (ArticleParameterTabId.Numeric, "Valeur numérique", id => Common.ChangeEditedParameterEntity (controller, id)),
-				TabPageDef.Create (ArticleParameterTabId.Enum,    "Énumération",      id => Common.ChangeEditedParameterEntity (controller, id)));
+				TabPageDef.Create (ArticleParameterTabId.Numeric,  "Valeur num.", id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.Enum,     "Énumération", id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.FreeText, "Texte libre", id => Common.ChangeEditedParameterEntity (controller, id)));
 
 			book.SelectTabPage (defaultId);
 		}
@@ -188,6 +189,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					else if (id == ArticleParameterTabId.Enum)
 					{
 						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<EnumValueArticleParameterDefinitionEntity> ();
+					}
+					else if (id == ArticleParameterTabId.FreeText)
+					{
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<FreeTextValueArticleParameterDefinitionEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);

@@ -219,6 +219,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				return enumParameter.DefaultValue;
 			}
 
+			if (parameter is FreeTextValueArticleParameterDefinitionEntity)
+			{
+				var enumParameter = parameter as FreeTextValueArticleParameterDefinitionEntity;
+				return enumParameter.ShortText.ToString ();
+			}
+
 			return null;
 		}
 

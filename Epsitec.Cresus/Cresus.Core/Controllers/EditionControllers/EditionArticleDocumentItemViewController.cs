@@ -400,7 +400,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (e.Entity is ArticleDefinitionEntity ||
 				e.Entity is NumericValueArticleParameterDefinitionEntity ||
-				e.Entity is EnumValueArticleParameterDefinitionEntity)
+				e.Entity is EnumValueArticleParameterDefinitionEntity ||
+				e.Entity is FreeTextValueArticleParameterDefinitionEntity)
 			{
 				this.parameterController.UpdateUI (this.Entity);
 				this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
