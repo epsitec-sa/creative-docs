@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
 				this.Entity.Name             = this.editingTextField1.Text;
-				this.Entity.TransitionAction = this.editingTextField2.Text;
+				this.Entity.TransitionAction = ObjectEdge.GetTransitionAction (this.editingTextField2 as TextFieldCombo);
 				this.UpdateTitle ();
 				this.UpdateSubtitle ();
 			}
@@ -500,30 +500,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editingTextField2.Parent = this.editor;
 				this.editingTextField2.SetManualBounds (rect);
 				this.editingTextField2.IsReadOnly = true;
-				this.editingTextField2.Text = text2;
 				this.editingTextField2.TabIndex = 2;
 
-				this.UpdateCombo (this.editingTextField2 as TextFieldCombo);
+				ObjectEdge.UpdateTransitionActionCombo (this.editingTextField2 as TextFieldCombo, text2);
 			}
 
 			this.editor.EditingObject = this;
 			this.editor.ClearHilited ();
 			this.UpdateButtonsState ();
-		}
-
-		private void UpdateCombo(TextFieldCombo combo)
-		{
-			combo.Items.Clear ();
-
-			var actionClasses = BusinessActionResolver.GetActionClasses ();
-			foreach (var actionClasse in actionClasses)
-			{
-				var verbs = BusinessActionResolver.GetActionVerbs (actionClasse).Select (x => x.Name);
-				foreach (var verb in verbs)
-				{
-					combo.Items.Add (string.Concat (actionClasse, ".", verb));
-				}
-			}
 		}
 
 		private void StopEdition()
@@ -539,6 +523,46 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			this.editor.EditingObject = null;
 			this.UpdateButtonsState ();
+		}
+
+
+		private static void UpdateTransitionActionCombo(TextFieldCombo combo, string text)
+		{
+			//	Initialise le widget combo permettant de choisir une action.
+			combo.Items.Clear ();
+			combo.Items.Add (ObjectEdge.emptyTransitionAction);
+
+			var actionClasses = BusinessActionResolver.GetActionClasses ();
+			foreach (var actionClasse in actionClasses)
+			{
+				var verbs = BusinessActionResolver.GetActionVerbs (actionClasse).Select (x => x.Name);
+				foreach (var verb in verbs)
+				{
+					combo.Items.Add (string.Concat (actionClasse, ".", verb));
+				}
+			}
+
+			if (string.IsNullOrWhiteSpace (text))
+			{
+				combo.Text = ObjectEdge.emptyTransitionAction;
+			}
+			else
+			{
+				combo.Text = text;
+			}
+		}
+
+		private static string GetTransitionAction(TextFieldCombo combo)
+		{
+			//	Retourne l'action choisie par le widget combo.
+			if (string.IsNullOrWhiteSpace (combo.Text) || combo.Text == ObjectEdge.emptyTransitionAction)
+			{
+				return null;
+			}
+			else
+			{
+				return combo.Text;
+			}
 		}
 
 
@@ -1209,6 +1233,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public static readonly Size				frameSize = new Size (200, 36);
 		private static readonly double			extendedHeight = 80;
+		private static readonly string			emptyTransitionAction = "&lt;vide&gt;";
 
 		private string							titleString;
 		private TextLayout						title;
