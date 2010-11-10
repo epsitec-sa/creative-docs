@@ -503,14 +503,23 @@ namespace Epsitec.Common.Printing
 			xml.Add (new XAttribute ("width",  XmlPort.Truncate (image.Width)));
 			xml.Add (new XAttribute ("height", XmlPort.Truncate (image.Height)));
 
-			byte[] bytes = image.BitmapImage.GetRawBitmapBytes ();
-			var builder = new System.Text.StringBuilder ();
-			for (int i = 0; i < bytes.Length; i++)
-			{
-				builder.Append (string.Format ("{0:x2}", bytes[i]));
-			}
+			int dx = image.BitmapImage.PixelWidth * 4;
+			int dy = image.BitmapImage.PixelHeight;
 
-			xml.Add (new XAttribute ("bitmap", builder.ToString ()));
+			byte[] bytes = image.BitmapImage.GetRawBitmapBytes ();
+			System.Diagnostics.Debug.Assert (bytes.Length == dx*dy);
+
+			for (int y = 0; y < dy; y++)
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				for (int x = 0; x < dx; x++)
+				{
+					builder.Append (string.Format ("{0:x2}", bytes[dx*y+x]));
+				}
+
+				xml.Add (new XAttribute (string.Format ("row{0}", y.ToString (System.Globalization.CultureInfo.InvariantCulture)), builder.ToString ()));
+			}
 		}
 
 		public static double Truncate(double value, int numberOfDecimal=3)
