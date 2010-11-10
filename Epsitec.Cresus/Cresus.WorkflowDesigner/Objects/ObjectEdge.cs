@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -415,7 +416,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
-				this.Entity.Name = this.editingTextField.Text;
+				this.Entity.Name             = this.editingTextField1.Text;
 				this.Entity.TransitionAction = this.editingTextField2.Text;
 				this.UpdateTitle ();
 				this.UpdateSubtitle ();
@@ -423,7 +424,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.editingElement == ActiveElement.EdgeEditDescription)
 			{
-				this.Entity.Description = this.editingTextField.Text;
+				this.Entity.Description = this.editingTextField1.Text;
 				this.UpdateDescription ();
 			}
 
@@ -444,7 +445,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void StartEdition(ActiveElement element)
 		{
 			Rectangle rect = Rectangle.Empty;
-			string text = null;
+			string text1 = null;
 			string text2 = null;
 
 			if (element == ActiveElement.EdgeHeader)
@@ -452,10 +453,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect = this.RectangleTitle;
 				rect.Deflate (-4, 6);
 
-				text = this.Entity.Name.ToString ();
+				text1 = this.Entity.Name.ToString ();
 				text2 = (this.Entity.TransitionAction == null) ? "" : this.Entity.TransitionAction;
 
-				this.editingTextField  = new TextField ();
+				this.editingTextField1 = new TextField ();
 				this.editingTextField2 = new TextFieldCombo ();
 			}
 
@@ -464,11 +465,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				rect = this.RectangleDescription;
 				rect.Inflate (6);
 
-				text = this.Entity.Description.ToString ();
+				text1 = this.Entity.Description.ToString ();
 
 				var field = new TextFieldMulti ();
 				field.ScrollerVisibility = false;
-				this.editingTextField = field;
+				this.editingTextField1 = field;
 			}
 
 			if (rect.IsEmpty)
@@ -485,12 +486,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
-			this.editingTextField.Parent = this.editor;
-			this.editingTextField.SetManualBounds (rect);
-			this.editingTextField.Text = text;
-			this.editingTextField.TabIndex = 1;
-			this.editingTextField.SelectAll ();
-			this.editingTextField.Focus ();
+			this.editingTextField1.Parent = this.editor;
+			this.editingTextField1.SetManualBounds (rect);
+			this.editingTextField1.Text = text1;
+			this.editingTextField1.TabIndex = 1;
+			this.editingTextField1.SelectAll ();
+			this.editingTextField1.Focus ();
 
 			if (text2 != null)
 			{
@@ -498,14 +499,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 				this.editingTextField2.Parent = this.editor;
 				this.editingTextField2.SetManualBounds (rect);
+				this.editingTextField2.IsReadOnly = true;
 				this.editingTextField2.Text = text2;
 				this.editingTextField2.TabIndex = 2;
 
-				var combo = this.editingTextField2 as TextFieldCombo;
-				combo.Items.Add ("WorkflowAction.NewAffair");
-				combo.Items.Add ("WorkflowAction.NewOffer");
-				combo.Items.Add ("WorkflowAction.NewOfferVariant");
-				combo.Items.Add ("etc. (à terminer)");
+				this.UpdateCombo (this.editingTextField2 as TextFieldCombo);
 			}
 
 			this.editor.EditingObject = this;
@@ -513,10 +511,25 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.UpdateButtonsState ();
 		}
 
+		private void UpdateCombo(TextFieldCombo combo)
+		{
+			combo.Items.Clear ();
+
+			var actionClasses = BusinessActionResolver.GetActionClasses ();
+			foreach (var actionClasse in actionClasses)
+			{
+				var verbs = BusinessActionResolver.GetActionVerbs (actionClasse).Select (x => x.Name);
+				foreach (var verb in verbs)
+				{
+					combo.Items.Add (string.Concat (actionClasse, ".", verb));
+				}
+			}
+		}
+
 		private void StopEdition()
 		{
-			this.editor.Children.Remove (this.editingTextField);
-			this.editingTextField = null;
+			this.editor.Children.Remove (this.editingTextField1);
+			this.editingTextField1 = null;
 
 			if (this.editingTextField2 != null)
 			{
@@ -1205,7 +1218,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private TextLayout						description;
 
 		private ActiveElement					editingElement;
-		private AbstractTextField				editingTextField;
+		private AbstractTextField				editingTextField1;
 		private AbstractTextField				editingTextField2;
 	}
 }
