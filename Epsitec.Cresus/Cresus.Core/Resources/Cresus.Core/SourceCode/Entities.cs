@@ -7691,30 +7691,54 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class ExchangeRateSourceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/L0AQC/L0ARC
+		///	The <c>Type</c> field.
+		///	designer:fld/L0AQC/L0A8M
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ARC]")]
-		public global::Epsitec.Common.Types.FormattedText Name
+		[global::Epsitec.Common.Support.EntityField ("[L0A8M]")]
+		public global::Epsitec.Cresus.Core.Business.ExchangeRateType Type
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARC]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.ExchangeRateType> ("[L0A8M]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				global::Epsitec.Cresus.Core.Business.ExchangeRateType oldValue = this.Type;
 				if (oldValue != value)
 				{
-					this.OnNameChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARC]", oldValue, value);
-					this.OnNameChanged (oldValue, value);
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.ExchangeRateType> ("[L0A8M]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Originator</c> field.
+		///	designer:fld/L0AQC/L0ARC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARC]")]
+		public string Originator
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ARC]");
+			}
+			set
+			{
+				string oldValue = this.Originator;
+				if (oldValue != value)
+				{
+					this.OnOriginatorChanging (oldValue, value);
+					this.SetField<string> ("[L0ARC]", oldValue, value);
+					this.OnOriginatorChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.ExchangeRateType oldValue, global::Epsitec.Cresus.Core.Business.ExchangeRateType newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.ExchangeRateType oldValue, global::Epsitec.Cresus.Core.Business.ExchangeRateType newValue);
+		partial void OnOriginatorChanging(string oldValue, string newValue);
+		partial void OnOriginatorChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
