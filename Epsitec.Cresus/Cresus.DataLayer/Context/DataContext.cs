@@ -810,6 +810,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
+		/// Reloads the data of all the <see cref="AbstractEntity"/> that are managed by this
+		/// instance. This will therefore erase all the modifications that have been made to these
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		public void ReloadEntities()
+		{
+			// TODO Improve this method by reloading only the entities that have been modified. This
+			// might be done in the future by checking which entities have been modified since they
+			// have been loaded. This requires to implement correctly the logging stuff in the database
+			// and to keep data somewhere in order to know when was loaded which entity.
+			// Marc
+
+			foreach (AbstractEntity entity in this.GetEntities ().ToList ())
+			{
+				this.ReloadEntity (entity);
+			}
+		}
+
+		/// <summary>
 		/// Reloads all the data of the given <see cref="AbstractEntity"/> so that it is consistent
 		/// with its value in the database. This will erase all modifications to the given
 		/// <see cref="AbstractEntity"/> and might even delete it if it has been deleted in the
