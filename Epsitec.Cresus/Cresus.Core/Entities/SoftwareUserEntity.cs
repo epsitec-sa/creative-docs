@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return (this.IsArchive == false)
 					&& (this.Disabled == false)
-					&& (Misc.IsDateInRange (System.DateTime.Now, this.BeginDate, this.EndDate))
+					&& (System.DateTime.Now.InRange (this))
 					&& (this.UserGroups.Where (group => !group.IsArchive).All (group => group.Disabled == false));
 			}
 		}

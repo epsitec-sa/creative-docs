@@ -10697,6 +10697,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PriceRefDate</c> field.
+		///	designer:fld/L0ADK/L0A9M
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9M]")]
+		public global::Epsitec.Common.Types.Date? PriceRefDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[L0A9M]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.PriceRefDate;
+				if (oldValue != value)
+				{
+					this.OnPriceRefDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0A9M]", oldValue, value);
+					this.OnPriceRefDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DebtorBookAccount</c> field.
 		///	designer:fld/L0ADK/L0AOK
 		///	</summary>
@@ -10735,6 +10757,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnBillingStatusChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingStatus oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingStatus newValue);
 		partial void OnBillingDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBillingDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPriceRefDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPriceRefDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDebtorBookAccountChanged(string oldValue, string newValue);
 		
