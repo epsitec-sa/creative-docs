@@ -55,7 +55,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIPreviewPanel()
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (this.Entity);
+
+			DocumentMetadataEntity example = new DocumentMetadataEntity ();
+			example.BusinessDocument = this.Entity;
+			example.IsArchive = false;
+
+			var metadoc = this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+
+			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
 
 			if (entityPrinter == null)
 			{
@@ -190,7 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
+			//SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 

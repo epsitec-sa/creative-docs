@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
-			BusinessDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
+			DocumentMetadataEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core
 			// personDR
 
 			personDR.Firstname = "Daniel";
-			personDR.Lastname  = FormattedText.FromSimpleText ("Roux");
+			personDR.Lastname  = "Roux";
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
 
 			yield return personPA;
@@ -781,7 +781,7 @@ namespace Epsitec.Cresus.Core
 			yield return business;
 		}
 
-		private IEnumerable<BusinessDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
+		private IEnumerable<DocumentMetadataEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
 		{
 			var decimalType = DecimalType.Default;
 			decimal vatRate = vatDefs.Where (x => x.Code == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
@@ -789,11 +789,15 @@ namespace Epsitec.Cresus.Core
 			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var invoiceA = this.DataContext.CreateEntity<BusinessDocumentEntity> ();
+			var metadocA = this.DataContext.CreateEntity<DocumentMetadataEntity> ();
 
-			invoiceA.IdA = "1000-00";
-//-			invoiceA.DocumentSource = Business.DocumentSource.Generated;
-			invoiceA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
-//-			invoiceA.Description = "Facture de test #1000";
+			metadocA.IdA = "1000-00";
+			metadocA.BusinessDocument = invoiceA;
+			metadocA.DocumentType = DocumentType.Invoice;
+			metadocA.DocumentSource = DocumentSource.Generated;
+			metadocA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
+			metadocA.Description = "Facture de test #1000";
+
 			invoiceA.BillingDate = new Date (2010, 7, 8);
 			invoiceA.BillingMailContact = billingAddress;
 			invoiceA.ShippingMailContact = billingAddress;
@@ -1045,7 +1049,7 @@ namespace Epsitec.Cresus.Core
 			billingA2.InstalmentRank = 1;
 			billingA2.InstalmentName = "2/2";
 
-			yield return invoiceA;
+			yield return metadocA;
 		}
 
 		private ArticlePriceEntity CreateArticlePrice(decimal price, ArticlePriceGroupEntity articlePriceGroup1 = null, ArticlePriceGroupEntity articlePriceGroup2 = null, ArticlePriceGroupEntity articlePriceGroup3 = null)

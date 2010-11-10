@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(BusinessDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentType type)
+		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentType type)
 		{
 			string doc;
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					break;
 			}
 
-			string title = TextFormatter.FormatText (string.Concat("<b>", doc), x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
+			string title = TextFormatter.FormatText (string.Concat("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
 
 			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}

@@ -253,11 +253,35 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				return AbstractEntityPrinter.FindEntityPrinterType (entity.GetType ());
+				var types = AbstractEntityPrinter.FindEntityPrinterTypes (entity.GetType ());
+
+				foreach (var type in types)
+				{
+					if (AbstractEntityPrinter.CheckCompatibleEntityPrinterType (entity, type))
+					{
+						return type;
+					}
+				}
+
+				return null;
 			}
 		}
 
-		private static System.Type FindEntityPrinterType(System.Type entityType)
+		private static bool CheckCompatibleEntityPrinterType(AbstractEntity entity, System.Type type)
+		{
+			var method = type.GetMethod ("CheckCompatibleEntity", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+			if (method == null)
+			{
+				return true;
+			}
+			else
+			{
+				return (bool) method.Invoke (null, new object[] { entity });
+			}
+		}
+
+		private static IEnumerable<System.Type> FindEntityPrinterTypes(System.Type entityType)
 		{
 			var baseTypeName = "AbstractEntityPrinter`1";
 
@@ -270,7 +294,7 @@ namespace Epsitec.Cresus.Core.Printers
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;
 
-			return types.FirstOrDefault ();
+			return types;
 		}
 
 

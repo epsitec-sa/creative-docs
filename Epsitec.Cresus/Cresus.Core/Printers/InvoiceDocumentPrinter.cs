@@ -24,16 +24,17 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class InvoiceDocumentPrinter : AbstractDocumentPrinter
 	{
-		public InvoiceDocumentPrinter(AbstractEntityPrinter entityPrinter, BusinessDocumentEntity entity)
+		public InvoiceDocumentPrinter(AbstractEntityPrinter entityPrinter, DocumentMetadataEntity metadata, BusinessDocumentEntity entity)
 			: base (entityPrinter, entity)
 		{
+			this.metadata = metadata;
 		}
 
 		public override string JobName
 		{
 			get
 			{
-				return FormattedText.Concat ("Facture ", this.Entity.IdA).ToSimpleText ();
+				return FormattedText.Concat ("Facture ", this.metadata.IdA).ToSimpleText ();
 			}
 		}
 
@@ -266,7 +267,7 @@ namespace Epsitec.Cresus.Core.Printers
 				if (group == null)
 				{
 					title      = "Concerne";
-					text       = TextFormatter.FormatText (this.Entity.DocumentTitle);
+					text       = TextFormatter.FormatText (this.metadata.DocumentTitle);
 					cellBorder = CellBorder.Empty;
 					margins    = new Margins (0);
 					color      = Color.Empty;
@@ -301,7 +302,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.RequiredPageSize.Height-82, 90, 10));
@@ -1125,7 +1126,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -1335,7 +1336,7 @@ namespace Epsitec.Cresus.Core.Printers
 			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
 			isr.From = this.Entity.BillingMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
+			isr.Communication = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
 
 			isr.Slip = new IsrSlip (billingDetails);
 			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
@@ -1468,5 +1469,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private int					visibleColumnCount;
 		private int[]				lastRowForEachSection;
 		private List<Rectangle>		tableBounds;
+		private DocumentMetadataEntity metadata;
 	}
 }

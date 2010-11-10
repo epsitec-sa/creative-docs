@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Core.Entities
 				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
-			return TextFormatter.FormatText ("N°", this.IdA, "/~", this.IdB, "/~", this.IdC, ", ", date, ", ", total, addresses);
+			return TextFormatter.FormatText (/*"N°", this.IdA, "/~", this.IdB, "/~", this.IdC, ", ", */date, ", ", total, addresses);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("Facture n°", this.IdA);
+			return TextFormatter.FormatText ("???");//"Facture n°", this.IdA);
 		}
 
 
@@ -59,14 +59,14 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.IdA.GetEntityStatus ());
-				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
+				//a.Accumulate (this.IdA.GetEntityStatus ());
+				//a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
+				//a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 
-				a.Accumulate (this.DocumentTitle.GetEntityStatus ());
+				//a.Accumulate (this.DocumentTitle.GetEntityStatus ());
 				a.Accumulate (EntityStatus.Empty | EntityStatus.Valid); // this.Description.GetEntityStatus ();
 				a.Accumulate (this.Lines.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
+				//a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
 			}

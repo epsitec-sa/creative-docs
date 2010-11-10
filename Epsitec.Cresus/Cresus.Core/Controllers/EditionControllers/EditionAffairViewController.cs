@@ -80,6 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ExecuteNewOffer()
 		{
+#if false
 			var workflow       = this.Entity.Workflow.UnwrapNullEntity () ?? this.BusinessContext.CreateEntity<WorkflowEntity> ();
 			var workflowThread = this.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
 			var workflowStep   = this.BusinessContext.CreateEntity<WorkflowStepEntity> ();
@@ -127,6 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.Entity.Workflow = workflow;
 
 			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
+#endif
 		}
 
 
