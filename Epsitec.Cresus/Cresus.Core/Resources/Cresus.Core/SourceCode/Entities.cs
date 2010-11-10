@@ -3437,9 +3437,33 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>PriceCalculatorArg</c> field.
+		///	designer:fld/L0AF3/L0A0M
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0M]")]
+		public string PriceCalculatorArg
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A0M]");
+			}
+			set
+			{
+				string oldValue = this.PriceCalculatorArg;
+				if (oldValue != value)
+				{
+					this.OnPriceCalculatorArgChanging (oldValue, value);
+					this.SetField<string> ("[L0A0M]", oldValue, value);
+					this.OnPriceCalculatorArgChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPriceCalculatorArgChanging(string oldValue, string newValue);
+		partial void OnPriceCalculatorArgChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4150,6 +4174,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>PriceCalculatorArg</c> field.
+		///	designer:fld/L0AJ4/L0A1M
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A1M]")]
+		public string PriceCalculatorArg
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A1M]");
+			}
+			set
+			{
+				string oldValue = this.PriceCalculatorArg;
+				if (oldValue != value)
+				{
+					this.OnPriceCalculatorArgChanging (oldValue, value);
+					this.SetField<string> ("[L0A1M]", oldValue, value);
+					this.OnPriceCalculatorArgChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnMinQuantityChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnMinQuantityChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -4161,6 +4207,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnValueBeforeTaxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnPriceCalculatorChanging(string oldValue, string newValue);
 		partial void OnPriceCalculatorChanged(string oldValue, string newValue);
+		partial void OnPriceCalculatorArgChanging(string oldValue, string newValue);
+		partial void OnPriceCalculatorArgChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4183,8 +4231,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Currency</c> entity.
 	///	designer:cap/L0AP4
 	///	</summary>
-	public partial class CurrencyEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateTimeRange
+	public partial class CurrencyEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateTimeRange, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AP4/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
 		#region IDateTimeRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
@@ -6366,8 +6432,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PriceRoundingMode</c> entity.
 	///	designer:cap/L0AQ9
 	///	</summary>
-	public partial class PriceRoundingModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IRoundingMode
+	public partial class PriceRoundingModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IRoundingMode, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AQ9/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
 		#region IRoundingMode Members
 		///	<summary>
 		///	The <c>Modulo</c> field.
