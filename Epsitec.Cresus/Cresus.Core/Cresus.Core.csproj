@@ -87,6 +87,7 @@
     <Compile Include="Business\ActionAttribute.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\ExchangeRateType.cs" />
+    <Compile Include="Business\Finance\PriceCalculator.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />

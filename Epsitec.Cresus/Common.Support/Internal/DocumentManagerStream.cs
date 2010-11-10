@@ -1,8 +1,7 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Support.Internal
 {
@@ -11,7 +10,7 @@ namespace Epsitec.Common.Support.Internal
 	/// to seamlessly read a document while it is still being copied from its
 	/// source location to the temporary folder.
 	/// </summary>
-	internal class DocumentManagerStream : System.IO.Stream
+	internal sealed class DocumentManagerStream : System.IO.Stream
 	{
 		public DocumentManagerStream(DocumentManager manager, string path)
 		{
@@ -19,13 +18,8 @@ namespace Epsitec.Common.Support.Internal
 			this.stream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
 		}
 
-		public override void Close()
-		{
-			this.stream.Close ();
-			base.Close ();
-		}
-
-		public override bool CanRead
+		
+		public override bool					CanRead
 		{
 			get
 			{
@@ -33,7 +27,7 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
-		public override bool CanSeek
+		public override bool					CanSeek
 		{
 			get
 			{
@@ -41,7 +35,7 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
-		public override bool CanWrite
+		public override bool					CanWrite
 		{
 			get
 			{
@@ -49,7 +43,7 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
-		public override long Length
+		public override long					Length
 		{
 			get
 			{
@@ -57,7 +51,7 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
-		public override long Position
+		public override long					Position
 		{
 			get
 			{
@@ -69,6 +63,13 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
+
+		public override void Close()
+		{
+			this.stream.Close ();
+			base.Close ();
+		}
+		
 		public override void Flush()
 		{
 		}
@@ -117,7 +118,7 @@ namespace Epsitec.Common.Support.Internal
 			throw new System.NotImplementedException ("The method or operation is not implemented.");
 		}
 
-		private System.IO.Stream stream;
-		private DocumentManager manager;
+		private readonly System.IO.Stream		stream;
+		private readonly DocumentManager		manager;
 	}
 }

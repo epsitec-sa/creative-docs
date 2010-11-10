@@ -2,9 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Core.Business
 {

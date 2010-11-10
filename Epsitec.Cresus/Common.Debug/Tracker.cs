@@ -1,9 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Debug
 {
@@ -118,10 +116,11 @@ namespace Epsitec.Common.Debug
 			public Item(string name, object obj)
 			{
 				this.name = name;
-				this.weak = new WeakReference (obj);
+				this.weak = new System.WeakReference (obj);
 			}
 
-			public string Name
+			
+			public string						Name
 			{
 				get
 				{
@@ -129,7 +128,7 @@ namespace Epsitec.Common.Debug
 				}
 			}
 
-			public object Object
+			public object						Object
 			{
 				get
 				{
@@ -137,13 +136,14 @@ namespace Epsitec.Common.Debug
 				}
 			}
 
-			private string name;
-			private System.WeakReference weak;
+			
+			private readonly string					name;
+			private readonly System.WeakReference	weak;
 		}
 
 		#endregion
 
-		static private List<Item> items = new List<Item> ();
-		static private int id = 0;
+		static private readonly List<Item>		items = new List<Item> ();
+		static private int						id;
 	}
 }

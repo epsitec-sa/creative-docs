@@ -1,9 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
@@ -11,7 +9,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 	/// The <c>PidlHandle</c> class wraps a SHELL pointer to ID List so that
 	/// we don't forget to free the associated memory.
 	/// </summary>
-	internal class PidlHandle : Platform.FolderItemHandle
+	internal sealed class PidlHandle : Platform.FolderItemHandle
 	{
 		private PidlHandle()
 		{
@@ -22,7 +20,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.pidl = ShellApi.ILCombine (pidl, System.IntPtr.Zero);
 		}
 
-		public System.IntPtr Pidl
+		public System.IntPtr					Pidl
 		{
 			get
 			{
@@ -60,6 +58,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 		
+		
 		public static PidlHandle Inherit(System.IntPtr pidl)
 		{
 			PidlHandle handle = new PidlHandle ();
@@ -75,9 +74,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
+		
 		public static readonly PidlHandle VirtualDesktopHandle = new PidlHandle ();
 
-		System.IntPtr pidl;
-
+		private System.IntPtr					pidl;
 	}
 }
