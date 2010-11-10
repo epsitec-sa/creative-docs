@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	Il peut y avoir plusieurs prix, mais un seul prix à une date donnée pour une monnaie donnée.
 			foreach (var price in article.ArticleDefinition.ArticlePrices.Where (price => price.CurrencyCode == currency))
 			{
-				if (Misc.IsDateInRange (date, price.BeginDate, price.EndDate))
+				if (date.InRange (price))
 				{
 					return price.ValueBeforeTax;
 				}

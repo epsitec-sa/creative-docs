@@ -1,11 +1,13 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -202,18 +204,9 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static bool IsDateInRange(System.DateTime date, System.DateTime? beginDate, System.DateTime? endDate)
+		public static bool InRange(this System.DateTime date, IDateTimeRange range)
 		{
-			if (beginDate.HasValue && beginDate.Value > date)
-			{
-				return false;
-			}
-			if (endDate.HasValue && endDate.Value < date)
-			{
-				return false;
-			}
-
-			return true;
+			return date.InRange (range.BeginDate, range.EndDate);
 		}
 
 
