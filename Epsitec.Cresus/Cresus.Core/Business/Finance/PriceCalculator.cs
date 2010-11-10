@@ -4,16 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business.Actions
+namespace Epsitec.Cresus.Core.Business.Finance
 {
-	public static class RelationActions
+	class PriceCalculator
 	{
-		public static void CreateOffer()
-		{
-		}
-
-		public static void CreateAffair()
-		{
-		}
 	}
 }

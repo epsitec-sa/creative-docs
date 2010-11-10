@@ -1,6 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+/*
+ *	Dummy piece of code - never mind, we just want to use this project
+ *	to produce the DLLs and EXEs so that we can copy them to the export
+ *	folder...
+ */
 
 namespace X.Export
 {
