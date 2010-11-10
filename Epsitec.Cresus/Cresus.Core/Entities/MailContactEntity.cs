@@ -52,8 +52,8 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[]
 			{
 				this.LegalPerson.Name.ToSimpleText (),
-				this.NaturalPerson.Firstname.ToSimpleText (),
-				this.NaturalPerson.Lastname.ToSimpleText (),
+				this.NaturalPerson.Firstname,
+				this.NaturalPerson.Lastname,
 				this.Address.Street.StreetName.ToSimpleText (),
 				this.Address.Location.PostalCode.ToSimpleText (),
 				this.Address.Location.Name.ToSimpleText ()

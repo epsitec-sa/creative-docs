@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Firstname.ToSimpleText (), this.Lastname.ToSimpleText () };
+			return new string[] { this.Firstname, this.Lastname };
 		}
 
 		public override EntityStatus GetEntityStatus()

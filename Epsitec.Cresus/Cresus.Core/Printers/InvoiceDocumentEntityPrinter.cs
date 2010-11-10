@@ -21,16 +21,18 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class InvoiceDocumentEntityPrinter : AbstractEntityPrinter<BusinessDocumentEntity>
+	public class InvoiceDocumentEntityPrinter : AbstractEntityPrinter<DocumentMetadataEntity>
 	{
-		public InvoiceDocumentEntityPrinter(BusinessDocumentEntity entity)
-			: base (entity)
+		public InvoiceDocumentEntityPrinter(DocumentMetadataEntity metadata)
+			: base (metadata)
 		{
-			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, this.entity));
+			BusinessDocumentEntity doc = metadata.BusinessDocument;
 
-			if (this.entity.BillingMailContact != null)
+			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, metadata, doc));
+
+			if (doc.BillingMailContact != null)
 			{
-				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, this.entity.BillingMailContact));
+				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, doc.BillingMailContact));
 			}
 
 			{
@@ -144,6 +146,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.DocumentTypes.Add (type);
 			}
+		}
+
+
+		internal static bool CheckCompatibleEntity(DocumentMetadataEntity metadata)
+		{
+			return metadata.BusinessDocument.IsNotNull ();
 		}
 	}
 }

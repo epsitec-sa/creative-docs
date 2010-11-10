@@ -21,30 +21,12 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return this.GetDocumentName ();
+			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
 		}
 
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
-		}
-
-		private FormattedText GetDocumentName()
-		{
-			FormattedText name;
-
-			if (this.ActiveDocuments.Count == 0)
-			{
-				name = FormattedText.FromSimpleText ("Aucun document");
-			}
-			else
-			{
-				BusinessDocumentEntity doc = this.ActiveDocuments.First ().BusinessDocument;
-				name = TextFormatter.FormatText ("Document", doc.IdA);
-				//	TODO: faire mieux ici
-			}
-
-			return name;
 		}
 	}
 }
