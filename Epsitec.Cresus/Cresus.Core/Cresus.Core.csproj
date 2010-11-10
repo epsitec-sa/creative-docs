@@ -105,8 +105,10 @@
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\WorkflowTransitionType.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
     <Compile Include="Entities\ArticlePriceGroupEntity.cs" />
+    <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
