@@ -42,6 +42,12 @@ namespace Epsitec.Cresus.Core.Resolvers
 			return action;
 		}
 
+		/// <summary>
+		/// Gets the action classes currently available.
+		/// </summary>
+		/// <returns>
+		/// The collection of action classes specified by their names.
+		/// </returns>
 		public static IEnumerable<string> GetActionClasses()
 		{
 			const string suffix = "Actions";
@@ -53,10 +59,27 @@ namespace Epsitec.Cresus.Core.Resolvers
 				   select name.Substring (0, name.Length - suffixLen);
 		}
 
+		/// <summary>
+		/// Gets the action verbs for a specified action class.
+		/// </summary>
+		/// <param name="actionClass">The action class.</param>
+		/// <returns>
+		/// The collection of action verbs for the specified action class.
+		/// </returns>
 		public static IEnumerable<ActionVerb> GetActionVerbs(string actionClass)
 		{
-			System.Type type = BusinessActionResolver.Resolve (actionClass);
+			return BusinessActionResolver.GetActionVerbs (BusinessActionResolver.Resolve (actionClass));
+		}
 
+		/// <summary>
+		/// Gets the action verbs for a specified action class.
+		/// </summary>
+		/// <param name="type">The action class type.</param>
+		/// <returns>
+		/// The collection of action verbs for the specified action class.
+		/// </returns>
+		public static IEnumerable<ActionVerb> GetActionVerbs(System.Type type)
+		{
 			if (type != null)
 			{
 				var methods = type.GetMethods (System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
@@ -105,7 +128,6 @@ namespace Epsitec.Cresus.Core.Resolvers
 		}
 
 		[System.ThreadStatic]
-		private static Dictionary<string, System.Type> actionCache;
-		private static readonly object[] noArguments = new object[] { };
+		private static Dictionary<string, System.Type>	actionCache;
 	}
 }
