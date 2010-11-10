@@ -540,6 +540,8 @@ namespace Epsitec.Cresus.Core.Business
 		private void OnLockAcquired()
 		{
 			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
+
+			this.dataContext.ReloadEntities ();
 		}
 
 		
