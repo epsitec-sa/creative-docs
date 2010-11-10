@@ -185,6 +185,20 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
+				this.exportButton = new Button
+				{
+					Parent = this.pagesToolbarBox,
+					Text = "ex",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Right,
+					Margins = new Margins (5, 0, 0, 0),
+				};
+
+				ToolTip.Default.SetToolTip (this.exportButton, "Exporte la page avec XmlPort (pour le debug)");
+			}
+
+			{
 				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				frame.Margins = new Margins (2, 0, 0, 0);
 				frame.Dock = DockStyle.Right;
@@ -285,6 +299,11 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.currentZoom = 4;
 				this.UpdatePages (rebuild: false);
+			};
+
+			this.exportButton.Clicked += delegate
+			{
+				this.XmlExport ();
 			};
 
 			if (this.debugPrevButton1 != null)
@@ -798,6 +817,22 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private void XmlExport()
+		{
+			var port = new XmlPort ();
+
+			int pageRank = 0;
+			var documentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank);
+
+			documentPrinter.CurrentPage = 0;
+			documentPrinter.PrintBackgroundCurrentPage (port);
+			documentPrinter.PrintForegroundCurrentPage (port);
+
+			string s = port.XmlSource;
+			System.IO.File.WriteAllText ("XmlExport-debug.txt", s);
+		}
+
+
 		private void HandleDebugPrevButton1Clicked(object sender, MessageEventArgs e)
 		{
 			this.entityPrinter.DebugParam1 -= GetStep (e);
@@ -880,6 +915,8 @@ namespace Epsitec.Cresus.Core.Printers
 		private Button										zoom11Button;
 		private Button										zoom21Button;
 		private Button										zoom41Button;
+
+		private Button										exportButton;
 
 		private TextFieldCombo								printerUnitField;
 
