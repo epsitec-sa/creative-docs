@@ -23,7 +23,7 @@ namespace Epsitec.Common.Printing
 				new XComment ("Saved on " + timeStamp)
 			);
 
-			this.xRoot = new XElement ("Root");
+			this.xRoot = new XElement ("root");
 			this.xDocument.Add (this.xRoot);
 		}
 
@@ -52,8 +52,7 @@ namespace Epsitec.Common.Printing
 					this.lineWidth = value;
 
 					var xml = new XElement ("lineWidth");
-					xml.Add (new XAttribute ("value", this.lineWidth));
-
+					XmlPort.Add (xml, this.lineWidth);
 					this.xRoot.Add (xml);
 				}
 			}
@@ -93,7 +92,6 @@ namespace Epsitec.Common.Printing
 
 					var xml = new XElement ("lineCap");
 					xml.Add (new XAttribute ("value", this.lineCap));
-
 					this.xRoot.Add (xml);
 				}
 			}
@@ -112,8 +110,7 @@ namespace Epsitec.Common.Printing
 					this.lineMiterLimit = value;
 
 					var xml = new XElement ("lineMiterLimit");
-					xml.Add (new XAttribute ("value", this.lineMiterLimit));
-
+					XmlPort.Add (xml, this.lineMiterLimit);
 					this.xRoot.Add (xml);
 				}
 			}
@@ -170,11 +167,7 @@ namespace Epsitec.Common.Printing
 					this.color = value;
 
 					var xml = new XElement ("color");
-					xml.Add (new XAttribute ("a", this.color.A));
-					xml.Add (new XAttribute ("r", this.color.R));
-					xml.Add (new XAttribute ("g", this.color.G));
-					xml.Add (new XAttribute ("b", this.color.B));
-
+					XmlPort.Add (xml, this.color);
 					this.xRoot.Add (xml);
 				}
 			}
@@ -193,13 +186,7 @@ namespace Epsitec.Common.Printing
 					this.transform = value;
 
 					var xml = new XElement ("transform");
-					xml.Add (new XAttribute ("xx", this.transform.XX));
-					xml.Add (new XAttribute ("xy", this.transform.XY));
-					xml.Add (new XAttribute ("yx", this.transform.YX));
-					xml.Add (new XAttribute ("yy", this.transform.YY));
-					xml.Add (new XAttribute ("tx", this.transform.TX));
-					xml.Add (new XAttribute ("ty", this.transform.TY));
-
+					XmlPort.Add (xml, this.transform);
 					this.xRoot.Add (xml);
 				}
 			}
@@ -219,7 +206,6 @@ namespace Epsitec.Common.Printing
 
 					var xml = new XElement ("fillMode");
 					xml.Add (new XAttribute ("value", this.fillMode));
-
 					this.xRoot.Add (xml);
 				}
 			}
@@ -239,7 +225,6 @@ namespace Epsitec.Common.Printing
 
 					var xml = new XElement ("imageFilter");
 					xml.Add (new XAttribute ("value", this.imageFilter));
-
 					this.xRoot.Add (xml);
 				}
 			}
@@ -257,7 +242,9 @@ namespace Epsitec.Common.Printing
 				{
 					this.imageCrop = value;
 
-					this.AddMargins ("imageCrop", this.imageCrop);
+					var xml = new XElement ("imageCrop");
+					XmlPort.Add (xml, this.imageCrop);
+					this.xRoot.Add (xml);
 				}
 			}
 		}
@@ -275,9 +262,7 @@ namespace Epsitec.Common.Printing
 					this.imageFinalSize = value;
 
 					var xml = new XElement ("imageFinalSize");
-					xml.Add (new XAttribute ("width",  this.imageFinalSize.Width));
-					xml.Add (new XAttribute ("height", this.imageFinalSize.Height));
-
+					XmlPort.Add (xml, this.imageFinalSize);
 					this.xRoot.Add (xml);
 				}
 			}
@@ -382,10 +367,16 @@ namespace Epsitec.Common.Printing
 
 		public void PaintOutline(Path path)
 		{
+			var xml = new XElement ("paintOutline");
+			XmlPort.Add (xml, path);
+			this.xRoot.Add (xml);
 		}
 
 		public void PaintSurface(Path path)
 		{
+			var xml = new XElement ("paintSurface");
+			XmlPort.Add (xml, path);
+			this.xRoot.Add (xml);
 		}
 
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
@@ -399,14 +390,11 @@ namespace Epsitec.Common.Printing
 
 		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
 		{
-			var xml = new XElement ("text");
-
-			xml.Add (new XAttribute ("x", x));
-			xml.Add (new XAttribute ("y", y));
-			xml.Add (new XAttribute ("text", text));
-			//?xml.Add (new XAttribute ("font", font));
-			xml.Add (new XAttribute ("size", size));
-
+			var xml = new XElement ("paintText");
+			XmlPort.Add (xml, new Point (x, y));
+			XmlPort.Add (xml, text);
+			XmlPort.Add (xml, font);
+			XmlPort.Add (xml, size, "size");
 			this.xRoot.Add (xml);
 
 			return 0;
@@ -414,41 +402,122 @@ namespace Epsitec.Common.Printing
 
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight)
 		{
+			this.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, 0, 0, bitmap.Width, bitmap.Height);
 		}
 
 		public void PaintImage(Image bitmap, Rectangle fill, Point imageOrigin)
 		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, imageOrigin.X, imageOrigin.Y, fill.Width, fill.Height);
 		}
 
 		public void PaintImage(Image bitmap, Rectangle fill, Rectangle imageRect)
 		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, imageRect.Left, imageRect.Bottom, imageRect.Width, imageRect.Height);
 		}
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY)
 		{
+			this.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, fillWidth, fillHeight);
 		}
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
+			var xml = new XElement ("paintImage");
+			XmlPort.Add (xml, fillX, "fillX");
+			XmlPort.Add (xml, fillY, "fillY");
+			XmlPort.Add (xml, fillWidth, "fillWidth");
+			XmlPort.Add (xml, fillHeight, "fillHeight");
+			XmlPort.Add (xml, imageOriginX, "imageOriginX");
+			XmlPort.Add (xml, imageOriginY, "imageOriginY");
+			XmlPort.Add (xml, imageWidth, "imageWidth");
+			XmlPort.Add (xml, imageHeight, "imageHeight");
+			XmlPort.Add (xml, bitmap);
+			this.xRoot.Add (xml);
 		}
 
 		#endregion
 
 
-		private void AddMargins(string name, Margins margins)
+		private static void Add(XElement xml, double value, string name="value")
 		{
-			var xml = new XElement (name);
+			xml.Add (new XAttribute (name, XmlPort.Truncate (value)));
+		}
 
-			xml.Add (new XAttribute ("left",   margins.Left));
-			xml.Add (new XAttribute ("right",  margins.Right));
-			xml.Add (new XAttribute ("bottom", margins.Bottom));
-			xml.Add (new XAttribute ("top",    margins.Top));
+		private static void Add(XElement xml, string text, string name="text")
+		{
+			xml.Add (new XAttribute (name, text));
+		}
 
-			this.xRoot.Add (xml);
+		private static void Add(XElement xml, Point pos)
+		{
+			xml.Add (new XAttribute ("x", XmlPort.Truncate (pos.X)));
+			xml.Add (new XAttribute ("y", XmlPort.Truncate (pos.Y)));
+		}
+
+		private static void Add(XElement xml, Size size)
+		{
+			xml.Add (new XAttribute ("width",  XmlPort.Truncate (size.Width)));
+			xml.Add (new XAttribute ("height", XmlPort.Truncate (size.Height)));
+		}
+
+		private static void Add(XElement xml, Rectangle rect)
+		{
+			xml.Add (new XAttribute ("rect", rect.ToString ()));
+		}
+
+		private static void Add(XElement xml, Margins margins)
+		{
+			xml.Add (new XAttribute ("margins", margins.ToString ()));
+		}
+
+		private static void Add(XElement xml, Color color)
+		{
+			xml.Add (new XAttribute ("hexa", Color.ToHexa (color)));
+			xml.Add (new XAttribute ("a", XmlPort.Truncate (color.A)));
+		}
+
+		private static void Add(XElement xml, Font font)
+		{
+			xml.Add (new XAttribute ("face",  font.FaceName));
+			xml.Add (new XAttribute ("style", font.StyleName));
+		}
+
+		private static void Add(XElement xml, Transform transform)
+		{
+			xml.Add (new XAttribute ("matrix", transform.ToString ()));
+		}
+
+		private static void Add(XElement xml, Path path)
+		{
+			string s = path.ToString ().Replace ("\r\n", " ");
+			xml.Add (new XAttribute ("path", s));
+		}
+
+		private static void Add(XElement xml, Image image)
+		{
+			xml.Add (new XAttribute ("width",  XmlPort.Truncate (image.Width)));
+			xml.Add (new XAttribute ("height", XmlPort.Truncate (image.Height)));
+
+			byte[] bytes = image.BitmapImage.GetRawBitmapBytes ();
+			var builder = new System.Text.StringBuilder ();
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				builder.Append (string.Format ("{0:x2}", bytes[i]));
+			}
+
+			xml.Add (new XAttribute ("bitmap", builder.ToString ()));
+		}
+
+		public static double Truncate(double value, int numberOfDecimal=3)
+		{
+			//	Retourne un nombre tronqué à un certain nombre de décimales.
+			double factor = System.Math.Pow (10, numberOfDecimal);
+			return System.Math.Floor (value*factor) / factor;
 		}
 
 
