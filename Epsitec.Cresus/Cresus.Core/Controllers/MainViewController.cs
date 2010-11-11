@@ -332,6 +332,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 						if (context.IsPersistent (entity))
 						{
+							//	HACK
+							//	TODO: remove this
+							if (entity is BusinessDocumentEntity)
+							{
+								DocumentMetadataEntity example = new DocumentMetadataEntity ();
+								example.BusinessDocument = entity as BusinessDocumentEntity;
+								example.IsArchive = false;
+								yield return context.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+							}
 							yield return entity;
 						}
 					}

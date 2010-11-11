@@ -88,6 +88,9 @@
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\ExchangeRateType.cs" />
     <Compile Include="Business\Finance\PriceCalculator.cs" />
+    <Compile Include="Business\Finance\TaxCalculator.cs" />
+    <Compile Include="Business\Finance\TaxContext.cs" />
+    <Compile Include="Business\Finance\TaxRateAmount.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
     <Compile Include="Entities\ArticlePriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
@@ -185,6 +189,7 @@
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
+    <Compile Include="Repositories\VatDefinitionRepository.cs" />
     <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />

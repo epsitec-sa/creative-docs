@@ -209,6 +209,87 @@ namespace Epsitec.Cresus.Core
 			return date.InRange (range.BeginDate, range.EndDate);
 		}
 
+		public static bool Overlaps(this IDateRange range, IDateRange other)
+		{
+			if ((range.EndDate.HasValue) &&
+				(!range.EndDate.Value.InRange (other.BeginDate, other.EndDate)))
+			{
+				//	The range ends before the other one.
+				return false;
+			}
+			
+			if ((range.BeginDate.HasValue) &&
+				(!range.BeginDate.Value.InRange (other.BeginDate, other.EndDate)))
+			{
+				//	The range begins after the other one.
+				return false;
+			}
+
+			return true;
+		}
+
+		public static IDateRange GetIntersection(this IDateRange range, IDateRange other)
+		{
+			Date? beginDate;
+			Date? endDate;
+
+			if ((range.BeginDate.HasValue) &&
+				(other.BeginDate.HasValue))
+			{
+				beginDate = range.BeginDate.Value < other.BeginDate.Value ? other.BeginDate : range.BeginDate;
+			}
+			else
+			{
+				beginDate = range.BeginDate ?? other.BeginDate;
+			}
+			
+			if ((range.EndDate.HasValue) &&
+				(other.EndDate.HasValue))
+			{
+				endDate = range.EndDate.Value > other.EndDate.Value ? other.EndDate : range.EndDate;
+			}
+			else
+			{
+				endDate = range.EndDate ?? other.EndDate;
+			}
+
+			return new DateRange
+			{
+				BeginDate = beginDate,
+				EndDate = endDate
+			};
+		}
+
+		public static int GetDuration(this IDateRange range)
+		{
+			if ((range.BeginDate.HasValue) &&
+				(range.EndDate.HasValue))
+			{
+				return range.EndDate.Value - range.BeginDate.Value;
+			}
+
+			throw new System.ArgumentException ("Infinite date range; cannot compute duration");
+		}
+
+
+		private class DateRange : IDateRange
+		{
+			#region IDateRange Members
+
+			public Date? BeginDate
+			{
+				get;
+				set;
+			}
+
+			public Date? EndDate
+			{
+				get;
+				set;
+			}
+
+			#endregion
+		}
 
 		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
 		{

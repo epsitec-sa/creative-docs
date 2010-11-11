@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Core.Business
 		Unknown,
 
 		FederalMonthlyRate,					//	PDF http://www.estv.admin.ch/mwst/dienstleistungen/00304/00308/index.html?lang=fr
+											//	HTML http://www.estv.admin.ch/mwst/dienstleistungen/00304/00308/00692/index.html?lang=fr
 		FederalDailyRate,					//	XML http://www.afd.admin.ch/publicdb/newdb/mwst_kurse/wechselkurse.php
 
 		GroupSpecific,

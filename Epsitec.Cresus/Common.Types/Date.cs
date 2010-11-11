@@ -200,6 +200,11 @@ namespace Epsitec.Common.Types
 		{
 			return t1.days >= t2.days;
 		}
+
+		public static int operator-(Date t1, Date t2)
+		{
+			return (t2.ToDateTime () - t1.ToDateTime ()).Days;
+		}
 		
 		public override string ToString()
 		{

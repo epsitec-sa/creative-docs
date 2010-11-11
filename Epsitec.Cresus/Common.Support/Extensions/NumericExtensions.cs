@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
 {
+	/// <summary>
+	/// The <c>NumericExtensions</c> class provides extension methods for numeric types
+	/// (such as <c>decimal</c> or <c>int</c>).
+	/// </summary>
 	public static class NumericExtensions
 	{
 		public static bool InRange(this decimal value, decimal? beginDate, decimal? endDate)

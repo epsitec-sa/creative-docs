@@ -774,10 +774,10 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, description);
 			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
 
-			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax.HasValue)
+			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
-				decimal tax =       line.ResultingLineTax.Value;
+				decimal tax =       line.ResultingLineTax1.Value;
 
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (beforeTax));
 				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (tax));
@@ -1268,11 +1268,12 @@ namespace Epsitec.Cresus.Core.Printers
 					var article = item as ArticleDocumentItemEntity;
 
 					decimal beforeTax = article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
-					decimal tax =       article.ResultingLineTax           .GetValueOrDefault (0);
+					decimal tax1 =      article.ResultingLineTax1          .GetValueOrDefault (0);
+					decimal tax2 =      article.ResultingLineTax2          .GetValueOrDefault (0);
 
 					sumPT  += beforeTax;
-					sumTva += tax;
-					sumTot += beforeTax+tax;
+					sumTva += tax1 + tax2;
+					sumTot += beforeTax+tax1+tax2;
 				}
 			}
 		}

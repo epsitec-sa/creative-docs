@@ -13,6 +13,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	{
 		None				= 0,
 
+		NotAnInvoice		= 1,				//	ceci n'est pas (encore) une facture
+
 		DebtorBillOpen		= 2,				//	facture débiteur ouverte
 		DebtorBillClosed	= 3,				//	facture débiteur fermée
 

@@ -6,16 +6,16 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Business;
 
 
 namespace Epsitec.Cresus.Core
@@ -179,6 +179,11 @@ namespace Epsitec.Cresus.Core
 			}
 
 			this.IsReady = true;
+		}
+
+		public void SetupBusiness()
+		{
+			TaxContext.Initialize (this);
 		}
 
 		private void PreserveNavigation(System.Action action)
@@ -399,8 +404,6 @@ namespace Epsitec.Cresus.Core
 				this.DeleteDatabase (access);
 			}
 
-			bool connected = false;
-
 			try
 			{
 				if (DbInfrastructure.CheckForDatabaseFiles (access))
@@ -410,7 +413,7 @@ namespace Epsitec.Cresus.Core
 					return false;
 				}
 			}
-			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
+			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException)
 			{
 				throw;
 			}
