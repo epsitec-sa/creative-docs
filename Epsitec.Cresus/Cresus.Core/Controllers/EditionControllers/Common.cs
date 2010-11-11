@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					}
 					else if (id == DocumentItemTabId.Price)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<PriceDocumentItemEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<SubTotalDocumentItemEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);

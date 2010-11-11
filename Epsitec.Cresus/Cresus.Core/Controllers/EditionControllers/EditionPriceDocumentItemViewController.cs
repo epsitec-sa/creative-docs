@@ -20,9 +20,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionPriceDocumentItemViewController : EditionViewController<Entities.PriceDocumentItemEntity>
+	public class EditionPriceDocumentItemViewController : EditionViewController<Entities.SubTotalDocumentItemEntity>
 	{
-		public EditionPriceDocumentItemViewController(string name, Entities.PriceDocumentItemEntity entity)
+		public EditionPriceDocumentItemViewController(string name, Entities.SubTotalDocumentItemEntity entity)
 			: base (name, entity)
 		{
 		}

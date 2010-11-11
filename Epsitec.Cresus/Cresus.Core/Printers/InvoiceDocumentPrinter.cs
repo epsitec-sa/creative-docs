@@ -374,9 +374,9 @@ namespace Epsitec.Cresus.Core.Printers
 						rowUsed = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity, group);
 					}
 
-					if (line is PriceDocumentItemEntity)
+					if (line is SubTotalDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
+						rowUsed = this.InitializeColumnPriceLine (line as SubTotalDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
@@ -384,9 +384,9 @@ namespace Epsitec.Cresus.Core.Printers
 						rowUsed = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
 					}
 
-					if (line is TotalDocumentItemEntity)
+					if (line is EndTotalDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnTotalLine (line as TotalDocumentItemEntity);
+						rowUsed = this.InitializeColumnTotalLine (line as EndTotalDocumentItemEntity);
 					}
 
 					rowCount += rowUsed;
@@ -490,9 +490,9 @@ namespace Epsitec.Cresus.Core.Printers
 						rowUsed = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity, group);
 					}
 
-					if (line is PriceDocumentItemEntity)
+					if (line is SubTotalDocumentItemEntity)
 					{
-						rowUsed = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity);
+						rowUsed = this.BuildPriceLine (this.table, row, line as SubTotalDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
@@ -503,9 +503,9 @@ namespace Epsitec.Cresus.Core.Printers
 						rowUsed = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity, firstTax, lastTax);
 					}
 
-					if (line is TotalDocumentItemEntity)
+					if (line is EndTotalDocumentItemEntity)
 					{
-						rowUsed = this.BuildTotalLine (this.table, row, line as TotalDocumentItemEntity);
+						rowUsed = this.BuildTotalLine (this.table, row, line as EndTotalDocumentItemEntity);
 					}
 
 					if (rowUsed != 0)
@@ -649,7 +649,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return 1;
 		}
 
-		private int InitializeColumnPriceLine(PriceDocumentItemEntity line)
+		private int InitializeColumnPriceLine(SubTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
@@ -681,7 +681,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return 1;
 		}
 
-		private int InitializeColumnTotalLine(TotalDocumentItemEntity line)
+		private int InitializeColumnTotalLine(EndTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
@@ -800,7 +800,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return 1;
 		}
 
-		private int BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
+		private int BuildPriceLine(TableBand table, int row, SubTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			//  Une ligne de sous-total PriceDocumentItemEntity peut occuper 2 lignes physiques du tableau,
@@ -955,7 +955,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return 1;
 		}
 
-		private int BuildTotalLine(TableBand table, int row, TotalDocumentItemEntity line)
+		private int BuildTotalLine(TableBand table, int row, EndTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)

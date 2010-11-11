@@ -12,39 +12,89 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
-	public class DocumentPriceCalculator
+	public class DocumentPriceCalculator : IDocumentPriceCalculator
 	{
 		public DocumentPriceCalculator(BusinessDocumentEntity document)
 		{
 			this.document = document;
+			this.calculators = new List<AbstractPriceCalculator> ();
 		}
 
-
+		
 		public void Update()
 		{
-			var articles = this.GetArticles ().ToList ();
-			var totals   = this.GetTotals ().ToList ();
-			
-			
+			this.currentState = State.Article;
+
+			foreach (var line in this.document.Lines)
+			{
+				line.Process (this);
+			}
 		}
 
-		private IEnumerable<ArticlePriceCalculator> GetArticles()
+		enum State
 		{
-			return from line in this.document.Lines.OfType<ArticleDocumentItemEntity> ()
-				   orderby line.GroupIndex
-				   select new ArticlePriceCalculator (this.document, line);
-		}
-
-		private IEnumerable<TotalPriceCalculator> GetTotals()
-		{
-			return this.document.Lines
-				.OfType<TotalDocumentItemEntity> ()
-				.Select ((line, index) => new { Line = line, Index = index })
-				.OrderBy (x => x.Line.GroupIndex)
-				.ThenBy (x => x.Index)
-				.Select (x => new TotalPriceCalculator (this.document, x.Line));
+			Article,
+			Total,
 		}
 		
+
+		#region IDocumentPriceCalculator Members
+
+		public BusinessDocumentEntity Document
+		{
+			get
+			{
+				return this.document;
+			}
+		}
+
+		void IDocumentPriceCalculator.Process(ArticlePriceCalculator calculator)
+		{
+			this.calculators.Add (calculator);
+			calculator.ComputePrice ();
+			
+			if (this.currentGroup == null)
+			{
+				this.currentGroup = new GroupPriceCalculator ();
+			}
+
+			this.currentGroup.Add (calculator);
+
+			var item  = calculator.ArticleItem;
+			var value = item.ResultingLinePriceBeforeTax.Value;
+			var tax   = PriceCalculator.Sum (item.ResultingLineTax1, item.ResultingLineTax2);
+
+			this.currentGroup.Accumulate (value, tax, item.NeverApplyDiscount);
+		}
+
+		void IDocumentPriceCalculator.Process(SubTotalPriceCalculator calculator)
+		{
+			this.calculators.Add (calculator);
+			calculator.ComputePrice (this.currentGroup);
+
+			this.currentGroup = new GroupPriceCalculator ();
+			this.currentGroup.Add (calculator);
+		}
+
+		#endregion
+		
 		private readonly BusinessDocumentEntity		document;
+		private readonly List<AbstractPriceCalculator> calculators;
+
+
+		private GroupPriceCalculator currentGroup;
+		private SubTotalPriceCalculator lastPriceCalculator;
+		
+		private State currentState;
+	}
+
+	public interface IDocumentPriceCalculator
+	{
+		BusinessDocumentEntity Document
+		{
+			get;
+		}
+		void Process(ArticlePriceCalculator calculator);
+		void Process(SubTotalPriceCalculator calculator);
 	}
 }

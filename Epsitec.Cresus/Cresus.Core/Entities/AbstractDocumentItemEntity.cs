@@ -1,6 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Controllers.TabIds;
 
 using System.Collections.Generic;
@@ -16,6 +17,11 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return DocumentItemTabId.None;
 			}
+		}
+
+
+		public virtual void Process(IDocumentPriceCalculator priceCalculator)
+		{
 		}
 	}
 }

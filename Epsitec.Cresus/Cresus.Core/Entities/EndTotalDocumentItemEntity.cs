@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class TotalDocumentItemEntity
+	public partial class EndTotalDocumentItemEntity
 	{
 		public override FormattedText GetCompactSummary()
 		{

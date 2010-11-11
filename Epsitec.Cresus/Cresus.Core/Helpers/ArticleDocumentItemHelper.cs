@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				if (date.InRange (price))
 				{
-					return price.ValueBeforeTax;
+					return price.Value;
 				}
 			}
 
