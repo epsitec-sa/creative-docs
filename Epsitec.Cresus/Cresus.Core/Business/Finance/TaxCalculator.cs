@@ -25,23 +25,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 
 		/// <summary>
-		/// Gets the tax rates and amounts based on the specified amount and VAT code.
-		/// Uses the date specified in the constructor. There will be exactly one output
-		/// for every rate we find.
+		/// Computes the tax based on the specified amount and VAT code. Uses the date
+		/// specified in the constructor. There will be exactly one output for every
+		/// rate we find.
 		/// </summary>
 		/// <param name="amount">The amount.</param>
 		/// <param name="vatCode">The VAT code.</param>
-		/// <returns>The collection of tax rates and amounts.</returns>
-		public TaxRateAmount[] GetTaxes(decimal amount, VatCode vatCode)
+		/// <returns>The computed tax.</returns>
+		public Tax ComputeTax(decimal amount, VatCode vatCode)
 		{
 			if (this.date.HasValue)
 			{
 				var vatDef = TaxContext.Current.GetVatDefinition (this.date.Value, vatCode);
 
-				return new TaxRateAmount[1]
-				{
-					new TaxRateAmount (vatDef.Rate, amount)
-				};
+				return new Tax (new TaxRateAmount (vatDef.Rate, amount));
 			}
 
 			if (this.dateRange != null)
@@ -64,10 +61,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				var taxes = from range in durationRates
 							select new TaxRateAmount (range.Rate, amount * range.Duration / totalDays);
 
-				return taxes.ToArray ();
+				return new Tax (taxes);
 			}
 
-			return new TaxRateAmount[0];
+			return new Tax ();
 		}
 
 		

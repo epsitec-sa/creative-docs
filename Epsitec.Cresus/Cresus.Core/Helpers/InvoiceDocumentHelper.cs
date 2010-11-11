@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					var article = line as ArticleDocumentItemEntity;
 
 					article.FinalLinePriceBeforeTax = Misc.PriceConstrain (article.ResultingLinePriceBeforeTax * discountRate);
-					article.FinalLineTax1           = Misc.PriceConstrain (article.ResultingLineTax1           * discountRate);
+//					article.FinalLineTax1           = Misc.PriceConstrain (article.ResultingLineTax1           * discountRate);
 				}
 
 				if (line is PriceDocumentItemEntity)
