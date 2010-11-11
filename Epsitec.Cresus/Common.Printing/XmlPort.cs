@@ -295,20 +295,20 @@ namespace Epsitec.Common.Printing
 
 		public void PaintOutline(Path path)
 		{
-			var xml = new XElement ("path");
+			var xml = new XElement ("outline");
 
-			xml.Add (new XAttribute ("d", XmlPort.Serialize (path)));
-			this.UpdateGraphicState (xml, UpdateMode.Outline);
+			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
 		}
 
 		public void PaintSurface(Path path)
 		{
-			var xml = new XElement ("path");
+			var xml = new XElement ("surface");
 
-			xml.Add (new XAttribute ("d", XmlPort.Serialize (path)));
-			this.UpdateGraphicState (xml, UpdateMode.Surface);
+			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
 		}
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Printing
 
 			xml.Add (new XAttribute ("x", XmlPort.Truncate (x)));
 			xml.Add (new XAttribute ("y", XmlPort.Truncate (y)));
-			this.UpdateGraphicState (xml, UpdateMode.Text);
+			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
 
@@ -386,83 +386,56 @@ namespace Epsitec.Common.Printing
 		#endregion
 
 
-		private enum UpdateMode
+		private void UpdateGraphicState(XElement xml)
 		{
-			Outline,
-			Surface,
-			Text,
-			Image,
-		}
-
-		private void UpdateGraphicState(XElement xml, UpdateMode mode)
-		{
-			if (mode == UpdateMode.Outline)
+			if (this.lastState.lineWidth != this.currentState.lineWidth)
 			{
-				if (this.lastState.lineWidth != this.currentState.lineWidth)
-				{
-					this.lastState.lineWidth = this.currentState.lineWidth;
+				this.lastState.lineWidth = this.currentState.lineWidth;
 
-					xml.Add (new XAttribute ("stroke-width", XmlPort.Truncate (this.lastState.lineWidth)));
-				}
-
-				if (this.lastState.lineJoin != this.currentState.lineJoin)
-				{
-					this.lastState.lineJoin = this.currentState.lineJoin;
-
-					xml.Add (new XAttribute ("stroke-join", this.lastState.lineJoin));
-				}
-
-				if (this.lastState.lineCap != this.currentState.lineCap)
-				{
-					this.lastState.lineCap = this.currentState.lineCap;
-
-					xml.Add (new XAttribute ("stroke-cap", this.lastState.lineCap));
-				}
-
-				if (this.lastState.lineMiterLimit != this.currentState.lineMiterLimit)
-				{
-					this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
-
-					xml.Add (new XAttribute ("stroke-limit", XmlPort.Truncate (this.lastState.lineMiterLimit)));
-				}
+				xml.Add (new XAttribute ("line-width", XmlPort.Truncate (this.lastState.lineWidth)));
 			}
 
-			if (mode == UpdateMode.Image)
+			if (this.lastState.lineJoin != this.currentState.lineJoin)
 			{
-				if (this.lastState.imageFilter != this.currentState.imageFilter)
-				{
-					this.lastState.imageFilter = this.currentState.imageFilter;
-				}
+				this.lastState.lineJoin = this.currentState.lineJoin;
 
-				if (this.lastState.imageCrop != this.currentState.imageCrop)
-				{
-					this.lastState.imageCrop = this.currentState.imageCrop;
-				}
+				xml.Add (new XAttribute ("line-join", this.lastState.lineJoin));
+			}
 
-				if (this.lastState.imageFinalSize != this.currentState.imageFinalSize)
-				{
-					this.lastState.imageFinalSize = this.currentState.imageFinalSize;
-				}
+			if (this.lastState.lineCap != this.currentState.lineCap)
+			{
+				this.lastState.lineCap = this.currentState.lineCap;
+
+				xml.Add (new XAttribute ("line-cap", this.lastState.lineCap));
+			}
+
+			if (this.lastState.lineMiterLimit != this.currentState.lineMiterLimit)
+			{
+				this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
+
+				xml.Add (new XAttribute ("line-miter-limit", XmlPort.Truncate (this.lastState.lineMiterLimit)));
+			}
+
+			if (this.lastState.imageFilter != this.currentState.imageFilter)
+			{
+				this.lastState.imageFilter = this.currentState.imageFilter;
+			}
+
+			if (this.lastState.imageCrop != this.currentState.imageCrop)
+			{
+				this.lastState.imageCrop = this.currentState.imageCrop;
+			}
+
+			if (this.lastState.imageFinalSize != this.currentState.imageFinalSize)
+			{
+				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
 			}
 
 			if (this.lastState.color != this.currentState.color)
 			{
 				this.lastState.color = this.currentState.color;
 
-				string name = "color";
-
-				if (mode == UpdateMode.Outline)
-				{
-					name = "stroke";
-				}
-
-				if (mode == UpdateMode.Surface ||
-					mode == UpdateMode.Text)
-				{
-					name = "fill";
-				}
-
-				xml.Add (new XAttribute (name, XmlPort.Serialize (this.lastState.color)));
+				xml.Add (new XAttribute ("color", XmlPort.Serialize (this.lastState.color)));
 			}
 
 			if (this.lastState.clip != this.currentState.clip)
@@ -484,28 +457,25 @@ namespace Epsitec.Common.Printing
 				xml.Add (new XAttribute ("fill-mode", this.lastState.fillMode));
 			}
 
-			if (mode == UpdateMode.Text)
+			if (this.lastState.fontFace != this.currentState.fontFace)
 			{
-				if (this.lastState.fontFace != this.currentState.fontFace)
-				{
-					this.lastState.fontFace = this.currentState.fontFace;
+				this.lastState.fontFace = this.currentState.fontFace;
 
-					xml.Add (new XAttribute ("font-family", this.lastState.fontFace));
-				}
+				xml.Add (new XAttribute ("font-family", this.lastState.fontFace));
+			}
 
-				if (this.lastState.fontStyle != this.currentState.fontStyle)
-				{
-					this.lastState.fontStyle = this.currentState.fontStyle;
+			if (this.lastState.fontStyle != this.currentState.fontStyle)
+			{
+				this.lastState.fontStyle = this.currentState.fontStyle;
 
-					xml.Add (new XAttribute ("font-style", this.lastState.fontStyle));
-				}
+				xml.Add (new XAttribute ("font-style", this.lastState.fontStyle));
+			}
 
-				if (this.lastState.fontSize != this.currentState.fontSize)
-				{
-					this.lastState.fontSize = this.currentState.fontSize;
+			if (this.lastState.fontSize != this.currentState.fontSize)
+			{
+				this.lastState.fontSize = this.currentState.fontSize;
 
-					xml.Add (new XAttribute ("font-size", XmlPort.Truncate (this.lastState.fontSize)));
-				}
+				xml.Add (new XAttribute ("font-size", XmlPort.Truncate (this.lastState.fontSize)));
 			}
 		}
 
