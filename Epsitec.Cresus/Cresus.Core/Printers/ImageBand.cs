@@ -32,8 +32,11 @@ namespace Epsitec.Cresus.Core.Printers
 			string name = Misc.GetResourceImage (filename);
 
 			this.image = ImageProvider.Default.GetImage (name, Resources.DefaultManager);
-			this.image.Id = string.Concat ("file:", filename);
+			this.image.Id = string.Concat ("file:", filename);  // (*)
 		}
+
+		// (*)	Il est très important de donner l'identificateur à l'image, pour permettre la
+		//		désérialisation du port graphique XmlPort !
 
 
 		public override double RequiredHeight(double width)
