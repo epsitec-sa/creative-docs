@@ -370,21 +370,20 @@ namespace Epsitec.Common.Printing
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-#if false
 			var xml = new XElement ("image");
 
-			XmlPort.Add (xml, fillX, "fillX");
-			XmlPort.Add (xml, fillY, "fillY");
-			XmlPort.Add (xml, fillWidth, "fillWidth");
-			XmlPort.Add (xml, fillHeight, "fillHeight");
-			XmlPort.Add (xml, imageOriginX, "imageOriginX");
-			XmlPort.Add (xml, imageOriginY, "imageOriginY");
-			XmlPort.Add (xml, imageWidth, "imageWidth");
-			XmlPort.Add (xml, imageHeight, "imageHeight");
+			xml.Add (new XAttribute ("id",            bitmap.Id));
+			xml.Add (new XAttribute ("fill-x",        XmlPort.Truncate (fillX)));
+			xml.Add (new XAttribute ("fill-y",        XmlPort.Truncate (fillY)));
+			xml.Add (new XAttribute ("fill-width",    XmlPort.Truncate (fillWidth)));
+			xml.Add (new XAttribute ("fill-height",   XmlPort.Truncate (fillHeight)));
+			xml.Add (new XAttribute ("image-originX", XmlPort.Truncate (imageOriginX)));
+			xml.Add (new XAttribute ("image-originY", XmlPort.Truncate (imageOriginY)));
+			xml.Add (new XAttribute ("image-width",   XmlPort.Truncate (imageWidth)));
+			xml.Add (new XAttribute ("image-height",  XmlPort.Truncate (imageHeight)));
+			this.UpdateGraphicState (xml);
 
-			XmlPort.Add (xml, bitmap);
 			this.xRoot.Add (xml);
-#endif
 		}
 
 		#endregion
@@ -423,16 +422,23 @@ namespace Epsitec.Common.Printing
 			if (this.lastState.imageFilter != this.currentState.imageFilter)
 			{
 				this.lastState.imageFilter = this.currentState.imageFilter;
+
+				xml.Add (new XAttribute ("image-filter", this.lastState.imageFilter));
 			}
 
 			if (this.lastState.imageCrop != this.currentState.imageCrop)
 			{
 				this.lastState.imageCrop = this.currentState.imageCrop;
+
+				xml.Add (new XAttribute ("image-crop", this.lastState.imageCrop));
 			}
 
 			if (this.lastState.imageFinalSize != this.currentState.imageFinalSize)
 			{
 				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
+
+				xml.Add (new XAttribute ("image-final-size-width",  XmlPort.Truncate (this.lastState.imageFinalSize.Width)));
+				xml.Add (new XAttribute ("image-final-size-height", XmlPort.Truncate (this.lastState.imageFinalSize.Height)));
 			}
 
 			if (this.lastState.color != this.currentState.color)
@@ -445,6 +451,11 @@ namespace Epsitec.Common.Printing
 			if (this.lastState.clip != this.currentState.clip)
 			{
 				this.lastState.clip = this.currentState.clip;
+
+				xml.Add (new XAttribute ("clip-left",   XmlPort.Truncate (this.lastState.clip.Left)));
+				xml.Add (new XAttribute ("clip-bottom", XmlPort.Truncate (this.lastState.clip.Bottom)));
+				xml.Add (new XAttribute ("clip-width",  XmlPort.Truncate (this.lastState.clip.Width)));
+				xml.Add (new XAttribute ("clip-height", XmlPort.Truncate (this.lastState.clip.Height)));
 			}
 
 			if (this.lastState.transform != this.currentState.transform)
@@ -465,7 +476,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.fontFace = this.currentState.fontFace;
 
-				xml.Add (new XAttribute ("font-family", this.lastState.fontFace));
+				xml.Add (new XAttribute ("font-face", this.lastState.fontFace));
 			}
 
 			if (this.lastState.fontStyle != this.currentState.fontStyle)
@@ -480,31 +491,6 @@ namespace Epsitec.Common.Printing
 				this.lastState.fontSize = this.currentState.fontSize;
 
 				xml.Add (new XAttribute ("font-size", XmlPort.Truncate (this.lastState.fontSize)));
-			}
-		}
-
-
-		private static void Add(XElement xml, Image image)
-		{
-			xml.Add (new XAttribute ("width",  XmlPort.Truncate (image.Width)));
-			xml.Add (new XAttribute ("height", XmlPort.Truncate (image.Height)));
-
-			int dx = image.BitmapImage.PixelWidth * 4;
-			int dy = image.BitmapImage.PixelHeight;
-
-			byte[] bytes = image.BitmapImage.GetRawBitmapBytes ();
-			System.Diagnostics.Debug.Assert (bytes.Length == dx*dy);
-
-			for (int y = 0; y < dy; y++)
-			{
-				var builder = new System.Text.StringBuilder ();
-
-				for (int x = 0; x < dx; x++)
-				{
-					builder.Append (string.Format ("{0:x2}", bytes[dx*y+x]));
-				}
-
-				xml.Add (new XAttribute (string.Format ("row{0}", y.ToString (System.Globalization.CultureInfo.InvariantCulture)), builder.ToString ()));
 			}
 		}
 

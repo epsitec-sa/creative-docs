@@ -37,8 +37,14 @@ namespace Epsitec.Common.Drawing
 			
 			return null;
 		}
-		
-		
+
+
+		public string							Id
+		{
+			get;
+			set;
+		}
+
 		public virtual Size						Size
 		{
 			get { return this.size; }
