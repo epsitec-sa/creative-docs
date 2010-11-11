@@ -30,7 +30,9 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Load(string filename)
 		{
 			string name = Misc.GetResourceImage (filename);
+
 			this.image = ImageProvider.Default.GetImage (name, Resources.DefaultManager);
+			this.image.Id = string.Concat ("file:", filename);
 		}
 
 
