@@ -219,9 +219,9 @@ namespace Epsitec.Cresus.Core.Helpers
 					{
 						total = Misc.PriceConstrain (total * (1.0M - article.Discounts[0].DiscountRate.Value));
 					}
-					else if (article.Discounts[0].DiscountAmount.HasValue)  // rabais en francs ?
+					else if (article.Discounts[0].Value.HasValue)  // rabais en francs ?
 					{
-						total = Misc.PriceConstrain (total - article.Discounts[0].DiscountAmount.Value);
+						total = Misc.PriceConstrain (total - article.Discounts[0].Value.Value);
 					}
 				}
 

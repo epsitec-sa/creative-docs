@@ -268,9 +268,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					return Misc.PercentToString (this.Entity.Discounts[0].DiscountRate.Value);
 				}
 
-				if (this.Entity.Discounts[0].DiscountAmount.HasValue)
+				if (this.Entity.Discounts[0].Value.HasValue)
 				{
-					return Misc.PriceToString (this.Entity.Discounts[0].DiscountAmount.Value);
+					return Misc.PriceToString (this.Entity.Discounts[0].Value.Value);
 				}
 			}
 
@@ -309,12 +309,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (percent)
 				{
 					this.Entity.Discounts[0].DiscountRate = v;
-					this.Entity.Discounts[0].DiscountAmount = null;
+					this.Entity.Discounts[0].Value = null;
 				}
 				else
 				{
 					this.Entity.Discounts[0].DiscountRate = null;
-					this.Entity.Discounts[0].DiscountAmount = v;
+					this.Entity.Discounts[0].Value = v;
 				}
 			}
 

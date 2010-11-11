@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				builder.Append (" (après rabais en %)");
 			}
-			else if (this.Discount.DiscountAmount.HasValue)
+			else if (this.Discount.Value.HasValue)
 			{
 				builder.Append (" (après rabais en francs)");
 			}
-			else if (this.FixedPriceAfterTax.HasValue)
+			else if (this.FixedPrice.HasValue)
 			{
 				builder.Append (" (montant arrêté)");
 			}
