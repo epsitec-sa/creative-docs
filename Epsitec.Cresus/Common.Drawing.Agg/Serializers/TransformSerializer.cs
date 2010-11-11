@@ -3,10 +3,16 @@
 
 using System.Collections.Generic;
 using System;
+
 namespace Epsitec.Common.Drawing.Serializers
 {
 	public class TransformSerializer : AbstractSerializer
 	{
+		public TransformSerializer(int resolution = 2)
+			: base (resolution)
+		{
+		}
+
 		public string Serialize(Transform transform)
 		{
 			var buffer = new System.Text.StringBuilder ();
@@ -27,7 +33,7 @@ namespace Epsitec.Common.Drawing.Serializers
 		}
 
 
-		public static Transform FromDeserialize(string value)
+		public static Transform Parse(string value)
 		{
 			if (!string.IsNullOrWhiteSpace (value))
 			{

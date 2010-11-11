@@ -3,10 +3,16 @@
 
 using System.Collections.Generic;
 using System;
+
 namespace Epsitec.Common.Drawing.Serializers
 {
 	public class PathSerializer : AbstractSerializer
 	{
+		public PathSerializer(int resolution = 2)
+			: base (resolution)
+		{
+		}
+
 		public string Serialize(Path path)
 		{
 			if (path.IsEmpty)
@@ -107,7 +113,7 @@ namespace Epsitec.Common.Drawing.Serializers
 		}
 
 
-		public static Path FromDeserialize(string value)
+		public static Path Parse(string value)
 		{
 			var path = new Path ();
 

@@ -3,19 +3,21 @@
 
 using System.Collections.Generic;
 using System;
+
 namespace Epsitec.Common.Drawing.Serializers
 {
 	public abstract class AbstractSerializer
 	{
+		public AbstractSerializer(int resolution = 2)
+		{
+			this.resolution = resolution;
+		}
+
 		public int Resolution
 		{
 			get
 			{
 				return this.resolution;
-			}
-			set
-			{
-				this.resolution = value;
 			}
 		}
 
@@ -34,6 +36,6 @@ namespace Epsitec.Common.Drawing.Serializers
 		}
 
 
-		private int resolution = 2;
+		private readonly int resolution = 2;
 	}
 }
