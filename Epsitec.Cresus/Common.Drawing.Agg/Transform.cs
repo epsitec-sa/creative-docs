@@ -583,24 +583,89 @@ namespace Epsitec.Common.Drawing
 
 		public override string ToString()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			var buffer = new System.Text.StringBuilder ();
+
 			buffer.Append ("[ ");
-			buffer.Append (this.XX.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.xx.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.XY.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.xy.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.YX.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.yx.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.YY.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.yy.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.TX.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.tx.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ");
-			buffer.Append (this.TY.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.ty.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (" ]");
 			
 			return buffer.ToString ();
 		}
-					
+			
+		
+		#region SVG style serialisation
+		public string Serialize()
+		{
+			var buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (Transform.Serialize(this.xx));
+			buffer.Append (" ");
+			buffer.Append (Transform.Serialize(this.xy));
+			buffer.Append (" ");
+			buffer.Append (Transform.Serialize(this.yx));
+			buffer.Append (" ");
+			buffer.Append (Transform.Serialize(this.yy));
+			buffer.Append (" ");
+			buffer.Append (Transform.Serialize(this.tx));
+			buffer.Append (" ");
+			buffer.Append (Transform.Serialize(this.ty));
+
+			return buffer.ToString();
+		}
+
+		private static string Serialize(double value, int numberOfDecimal=2)
+		{
+			double factor = System.Math.Pow (10, numberOfDecimal);
+			value = System.Math.Floor (value*factor) / factor;
+
+			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+
+		public static Transform FromDeserialize(string value)
+		{
+			var list = value.Split (' ');
+
+			if (list.Length == 6)
+			{
+				double xx, xy, yx, yy, tx, ty;
+
+				if (double.TryParse (list[0], out xx))
+				{
+					if (double.TryParse (list[1], out xy))
+					{
+						if (double.TryParse (list[2], out yx))
+						{
+							if (double.TryParse (list[3], out yy))
+							{
+								if (double.TryParse (list[4], out tx))
+								{
+									if (double.TryParse (list[5], out ty))
+									{
+										return new Transform (xx, xy, yx, yy, tx, ty);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return Transform.Identity;
+		}
+		#endregion
+
+
 		private static readonly double			ε = 0.00001;
 		
 		private readonly double					xx, xy, yx, yy;

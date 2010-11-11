@@ -473,11 +473,15 @@ namespace Epsitec.Common.Printing
 			if (this.lastState.transform != this.currentState.transform)
 			{
 				this.lastState.transform = this.currentState.transform;
+
+				xml.Add (new XAttribute ("transform", XmlPort.Serialize (this.lastState.transform)));
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode)
 			{
 				this.lastState.fillMode = this.currentState.fillMode;
+
+				xml.Add (new XAttribute ("fill-mode", this.lastState.fillMode));
 			}
 
 			if (mode == UpdateMode.Text)
@@ -557,6 +561,17 @@ namespace Epsitec.Common.Printing
 		private Path DeserializePath(string value)
 		{
 			return Path.FromDeserialize (value);
+		}
+
+
+		private static string Serialize(Transform transform)
+		{
+			return transform.Serialize ();
+		}
+
+		private Transform DeserializeTransform(string value)
+		{
+			return Transform.FromDeserialize (value);
 		}
 
 
