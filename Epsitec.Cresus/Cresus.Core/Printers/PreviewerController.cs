@@ -830,6 +830,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			string s = port.XmlSource;
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", s);
+
+			Graphics g = new Graphics ();
+			XmlPort.Deserialize (s, g);
 		}
 
 
