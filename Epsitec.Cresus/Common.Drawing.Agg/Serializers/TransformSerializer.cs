@@ -29,25 +29,28 @@ namespace Epsitec.Common.Drawing.Serializers
 
 		public static Transform FromDeserialize(string value)
 		{
-			var list = value.Split (' ');
-
-			if (list.Length == 6)
+			if (!string.IsNullOrWhiteSpace (value))
 			{
-				double xx, xy, yx, yy, tx, ty;
+				var list = value.Split (' ');
 
-				if (double.TryParse (list[0], out xx))
+				if (list.Length == 6)
 				{
-					if (double.TryParse (list[1], out xy))
+					double xx, xy, yx, yy, tx, ty;
+
+					if (double.TryParse (list[0], out xx))
 					{
-						if (double.TryParse (list[2], out yx))
+						if (double.TryParse (list[1], out xy))
 						{
-							if (double.TryParse (list[3], out yy))
+							if (double.TryParse (list[2], out yx))
 							{
-								if (double.TryParse (list[4], out tx))
+								if (double.TryParse (list[3], out yy))
 								{
-									if (double.TryParse (list[5], out ty))
+									if (double.TryParse (list[4], out tx))
 									{
-										return new Transform (xx, xy, yx, yy, tx, ty);
+										if (double.TryParse (list[5], out ty))
+										{
+											return new Transform (xx, xy, yx, yy, tx, ty);
+										}
 									}
 								}
 							}
