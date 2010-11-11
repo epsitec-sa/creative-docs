@@ -110,14 +110,12 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
 
-			StructuredType entityStructuredType = (StructuredType) dataContext.EntityContext.GetStructuredType (entityDruid);
-
 			string eId = InvariantConverter.ConvertToString (entityDefinitionsToIds[entityDruid]);
-			string eName = entityStructuredType.Caption.Name;
+			string eName = DbContext.Current.ResourceManager.GetCaption (entityDruid).Name;
 			string eDruid = entityDruid.ToResourceId ();
 
-			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), eId);
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.NameTag), eName);
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), eId);
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.DruidTag), eDruid);
 
 			foreach (var field in dataContext.EntityContext.GetEntityFieldDefinitions (entityDruid))
@@ -130,9 +128,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				string fId = InvariantConverter.ConvertToString (fieldId);
 				string fName = DbContext.Current.ResourceManager.GetCaption (fieldDruid).Name;
 				string fDruid = fieldDruid.ToResourceId ();
-								
-				xField.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), fId);
+
 				xField.SetAttributeValue (XName.Get (XmlConstants.NameTag), fName);
+				xField.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), fId);
 				xField.SetAttributeValue (XName.Get (XmlConstants.DruidTag), fDruid);	
 
 				xEntity.Add (xField);
@@ -177,11 +175,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static XElement CreateXElementForEntity(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, AbstractEntity entity)
 		{
+			Druid entityDruid = entity.GetEntityStructuredTypeId ();
+			
 			XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
 
 			string id = InvariantConverter.ConvertToString<int> (entitiesToIds[entity]);
 			string definitionId = InvariantConverter.ConvertToString (entityDefinitionsToIds[entity.GetEntityStructuredTypeId ()]);
+			string name = DbContext.Current.ResourceManager.GetCaption (entityDruid).Name;
 
+			xEntity.SetAttributeValue (XName.Get (XmlConstants.NameTag), name);
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.EntityIdTag), id);
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), definitionId);
 
@@ -291,7 +293,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			XElement xField = new XElement (XName.Get (XmlConstants.FieldTag));
 
 			string definitionId = InvariantConverter.ConvertToString (fieldDefinitionsToIds[field.CaptionId]);
+			string name = DbContext.Current.ResourceManager.GetCaption (field.CaptionId).Name;
 
+			xField.SetAttributeValue (XName.Get (XmlConstants.NameTag), name);
 			xField.SetAttributeValue (XmlConstants.DefinitionIdTag, definitionId);
 			xField.SetAttributeValue (XmlConstants.ValueTag, value);
 
@@ -305,11 +309,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			foreach (AbstractEntity externalEntity in externalEntities)
 			{
+				Druid entityDruid = externalEntity.GetEntityStructuredTypeId ();
+
 				string id = InvariantConverter.ConvertToString (entitiesToIds[externalEntity]);
 				string key = dataContext.GetNormalizedEntityKey (externalEntity).Value.ToString ();
+				string name = DbContext.Current.ResourceManager.GetCaption (entityDruid).Name;
 				
 				XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
 
+				xEntity.SetAttributeValue (XName.Get (XmlConstants.NameTag), name);
 				xEntity.SetAttributeValue (XName.Get (XmlConstants.EntityIdTag), id);
 				xEntity.SetAttributeValue (XName.Get (XmlConstants.KeyTag), key);
 
