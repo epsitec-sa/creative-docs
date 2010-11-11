@@ -372,6 +372,7 @@ namespace Epsitec.Common.Printing
 		{
 			var xml = new XElement ("image");
 
+			//	L'image doit avoir un identificateur, pour permettre la désérialisation !
 			xml.Add (new XAttribute ("id",            bitmap.Id));
 			xml.Add (new XAttribute ("fill-x",        XmlPort.Truncate (fillX)));
 			xml.Add (new XAttribute ("fill-y",        XmlPort.Truncate (fillY)));

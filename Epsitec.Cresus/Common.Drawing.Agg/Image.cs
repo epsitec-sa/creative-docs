@@ -41,6 +41,7 @@ namespace Epsitec.Common.Drawing
 
 		public string							Id
 		{
+			//	L'identificateur permet de retrouver l'image lors de la désérialisation du port graphique XmlPort.
 			get;
 			set;
 		}
