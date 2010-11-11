@@ -55,11 +55,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="UnitTestDatabaseConnection.cs" />
-    <Compile Include="UnitTestDbInfoManager.cs" />
-    <Compile Include="UnitTestDbConnectionManager.cs" />
-    <Compile Include="UnitTestDbLockManager.cs" />
+    <Compile Include="Services\UnitTestDbInfoManager.cs" />
+    <Compile Include="Services\UnitTestDbConnectionManager.cs" />
+    <Compile Include="Services\UnitTestDbLockManager.cs" />
     <Compile Include="UnitTestDbSchemaChecker.cs" />
-    <Compile Include="UnitTestDbUidManager.cs" />
+    <Compile Include="Services\UnitTestDbUidManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

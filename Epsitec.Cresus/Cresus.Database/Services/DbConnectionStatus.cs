@@ -1,4 +1,4 @@
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 
 

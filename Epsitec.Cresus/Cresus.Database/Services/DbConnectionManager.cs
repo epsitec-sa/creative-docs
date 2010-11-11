@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 	/// <summary>
 	/// The <c>DbLogger</c> class manages the modification log (stored in a "CR_LOG"

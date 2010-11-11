@@ -9,7 +9,7 @@ using System.Data;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 
 
