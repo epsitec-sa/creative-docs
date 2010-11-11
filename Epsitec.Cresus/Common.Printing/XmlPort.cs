@@ -530,7 +530,7 @@ namespace Epsitec.Common.Printing
 		}
 
 
-		private static double Truncate(double value, int numberOfDecimal=3)
+		private static double Truncate(double value, int numberOfDecimal=2)
 		{
 			//	Retourne un nombre tronqué à un certain nombre de décimales.
 			double factor = System.Math.Pow (10, numberOfDecimal);

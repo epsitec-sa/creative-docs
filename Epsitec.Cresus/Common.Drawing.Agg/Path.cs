@@ -903,7 +903,7 @@ namespace Epsitec.Common.Drawing
 						}
 
 						buffer.Append ("M ");
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						buffer.Append (Path.Serialize (p1));
 						addSpace = true;
 						break;
 
@@ -916,7 +916,7 @@ namespace Epsitec.Common.Drawing
 						}
 
 						buffer.Append ("L ");
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						buffer.Append (Path.Serialize (p1));
 						addSpace = true;
 						break;
 
@@ -930,8 +930,8 @@ namespace Epsitec.Common.Drawing
 						}
 
 						buffer.Append ("Q ");
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p2.X, p2.Y));
+						buffer.Append (Path.Serialize (p1));
+						buffer.Append (Path.Serialize (p2));
 						addSpace = true;
 						break;
 
@@ -946,9 +946,9 @@ namespace Epsitec.Common.Drawing
 						}
 
 						buffer.Append ("C ");
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p2.X, p2.Y));
-						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p3.X, p3.Y));
+						buffer.Append (Path.Serialize (p1));
+						buffer.Append (Path.Serialize (p2));
+						buffer.Append (Path.Serialize (p3));
 						addSpace = true;
 						break;
 
@@ -970,6 +970,20 @@ namespace Epsitec.Common.Drawing
 
 			return buffer.ToString ();
 		}
+
+		private static string Serialize(Point p)
+		{
+			return string.Concat (Path.Serialize (p.X), " ", Path.Serialize (p.Y));
+		}
+
+		private static string Serialize(double value, int numberOfDecimal=2)
+		{
+			double factor = System.Math.Pow (10, numberOfDecimal);
+			value = System.Math.Floor (value*factor) / factor;
+
+			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+
 
 		public static Path FromDeserialize(string value)
 		{
