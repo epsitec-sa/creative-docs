@@ -32,6 +32,19 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			}
 		}
 
+		public static SqlFunctionCode ToSqlFunctionCode(UnaryComparator unaryComparator)
+		{
+			switch (unaryComparator)
+			{
+				case UnaryComparator.IsNull:
+					return SqlFunctionCode.CompareIsNull;
+				case UnaryComparator.IsNotNull:
+					return SqlFunctionCode.CompareIsNotNull;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + unaryComparator + "' is not supported");
+			}
+		}
+
 
 		/// <summary>
 		/// Converts an <see cref="BinaryComparator"/> to the corresponding <see cref="DbSimpleConditionOperator"/>.
@@ -69,6 +82,36 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		public static SqlFunctionCode ToSqlFunctionCode(BinaryComparator binaryComparator)
+		{
+			switch (binaryComparator)
+			{
+				case BinaryComparator.IsEqual:
+					return SqlFunctionCode.CompareEqual;
+				case BinaryComparator.IsNotEqual:
+					return SqlFunctionCode.CompareNotEqual;
+				case BinaryComparator.IsLower:
+					return SqlFunctionCode.CompareLessThan;
+				case BinaryComparator.IsLowerOrEqual:
+					return SqlFunctionCode.CompareLessThanOrEqual;
+				case BinaryComparator.IsGreater:
+					return SqlFunctionCode.CompareGreaterThan;
+				case BinaryComparator.IsGreaterOrEqual:
+					return SqlFunctionCode.CompareGreaterThanOrEqual;
+				case BinaryComparator.IsLike:
+					return SqlFunctionCode.CompareLike;
+				case BinaryComparator.IsNotLike:
+					return SqlFunctionCode.CompareNotLike;
+				case BinaryComparator.IsLikeEscape:
+					return SqlFunctionCode.CompareLikeEscape;
+				case BinaryComparator.IsNotLikeEscape:
+					return SqlFunctionCode.CompareNotLikeEscape;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + binaryComparator + "' is not supported");
+			}
+		}
+
+
 		/// <summary>
 		/// Converts an <see cref="UnaryOperator"/> to the corresponding <see cref="DbConditionModifierOperator"/>.
 		/// </summary>
@@ -81,6 +124,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				case UnaryOperator.Not:
 					return DbConditionModifierOperator.Not;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + unaryOperator + "' is not supported");
+			}
+		}
+
+
+		public static SqlFunctionCode ToSqlFunctionCode(UnaryOperator unaryOperator)
+		{
+			switch (unaryOperator)
+			{
+				case UnaryOperator.Not:
+					return SqlFunctionCode.LogicNot;
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + unaryOperator + "' is not supported");
 			}
@@ -101,6 +156,20 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbConditionCombinerOperator.And;
 				case BinaryOperator.Or:
 					return DbConditionCombinerOperator.Or;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + binaryOperator + "' is not supported");
+			}
+		}
+
+
+		public static SqlFunctionCode ToSqlFunctionCode(BinaryOperator binaryOperator)
+		{
+			switch (binaryOperator)
+			{
+				case BinaryOperator.And:
+					return SqlFunctionCode.LogicAnd;
+				case BinaryOperator.Or:
+					return SqlFunctionCode.LogicOr;
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + binaryOperator + "' is not supported");
 			}

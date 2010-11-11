@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Database;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -31,6 +33,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
+		}
+
+
+		internal SqlField CreateSqlField(System.Func<Druid, SqlField> sqlColumnResolver)
+		{
+			return sqlColumnResolver (this.FieldId);
 		}
 
 

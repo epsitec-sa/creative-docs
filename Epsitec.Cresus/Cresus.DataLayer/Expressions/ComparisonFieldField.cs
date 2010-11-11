@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 
@@ -95,6 +96,17 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			columnResolver.ThrowIfNull ("columnResolver");
 
 			return expressionConverter.CreateDbCondition (this, columnResolver);
+		}
+
+
+		internal override SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver)
+		{
+			return new SqlFunction
+			(
+				EnumConverter.ToSqlFunctionCode (this.Operator),
+				this.Left.CreateSqlField (sqlColumnResolver),
+				this.Right.CreateSqlField (sqlColumnResolver)
+			);
 		}
 
 

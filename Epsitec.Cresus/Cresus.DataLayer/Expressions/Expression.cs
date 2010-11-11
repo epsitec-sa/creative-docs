@@ -5,6 +5,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.DataLayer.Schema;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -44,6 +45,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <returns>The new <see cref="DbAbstractCondition"/>.</returns>
 		internal abstract DbAbstractCondition CreateDbCondition(ExpressionConverter expressionConverter, System.Func<Druid, DbTableColumn> columnResolver);
 
+
+		internal abstract SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver);
+		
 
 	}
 

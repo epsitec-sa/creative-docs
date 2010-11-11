@@ -83,6 +83,17 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			return expressionConverter.CreateDbCondition (this, columnResolver);
 		}
 
+
+		internal override SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver)
+		{
+			return new SqlFunction
+			(
+				EnumConverter.ToSqlFunctionCode (this.Operator),
+				this.Field.CreateSqlField (sqlColumnResolver)
+			);
+		}
+
+
 	}
 
 
