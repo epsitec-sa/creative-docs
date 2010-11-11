@@ -4,7 +4,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.DataLayer.Schema;
+using System.Text.RegularExpressions;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -171,6 +171,23 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			DbNumDef dbNumDef = EnumConverter.ToDbNumDef (this.Type);
 
 			return sqlConstantResolver (dbRawType, dbSimpleType, dbNumDef, this.Value);
+		}
+
+
+		/// <summary>
+		/// Escapes a string so that it can be used with the <see cref="BinaryComparator"/> dealing
+		/// with escaped strings.
+		/// </summary>
+		/// <param name="value">The string to escape.</param>
+		/// <returns>The escaped string.</returns>
+		public static string Escape(string value)
+		{
+			string escapeChar = DbSqlStandard.CompareLikeEscape;
+
+			string pattern = "([%_" + escapeChar + "])";
+			string replacement = escapeChar + "$1";
+
+			return Regex.Replace (value, pattern, replacement);
 		}
 
 

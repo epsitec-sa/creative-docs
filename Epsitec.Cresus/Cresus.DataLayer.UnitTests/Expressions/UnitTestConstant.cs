@@ -77,6 +77,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 		}
 
 
+		[TestMethod]
+		public void EscapeTest()
+		{
+			Assert.AreEqual ("#%", Constant.Escape ("%"));
+			Assert.AreEqual ("#_", Constant.Escape ("_"));
+			Assert.AreEqual ("##", Constant.Escape ("#"));
+			Assert.AreEqual ("#%#_##", Constant.Escape ("%_#"));
+			Assert.AreEqual ("cou#_cou#_bla#_bla", Constant.Escape ("cou_cou_bla_bla"));
+			Assert.AreEqual ("cou#%cou#_bla##bla", Constant.Escape ("cou%cou_bla#bla"));
+			Assert.AreEqual ("#%#%#%", Constant.Escape ("%%%"));
+			Assert.AreEqual ("#_#_#_", Constant.Escape ("___"));
+			Assert.AreEqual ("######", Constant.Escape ("###"));
+		}
+
+
 	}
 
 

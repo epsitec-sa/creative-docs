@@ -10,6 +10,10 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 {
@@ -103,6 +107,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 					(
 						() => operation.CreateDbCondition (null, id => null)
 					);
+				}
+			}
+		}
+		
+		
+		[TestMethod]
+		public void GetFieldsTest()
+		{
+			foreach (Field field1 in ExpressionHelper.GetSampleFields ())
+			{
+				foreach (Field field2 in ExpressionHelper.GetSampleFields ())
+				{
+					UnaryOperation operation = new UnaryOperation (
+						UnaryOperator.Not,
+						new ComparisonFieldField (field1, BinaryComparator.IsEqual, field2)
+					);
+
+					List<Druid> fields = operation.GetFields ().ToList ();
+
+					if (field1.FieldId == field2.FieldId)
+					{
+						Assert.IsTrue (fields.Count () == 1);
+						Assert.AreEqual (field1.FieldId, fields.Single ());
+					}
+					else
+					{
+						Assert.IsTrue (fields.Count () == 2);
+						CollectionAssert.Contains (fields, field1.FieldId);
+						CollectionAssert.Contains (fields, field2.FieldId);
+					}
 				}
 			}
 		}

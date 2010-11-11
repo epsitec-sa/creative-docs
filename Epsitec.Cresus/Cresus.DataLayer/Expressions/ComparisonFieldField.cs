@@ -76,7 +76,15 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <returns>The sequence of field ids that are used in this instance.</returns>
 		internal override IEnumerable<Druid> GetFields()
 		{
-			return ExpressionFields.GetFields (this);
+			Druid id1 = this.Left.FieldId;
+			Druid id2 = this.Right.FieldId;
+
+			yield return id1;
+
+			if (id1 != id2)
+			{
+				yield return id2;
+			}
 		}
 
 

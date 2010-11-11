@@ -10,6 +10,9 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
@@ -64,13 +67,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			(
 				() => new ComparisonFieldValue (left, op, null)
 			);
-		}
-
-
-		[TestMethod]
-		public void EscapeTest()
-		{
-			
 		}
 
 
@@ -138,6 +134,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 						() => comparison.CreateDbCondition (null, id => null)
 					);
 				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetFieldsTest()
+		{
+			foreach (Field field in ExpressionHelper.GetSampleFields ())
+			{
+				ComparisonFieldValue comparison = new ComparisonFieldValue (field, BinaryComparator.IsEqual, new Constant (0));
+
+				List<Druid> fields = comparison.GetFields ().ToList ();
+
+				Assert.IsTrue (fields.Count () == 1);
+				Assert.AreEqual (field.FieldId, fields.Single ());
 			}
 		}
 

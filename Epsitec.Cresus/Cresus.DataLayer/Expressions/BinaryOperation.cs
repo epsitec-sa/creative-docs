@@ -7,6 +7,8 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -75,7 +77,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <returns>The sequence of field ids that are used in this instance.</returns>
 		internal override IEnumerable<Druid> GetFields()
 		{
-			return ExpressionFields.GetFields (this);
+			IEnumerable<Druid> left = this.Left.GetFields ();
+			IEnumerable<Druid> right = this.Right.GetFields ();
+
+			return left.Concat (right).Distinct ();
 		}
 
 
