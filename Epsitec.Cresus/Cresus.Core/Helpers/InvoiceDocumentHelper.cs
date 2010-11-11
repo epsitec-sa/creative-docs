@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					ArticleDocumentItemHelper.UpdatePrices (x, article);
 
 					primarySubtotalBeforeTax += article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
-					primarySubtotalTax       += article.ResultingLineTax.GetValueOrDefault (0);
+					primarySubtotalTax       += article.ResultingLineTax1.GetValueOrDefault (0);
 				}
 
 				if (line is PriceDocumentItemEntity)
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					var article = line as ArticleDocumentItemEntity;
 
 					article.FinalLinePriceBeforeTax = Misc.PriceConstrain (article.ResultingLinePriceBeforeTax * discountRate);
-					article.FinalLineTax            = Misc.PriceConstrain (article.ResultingLineTax            * discountRate);
+					article.FinalLineTax1           = Misc.PriceConstrain (article.ResultingLineTax1           * discountRate);
 				}
 
 				if (line is PriceDocumentItemEntity)

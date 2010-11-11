@@ -227,13 +227,13 @@ namespace Epsitec.Cresus.Core.Helpers
 
 				article.PrimaryLinePriceBeforeTax   = total;
 				article.ResultingLinePriceBeforeTax = (int) total;  // arrondi au franc inférieur, pourquoi pas ?
-				article.ResultingLineTax            = /* Misc.PriceConstrain */ (article.ResultingLinePriceBeforeTax.Value * vatRate);
+				article.ResultingLineTax1           = /* Misc.PriceConstrain */ (article.ResultingLinePriceBeforeTax.Value * vatRate);
 			}
 			else
 			{
 				article.PrimaryLinePriceBeforeTax   = 0;
 				article.ResultingLinePriceBeforeTax = null;
-				article.ResultingLineTax            = null;
+				article.ResultingLineTax1           = null;
 			}
 		}
 	}

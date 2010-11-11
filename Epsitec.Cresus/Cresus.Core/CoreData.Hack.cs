@@ -691,56 +691,56 @@ namespace Epsitec.Cresus.Core
 			var vatDef2011_4 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
 
 			vatDef2010_1.Rank = 0;
-			vatDef2010_1.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
-			vatDef2010_1.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_1.BeginDate = new Date (2000, 1, 1);
+			vatDef2010_1.EndDate   = new Date (2010, 12, 31);
 			vatDef2010_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2010_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2010_1.Rate = 7.6M * 0.01M;
 
 			vatDef2010_2.Rank = 1;
-			vatDef2010_2.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
-			vatDef2010_2.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_2.BeginDate = new Date (2000, 1, 1);
+			vatDef2010_2.EndDate   = new Date (2010, 12, 31);
 			vatDef2010_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2010_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2010_2.Rate = 2.4M * 0.01M;
 
 			vatDef2010_3.Rank = 2;
-			vatDef2010_3.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
-			vatDef2010_3.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_3.BeginDate = new Date (2000, 1, 1);
+			vatDef2010_3.EndDate   = new Date (2010, 12, 31);
 			vatDef2010_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2010_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2010_3.Rate = 3.6M * 0.01M;
 
 			vatDef2010_4.Rank = 3;
-			vatDef2010_4.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
-			vatDef2010_4.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_4.BeginDate = new Date (2000, 1, 1);
+			vatDef2010_4.EndDate   = new Date (2010, 12, 31);
 			vatDef2010_4.Code = Business.Finance.VatCode.Excluded;
 			vatDef2010_4.Name = "Exclu du champ d'application de la TVA";
 			vatDef2010_4.Rate = 0.0M * 0.01M;
 
 			vatDef2011_1.Rank = 0;
-			vatDef2011_1.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_1.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_1.EndDate   = null;
 			vatDef2011_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2011_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2011_1.Rate = 8.0M * 0.01M;
 
 			vatDef2011_2.Rank = 1;
-			vatDef2011_2.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_2.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_2.EndDate   = null;
 			vatDef2011_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2011_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2011_2.Rate = 2.5M * 0.01M;
 
 			vatDef2011_3.Rank = 2;
-			vatDef2011_3.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_3.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_3.EndDate   = null;
 			vatDef2011_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2011_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2011_3.Rate = 3.8M * 0.01M;
 
 			vatDef2011_4.Rank = 3;
-			vatDef2011_4.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_4.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_4.EndDate   = null;
 			vatDef2011_4.Code = Business.Finance.VatCode.Excluded;
 			vatDef2011_4.Name = "Exclu du champ d'application de la TVA";
@@ -827,7 +827,7 @@ namespace Epsitec.Cresus.Core
 			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
 			lineA1.NeverApplyDiscount = false;
 			lineA1.ResultingLinePriceBeforeTax = (int) lineA1.PrimaryLinePriceBeforeTax;
-			lineA1.ResultingLineTax = lineA1.ResultingLinePriceBeforeTax * vatRate;
+			lineA1.ResultingLineTax1 = lineA1.ResultingLinePriceBeforeTax * vatRate;
 			lineA1.ArticleShortDescriptionCache = lineA1.ArticleDefinition.ShortDescription;
 			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.LongDescription;
 			
@@ -853,7 +853,7 @@ namespace Epsitec.Cresus.Core
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
 			lineA2.NeverApplyDiscount = false;
 			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryLinePriceBeforeTax;
-			lineA2.ResultingLineTax = lineA2.ResultingLinePriceBeforeTax * vatRate;
+			lineA2.ResultingLineTax1 = lineA2.ResultingLinePriceBeforeTax * vatRate;
 			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.ShortDescription;
 			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
 
@@ -886,7 +886,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax * 0;
 			lineA3.NeverApplyDiscount = false;
 			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryLinePriceBeforeTax;
-			lineA3.ResultingLineTax = lineA3.ResultingLinePriceBeforeTax * vatRate;
+			lineA3.ResultingLineTax1 = lineA3.ResultingLinePriceBeforeTax * vatRate;
 			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
 			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
 
@@ -918,7 +918,7 @@ namespace Epsitec.Cresus.Core
 			lineA4.PrimaryLinePriceBeforeTax = lineA4.PrimaryUnitPriceBeforeTax;
 			lineA4.NeverApplyDiscount = true;
 			lineA4.ResultingLinePriceBeforeTax = (int) lineA4.PrimaryUnitPriceBeforeTax;
-			lineA4.ResultingLineTax = lineA4.ResultingLinePriceBeforeTax * vatRate;
+			lineA4.ResultingLineTax1 = lineA4.ResultingLinePriceBeforeTax * vatRate;
 			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.ShortDescription;
 			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
 
@@ -982,7 +982,7 @@ namespace Epsitec.Cresus.Core
 			var totalA2 = this.DataContext.CreateEntity<TotalDocumentItemEntity> ();
 
 			totalA2.Visibility = true;
-			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax;
+			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax1;
 			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceAfterTax / 10) * 10.00M;	//	arrondi à 10.-
 			totalA2.TextForPrimaryPrice = "Total TTC";
 			totalA2.TextForFixedPrice = "Total TTC arrêté";
@@ -997,13 +997,13 @@ namespace Epsitec.Cresus.Core
 			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
 
 			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA1.FinalLineTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax * fixedPriceDiscount);
+			lineA1.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax1 * fixedPriceDiscount);
 			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA2.FinalLineTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax * fixedPriceDiscount);
+			lineA2.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax1 * fixedPriceDiscount);
 			lineA3.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA3.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA3.FinalLineTax = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax * fixedPriceDiscount);
+			lineA3.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax1 * fixedPriceDiscount);
 			lineA4.FinalLinePriceBeforeTax = lineA4.ResultingLinePriceBeforeTax;
-			lineA4.FinalLineTax = lineA4.ResultingLineTax;
+			lineA4.FinalLineTax1 = lineA4.ResultingLineTax1;
 
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3

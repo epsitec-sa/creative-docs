@@ -3704,7 +3704,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>VatDefinition</c> entity.
 	///	designer:cap/L0A24
 	///	</summary>
-	public partial class VatDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateTimeRange, global::Epsitec.Cresus.Core.Entities.IItemRank
+	public partial class VatDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -3724,37 +3724,55 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		#region IDateTimeRange Members
+		#region ILifetime Members
 		///	<summary>
-		///	The <c>BeginDate</c> field.
-		///	designer:fld/L0A24/L0AU4
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0A24/L0AB5
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AU4]")]
-		public global::System.DateTime? BeginDate
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetBeginDate (this);
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetBeginDate (this, value);
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/L0A24/L0AQK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQK]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
 			}
 		}
 		///	<summary>
 		///	The <c>EndDate</c> field.
-		///	designer:fld/L0A24/L0AV4
+		///	designer:fld/L0A24/L0ARK
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AV4]")]
-		public global::System.DateTime? EndDate
+		[global::Epsitec.Common.Support.EntityField ("[L0ARK]")]
+		public global::Epsitec.Common.Types.Date? EndDate
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetEndDate (this);
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetEndDate (this, value);
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
 			}
 		}
 		#endregion
@@ -4308,6 +4326,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ExchangeRateBase</c> field.
+		///	designer:fld/L0AP4/L0AAM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAM]")]
+		public global::System.Decimal ExchangeRateBase
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[L0AAM]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.ExchangeRateBase;
+				if (oldValue != value)
+				{
+					this.OnExchangeRateBaseChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[L0AAM]", oldValue, value);
+					this.OnExchangeRateBaseChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ExchangeRate</c> field.
 		///	designer:fld/L0AP4/L0AQ4
 		///	</summary>
@@ -4354,6 +4394,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnExchangeRateBaseChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnExchangeRateBaseChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateSourceChanging(global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue, global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity newValue);
@@ -6907,6 +6949,50 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>TaxRate1</c> field.
+		///	designer:fld/L0A9A/L0ADM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADM]")]
+		public global::System.Decimal? TaxRate1
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ADM]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.TaxRate1;
+				if (oldValue != value)
+				{
+					this.OnTaxRate1Changing (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ADM]", oldValue, value);
+					this.OnTaxRate1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TaxRate2</c> field.
+		///	designer:fld/L0A9A/L0AEM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AEM]")]
+		public global::System.Decimal? TaxRate2
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AEM]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.TaxRate2;
+				if (oldValue != value)
+				{
+					this.OnTaxRate2Changing (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AEM]", oldValue, value);
+					this.OnTaxRate2Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>FixedLinePriceBeforeTax</c> field.
 		///	designer:fld/L0A9A/L0ASA
 		///	</summary>
@@ -6951,11 +7037,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ResultingLineTax</c> field.
+		///	The <c>ResultingLineTax1</c> field.
 		///	designer:fld/L0A9A/L0ADD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ADD]")]
-		public global::System.Decimal? ResultingLineTax
+		public global::System.Decimal? ResultingLineTax1
 		{
 			get
 			{
@@ -6963,12 +7049,34 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.ResultingLineTax;
+				global::System.Decimal? oldValue = this.ResultingLineTax1;
 				if (oldValue != value)
 				{
-					this.OnResultingLineTaxChanging (oldValue, value);
+					this.OnResultingLineTax1Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ADD]", oldValue, value);
-					this.OnResultingLineTaxChanged (oldValue, value);
+					this.OnResultingLineTax1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ResultingLineTax2</c> field.
+		///	designer:fld/L0A9A/L0ABM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ABM]")]
+		public global::System.Decimal? ResultingLineTax2
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ABM]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingLineTax2;
+				if (oldValue != value)
+				{
+					this.OnResultingLineTax2Changing (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ABM]", oldValue, value);
+					this.OnResultingLineTax2Changed (oldValue, value);
 				}
 			}
 		}
@@ -6995,11 +7103,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FinalLineTax</c> field.
+		///	The <c>FinalLineTax1</c> field.
 		///	designer:fld/L0A9A/L0A6B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A6B]")]
-		public global::System.Decimal? FinalLineTax
+		public global::System.Decimal? FinalLineTax1
 		{
 			get
 			{
@@ -7007,12 +7115,34 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.FinalLineTax;
+				global::System.Decimal? oldValue = this.FinalLineTax1;
 				if (oldValue != value)
 				{
-					this.OnFinalLineTaxChanging (oldValue, value);
+					this.OnFinalLineTax1Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A6B]", oldValue, value);
-					this.OnFinalLineTaxChanged (oldValue, value);
+					this.OnFinalLineTax1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FinalLineTax2</c> field.
+		///	designer:fld/L0A9A/L0ACM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ACM]")]
+		public global::System.Decimal? FinalLineTax2
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ACM]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.FinalLineTax2;
+				if (oldValue != value)
+				{
+					this.OnFinalLineTax2Changing (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ACM]", oldValue, value);
+					this.OnFinalLineTax2Changed (oldValue, value);
 				}
 			}
 		}
@@ -7095,16 +7225,24 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPrimaryLinePriceBeforeTaxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
+		partial void OnTaxRate1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTaxRate1Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTaxRate2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTaxRate2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnResultingLineTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnResultingLineTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTax1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTax1Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTax2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTax2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalLineTax1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalLineTax1Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalLineTax2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalLineTax2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnArticleShortDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnArticleShortDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnArticleLongDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
