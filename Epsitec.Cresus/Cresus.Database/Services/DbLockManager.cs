@@ -3,7 +3,7 @@
 using Epsitec.Cresus.Database.Collections;
 
 
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 
 

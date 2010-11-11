@@ -127,7 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbInfoManager.cs" />
+    <Compile Include="Services\DbInfoManager.cs" />
     <Compile Include="DbAbstractAttachable.cs" />
     <Compile Include="DbAbstractCondition.cs" />
     <Compile Include="DbConditionCombiner.cs" />
@@ -158,15 +158,15 @@
     </Compile>
     <Compile Include="DbConditionModifier.cs" />
     <Compile Include="DbConditionModifierOperator.cs" />
-    <Compile Include="DbConnectionManager.cs" />
-    <Compile Include="DbConnectionStatus.cs" />
-    <Compile Include="DbLockManager.cs" />
+    <Compile Include="Services\DbConnectionManager.cs" />
+    <Compile Include="Services\DbConnectionStatus.cs" />
+    <Compile Include="Services\DbLockManager.cs" />
     <Compile Include="DbSimpleCondition.cs" />
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />
     <Compile Include="DbReader.cs" />
     <Compile Include="DbSchemaChecker.cs" />
-    <Compile Include="DbUidManager.cs" />
+    <Compile Include="Services\DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
     <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
@@ -180,7 +180,7 @@
     <Compile Include="SqlFunctionCode.cs" />
     <Compile Include="DbNullability.cs" />
     <Compile Include="SqlAggregateFunction.cs" />
-    <Compile Include="DbLogEntry.cs" />
+    <Compile Include="Services\DbLogEntry.cs" />
     <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
@@ -223,7 +223,7 @@
     <Compile Include="DbKey.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbLogger.cs">
+    <Compile Include="Services\DbLogger.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbNumDef.cs">

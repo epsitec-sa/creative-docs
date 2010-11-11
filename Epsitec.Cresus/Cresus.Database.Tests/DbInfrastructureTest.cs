@@ -1,3 +1,5 @@
+using Epsitec.Cresus.Database.Services;
+
 using NUnit.Framework;
 
 namespace Epsitec.Cresus.Database
