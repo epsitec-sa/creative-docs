@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
-	public class PriceCalculator
+	public class ArticlePriceCalculator
 	{
-		public PriceCalculator(BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
+		public ArticlePriceCalculator(BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
 		{
 			this.document     = document;
 			this.articleItem  = articleItem;
@@ -24,38 +24,33 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public void UpdateResultingLinePrice()
+		public void ComputePrice()
 		{
 			var roundingPolicy = this.priceRoundingMode.PriceRoundingPolicy;
 			var quantity       = this.GetTotalQuantity ();
 			var articlePrice   = this.GetArticlePrices (quantity).FirstOrDefault ();
+
+			decimal primaryUnitPriceBeforeTax   = this.ComputePrimaryUnitPriceBeforeTax (roundingPolicy, articlePrice);
+			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, quantity);
+			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
 			
-			decimal unitPriceBeforeTax = articlePrice.ValueBeforeTax;
-			decimal unitPriceAfterTax  = 0;
+			Tax tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
-			if (roundingPolicy == RoundingPolicy.OnUnitPriceBeforeTax)
-			{
-				unitPriceBeforeTax = this.priceRoundingMode.Round (unitPriceBeforeTax);
-			}
-
-			TaxRateAmount[] taxRateAmounts = this.GetTaxRateAmounts (unitPriceBeforeTax);
-
-			unitPriceAfterTax = taxRateAmounts.Sum (x => x.Amount);
-
-			if (roundingPolicy == RoundingPolicy.OnUnitPriceAfterTax)
-			{
-				unitPriceAfterTax = this.priceRoundingMode.Round (unitPriceAfterTax);
-			}
-
-			//	.........
+			this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
+			this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
+			this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
+			this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (tax.GetTax (0), this.currencyCode);
+			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (tax.GetTax (1), this.currencyCode);
 			
-			if (taxRateAmounts.Length > 2)
-			{
-				throw new System.InvalidOperationException ("Cannot process more than 2 different tax rates");
-			}
-			
-			this.articleItem.PrimaryUnitPriceBeforeTax = unitPriceBeforeTax;
-			this.articleItem.PrimaryLinePriceBeforeTax = unitPriceBeforeTax * quantity;
+			this.articleItem.FinalLinePriceBeforeTax = null;
+			this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (0));
+			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (1));
+		}
+
+		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
+		{
+			//	TODO: implement discount & rounding
+			return price;
 		}
 
 		public decimal GetTotalQuantity()
@@ -71,13 +66,74 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			Ordered,
 		}
 
-		private TaxRateAmount[] GetTaxRateAmounts(decimal articleValue)
+		private decimal ComputePrimaryUnitPriceBeforeTax(RoundingPolicy roundingPolicy, ArticlePriceEntity articlePrice)
+		{
+			decimal unitPriceBeforeTax = this.GetUnitPriceBeforeTax (articlePrice);
+
+			if (roundingPolicy == RoundingPolicy.OnUnitPriceBeforeTax)
+			{
+				unitPriceBeforeTax = this.priceRoundingMode.Round (unitPriceBeforeTax);
+			}
+
+			if (roundingPolicy == RoundingPolicy.OnUnitPriceAfterTax)
+			{
+				Tax tax = this.ComputeTax (unitPriceBeforeTax);
+
+				decimal unitPriceAfterTax = unitPriceBeforeTax + tax.TotalTax;
+
+				unitPriceAfterTax  = this.priceRoundingMode.Round (unitPriceAfterTax);
+				unitPriceBeforeTax = tax.ComputeAmountBeforeTax (unitPriceAfterTax);
+			}
+			
+			return unitPriceBeforeTax;
+		}
+
+		private decimal ComputePrimaryLinePriceBeforeTax(RoundingPolicy roundingPolicy, decimal unitPriceBeforeTax, decimal quantity)
+		{
+			return unitPriceBeforeTax * quantity;
+		}
+		
+		private decimal ComputeResultingLinePriceBeforeTax(RoundingPolicy roundingPolicy, decimal linePriceBeforeTax)
+		{
+			if (this.articleItem.FixedLinePriceBeforeTax.HasValue)
+			{
+				return this.articleItem.FixedLinePriceBeforeTax.Value;
+			}
+
+			foreach (var discount in this.articleItem.Discounts)
+			{
+				linePriceBeforeTax = this.ApplyDiscount (linePriceBeforeTax, discount);
+			}
+
+			if (roundingPolicy == RoundingPolicy.OnFinalPriceBeforeTax)
+			{
+				linePriceBeforeTax = this.priceRoundingMode.Round (linePriceBeforeTax);
+			}
+
+			if (roundingPolicy == RoundingPolicy.OnFinalPriceAfterTax)
+			{
+				Tax tax = this.ComputeTax (linePriceBeforeTax);
+
+				decimal linePriceAfterTax = linePriceBeforeTax + tax.TotalTax;
+
+				linePriceAfterTax  = this.priceRoundingMode.Round (linePriceAfterTax);
+				linePriceBeforeTax = tax.ComputeAmountBeforeTax (linePriceAfterTax);
+			}
+			
+			return linePriceBeforeTax;
+		}
+
+		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
+		{
+			return articlePrice.ValueBeforeTax;
+		}
+
+		private Tax ComputeTax(decimal articleValue)
 		{
 			TaxCalculator taxCalculator;
-			TaxRateAmount[] taxRateAmounts;
-
+			
 			if ((this.articleItem.BeginDate.HasValue) &&
-						(this.articleItem.EndDate.HasValue))
+				(this.articleItem.EndDate.HasValue))
 			{
 				taxCalculator = new TaxCalculator (this.articleItem);
 			}
@@ -86,9 +142,16 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				taxCalculator = new TaxCalculator (new Date (this.date));
 			}
 
-			taxRateAmounts = taxCalculator.GetTaxes (articleValue, this.articleItem.VatCode);
-			return taxRateAmounts;
+			var tax = taxCalculator.ComputeTax (articleValue, this.articleItem.VatCode);
+			
+			if (tax.RateAmounts.Count > 2)
+			{
+				throw new System.InvalidOperationException ("Cannot process more than 2 different tax rates");
+			}
+
+			return tax;
 		}
+		
 		private decimal GetQuantity(ArticleQuantityEntity quantity, InclusionMode inclusionMode)
 		{
 			switch (quantity.QuantityType)

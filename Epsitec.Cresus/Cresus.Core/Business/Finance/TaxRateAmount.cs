@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal							TaxAmount
+		public decimal							Tax
 		{
 			get
 			{

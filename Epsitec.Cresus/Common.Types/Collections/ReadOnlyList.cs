@@ -39,6 +39,15 @@ namespace Epsitec.Common.Types.Collections
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="collection">The collection which will be made available as a read-only list.</param>
+		public ReadOnlyList(IEnumerable<T> collection)
+		{
+			this.list = new List<T> (collection);
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether the list is null.
 		/// </summary>
 		/// <value><c>true</c> if the list is null; otherwise, <c>false</c>.</value>

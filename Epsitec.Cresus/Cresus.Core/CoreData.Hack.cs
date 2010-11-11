@@ -997,13 +997,13 @@ namespace Epsitec.Cresus.Core
 			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
 
 			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA1.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax1 * fixedPriceDiscount);
+//			lineA1.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax1 * fixedPriceDiscount);
 			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA2.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax1 * fixedPriceDiscount);
+//			lineA2.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax1 * fixedPriceDiscount);
 			lineA3.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA3.ResultingLinePriceBeforeTax * fixedPriceDiscount);
-			lineA3.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax1 * fixedPriceDiscount);
+//			lineA3.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax1 * fixedPriceDiscount);
 			lineA4.FinalLinePriceBeforeTax = lineA4.ResultingLinePriceBeforeTax;
-			lineA4.FinalLineTax1 = lineA4.ResultingLineTax1;
+//			lineA4.FinalLineTax1 = lineA4.ResultingLineTax1;
 
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3

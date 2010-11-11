@@ -7103,50 +7103,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FinalLineTax1</c> field.
-		///	designer:fld/L0A9A/L0A6B
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A6B]")]
-		public global::System.Decimal? FinalLineTax1
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[L0A6B]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.FinalLineTax1;
-				if (oldValue != value)
-				{
-					this.OnFinalLineTax1Changing (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[L0A6B]", oldValue, value);
-					this.OnFinalLineTax1Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>FinalLineTax2</c> field.
-		///	designer:fld/L0A9A/L0ACM
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ACM]")]
-		public global::System.Decimal? FinalLineTax2
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[L0ACM]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.FinalLineTax2;
-				if (oldValue != value)
-				{
-					this.OnFinalLineTax2Changing (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[L0ACM]", oldValue, value);
-					this.OnFinalLineTax2Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>ArticleShortDescriptionCache</c> field.
 		///	designer:fld/L0A9A/L0AVA
 		///	</summary>
@@ -7239,10 +7195,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnResultingLineTax2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTax1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTax1Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTax2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalLineTax2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnArticleShortDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnArticleShortDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnArticleLongDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
