@@ -823,7 +823,7 @@ namespace Epsitec.Cresus.Core
 			lineA1.EndDate = invoiceA.BillingDate;
 			lineA1.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-CP").FirstOrDefault ();
 			lineA1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
-			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].Value;
 			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
 			lineA1.NeverApplyDiscount = false;
 			lineA1.ResultingLinePriceBeforeTax = (int) lineA1.PrimaryLinePriceBeforeTax;
@@ -849,7 +849,7 @@ namespace Epsitec.Cresus.Core
 			lineA2.EndDate = invoiceA.BillingDate;
 			lineA2.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-FL").FirstOrDefault ();
 			lineA2.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
-			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].Value;
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
 			lineA2.NeverApplyDiscount = false;
 			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryLinePriceBeforeTax;
@@ -882,7 +882,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.EndDate = invoiceA.BillingDate;
 			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
 			lineA3.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
-			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].Value;
 			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax * 0;
 			lineA3.NeverApplyDiscount = false;
 			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryLinePriceBeforeTax;
@@ -914,7 +914,7 @@ namespace Epsitec.Cresus.Core
 			lineA4.EndDate = invoiceA.BillingDate;
 			lineA4.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
 			lineA4.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
-			lineA4.PrimaryUnitPriceBeforeTax = lineA4.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA4.PrimaryUnitPriceBeforeTax = lineA4.ArticleDefinition.ArticlePrices[0].Value;
 			lineA4.PrimaryLinePriceBeforeTax = lineA4.PrimaryUnitPriceBeforeTax;
 			lineA4.NeverApplyDiscount = true;
 			lineA4.ResultingLinePriceBeforeTax = (int) lineA4.PrimaryUnitPriceBeforeTax;
@@ -935,7 +935,7 @@ namespace Epsitec.Cresus.Core
 			discountA1.Description = "Rabais de quantité";
 			discountA1.DiscountRate = 0.20M;
 
-			var totalA1 = this.DataContext.CreateEntity<PriceDocumentItemEntity> ();
+			var totalA1 = this.DataContext.CreateEntity<SubTotalDocumentItemEntity> ();
 
 			//	Total avec rabais; devrait s'imprimer ainsi :
 			//
@@ -979,7 +979,7 @@ namespace Epsitec.Cresus.Core
 			taxA1.ResultingTax = taxA1.Rate * taxA1.BaseAmount; // devrait être égal à 'totalA1.ResultingTax + lineA4.ResultingLineTax'
 			taxA1.Text = "TVA au taux standard";
 			
-			var totalA2 = this.DataContext.CreateEntity<TotalDocumentItemEntity> ();
+			var totalA2 = this.DataContext.CreateEntity<EndTotalDocumentItemEntity> ();
 
 			totalA2.Visibility = true;
 			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax1;
@@ -1061,7 +1061,7 @@ namespace Epsitec.Cresus.Core
 			articlePrice1.MinQuantity = 1;
 			articlePrice1.MaxQuantity = null;
 			articlePrice1.CurrencyCode = Business.Finance.CurrencyCode.Chf;
-			articlePrice1.ValueBeforeTax = price;
+			articlePrice1.Value = price;
 			if (articlePriceGroup1 != null) articlePrice1.PriceGroups.Add (articlePriceGroup1);
 			if (articlePriceGroup2 != null) articlePrice1.PriceGroups.Add (articlePriceGroup2);
 			if (articlePriceGroup3 != null) articlePrice1.PriceGroups.Add (articlePriceGroup3);

@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PriceDocumentItemEntity
+	public partial class SubTotalDocumentItemEntity
 	{
 		public override DocumentItemTabId TabId
 		{
@@ -48,6 +48,11 @@ namespace Epsitec.Cresus.Core.Entities
 		public override EntityStatus GetEntityStatus()
 		{
 			return EntityStatus.Valid;
+		}
+
+		public override void Process(Business.Finance.IDocumentPriceCalculator priceCalculator)
+		{
+			priceCalculator.Process (new Business.Finance.SubTotalPriceCalculator (priceCalculator.Document, this));
 		}
 	}
 }

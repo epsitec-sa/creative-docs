@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				var line = this.Entity.Lines[index-1];
 
-				if (line is TotalDocumentItemEntity ||
+				if (line is EndTotalDocumentItemEntity ||
 					line is TaxDocumentItemEntity   )
 				{
 					index--;  // insère avant le total
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			return (x is TextDocumentItemEntity    ||
 				    x is ArticleDocumentItemEntity ||
-				    x is PriceDocumentItemEntity   );
+				    x is SubTotalDocumentItemEntity   );
 		}
 
 

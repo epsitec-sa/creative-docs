@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var builder = new TextBuilder ();
 
-			builder.Append (Misc.PriceToString (this.ValueBeforeTax));
+			builder.Append (Misc.PriceToString (this.Value));
 
 			if (this.CurrencyCode.HasValue)
 			{

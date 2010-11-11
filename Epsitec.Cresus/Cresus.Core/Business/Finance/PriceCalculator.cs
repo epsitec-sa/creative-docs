@@ -48,5 +48,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				return null;
 			}
 		}
+
+		public static decimal Sum(params decimal?[] values)
+		{
+			decimal sum = 0;
+
+			foreach (var value in values)
+			{
+				if (value.HasValue)
+				{
+					sum += value.Value;
+				}
+			}
+
+			return sum;
+		}
 	}
 }

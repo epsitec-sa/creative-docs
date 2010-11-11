@@ -51,5 +51,10 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
+
+		public override void Process(Business.Finance.IDocumentPriceCalculator priceCalculator)
+		{
+			priceCalculator.Process (new Business.Finance.ArticlePriceCalculator (priceCalculator.Document, this));
+		}
 	}
 }

@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static int GetUserLinesCount(BusinessDocumentEntity x)
 		{
 			//	Retourne le nombre de lignes gérables par l'utilisateur.
-			return x.Lines.Count (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is PriceDocumentItemEntity));
+			return x.Lines.Count (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is SubTotalDocumentItemEntity));
 		}
 
 		public static void UpdatePrices(BusinessDocumentEntity x, DataContext dataContext)
@@ -141,9 +141,9 @@ namespace Epsitec.Cresus.Core.Helpers
 					primarySubtotalTax       += article.ResultingLineTax1.GetValueOrDefault (0);
 				}
 
-				if (line is PriceDocumentItemEntity)
+				if (line is SubTotalDocumentItemEntity)
 				{
-					var price = line as PriceDocumentItemEntity;
+					var price = line as SubTotalDocumentItemEntity;
 
 					//	Calcule PrimaryPriceBeforeTax et PrimaryTax, les prix sans rabais.
 					price.PrimaryPriceBeforeTax = primarySubtotalBeforeTax;
@@ -204,9 +204,9 @@ namespace Epsitec.Cresus.Core.Helpers
 					primarySubtotalTax       = 0;
 				}
 
-				if (line is TotalDocumentItemEntity)
+				if (line is EndTotalDocumentItemEntity)
 				{
-					var total = line as TotalDocumentItemEntity;
+					var total = line as EndTotalDocumentItemEntity;
 
 					if (totalRank == 0)  // ligne de total HT ?
 					{
@@ -255,9 +255,9 @@ namespace Epsitec.Cresus.Core.Helpers
 //					article.FinalLineTax1           = Misc.PriceConstrain (article.ResultingLineTax1           * discountRate);
 				}
 
-				if (line is PriceDocumentItemEntity)
+				if (line is SubTotalDocumentItemEntity)
 				{
-					var price = line as PriceDocumentItemEntity;
+					var price = line as SubTotalDocumentItemEntity;
 
 					price.FinalPriceBeforeTax = Misc.PriceConstrain (price.ResultingPriceBeforeTax * discountRate);
 					price.FinalTax            = Misc.PriceConstrain (price.ResultingTax            * discountRate);
@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			// Crée la dernière ligne de total.
-			var lastPrice = dataContext.CreateEntity<TotalDocumentItemEntity> ();
+			var lastPrice = dataContext.CreateEntity<EndTotalDocumentItemEntity> ();
 			lastPrice.Visibility = true;
 
 			x.Lines.Add (lastPrice);
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			// Crée la ligne de total.
-			var lastPrice = dataContext.CreateEntity<TotalDocumentItemEntity> ();
+			var lastPrice = dataContext.CreateEntity<EndTotalDocumentItemEntity> ();
 			lastPrice.Visibility = true;
 
 			int index = x.Lines.Count-2;  // avant la ligne de total TTC
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static bool HasAmount(PriceDocumentItemEntity price)
+		public static bool HasAmount(SubTotalDocumentItemEntity price)
 		{
 			if (price.Discount.DiscountRate.HasValue)
 			{
@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return false;
 		}
 
-		public static string GetAmount(PriceDocumentItemEntity price)
+		public static string GetAmount(SubTotalDocumentItemEntity price)
 		{
 			if (price.Discount.DiscountRate.HasValue)
 			{
@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		private static TotalDocumentItemEntity GetTotalEntityHT(BusinessDocumentEntity x)
+		private static EndTotalDocumentItemEntity GetTotalEntityHT(BusinessDocumentEntity x)
 		{
 			//	Retourne la ligne de total HT qui vient avant les lignes de TVA.
 			int index = x.Lines.Count-2;  // avant la ligne de total TTC
@@ -547,25 +547,25 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				var line = x.Lines[index--];
 
-				if (line is TotalDocumentItemEntity)
+				if (line is EndTotalDocumentItemEntity)
 				{
-					return line as TotalDocumentItemEntity;
+					return line as EndTotalDocumentItemEntity;
 				}
 			}
 
 			return null;
 		}
 
-		private static TotalDocumentItemEntity GetTotalEntityTTC(BusinessDocumentEntity x)
+		private static EndTotalDocumentItemEntity GetTotalEntityTTC(BusinessDocumentEntity x)
 		{
 			//	Retourne la ligne de total TTC qui doit obligatoirement terminer une liste.
 			if (x.Lines.Count > 0)
 			{
 				var lastLine = x.Lines.Last ();
 
-				if (lastLine is TotalDocumentItemEntity)
+				if (lastLine is EndTotalDocumentItemEntity)
 				{
-					return lastLine as TotalDocumentItemEntity;
+					return lastLine as EndTotalDocumentItemEntity;
 				}
 			}
 

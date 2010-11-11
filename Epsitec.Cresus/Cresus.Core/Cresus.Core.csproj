@@ -94,7 +94,7 @@
     <Compile Include="Business\Finance\TaxCalculator.cs" />
     <Compile Include="Business\Finance\TaxContext.cs" />
     <Compile Include="Business\Finance\TaxRateAmount.cs" />
-    <Compile Include="Business\Finance\TotalPriceCalculator.cs" />
+    <Compile Include="Business\Finance\SubTotalPriceCalculator.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />
@@ -157,7 +157,7 @@
     <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
     <Compile Include="Entities\PostBoxEntity.cs" />
     <Compile Include="Entities\StreetEntity.cs" />
-    <Compile Include="Entities\TotalDocumentItemEntity.cs" />
+    <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\PersonGenderEntity.cs" />
     <Compile Include="Entities\DocumentMetadataEntity.cs" />
@@ -243,7 +243,7 @@
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionTotalBusinessDocumentViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionEndTotalBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
@@ -320,7 +320,7 @@
     <Compile Include="Entities\ArticleDocumentItemEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity.cs" />
-    <Compile Include="Entities\PriceDocumentItemEntity.cs" />
+    <Compile Include="Entities\SubTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="Business\EsrHelper.cs" />
     <Compile Include="CommandHandlerStack.cs" />

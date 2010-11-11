@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
-	public class ArticlePriceCalculator
+	public class ArticlePriceCalculator : AbstractPriceCalculator
 	{
 		public ArticlePriceCalculator(BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
 		{
@@ -24,11 +24,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public int GroupIndex
+		public ArticleDocumentItemEntity ArticleItem
 		{
 			get
 			{
-				return this.articleItem.GroupIndex;
+				return this.articleItem;
 			}
 		}
 
@@ -148,7 +148,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
 		{
-			return articlePrice.ValueBeforeTax;
+			if (articlePrice.ValueIncludesTaxes)
+			{
+				throw new System.NotImplementedException ();
+			}
+			else
+			{
+				return articlePrice.Value;
+			}
 		}
 
 		private Tax ComputeTax(decimal articleValue)

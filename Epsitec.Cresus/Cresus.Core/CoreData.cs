@@ -500,8 +500,8 @@ namespace Epsitec.Cresus.Core
 			
 			yield return EntityInfo<ArticleDocumentItemEntity>.GetTypeId ();
 			yield return EntityInfo<TextDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<PriceDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<TotalDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<SubTotalDocumentItemEntity>.GetTypeId ();
+			yield return EntityInfo<EndTotalDocumentItemEntity>.GetTypeId ();
 			yield return EntityInfo<TaxDocumentItemEntity>.GetTypeId ();
 
 			yield return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
