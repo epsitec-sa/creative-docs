@@ -44,5 +44,18 @@ namespace Epsitec.Common.Support.Extensions
 
 			return -1;
 		}
+
+
+		/// <summary>
+		/// Appends one or more elements at the end of an <see cref="IEnumerable{T}"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
+		/// <param name="sequence">The sequence to which to append the new elements.</param>
+		/// <param name="elements">The elements to append to the sequence.</param>
+		/// <returns>A new <see cref="IEnumerable{T}"/> that contains the concatenation of the sequence and the elements.</returns>
+		public static IEnumerable<T> Append<T>(this IEnumerable<T> sequence, params T[] elements)
+		{
+			return sequence.Concat (elements);
+		}
 	}
 }
