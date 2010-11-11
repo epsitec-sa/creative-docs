@@ -88,11 +88,13 @@
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\ExchangeRateType.cs" />
     <Compile Include="Business\Finance\ArticlePriceCalculator.cs" />
+    <Compile Include="Business\Finance\DocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculator.cs" />
     <Compile Include="Business\Finance\Tax.cs" />
     <Compile Include="Business\Finance\TaxCalculator.cs" />
     <Compile Include="Business\Finance\TaxContext.cs" />
     <Compile Include="Business\Finance\TaxRateAmount.cs" />
+    <Compile Include="Business\Finance\TotalPriceCalculator.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />

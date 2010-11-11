@@ -24,6 +24,15 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
+		public int GroupIndex
+		{
+			get
+			{
+				return this.articleItem.GroupIndex;
+			}
+		}
+
+		
 		public void ComputePrice()
 		{
 			var roundingPolicy = this.priceRoundingMode.PriceRoundingPolicy;
@@ -43,9 +52,23 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (tax.GetTax (1), this.currencyCode);
 			
 			this.articleItem.FinalLinePriceBeforeTax = null;
+			
 			this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (0));
 			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (1));
 		}
+
+		public void AdjustFinalPrice(decimal adjustmentRate)
+		{
+			if (this.articleItem.NeverApplyDiscount)
+			{
+				this.articleItem.FinalLinePriceBeforeTax = this.articleItem.ResultingLinePriceBeforeTax;
+			}
+			else
+			{
+				this.articleItem.FinalLinePriceBeforeTax = PriceCalculator.ClipPriceValue (this.articleItem.ResultingLinePriceBeforeTax * adjustmentRate, this.currencyCode);
+			}
+		}
+
 
 		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
 		{
