@@ -67,9 +67,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return Misc.PercentToString (this.Entity.Discount.DiscountRate.Value);
 			}
 
-			if (this.Entity.Discount.DiscountAmount.HasValue)
+			if (this.Entity.Discount.Value.HasValue)
 			{
-				return Misc.PriceToString (this.Entity.Discount.DiscountAmount.Value);
+				return Misc.PriceToString (this.Entity.Discount.Value.Value);
 			}
 
 			return null;
@@ -95,25 +95,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (v == null)
 			{
 				this.Entity.Discount.DiscountRate   = null;
-				this.Entity.Discount.DiscountAmount = null;
+				this.Entity.Discount.Value = null;
 			}
 			else
 			{
 				if (percent)
 				{
 					this.Entity.Discount.DiscountRate = v;
-					this.Entity.Discount.DiscountAmount = null;
+					this.Entity.Discount.Value = null;
 				}
 				else
 				{
 					this.Entity.Discount.DiscountRate = null;
-					this.Entity.Discount.DiscountAmount = v;
+					this.Entity.Discount.Value = v;
 				}
 			}
 
-			if (this.Entity.Discount.DiscountRate.HasValue || this.Entity.Discount.DiscountAmount.HasValue)
+			if (this.Entity.Discount.DiscountRate.HasValue || this.Entity.Discount.Value.HasValue)
 			{
-				this.Entity.FixedPriceAfterTax = null;
+				this.Entity.FixedPrice = null;
 			}
 
 			this.UpdatePrices ();
@@ -122,17 +122,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private string GetFixedPriceAfterTax()
 		{
-			return Misc.PriceToString (this.Entity.FixedPriceAfterTax);
+			return Misc.PriceToString (this.Entity.FixedPrice);
 		}
 
 		private void SetFixedPriceAfterTax(string value)
 		{
-			this.Entity.FixedPriceAfterTax = Misc.StringToDecimal (value);
+			this.Entity.FixedPrice = Misc.StringToDecimal (value);
 
-			if (this.Entity.FixedPriceAfterTax.HasValue)
+			if (this.Entity.FixedPrice.HasValue)
 			{
 				this.Entity.Discount.DiscountRate   = null;
-				this.Entity.Discount.DiscountAmount = null;
+				this.Entity.Discount.Value = null;
 			}
 
 			this.UpdatePrices ();

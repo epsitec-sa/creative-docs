@@ -791,9 +791,9 @@ namespace Epsitec.Cresus.Core.Printers
 					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
 				}
 
-				if (line.Discounts[0].DiscountAmount.HasValue)
+				if (line.Discounts[0].Value.HasValue)
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].Value.Value));
 				}
 			}
 

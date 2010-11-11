@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
 		{
-			//	TODO: implement discount & rounding
+			//	TODO: implement discount & rounding, based either on price before or after tax...
 			return price;
 		}
 
@@ -118,9 +118,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		private decimal ComputeResultingLinePriceBeforeTax(RoundingPolicy roundingPolicy, decimal linePriceBeforeTax)
 		{
-			if (this.articleItem.FixedLinePriceBeforeTax.HasValue)
+			Tax tax = this.ComputeTax (linePriceBeforeTax);
+			
+			if (this.articleItem.FixedLinePrice.HasValue)
 			{
-				return this.articleItem.FixedLinePriceBeforeTax.Value;
+				decimal fixedLinePrice = this.articleItem.FixedLinePrice.Value;
+
+				if (this.articleItem.FixedLinePriceIncludesTaxes)
+				{
+					return tax.ComputeAmountBeforeTax (fixedLinePrice);
+				}
+				else
+				{
+					return fixedLinePrice;
+				}
 			}
 
 			foreach (var discount in this.articleItem.Discounts)
@@ -135,8 +146,6 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			if (roundingPolicy == RoundingPolicy.OnFinalPriceAfterTax)
 			{
-				Tax tax = this.ComputeTax (linePriceBeforeTax);
-
 				decimal linePriceAfterTax = linePriceBeforeTax + tax.TotalTax;
 
 				linePriceAfterTax  = this.priceRoundingMode.Round (linePriceAfterTax);

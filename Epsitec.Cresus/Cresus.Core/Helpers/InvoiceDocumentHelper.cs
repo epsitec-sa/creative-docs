@@ -150,20 +150,20 @@ namespace Epsitec.Cresus.Core.Helpers
 					price.PrimaryTax            = primarySubtotalTax;
 
 					//	Calcule ResultingPriceBeforeTax et ResultingTax, les prix après rabais.
-					if (price.FixedPriceAfterTax.HasValue)  // valeur imposée ?
+					if (price.FixedPrice.HasValue)  // valeur imposée ?
 					{
 						//	Utiliser une règle de 3 : ht final = ttc final / ttc calculé * ht calculé
-						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPriceAfterTax.Value / (1.0M + vatRate));
+						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPrice.Value / (1.0M + vatRate));
 						price.ResultingTax            = Misc.PriceConstrain (price.ResultingPriceBeforeTax.Value * vatRate);
 					}
-					else if (price.FixedPriceBeforeTax.HasValue)  // valeur imposée ?
+					else if (price.FixedPrice.HasValue)  // valeur imposée ?
 					{
-						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPriceBeforeTax);
+						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPrice);
 						price.ResultingTax            = Misc.PriceConstrain (price.ResultingPriceBeforeTax.GetValueOrDefault (0) * vatRate);
 					}
 					else
 					{
-						if (price.Discount.DiscountRate.HasValue || price.Discount.DiscountAmount.HasValue)  // rabais ?
+						if (price.Discount.DiscountRate.HasValue || price.Discount.Value.HasValue)  // rabais ?
 						{
 							if (price.Discount.DiscountRate.HasValue)
 							{
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Helpers
 							}
 							else
 							{
-								price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.Discount.DiscountAmount.GetValueOrDefault (0));
+								price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.Discount.Value.GetValueOrDefault (0));
 							}
 
 							//	règle de 3
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 
 					//	Génère les textes appropriés.
-					if (price.Discount.DiscountRate.HasValue || price.Discount.DiscountAmount.HasValue || price.FixedPriceAfterTax.HasValue)  // rabais ?
+					if (price.Discount.DiscountRate.HasValue || price.Discount.Value.HasValue || price.FixedPrice.HasValue)  // rabais ?
 					{
 						price.TextForPrimaryPrice   = "Sous-total avant rabais";
 						price.TextForResultingPrice = "Sous-total après rabais";
@@ -421,12 +421,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				return true;
 			}
 
-			if (price.Discount.DiscountAmount.HasValue)
+			if (price.Discount.Value.HasValue)
 			{
 				return true;
 			}
 
-			if (price.FixedPriceAfterTax.HasValue || price.FixedPriceBeforeTax.HasValue)
+			if (price.FixedPrice.HasValue)
 			{
 				return true;
 			}
@@ -441,12 +441,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				return Misc.PercentToString (price.Discount.DiscountRate);
 			}
 
-			if (price.Discount.DiscountAmount.HasValue)
+			if (price.Discount.Value.HasValue)
 			{
-				return Misc.PriceToString (price.Discount.DiscountAmount);
+				return Misc.PriceToString (price.Discount.Value);
 			}
 
-			if (price.FixedPriceAfterTax.HasValue || price.FixedPriceBeforeTax.HasValue)
+			if (price.FixedPrice.HasValue)
 			{
 				return Misc.PriceToString (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.ResultingPriceBeforeTax.GetValueOrDefault (0));
 			}
