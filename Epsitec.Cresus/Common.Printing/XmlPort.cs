@@ -40,6 +40,59 @@ namespace Epsitec.Common.Printing
 		}
 
 
+		#region Deserialisation
+		public static void Deserialize(string xmlSource, IPaintPort dstPort)
+		{
+			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
+			XElement root = doc.Element ("g");
+
+			foreach (var element in root.Elements ())
+			{
+				XmlPort.DeserializeGraphicState (element, dstPort);
+
+				if (element.Name == "surface")
+				{
+					string value = (string) element.Attribute ("path");
+					var path = XmlPort.DeserializePath (value);
+					dstPort.PaintSurface (path);
+				}
+				else if (element.Name == "outline")
+				{
+					string value = (string) element.Attribute ("path");
+					var path = XmlPort.DeserializePath (value);
+					dstPort.PaintOutline (path);
+				}
+				else if (element.Name == "text")
+				{
+				}
+				else if (element.Name == "image")
+				{
+				}
+				else
+				{
+					throw new System.ArgumentException ("Invalid serialized data");
+				}
+			}
+		}
+
+		private static void DeserializeGraphicState(XElement element, IPaintPort dstPort)
+		{
+			if (element.Attribute ("line-width") != null)
+			{
+				double value = (double) element.Attribute ("line-width");
+				dstPort.LineWidth = value;
+			}
+
+			if (element.Attribute ("color") != null)
+			{
+				string value = (string) element.Attribute ("color");
+				dstPort.Color = XmlPort.DeserializeColor (value);
+			}
+
+		}
+		#endregion
+
+
 		#region IPaintPort Members
 
 		public double LineWidth
@@ -334,8 +387,8 @@ namespace Epsitec.Common.Printing
 
 			var xml = new XElement ("text", text);
 
-			xml.Add (new XAttribute ("x", XmlPort.Truncate (x)));
-			xml.Add (new XAttribute ("y", XmlPort.Truncate (y)));
+			xml.Add (new XAttribute ("x", this.Truncate (x)));
+			xml.Add (new XAttribute ("y", this.Truncate (y)));
 			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
@@ -374,14 +427,14 @@ namespace Epsitec.Common.Printing
 
 			//	L'image doit avoir un identificateur, pour permettre la désérialisation !
 			xml.Add (new XAttribute ("id",            bitmap.Id));
-			xml.Add (new XAttribute ("fill-x",        XmlPort.Truncate (fillX)));
-			xml.Add (new XAttribute ("fill-y",        XmlPort.Truncate (fillY)));
-			xml.Add (new XAttribute ("fill-width",    XmlPort.Truncate (fillWidth)));
-			xml.Add (new XAttribute ("fill-height",   XmlPort.Truncate (fillHeight)));
-			xml.Add (new XAttribute ("image-originX", XmlPort.Truncate (imageOriginX)));
-			xml.Add (new XAttribute ("image-originY", XmlPort.Truncate (imageOriginY)));
-			xml.Add (new XAttribute ("image-width",   XmlPort.Truncate (imageWidth)));
-			xml.Add (new XAttribute ("image-height",  XmlPort.Truncate (imageHeight)));
+			xml.Add (new XAttribute ("fill-x",        this.Truncate (fillX)));
+			xml.Add (new XAttribute ("fill-y",        this.Truncate (fillY)));
+			xml.Add (new XAttribute ("fill-width",    this.Truncate (fillWidth)));
+			xml.Add (new XAttribute ("fill-height",   this.Truncate (fillHeight)));
+			xml.Add (new XAttribute ("image-originX", this.Truncate (imageOriginX)));
+			xml.Add (new XAttribute ("image-originY", this.Truncate (imageOriginY)));
+			xml.Add (new XAttribute ("image-width",   this.Truncate (imageWidth)));
+			xml.Add (new XAttribute ("image-height",  this.Truncate (imageHeight)));
 			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
@@ -396,7 +449,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.lineWidth = this.currentState.lineWidth;
 
-				xml.Add (new XAttribute ("line-width", XmlPort.Truncate (this.lastState.lineWidth)));
+				xml.Add (new XAttribute ("line-width", this.Truncate (this.lastState.lineWidth)));
 			}
 
 			if (this.lastState.lineJoin != this.currentState.lineJoin)
@@ -417,7 +470,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
 
-				xml.Add (new XAttribute ("line-miter-limit", XmlPort.Truncate (this.lastState.lineMiterLimit)));
+				xml.Add (new XAttribute ("line-miter-limit", this.Truncate (this.lastState.lineMiterLimit)));
 			}
 
 			if (this.lastState.imageFilter != this.currentState.imageFilter)
@@ -438,8 +491,8 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
 
-				xml.Add (new XAttribute ("image-final-size-width",  XmlPort.Truncate (this.lastState.imageFinalSize.Width)));
-				xml.Add (new XAttribute ("image-final-size-height", XmlPort.Truncate (this.lastState.imageFinalSize.Height)));
+				xml.Add (new XAttribute ("image-final-size-width",  this.Truncate (this.lastState.imageFinalSize.Width)));
+				xml.Add (new XAttribute ("image-final-size-height", this.Truncate (this.lastState.imageFinalSize.Height)));
 			}
 
 			if (this.lastState.color != this.currentState.color)
@@ -453,10 +506,10 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.clip = this.currentState.clip;
 
-				xml.Add (new XAttribute ("clip-left",   XmlPort.Truncate (this.lastState.clip.Left)));
-				xml.Add (new XAttribute ("clip-bottom", XmlPort.Truncate (this.lastState.clip.Bottom)));
-				xml.Add (new XAttribute ("clip-width",  XmlPort.Truncate (this.lastState.clip.Width)));
-				xml.Add (new XAttribute ("clip-height", XmlPort.Truncate (this.lastState.clip.Height)));
+				xml.Add (new XAttribute ("clip-left",   this.Truncate (this.lastState.clip.Left)));
+				xml.Add (new XAttribute ("clip-bottom", this.Truncate (this.lastState.clip.Bottom)));
+				xml.Add (new XAttribute ("clip-width",  this.Truncate (this.lastState.clip.Width)));
+				xml.Add (new XAttribute ("clip-height", this.Truncate (this.lastState.clip.Height)));
 			}
 
 			if (this.lastState.transform != this.currentState.transform)
@@ -491,7 +544,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.fontSize = this.currentState.fontSize;
 
-				xml.Add (new XAttribute ("font-size", XmlPort.Truncate (this.lastState.fontSize)));
+				xml.Add (new XAttribute ("font-size", this.Truncate (this.lastState.fontSize)));
 			}
 		}
 
@@ -501,7 +554,7 @@ namespace Epsitec.Common.Printing
 			return string.Concat ("#", Color.ToHexa (color));
 		}
 
-		private Color DeserializeColor(string value)
+		private static Color DeserializeColor(string value)
 		{
 			if (value.StartsWith ("#"))
 			{
@@ -519,7 +572,7 @@ namespace Epsitec.Common.Printing
 			return this.pathSerializer.Serialize (path);
 		}
 
-		private Path DeserializePath(string value)
+		private static Path DeserializePath(string value)
 		{
 			return PathSerializer.Parse (value);
 		}
@@ -530,17 +583,15 @@ namespace Epsitec.Common.Printing
 			return this.transformSerializer.Serialize (transform);
 		}
 
-		private Transform DeserializeTransform(string value)
+		private static Transform DeserializeTransform(string value)
 		{
 			return TransformSerializer.Parse (value);
 		}
 
 
-		private static double Truncate(double value, int numberOfDecimal=2)
+		private string Truncate(double value)
 		{
-			//	Retourne un nombre tronqué à un certain nombre de décimales.
-			double factor = System.Math.Pow (10, numberOfDecimal);
-			return System.Math.Floor (value*factor) / factor;
+			return this.pathSerializer.Serialize (value);
 		}
 
 

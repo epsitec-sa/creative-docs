@@ -22,12 +22,12 @@ namespace Epsitec.Common.Drawing.Serializers
 		}
 
 
-		protected string Serialize(Point p)
+		public string Serialize(Point p)
 		{
 			return string.Concat (this.Serialize (p.X), " ", this.Serialize (p.Y));
 		}
 
-		protected string Serialize(double value)
+		public string Serialize(double value)
 		{
 			double factor = System.Math.Pow (10, this.resolution);
 			value = System.Math.Floor (value*factor) / factor;
