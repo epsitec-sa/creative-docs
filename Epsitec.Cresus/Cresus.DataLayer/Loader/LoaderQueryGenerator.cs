@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// sql requests to the database. The new way might contain some bugs, therefore I left
 			// the code for the old way and you can switch which way you want to take. You should
 			// use the new way, but if this creates a bug, tell me of it and use the old way until
-			// I correct the bug.
+			// I correct the bug. If you modify this here, modify it also in the three other places.
 			// Marc
 
 			// Old version of the loader query generator.
@@ -169,9 +169,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction innerTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData2 (innerTransaction, request);
-				referencesData = this.GetReferenceData2 (innerTransaction, request);
-				collectionsData = this.GetCollectionData2 (innerTransaction, request);
+				valuesData = this.GetValueData (innerTransaction, request);
+				referencesData = this.GetReferenceData (innerTransaction, request);
+				collectionsData = this.GetCollectionData (innerTransaction, request);
 
 				innerTransaction.Commit ();
 			}
@@ -339,7 +339,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region GET VALUE DATA
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueData(DbTransaction transaction, Request request)
+		public Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueData(DbTransaction transaction, Request request)
+		{
+			// HACK This method acts as a switch between the old and the new way of generating
+			// sql requests to the database. The new way might contain some bugs, therefore I left
+			// the code for the old way and you can switch which way you want to take. You should
+			// use the new way, but if this creates a bug, tell me of it and use the old way until
+			// I correct the bug. If you modify this here, modify it also in the three other places.
+			// Marc
+
+			// Old version of the loader query generator.
+			// Should be reliable.
+
+			//return this.GetValueDataOld (transaction, request);
+
+			// New version of the loader query generator.
+			// Might contain some bugs.
+
+			return this.GetValueDataNew (transaction, request);
+		}
+
+
+		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueDataOld(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, ValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, ValueData>> ();
 
@@ -430,7 +451,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		// ======================================================================== \\
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueData2(DbTransaction transaction, Request request)
+		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueDataNew(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, ValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, ValueData>> ();
 
@@ -517,7 +538,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region GET REFERENCE DATA
 
 
-		private Dictionary<DbKey, ReferenceData> GetReferenceData(DbTransaction transaction, Request request)
+		public Dictionary<DbKey, ReferenceData> GetReferenceData(DbTransaction transaction, Request request)
+		{
+			// HACK This method acts as a switch between the old and the new way of generating
+			// sql requests to the database. The new way might contain some bugs, therefore I left
+			// the code for the old way and you can switch which way you want to take. You should
+			// use the new way, but if this creates a bug, tell me of it and use the old way until
+			// I correct the bug. If you modify this here, modify it also in the three other places.
+			// Marc
+
+			// Old version of the loader query generator.
+			// Should be reliable.
+
+			//return this.GetReferenceDataOld (transaction, request);
+
+			// New version of the loader query generator.
+			// Might contain some bugs.
+
+			return this.GetReferenceDataNew (transaction, request);
+		}
+		
+		
+		private Dictionary<DbKey, ReferenceData> GetReferenceDataOld(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, ReferenceData> references = new Dictionary<DbKey, ReferenceData> ();
 
@@ -591,7 +633,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		// ======================================================================== \\
 
 
-		private Dictionary<DbKey, ReferenceData> GetReferenceData2(DbTransaction transaction, Request request)
+		private Dictionary<DbKey, ReferenceData> GetReferenceDataNew(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, ReferenceData> references = new Dictionary<DbKey, ReferenceData> ();
 
@@ -661,7 +703,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region GET COLLECTION DATA
 
 
-		private Dictionary<DbKey, CollectionData> GetCollectionData(DbTransaction transaction, Request request)
+		public Dictionary<DbKey, CollectionData> GetCollectionData(DbTransaction transaction, Request request)
+		{
+			// HACK This method acts as a switch between the old and the new way of generating
+			// sql requests to the database. The new way might contain some bugs, therefore I left
+			// the code for the old way and you can switch which way you want to take. You should
+			// use the new way, but if this creates a bug, tell me of it and use the old way until
+			// I correct the bug. If you modify this here, modify it also in the three other places.
+			// Marc
+
+			// Old version of the loader query generator.
+			// Should be reliable.
+
+			//return this.GetCollectionDataOld (transaction, request);
+
+			// New version of the loader query generator.
+			// Might contain some bugs.
+
+			return this.GetCollectionDataNew (transaction, request);
+		}
+
+
+		private Dictionary<DbKey, CollectionData> GetCollectionDataOld(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, CollectionData> collectionData = new Dictionary<DbKey, CollectionData> ();
 
@@ -744,7 +807,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		// ======================================================================== \\
 
 
-		private Dictionary<DbKey, CollectionData> GetCollectionData2(DbTransaction transaction, Request request)
+		private Dictionary<DbKey, CollectionData> GetCollectionDataNew(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, CollectionData> collectionData = new Dictionary<DbKey, CollectionData> ();
 
