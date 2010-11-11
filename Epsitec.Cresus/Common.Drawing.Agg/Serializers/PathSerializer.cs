@@ -1,0 +1,115 @@
+//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Responsable: Daniel ROUX
+
+using System.Collections.Generic;
+using System;
+namespace Epsitec.Common.Drawing.Serializers
+{
+	public class PathSerializer : AbstractSerializer
+	{
+		public string Serialize(Path path)
+		{
+			if (path.IsEmpty)
+			{
+				return "";
+			}
+
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements (out elements, out points);
+
+			var buffer = new System.Text.StringBuilder ();
+
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
+			bool addSpace = false;
+			int i = 0;
+			while (i < elements.Length)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						p1 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("M ");
+						buffer.Append (this.Serialize (p1));
+						addSpace = true;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("L ");
+						buffer.Append (this.Serialize (p1));
+						addSpace = true;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("Q ");
+						buffer.Append (this.Serialize (p1));
+						buffer.Append (this.Serialize (p2));
+						addSpace = true;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("C ");
+						buffer.Append (this.Serialize (p1));
+						buffer.Append (this.Serialize (p2));
+						buffer.Append (this.Serialize (p3));
+						addSpace = true;
+						break;
+
+					default:
+						if ((elements[i] & PathElement.FlagClose) != 0)
+						{
+							if (addSpace)
+							{
+								buffer.Append (" ");
+							}
+
+							buffer.Append ("Z");
+							addSpace = true;
+						}
+						i++;
+						break;
+				}
+			}
+
+			return buffer.ToString ();
+		}
+
+
+		public static Path FromDeserialize(string value)
+		{
+			return new Path ();  // TODO: ...
+		}
+	}
+}

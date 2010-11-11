@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing.Serializers;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -24,6 +25,12 @@ namespace Epsitec.Common.Printing
 
 			this.xRoot = new XElement ("g");
 			this.xDocument.Add (this.xRoot);
+
+			this.pathSerializer = new PathSerializer ();
+			this.pathSerializer.Resolution = 2;
+
+			this.transformSerializer = new TransformSerializer ();
+			this.transformSerializer.Resolution = 2;
 		}
 
 		public string XmlSource
@@ -297,7 +304,7 @@ namespace Epsitec.Common.Printing
 		{
 			var xml = new XElement ("outline");
 
-			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			xml.Add (new XAttribute ("path", this.Serialize (path)));
 			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
@@ -307,7 +314,7 @@ namespace Epsitec.Common.Printing
 		{
 			var xml = new XElement ("surface");
 
-			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			xml.Add (new XAttribute ("path", this.Serialize (path)));
 			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
@@ -447,7 +454,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.transform = this.currentState.transform;
 
-				xml.Add (new XAttribute ("transform", XmlPort.Serialize (this.lastState.transform)));
+				xml.Add (new XAttribute ("transform", this.Serialize (this.lastState.transform)));
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode)
@@ -523,25 +530,25 @@ namespace Epsitec.Common.Printing
 		}
 
 
-		private static string Serialize(Path path)
+		private string Serialize(Path path)
 		{
-			return path.Serialize ();
+			return this.pathSerializer.Serialize (path);
 		}
 
 		private Path DeserializePath(string value)
 		{
-			return Path.FromDeserialize (value);
+			return PathSerializer.FromDeserialize (value);
 		}
 
 
-		private static string Serialize(Transform transform)
+		private string Serialize(Transform transform)
 		{
-			return transform.Serialize ();
+			return this.transformSerializer.Serialize (transform);
 		}
 
 		private Transform DeserializeTransform(string value)
 		{
-			return Transform.FromDeserialize (value);
+			return TransformSerializer.FromDeserialize (value);
 		}
 
 
@@ -556,6 +563,8 @@ namespace Epsitec.Common.Printing
 		private readonly Stack<ColorModifierCallback>	stackColorModifier;
 		private readonly XDocument						xDocument;
 		private readonly XElement						xRoot;
+		private readonly PathSerializer					pathSerializer;
+		private readonly TransformSerializer			transformSerializer;
 
 		private GraphicState							currentState = new GraphicState ();
 		private GraphicState							lastState    = new GraphicState ();
