@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.persistenceManager = new PersistenceManager ();
 
-			this.data = new CoreData (forceDatabaseCreation: false	);
+			this.data = new CoreData (forceDatabaseCreation: false);
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);

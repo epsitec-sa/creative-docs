@@ -870,6 +870,111 @@ namespace Epsitec.Common.Drawing
 			buffer.Append ("\r\n");
 			return buffer.ToString ();
 		}
+
+
+		public string Serialize()
+		{
+			if (this.isEmpty)
+			{
+				return "";
+			}
+
+			PathElement[] elements;
+			Point[] points;
+			this.GetElements (out elements, out points);
+
+			var buffer = new System.Text.StringBuilder ();
+
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
+			bool addSpace = false;
+			int i = 0;
+			while (i < elements.Length)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						p1 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("M ");
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						addSpace = true;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("L ");
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						addSpace = true;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("Q ");
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p2.X, p2.Y));
+						addSpace = true;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+
+						if (addSpace)
+						{
+							buffer.Append (" ");
+						}
+
+						buffer.Append ("C ");
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p1.X, p1.Y));
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p2.X, p2.Y));
+						buffer.Append (System.String.Format ("{0:0.00} {1:0.00}", p3.X, p3.Y));
+						addSpace = true;
+						break;
+
+					default:
+						if ((elements[i] & PathElement.FlagClose) != 0)
+						{
+							if (addSpace)
+							{
+								buffer.Append (" ");
+							}
+
+							buffer.Append ("Z");
+							addSpace = true;
+						}
+						i++;
+						break;
+				}
+			}
+
+			return buffer.ToString ();
+		}
+
+		public static Path FromDeserialize(string value)
+		{
+			return new Path ();  // TODO: ...
+		}
 		
 		
 		public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()

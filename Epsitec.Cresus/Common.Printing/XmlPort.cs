@@ -11,7 +11,6 @@ namespace Epsitec.Common.Printing
 	{
 		public XmlPort()
 		{
-			this.transform = Transform.Identity;
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
@@ -23,7 +22,7 @@ namespace Epsitec.Common.Printing
 				new XComment ("Saved on " + timeStamp)
 			);
 
-			this.xRoot = new XElement ("root");
+			this.xRoot = new XElement ("g");
 			this.xDocument.Add (this.xRoot);
 		}
 
@@ -43,18 +42,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.lineWidth;
+				return this.currentState.lineWidth;
 			}
 			set
 			{
-				if (this.lineWidth != value)
-				{
-					this.lineWidth = value;
-
-					var xml = new XElement ("lineWidth");
-					XmlPort.Add (xml, this.lineWidth);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.lineWidth = value;
 			}
 		}
 
@@ -62,19 +54,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.lineJoin;
+				return this.currentState.lineJoin;
 			}
 			set
 			{
-				if (this.lineJoin != value)
-				{
-					this.lineJoin = value;
-
-					var xml = new XElement ("lineJoin");
-					xml.Add (new XAttribute ("value", this.lineJoin));
-
-					this.xRoot.Add (xml);
-				}
+				this.currentState.lineJoin = value;
 			}
 		}
 
@@ -82,18 +66,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.lineCap;
+				return this.currentState.lineCap;
 			}
 			set
 			{
-				if (this.lineCap != value)
-				{
-					this.lineCap = value;
-
-					var xml = new XElement ("lineCap");
-					xml.Add (new XAttribute ("value", this.lineCap));
-					this.xRoot.Add (xml);
-				}
+				this.currentState.lineCap = value;
 			}
 		}
 
@@ -101,18 +78,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.lineMiterLimit;
+				return this.currentState.lineMiterLimit;
 			}
 			set
 			{
-				if (this.lineMiterLimit != value)
-				{
-					this.lineMiterLimit = value;
-
-					var xml = new XElement ("lineMiterLimit");
-					XmlPort.Add (xml, this.lineMiterLimit);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.lineMiterLimit = value;
 			}
 		}
 
@@ -120,11 +90,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return RichColor.FromColor (this.originalColor);
+				return RichColor.FromColor (this.currentState.originalColor);
 			}
 			set
 			{
-				this.originalColor = value.Basic;
+				this.currentState.originalColor = value.Basic;
 				this.FinalColor = this.GetFinalColor (value.Basic);
 			}
 		}
@@ -133,11 +103,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.originalColor;
+				return this.currentState.originalColor;
 			}
 			set
 			{
-				this.originalColor = value;
+				this.currentState.originalColor = value;
 				this.FinalColor = this.GetFinalColor (value);
 			}
 		}
@@ -146,7 +116,7 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return RichColor.FromColor (this.color);
+				return RichColor.FromColor (this.currentState.color);
 			}
 			set
 			{
@@ -158,18 +128,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.color;
+				return this.currentState.color;
 			}
 			set
 			{
-				if (this.color != value)
-				{
-					this.color = value;
-
-					var xml = new XElement ("color");
-					XmlPort.Add (xml, this.color);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.color = value;
 			}
 		}
 
@@ -177,18 +140,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.transform;
+				return this.currentState.transform;
 			}
 			set
 			{
-				if (this.transform != value)
-				{
-					this.transform = value;
-
-					var xml = new XElement ("transform");
-					XmlPort.Add (xml, this.transform);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.transform = value;
 			}
 		}
 
@@ -196,18 +152,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.fillMode;
+				return this.currentState.fillMode;
 			}
 			set
 			{
-				if (this.fillMode != value)
-				{
-					this.fillMode = value;
-
-					var xml = new XElement ("fillMode");
-					xml.Add (new XAttribute ("value", this.fillMode));
-					this.xRoot.Add (xml);
-				}
+				this.currentState.fillMode = value;
 			}
 		}
 
@@ -215,18 +164,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.imageFilter;
+				return this.currentState.imageFilter;
 			}
 			set
 			{
-				if (this.imageFilter != value)
-				{
-					this.imageFilter = value;
-
-					var xml = new XElement ("imageFilter");
-					xml.Add (new XAttribute ("value", this.imageFilter));
-					this.xRoot.Add (xml);
-				}
+				this.currentState.imageFilter = value;
 			}
 		}
 
@@ -234,18 +176,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.imageCrop;
+				return this.currentState.imageCrop;
 			}
 			set
 			{
-				if (this.imageCrop != value)
-				{
-					this.imageCrop = value;
-
-					var xml = new XElement ("imageCrop");
-					XmlPort.Add (xml, this.imageCrop);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.imageCrop = value;
 			}
 		}
 
@@ -253,18 +188,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.imageFinalSize;
+				return this.currentState.imageFinalSize;
 			}
 			set
 			{
-				if (this.imageFinalSize != value)
-				{
-					this.imageFinalSize = value;
-
-					var xml = new XElement ("imageFinalSize");
-					XmlPort.Add (xml, this.imageFinalSize);
-					this.xRoot.Add (xml);
-				}
+				this.currentState.imageFinalSize = value;
 			}
 		}
 
@@ -272,7 +200,7 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.clip.IsSurfaceZero;
+				return this.currentState.clip.IsSurfaceZero;
 			}
 		}
 
@@ -314,22 +242,22 @@ namespace Epsitec.Common.Printing
 
 		public void SetClippingRectangle(Rectangle rect)
 		{
-			this.clip = Rectangle.Intersection (this.clip, rect);
+			this.currentState.clip = Rectangle.Intersection (this.currentState.clip, rect);
 		}
 
 		public Rectangle SaveClippingRectangle()
 		{
-			return this.clip;
+			return this.currentState.clip;
 		}
 
 		public void RestoreClippingRectangle(Rectangle rect)
 		{
-			this.clip = rect;
+			this.currentState.clip = rect;
 		}
 
 		public void ResetClippingRectangle()
 		{
-			this.clip = Drawing.Rectangle.MaxValue;
+			this.currentState.clip = Drawing.Rectangle.MaxValue;
 		}
 
 		public void Align(ref double x, ref double y)
@@ -339,43 +267,49 @@ namespace Epsitec.Common.Printing
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			Drawing.Transform scale = Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy);
-			this.Transform = scale.MultiplyBy (this.transform);
+			this.Transform = scale.MultiplyBy (this.currentState.transform);
 		}
 
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
 			Drawing.Transform rotation = Drawing.Transform.CreateRotationDegTransform (angle, cx, cy);
-			this.Transform = rotation.MultiplyBy (this.transform);
+			this.Transform = rotation.MultiplyBy (this.currentState.transform);
 		}
 
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
 			Drawing.Transform rotation = Drawing.Transform.CreateRotationRadTransform (angle, cx, cy);
-			this.Transform = rotation.MultiplyBy (this.transform);
+			this.Transform = rotation.MultiplyBy (this.currentState.transform);
 		}
 
 		public void TranslateTransform(double ox, double oy)
 		{
 			Drawing.Transform translation = Drawing.Transform.CreateTranslationTransform (ox, oy);
-			this.Transform = translation.MultiplyBy (this.transform);
+			this.Transform = translation.MultiplyBy (this.currentState.transform);
 		}
 
 		public void MergeTransform(Transform transform)
 		{
-			this.Transform = transform.MultiplyBy (this.transform);
+			this.Transform = transform.MultiplyBy (this.currentState.transform);
 		}
 
 		public void PaintOutline(Path path)
 		{
-			var xml = new XElement ("paintOutline");
-			XmlPort.Add (xml, path);
+			var xml = new XElement ("outline");
+
+			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			this.UpdateGraphicState (xml);
+
 			this.xRoot.Add (xml);
 		}
 
 		public void PaintSurface(Path path)
 		{
-			var xml = new XElement ("paintSurface");
-			XmlPort.Add (xml, path);
+			var xml = new XElement ("surface");
+
+			xml.Add (new XAttribute ("path", XmlPort.Serialize (path)));
+			this.UpdateGraphicState (xml);
+
 			this.xRoot.Add (xml);
 		}
 
@@ -390,11 +324,16 @@ namespace Epsitec.Common.Printing
 
 		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
 		{
-			var xml = new XElement ("paintText");
-			XmlPort.Add (xml, new Point (x, y));
-			XmlPort.Add (xml, text);
-			XmlPort.Add (xml, font);
-			XmlPort.Add (xml, size, "size");
+			this.currentState.fontFace  = font.FaceName;
+			this.currentState.fontStyle = font.StyleName;
+			this.currentState.fontSize  = size;
+
+			var xml = new XElement ("text", text);
+
+			xml.Add (new XAttribute ("x", XmlPort.Truncate (x)));
+			xml.Add (new XAttribute ("y", XmlPort.Truncate (y)));
+			this.UpdateGraphicState (xml);
+
 			this.xRoot.Add (xml);
 
 			return 0;
@@ -427,7 +366,9 @@ namespace Epsitec.Common.Printing
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			var xml = new XElement ("paintImage");
+#if false
+			var xml = new XElement ("image");
+
 			XmlPort.Add (xml, fillX, "fillX");
 			XmlPort.Add (xml, fillY, "fillY");
 			XmlPort.Add (xml, fillWidth, "fillWidth");
@@ -436,67 +377,104 @@ namespace Epsitec.Common.Printing
 			XmlPort.Add (xml, imageOriginY, "imageOriginY");
 			XmlPort.Add (xml, imageWidth, "imageWidth");
 			XmlPort.Add (xml, imageHeight, "imageHeight");
+
 			XmlPort.Add (xml, bitmap);
 			this.xRoot.Add (xml);
+#endif
 		}
 
 		#endregion
 
 
-		private static void Add(XElement xml, double value, string name="value")
+		private void UpdateGraphicState(XElement xml)
 		{
-			xml.Add (new XAttribute (name, XmlPort.Truncate (value)));
+			if (this.lastState.lineWidth != this.currentState.lineWidth)
+			{
+				this.lastState.lineWidth = this.currentState.lineWidth;
+
+				xml.Add (new XAttribute ("lineWidth", XmlPort.Truncate (this.lastState.lineWidth)));
+			}
+
+			if (this.lastState.lineJoin != this.currentState.lineJoin)
+			{
+				this.lastState.lineJoin = this.currentState.lineJoin;
+
+				xml.Add (new XAttribute ("lineJoin", this.lastState.lineJoin));
+			}
+
+			if (this.lastState.lineCap != this.currentState.lineCap)
+			{
+				this.lastState.lineCap = this.currentState.lineCap;
+
+				xml.Add (new XAttribute ("lineCap", this.lastState.lineCap));
+			}
+
+			if (this.lastState.lineMiterLimit != this.currentState.lineMiterLimit)
+			{
+				this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
+
+				xml.Add (new XAttribute ("lineMiterLimit", XmlPort.Truncate (this.lastState.lineMiterLimit)));
+			}
+
+			if (this.lastState.imageFilter != this.currentState.imageFilter)
+			{
+				this.lastState.imageFilter = this.currentState.imageFilter;
+			}
+
+			if (this.lastState.imageCrop != this.currentState.imageCrop)
+			{
+				this.lastState.imageCrop = this.currentState.imageCrop;
+			}
+
+			if (this.lastState.imageFinalSize != this.currentState.imageFinalSize)
+			{
+				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
+			}
+
+			if (this.lastState.color != this.currentState.color)
+			{
+				this.lastState.color = this.currentState.color;
+
+				xml.Add (new XAttribute ("color", XmlPort.Serialize (this.lastState.color)));
+			}
+
+			if (this.lastState.clip != this.currentState.clip)
+			{
+				this.lastState.clip = this.currentState.clip;
+			}
+
+			if (this.lastState.transform != this.currentState.transform)
+			{
+				this.lastState.transform = this.currentState.transform;
+			}
+
+			if (this.lastState.fillMode != this.currentState.fillMode)
+			{
+				this.lastState.fillMode = this.currentState.fillMode;
+			}
+
+			if (this.lastState.fontFace != this.currentState.fontFace)
+			{
+				this.lastState.fontFace = this.currentState.fontFace;
+
+				xml.Add (new XAttribute ("fontFamily", this.lastState.fontFace));
+			}
+
+			if (this.lastState.fontStyle != this.currentState.fontStyle)
+			{
+				this.lastState.fontStyle = this.currentState.fontStyle;
+
+				xml.Add (new XAttribute ("fontStyle", this.lastState.fontStyle));
+			}
+
+			if (this.lastState.fontSize != this.currentState.fontSize)
+			{
+				this.lastState.fontSize = this.currentState.fontSize;
+
+				xml.Add (new XAttribute ("fontSize", XmlPort.Truncate (this.lastState.fontSize)));
+			}
 		}
 
-		private static void Add(XElement xml, string text, string name="text")
-		{
-			xml.Add (new XAttribute (name, text));
-		}
-
-		private static void Add(XElement xml, Point pos)
-		{
-			xml.Add (new XAttribute ("x", XmlPort.Truncate (pos.X)));
-			xml.Add (new XAttribute ("y", XmlPort.Truncate (pos.Y)));
-		}
-
-		private static void Add(XElement xml, Size size)
-		{
-			xml.Add (new XAttribute ("width",  XmlPort.Truncate (size.Width)));
-			xml.Add (new XAttribute ("height", XmlPort.Truncate (size.Height)));
-		}
-
-		private static void Add(XElement xml, Rectangle rect)
-		{
-			xml.Add (new XAttribute ("rect", rect.ToString ()));
-		}
-
-		private static void Add(XElement xml, Margins margins)
-		{
-			xml.Add (new XAttribute ("margins", margins.ToString ()));
-		}
-
-		private static void Add(XElement xml, Color color)
-		{
-			xml.Add (new XAttribute ("hexa", Color.ToHexa (color)));
-			xml.Add (new XAttribute ("a", XmlPort.Truncate (color.A)));
-		}
-
-		private static void Add(XElement xml, Font font)
-		{
-			xml.Add (new XAttribute ("face",  font.FaceName));
-			xml.Add (new XAttribute ("style", font.StyleName));
-		}
-
-		private static void Add(XElement xml, Transform transform)
-		{
-			xml.Add (new XAttribute ("matrix", transform.ToString ()));
-		}
-
-		private static void Add(XElement xml, Path path)
-		{
-			string s = path.ToString ().Replace ("\r\n", " ");
-			xml.Add (new XAttribute ("path", s));
-		}
 
 		private static void Add(XElement xml, Image image)
 		{
@@ -522,7 +500,37 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
-		public static double Truncate(double value, int numberOfDecimal=3)
+
+		private static string Serialize(Color color)
+		{
+			return string.Concat ("#", Color.ToHexa (color));
+		}
+
+		private Color DeserializeColor(string value)
+		{
+			if (value.StartsWith ("#"))
+			{
+				return Color.FromHexa (value.Substring (1));
+			}
+			else
+			{
+				return Color.Empty;
+			}
+		}
+
+
+		private static string Serialize(Path path)
+		{
+			return path.Serialize ();
+		}
+
+		private Path DeserializePath(string value)
+		{
+			return Path.FromDeserialize (value);
+		}
+
+
+		private static double Truncate(double value, int numberOfDecimal=3)
 		{
 			//	Retourne un nombre tronqué à un certain nombre de décimales.
 			double factor = System.Math.Pow (10, numberOfDecimal);
@@ -534,17 +542,27 @@ namespace Epsitec.Common.Printing
 		private readonly XDocument						xDocument;
 		private readonly XElement						xRoot;
 
-		private double									lineWidth      = 1.0;
-		private JoinStyle								lineJoin       = JoinStyle.Miter;
-		private CapStyle								lineCap        = CapStyle.Square;
-		private double									lineMiterLimit = 4.0;
-		private ImageFilter								imageFilter;
-		private Margins									imageCrop;
-		private Size									imageFinalSize;
-		private Color									originalColor  = Color.FromRgb (0, 0, 0);
-		private Color									color          = Color.FromRgb (0, 0, 0);
-		private Rectangle								clip           = Rectangle.MaxValue;
-		private Transform								transform      = Transform.Identity;
-		private FillMode								fillMode       = FillMode.NonZero;
+		private GraphicState							currentState = new GraphicState ();
+		private GraphicState							lastState    = new GraphicState ();
+
+
+		private class GraphicState
+		{
+			public double								lineWidth      = 1.0;
+			public JoinStyle							lineJoin       = JoinStyle.Miter;
+			public CapStyle								lineCap        = CapStyle.Square;
+			public double								lineMiterLimit = 4.0;
+			public ImageFilter							imageFilter;
+			public Margins								imageCrop;
+			public Size									imageFinalSize;
+			public Color								originalColor  = Color.FromRgb (0, 0, 0);
+			public Color								color          = Color.FromRgb (0, 0, 0);
+			public Rectangle							clip           = Rectangle.MaxValue;
+			public Transform							transform      = Transform.Identity;
+			public FillMode								fillMode       = FillMode.NonZero;
+			public string								fontFace       = "Arial";
+			public string								fontStyle      = "Regular";
+			public double								fontSize       = 10.0;
+		}
 	}
 }
