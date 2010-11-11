@@ -109,7 +109,62 @@ namespace Epsitec.Common.Drawing.Serializers
 
 		public static Path FromDeserialize(string value)
 		{
-			return new Path ();  // TODO: ...
+			var path = new Path ();
+
+			if (!string.IsNullOrWhiteSpace (value))
+			{
+				var list = value.Split (' ');
+
+				int i = 0;
+				while (i < list.Length)
+				{
+					switch (list[i++])
+					{
+						case "M":
+							path.MoveTo (PathSerializer.GetPoint (list, ref i));
+							break;
+
+						case "L":
+							path.LineTo (PathSerializer.GetPoint (list, ref i));
+							break;
+
+						case "Q":
+							path.CurveTo (PathSerializer.GetPoint (list, ref i),
+										  PathSerializer.GetPoint (list, ref i));
+							break;
+
+						case "C":
+							path.CurveTo (PathSerializer.GetPoint (list, ref i),
+										  PathSerializer.GetPoint (list, ref i),
+										  PathSerializer.GetPoint (list, ref i));
+							break;
+
+						case "Z":
+							path.Close ();
+							break;
+
+						default:
+							throw new System.ArgumentException ("Invalid serialized path");
+					}
+				}
+			}
+
+			return path;
+		}
+
+		private static Point GetPoint(string[] list, ref int i)
+		{
+			double x, y;
+
+			if (double.TryParse (list[i++], out x))
+			{
+				if (double.TryParse (list[i++], out y))
+				{
+					return new Point (x, y);
+				}
+			}
+
+			return Point.Zero;
 		}
 	}
 }
