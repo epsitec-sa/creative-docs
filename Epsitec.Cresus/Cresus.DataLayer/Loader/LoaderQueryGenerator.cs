@@ -4,10 +4,12 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Collections;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -17,18 +19,28 @@ using Epsitec.Cresus.DataLayer.Serialization;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using System.Data;
+
 using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
-	// TODO This class needs some refactoring, as it starts to look fugly in some places.
+
+	// TODO Check whether or not the DISTINCT keyword is required for the queries.
 	// Marc
 
 
-	// TODO Get rid of DbReader to build and use the "real query" in order to have a nicer and more
-	// functionnal approach.
+	// TODO Improve request for ids in targets.
+	// Marc
+
+
+	// TODO Try to recycle the condition container for the three requests.
+	// Marc
+
+
+	// TODO Check target rank in collection requests ?
 	// Marc
 
 
@@ -95,9 +107,33 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				return this.DataContext.DataConverter;
 			}
 		}
-		
-		
+
+
+		#region REQUEST ENTRY POINT
+
+
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
+		{
+			// HACK This method acts as a switch between the old and the new way of generating
+			// sql requests to the database. The new way might contain some bugs, therefore I left
+			// the code for the old way and you can switch which way you want to take. You should
+			// use the new way, but if this creates a bug, tell me of it and use the old way until
+			// I correct the bug.
+			// Marc
+
+			// Old version of the loader query generator.
+			// Should be reliable.
+			
+			//return this.GetEntitiesDataOld (request);
+			
+			// New version of the loader query generator.
+			// Might contain some bugs.
+			
+			return this.GetEntitiesDataNew (request);
+		}
+
+
+		private IEnumerable<EntityData> GetEntitiesDataOld(Request request)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, ValueData>> valuesData;
 			Dictionary<DbKey, ReferenceData> referencesData;
@@ -123,6 +159,40 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				yield return new EntityData (rowKey, leafEntityId, loadedEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
+
+
+		private IEnumerable<EntityData> GetEntitiesDataNew(Request request)
+		{
+			Dictionary<DbKey, System.Tuple<Druid, ValueData>> valuesData;
+			Dictionary<DbKey, ReferenceData> referencesData;
+			Dictionary<DbKey, CollectionData> collectionsData;
+
+			using (DbTransaction innerTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				valuesData = this.GetValueData2 (innerTransaction, request);
+				referencesData = this.GetReferenceData2 (innerTransaction, request);
+				collectionsData = this.GetCollectionData2 (innerTransaction, request);
+
+				innerTransaction.Commit ();
+			}
+
+			foreach (DbKey rowKey in valuesData.Keys)
+			{
+				Druid loadedEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
+				Druid leafEntityId = valuesData[rowKey].Item1;
+				ValueData entityValueData = valuesData[rowKey].Item2;
+				ReferenceData entityReferenceData = referencesData[rowKey];
+				CollectionData entityCollectionData = collectionsData.ContainsKey (rowKey) ? collectionsData[rowKey] : new CollectionData ();
+
+				yield return new EntityData (rowKey, leafEntityId, loadedEntityId, entityValueData, entityReferenceData, entityCollectionData);
+			}
+		}
+
+
+		#endregion
+
+
+		#region GET VALUE FIELD
 
 
 		public object GetValueField(AbstractEntity entity, Druid fieldId)
@@ -157,6 +227,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		#endregion
+
+
+		#region GET REFERENCE FIELD
+
+
 		public EntityData GetReferenceField(AbstractEntity entity, Druid fieldId)
 		{
 			string fieldName = fieldId.ToResourceId ();
@@ -185,6 +261,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return data.FirstOrDefault ();
 		}
+
+
+		#endregion
+
+
+		#region GET COLLECTION FIELD
 
 
 		public IEnumerable<EntityData> GetCollectionField(AbstractEntity entity, Druid fieldId)
@@ -248,10 +330,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				RootEntity = rootExample,
 				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 			};
-			
+
 			return this.GetCollectionData (transaction, request, fieldId);
 		}
-		
+		#endregion
+
+
+		#region GET VALUE DATA
+
 
 		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueData(DbTransaction transaction, Request request)
 		{
@@ -337,6 +423,100 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+
+		private Dictionary<DbKey, System.Tuple<Druid, ValueData>> GetValueData2(DbTransaction transaction, Request request)
+		{
+			Dictionary<DbKey, System.Tuple<Druid, ValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, ValueData>> ();
+
+			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
+
+			var fields = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
+				.Where (field => field.Relation == FieldRelation.None)
+				.Where (field => field.Source == FieldSource.Value)
+				.OrderBy (field => field.CaptionId.ToResourceId ())
+				.ToList ();
+
+			SqlSelect select = this.CreateSqlSelectForValueData (request);
+
+			transaction.SqlBuilder.SelectData (select);
+			DataSet data = this.DbInfrastructure.ExecuteRetData (transaction);
+
+			foreach (DataRow dataRow in data.Tables[0].Rows)
+			{
+				ValueData entityValueData = new ValueData ();
+				Druid realEntityId = Druid.FromLong ((long) dataRow[dataRow.ItemArray.Length - 2]);
+				DbKey entityKey = new DbKey (new DbId ((long) dataRow[dataRow.ItemArray.Length - 1]));
+
+				for (int i = 0; i < dataRow.ItemArray.Length - 2; i++)
+				{
+					object internalValue = dataRow[i];
+
+					if (internalValue != System.DBNull.Value)
+					{
+						StructuredTypeField field = fields[i];
+						INamedType type = field.Type;
+
+						Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
+						string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
+
+						DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+						DbColumn dbColumn = dbTable.Columns[columnName];
+
+						DbTypeDef typeDef = dbColumn.Type;
+						DbRawType rawType = typeDef.RawType;
+						DbSimpleType simpleType = typeDef.SimpleType;
+						DbNumDef numDef = typeDef.NumDef;
+
+						object externalValue = this.DataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, internalValue);
+
+						entityValueData[field.CaptionId] = externalValue;
+					}
+				}
+
+				valueData[entityKey] = System.Tuple.Create (realEntityId, entityValueData);
+			}
+
+			return valueData;
+		}
+
+
+		private SqlSelect CreateSqlSelectForValueData(Request request)
+		{
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
+
+			SqlContainer sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			SqlContainer sqlContainerForValues = this.BuildSqlContainerForValues (requestedAlias, requestedEntity);
+
+			return sqlContainerForConditions.Plus (sqlContainerForValues).BuildSqlSelect ();
+		}
+
+
+		#endregion
+
+
+		#region GET REFERENCE DATA
+
+
 		private Dictionary<DbKey, ReferenceData> GetReferenceData(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, ReferenceData> references = new Dictionary<DbKey, ReferenceData> ();
@@ -402,6 +582,83 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return dbReader;
 		}
+
+
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+
+		private Dictionary<DbKey, ReferenceData> GetReferenceData2(DbTransaction transaction, Request request)
+		{
+			Dictionary<DbKey, ReferenceData> references = new Dictionary<DbKey, ReferenceData> ();
+
+			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
+
+			var fieldIds = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
+				.Where (field => field.Relation == FieldRelation.Reference)
+				.Where (field => field.Source == FieldSource.Value)
+				.Select (field => field.CaptionId)
+				.OrderBy (field => field.ToResourceId ())
+				.ToList ();
+
+			SqlSelect select = this.CreateSqlSelectForReferenceData (request);
+
+			transaction.SqlBuilder.SelectData (select);
+		    DataSet data = this.DbInfrastructure.ExecuteRetData (transaction);
+
+			foreach (DataRow dataRow in data.Tables[0].Rows)
+			{
+				DbKey sourceKey = new DbKey (new DbId ((long) dataRow[dataRow.ItemArray.Length - 1]));
+
+				ReferenceData entityReferenceData = new ReferenceData ();
+
+				for (int i = 0; i < dataRow.ItemArray.Length - 1; i++)
+				{
+					if (dataRow[i] != System.DBNull.Value)
+					{
+						entityReferenceData[fieldIds[i]] = new DbKey (new DbId ((long) dataRow[i]));
+					}
+				}
+
+				references[sourceKey] = entityReferenceData;
+			}
+
+			return references;
+		}
+
+
+		private SqlSelect CreateSqlSelectForReferenceData(Request request)
+		{
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
+
+			SqlContainer  sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
+			
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			SqlContainer sqlContainerForReferences = this.BuildSqlContainerForReferences (requestedAlias, requestedEntity);
+
+			return sqlContainerForConditions.Plus (sqlContainerForReferences).BuildSqlSelect ();
+		}
+
+
+		#endregion
+
+
+		#region GET COLLECTION DATA
 
 
 		private Dictionary<DbKey, CollectionData> GetCollectionData(DbTransaction transaction, Request request)
@@ -478,8 +735,92 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return reader;
 		}
+		
+		
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
 
 
+		private Dictionary<DbKey, CollectionData> GetCollectionData2(DbTransaction transaction, Request request)
+		{
+			Dictionary<DbKey, CollectionData> collectionData = new Dictionary<DbKey, CollectionData> ();
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			Druid leafRequestedEntityId = requestedEntity.GetEntityStructuredTypeId ();
+
+			var definedFieldIds = this.EntityContext.GetEntityFieldDefinitions (leafRequestedEntityId)
+				.Where (f => f.Relation == FieldRelation.Collection)
+				.Select (f => f.CaptionId)
+				.ToList ();
+
+			foreach (Druid fieldId in definedFieldIds)
+			{
+				foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData2 (transaction, request, fieldId))
+				{
+					if (!collectionData.ContainsKey (relation.Item1))
+					{
+						collectionData[relation.Item1] = new CollectionData ();
+					}
+
+					collectionData[relation.Item1][fieldId].Add (relation.Item2);
+				}
+			}
+
+			return collectionData;
+		}
+
+
+		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData2(DbTransaction transaction, Request request, Druid fieldId)
+		{
+			SqlSelect select = this.CreateSqlSelectForCollectionData (request, fieldId);
+
+			transaction.SqlBuilder.SelectData (select);
+			DataSet data = this.DbInfrastructure.ExecuteRetData (transaction);
+
+			foreach (DataRow dataRow in data.Tables[0].Rows)
+			{
+				DbKey sourceKey = new DbKey (new DbId ((long) dataRow[dataRow.ItemArray.Length - 1]));
+				DbKey targetKey = new DbKey (new DbId ((long) dataRow[0]));
+
+				yield return System.Tuple.Create (sourceKey, targetKey);
+			}
+		}
+
+
+		private SqlSelect CreateSqlSelectForCollectionData(Request request, Druid fieldId)
+		{
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
+
+			SqlContainer  sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			SqlContainer sqlContainerForCollection = this.BuildSqlContainerForCollection (requestedAlias, requestedEntity, fieldId);
+
+			return sqlContainerForConditions.Plus (sqlContainerForCollection).BuildSqlSelect ();
+		}
+
+
+		#endregion
+
+
+		#region CONDITION GENERATION
+
+		
 		private void AddConditionsForEntity(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
 			if (this.DataContext.IsForeignEntity (entity))
@@ -847,6 +1188,476 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+
+		private SqlContainer BuildSqlContainerForRequest(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			if (this.DataContext.IsForeignEntity (entity))
+			{
+				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
+			}
+
+			SqlContainer sqlContainerForRequestRootEntity = this.BuildSqlContainerForRequestRootEntity (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForEntity = this.BuildSqlContainerForEntity (request, rootEntityAlias, entity);
+
+			return sqlContainerForRequestRootEntity.Plus (sqlContainerForEntity);
+		}
+
+
+		private SqlContainer BuildSqlContainerForRequestRootEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			SqlField tableForRootEntity = this.BuildTableForRootEntity (rootEntityAlias, entity);
+			SqlFunction conditionForRootEntityStatus = this.BuildConditionForRootEntityStatus (rootEntityAlias, entity);
+			
+			return SqlContainer.CreateSqlTables (tableForRootEntity).PlusSqlConditions (conditionForRootEntityStatus);
+		}
+
+
+		private SqlField BuildTableForRootEntity(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			DbTable rootDbTable = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
+
+			return SqlField.CreateAliasedName (rootDbTable.GetSqlName (), rootEntityAlias.Alias);
+		}
+
+
+		private SqlFunction BuildConditionForRootEntityStatus(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			return this.BuildConditionForEntityStatus (rootEntityAlias, rootEntityId);
+		}
+
+
+		private SqlContainer BuildSqlContainerForEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			if (this.DataContext.IsForeignEntity (entity))
+			{
+				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
+			}
+
+			SqlContainer sqlContainerForRequestRootEntityId = this.BuildSqlContainerForRequestRootEntityId (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
+			SqlContainer sqlContainerForFields = this.BuildSqlContainerForFields (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForLocalConstraints = this.BuildSqlContainerForLocalConstraints (request, rootEntityAlias, entity);
+
+			return sqlContainerForRequestRootEntityId.Plus (sqlContainerForSubEntities).Plus (sqlContainerForFields).Plus (sqlContainerForLocalConstraints);
+		}
+
+
+		private SqlContainer BuildSqlContainerForRequestRootEntityId(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			DbKey? rootEntityKey = request.RootEntityKey;
+
+			SqlContainer sqlContainer = SqlContainer.Empty;
+
+			if (rootEntityKey.HasValue && entity == request.RootEntity)
+			{
+				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+				long id = rootEntityKey.Value.Id.Value;
+
+				DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
+				DbColumn dbColumn = dbTable.Columns[Tags.ColumnId];
+
+				SqlFunction sqlCondition = new SqlFunction
+				(
+					SqlFunctionCode.CompareEqual,
+					SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnStatus),
+					SqlField.CreateConstant (id, DbRawType.Int64)
+				);
+
+				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
+			}
+
+			return sqlContainer;
+		}
+
+
+		private SqlContainer BuildSqlContainerForSubEntities(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			return this.EntityContext
+				.GetInheritedEntityIds (leafEntityId)
+				.Where (id => id != rootEntityId)
+				.Reverse ()
+				.Select (id => this.BuildSqlContainerForSubEntity (rootEntityAlias, rootEntityId, id))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.Plus (e));
+		}
+
+
+		private SqlContainer BuildSqlContainerForSubEntity(AliasNode rootEntityAlias, Druid rootEntityId, Druid localEntityId)
+		{
+			SqlContainer joinToSubEntity = this.BuildJoinToSubEntity (rootEntityAlias, rootEntityId, localEntityId);
+			SqlFunction conditionForSubEntityStatus = this.BuildConditionForEntityStatus (rootEntityAlias, localEntityId);
+
+			return joinToSubEntity.PlusSqlConditions (conditionForSubEntityStatus);
+		}
+
+
+		private SqlContainer BuildJoinToSubEntity(AliasNode rootEntityAlias, Druid rootEntityId, Druid localEntityId)
+		{
+			AliasNode localEntityAlias = rootEntityAlias.CreateChild (localEntityId.ToResourceId ());
+
+			DbTable rootDbTable = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
+			DbTable localDbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+
+			DbColumn rootIdDbColumn = rootDbTable.Columns[Tags.ColumnId];
+			DbColumn localIdDbColumn = localDbTable.Columns[Tags.ColumnId];
+
+			SqlField sqlTable = SqlField.CreateAliasedName (localDbTable.GetSqlName (), localEntityAlias.Alias);
+
+			SqlField rootIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, rootIdDbColumn.GetSqlName (), Tags.ColumnId);
+			SqlField localIdColumn = SqlField.CreateAliasedName (localEntityAlias.Alias, localIdDbColumn.GetSqlName (), Tags.ColumnId);
+
+			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+
+			SqlJoin sqlJoin = new SqlJoin (rootIdColumn, localIdColumn, sqlJoinCode);
+
+			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+		}
+
+
+		private SqlFunction BuildConditionForEntityStatus(AliasNode rootEntityAlias, Druid localEntityId)
+		{
+			AliasNode localEntityAlias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId);
+
+			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbColumn dbColumn = dbTable.Columns[Tags.ColumnStatus];
+
+			SqlFunction sqlCondition = new SqlFunction
+			(
+				SqlFunctionCode.CompareEqual,
+				SqlField.CreateAliasedName (localEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnStatus),
+				SqlField.CreateConstant ((short) DbRowStatus.Live, DbRawType.Int16)
+			);
+
+			return sqlCondition;
+		}
+
+
+		private SqlContainer BuildSqlContainerForFields(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			return this.EntityContext
+				.GetDefinedFieldIds (entity)
+				.Select (id => Druid.Parse (id))
+				.Select (id => this.BuildSqlContainerForField (entity, request, rootEntityAlias, id))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.Plus (e));
+		}
+
+
+		private SqlContainer BuildSqlContainerForField(AbstractEntity entity, Request request, AliasNode rootEntityAlias, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldId.ToResourceId ());
+
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+					return this.BuildSqlContainerForValueField (rootEntityAlias, entity, field);
+
+				case FieldRelation.Reference:
+					return this.BuildSqlContainerForReferenceField (request, rootEntityAlias, entity, field);
+
+				case FieldRelation.Collection:
+					return this.BuildSqlContainerForCollectionField (request, rootEntityAlias, entity, field);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private SqlContainer BuildSqlContainerForValueField(AliasNode rootEntityAlias, AbstractEntity entity, StructuredTypeField field)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
+
+			AliasNode localEntityalias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId);
+
+			string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
+
+			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbColumn dbColumn = dbTable.Columns[columnName];
+
+			object fieldValue = entity.InternalGetValue (field.CaptionId.ToResourceId ());
+
+			AbstractType fieldType = (AbstractType) field.Type;
+
+			SqlFunction sqlCondition;
+
+			switch (fieldType.TypeCode)
+			{
+				case TypeCode.String:
+					sqlCondition = new SqlFunction
+					(
+						SqlFunctionCode.CompareLike,
+						SqlField.CreateAliasedName (localEntityalias.Alias, dbColumn.GetSqlName (), columnName),
+						SqlField.CreateConstant ((string) fieldValue, DbRawType.String)
+					);
+					break;
+
+				case TypeCode.Decimal:
+					throw new System.NotImplementedException ();
+
+				case TypeCode.Double:
+					throw new System.NotImplementedException ();
+
+				case TypeCode.Integer:
+					sqlCondition = new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateAliasedName (localEntityalias.Alias, dbColumn.GetSqlName (), columnName),
+						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+					);
+					break;
+
+				case TypeCode.LongInteger:
+					sqlCondition = new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateAliasedName (localEntityalias.Alias, dbColumn.GetSqlName (), columnName),
+						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+					);
+					break;
+
+				case TypeCode.Boolean:
+					sqlCondition = new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateAliasedName (localEntityalias.Alias, dbColumn.GetSqlName (), columnName),
+						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+					);
+					break;
+
+				case TypeCode.Date:
+					throw new System.NotImplementedException ();
+
+				case TypeCode.DateTime:
+					throw new System.NotImplementedException ();
+
+				case TypeCode.Time:
+					throw new System.NotImplementedException ();
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+
+			return SqlContainer.CreateSqlConditions (sqlCondition);
+		}
+
+
+		private SqlContainer BuildSqlContainerForReferenceField(Request request, AliasNode rootEntityAlias, AbstractEntity entity, StructuredTypeField field)
+		{
+			AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
+
+			return this.BuildSqlContainerForRelation (request, rootEntityAlias, entity, field, target);
+		}
+
+
+		private SqlContainer BuildSqlContainerForCollectionField(Request request, AliasNode rootEntityAlias, AbstractEntity entity, StructuredTypeField field)
+		{
+			return entity
+				.GetFieldCollection<AbstractEntity> (field.Id)
+				.Select (r => this.BuildSqlContainerForRelation (request, rootEntityAlias, entity, field, r))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.Plus (e));
+		}
+
+
+		private SqlContainer BuildSqlContainerForRelation(Request request, AliasNode rootSourceAlias, AbstractEntity source, StructuredTypeField field, AbstractEntity target)
+		{
+			if (this.DataContext.IsForeignEntity (target))
+			{
+				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
+			}
+
+			if (this.DataContext.IsPersistent (target))
+			{
+				DbKey targetKey = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
+
+				return this.BuildSqlContainerForRelationByReference (rootSourceAlias, source, field, targetKey);
+			}
+			else
+			{
+				return this.BuildSqlContainerForRelationByValue (request, rootSourceAlias, source, field, target);
+			}
+		}
+
+
+		private SqlContainer BuildSqlContainerForRelationByReference(AliasNode rootSourceAlias, AbstractEntity source, StructuredTypeField field, DbKey targetKey)
+		{
+			Druid fieldId = field.CaptionId;
+
+			Druid leafEntityId = source.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			long targetId = targetKey.Id.Value;
+
+			SqlContainer joinToRelation = this.BuildSqlContainerForJoinToRelation(rootSourceAlias, localEntityId, fieldId, SqlJoinCode.Inner);
+			AliasNode relationAlias = rootSourceAlias.GetChildren (field.Id).Last ();
+
+			SqlFunction conditionForRelationStatus = this.BuildConditionForRelationStatus (relationAlias, localEntityId, fieldId);
+			SqlFunction conditionForRelationTargetId = this.BuildConditionForRelationTargetId (relationAlias, localEntityId, fieldId, targetId);
+
+			return joinToRelation.PlusSqlConditions (conditionForRelationStatus, conditionForRelationTargetId);
+		}
+
+
+		private SqlContainer BuildSqlContainerForRelationByValue(Request request, AliasNode rootSourceAlias, AbstractEntity source, StructuredTypeField field, AbstractEntity target)
+		{
+			Druid fieldId = field.CaptionId;
+
+			Druid leafEntityId = source.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			Druid leafTargetId = target.GetEntityStructuredTypeId ();
+			Druid rootTargetId = this.EntityContext.GetRootEntityId (leafTargetId);
+
+			SqlContainer joinToRelation = this.BuildSqlContainerForJoinToRelation(rootSourceAlias, localEntityId, fieldId, SqlJoinCode.Inner);
+			AliasNode relationAlias = rootSourceAlias.GetChildren (field.Id).Last ();
+
+			SqlFunction conditionForRelationStatus = this.BuildConditionForRelationStatus (relationAlias, localEntityId, fieldId);
+
+			SqlContainer joinToTarget = this.BuildSqlContainerForJoinToTarget (relationAlias, localEntityId, fieldId, rootTargetId);
+			AliasNode targetAlias = relationAlias.GetChild (rootTargetId.ToResourceId ());
+
+			SqlContainer containerForTarget = this.BuildSqlContainerForEntity (request, targetAlias, target);
+
+			SqlFunction conditionForTargetStatus = this.BuildConditionForRootEntityStatus (targetAlias, target);
+
+			return joinToRelation.PlusSqlConditions (conditionForRelationStatus).Plus (joinToTarget).PlusSqlConditions(conditionForTargetStatus).Plus (containerForTarget);
+		}
+
+
+		private SqlContainer BuildSqlContainerForJoinToRelation(AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId, SqlJoinCode sqlJoinCode)
+		{
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+
+			AliasNode relationAlias = rootEntityAlias.CreateChild (fieldId.ToResourceId ());
+
+			DbTable rootSourceDbTable = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
+			DbTable relationDbTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+
+			DbColumn sourceIdDbColumn = rootSourceDbTable.Columns[Tags.ColumnId];
+			DbColumn relationSourceIdDbColumn = relationDbTable.Columns[Tags.ColumnRefSourceId];
+
+			SqlField sqlTable = SqlField.CreateAliasedName (relationDbTable.GetSqlName (), relationAlias.Alias);
+
+			SqlField sourceIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, sourceIdDbColumn.GetSqlName (), Tags.ColumnId);
+			SqlField relationSourceIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationSourceIdDbColumn.GetSqlName (), Tags.ColumnRefSourceId);
+			
+			SqlJoin sqlJoin = new SqlJoin (sourceIdColumn, relationSourceIdColumn, sqlJoinCode);
+
+			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+		}
+
+
+		private SqlContainer BuildSqlContainerForJoinToTarget(AliasNode relationAlias, Druid localEntityId, Druid fieldId, Druid rootTargetId)
+		{
+			AliasNode rootTargetAlias = relationAlias.CreateChild (rootTargetId.ToResourceId ());
+
+			DbTable relationDbTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			DbTable rootTargetDbTable = this.SchemaEngine.GetEntityTableDefinition (rootTargetId);
+
+			DbColumn relationTargetIdDbColumn = relationDbTable.Columns[Tags.ColumnRefTargetId];
+			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[Tags.ColumnId];
+
+			SqlField sqlTable = SqlField.CreateAliasedName (rootTargetDbTable.GetSqlName (), rootTargetAlias.Alias);
+
+			SqlField relationTargetIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationTargetIdDbColumn.GetSqlName (), Tags.ColumnRefTargetId);
+			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias.Alias, targetIdDbColumn.GetSqlName (), Tags.ColumnId);
+
+			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+
+			SqlJoin sqlJoin = new SqlJoin (relationTargetIdColumn, targetIdColumn, sqlJoinCode);
+
+			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+		}
+
+
+		private SqlFunction BuildConditionForRelationStatus(AliasNode relationAlias, Druid localEntityId, Druid fieldId)
+		{
+			DbTable dbTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			DbColumn dbColumn = dbTable.Columns[Tags.ColumnStatus];
+
+			return new SqlFunction
+			(
+				SqlFunctionCode.CompareEqual,
+				SqlField.CreateAliasedName (relationAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnStatus),
+				SqlField.CreateConstant ((short) DbRowStatus.Live, DbRawType.Int16)
+			);
+		}
+
+
+		private SqlFunction BuildConditionForRelationTargetId(AliasNode relationAlias, Druid localEntityId, Druid fieldId, long targetId)
+		{
+			DbTable dbTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			DbColumn dbColumn = dbTable.Columns[Tags.ColumnRefTargetId];
+
+			return new SqlFunction
+			(
+				SqlFunctionCode.CompareEqual,
+				SqlField.CreateAliasedName (relationAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnRefTargetId),
+				SqlField.CreateConstant (targetId, DbRawType.Int64)
+			);
+		}
+
+
+		private SqlContainer BuildSqlContainerForLocalConstraints(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			return request
+				.GetLocalConstraints (entity)
+				.Select (c => this.BuildConditionForLocalConstraint (rootEntityAlias, entity, c))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlConditions (e));
+		}
+
+
+		private SqlFunction BuildConditionForLocalConstraint(AliasNode rootEntityAlias, AbstractEntity entity, Expression constraint)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+
+			return constraint.CreateSqlCondition
+			(
+				(dbRawType, dbSimpleType, dbNumDef, value) =>
+				{
+					object convertedValue = this.DataConverter.FromCresusToDatabaseValue (dbRawType, dbSimpleType, dbNumDef, value);
+					DbRawType convertedType = this.DataConverter.FromDotNetToDatabaseType (dbRawType);
+
+					return SqlField.CreateConstant (convertedValue, convertedType);
+				},
+				(fieldId) =>
+				{
+					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+					AliasNode localEntityAlias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId);
+					string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
+
+					DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+					DbColumn dbColumn = dbTable.Columns[columnName];
+
+					return SqlField.CreateAliasedName (localEntityAlias.Alias, dbColumn.GetSqlName (), columnName);
+				}
+			);
+		}
+
+
+#endregion
+
+
+		#region VALUE QUERY GENERATION
+
+
 		private void AddQueryForValues(DbReader dbReader, AbstractEntity entity, AliasNode rootEntityAlias)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -869,6 +1680,55 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, Tags.ColumnInstanceType);
 			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, Tags.ColumnId);
 		}
+
+
+		private void AddEntityQueryField(DbReader dbReader, AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId)
+		{
+			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
+
+			this.AddEntityQueryField (dbReader, rootEntityAlias, localEntityId, columnName);
+		}
+
+
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+
+		private SqlContainer BuildSqlContainerForValues(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
+				.Where (field => field.Relation == FieldRelation.None)
+				.Where (field => field.Source == FieldSource.Value)
+				.Select (field => field.CaptionId)
+				.OrderBy (field => field.ToResourceId ())
+				.Select (field => this.BuildSqlFieldForValueField (rootEntityAlias, entity, field))
+				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnInstanceType))
+				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlFields (e));
+		}
+
+
+		private SqlField BuildSqlFieldForValueField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			string fieldName = this.SchemaEngine.GetEntityColumnName (fieldId);
+
+			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, fieldName);
+		}
+
+
+		#endregion
+
+
+		#region REFERENCE QUERY GENERATION
 
 
 		private void AddQueryForReferences(DbReader dbReader, AbstractEntity entity, AliasNode rootEntityAlias)
@@ -908,6 +1768,53 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+
+		private SqlContainer BuildSqlContainerForReferences(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
+				.Where (field => field.Relation == FieldRelation.Reference)
+				.Where (field => field.Source == FieldSource.Value)
+				.Select (field => field.CaptionId)
+				.OrderBy (field => field.ToResourceId ())
+				.Select (field => this.BuildSqlFieldForReferenceField (rootEntityAlias, entity, field))
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.Plus (e))
+				.PlusSqlFields (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId));
+		}
+
+
+		private SqlContainer BuildSqlFieldForReferenceField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			SqlContainer sqlContainerForRelationJoin = SqlContainer.Empty;
+
+			if (!this.EntityContext.IsFieldDefined (fieldId.ToResourceId (), entity))
+			{
+				sqlContainerForRelationJoin = this.BuildSqlContainerForJoinToRelation (rootEntityAlias, localEntityId, fieldId, SqlJoinCode.OuterLeft);
+			}
+
+			SqlField sqlFieldForRelation = this.BuildSqlFieldForRelationColumn(rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefTargetId);
+
+			return sqlContainerForRelationJoin.PlusSqlFields (sqlFieldForRelation);
+		}
+
+
+		#endregion
+
+
+		#region COLLECTION QUERY GENERATION
+
+
 		private void AddQueryForCollection(DbReader dbReader, AbstractEntity entity, AliasNode rootEntityAlias, Druid fieldId)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -937,12 +1844,36 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private void AddEntityQueryField(DbReader dbReader, AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId)
-		{
-			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
 
-			this.AddEntityQueryField (dbReader, rootEntityAlias, localEntityId, columnName);
+
+
+		private SqlContainer BuildSqlContainerForCollection(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+
+			SqlContainer sqlContainerForRelationJoin = this.BuildSqlContainerForJoinToRelation (rootEntityAlias, localEntityId, fieldId, SqlJoinCode.Inner);
+
+			SqlField sqlFieldForTargetId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefTargetId);
+			SqlField sqlFieldForRank = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefRank);
+			SqlField sqlFieldForSourceId = this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId);
+
+			sqlFieldForRank.SortOrder = SqlSortOrder.Ascending;
+
+			return sqlContainerForRelationJoin.PlusSqlFields (sqlFieldForTargetId, sqlFieldForRank, sqlFieldForSourceId);
 		}
+
+
+		#endregion
+
+
+		#region MISC
 
 
 		private void AddEntityQueryField(DbReader dbReader, AliasNode rootEntityAlias, Druid localEntityId, string columnName)
@@ -1079,6 +2010,38 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				return requestedEntityAlias;
 			}
 		}
+
+
+		// ======================================================================== \\
+		// ======================================================================== \\
+		// ============================= SEPARATION =============================== \\
+		// ======================================================================== \\
+		// ======================================================================== \\
+
+		
+		private SqlField BuildSqlFieldForEntityColumn(AliasNode rootEntityAlias, Druid localEntityId, string columnName)
+		{
+			AliasNode localAlias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId);
+
+			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbColumn dbColumn = dbTable.Columns[columnName];
+
+			return SqlField.CreateAliasedName (localAlias.Alias, dbColumn.GetSqlName (), columnName);
+		}
+
+
+		private SqlField BuildSqlFieldForRelationColumn(AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId, string columnName)
+		{
+			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
+
+			DbTable dbTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			DbColumn dbColumn = dbTable.Columns[columnName];
+
+			return SqlField.CreateAliasedName (relationAlias.Alias, dbColumn.GetSqlName (), columnName);
+		}
+
+
+		#endregion
 
 
 	}

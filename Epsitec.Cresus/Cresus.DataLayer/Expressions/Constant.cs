@@ -1,5 +1,11 @@
 ﻿using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Schema;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -155,6 +161,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
+		}
+
+
+		internal SqlField CreateSqlField(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver)
+		{
+			DbRawType dbRawType = EnumConverter.ToDbRawType (this.Type);
+			DbSimpleType dbSimpleType = EnumConverter.ToDbSimpleType (this.Type);
+			DbNumDef dbNumDef = EnumConverter.ToDbNumDef (this.Type);
+
+			return sqlConstantResolver (dbRawType, dbSimpleType, dbNumDef, this.Value);
 		}
 
 
