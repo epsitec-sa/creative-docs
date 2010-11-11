@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						RequestedEntity = example,
 					};
 
-					string value = ComparisonFieldValue.Escape ("test%test");
+					string value = Constant.Escape ("test%test");
 
 					request.AddLocalConstraint (example,
 						new ComparisonFieldValue (
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						RequestedEntity = example,
 					};
 
-					string value = ComparisonFieldValue.Escape ("test_test");
+					string value = Constant.Escape ("test_test");
 
 					request.AddLocalConstraint (example,
 						new ComparisonFieldValue (
@@ -511,7 +511,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						RequestedEntity = example,
 					};
 
-					string value = ComparisonFieldValue.Escape ("test#test");
+					string value = Constant.Escape ("test#test");
 
 					request.AddLocalConstraint (example,
 						new ComparisonFieldValue (

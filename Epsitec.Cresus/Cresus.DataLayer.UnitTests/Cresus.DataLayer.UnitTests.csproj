@@ -55,6 +55,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Expressions\ExpressionHelper.cs" />
     <Compile Include="General\UnitTestConcurrencyDelete.cs" />
     <Compile Include="General\UnitTestEmptyEntity.cs" />
     <Compile Include="General\UnitTestEntityCopy.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Expressions\UnitTestBinaryOperation.cs" />
     <Compile Include="Expressions\UnitTestComparisonFieldField.cs" />
     <Compile Include="Expressions\UnitTestComparisonFieldValue.cs" />
-    <Compile Include="Loader\UnitTestExpressionFields.cs" />
     <Compile Include="General\UnitTestConcurrency.cs" />
     <Compile Include="Context\UnitTestEntityEventArgs.cs" />
     <Compile Include="General\UnitTestEntityEvents.cs" />

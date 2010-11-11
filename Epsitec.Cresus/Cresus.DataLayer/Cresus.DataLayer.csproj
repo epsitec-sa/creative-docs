@@ -164,7 +164,6 @@
     <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\ExpressionConverter.cs" />
     <Compile Include="Loader\DataLoader.cs" />
-    <Compile Include="Loader\ExpressionFields.cs" />
     <Compile Include="Loader\Request.cs" />
     <Compile Include="Context\DataContextPool.cs" />
     <Compile Include="Serialization\CollectionData.cs" />
