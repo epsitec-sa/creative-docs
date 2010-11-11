@@ -26,11 +26,8 @@ namespace Epsitec.Common.Printing
 			this.xRoot = new XElement ("g");
 			this.xDocument.Add (this.xRoot);
 
-			this.pathSerializer = new PathSerializer ();
-			this.pathSerializer.Resolution = 2;
-
-			this.transformSerializer = new TransformSerializer ();
-			this.transformSerializer.Resolution = 2;
+			this.pathSerializer      = new PathSerializer (2);
+			this.transformSerializer = new TransformSerializer (2);
 		}
 
 		public string XmlSource
@@ -537,7 +534,7 @@ namespace Epsitec.Common.Printing
 
 		private Path DeserializePath(string value)
 		{
-			return PathSerializer.FromDeserialize (value);
+			return PathSerializer.Parse (value);
 		}
 
 
@@ -548,7 +545,7 @@ namespace Epsitec.Common.Printing
 
 		private Transform DeserializeTransform(string value)
 		{
-			return TransformSerializer.FromDeserialize (value);
+			return TransformSerializer.Parse (value);
 		}
 
 
