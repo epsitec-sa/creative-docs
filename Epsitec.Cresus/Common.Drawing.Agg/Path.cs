@@ -872,6 +872,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		#region SVG style serialisation
 		public string Serialize()
 		{
 			if (this.isEmpty)
@@ -989,8 +990,9 @@ namespace Epsitec.Common.Drawing
 		{
 			return new Path ();  // TODO: ...
 		}
-		
-		
+		#endregion
+
+
 		public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
 		{
 			PathElement[] elements;
