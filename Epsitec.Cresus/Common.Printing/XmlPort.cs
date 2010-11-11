@@ -28,6 +28,9 @@ namespace Epsitec.Common.Printing
 
 			this.pathSerializer      = new PathSerializer (2);
 			this.transformSerializer = new TransformSerializer (2);
+
+			this.currentState = new GraphicState ();
+			this.lastState    = new GraphicState ();
 		}
 
 		public string XmlSource
@@ -41,14 +44,17 @@ namespace Epsitec.Common.Printing
 
 
 		#region Deserialisation
-		public static void Deserialize(string xmlSource, IPaintPort dstPort)
+		public void Deserialize(string xmlSource, IPaintPort dstPort)
 		{
+			this.UpdateGraphicState (dstPort, updateAll: true);
+
 			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
 			XElement root = doc.Element ("g");
 
 			foreach (var element in root.Elements ())
 			{
-				XmlPort.DeserializeGraphicState (element, dstPort);
+				this.DeserializeGraphicState (element);  // this.currentState <- selon xml
+				this.UpdateGraphicState (dstPort);
 
 				if (element.Name == "surface")
 				{
@@ -64,9 +70,30 @@ namespace Epsitec.Common.Printing
 				}
 				else if (element.Name == "text")
 				{
+					double x    = (double) element.Attribute ("x");
+					double y    = (double) element.Attribute ("y");
+					string text = (string) element.Attribute ("text");
+
+					dstPort.PaintText (x, y, text, this.currentFont, this.currentState.fontSize);
 				}
 				else if (element.Name == "image")
 				{
+					string id           = (string) element.Attribute ("id");
+					double fillX        = (double) element.Attribute ("fill-x");
+					double fillY        = (double) element.Attribute ("fill-y");
+					double fillWidth    = (double) element.Attribute ("fill-width");
+					double fillHeight   = (double) element.Attribute ("fill-height");
+					double imageOriginX = (double) element.Attribute ("image-originX");
+					double imageOriginY = (double) element.Attribute ("image-originY");
+					double imageWidth   = (double) element.Attribute ("image-width");
+					double imageHeight  = (double) element.Attribute ("image-height");
+
+					Image bitmap = null;  // TODO: Retrouver l'image à partir de 'id' !
+
+					if (bitmap != null)
+					{
+						dstPort.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, imageWidth, imageHeight);
+					}
 				}
 				else
 				{
@@ -75,20 +102,159 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
-		private static void DeserializeGraphicState(XElement element, IPaintPort dstPort)
+		private void DeserializeGraphicState(XElement element)
 		{
-			if (element.Attribute ("line-width") != null)
+			XAttribute attribute;
+
+			attribute = element.Attribute ("line-width");
+			if (attribute != null)
 			{
-				double value = (double) element.Attribute ("line-width");
-				dstPort.LineWidth = value;
+				this.currentState.lineWidth = (double) attribute;
 			}
 
-			if (element.Attribute ("color") != null)
+			attribute = element.Attribute ("line-join");
+			if (attribute != null)
 			{
-				string value = (string) element.Attribute ("color");
-				dstPort.Color = XmlPort.DeserializeColor (value);
+				//?this.currentState.lineJoin = (JoinStyle) attribute;
 			}
 
+			attribute = element.Attribute ("line-cap");
+			if (attribute != null)
+			{
+				//?this.currentState.lineCap = (CapStyle) attribute;
+			}
+
+			attribute = element.Attribute ("line-miter-limit");
+			if (attribute != null)
+			{
+				this.currentState.lineMiterLimit = (double) attribute;
+			}
+
+			attribute = element.Attribute ("color");
+			if (attribute != null)
+			{
+				this.currentState.color = XmlPort.DeserializeColor ((string) attribute);
+			}
+
+			attribute = element.Attribute ("transform");
+			if (attribute != null)
+			{
+				this.currentState.transform = XmlPort.DeserializeTransform ((string) attribute);
+			}
+
+			attribute = element.Attribute ("fill-mode");
+			if (attribute != null)
+			{
+				//?this.currentState.fillMode = (FillMode) attribute;
+			}
+
+			attribute = element.Attribute ("font-face");
+			if (attribute != null)
+			{
+				this.currentState.fontFace = (string) attribute;
+			}
+
+			attribute = element.Attribute ("font-style");
+			if (attribute != null)
+			{
+				this.currentState.fontStyle = (string) attribute;
+			}
+
+			attribute = element.Attribute ("font-size");
+			if (attribute != null)
+			{
+				this.currentState.fontSize = (double) attribute;
+			}
+
+		}
+
+		private void UpdateGraphicState(IPaintPort dstPort, bool updateAll=false)
+		{
+			if (this.lastState.lineWidth != this.currentState.lineWidth || updateAll)
+			{
+				this.lastState.lineWidth = this.currentState.lineWidth;
+
+				dstPort.LineWidth = this.lastState.lineWidth;
+			}
+
+			if (this.lastState.lineJoin != this.currentState.lineJoin || updateAll)
+			{
+				this.lastState.lineJoin = this.currentState.lineJoin;
+
+				dstPort.LineJoin = this.lastState.lineJoin;
+			}
+
+			if (this.lastState.lineCap != this.currentState.lineCap || updateAll)
+			{
+				this.lastState.lineCap = this.currentState.lineCap;
+
+				dstPort.LineCap = this.lastState.lineCap;
+			}
+
+			if (this.lastState.lineMiterLimit != this.currentState.lineMiterLimit || updateAll)
+			{
+				this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
+
+				dstPort.LineMiterLimit = this.lastState.lineMiterLimit;
+			}
+
+			if (this.lastState.imageFilter != this.currentState.imageFilter || updateAll)
+			{
+				this.lastState.imageFilter = this.currentState.imageFilter;
+
+				dstPort.ImageFilter = this.lastState.imageFilter;
+			}
+
+			if (this.lastState.imageCrop != this.currentState.imageCrop || updateAll)
+			{
+				this.lastState.imageCrop = this.currentState.imageCrop;
+
+				dstPort.ImageCrop = this.lastState.imageCrop;
+			}
+
+			if (this.lastState.imageFinalSize != this.currentState.imageFinalSize || updateAll)
+			{
+				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
+
+				dstPort.ImageFinalSize = this.lastState.imageFinalSize;
+			}
+
+			if (this.lastState.color != this.currentState.color || updateAll)
+			{
+				this.lastState.color = this.currentState.color;
+
+				dstPort.Color = this.lastState.color;
+			}
+
+			if (this.lastState.clip != this.currentState.clip || updateAll)
+			{
+				this.lastState.clip = this.currentState.clip;
+
+				dstPort.SetClippingRectangle (this.lastState.clip);
+			}
+
+			if (this.lastState.transform != this.currentState.transform || updateAll)
+			{
+				this.lastState.transform = this.currentState.transform;
+
+				dstPort.Transform = this.lastState.transform;
+			}
+
+			if (this.lastState.fillMode != this.currentState.fillMode || updateAll)
+			{
+				this.lastState.fillMode = this.currentState.fillMode;
+
+				dstPort.FillMode = this.lastState.fillMode;
+			}
+
+			if (this.lastState.fontFace  != this.currentState.fontFace  ||
+				this.lastState.fontStyle != this.currentState.fontStyle || updateAll)
+			{
+				this.lastState.fontFace  = this.currentState.fontFace;
+				this.lastState.fontStyle = this.currentState.fontStyle;
+
+				this.currentFont = Font.GetFont (this.lastState.fontFace, this.lastState.fontStyle);
+			}
 		}
 		#endregion
 
@@ -595,33 +761,39 @@ namespace Epsitec.Common.Printing
 		}
 
 
-		private readonly Stack<ColorModifierCallback>	stackColorModifier;
-		private readonly XDocument						xDocument;
-		private readonly XElement						xRoot;
-		private readonly PathSerializer					pathSerializer;
-		private readonly TransformSerializer			transformSerializer;
-
-		private GraphicState							currentState = new GraphicState ();
-		private GraphicState							lastState    = new GraphicState ();
-
-
 		private class GraphicState
 		{
 			public double								lineWidth      = 1.0;
 			public JoinStyle							lineJoin       = JoinStyle.Miter;
 			public CapStyle								lineCap        = CapStyle.Square;
 			public double								lineMiterLimit = 4.0;
+
 			public ImageFilter							imageFilter;
 			public Margins								imageCrop;
 			public Size									imageFinalSize;
+
 			public Color								originalColor  = Color.FromRgb (0, 0, 0);
 			public Color								color          = Color.FromRgb (0, 0, 0);
+
 			public Rectangle							clip           = Rectangle.MaxValue;
 			public Transform							transform      = Transform.Identity;
+
 			public FillMode								fillMode       = FillMode.NonZero;
+
 			public string								fontFace       = "Arial";
 			public string								fontStyle      = "Regular";
 			public double								fontSize       = 10.0;
 		}
+
+	
+		private readonly Stack<ColorModifierCallback>	stackColorModifier;
+		private readonly XDocument						xDocument;
+		private readonly XElement						xRoot;
+		private readonly PathSerializer					pathSerializer;
+		private readonly TransformSerializer			transformSerializer;
+		private readonly GraphicState					currentState;
+		private readonly GraphicState					lastState;
+
+		private Font									currentFont;
 	}
 }
