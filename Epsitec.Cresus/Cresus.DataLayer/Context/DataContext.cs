@@ -822,7 +822,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			// and to keep data somewhere in order to know when was loaded which entity.
 			// Marc
 
-			foreach (AbstractEntity entity in this.GetEntities ().ToList ())
+			foreach (AbstractEntity entity in this.GetEntities ().Where (e => this.IsPersistent (e)).ToList ())
 			{
 				this.ReloadEntity (entity);
 			}
@@ -838,6 +838,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void ReloadEntity(AbstractEntity entity)
 		{
 			if (entity == null)
+			{
+				return;
+			}
+
+			if (!this.IsPersistent (entity))
 			{
 				return;
 			}
