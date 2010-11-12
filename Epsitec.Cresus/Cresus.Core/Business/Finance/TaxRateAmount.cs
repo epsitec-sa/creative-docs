@@ -12,21 +12,53 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	/// </summary>
 	public struct TaxRateAmount
 	{
-		public TaxRateAmount(decimal rate, decimal amount)
+		public TaxRateAmount(decimal amount, VatCode code, decimal rate)
 		{
-			this.rate   = rate;
-			this.amount = amount;
+			this.amount   = amount;
+			this.codeRate = new VatCodeRate (code, rate);
 		}
 
-		
+
+		/// <summary>
+		/// Gets the VAT rate.
+		/// </summary>
+		/// <value>The VAT rate.</value>
 		public decimal							Rate
 		{
 			get
 			{
-				return this.rate;
+				return this.codeRate.Rate;
 			}
 		}
 
+		/// <summary>
+		/// Gets the VAT code.
+		/// </summary>
+		/// <value>The VAT code.</value>
+		public VatCode							Code
+		{
+			get
+			{
+				return this.codeRate.Code;
+			}
+		}
+
+		/// <summary>
+		/// Gets the VAT code and rate as a <see cref="VatCodeRate"/> instance.
+		/// </summary>
+		/// <value>The VAT code and rate.</value>
+		public VatCodeRate						CodeRate
+		{
+			get
+			{
+				return this.codeRate;
+			}
+		}
+
+		/// <summary>
+		/// Gets the amount before tax.
+		/// </summary>
+		/// <value>The amount before tax.</value>
 		public decimal							Amount
 		{
 			get
@@ -35,6 +67,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+		/// <summary>
+		/// Gets the tax for the amount (this is computed by multiplying the
+		/// <see cref="Amount"/> with the <see cref="Rate"/>).
+		/// </summary>
+		/// <value>The tax for the amount.</value>
 		public decimal							Tax
 		{
 			get
@@ -44,7 +81,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 		
-		private readonly decimal rate;
-		private readonly decimal amount;
+		private readonly decimal				amount;
+		private readonly VatCodeRate			codeRate;
 	}
 }

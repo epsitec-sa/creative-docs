@@ -546,6 +546,9 @@ namespace Epsitec.Cresus.Core
 			articleDef2.Units = uomGroup1;
 			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
+			var priceDef3 = this.CreateArticlePrice (960M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3);
+			priceDef3.ValueIncludesTaxes = true;
+
 			articleDef3.IdA = "CR-FL";
 			articleDef3.ShortDescription = "Crésus Facturation LARGO";
 			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.<br/><br/>Quelques textes pour faire long :<br/>Lundi<br/>Mardi<br/>Mercredi<br/>Jeudi<br/>Vendredi<br/>Samedi<br/>Dimanche";
@@ -553,7 +556,7 @@ namespace Epsitec.Cresus.Core
 			articleDef3.ArticleCategory = articleCategory1;
 			articleDef3.BillingUnit = uomUnit1;
 			articleDef3.Units = uomGroup1;
-			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (892.20M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
+			articleDef3.ArticlePrices.Add (priceDef3);
 
 			articleDef4.IdA = "EMB";
 			articleDef4.ShortDescription = "Port et emballage";
@@ -804,7 +807,7 @@ namespace Epsitec.Cresus.Core
 			invoiceA.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
 			invoiceA.OtherPartyTaxMode = Business.Finance.TaxMode.LiableForVat;
 			invoiceA.BillingCurrencyCode = Business.Finance.CurrencyCode.Chf;
-			invoiceA.BillingStatus = Business.Finance.BillingStatus.DebtorBillOpen;
+			invoiceA.BillingStatus = Business.Finance.BillingStatus.NotAnInvoice;
 			invoiceA.BillingDetails.Add (billingA1);
 			invoiceA.BillingDetails.Add (billingA2);
 			invoiceA.DebtorBookAccount = "1100";
@@ -876,10 +879,15 @@ namespace Epsitec.Cresus.Core
 			var quantityA3_1 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 			var quantityA3_2 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
+			var lineA3discount = this.DataContext.CreateEntity<DiscountEntity> ();
+
+			lineA3discount.DiscountRate = 0.075M;
+			lineA3discount.RoundingMode = this.DataContext.GetEntitiesOfType<PriceRoundingModeEntity> (x => x.Modulo == 0.05M).FirstOrDefault ();
+
 			lineA3.Visibility = true;
 			lineA3.IndentationLevel = 0;
-			lineA3.BeginDate = invoiceA.BillingDate;
-			lineA3.EndDate = invoiceA.BillingDate;
+			lineA3.BeginDate = new Date (2010, 11, 1);
+			lineA3.EndDate = new Date (2011, 1, 20);
 			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
 			lineA3.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].Value;
@@ -889,6 +897,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.ResultingLineTax1 = lineA3.ResultingLinePriceBeforeTax * vatRate;
 			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
 			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
+			lineA3.Discounts.Add (lineA3discount);
 
 			quantityA3_1.ColumnName = "suivra";
 			quantityA3_1.QuantityType = Business.ArticleQuantityType.Delayed;
