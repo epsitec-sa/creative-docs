@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static void UpdatePrices(BusinessDocumentEntity x, DataContext dataContext)
 		{
+#if false
 			//	Recalcule complètement une facture.
 			//	
 			//	Une ligne de total (PriceDocumentItemEntity) effectue un sous-total de tout ce qui précède,
@@ -234,11 +235,10 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
-
-			//	EXPERIMENTAL :
-
+#else
 			var calculator = new Epsitec.Cresus.Core.Business.Finance.DocumentPriceCalculator (x);
 			calculator.Update ();
+#endif
 		}
 
 		private static void BackwardUpdatePrices(BusinessDocumentEntity x, decimal discountRate)

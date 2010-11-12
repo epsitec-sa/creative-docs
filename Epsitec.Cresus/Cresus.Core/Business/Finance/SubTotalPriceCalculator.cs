@@ -79,7 +79,62 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 			if (this.totalItem.FixedPrice.HasValue)
 			{
-				this.ApplyFixedDiscount (this.totalItem.FixedPrice.Value, ref priceBeforeTax, ref tax, this.totalItem.FixedPriceIncludesTaxes);
+				bool computeIncludingTaxes = this.totalItem.FixedPriceIncludesTaxes;
+				this.ApplyFixedDiscount (this.totalItem.FixedPrice.Value, ref priceBeforeTax, ref tax, computeIncludingTaxes);
+			}
+		}
+
+		private void ApplyDiscount(ref decimal priceBeforeTax, ref decimal tax)
+		{
+			if (this.discount.DiscountRate.HasValue)
+			{
+				decimal discountRatio = 1.00M - this.discount.DiscountRate.Value;
+				this.ApplyDiscountRatio (ref priceBeforeTax, ref tax, discountRatio);
+				return;
+			}
+			
+			if (this.discount.Value.HasValue)
+			{
+				if (this.discount.ValueIncludesTaxes)
+				{
+					decimal discountedPriceAfterTax = priceBeforeTax + tax - this.discount.Value.Value;
+					this.ApplyFixedDiscount (discountedPriceAfterTax, ref priceBeforeTax, ref tax, true);
+					return;
+				}
+				else
+				{
+					decimal discountedPriceBeforeTax = priceBeforeTax - this.discount.Value.Value;
+					this.ApplyFixedDiscount (discountedPriceBeforeTax, ref priceBeforeTax, ref tax, false);
+					return;
+				}
+			}
+		}
+
+
+		private void ApplyDiscountRatio(ref decimal priceBeforeTax, ref decimal tax, decimal discountRatio)
+		{
+			if (this.discount.ValueIncludesTaxes)
+			{
+				decimal priceAfterTax = priceBeforeTax + tax;
+				decimal discountedPriceAfterTax = priceAfterTax * discountRatio;
+				
+				if (this.discount.RoundingMode.IsNotNull ())
+				{
+					discountedPriceAfterTax = this.discount.RoundingMode.Round (discountedPriceAfterTax);
+				}
+
+				this.ApplyFixedDiscount (discountedPriceAfterTax, ref priceBeforeTax, ref tax, true);
+			}
+			else
+			{
+				decimal discountedPriceBeforeTax = priceBeforeTax * discountRatio;
+
+				if (this.discount.RoundingMode.IsNotNull ())
+				{
+					discountedPriceBeforeTax = this.discount.RoundingMode.Round (discountedPriceBeforeTax);
+				}
+
+				this.ApplyFixedDiscount (discountedPriceBeforeTax, ref priceBeforeTax, ref tax, false);
 			}
 		}
 
@@ -104,48 +159,6 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			this.taxDiscountable = taxDiscountable;
 		}
-
-		private void ApplyDiscount(ref decimal priceBeforeTax, ref decimal tax)
-		{
-			//	TODO: implement discount & rounding, based either on price before or after tax...
-			//	Attention: les rabais ne peuvent être appliqués que sur la part compressible du
-			//	montant !
-
-			decimal priceAfterTax = priceBeforeTax + tax;
-
-			if (this.discount.DiscountRate.HasValue)
-			{
-				decimal discountRatio = 1.00M - this.discount.DiscountRate.Value;
-				
-				if (this.discount.ValueIncludesTaxes)
-				{
-					decimal discountedPriceAfterTax = priceAfterTax * discountRatio;
-
-					if (this.discount.RoundingMode.IsNotNull ())
-					{
-						discountedPriceAfterTax = this.discount.RoundingMode.Round (discountedPriceAfterTax);
-					}
-
-					this.ApplyFixedDiscount (discountedPriceAfterTax, ref priceBeforeTax, ref tax, true);
-				}
-				else
-				{
-					decimal discountedPriceBeforeTax = priceBeforeTax * discountRatio;
-
-					if (this.discount.RoundingMode.IsNotNull ())
-					{
-						discountedPriceBeforeTax = this.discount.RoundingMode.Round (discountedPriceBeforeTax);
-					}
-
-					this.ApplyFixedDiscount (discountedPriceBeforeTax, ref priceBeforeTax, ref tax, false);
-				}
-			}
-			else
-			{
-				//	TODO: ...
-			}
-		}
-		
 
 		
 		private readonly BusinessDocumentEntity		document;
