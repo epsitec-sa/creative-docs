@@ -49,7 +49,18 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			if (this.dateRange != null)
 			{
-				var durationRates = (from vatDef in TaxContext.Current.GetVatDefinitions (this.dateRange, vatCode)
+				VatDefinitionEntity[] vatDefs = TaxContext.Current.GetVatDefinitions (this.dateRange, vatCode);
+
+				if (vatDefs.Length == 0)
+				{
+					if (TaxContext.Current.GetVatDefinitions (vatCode).IsEmpty ())
+					{
+						System.Diagnostics.Debug.WriteLine ("Cannot find VAT rate for VatCode." + vatCode);
+						return new Tax ();
+					}
+				}
+
+				var durationRates = (from vatDef in vatDefs
 									 group vatDef by vatDef.Rate into sameRateVatDef
 									 select new
 									 {
@@ -61,7 +72,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 				if (totalDays == 0)
 				{
-					throw new System.InvalidOperationException ("Cannot find VAT rate for specified date range");
+					System.Diagnostics.Debug.WriteLine ("Cannot find VAT rate for specified date range");
+					return new Tax ();
 				}
 
 				var taxes = from range in durationRates

@@ -33,6 +33,15 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
+		public VatDefinitionEntity[] GetVatDefinitions(VatCode vatCode)
+		{
+			var results = from def in this.vatDefs
+						  where def.Code == vatCode
+						  select def;
+
+			return results.ToArray ();
+		}
+
 		public VatDefinitionEntity GetVatDefinition(Date date, VatCode vatCode)
 		{
 			var results = from def in this.vatDefs
