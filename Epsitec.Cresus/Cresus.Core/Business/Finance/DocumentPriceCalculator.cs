@@ -57,20 +57,39 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		public void UpdatePrices()
 		{
-			this.SortLines ();
-
-			this.currentState = State.None;
-			
-			this.calculators.Clear ();
-			this.groups.Clear ();
-
-			foreach (var line in this.document.Lines)
+			if (DocumentPriceCalculator.activeCalculators == null)
 			{
-				line.Process (this);
+				DocumentPriceCalculator.activeCalculators = new HashSet<DocumentPriceCalculator> ();
 			}
 
-			this.RecordCurrentGroup ();
-			this.GenerateVatLinesAndGrandTotal ();
+			if (DocumentPriceCalculator.activeCalculators.Add (this))
+			{
+				try
+				{
+					this.SortLines ();
+
+					this.currentState = State.None;
+
+					this.calculators.Clear ();
+					this.groups.Clear ();
+
+					foreach (var line in this.document.Lines)
+					{
+						line.Process (this);
+					}
+
+					this.RecordCurrentGroup ();
+					this.GenerateVatLinesAndGrandTotal ();
+				}
+				finally
+				{
+					DocumentPriceCalculator.activeCalculators.Remove (this);
+				}
+			}
+			else
+			{
+				//	Recursive updates are not taken into account here.
+			}
 		}
 
 		private void GenerateVatLinesAndGrandTotal()
@@ -263,6 +282,9 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				return this.groups.Peek ();
 			}
 		}
+
+		[System.ThreadStatic]
+		private static HashSet<DocumentPriceCalculator>	activeCalculators;
 
 		private readonly DataContext					context;
 		private readonly BusinessDocumentEntity			document;
