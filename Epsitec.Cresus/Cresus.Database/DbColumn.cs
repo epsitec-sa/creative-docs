@@ -441,6 +441,19 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public bool IsAutoTimeStamp
+		{
+			get
+			{
+				return this.isAutoTimeStamp;
+			}
+			set
+			{
+				this.isAutoTimeStamp = value;
+			}
+		}
+
+
 		/// <summary>
 		/// Defines the column category. A column category may not be changed
 		/// after it has been defined.
@@ -834,6 +847,7 @@ namespace Epsitec.Cresus.Database
 			column.IsForeignKey = this.IsForeignKey;
 			column.IsAutoIncremented = this.IsAutoIncremented;
 			column.AutoIncrementStartIndex = this.AutoIncrementStartIndex;
+			column.IsAutoTimeStamp = this.IsAutoTimeStamp;
 	
 			return column;
 		}
@@ -938,6 +952,7 @@ namespace Epsitec.Cresus.Database
 				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				column.isAutoIncremented = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("inc"));
 				column.IsNullable		 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
+				column.IsAutoTimeStamp	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("ats"));
 
 				if (!isEmptyElement)
 				{
@@ -973,6 +988,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
 			DbTools.WriteAttribute (xmlWriter, "inc", DbTools.BoolDefaultingToFalseToString (this.isAutoIncremented));
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.IsNullable));
+			DbTools.WriteAttribute (xmlWriter, "ats", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStamp));
 			
 			xmlWriter.WriteEndElement ();
 		}
@@ -1020,6 +1036,7 @@ namespace Epsitec.Cresus.Database
 		
 		private bool							isPrimaryKey;
 		private bool							isAutoIncremented;
+		private bool							isAutoTimeStamp;
 		private long							autoIncrementStartIndex;
 		private string							comment;
 		private DbElementCat					category;
