@@ -158,16 +158,18 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public void ComputeDiscountBeforeTax(decimal expectedPriceBeforeTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable)
+		public void ComputeDiscountBeforeTax(decimal expectedPriceBeforeTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable, out Tax taxDiscountable)
 		{
 			decimal total = this.TotalPriceBeforeTax;
 			decimal minus = total - expectedPriceBeforeTax;
 
 			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
 			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
+
+			taxDiscountable = this.ComputeAdjustedTax (totalBeforeTaxDiscountable);
 		}
 
-		public void ComputeDiscountAfterTax(decimal expectedPriceAfterTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable)
+		public void ComputeDiscountAfterTax(decimal expectedPriceAfterTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable, out Tax taxDiscountable)
 		{
 			decimal total = this.TotalPriceBeforeTax + this.TotalTax;
 			decimal minus = total - expectedPriceAfterTax;
@@ -176,8 +178,28 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
 			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
+
+			taxDiscountable = this.ComputeAdjustedTax (totalBeforeTaxDiscountable);
 		}
 
+		private Tax ComputeAdjustedTax(decimal newTotal)
+		{
+			decimal oldTotal = this.TotalPriceBeforeTax;
+
+			if (oldTotal == 0)
+			{
+				//	There is no total price before we apply the discount; we cannot produce a
+				//	meaningful Tax record :
+
+				return null;
+			}
+			else
+			{
+				decimal ratio = newTotal / oldTotal;
+				
+				return new Tax (this.taxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
+			}
+		}
 
 		private readonly List<AbstractPriceCalculator> members;
 
