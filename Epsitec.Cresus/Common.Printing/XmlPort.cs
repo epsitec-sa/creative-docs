@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Serializers;
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -55,7 +57,7 @@ namespace Epsitec.Common.Printing
 			dstPort.Color = Color.FromName ("Red");
 			dstPort.PaintSurface (p);
 
-			//this.UpdateGraphicState (dstPort, updateAll: true);
+			this.UpdateGraphicState (dstPort, updateAll: true);
 
 			p = Path.FromRectangle (new Rectangle (50, 350, 50, 50));
 			dstPort.Color = Color.FromName ("Green");
@@ -85,7 +87,7 @@ namespace Epsitec.Common.Printing
 				{
 					double x    = (double) element.Attribute ("x");
 					double y    = (double) element.Attribute ("y");
-					string text = (string) element.Attribute ("text");
+					string text = element.Value;
 
 					dstPort.PaintText (x, y, text, this.currentFont, this.currentState.fontSize);
 				}
@@ -101,7 +103,7 @@ namespace Epsitec.Common.Printing
 					double imageWidth   = (double) element.Attribute ("image-width");
 					double imageHeight  = (double) element.Attribute ("image-height");
 
-					Image bitmap = null;  // TODO: Retrouver l'image à partir de 'id' !
+					Image bitmap = this.GetImage (id);
 
 					if (bitmap != null)
 					{
@@ -113,6 +115,22 @@ namespace Epsitec.Common.Printing
 					throw new System.ArgumentException ("Invalid serialized data");
 				}
 			}
+		}
+
+		private Image GetImage(string id)
+		{
+			if (id.StartsWith ("file:"))
+			{
+				string name = string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}", id.Substring (5));
+				return ImageProvider.Default.GetImage (name, Resources.DefaultManager);
+			}
+
+			if (id.StartsWith ("db:"))
+			{
+				// TODO:
+			}
+
+			return null;
 		}
 
 		private void DeserializeGraphicState(XElement element)
@@ -250,7 +268,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.transform = this.currentState.transform;
 
-				dstPort.Transform = this.lastState.transform;
+				//?dstPort.Transform = this.lastState.transform;
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode || updateAll)
