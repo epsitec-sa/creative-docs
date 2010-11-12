@@ -691,7 +691,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 
-			if (line.PrimaryPriceBeforeTax.HasValue)  // ligne de total HT ?
+			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
 			{
 				this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
 			}
@@ -963,24 +963,24 @@ namespace Epsitec.Cresus.Core.Printers
 				return 0;
 			}
 
-			if (line.PrimaryPriceBeforeTax.HasValue)  // ligne de total HT ?
+			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrimaryPrice);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (line.PrimaryPriceBeforeTax));
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (line.PriceBeforeTax));
 			}
 			else if (line.FixedPriceAfterTax.HasValue)
 			{
-				FormattedText text = FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrimaryPrice, line.TextForFixedPrice);
+				FormattedText text = FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrice, line.TextForFixedPrice);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
-				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
+				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
 			else
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrimaryPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice);
 
-				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b>");
+				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b>");
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
 

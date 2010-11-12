@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					this.CreateUIInvoice (data);
 					this.CreateUIArticleLines (data);
+					this.CreateUIFreightAndTaxLines (data);
+					this.CreateUIVatLines (data);
 					this.CreateUIBillings (data);
 					this.CreateUIComments (data);
 				}
@@ -150,20 +152,68 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					AutoGroup    = true,
-					Name		 = "ArticleDocumentItem",
+					Name		 = "ArticleLines",
 					IconUri		 = "Data.DocumentItems",
 					Title		 = TextFormatter.FormatText ("Lignes"),
 					CompactTitle = TextFormatter.FormatText ("Lignes"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleDocumentItem", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleLines", data.Controller, this.DataContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 			template.DefineCreateItem (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
 			template.Filter = SummaryBusinessDocumentViewController.ArticleLineFilter;
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
+		}
+
+		private void CreateUIFreightAndTaxLines(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "FreightAndTaxLines",
+					IconUri		 = "Data.DocumentItems",
+					Title		 = TextFormatter.FormatText ("Port, emballage et taxes"),
+					CompactTitle = TextFormatter.FormatText ("Port, emballage et taxes"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightAndTaxLines", data.Controller, this.DataContext);
+
+			template.DefineText (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
+			template.DefineCreateItem (this.CreateFreightAndTaxDocumentItem);  // le bouton [+] crée une ligne d'article
+			template.DefineCreateGetIndex (this.CreateFreightAndTaxGetIndex);
+			template.Filter = SummaryBusinessDocumentViewController.FreightAndTaxLineFilter;
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
+		}
+
+		private void CreateUIVatLines(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "VatLines",
+					IconUri		 = "Data.DocumentItems",
+					Title		 = TextFormatter.FormatText ("Récapitulatif TVA"),
+					CompactTitle = TextFormatter.FormatText ("Récapitulatif TVA"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("VatLines", data.Controller, this.DataContext);
+
+			template.DefineText (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
+			template.DefineCreateItem (null);
+			template.DefineDeleteItem (null);
+			template.Filter = SummaryBusinessDocumentViewController.VatLineFilter;
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
@@ -201,6 +251,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
+		private ArticleDocumentItemEntity CreateFreightAndTaxDocumentItem()
+		{
+			var article = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
+
+			article.Visibility = true;
+			article.BeginDate  = this.Entity.BillingDate;
+			article.EndDate    = this.Entity.BillingDate;
+			article.GroupLevel = 0;
+
+			return article;
+		}
+
 		private ArticleDocumentItemEntity CreateArticleDocumentItem()
 		{
 			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
@@ -209,6 +271,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			article.Visibility = true;
 			article.BeginDate  = this.Entity.BillingDate;
 			article.EndDate    = this.Entity.BillingDate;
+			article.GroupLevel = 1;
 
 			return article;
 		}
@@ -218,34 +281,67 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Retourne l'index où insérer la nouvelle ligne d'article créée avec le bouton [+].
 			int index = this.Entity.Lines.Count;  // insère à la fin par défaut
 
-			while (index > 0)
+			while (--index >= 0)
 			{
-				var line = this.Entity.Lines[index-1];
+				var line = this.Entity.Lines[index];
 
-				if (line is EndTotalDocumentItemEntity ||
-					line is TaxDocumentItemEntity   )
+				if (line.GroupLevel > 0)
 				{
-					index--;  // insère avant le total
-					continue;
+					return index+1;
+				}
+			}
+
+			return 0;
+		}
+
+		private int CreateFreightAndTaxGetIndex()
+		{
+			int index = this.CreateArticleGetIndex ();
+			int count = this.Entity.Lines.Count;
+
+			while (index < count)
+			{
+				var line = this.Entity.Lines[index];
+
+				if ((line is TaxDocumentItemEntity) ||
+					(line is SubTotalDocumentItemEntity) ||
+					(line is EndTotalDocumentItemEntity))
+				{
+					break;
 				}
 
-				if (ArticleDocumentItemHelper.IsFixedTax (line as ArticleDocumentItemEntity))
-				{
-					index--;  // insère avant les frais de port
-					continue;
-				}
-
-				break;
+				index++;
 			}
 
 			return index;
 		}
 
+		private static bool FreightAndTaxLineFilter(AbstractDocumentItemEntity x)
+		{
+			if (x.GroupLevel != 0)
+			{
+				return false;
+			}
+
+			return x is TextDocumentItemEntity
+				|| x is ArticleDocumentItemEntity;
+		}
+
+		private static bool VatLineFilter(AbstractDocumentItemEntity x)
+		{
+			return x is TaxDocumentItemEntity;
+		}
+
 		private static bool ArticleLineFilter(AbstractDocumentItemEntity x)
 		{
-			return (x is TextDocumentItemEntity    ||
-				    x is ArticleDocumentItemEntity ||
-				    x is SubTotalDocumentItemEntity   );
+			if (x.GroupLevel < 1)
+			{
+				return false;
+			}
+
+			return x is TextDocumentItemEntity
+				|| x is ArticleDocumentItemEntity
+				|| x is SubTotalDocumentItemEntity;
 		}
 
 

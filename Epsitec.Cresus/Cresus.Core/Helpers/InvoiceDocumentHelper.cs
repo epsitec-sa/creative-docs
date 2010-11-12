@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
 #else
-			var calculator = new Epsitec.Cresus.Core.Business.Finance.DocumentPriceCalculator (x);
+			var calculator = new Epsitec.Cresus.Core.Business.Finance.DocumentPriceCalculator (dataContext, x);
 			calculator.Update ();
 #endif
 		}
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					var tax = line as TaxDocumentItemEntity;
 
-					total += tax.ResultingTax.GetValueOrDefault (0);
+					total += tax.ResultingTax;
 				}
 			}
 
@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 				else
 				{
-					return total.PrimaryPriceAfterTax;
+					return total.PriceAfterTax;
 				}
 			}
 
@@ -502,7 +502,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (total != null)
 			{
-				return total.PrimaryPriceAfterTax;
+				return total.PriceAfterTax;
 			}
 
 			return null;
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (total != null)
 			{
-				return total.PrimaryPriceBeforeTax;
+				return total.PriceBeforeTax;
 			}
 
 			return null;
