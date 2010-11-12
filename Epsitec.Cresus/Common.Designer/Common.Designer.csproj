@@ -253,6 +253,14 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Client\ModuleRepository.Client.csproj">
+      <Project>{EC31ACEA-8F8A-43E8-9A26-584D8B22552C}</Project>
+      <Name>ModuleRepository.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Service\ModuleRepository.Service.csproj">
+      <Project>{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C}</Project>
+      <Name>ModuleRepository.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\Duplicate.icon" />
