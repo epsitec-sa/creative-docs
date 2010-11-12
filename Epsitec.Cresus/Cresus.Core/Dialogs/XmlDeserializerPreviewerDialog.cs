@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.application = application;
 			this.xmlSource   = xmlSource;
+
+			this.pages = Printers.PrintEngine.DeserializeJobs (this.xmlSource, zoom: 2);
 		}
 
 
@@ -77,6 +79,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = tabIndex++,
 			};
 
+			var leftPane = new FrameBox
+			{
+				Parent = topPane,
+				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 10, 0, 0),
+				TabIndex = tabIndex++,
+			};
+
 			var footer = new FrameBox
 			{
 				Parent = window.Root,
@@ -89,31 +100,68 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Crée la partie principale.
 			this.textField = new TextFieldMulti
 			{
-				Parent = topPane,
+				Parent = leftPane,
 				MaxLength = 100000,
 				Text = TextLayout.ConvertToTaggedText (this.xmlSource),
 				IsReadOnly = true,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 10, 0, 0),
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.description = new TextFieldMulti
+			{
+				Parent = leftPane,
+				IsReadOnly = true,
+				PreferredHeight = 100,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 10, 0),
 			};
 
 			this.previewer = new XmlDeserializerPreviewer
 			{
 				Parent = topPane,
-				XmlSource = this.xmlSource,
 				Dock = DockStyle.Fill,
 			};
 
 			//	Crée le pied de page.
 			{
-				this.closeButton = new Button ()
+				this.closeButton = new Button
 				{
 					Parent = footer,
 					Text = "Fermer",
 					PreferredWidth = 60,
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 					Dock = DockStyle.Right,
+					Margins = new Margins (20, 0, 0, 0),
 					TabIndex = tabIndex++,
+				};
+
+				var next = new GlyphButton
+				{
+					Parent = footer,
+					GlyphShape = GlyphShape.ArrowRight,
+					PreferredWidth = 30,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				var prev = new GlyphButton
+				{
+					Parent = footer,
+					GlyphShape = GlyphShape.ArrowLeft,
+					PreferredWidth = 30,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				next.Clicked += delegate
+				{
+					this.ChangePage (1);
+				};
+
+				prev.Clicked += delegate
+				{
+					this.ChangePage (-1);
 				};
 			}
 
@@ -142,8 +190,31 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 		}
 
+		private void ChangePage(int direction)
+		{
+			if (this.pages != null)
+			{
+				this.page += direction;
+
+				this.page = System.Math.Max (this.page, 0);
+				this.page = System.Math.Min (this.page, this.pages.Count-1);
+
+				this.UpdateWidgets ();
+			}
+		}
+
 		private void UpdateWidgets()
 		{
+			if (this.pages == null || this.page < 0 || this.page >= this.pages.Count)
+			{
+				this.description.Text = null;
+				this.previewer.Bitmap = null;
+			}
+			else
+			{
+				this.description.Text = this.pages[this.page].FullDescription;
+				this.previewer.Bitmap = this.pages[this.page].Miniature;
+			}
 		}
 
 
@@ -157,7 +228,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly CoreApplication						application;
 		private readonly string									xmlSource;
 
+		private List<Printers.DeserializedPage>					pages;
+		private int												page;
+
 		private TextFieldMulti									textField;
+		private TextFieldMulti									description;
 		private XmlDeserializerPreviewer						previewer;
 		private Button											closeButton;
 	}

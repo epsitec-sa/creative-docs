@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Xml.Linq;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers

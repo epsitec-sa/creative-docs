@@ -156,6 +156,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
+				TabIndex = 3,
+			};
+
+			this.saveButton = new Button ()
+			{
+				Parent = footer,
+				Text = "Enregistrer",
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
 				TabIndex = 2,
 			};
 
@@ -337,6 +346,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.CloseDialog ();
 			};
 
+			this.saveButton.Clicked += delegate
+			{
+				this.Result = DialogResult.Answer1;
+				this.CloseDialog ();
+			};
+
 			this.cancelButton.Clicked += delegate
 			{
 				this.Result = DialogResult.Cancel;
@@ -508,6 +523,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText								informationText;
 		private Button									invertButton;
 		private Button									acceptButton;
+		private Button									saveButton;
 		private Button									cancelButton;
 		private SectionToPrint							previewedSection;
 		private List<CheckButton>						checkButtons;

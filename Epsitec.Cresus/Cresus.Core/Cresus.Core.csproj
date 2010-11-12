@@ -195,6 +195,7 @@
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
+    <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
