@@ -321,6 +321,11 @@ namespace Epsitec.Common.Widgets
 				//	Reorder the queue if the callback is already in the queue; otherwise
 				//	add it to the pending queue and make sure the main thread executes it
 				//	soon.
+
+				if (Application.pendingCallbacks.Count > 50)
+				{
+					System.Diagnostics.Debug.WriteLine ("Probable performance issue: more than 50 pending callbacks queued !");
+				}
 				
 				if (Application.pendingCallbacks.Contains (callback))
 				{

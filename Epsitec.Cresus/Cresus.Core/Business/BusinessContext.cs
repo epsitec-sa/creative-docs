@@ -569,12 +569,29 @@ namespace Epsitec.Cresus.Core.Business
 				}
 
 				this.OnContainsChangesChanged ();
-				CoreProgram.Application.MainWindowController.Update ();
+
+				this.AsyncUpdateMainWindowController ();
 			}
 			finally
 			{
 				System.Threading.Interlocked.Decrement (ref this.dataChangedCounter);
 			}
+		}
+
+		private void AsyncUpdateMainWindowController()
+		{
+			CoreApplication.QueueAsyncCallback (this.SyncUpdateMainWindowController);
+		}
+
+		private void SyncUpdateMainWindowController()
+		{
+			if (this.isDisposed)
+			{
+				System.Diagnostics.Debug.WriteLine ("Calling BusinessContext.SyncUpdateMainWindowController on disposed context");
+				return;
+			}
+
+			CoreProgram.Application.MainWindowController.Update ();
 		}
 
 		private void HandleFirstEntityChange()
