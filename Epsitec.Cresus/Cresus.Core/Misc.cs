@@ -212,14 +212,16 @@ namespace Epsitec.Cresus.Core
 		public static bool Overlaps(this IDateRange range, IDateRange other)
 		{
 			if ((range.EndDate.HasValue) &&
-				(!range.EndDate.Value.InRange (other.BeginDate, other.EndDate)))
+				(other.BeginDate.HasValue) &&
+				(range.EndDate.Value < other.BeginDate.Value))
 			{
 				//	The range ends before the other one.
 				return false;
 			}
 			
 			if ((range.BeginDate.HasValue) &&
-				(!range.BeginDate.Value.InRange (other.BeginDate, other.EndDate)))
+				(other.EndDate.HasValue) &&
+				(range.BeginDate.Value > other.EndDate.Value))
 			{
 				//	The range begins after the other one.
 				return false;
@@ -265,7 +267,7 @@ namespace Epsitec.Cresus.Core
 			if ((range.BeginDate.HasValue) &&
 				(range.EndDate.HasValue))
 			{
-				return range.EndDate.Value - range.BeginDate.Value;
+				return range.EndDate.Value - range.BeginDate.Value + 1;
 			}
 
 			throw new System.ArgumentException ("Infinite date range; cannot compute duration");
