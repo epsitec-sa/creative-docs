@@ -46,7 +46,20 @@ namespace Epsitec.Common.Printing
 		#region Deserialisation
 		public void Deserialize(string xmlSource, IPaintPort dstPort)
 		{
-			this.UpdateGraphicState (dstPort, updateAll: true);
+			if (string.IsNullOrWhiteSpace (xmlSource))
+			{
+				return;
+			}
+
+			Path p = Path.FromRectangle (new Rectangle (0, 300, 50, 50));
+			dstPort.Color = Color.FromName ("Red");
+			dstPort.PaintSurface (p);
+
+			//this.UpdateGraphicState (dstPort, updateAll: true);
+
+			p = Path.FromRectangle (new Rectangle (50, 350, 50, 50));
+			dstPort.Color = Color.FromName ("Green");
+			dstPort.PaintSurface (p);
 
 			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
 			XElement root = doc.Element ("g");

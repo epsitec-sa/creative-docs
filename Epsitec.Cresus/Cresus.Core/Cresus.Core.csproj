@@ -135,6 +135,7 @@
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="CoreData.Hack.Workflows.cs" />
+    <Compile Include="Dialogs\XmlDeserializerPreviewerDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
@@ -484,6 +485,7 @@
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
+    <Compile Include="Widgets\XmlDeserializerPreviewer.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />

@@ -833,9 +833,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//----------------------------
 
+#if false
 			var deserializePort = new XmlPort ();
 			Graphics g = new Graphics ();
 			deserializePort.Deserialize (s, g);
+#endif
+
+			var dialog = new Dialogs.XmlDeserializerPreviewerDialog (CoreProgram.Application, s);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
 		}
 
 

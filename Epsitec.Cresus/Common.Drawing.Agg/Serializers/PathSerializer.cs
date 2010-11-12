@@ -72,6 +72,7 @@ namespace Epsitec.Common.Drawing.Serializers
 
 						buffer.Append ("Q ");
 						buffer.Append (this.Serialize (p1));
+						buffer.Append (" ");
 						buffer.Append (this.Serialize (p2));
 						addSpace = true;
 						break;
@@ -88,7 +89,9 @@ namespace Epsitec.Common.Drawing.Serializers
 
 						buffer.Append ("C ");
 						buffer.Append (this.Serialize (p1));
+						buffer.Append (" ");
 						buffer.Append (this.Serialize (p2));
+						buffer.Append (" ");
 						buffer.Append (this.Serialize (p3));
 						addSpace = true;
 						break;
