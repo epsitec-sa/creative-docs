@@ -20,6 +20,16 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.document  = document;
 			this.totalItem = totalItem;
 			this.discount  = this.totalItem.Discount.UnwrapNullEntity ();
+			this.currencyCode = this.document.BillingCurrencyCode;
+		}
+
+
+		public GroupPriceCalculator Group
+		{
+			get
+			{
+				return this.group;
+			}
 		}
 
 		
@@ -30,14 +40,27 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			decimal primaryPriceBeforeTax = this.group.TotalPriceBeforeTax;
 			decimal primaryTax = this.group.TotalTax;
 
-			this.totalItem.PrimaryPriceBeforeTax = primaryPriceBeforeTax;
-			this.totalItem.PrimaryTax            = primaryTax;
+			this.totalItem.PrimaryPriceBeforeTax = PriceCalculator.ClipPriceValue (primaryPriceBeforeTax, this.currencyCode);
+			this.totalItem.PrimaryTax            = PriceCalculator.ClipPriceValue (primaryTax, this.currencyCode);
 
 			decimal resultingPriceBeforeTax = primaryPriceBeforeTax;
 			decimal resultingTax            = primaryTax;
 
 			this.ApplyDiscount (ref resultingPriceBeforeTax, ref resultingTax);
 			this.ApplyFixedPrice (ref resultingPriceBeforeTax, ref resultingTax);
+
+			this.totalItem.ResultingPriceBeforeTax = PriceCalculator.ClipPriceValue (resultingPriceBeforeTax, this.currencyCode);
+			this.totalItem.ResultingTax            = PriceCalculator.ClipPriceValue (resultingTax, this.currencyCode);
+
+			this.totalItem.FinalPriceBeforeTax = null;
+		}
+
+		public void AdjustFinalPrice(decimal adjustmentRate)
+		{
+			decimal totalPrice = this.group.TotalPriceBeforeTax;
+			decimal totalTax   = this.group.TotalTax;
+
+			
 		}
 
 		private void ApplyFixedPrice(ref decimal priceBeforeTax, ref decimal tax)
@@ -46,14 +69,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			{
 				decimal fixedPrice = this.totalItem.FixedPrice.Value;
 
+				decimal totalBeforeTaxDiscountable;
+				decimal totalTaxDiscountable;
+
 				if (this.totalItem.FixedPriceIncludesTaxes)
 				{
+					this.group.ComputeDiscountAfterTax (fixedPrice, out totalBeforeTaxDiscountable, out totalTaxDiscountable);
 				}
 				else
 				{
-
-					priceBeforeTax = fixedPrice;
+					this.group.ComputeDiscountBeforeTax (fixedPrice, out totalBeforeTaxDiscountable, out totalTaxDiscountable);
 				}
+					
+				priceBeforeTax = totalBeforeTaxDiscountable + this.group.TotalPriceBeforeTaxNotDiscountable;
+				tax = totalTaxDiscountable + this.group.TotalTaxNotDiscountable;
 			}
 		}
 
@@ -69,6 +98,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		private readonly BusinessDocumentEntity		document;
 		private readonly SubTotalDocumentItemEntity	totalItem;
 		private readonly DiscountEntity				discount;
+		private readonly CurrencyCode				currencyCode;
 
 		private GroupPriceCalculator				group;
 	}

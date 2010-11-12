@@ -7610,28 +7610,6 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>FinalTax</c> field.
-		///	designer:fld/L0AAB/L0AEB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AEB]")]
-		public global::System.Decimal? FinalTax
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[L0AEB]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.FinalTax;
-				if (oldValue != value)
-				{
-					this.OnFinalTaxChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[L0AEB]", oldValue, value);
-					this.OnFinalTaxChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnDisplayModesChanging(global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes? newValue);
 		partial void OnDisplayModesChanged(global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes? newValue);
@@ -7657,8 +7635,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnResultingTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
