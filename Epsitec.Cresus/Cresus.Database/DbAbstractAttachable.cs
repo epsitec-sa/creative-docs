@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using System.Data;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database
 {
@@ -22,7 +24,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Builds a new instance of <c>DbAbstractAttachable</c>
 		/// </summary>
-		public DbAbstractAttachable()
+		internal DbAbstractAttachable()
 		{
 			this.IsAttached = false;
 		}
@@ -213,6 +215,43 @@ namespace Epsitec.Cresus.Database
 				}
 
 				return table.Rows[0]["c"];
+			}
+		}
+
+
+		/// <summary>
+		/// Gets a sequence of values out of a single row in the table which satisfies some conditions.
+		/// </summary>
+		/// <param name="dbColumns">The sequence of <see cref="DbColumns"/> defining which values of the row to return.</param>
+		/// <param name="conditions">The conditions defining which row to return.</param>
+		/// <returns>The given values of the given row.</returns>
+		/// <exception cref="System.Exception">If there is zero or more that one rows that satisfies the conditions.</exception>
+		protected List<object> GetRowValues(IEnumerable<DbColumn> dbColumns, SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+				query.Tables.Add ("t", SqlField.CreateName (this.DbTable.GetSqlName ()));
+				
+				foreach (DbColumn dbColumn in dbColumns)
+				{
+					query.Fields.Add (SqlField.CreateName ("t", dbColumn.GetSqlName ()));
+				}
+				
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+				transaction.Commit ();
+
+				if (table.Rows.Count != 1)
+				{
+					throw new System.Exception ("There should be a single row of results.");
+				}
+
+				return table.Rows[0].ItemArray.ToList ();
 			}
 		}
 
