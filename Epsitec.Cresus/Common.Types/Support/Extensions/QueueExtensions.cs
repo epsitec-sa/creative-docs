@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support.Extensions
 		public static void Requeue<T>(this Queue<T> queue, T item)
 			where T : class
 		{
-			var items = queue.Where (x => x != item).ToList ();
+			var items = queue.Where (x => !x.Equals (item)).ToList ();
 
 			queue.Clear ();
 			items.ForEach (x => queue.Enqueue (x));
