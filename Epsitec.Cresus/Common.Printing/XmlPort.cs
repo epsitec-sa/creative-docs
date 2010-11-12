@@ -10,16 +10,22 @@ using System.Xml.Linq;
 
 namespace Epsitec.Common.Printing
 {
+	/// <summary>
+	/// Ce port graphique exporte au format xml tout ce qui est dessiné.
+	/// Il s'occupe également de la désérialisation.
+	/// </summary>
 	public sealed class XmlPort : IPaintPort
 	{
 		public XmlPort(XElement xRoot)
 		{
+			//	Si on dessine, le XElement donné est complété par tous les éléments dessinés.
+			//	Si on désérialise, le XElement donné contient les données sérialisées.
 			this.xRoot = xRoot;
 
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 
-			this.pathSerializer      = new PathSerializer (2);
-			this.transformSerializer = new TransformSerializer (2);
+			this.pathSerializer      = new PathSerializer (2);       // 2 décimales pour les chemins
+			this.transformSerializer = new TransformSerializer (4);  // 4 décimales pour les matrices de transformation
 
 			this.currentState = new GraphicState ();
 			this.lastState    = new GraphicState ();
@@ -27,9 +33,11 @@ namespace Epsitec.Common.Printing
 
 
 		#region Deserialisation
-		public Bitmap Deserialize(Size size, double zoom)
+		public Bitmap Deserialize(Size size, double zoom=1)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un bitmap.
+			System.Diagnostics.Debug.Assert (zoom > 0);
+
 			int width =  (int) (size.Width  * zoom);
 			int height = (int) (size.Height * zoom);
 
@@ -47,15 +55,9 @@ namespace Epsitec.Common.Printing
 		public void Deserialize(IPaintPort dstPort)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un port graphique.
-			//?Path p = Path.FromRectangle (new Rectangle (10, 110, 10, 10));
-			//?dstPort.Color = Color.FromName ("Red");
-			//?dstPort.PaintSurface (p);
+			this.initialTransform = dstPort.Transform;
 
 			this.UpdateGraphicState (dstPort, updateAll: true);
-
-			//?p = Path.FromRectangle (new Rectangle (20, 120, 10, 10));
-			//?dstPort.Color = Color.FromName ("Green");
-			//?dstPort.PaintSurface (p);
 
 			foreach (var element in this.xRoot.Elements ())
 			{
@@ -106,14 +108,12 @@ namespace Epsitec.Common.Printing
 					throw new System.ArgumentException ("Invalid serialized data");
 				}
 			}
-
-			//?p = Path.FromRectangle (new Rectangle (30, 130, 10, 10));
-			//?dstPort.Color = Color.FromName ("Blue");
-			//?dstPort.PaintSurface (p);
 		}
 
 		private Image GetImage(string id)
 		{
+			//	Retrouve une image d'après son id. Ceci est nécessaire, car les données sérialisées
+			//	ne contiennent pas le bitmap, pour éviter de générer des chaînes gigantesques.
 			if (id.StartsWith ("file:"))
 			{
 				string name = string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}", id.Substring (5));
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.transform = this.currentState.transform;
 
-				dstPort.Transform = this.lastState.transform.MultiplyBy (dstPort.Transform);
+				dstPort.Transform = this.lastState.transform.MultiplyBy (this.initialTransform);
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode || updateAll)
@@ -820,5 +820,6 @@ namespace Epsitec.Common.Printing
 		private readonly GraphicState					lastState;
 
 		private Font									currentFont;
+		private Transform								initialTransform;
 	}
 }
