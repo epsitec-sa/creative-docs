@@ -12,21 +12,11 @@ namespace Epsitec.Common.Printing
 {
 	public sealed class XmlPort : IPaintPort
 	{
-		public XmlPort()
+		public XmlPort(XElement xRoot)
 		{
+			this.xRoot = xRoot;
+
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
-
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
-			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
-
-			this.xDocument = new XDocument
-			(
-				new XDeclaration ("1.0", "utf-8", "yes"),
-				new XComment ("Saved on " + timeStamp)
-			);
-
-			this.xRoot = new XElement ("g");
-			this.xDocument.Add (this.xRoot);
 
 			this.pathSerializer      = new PathSerializer (2);
 			this.transformSerializer = new TransformSerializer (2);
@@ -35,38 +25,39 @@ namespace Epsitec.Common.Printing
 			this.lastState    = new GraphicState ();
 		}
 
-		public string XmlSource
-		{
-			get
-			{
-				//?return this.xDocument.ToString (SaveOptions.DisableFormatting);
-				return this.xDocument.ToString (SaveOptions.None);
-			}
-		}
-
 
 		#region Deserialisation
-		public void Deserialize(string xmlSource, IPaintPort dstPort)
+		public Bitmap Deserialize(Size size, double zoom)
 		{
-			if (string.IsNullOrWhiteSpace (xmlSource))
-			{
-				return;
-			}
+			//	Le résultat de la désérialisation est dessiné dans un bitmap.
+			int width =  (int) (size.Width  * zoom);
+			int height = (int) (size.Height * zoom);
 
-			Path p = Path.FromRectangle (new Rectangle (0, 300, 50, 50));
-			dstPort.Color = Color.FromName ("Red");
-			dstPort.PaintSurface (p);
+			Graphics graphics = new Graphics ();
+			graphics.SetPixmapSize (width, height);
+			graphics.TranslateTransform (0, height);
+			graphics.ScaleTransform (zoom, -zoom, 0, 0);
+
+			this.Deserialize (graphics);
+
+			Bitmap bitmap = Bitmap.FromPixmap (graphics.Pixmap) as Bitmap;
+			return bitmap;
+		}
+
+		public void Deserialize(IPaintPort dstPort)
+		{
+			//	Le résultat de la désérialisation est dessiné dans un port graphique.
+			//?Path p = Path.FromRectangle (new Rectangle (10, 110, 10, 10));
+			//?dstPort.Color = Color.FromName ("Red");
+			//?dstPort.PaintSurface (p);
 
 			this.UpdateGraphicState (dstPort, updateAll: true);
 
-			p = Path.FromRectangle (new Rectangle (50, 350, 50, 50));
-			dstPort.Color = Color.FromName ("Green");
-			dstPort.PaintSurface (p);
+			//?p = Path.FromRectangle (new Rectangle (20, 120, 10, 10));
+			//?dstPort.Color = Color.FromName ("Green");
+			//?dstPort.PaintSurface (p);
 
-			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
-			XElement root = doc.Element ("g");
-
-			foreach (var element in root.Elements ())
+			foreach (var element in this.xRoot.Elements ())
 			{
 				this.DeserializeGraphicState (element);  // this.currentState <- selon xml
 				this.UpdateGraphicState (dstPort);
@@ -115,6 +106,10 @@ namespace Epsitec.Common.Printing
 					throw new System.ArgumentException ("Invalid serialized data");
 				}
 			}
+
+			//?p = Path.FromRectangle (new Rectangle (30, 130, 10, 10));
+			//?dstPort.Color = Color.FromName ("Blue");
+			//?dstPort.PaintSurface (p);
 		}
 
 		private Image GetImage(string id)
@@ -261,14 +256,14 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.clip = this.currentState.clip;
 
-				dstPort.SetClippingRectangle (this.lastState.clip);
+				//dstPort.SetClippingRectangle (this.lastState.clip);
 			}
 
 			if (this.lastState.transform != this.currentState.transform || updateAll)
 			{
 				this.lastState.transform = this.currentState.transform;
 
-				//?dstPort.Transform = this.lastState.transform;
+				dstPort.Transform = this.lastState.transform.MultiplyBy (dstPort.Transform);
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode || updateAll)
@@ -818,7 +813,6 @@ namespace Epsitec.Common.Printing
 
 	
 		private readonly Stack<ColorModifierCallback>	stackColorModifier;
-		private readonly XDocument						xDocument;
 		private readonly XElement						xRoot;
 		private readonly PathSerializer					pathSerializer;
 		private readonly TransformSerializer			transformSerializer;

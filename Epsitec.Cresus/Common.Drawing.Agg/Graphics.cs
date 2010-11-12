@@ -1008,7 +1008,7 @@ namespace Epsitec.Common.Drawing
 			this.pixmap.Size = new System.Drawing.Size (width, height);
 			
 			this.solidRenderer.Pixmap    = null;
-			this.imageRenderer.Pixmap	  = null;
+			this.imageRenderer.Pixmap	 = null;
 			this.gradientRenderer.Pixmap = null;
 			this.smoothRenderer.Pixmap   = null;
 			

@@ -7,8 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Printing;
 
-using Epsitec.Common.Support.EntityEngine;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,17 +19,17 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public string XmlSource
+		public Bitmap Bitmap
 		{
 			get
 			{
-				return this.xmlSource;
+				return this.bitmap;
 			}
 			set
 			{
-				if (this.xmlSource != value)
+				if (this.bitmap != value)
 				{
-					this.xmlSource = value;
+					this.bitmap = value;
 					this.Invalidate ();
 				}
 			}
@@ -44,16 +42,31 @@ namespace Epsitec.Cresus.Core.Widgets
 			rect.Deflate (0.5);
 
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromName ("White"));
+			graphics.RenderSolid (Color.FromBrightness (0.9));
 
 			graphics.AddRectangle (rect);
-			graphics.RenderSolid (Color.FromName ("Black"));
+			graphics.RenderSolid (Color.FromBrightness (0));
 
-			var xmlPort = new XmlPort ();
-			xmlPort.Deserialize (this.xmlSource, graphics);
+			if (this.bitmap != null)
+			{
+				double dx = this.bitmap.Width;
+				double dy = this.bitmap.Height;
+
+				Rectangle bounds = new Rectangle (10, 10, dx, dy);
+
+				graphics.AddFilledRectangle (bounds);
+				graphics.RenderSolid (Color.FromBrightness (1));
+
+				rect.Deflate (0.5);
+				graphics.PaintImage (this.bitmap, bounds);
+
+				bounds.Inflate (0.5);
+				graphics.AddRectangle (bounds);
+				graphics.RenderSolid (Color.FromBrightness (0));
+			}
 		}
 
 
-		private string							xmlSource;
+		private Bitmap								bitmap;
 	}
 }

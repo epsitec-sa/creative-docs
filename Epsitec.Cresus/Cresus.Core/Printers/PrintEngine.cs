@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -238,7 +239,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var jobDialog = new Dialogs.PrintingJobDialog (CoreProgram.Application, jobs);
 			jobDialog.OpenDialog ();
 
-			if (jobDialog.Result == DialogResult.Accept)
+			if (jobDialog.Result == DialogResult.Accept)  // imprimer ?
 			{
 				//	Imprime tous les jobs (pages sur une même imprimante physique, mais éventuellement sur
 				//	plusieurs bacs différents).
@@ -246,6 +247,11 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					PrintEngine.PrintJob (job);
 				}
+			}
+
+			if (jobDialog.Result == DialogResult.Answer1)  // enregistrer ?
+			{
+				PrintEngine.SaveJobs (jobs);
 			}
 		}
 
@@ -339,6 +345,115 @@ namespace Epsitec.Cresus.Core.Printers
 			printDocument.Print (engine);
 		}
 
+
+		private static void SaveJobs(List<JobToPrint> jobs)
+		{
+			//	Enregistre tous les jobs d'impression.
+			string xmlSource = PrintEngine.SerializeJobs (jobs);
+			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
+
+			var dialog = new Dialogs.XmlDeserializerPreviewerDialog (CoreProgram.Application, xmlSource);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
+		}
+
+		private static string SerializeJobs(List<JobToPrint> jobs)
+		{
+			//	Retourne la chaîne xmlSource qui sérialise une liste de jobs d'impression.
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+			var xDocument = new XDocument
+			(
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XComment ("Saved on " + timeStamp)
+			);
+
+			var xRoot = new XElement ("jobs");
+			xDocument.Add (xRoot);
+
+			foreach (var job in jobs)
+			{
+				var xJob = new XElement ("job");
+				xJob.Add (new XAttribute ("title",        job.JobFullName));
+				xJob.Add (new XAttribute ("printer-name", job.PrinterPhysicalName));
+
+				List<SectionToPrint> sectionsToPrint = job.Sections.Where (x => x.Enable).ToList ();
+
+				foreach (var section in sectionsToPrint)
+				{
+					var xSection = new XElement ("section");
+					xSection.Add (new XAttribute ("printer-unit",     section.PrinterUnit.LogicalName));
+					xSection.Add (new XAttribute ("printer-tray",     section.PrinterUnit.PhysicalPrinterTray));
+					xSection.Add (new XAttribute ("printer-x-offset", section.PrinterUnit.XOffset));
+					xSection.Add (new XAttribute ("printer-y-offset", section.PrinterUnit.YOffset));
+					xSection.Add (new XAttribute ("printer-width",    section.DocumentPrinter.RequiredPageSize.Width));
+					xSection.Add (new XAttribute ("printer-height",   section.DocumentPrinter.RequiredPageSize.Height));
+
+					for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
+					{
+						var xPage = new XElement ("page");
+						xPage.Add (new XAttribute ("rank", page));
+
+						var port = new XmlPort (xPage);
+						section.DocumentPrinter.CurrentPage = page;
+						section.DocumentPrinter.PrintBackgroundCurrentPage (port);
+						section.DocumentPrinter.PrintForegroundCurrentPage (port);
+
+						xSection.Add (xPage);
+					}
+
+					xJob.Add (xSection);
+				}
+
+				xRoot.Add (xJob);
+			}
+
+			return xDocument.ToString (SaveOptions.None);
+		}
+
+		public static List<DeserializedPage> DeserializeJobs(string xmlSource, double zoom=0)
+		{
+			//	Désérialise une liste de jobs d'impression.
+			var pages = new List<DeserializedPage> ();
+
+			if (!string.IsNullOrWhiteSpace (xmlSource))
+			{
+				XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
+				XElement root = doc.Element ("jobs");
+
+				foreach (var xJob in root.Elements ())
+				{
+					string title               = (string) xJob.Attribute ("title");
+					string printerPhysicalName = (string) xJob.Attribute ("printer-name");
+
+					foreach (var xSection in xJob.Elements ())
+					{
+						string printerLogicalName  = (string) xSection.Attribute ("printer-unit");
+						string printerPhysicalTray = (string) xSection.Attribute ("printer-tray");
+						double width               = (double) xSection.Attribute ("printer-width");
+						double height              = (double) xSection.Attribute ("printer-height");
+
+						foreach (var xPage in xSection.Elements ())
+						{
+							int pageRank = (int) xPage.Attribute ("rank");
+
+							var dp = new DeserializedPage (title, printerLogicalName, printerPhysicalName, printerPhysicalTray, new Size (width, height), pageRank);
+
+							if (zoom != 0)
+							{
+								var port = new XmlPort (xPage);
+								dp.Miniature = port.Deserialize (new Size (width, height), zoom);
+							}
+
+							pages.Add (dp);
+						}
+					}
+				}
+			}
+
+			return pages;
+		}
 
 
 		private static void RegisterFonts()
