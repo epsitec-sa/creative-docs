@@ -14,14 +14,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class EndTotalDocumentItemEntity
 	{
-		public override bool IsAutomatic
-		{
-			get
-			{
-				return true;
-			}
-		}
-		
 		public override FormattedText GetCompactSummary()
 		{
 			var desc = this.TextForPrice;

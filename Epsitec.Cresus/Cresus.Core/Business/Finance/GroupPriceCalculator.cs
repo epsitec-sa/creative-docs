@@ -15,12 +15,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 {
 	public class GroupPriceCalculator : AbstractPriceCalculator
 	{
-		public GroupPriceCalculator()
+		public GroupPriceCalculator(int groupLevel)
 		{
 			this.members = new List<AbstractPriceCalculator> ();
+			this.groupLevel = groupLevel;
 		}
 
 
+		public int								GroupLevel
+		{
+			get
+			{
+				return this.groupLevel;
+			}
+		}
 
 		public IList<AbstractPriceCalculator>	Members
 		{
@@ -107,6 +115,12 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+
+		public void Add(GroupPriceCalculator calculator)
+		{
+			calculator.Members.OfType<ArticlePriceCalculator> ().ForEach (x => this.Add (x));
+			calculator.Members.OfType<SubTotalPriceCalculator> ().ForEach (x => this.Add (x));
+		}
 
 		public void Add(ArticlePriceCalculator calculator)
 		{
@@ -202,6 +216,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 		private readonly List<AbstractPriceCalculator> members;
+		private readonly int					groupLevel;
 
 		private decimal							totalPriceBeforeTaxDiscountable;
 		private decimal							totalPriceBeforeTaxNotDiscountable;
