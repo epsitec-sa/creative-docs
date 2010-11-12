@@ -32,6 +32,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+		public SubTotalDocumentItemEntity Item
+		{
+			get
+			{
+				return this.totalItem;
+			}
+		}
+
 		
 		public void ComputePrice(GroupPriceCalculator groupPriceCalculator)
 		{
@@ -86,6 +94,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		private void ApplyDiscount(ref decimal priceBeforeTax, ref decimal tax)
 		{
+			if (this.discount.IsNull ())
+            {
+				return;
+            }
 			if (this.discount.DiscountRate.HasValue)
 			{
 				decimal discountRatio = 1.00M - this.discount.DiscountRate.Value;

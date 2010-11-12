@@ -20,15 +20,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public virtual bool IsAutomatic
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-
 		public virtual void Process(IDocumentPriceCalculator priceCalculator)
 		{
 		}
