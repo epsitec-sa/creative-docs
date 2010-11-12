@@ -396,6 +396,7 @@ namespace Epsitec.Cresus.Core.Printers
 						xPage.Add (new XAttribute ("rank", page));
 
 						var port = new XmlPort (xPage);
+						section.DocumentPrinter.IsPreview = false;
 						section.DocumentPrinter.CurrentPage = page;
 						section.DocumentPrinter.PrintBackgroundCurrentPage (port);
 						section.DocumentPrinter.PrintForegroundCurrentPage (port);
