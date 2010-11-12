@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+	/// <summary>
+	/// The <c>TaxContext</c> class provides access to the VAT definitions for
+	/// specified date ranges and VAT codes.
+	/// </summary>
 	public class TaxContext
 	{
 		private TaxContext(CoreData data)

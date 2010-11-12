@@ -31,11 +31,19 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public ArticleDocumentItemEntity ArticleItem
+		public ArticleDocumentItemEntity	ArticleItem
 		{
 			get
 			{
 				return this.articleItem;
+			}
+		}
+
+		public Tax							Tax
+		{
+			get
+			{
+				return this.tax;
 			}
 		}
 
@@ -50,18 +58,18 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, quantity);
 			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
 			
-			Tax tax = this.ComputeTax (resultingLinePriceBeforeTax);
+			this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
 			this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
 			this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
 			this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
-			this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (tax.GetTax (0), this.currencyCode);
-			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (tax.GetTax (1), this.currencyCode);
+			this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (this.tax.GetTax (0), this.currencyCode);
+			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (this.tax.GetTax (1), this.currencyCode);
 			
 			this.articleItem.FinalLinePriceBeforeTax = null;
-			
-			this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (0));
-			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (tax.GetTaxRate (1));
+
+			this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (0));
+			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (1));
 		}
 
 		public void AdjustFinalPrice(decimal adjustmentRate)
@@ -171,7 +179,12 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			if (articlePrice.ValueIncludesTaxes)
 			{
-				throw new System.NotImplementedException ();
+				//	Use a dummy amount to compute the taxes, just so that we can have the
+				//	mean rate if the VAT is split over two years with different rates for
+				//	the same code :
+
+				Tax tax = this.ComputeTax (1000);
+				return tax.ComputeAmountBeforeTax (articlePrice.Value);
 			}
 			else
 			{
@@ -291,5 +304,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		private readonly System.DateTime			date;
 
 		private readonly PriceRoundingModeEntity	priceRoundingMode;
+		
+		private Tax									tax;
 	}
 }

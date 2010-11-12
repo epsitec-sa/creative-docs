@@ -49,8 +49,17 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.ApplyDiscount (ref resultingPriceBeforeTax, ref resultingTax);
 			this.ApplyFixedPrice (ref resultingPriceBeforeTax, ref resultingTax);
 
-			this.totalItem.ResultingPriceBeforeTax = PriceCalculator.ClipPriceValue (resultingPriceBeforeTax, this.currencyCode);
-			this.totalItem.ResultingTax            = PriceCalculator.ClipPriceValue (resultingTax, this.currencyCode);
+			decimal resultingPriceAfterTax  = resultingPriceBeforeTax + resultingTax;
+
+
+			resultingPriceBeforeTax = PriceCalculator.ClipPriceValue (resultingPriceBeforeTax, this.currencyCode);
+			resultingPriceAfterTax  = PriceCalculator.ClipPriceValue (resultingPriceAfterTax, this.currencyCode);
+
+			//	Use the prices as the references rather than using the tax; this ensures that
+			//	rounding errors affect the tax, not the price:
+			
+			this.totalItem.ResultingPriceBeforeTax = resultingPriceBeforeTax;
+			this.totalItem.ResultingTax            = resultingPriceAfterTax - resultingPriceBeforeTax;
 
 			this.totalItem.FinalPriceBeforeTax = null;
 		}

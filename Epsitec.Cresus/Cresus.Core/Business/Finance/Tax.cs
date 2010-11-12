@@ -23,6 +23,13 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.totalTax    = this.rateAmounts.Sum (x => x.Tax);
 		}
 
+		private Tax(IEnumerable<TaxRateAmount> rateAmounts, decimal totalAmount, decimal totalTax)
+		{
+			this.rateAmounts = new ReadOnlyList<TaxRateAmount> (rateAmounts);
+			this.totalAmount = totalAmount;
+			this.totalTax    = totalTax;
+		}
+
 
 		public IList<TaxRateAmount>			RateAmounts
 		{
@@ -102,6 +109,24 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return this.rateAmounts[index].Rate;
 		}
 
+
+		public static Tax Combine(Tax a, Tax b)
+		{
+			if (a == null)
+			{
+				return b;
+			}
+			if (b == null)
+			{
+				return a;
+			}
+
+			var rateAmounts = from rateAmount in a.rateAmounts.Concat (b.rateAmounts)
+							  group rateAmount by rateAmount.CodeRate into g
+							  select new TaxRateAmount (g.Sum (x => x.Amount), g.Key.Code, g.Key.Rate);
+
+			return new Tax (rateAmounts, a.totalAmount + b.totalAmount, a.totalTax + b.totalTax);
+		}
 		
 		
 		private readonly IList<TaxRateAmount> rateAmounts;
