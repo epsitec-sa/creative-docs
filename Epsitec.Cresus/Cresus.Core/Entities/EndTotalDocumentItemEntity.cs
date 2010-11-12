@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			var desc = this.TextForPrimaryPrice;
+			var desc = this.TextForPrice;
 
 			string total;
-			if (this.PrimaryPriceBeforeTax.HasValue)
+			if (this.PriceBeforeTax.HasValue)
 			{
-				total = Misc.PriceToString (this.PrimaryPriceBeforeTax);
+				total = Misc.PriceToString (this.PriceBeforeTax);
 			}
 			else if (this.FixedPriceAfterTax.HasValue)
 			{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				total = Misc.PriceToString (this.PrimaryPriceAfterTax);
+				total = Misc.PriceToString (this.PriceAfterTax);
 			}
 
 			var text = TextFormatter.FormatText (desc, total);

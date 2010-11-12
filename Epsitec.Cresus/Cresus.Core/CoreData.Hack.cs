@@ -821,7 +821,7 @@ namespace Epsitec.Cresus.Core
 			var quantityA1 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA1.Visibility = true;
-			lineA1.IndentationLevel = 0;
+			lineA1.GroupLevel = 0;
 			lineA1.BeginDate = invoiceA.BillingDate;
 			lineA1.EndDate = invoiceA.BillingDate;
 			lineA1.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-CP").FirstOrDefault ();
@@ -847,7 +847,7 @@ namespace Epsitec.Cresus.Core
 			var quantityA2_2 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA2.Visibility = true;
-			lineA2.IndentationLevel = 0;
+			lineA2.GroupLevel = 0;
 			lineA2.BeginDate = invoiceA.BillingDate;
 			lineA2.EndDate = invoiceA.BillingDate;
 			lineA2.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-FL").FirstOrDefault ();
@@ -885,7 +885,7 @@ namespace Epsitec.Cresus.Core
 			lineA3discount.RoundingMode = this.DataContext.GetEntitiesOfType<PriceRoundingModeEntity> (x => x.Modulo == 0.05M).FirstOrDefault ();
 
 			lineA3.Visibility = true;
-			lineA3.IndentationLevel = 0;
+			lineA3.GroupLevel = 0;
 			lineA3.BeginDate = new Date (2010, 11, 1);
 			lineA3.EndDate = new Date (2011, 1, 20);
 			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
@@ -918,7 +918,7 @@ namespace Epsitec.Cresus.Core
 			var quantityA4 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA4.Visibility = true;
-			lineA4.IndentationLevel = 0;
+			lineA4.GroupLevel = 0;
 			lineA4.BeginDate = invoiceA.BillingDate;
 			lineA4.EndDate = invoiceA.BillingDate;
 			lineA4.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
@@ -984,16 +984,16 @@ namespace Epsitec.Cresus.Core
 			taxA1.Visibility = true;
 			taxA1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			taxA1.Rate = vatRate;
-			taxA1.BaseAmount = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
+			taxA1.BaseAmount = (totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax).Value;
 			taxA1.ResultingTax = taxA1.Rate * taxA1.BaseAmount; // devrait être égal à 'totalA1.ResultingTax + lineA4.ResultingLineTax'
 			taxA1.Text = "TVA au taux standard";
 			
 			var totalA2 = this.DataContext.CreateEntity<EndTotalDocumentItemEntity> ();
 
 			totalA2.Visibility = true;
-			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax1;
-			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceAfterTax / 10) * 10.00M;	//	arrondi à 10.-
-			totalA2.TextForPrimaryPrice = "Total TTC";
+			totalA2.PriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax1;
+			totalA2.FixedPriceAfterTax = (int) (totalA2.PriceAfterTax / 10) * 10.00M;	//	arrondi à 10.-
+			totalA2.TextForPrice = "Total TTC";
 			totalA2.TextForFixedPrice = "Total TTC arrêté";
 
 			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
@@ -1012,6 +1012,16 @@ namespace Epsitec.Cresus.Core
 //			lineA3.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax1 * fixedPriceDiscount);
 			lineA4.FinalLinePriceBeforeTax = lineA4.ResultingLinePriceBeforeTax;
 //			lineA4.FinalLineTax1 = lineA4.ResultingLineTax1;
+
+			textA1.GroupIndex  = 0;		textA1.GroupLevel  = 1;
+			lineA1.GroupIndex  = 0;		lineA1.GroupLevel  = 1;
+			lineA2.GroupIndex  = 0;		lineA2.GroupLevel  = 1;
+			lineA3.GroupIndex  = 0;		lineA3.GroupLevel  = 1;
+			totalA1.GroupIndex = 0;		totalA1.GroupLevel = 1;
+
+			lineA4.GroupIndex  = 1000;	lineA4.GroupLevel  = 0;
+			taxA1.GroupIndex   = 1000;	taxA1.GroupLevel   = 0;
+			totalA2.GroupIndex = 1000;	totalA2.GroupLevel = 0;
 
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3
