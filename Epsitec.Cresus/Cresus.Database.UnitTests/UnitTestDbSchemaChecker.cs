@@ -464,6 +464,26 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void DbTableColumnIsAutoTimeStampTest()
+		{
+			DbTable table1 = new DbTable ();
+			DbTable table2 = new DbTable ();
+			DbTable table3 = new DbTable ();
+
+			table1.Columns.Add (new DbColumn ());
+			table2.Columns.Add (new DbColumn ());
+			table3.Columns.Add (new DbColumn ());
+
+			table1.Columns[0].IsAutoTimeStamp = true;
+			table2.Columns[0].IsAutoTimeStamp = true;
+			table3.Columns[0].IsAutoTimeStamp = false;
+
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+		}
+
+
+		[TestMethod]
 		public void DbTableColumnLocalizationTest()
 		{
 			DbTable table1 = new DbTable ();

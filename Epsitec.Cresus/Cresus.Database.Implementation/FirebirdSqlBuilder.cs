@@ -278,6 +278,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.BuildSetColumnCommentSqlCommand (table.Name, column);
 				this.BuildAutoIncrementTriggerForColumn (table.Name, column);
+				this.BuildAutoTimeStampTriggerForColumn (table.Name, column);
 			}
 		}
 
@@ -370,6 +371,54 @@ namespace Epsitec.Cresus.Database.Implementation
 			return triggerName;
 		}
 
+		private void BuildAutoTimeStampTriggerForColumn(string tableName, SqlColumn sqlColumn)
+		{
+			// Firebird does not support directly the auto timestamp columns, so we need to use
+			// a workaround described here : http://www.firebirdfaq.org/faq77/ . Basically, we need
+			// to create a trigger that assigns the timestamp on insert and updates.
+
+			if (sqlColumn.IsAutoTimeStamp)
+			{
+				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
+				string columnName = sqlColumn.Name;
+
+				this.commandCount++;
+				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
+				this.Append ("ACTIVE BEFORE INSERT OR UPDATE POSITION 0 ");
+				this.Append ("AS ");
+				this.Append ("BEGIN ");
+				this.Append ("IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);");
+				this.Append ("END;\n");
+			}
+		}
+
+		private void RemoveAutoTimeStampTriggerForColumn(string tableName, SqlColumn sqlColumn)
+		{
+			// As Firebird does not support directly auto timestamp columns, we need to cleanup the
+			// database if we are removing such a column by removing the trigger.
+
+			if (sqlColumn.IsAutoTimeStamp)
+			{
+				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
+
+				this.commandCount++;
+				this.Append ("DROP TRIGGER " + triggerName + ";\n");
+			}
+		}
+
+		private string GetAutoTimeStampTriggerName(string tableName, SqlColumn column)
+		{
+			string triggerName = tableName + "_" + column.Name + "_tts";
+
+			if (triggerName.Length > 32)
+			{
+				throw new System.Exception ("Trigger name for column " + column.Name + " of table " + tableName + " is too long.");
+			}
+
+			return triggerName;
+		}
+
+
 		public void RemoveTable(SqlTable table)
 		{
 			if (!this.ValidateName (table.Name))
@@ -384,6 +433,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			foreach (SqlColumn column in table.Columns)
 			{
 				this.RemoveAutoIncrementedTriggerForColumn (table.Name, column);
+				this.RemoveAutoTimeStampTriggerForColumn (table.Name, column);
 			}
 			
 			this.commandCount++;
@@ -424,6 +474,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.BuildSetColumnCommentSqlCommand (tableName, column);
 				this.BuildAutoIncrementTriggerForColumn (tableName, column);
+				this.BuildAutoTimeStampTriggerForColumn (tableName, column);
 			}
 		}
 
@@ -470,6 +521,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 
 				this.RemoveAutoIncrementedTriggerForColumn (tableName, column);
+				this.RemoveAutoTimeStampTriggerForColumn (tableName, column);
 				
 				this.commandCount++;
 				
@@ -772,7 +824,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.commandType = DbCommandType.ReturningData;
 			this.commandCount++;
 
-			this.Append ("select CAST('NOW' AS TIMESTAMP) FROM RDB$DATABASE");
+			this.Append ("SELECT CAST('NOW' AS TIMESTAMP) FROM RDB$DATABASE");
 		}
 				
 		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields)

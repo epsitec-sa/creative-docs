@@ -228,6 +228,7 @@ namespace Epsitec.Cresus.Database
 				&& a.IsPrimaryKey == b.IsPrimaryKey
 				&& a.IsForeignKey == b.IsForeignKey
 				&& a.IsAutoIncremented == b.IsAutoIncremented
+				&& a.IsAutoTimeStamp == b.IsAutoTimeStamp
 				&& a.RevisionMode == b.RevisionMode
 				&& DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
 			);

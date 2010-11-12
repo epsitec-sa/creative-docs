@@ -229,6 +229,20 @@ namespace Epsitec.Cresus.Database
 				this.autoIncrementStartIndex = value;
 			}
 		}
+
+
+		public bool IsAutoTimeStamp
+		{
+			get
+			{
+				return this.isAutoTimeStamp;
+			}
+			set
+			{
+				this.isAutoTimeStamp = value;
+			}
+		}
+
 		
 		/// <summary>
 		/// Sets the type.
@@ -283,6 +297,7 @@ namespace Epsitec.Cresus.Database
 		private bool							isNullable;
 		private bool							isAutoIncremented;
 		private long							autoIncrementStartIndex;
+		private bool							isAutoTimeStamp;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
 		private DbCharacterEncoding				encoding;
