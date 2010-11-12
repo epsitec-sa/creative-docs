@@ -55,7 +55,7 @@ namespace Epsitec.Common.Printing
 		public void Deserialize(IPaintPort dstPort)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un port graphique.
-			this.initialTransform = dstPort.Transform;
+			this.baseTransform = dstPort.Transform;
 
 			this.UpdateGraphicState (dstPort, updateAll: true);
 
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.transform = this.currentState.transform;
 
-				dstPort.Transform = this.lastState.transform.MultiplyBy (this.initialTransform);
+				dstPort.Transform = this.lastState.transform.MultiplyBy (this.baseTransform);
 			}
 
 			if (this.lastState.fillMode != this.currentState.fillMode || updateAll)
@@ -820,6 +820,6 @@ namespace Epsitec.Common.Printing
 		private readonly GraphicState					lastState;
 
 		private Font									currentFont;
-		private Transform								initialTransform;
+		private Transform								baseTransform;
 	}
 }
