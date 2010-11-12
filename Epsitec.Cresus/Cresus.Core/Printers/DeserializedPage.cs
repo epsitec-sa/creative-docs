@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return string.Format ("● Titre: <b>{0}</b><br/>● Nom logique: {1}<br/>● Imprimante: {2}<br/>● Bac: {3}<br/>● Dimensions: {4}×{5} mm<br/>● Page: {6}", this.title, this.printerLogicalName, this.printerPhysicalName, this.printerPhysicalTray, this.pageSize.Width, this.pageSize.Height, this.pageRank+1);
+				return string.Format ("● Titre: <b>{0}</b><br/>● Nom logique: {1}<br/>● Imprimante: {2}<br/>● Bac: {3}<br/>● Dimensions: {4}×{5} mm<br/>● N° page: {6}", this.title, this.printerLogicalName, this.printerPhysicalName, this.printerPhysicalTray, this.pageSize.Width, this.pageSize.Height, this.pageRank+1);
 			}
 		}
 

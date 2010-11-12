@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static void SaveJobs(List<JobToPrint> jobs)
 		{
-			//	Enregistre tous les jobs d'impression.
+			//	Sérialise et enregistre tous les jobs d'impression.
 			string xmlSource = PrintEngine.SerializeJobs (jobs);
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
 
@@ -415,6 +415,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public static List<DeserializedPage> DeserializeJobs(string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
+			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
 			var pages = new List<DeserializedPage> ();
 
 			if (!string.IsNullOrWhiteSpace (xmlSource))
@@ -440,7 +441,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 							var dp = new DeserializedPage (title, printerLogicalName, printerPhysicalName, printerPhysicalTray, new Size (width, height), pageRank);
 
-							if (zoom != 0)
+							if (zoom > 0)
 							{
 								var port = new XmlPort (xPage);
 								dp.Miniature = port.Deserialize (new Size (width, height), zoom);
