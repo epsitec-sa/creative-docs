@@ -24,9 +24,41 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.groups = new List<GroupPriceCalculator> ();
 		}
 
-		
-		public void Update()
+
+		public void SortLines()
 		{
+			List<AbstractDocumentItemEntity> lines = new List<AbstractDocumentItemEntity> ();
+
+			lines.AddRange (this.document.Lines.Where (x => x.GroupLevel > 0));
+			lines.AddRange (this.document.Lines.Where (x => x.GroupLevel == 0 && !x.IsAutomatic));
+			lines.AddRange (this.document.Lines.Where (x => x.GroupLevel == 0 && x.IsAutomatic));
+
+			if (Comparer.EqualObjects (lines, this.document.Lines))
+			{
+				return;
+			}
+
+			IEntityCollection collection = this.document.Lines as IEntityCollection;
+
+			if (collection != null)
+			{
+				using (collection.SuspendNotifications ())
+				{
+					this.document.Lines.Clear ();
+					this.document.Lines.AddRange (lines);
+				}
+			}
+			else
+			{
+				this.document.Lines.Clear ();
+				this.document.Lines.AddRange (lines);
+			}
+		}
+		
+		public void UpdatePrices()
+		{
+			this.SortLines ();
+
 			this.currentState = State.None;
 			
 			this.calculators.Clear ();

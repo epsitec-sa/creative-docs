@@ -14,6 +14,14 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class TaxDocumentItemEntity
 	{
+		public override bool IsAutomatic
+		{
+			get
+			{
+				return true;
+			}
+		}
+		
 		public override FormattedText GetCompactSummary()
 		{
 			var desc = this.Text;

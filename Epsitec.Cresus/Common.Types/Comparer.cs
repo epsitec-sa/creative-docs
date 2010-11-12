@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -80,6 +83,7 @@ namespace Epsitec.Common.Types
 			
 			return a.Equals (b);
 		}
+		
 		public static bool Equal(System.Array a, System.Array b)
 		{
 			//	Compare deux tableaux d'objets : l'égalité est définie par le
@@ -156,6 +160,7 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
+		
 		public static bool Equal(int[] a, int[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
@@ -178,6 +183,7 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
+		
 		public static bool Equal(string[] a, string[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
@@ -201,7 +207,8 @@ namespace Epsitec.Common.Types
 			return true;
 		}
 
-		public static bool EqualValues<T>(T[] a, T[] b) where T : struct, System.IEquatable<T>
+		public static bool EqualValues<T>(T[] a, T[] b)
+			where T : struct, System.IEquatable<T>
 		{
 			bool result;
 
@@ -220,15 +227,45 @@ namespace Epsitec.Common.Types
 
 			return true;
 		}
-		public static bool EqualObjects<T>(T[] a, T[] b) where T : class
+
+		public static bool EqualObjects<T>(T[] a, T[] b)
+			where T : class
 		{
 			bool result;
-			
+
 			if (Comparer.PreCompare (a, b, out result))
 			{
 				return result;
 			}
-			
+
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					if ((a[i] == null) ||
+						(a[i].Equals (b[i]) == false))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		public static bool EqualObjects<T>(IEnumerable<T> collectionA, IEnumerable<T> collectionB)
+			where T : class
+		{
+			bool result;
+
+			T[] a = collectionA == null ? new T[0] : collectionA.ToArray ();
+			T[] b = collectionB == null ? new T[0] : collectionB.ToArray ();
+
+			if (Comparer.PreCompare (a, b, out result))
+			{
+				return result;
+			}
+
 			for (int i = 0; i < a.Length; i++)
 			{
 				if (a[i] != b[i])
