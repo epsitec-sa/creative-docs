@@ -18,12 +18,16 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 			this.document = document;
 			this.calculators = new List<AbstractPriceCalculator> ();
+			this.groups = new List<GroupPriceCalculator> ();
 		}
 
 		
 		public void Update()
 		{
-			this.currentState = State.Article;
+			this.currentState = State.None;
+			
+			this.calculators.Clear ();
+			this.groups.Clear ();
 
 			foreach (var line in this.document.Lines)
 			{
@@ -33,6 +37,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		enum State
 		{
+			None,
 			Article,
 			Total,
 		}
@@ -50,28 +55,31 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		void IDocumentPriceCalculator.Process(ArticlePriceCalculator calculator)
 		{
-			this.calculators.Add (calculator);
-			calculator.ComputePrice ();
-			
-			if (this.currentGroup == null)
+			if (this.currentState != State.Article)
 			{
+				if (this.currentGroup != null)
+				{
+					this.groups.Add (this.currentGroup);
+				}
+
+				this.currentState = State.Article;
 				this.currentGroup = new GroupPriceCalculator ();
 			}
 
+			this.calculators.Add (calculator);
+			
+			calculator.ComputePrice ();
+			
 			this.currentGroup.Add (calculator);
-
-			var item  = calculator.ArticleItem;
-			var value = item.ResultingLinePriceBeforeTax.Value;
-			var tax   = PriceCalculator.Sum (item.ResultingLineTax1, item.ResultingLineTax2);
-
-			this.currentGroup.Accumulate (value, tax, item.NeverApplyDiscount);
 		}
 
 		void IDocumentPriceCalculator.Process(SubTotalPriceCalculator calculator)
 		{
 			this.calculators.Add (calculator);
-			calculator.ComputePrice (this.currentGroup);
+			
+			calculator.ComputePrice (this.currentGroup ?? new GroupPriceCalculator ());
 
+			this.currentState = State.Total;
 			this.currentGroup = new GroupPriceCalculator ();
 			this.currentGroup.Add (calculator);
 		}
@@ -80,21 +88,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		private readonly BusinessDocumentEntity		document;
 		private readonly List<AbstractPriceCalculator> calculators;
+		private readonly List<GroupPriceCalculator>	groups;
 
 
-		private GroupPriceCalculator currentGroup;
-		private SubTotalPriceCalculator lastPriceCalculator;
-		
-		private State currentState;
-	}
-
-	public interface IDocumentPriceCalculator
-	{
-		BusinessDocumentEntity Document
-		{
-			get;
-		}
-		void Process(ArticlePriceCalculator calculator);
-		void Process(SubTotalPriceCalculator calculator);
+		private GroupPriceCalculator			currentGroup;
+		private State							currentState;
 	}
 }

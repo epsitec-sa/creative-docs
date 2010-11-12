@@ -994,7 +994,6 @@ namespace Epsitec.Cresus.Core
 			decimal? fixedPriceDiscount = (totalBeforeTax - lineA4.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
 
 			totalA1.FinalPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA1.ResultingPriceBeforeTax * fixedPriceDiscount);
-			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
 
 			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLinePriceBeforeTax * fixedPriceDiscount);
 //			lineA1.FinalLineTax1 = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax1 * fixedPriceDiscount);

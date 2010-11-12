@@ -91,6 +91,7 @@
     <Compile Include="Business\Finance\ArticlePriceCalculator.cs" />
     <Compile Include="Business\Finance\DocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\GroupPriceCalculator.cs" />
+    <Compile Include="Business\Finance\IDocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculator.cs" />
     <Compile Include="Business\Finance\Tax.cs" />
     <Compile Include="Business\Finance\TaxCalculator.cs" />

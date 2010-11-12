@@ -234,6 +234,11 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
+
+			//	EXPERIMENTAL :
+
+			var calculator = new Epsitec.Cresus.Core.Business.Finance.DocumentPriceCalculator (x);
+			calculator.Update ();
 		}
 
 		private static void BackwardUpdatePrices(BusinessDocumentEntity x, decimal discountRate)
@@ -260,7 +265,6 @@ namespace Epsitec.Cresus.Core.Helpers
 					var price = line as SubTotalDocumentItemEntity;
 
 					price.FinalPriceBeforeTax = Misc.PriceConstrain (price.ResultingPriceBeforeTax * discountRate);
-					price.FinalTax            = Misc.PriceConstrain (price.ResultingTax            * discountRate);
 				}
 			}
 		}

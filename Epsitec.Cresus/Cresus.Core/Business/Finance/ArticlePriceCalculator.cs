@@ -21,6 +21,13 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			this.articleDef   = this.articleItem.ArticleDefinition;
 			this.currencyCode = this.document.BillingCurrencyCode;
 			this.date         = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
+			
+			this.priceRoundingMode = new PriceRoundingModeEntity ()
+			{
+				Modulo = 0.05M,
+				AddBeforeModulo = 0.025M,
+				PriceRoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
+			};
 		}
 
 
@@ -157,6 +164,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
 		{
+			if (articlePrice == null)
+			{
+				return 0;
+			}
+
 			if (articlePrice.ValueIncludesTaxes)
 			{
 				throw new System.NotImplementedException ();

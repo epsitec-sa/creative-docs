@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 
 
-		public IList<AbstractPriceCalculator> Members
+		public IList<AbstractPriceCalculator>	Members
 		{
 			get
 			{
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalPriceBeforeTax
+		public decimal							TotalPriceBeforeTax
 		{
 			get
 			{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalPriceBeforeTaxDiscountable
+		public decimal							TotalPriceBeforeTaxDiscountable
 		{
 			get
 			{
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalPriceBeforeTaxNotDiscountable
+		public decimal							TotalPriceBeforeTaxNotDiscountable
 		{
 			get
 			{
@@ -54,7 +54,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalTax
+		public decimal							MeanDiscountableTaxRate
+		{
+			get
+			{
+				if (this.totalPriceBeforeTaxDiscountable == 0)
+				{
+					return 0;
+				}
+
+				return this.totalTaxDiscountable / this.totalPriceBeforeTaxDiscountable;
+			}
+		}
+
+		public decimal							TotalTax
 		{
 			get
 			{
@@ -62,7 +75,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalTaxDiscountable
+		public decimal							TotalTaxDiscountable
 		{
 			get
 			{
@@ -70,7 +83,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal TotalTaxNotDiscountable
+		public decimal							TotalTaxNotDiscountable
 		{
 			get
 			{
@@ -80,10 +93,26 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 
 
-		public void Add(AbstractPriceCalculator calculator)
+		public void Add(ArticlePriceCalculator calculator)
 		{
+			var item  = calculator.ArticleItem;
+			var value = item.ResultingLinePriceBeforeTax.Value;
+			var tax   = PriceCalculator.Sum (item.ResultingLineTax1, item.ResultingLineTax2);
+
 			this.members.Add (calculator);
+			this.Accumulate (value, tax, item.NeverApplyDiscount);
 		}
+
+		public void Add(SubTotalPriceCalculator calculator)
+		{
+			var group = calculator.Group;
+
+			this.members.Add (calculator);
+			
+			this.Accumulate (group.TotalPriceBeforeTaxDiscountable, group.TotalTaxDiscountable, neverApplyDiscount:false);
+			this.Accumulate (group.totalPriceBeforeTaxNotDiscountable, group.TotalTaxNotDiscountable, neverApplyDiscount: true);
+		}
+
 
 		public void Accumulate(decimal valueBeforeTax, decimal tax, bool neverApplyDiscount)
 		{
@@ -110,11 +139,32 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
+		public void ComputeDiscountBeforeTax(decimal expectedPriceBeforeTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable)
+		{
+			decimal total = this.TotalPriceBeforeTax;
+			decimal minus = total - expectedPriceBeforeTax;
+
+			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
+			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
+		}
+
+		public void ComputeDiscountAfterTax(decimal expectedPriceAfterTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable)
+		{
+			decimal total = this.TotalPriceBeforeTax + this.TotalTax;
+			decimal minus = total - expectedPriceAfterTax;
+
+			minus = minus / (1M + this.MeanDiscountableTaxRate);
+
+			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
+			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
+		}
+
+
 		private readonly List<AbstractPriceCalculator> members;
 
-		private decimal totalPriceBeforeTaxDiscountable;
-		private decimal totalPriceBeforeTaxNotDiscountable;
-		private decimal totalTaxDiscountable;
-		private decimal totalTaxNotDiscountable;
+		private decimal							totalPriceBeforeTaxDiscountable;
+		private decimal							totalPriceBeforeTaxNotDiscountable;
+		private decimal							totalTaxDiscountable;
+		private decimal							totalTaxNotDiscountable;
 	}
 }
