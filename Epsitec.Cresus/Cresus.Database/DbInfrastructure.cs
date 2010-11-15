@@ -2982,6 +2982,10 @@ namespace Epsitec.Cresus.Database
 					{
 						IsAutoTimeStamp = true,
 					},
+					new DbColumn (Tags.ColumnSequenceNumber, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsAutoIncremented = true,
+					},
 				};
 
 				table.DefineCategory (DbElementCat.Internal);

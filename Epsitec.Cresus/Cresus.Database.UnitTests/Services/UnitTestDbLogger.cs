@@ -79,9 +79,11 @@ namespace Cresus.Database.UnitTests.Services
 					DbLogEntry logEntry2 = logger.GetLogEntry (logEntry1.EntryId);
 
 					Assert.AreEqual (dbId, logEntry1.ConnectionId);
+					Assert.AreEqual (dbId.Value, logEntry1.SequenceNumber);
 					Assert.AreEqual (logEntry1.EntryId, logEntry2.EntryId);
 					Assert.AreEqual (logEntry1.ConnectionId, logEntry2.ConnectionId);
 					Assert.AreEqual (logEntry1.DateTime, logEntry2.DateTime);
+					Assert.AreEqual (logEntry1.SequenceNumber, logEntry2.SequenceNumber);
 
 					logger.RemoveLogEntry (dbId);
 
