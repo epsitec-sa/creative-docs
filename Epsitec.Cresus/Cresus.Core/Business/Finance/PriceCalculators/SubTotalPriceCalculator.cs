@@ -75,12 +75,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.totalItem.FinalPriceBeforeTax = null;
 		}
 
-		public void AdjustFinalPrice(decimal adjustmentRate)
+		public override void ApplyFinalPriceAdjustment(decimal adjustment)
 		{
-			decimal totalPrice = this.group.TotalPriceBeforeTax;
-			decimal totalTax   = this.group.TotalTax;
+			decimal finalTotal   = this.totalItem.ResultingPriceBeforeTax.Value;
+			decimal discount     = this.group.TotalPriceBeforeTax - finalTotal;
+			decimal discountable = this.group.TotalPriceBeforeTaxDiscountable - discount;
 
-			
+			decimal adjustedTotal = discountable * adjustment + this.group.TotalPriceBeforeTaxNotDiscountable;
+
+			this.totalItem.FinalPriceBeforeTax = PriceCalculator.ClipPriceValue (adjustedTotal, this.currencyCode);
+			this.group.AdjustFinalPrices (adjustedTotal);
 		}
 
 		private void ApplyFixedPrice(ref decimal priceBeforeTax, ref decimal tax)
