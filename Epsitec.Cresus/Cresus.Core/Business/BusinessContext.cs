@@ -541,7 +541,9 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
 
+			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
 			this.dataContext.ReloadEntities ();
+			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
 		

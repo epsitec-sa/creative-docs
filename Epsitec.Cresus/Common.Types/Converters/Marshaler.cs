@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>Marshaler</c> class can get/set values represented by strings,
 	/// automatically converting between the underlying type and <c>string</c>.
 	/// </summary>
-	public abstract class Marshaler
+	public abstract class Marshaler : IReadOnly
 	{
 		/// <summary>
 		/// Gets a value indicating whether this marshaler operates on a nullable
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2>> getterExpression, System.Action<T1, T2> setter)
+		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2>> getterExpression, System.Action<T1, T2> setter = null)
 		{
 			var getter = getterExpression.Compile ();
 
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getterExpression, System.Action<T1, T2?> setter)
+		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getterExpression, System.Action<T1, T2?> setter = null)
 			where T2 : struct
 		{
 			var getter = getterExpression.Compile ();
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T> Create<T>(Expression<System.Func<T>> getterExpression, System.Action<T> setter)
+		public static Marshaler<T> Create<T>(Expression<System.Func<T>> getterExpression, System.Action<T> setter = null)
 		{
 			var getter = getterExpression.Compile ();
 
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T?> Create<T>(Expression<System.Func<T?>> getterExpression, System.Action<T?> setter)
+		public static Marshaler<T?> Create<T>(Expression<System.Func<T?>> getterExpression, System.Action<T?> setter = null)
 			where T : struct
 		{
 			var getter = getterExpression.Compile ();
@@ -172,5 +172,14 @@ namespace Epsitec.Common.Types.Converters
 
 
 		protected abstract object GetObjectValue();
+
+		#region IReadOnly Members
+
+		public abstract bool IsReadOnly
+		{
+			get;
+		}
+
+		#endregion
 	}
 }
