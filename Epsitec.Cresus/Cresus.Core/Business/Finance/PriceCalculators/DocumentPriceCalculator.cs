@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.ComputeLinePrices ();
 
 			var group = this.GetLastGroup ();
-			var taxes = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable);
+			var taxes = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable) ?? new Tax ();
 
 			this.ComputeTaxesAndEndTotal (group, taxes);
 			this.ComputeFinalPrices (group, taxes);
