@@ -8,6 +8,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -413,8 +415,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
+			DbId connectionId = new DbId (this.ConnectionInformation.ConnectionId);
+			DbLogEntry dbLogEntry = this.DbInfrastructure.Logger.CreateLogEntry (connectionId);
+
 			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure);
-			EpsitecEntitySerializer.Import (file, this.dbInfrastructure);
+			EpsitecEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry);
 		}
 
 		

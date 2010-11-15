@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -52,6 +54,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -89,34 +93,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
-					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
-					AbstractContactEntity contact2 = dataContext2.ResolveEntity<AbstractContactEntity> (keycontact);
+					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					{
+						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
+						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
+						AbstractContactEntity contact2 = dataContext2.ResolveEntity<AbstractContactEntity> (keycontact);
 
-					Assert.IsNotNull (person1);
-					Assert.IsNotNull (person2);
-					Assert.IsNotNull (contact2);
+						Assert.IsNotNull (person1);
+						Assert.IsNotNull (person2);
+						Assert.IsNotNull (contact2);
 
-					dataContext1.DeleteEntity (person1);
-					contact2.NaturalPerson = person2;
+						dataContext1.DeleteEntity (person1);
+						contact2.NaturalPerson = person2;
 
-					dataContext1.SaveChanges ();
-					dataContext2.SaveChanges ();
+						dataContext1.SaveChanges ();
+						dataContext2.SaveChanges ();
 
-					// TODO Here there is a row which is inserted in the table that stores
-					// the relation between the contacts and the persons. Therefore in the
-					// database, there is a relation from the contact to the person, even if
-					// the person does not exist anymore. When the person of the contact is
-					// resolved, no person with the given id exists, so it is as if there is
-					// nothing in the row.
-					// The behavior is fine, but we have now polluted the database with some
-					// garbage stuff. Hopefully, when the field will be modified the next
-					// time, this garbage will be trashed.
-					// Marc
-				}
+						// TODO Here there is a row which is inserted in the table that stores
+						// the relation between the contacts and the persons. Therefore in the
+						// database, there is a relation from the contact to the person, even if
+						// the person does not exist anymore. When the person of the contact is
+						// resolved, no person with the given id exists, so it is as if there is
+						// nothing in the row.
+						// The behavior is fine, but we have now polluted the database with some
+						// garbage stuff. Hopefully, when the field will be modified the next
+						// time, this garbage will be trashed.
+						// Marc
+					}
 
 					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 					{
@@ -142,6 +148,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -196,6 +204,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -257,6 +267,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -294,6 +306,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -341,6 +355,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{

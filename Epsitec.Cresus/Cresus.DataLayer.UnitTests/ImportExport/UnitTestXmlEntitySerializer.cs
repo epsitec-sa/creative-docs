@@ -47,6 +47,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -62,6 +64,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
@@ -84,6 +88,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.RegisterSchema (dataContext);
@@ -108,6 +114,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
@@ -151,6 +159,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -202,6 +212,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
@@ -243,6 +255,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));

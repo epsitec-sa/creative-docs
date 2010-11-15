@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -52,6 +54,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -75,6 +79,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -100,6 +106,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -136,6 +144,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
 				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
 				{
+					dataInfrastructure1.OpenConnection ("id");
+					dataInfrastructure2.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure1.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure2.CreateDataContext ())
 					{
@@ -171,6 +182,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -194,6 +207,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -219,6 +234,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));

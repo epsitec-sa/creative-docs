@@ -44,6 +44,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -57,6 +59,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -90,6 +94,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -119,6 +125,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -148,6 +156,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -170,9 +180,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest1()
 		{
-
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -203,6 +214,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -234,6 +247,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -264,6 +279,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -289,6 +306,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -322,6 +341,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -355,6 +376,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -388,6 +411,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -416,6 +441,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -440,6 +467,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -468,6 +497,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					var contact = dataContext.CreateEntityAndRegisterAsEmpty<UriContactEntity> ();

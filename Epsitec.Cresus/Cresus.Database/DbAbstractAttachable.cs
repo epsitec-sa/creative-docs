@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Gets a sequence of values out of a single row in the table which satisfies some conditions.
 		/// </summary>
-		/// <param name="dbColumns">The collection of <see cref="DbColumn"/>s defining which values of the row to return.</param>
+		/// <param name="dbColumns">The sequence of <see cref="DbColumn"/> defining which values of the row to return.</param>
 		/// <param name="conditions">The conditions defining which row to return.</param>
 		/// <returns>The given values of the given row.</returns>
 		/// <exception cref="System.Exception">If there is zero or more that one rows that satisfies the conditions.</exception>

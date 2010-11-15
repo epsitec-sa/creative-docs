@@ -2,6 +2,7 @@
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
+using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
 
@@ -24,10 +25,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public TableDefinition(string name, TableCategory category, IEnumerable<ColumnDefinition> columns)
+		public TableDefinition(string name, TableCategory category, bool containsLogColumn, IEnumerable<ColumnDefinition> columns)
 		{
 			this.Name = name;
-			this.category = category;
+			this.Category = category;
+			this.ContainsLogColumn = containsLogColumn;
 			this.Columns = columns.ToList ();
 		}
 
@@ -39,7 +41,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public TableCategory category
+		public TableCategory Category
+		{
+			get;
+			private set;
+		}
+
+
+		public bool ContainsLogColumn
 		{
 			get;
 			private set;
@@ -58,6 +67,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			this.WriteXmlStart (xmlWriter, index);
 			this.WriteXmlName (xmlWriter);
 			this.WriteXmlCategory (xmlWriter);
+			this.WriteXmlContainsLogColumn (xmlWriter);
 			this.WriteXmlColumns (xmlWriter);
 			this.WriteXmlEnd (xmlWriter);
 		}
@@ -81,7 +91,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private void WriteXmlCategory(XmlWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement ("category");
-			xmlWriter.WriteValue (System.Enum.GetName (typeof (TableCategory), this.category));
+			xmlWriter.WriteValue (System.Enum.GetName (typeof (TableCategory), this.Category));
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		private void WriteXmlContainsLogColumn(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("log");
+			xmlWriter.WriteValue (InvariantConverter.ConvertToString (this.ContainsLogColumn));
 			xmlWriter.WriteEndElement ();
 		}
 
@@ -277,11 +295,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			string name = TableDefinition.ReadXmlName (xmlReader);
 			TableCategory category = TableDefinition.ReadXmlCategory (xmlReader);
+			bool containsLogColumn = TableDefinition.ReadXmlContainsLogColumn (xmlReader);
 			IEnumerable<ColumnDefinition> columns = TableDefinition.ReadXmlColumns (xmlReader);
 
 			TableDefinition.ReadXmlEnd (xmlReader);
 
-			return new TableDefinition (name, category, columns);
+
+			return new TableDefinition (name, category, containsLogColumn, columns);
 		}
 
 
@@ -320,11 +340,23 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			xmlReader.ReadStartElement ("category");
 
-			string dbRawTypeAsString = xmlReader.ReadContentAsString ();
+			string categoryAsString = xmlReader.ReadContentAsString ();
 
 			xmlReader.ReadEndElement ();
 
-			return (TableCategory) System.Enum.Parse (typeof (TableCategory), dbRawTypeAsString);
+			return (TableCategory) System.Enum.Parse (typeof (TableCategory), categoryAsString);
+		}
+
+
+		private static bool ReadXmlContainsLogColumn(XmlReader xmlReader)
+		{
+			xmlReader.ReadStartElement ("log");
+
+			string containsLogColumnAsString = xmlReader.ReadContentAsString ();
+
+			xmlReader.ReadEndElement ();
+
+			return InvariantConverter.ConvertFromString<bool> (containsLogColumnAsString);
 		}
 
 
@@ -353,7 +385,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, int index)
+		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, int index)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 
@@ -361,7 +393,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!isEmpty)
 			{
-				this.InsertRows (dbInfrastructure, this.ProcessRowsRead (this.ReadXmlRows (xmlReader)));
+				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (this.ReadXmlRows (xmlReader)));
 
 				TableDefinition.ReadXmlEnd (xmlReader);
 			}
@@ -453,13 +485,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void InsertRows(DbInfrastructure dbInfrastructure, IEnumerable<IList<object>> rows)
+		private void InsertRows(DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, IEnumerable<IList<object>> rows)
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				foreach (IList<object> row in rows)
 				{
-					this.InsertRow (dbInfrastructure, dbTransaction, row);
+					this.InsertRow (dbInfrastructure, dbTransaction, dbLogEntry, row);
 				}
 
 				dbTransaction.Commit ();
@@ -467,7 +499,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IList<object> row)
+		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, DbLogEntry dbLogEntry, IList<object> row)
 		{
 			string tableName = this.Name;
 			SqlFieldList sqlFields = new SqlFieldList ();
@@ -486,9 +518,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			sqlFields.Add (this.CreateSqlFieldForStatus ());
 
-			if (this.category == TableCategory.Data)
+			if (this.Category == TableCategory.Data && this.ContainsLogColumn)
 			{
-				sqlFields.Add (this.CreateSqlFieldForLog ());
+				sqlFields.Add (this.CreateSqlFieldForLog (dbLogEntry));
 			}
 
 			dbTransaction.SqlBuilder.InsertData (tableName, sqlFields);
@@ -501,19 +533,16 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			// TODO Get the real value for the status.
 			// Marc
 			
-			SqlField sqlField = SqlField.CreateConstant (0, DbRawType.Int64);
+			SqlField sqlField = SqlField.CreateConstant ((short) DbRowStatus.Live , DbRawType.Int16);
 			sqlField.Alias = Tags.ColumnStatus;
 
 			return sqlField;
 		}
 
 
-		private SqlField CreateSqlFieldForLog()
+		private SqlField CreateSqlFieldForLog(DbLogEntry logEntryId)
 		{
-			// TODO Get the real value for the log.
-			// Marc
-			
-			SqlField sqlField = SqlField.CreateConstant (0, DbRawType.Int64);
+			SqlField sqlField = SqlField.CreateConstant (logEntryId.EntryId, DbRawType.Int64);
 			sqlField.Alias = Tags.ColumnRefLog;
 
 			return sqlField;

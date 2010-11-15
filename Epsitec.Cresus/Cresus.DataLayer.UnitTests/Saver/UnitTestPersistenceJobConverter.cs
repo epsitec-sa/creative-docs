@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -58,6 +60,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new PersistenceJobConverter (dataContext);
@@ -81,6 +85,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -99,6 +105,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -122,6 +130,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -140,6 +150,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -168,6 +180,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -206,6 +220,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -224,6 +240,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -249,6 +267,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -279,6 +299,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -309,6 +331,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -335,10 +359,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<AbstractEntity> targets = new List<AbstractEntity> ()
-				{
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-				};
+					{
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+					};
 					PersistenceJobType jobType = PersistenceJobType.Insert;
 
 					CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
@@ -355,6 +379,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -363,10 +389,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					Druid localEntityId = Druid.Parse ("[L0AN]");
 					Druid fieldId = Druid.Parse ("[L0AS]");
 					List<AbstractEntity> targets = new List<AbstractEntity> ()
-				{
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-				};
+					{
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+					};
 					PersistenceJobType jobType = PersistenceJobType.Update;
 
 					CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);

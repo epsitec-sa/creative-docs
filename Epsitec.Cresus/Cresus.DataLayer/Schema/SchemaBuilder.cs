@@ -415,14 +415,18 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (tableType.BaseType == null)
 			{
-				//	If this entity has no parent in the class hierarchy, then we need to add a
+				// If this entity has no parent in the class hierarchy, then we need to add a
 				// special identification column, which can be used to map a row to its proper
-				// derived entity class.
+				// derived entity class. We also add a column which in order to log info about
+				// who made the last change to the entity.
+	
+				DbTypeDef keyTypeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
+				
+				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
+				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
 
-				DbTypeDef typeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
-				DbColumn column = new DbColumn (Tags.ColumnInstanceType, typeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
-
-				table.Columns.Add (column);
+				table.Columns.Add (typeColumn);
+				table.Columns.Add (logColumn);
 			}
 
 			return table;

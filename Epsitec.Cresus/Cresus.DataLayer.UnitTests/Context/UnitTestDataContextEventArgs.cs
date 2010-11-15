@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -43,6 +45,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new DataContextEventArgs (dataContext);
@@ -56,6 +60,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);

@@ -100,6 +100,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		        {
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
@@ -111,6 +113,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
@@ -141,6 +145,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -165,6 +171,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					UriContactEntity example = new UriContactEntity ()
@@ -201,6 +209,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000001)));
@@ -225,6 +235,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					LocationEntity example = new LocationEntity ()
@@ -261,6 +273,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000001)));
@@ -285,6 +299,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					LegalPersonEntity example = new LegalPersonEntity ()
@@ -321,6 +337,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -345,6 +363,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					AbstractContactEntity example = new AbstractContactEntity ()
@@ -381,6 +401,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000001)));
@@ -410,6 +432,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -451,6 +475,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000000 + UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
@@ -475,6 +501,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					MailContactEntity example = new MailContactEntity ()
@@ -515,6 +543,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (1000000000 + id)));
