@@ -22,6 +22,78 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public decimal BillingUnitQuantity
+		{
+			get
+			{
+				if (this.PrimaryUnitPriceBeforeTax == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.PrimaryLinePriceBeforeTax / this.PrimaryUnitPriceBeforeTax;
+				}
+			}
+		}
+
+		public decimal? PrimaryUnitPriceAfterTax
+		{
+			get
+			{
+				if (this.BillingUnitQuantity == 0)
+				{
+					return null;
+				}
+
+				if (this.PrimaryLinePriceAfterTax.HasValue)
+				{
+					return this.PrimaryLinePriceAfterTax.Value / this.BillingUnitQuantity;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		public decimal? ResultingUnitPriceAfterTax
+		{
+			get
+			{
+				if (this.BillingUnitQuantity == 0)
+				{
+					return null;
+				}
+
+				if (this.ResultingLinePriceAfterTax.HasValue)
+				{
+					return this.ResultingLinePriceAfterTax.Value / this.BillingUnitQuantity;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		public decimal? ResultingLinePriceAfterTax
+		{
+			get
+			{
+				if (this.ResultingLinePriceBeforeTax.HasValue)
+				{
+					return this.ResultingLinePriceBeforeTax.Value
+						+ this.ResultingLineTax1.GetValueOrDefault ()
+						+ this.ResultingLineTax2.GetValueOrDefault ();
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);

@@ -154,7 +154,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
-    <Compile Include="Entities\ArticlePriceGroupEntity.cs" />
+    <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />

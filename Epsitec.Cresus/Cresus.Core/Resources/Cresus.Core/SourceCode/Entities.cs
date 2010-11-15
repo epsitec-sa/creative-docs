@@ -33,7 +33,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQ3]", typeof (Epsitec.Cresus.Core.Entities.DiscountEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AV3]", typeof (Epsitec.Cresus.Core.Entities.PriceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A24]", typeof (Epsitec.Cresus.Core.Entities.VatDefinitionEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AC4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AC4]", typeof (Epsitec.Cresus.Core.Entities.PriceGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AJ4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AP4]", typeof (Epsitec.Cresus.Core.Entities.CurrencyEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AD5]", typeof (Epsitec.Cresus.Core.Entities.AffairEntity))]
@@ -2318,6 +2318,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefaultPriceGroup</c> field.
+		///	designer:fld/L0AB2/L0AOM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AOM]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceGroupEntity DefaultPriceGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0AOM]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.DefaultPriceGroup;
+				if (oldValue != value)
+				{
+					this.OnDefaultPriceGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0AOM]", oldValue, value);
+					this.OnDefaultPriceGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultDiscounts</c> field.
 		///	designer:fld/L0AB2/L0AL7
 		///	</summary>
@@ -2368,6 +2390,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode? newValue);
 		partial void OnDefaultBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode? newValue);
+		partial void OnDefaultPriceGroupChanging(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
+		partial void OnDefaultPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
 		partial void OnDefaultCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
 		partial void OnDefaultCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
 		
@@ -3888,30 +3912,30 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.ArticlePriceGroup Entity
+#region Epsitec.Cresus.Core.PriceGroup Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>ArticlePriceGroup</c> entity.
+	///	The <c>PriceGroup</c> entity.
 	///	designer:cap/L0AC4
 	///	</summary>
-	public partial class ArticlePriceGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class PriceGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
-		#region IItemCode Members
+		#region ILifetime Members
 		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/L0AC4/L0AD3
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AC4/L0AB5
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
-		public string Code
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
 			}
 		}
 		#endregion
@@ -3938,6 +3962,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0AC4/L0AMM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMM]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AMM]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AMM]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>NeverApplyDiscount</c> field.
 		///	designer:fld/L0AC4/L0AM9
 		///	</summary>
@@ -3960,11 +4006,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DivideRatio</c> field.
+		///	The <c>DefaultDivideRatio</c> field.
 		///	designer:fld/L0AC4/L0AN9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AN9]")]
-		public global::System.Decimal? DivideRatio
+		public global::System.Decimal? DefaultDivideRatio
 		{
 			get
 			{
@@ -3972,21 +4018,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.DivideRatio;
+				global::System.Decimal? oldValue = this.DefaultDivideRatio;
 				if (oldValue != value)
 				{
-					this.OnDivideRatioChanging (oldValue, value);
+					this.OnDefaultDivideRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AN9]", oldValue, value);
-					this.OnDivideRatioChanged (oldValue, value);
+					this.OnDefaultDivideRatioChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>MultiplyRatio</c> field.
+		///	The <c>DefaultMultiplyRatio</c> field.
 		///	designer:fld/L0AC4/L0AO9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AO9]")]
-		public global::System.Decimal? MultiplyRatio
+		public global::System.Decimal? DefaultMultiplyRatio
 		{
 			get
 			{
@@ -3994,21 +4040,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.MultiplyRatio;
+				global::System.Decimal? oldValue = this.DefaultMultiplyRatio;
 				if (oldValue != value)
 				{
-					this.OnMultiplyRatioChanging (oldValue, value);
+					this.OnDefaultMultiplyRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AO9]", oldValue, value);
-					this.OnMultiplyRatioChanged (oldValue, value);
+					this.OnDefaultMultiplyRatioChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>RoundingMode</c> field.
+		///	The <c>DefaultRoundingMode</c> field.
 		///	designer:fld/L0AC4/L0AV9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AV9]")]
-		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity RoundingMode
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity DefaultRoundingMode
 		{
 			get
 			{
@@ -4016,34 +4062,36 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultRoundingMode;
 				if (oldValue != value)
 				{
-					this.OnRoundingModeChanging (oldValue, value);
+					this.OnDefaultRoundingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0AV9]", oldValue, value);
-					this.OnRoundingModeChanged (oldValue, value);
+					this.OnDefaultRoundingModeChanged (oldValue, value);
 				}
 			}
 		}
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
-		partial void OnDivideRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnDivideRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMultiplyRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
-		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnDefaultDivideRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultDivideRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultMultiplyRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnDefaultRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 140);	// [L0AC4]
 		public static readonly new string EntityStructuredTypeKey = "[L0AC4]";
@@ -4205,15 +4253,37 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ValueOverridesPriceGroup</c> field.
+		///	designer:fld/L0AJ4/L0AQM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQM]")]
+		public bool ValueOverridesPriceGroup
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0AQM]");
+			}
+			set
+			{
+				bool oldValue = this.ValueOverridesPriceGroup;
+				if (oldValue != value)
+				{
+					this.OnValueOverridesPriceGroupChanging (oldValue, value);
+					this.SetField<bool> ("[L0AQM]", oldValue, value);
+					this.OnValueOverridesPriceGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PriceGroups</c> field.
 		///	designer:fld/L0AJ4/L0AN4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AN4]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity> PriceGroups
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> PriceGroups
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity> ("[L0AN4]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0AN4]");
 			}
 		}
 		///	<summary>
@@ -4271,6 +4341,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnValueChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnValueIncludesTaxesChanging(bool oldValue, bool newValue);
 		partial void OnValueIncludesTaxesChanged(bool oldValue, bool newValue);
+		partial void OnValueOverridesPriceGroupChanging(bool oldValue, bool newValue);
+		partial void OnValueOverridesPriceGroupChanged(bool oldValue, bool newValue);
 		partial void OnPriceCalculatorChanging(string oldValue, string newValue);
 		partial void OnPriceCalculatorChanged(string oldValue, string newValue);
 		partial void OnPriceCalculatorArgChanging(string oldValue, string newValue);
@@ -6987,6 +7059,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PrimaryLinePriceAfterTax</c> field.
+		///	designer:fld/L0A9A/L0APM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APM]")]
+		public global::System.Decimal? PrimaryLinePriceAfterTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0APM]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.PrimaryLinePriceAfterTax;
+				if (oldValue != value)
+				{
+					this.OnPrimaryLinePriceAfterTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0APM]", oldValue, value);
+					this.OnPrimaryLinePriceAfterTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>NeverApplyDiscount</c> field.
 		///	designer:fld/L0A9A/L0A1B
 		///	</summary>
@@ -7273,6 +7367,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPrimaryUnitPriceBeforeTaxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnPrimaryLinePriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryLinePriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
 		partial void OnTaxRate1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -10677,6 +10773,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>BillingPriceGroup</c> field.
+		///	designer:fld/L0ADK/L0ANM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANM]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceGroupEntity BillingPriceGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0ANM]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.BillingPriceGroup;
+				if (oldValue != value)
+				{
+					this.OnBillingPriceGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0ANM]", oldValue, value);
+					this.OnBillingPriceGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>OtherPartyBillingMode</c> field.
 		///	designer:fld/L0ADK/L0AIK
 		///	</summary>
@@ -10861,6 +10979,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnBillingMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnShippingMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnShippingMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnBillingPriceGroupChanging(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
+		partial void OnBillingPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
 		partial void OnOtherPartyBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
 		partial void OnOtherPartyBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
 		partial void OnOtherPartyTaxModeChanging(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);

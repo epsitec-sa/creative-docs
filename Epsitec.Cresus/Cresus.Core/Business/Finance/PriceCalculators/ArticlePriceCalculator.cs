@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
@@ -20,14 +20,33 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.articleItem  = articleItem;
 			this.articleDef   = this.articleItem.ArticleDefinition;
 			this.currencyCode = this.document.BillingCurrencyCode;
+			this.priceGroup   = this.document.BillingPriceGroup.UnwrapNullEntity ();
 			this.date         = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
-			
-			this.priceRoundingMode = new PriceRoundingModeEntity ()
+
+			this.notDiscountable = this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
+
+			if ((this.priceGroup.IsNotNull ()) &&
+				(this.priceGroup.NeverApplyDiscount))
+            {
+				this.notDiscountable = true;
+            }
+
+			if ((this.priceGroup.IsNotNull ()) &&
+				(this.priceGroup.DefaultRoundingMode.IsNotNull ()))
 			{
-				Modulo = 0.05M,
-				AddBeforeModulo = 0.025M,
-				PriceRoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
-			};
+				this.priceRoundingMode = this.priceGroup.DefaultRoundingMode;
+			}
+			else
+			{
+				//	TODO: use rounding mode found in the settings...
+
+				this.priceRoundingMode = new PriceRoundingModeEntity ()
+				{
+					Modulo = 0.05M,
+					AddBeforeModulo = 0.025M,
+					PriceRoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
+				};
+			}
 		}
 
 
@@ -47,6 +66,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
+		public bool							NotDiscountable
+		{
+			get
+			{
+				return this.notDiscountable;
+			}
+		}
+
 		
 		public void ComputePrice()
 		{
@@ -54,14 +81,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var quantity       = this.GetTotalQuantity ();
 			var articlePrice   = this.GetArticlePrices (quantity).FirstOrDefault ();
 
+			//	TODO: apply PriceGroup to price if articlePrice.ValueOverridesPriceGroup is set to false
+
 			decimal primaryUnitPriceBeforeTax   = this.ComputePrimaryUnitPriceBeforeTax (roundingPolicy, articlePrice);
 			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, quantity);
 			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
+
+			decimal primaryLineTax = this.ComputeTax (primaryLinePriceBeforeTax).TotalTax;
 			
 			this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
 			this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
 			this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
+			this.articleItem.PrimaryLinePriceAfterTax    = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax + primaryLineTax, this.currencyCode);
 			this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
 			this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (this.tax.GetTax (0), this.currencyCode);
 			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (this.tax.GetTax (1), this.currencyCode);
@@ -74,7 +106,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public override void ApplyFinalPriceAdjustment(decimal adjustment)
 		{
-			if (this.articleItem.NeverApplyDiscount)
+			if (this.notDiscountable)
 			{
 				this.articleItem.FinalLinePriceBeforeTax = this.articleItem.ResultingLinePriceBeforeTax;
 			}
@@ -264,13 +296,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity)
 		{
-			var prices = from price in this.articleDef.ArticlePrices
-						 where price.CurrencyCode == this.currencyCode
-						 where this.date.InRange (price)
-						 where quantity.InRange (price.MinQuantity, price.MaxQuantity)
-						 select price;
-
-			return prices;
+			return this.articleDef.GetArticlePrices (quantity, this.date, this.currencyCode, this.priceGroup);
 		}
 
 		public IEnumerable<ArticleAccountingDefinitionEntity> GetArticleAccountingDefinition()
@@ -301,9 +327,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private readonly ArticleDefinitionEntity	articleDef;
 		private readonly CurrencyCode				currencyCode;
 		private readonly System.DateTime			date;
+		private readonly PriceGroupEntity			priceGroup;
 
 		private readonly PriceRoundingModeEntity	priceRoundingMode;
 		
 		private Tax									tax;
+		private bool								notDiscountable;
 	}
 }

@@ -504,22 +504,19 @@ namespace Epsitec.Cresus.Core
 			articleCategory4.ArticleType = Business.ArticleType.Goods;
 			articleCategory4.DefaultAccounting.Add (accountingDef);
 
-			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
-			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
-			var articlePriceGroup3 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup1 = this.DataContext.CreateEntity<PriceGroupEntity> ();
+			var articlePriceGroup2 = this.DataContext.CreateEntity<PriceGroupEntity> ();
+			var articlePriceGroup3 = this.DataContext.CreateEntity<PriceGroupEntity> ();
 
-			articlePriceGroup1.Code = "USER";
 			articlePriceGroup1.Name = "Prix catalogue";
 
-			articlePriceGroup2.Code = "RSLR";
 			articlePriceGroup2.Name = "Revendeur agréé";
-			articlePriceGroup2.MultiplyRatio = 0.70M;
-			articlePriceGroup2.DivideRatio = 1.00M;
+			articlePriceGroup2.DefaultMultiplyRatio = 0.70M;
+			articlePriceGroup2.DefaultDivideRatio = 1.00M;
 
-			articlePriceGroup3.Code = "CRTR";
 			articlePriceGroup3.Name = "Revendeur certifié";
-			articlePriceGroup3.MultiplyRatio = 0.70M;
-			articlePriceGroup3.DivideRatio = 1.00M;
+			articlePriceGroup3.DefaultMultiplyRatio = 0.70M;
+			articlePriceGroup3.DefaultDivideRatio = 1.00M;
 
 			var articleDef1 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 			var articleDef2 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
@@ -1074,7 +1071,7 @@ namespace Epsitec.Cresus.Core
 			yield return metadocA;
 		}
 
-		private ArticlePriceEntity CreateArticlePrice(decimal price, ArticlePriceGroupEntity articlePriceGroup1 = null, ArticlePriceGroupEntity articlePriceGroup2 = null, ArticlePriceGroupEntity articlePriceGroup3 = null)
+		private ArticlePriceEntity CreateArticlePrice(decimal price, PriceGroupEntity articlePriceGroup1 = null, PriceGroupEntity articlePriceGroup2 = null, PriceGroupEntity articlePriceGroup3 = null)
 		{
 			var articlePrice1 = this.DataContext.CreateEntity<ArticlePriceEntity> ();
 
