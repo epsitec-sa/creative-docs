@@ -1,13 +1,40 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
+using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
-	public class PriceCalculator
+	public static class PriceCalculator
 	{
+		public static void UpdatePrices(DataContext context, BusinessDocumentEntity document)
+		{
+			if (PriceCalculator.activeCalculator != null)
+            {
+				return;
+            }
+
+			try
+			{
+				using (PriceCalculator.activeCalculator = new DocumentPriceCalculator (context, document))
+				{
+					PriceCalculator.activeCalculator.UpdatePrices ();
+				}
+			}
+			finally
+			{
+				PriceCalculator.activeCalculator = null;
+			}
+		}
+
+
 		public static decimal ClipPriceValue(decimal value, CurrencyCode currency)
 		{
 			//	Currently, keep only cents for any price value. Maybe we should consider
@@ -63,5 +90,9 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			return sum;
 		}
+		
+		
+		[System.ThreadStatic]
+		private static DocumentPriceCalculator	activeCalculator;
 	}
 }

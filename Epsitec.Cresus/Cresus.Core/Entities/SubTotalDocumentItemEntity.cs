@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers.TabIds;
-using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,9 +50,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return EntityStatus.Valid;
 		}
 
-		public override void Process(Business.Finance.IDocumentPriceCalculator priceCalculator)
+		public override void Process(IDocumentPriceCalculator priceCalculator)
 		{
-			priceCalculator.Process (new Business.Finance.SubTotalPriceCalculator (priceCalculator.Document, this));
+			priceCalculator.Process (new SubTotalPriceCalculator (priceCalculator.Document, this));
 		}
 	}
 }

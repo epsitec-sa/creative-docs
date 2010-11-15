@@ -1,11 +1,11 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Controllers.TabIds;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Controllers.TabIds;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public override void Process(Business.Finance.IDocumentPriceCalculator priceCalculator)
+		public override void Process(IDocumentPriceCalculator priceCalculator)
 		{
-			priceCalculator.Process (new Business.Finance.ArticlePriceCalculator (priceCalculator.Document, this));
+			priceCalculator.Process (new ArticlePriceCalculator (priceCalculator.Document, this));
 		}
 	}
 }
