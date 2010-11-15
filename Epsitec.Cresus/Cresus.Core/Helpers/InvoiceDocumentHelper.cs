@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Core.Helpers
 			return x.Lines.Count (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is SubTotalDocumentItemEntity));
 		}
 
+#if false
 		public static void UpdatePrices(BusinessDocumentEntity x, DataContext dataContext)
 		{
-#if false
 			//	Recalcule complètement une facture.
 			//	
 			//	Une ligne de total (PriceDocumentItemEntity) effectue un sous-total de tout ce qui précède,
@@ -235,10 +235,8 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
-#else
-			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (dataContext, x);
-#endif
 		}
+#endif
 
 		private static void BackwardUpdatePrices(BusinessDocumentEntity x, decimal discountRate)
 		{

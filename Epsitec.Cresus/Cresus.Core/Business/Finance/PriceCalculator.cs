@@ -14,10 +14,15 @@ namespace Epsitec.Cresus.Core.Business.Finance
 {
 	public static class PriceCalculator
 	{
-		public static void UpdatePrices(DataContext context, BusinessDocumentEntity document)
+		public static void UpdatePrices(BusinessContext context, BusinessDocumentEntity document)
 		{
 			if (PriceCalculator.activeCalculator != null)
             {
+				//	Calls to UpdatePrices while the document price calculator is working
+				//	should never happen, since the business rules applied when updating
+				//	an invoice cannot fire recursively. However, if this is invoked manually
+				//	in order to test the code, it can nevertheless happen.
+				
 				return;
             }
 
