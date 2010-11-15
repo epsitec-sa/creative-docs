@@ -79,5 +79,13 @@ namespace Epsitec.Cresus.Core.Printers
 			return ((px >= minx && py >= miny) || (px >= miny && py >= minx)) &&
 				   ((px <= maxx && py <= maxy) || (px <= maxy && py <= maxx));
 		}
+
+
+		public static PrinterUnit GetPrinterUnit(string logicalPrinterName)
+		{
+			//	Cherche une unité d'impression d'après son nom.
+			List<PrinterUnit> printerUnitList = PrinterApplicationSettings.GetPrinterUnitList ();
+			return printerUnitList.Where (p => p.LogicalName == logicalPrinterName).FirstOrDefault ();
+		}
 	}
 }
