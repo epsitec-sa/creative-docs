@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 			{
-				ValueGetter         = () => this.ArticleDefinition,
-				ValueSetter         = x => this.ArticleDefinition = x,
-				ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
+				ValueGetter         = () => this.Entity.ArticleDefinition,
+				ValueSetter         = x => this.SetArticleDefinition (x),
+				ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 			};
 
 			builder.CreateAutoCompleteTextField ("Article", controller);
@@ -105,9 +105,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 
-			FrameBox group = builder.CreateGroup (tile, "Prix unitaire et total HT");
-			builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetPrice (),      this.SetPrice));
-			builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingLinePriceBeforeTax, null));
+			FrameBox group1 = builder.CreateGroup (tile, "Prix unitaire HT et total HT avant rabais");
+			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryUnitPriceBeforeTax));
+			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryLinePriceBeforeTax));
+
+			FrameBox group2 = builder.CreateGroup (tile, "Prix unitaire TTC et total TTC avant rabais");
+			builder.CreateTextField (group2, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryUnitPriceAfterTax));
+			builder.CreateTextField (group2, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryLinePriceAfterTax));
+
+			FrameBox group3 = builder.CreateGroup (tile, "Prix unitaire TTC et total TTC après rabais");
+			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingUnitPriceAfterTax));
+			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingLinePriceAfterTax));
 		}
 
 		private void CreateUIQuantities(SummaryDataItems data)
@@ -139,32 +147,45 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private ArticleDefinitionEntity ArticleDefinition
+		private void SetArticleDefinition(ArticleDefinitionEntity value)
 		{
-			get
+			if (this.Entity.ArticleDefinition.RefEquals (value))
 			{
-				return this.Entity.ArticleDefinition;
+				return;
 			}
-			set
-			{
-				if (this.Entity.ArticleDefinition.RefEquals (value) == false)
-				{
-					this.Entity.ArticleDefinition = value;
 
-					this.Entity.ArticleParameters = null;
+			var item = this.Entity;
 
-					this.UnitOfMeasure = value.BillingUnit;
-					this.SetPrice (this.GetArticlePrice ());
+			item.ArticleDefinition = value;
+			item.ArticleParameters = null;
+			item.ArticleTraceabilityDetails.Clear ();
+			item.ArticleQuantities.Clear ();
+			item.VatCode = value.GetOutputVatCode ();
+			item.NeverApplyDiscount = false;
+			item.TaxRate1 = null;
+			item.TaxRate2 = null;
+			item.FixedLinePrice = null;
+			item.FixedLinePriceIncludesTaxes = false;
+			item.ResultingLinePriceBeforeTax = null;
+			item.ResultingLineTax1 = null;
+			item.ResultingLineTax2 = null;
+			item.FinalLinePriceBeforeTax = null;
+			item.ArticleShortDescriptionCache = null;
+			item.ArticleLongDescriptionCache = null;
+			item.ReplacementText = null;
 
-					this.Entity.ReplacementText = null;
-					this.SetArticleDescription (this.GetArticleDescription ());
+			this.Entity.ArticleParameters = null;
 
-					this.parameterController.UpdateUI (this.Entity);
-					this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
+			this.UnitOfMeasure = value.BillingUnit;
+//-			this.SetPrice (this.GetArticlePrice ());
 
-					this.TileContainer.UpdateAllWidgets ();
-				}
-			}
+			this.Entity.ReplacementText = null;
+			this.SetArticleDescription (this.GetArticleDescription ());
+
+			this.parameterController.UpdateUI (this.Entity);
+			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
+
+			this.TileContainer.UpdateAllWidgets ();
 		}
 
 		private UnitOfMeasureEntity UnitOfMeasure
@@ -315,57 +336,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.Entity.Discounts[0].Value = v;
 				}
 			}
-
-			this.UpdatePrices ();
 		}
-
-
-		private decimal? GetArticlePrice()
-		{
-			return ArticleDocumentItemHelper.GetArticlePrice (this.Entity, System.DateTime.Now, Business.Finance.CurrencyCode.Chf);
-		}
-
-		private decimal? GetPrice()
-		{
-			return this.Entity.PrimaryUnitPriceBeforeTax;
-		}
-
-		private void SetPrice(decimal? value)
-		{
-			if (value.HasValue)
-			{
-				this.Entity.PrimaryUnitPriceBeforeTax = value.Value;
-				this.UpdatePrices ();
-			}
-		}
-
-		private decimal? GetTotalPrice()
-		{
-			return this.Entity.ResultingLinePriceBeforeTax;
-		}
-
-		private void SetTotalPrice(decimal? value)
-		{
-			if (value.HasValue)
-			{
-				this.Entity.ResultingLinePriceBeforeTax = value.Value;
-			}
-		}
-
-		private void UpdatePrices()
-		{
-#if false
-			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as BusinessDocumentEntity;
-
-			if (invoiceDocument != null)
-			{
-				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
-			}
-
-			this.TileContainer.UpdateAllWidgets ();
-#endif
-		}
-
 
 		private static bool IsEmpty(ArticleQuantityEntity quantity)
 		{

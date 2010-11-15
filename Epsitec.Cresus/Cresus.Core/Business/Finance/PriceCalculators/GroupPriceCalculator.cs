@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var tax   = calculator.Tax;
 
 			this.members.Add (calculator);
-			this.Accumulate (tax, item.NeverApplyDiscount);
+			this.Accumulate (tax, calculator.NotDiscountable);
 		}
 
 		public void Add(SubTotalPriceCalculator calculator)

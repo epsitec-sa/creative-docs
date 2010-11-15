@@ -3,8 +3,9 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business.Finance;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,68 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
+			}
+		}
+
+		public Business.Finance.VatCode GetOutputVatCode()
+		{
+			if ((this.OutputVatCode.HasValue == false) &&
+				(this.ArticleCategory.IsNotNull ()))
+			{
+				return this.ArticleCategory.DefaultOutputVatCode;
+			}
+			else
+			{
+				return this.OutputVatCode.GetValueOrDefault ();
+			}
+		}
+
+		public Business.Finance.VatCode GetInputVatCode()
+		{
+			if ((this.InputVatCode.HasValue == false) &&
+				(this.ArticleCategory.IsNotNull ()))
+			{
+				return this.ArticleCategory.DefaultInputVatCode;
+			}
+			else
+			{
+				return this.InputVatCode.GetValueOrDefault ();
+			}
+		}
+		
+		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity, System.DateTime date, CurrencyCode currencyCode, PriceGroupEntity priceGroup = null)
+		{
+			var prices = from price in this.ArticlePrices
+						 where price.CurrencyCode == currencyCode
+						 where date.InRange (price)
+						 where quantity.InRange (price.MinQuantity, price.MaxQuantity)
+						 select price;
+
+			if (priceGroup.IsNull ())
+			{
+				return prices;
+			}
+
+			//	Find specific article prices which match the specified price group.
+			//	If none can be found, return the generic article prices instead.
+			
+			var match = new List<ArticlePriceEntity> ();
+
+			foreach (var price in prices)
+			{
+				if (price.PriceGroups.Contains (priceGroup))
+				{
+					match.Add (price);
+				}
+			}
+
+			if (match.Count == 0)
+			{
+				return prices.Where (x => x.PriceGroups.Count == 0);
+			}
+			else
+			{
+				return match;
 			}
 		}
 	}
