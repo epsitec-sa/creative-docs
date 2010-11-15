@@ -51,8 +51,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				
 				builder.CreateFooterEditorTile ();
 			}
-
-//-			this.DataContext.EntityChanged += new Epsitec.Common.Support.EventHandler<EntityChangedEventArgs> (this.HandleDataContextEntityChanged);
 		}
 
 
@@ -67,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.ArticleDefinition,
-				ValueSetter         = x => this.SetArticleDefinition (x),
+				ValueSetter         = x => this.ResetArticleDefinition (x),
 				ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 			};
 
@@ -147,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private void SetArticleDefinition(ArticleDefinitionEntity value)
+		private void ResetArticleDefinition(ArticleDefinitionEntity value)
 		{
 			if (this.Entity.ArticleDefinition.RefEquals (value))
 			{
@@ -174,12 +172,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			item.ArticleLongDescriptionCache = null;
 			item.ReplacementText = null;
 
-			this.Entity.ArticleParameters = null;
-
-			this.UnitOfMeasure = value.BillingUnit;
-//-			this.SetPrice (this.GetArticlePrice ());
-
-			this.Entity.ReplacementText = null;
 			this.SetArticleDescription (this.GetArticleDescription ());
 
 			this.parameterController.UpdateUI (this.Entity);
@@ -187,19 +179,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			this.TileContainer.UpdateAllWidgets ();
 		}
-
-		private UnitOfMeasureEntity UnitOfMeasure
-		{
-			get
-			{
-				return this.GetUnitOfMeasure (Business.ArticleQuantityType.Billed, 0);
-			}
-			set
-			{
-				this.SetUnitOfMeasure (Business.ArticleQuantityType.Billed, 0, value);
-			}
-		}
-
 
 		private FormattedText GetArticleDescription()
 		{
@@ -227,56 +206,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.ReplacementText = text.GetGlobalText ();
 			}
 		}
-
-
-		private UnitOfMeasureEntity GetUnitOfMeasure(Business.ArticleQuantityType quantityType, int rank)
-		{
-			foreach (var quantity in this.Entity.ArticleQuantities)
-			{
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					return quantity.Unit;
-				}
-			}
-
-			return null;
-		}
-
-		private void SetUnitOfMeasure(Business.ArticleQuantityType quantityType, int rank, UnitOfMeasureEntity value)
-		{
-			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
-			{
-				var quantity = this.Entity.ArticleQuantities[i];
-
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					quantity.Unit = value;
-
-					if (IsEmpty (quantity))
-					{
-						this.Entity.ArticleQuantities.RemoveAt (i);
-
-						this.TileContainer.UpdateAllWidgets ();
-					}
-
-					return;
-				}
-			}
-
-			if (!string.IsNullOrEmpty (value.Code))
-			{
-				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
-
-				newQuantity.QuantityType = quantityType;
-				newQuantity.Quantity     = 1;
-				newQuantity.Unit         = value;
-
-				this.Entity.ArticleQuantities.Add (newQuantity);
-
-				this.TileContainer.UpdateAllWidgets ();
-			}
-		}
-
 
 		private string GetDiscount()
 		{
@@ -338,24 +267,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private static bool IsEmpty(ArticleQuantityEntity quantity)
-		{
-			return (quantity.Quantity == 0 &&
-					string.IsNullOrEmpty (quantity.Unit.Code));
-		}
-
-
-
+		
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
 			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
 			return article;
-		}
-
-		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
-		{
-			var unit = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
-			return unit;
 		}
 
 
@@ -364,21 +280,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
 			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.articleDescriptionTextField);
 		}
-
-		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
-		{
-			//?System.Diagnostics.Debug.WriteLine (string.Format ("HandleDataContextEntityChanged {0}", e.Entity.GetType()));
-
-			if (e.Entity is ArticleDefinitionEntity ||
-				e.Entity is NumericValueArticleParameterDefinitionEntity ||
-				e.Entity is EnumValueArticleParameterDefinitionEntity ||
-				e.Entity is FreeTextValueArticleParameterDefinitionEntity)
-			{
-				this.parameterController.UpdateUI (this.Entity);
-				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
-			}
-		}
-
 
 	
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
