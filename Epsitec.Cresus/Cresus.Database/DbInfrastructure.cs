@@ -501,53 +501,11 @@ namespace Epsitec.Cresus.Database
 			this.connectionManager = new DbConnectionManager ();
 			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
 		}
-
-		/// <summary>
-		/// Sets up the database logger.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
+		
 		private void AttachLogger(DbTransaction transaction)
 		{
 			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.clientId);
 			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
-			this.logger.ResetCurrentLogId (transaction);
-		}
-
-		/// <summary>
-		/// Sets up a roaming database. Call <c>AttachToDatabase</c> first.
-		/// </summary>
-		/// <param name="clientId">The current client id.</param>
-		public void SetupRoamingDatabase(int clientId)
-		{
-			if (this.clientId != clientId)
-			{
-				using (DbTransaction transaction = this.BeginTransaction ())
-				{
-					//	The last ID stored in the log is considered to be the active id at the
-					//	synchronization point (setting up a roaming database requires an image
-					//	of the server database to start its operations).
-					
-					DbId lastServerId = this.logger.CurrentId;
-					
-					//	Update the logger in order to use the new client id instead of the
-					//	id found in the copied database :
-					
-					this.logger.Detach ();
-					
-					this.logger = new DbLogger ();
-					this.logger.DefineClientId (clientId);
-					this.logger.DefineInitialLogId (1);
-					this.logger.Attach (this, this.internalTables[Tags.TableLog]);
-					this.logger.CreateInitialEntry (transaction);
-					
-					//	Define local settings based on the client :
-					
-					transaction.Commit ();
-					
-					this.clientId = clientId;
-				}
-			}
 		}
 
 		/// <summary>
@@ -1417,7 +1375,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Creates a table definition with the minimum id, status and log columns.
+		/// Creates a table definition with the minimum id and status columns.
 		/// </summary>
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The table category.</param>
@@ -1434,7 +1392,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Creates a table definition with the minimum id, status and log columns.
+		/// Creates a table definition with the minimum id and status columns.
 		/// </summary>
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The table category.</param>
@@ -1460,14 +1418,12 @@ namespace Epsitec.Cresus.Database
 				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex,
 			};
 			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
-			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
 
 			table.DefineCategory (category);
 			table.DefineRevisionMode (revisionMode);
 
 			table.Columns.Add (colId);
 			table.Columns.Add (colStat);
-			table.Columns.Add (colLog);
 
 			table.PrimaryKeys.Add (colId);
 			table.UpdatePrimaryKeyInfo ();
@@ -2173,7 +2129,6 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (newKey.Id,             DbKey.RawTypeForId));
 			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (newKey.IntStatus,      DbKey.RawTypeForStatus));
-			fields.Add (Tags.ColumnRefLog, SqlField.CreateConstant (this.logger.CurrentId, DbKey.RawTypeForId));
 			
 			DbInfrastructure.AddKeyExtraction (conds, tableName, oldKey);
 			
@@ -2602,15 +2557,6 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (this.logger == null);
 			
-			//	Minimal logger definition. We must be able to access to the
-			//	logger's CurrentId property, that's all :
-			
-			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.clientId);
-			this.logger.DefineInitialLogId (1);
-			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
-			
 			//	First, fill the type table so that we can reference them from
 			//	the column definition table :
 			
@@ -2646,17 +2592,6 @@ namespace Epsitec.Cresus.Database
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTable,  Tags.TableTableDef);
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefType,   Tags.TableTypeDef);
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTarget, Tags.TableTableDef);
-			
-			//	Now that everything is properly defined, we may attach the
-			//	logger to the database :
-			
-			// TODO Why is the logger attached here? It is also attached later on. Why attach it twice?
-			// Marc
-
-			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
-			this.logger.CreateInitialEntry (transaction);
-			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 		}
 
 		/// <summary>
@@ -2722,7 +2657,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus),
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)),
@@ -2753,7 +2687,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus),
-				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)),
@@ -2789,7 +2722,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)),
@@ -2963,7 +2895,6 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
@@ -2990,7 +2921,6 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnDisplayName, types.Name,		   DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
@@ -3023,7 +2953,6 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
@@ -3044,14 +2973,16 @@ namespace Epsitec.Cresus.Database
 				
 				DbColumn[] columns = new DbColumn[]
 				{
-					new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsAutoTimeStamp = true,
+					},
 				};
-
-				//	TODO: add a column recording the nature of the change and the author of the change...
 
 				table.DefineCategory (DbElementCat.Internal);
 				table.Columns.AddRange (columns);

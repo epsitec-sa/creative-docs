@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -56,6 +58,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new PersistenceJobGenerator (dataContext);
@@ -79,6 +83,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -97,6 +103,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -139,6 +147,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -169,17 +179,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
 					NaturalPersonEntity entity = dataContext.CreateEntity<NaturalPersonEntity> ();
 					List<UriContactEntity> targets = new List<UriContactEntity> ()
-				{
-					dataContext.CreateEntity<UriContactEntity> (),
-					dataContext.CreateEntity<UriContactEntity> (),
-					dataContext.CreateEntity<UriContactEntity> (),
-				};
+					{
+						dataContext.CreateEntity<UriContactEntity> (),
+						dataContext.CreateEntity<UriContactEntity> (),
+						dataContext.CreateEntity<UriContactEntity> (),
+					};
 
 					foreach (UriContactEntity target in targets)
 					{
@@ -207,6 +219,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -219,11 +233,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					entity.PreferredLanguage = target;
 
 					List<UriContactEntity> targets = new List<UriContactEntity> ()
-				{
-					dataContext.CreateEntity<UriContactEntity> (),
-					dataContext.CreateEntity<UriContactEntity> (),
-					dataContext.CreateEntity<UriContactEntity> (),
-				};
+					{
+						dataContext.CreateEntity<UriContactEntity> (),
+						dataContext.CreateEntity<UriContactEntity> (),
+						dataContext.CreateEntity<UriContactEntity> (),
+					};
 
 					foreach (UriContactEntity t in targets)
 					{
@@ -275,6 +289,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -293,6 +309,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -302,7 +320,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
 
-					Assert.IsTrue (jobs.Count == 1);
+					Assert.IsTrue (jobs.Count == 2);
 					Assert.IsTrue (jobs[0] is ValuePersistenceJob);
 					Assert.IsTrue (jobs[0].Entity == entity);
 					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
@@ -311,6 +329,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 1);
 					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[L0A01]"));
 					Assert.IsTrue (((string) ((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().First ().Value) == "new last name");
+
+					Assert.IsTrue (jobs[1] is ValuePersistenceJob);
+					Assert.IsTrue (jobs[1].Entity == entity);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[1]).IsRootTypeJob);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AM]"));
+					Assert.IsTrue (((ValuePersistenceJob) jobs[1]).GetFieldIdsWithValues ().Count () == 0);
 				}
 			}
 		}
@@ -321,6 +346,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -331,13 +358,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
 
-					Assert.IsTrue (jobs.Count == 1);
-					Assert.IsTrue (jobs[0] is ReferencePersistenceJob);
+					Assert.IsTrue (jobs.Count == 2);
+
+					Assert.IsTrue (jobs[0] is ValuePersistenceJob);
 					Assert.IsTrue (jobs[0].Entity == entity);
-					Assert.IsTrue (((ReferencePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
-					Assert.IsTrue (((ReferencePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AN]"));
-					Assert.IsTrue (((ReferencePersistenceJob) jobs[0]).FieldId == Druid.Parse ("[L0AU]"));
-					Assert.IsTrue (((ReferencePersistenceJob) jobs[0]).Target == target);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).IsRootTypeJob);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AM]"));
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 0);
+
+					Assert.IsTrue (jobs[1] is ReferencePersistenceJob);
+					Assert.IsTrue (jobs[1].Entity == entity);
+					Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
+					Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AN]"));
+					Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).FieldId == Druid.Parse ("[L0AU]"));
+					Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).Target == target);
 				}
 			}
 		}
@@ -348,29 +383,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-				{
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
-				};
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
+					};
 
 					entity.Contacts.Add (targets.Last ());
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
 
-					Assert.IsTrue (jobs.Count == 1);
-					Assert.IsTrue (jobs[0] is CollectionPersistenceJob);
+					Assert.IsTrue (jobs.Count == 2);
+
+					Assert.IsTrue (jobs[0] is ValuePersistenceJob);
 					Assert.IsTrue (jobs[0].Entity == entity);
-					Assert.IsTrue (((CollectionPersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
-					Assert.IsTrue (((CollectionPersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AM]"));
-					Assert.IsTrue (((CollectionPersistenceJob) jobs[0]).FieldId == Druid.Parse ("[L0AS]"));
-					Assert.IsTrue (((CollectionPersistenceJob) jobs[0]).Targets.SequenceEqual (targets));
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).IsRootTypeJob);
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AM]"));
+					Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 0);
+
+					Assert.IsTrue (jobs[1] is CollectionPersistenceJob);
+					Assert.IsTrue (jobs[1].Entity == entity);
+					Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
+					Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AM]"));
+					Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).FieldId == Druid.Parse ("[L0AS]"));
+					Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).Targets.SequenceEqual (targets));
 				}
 			}
 		}
@@ -381,6 +426,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -391,24 +438,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					entity.Gender = null;
 
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-				{
-					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-				};
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+					};
 
 					entity.Contacts.RemoveAt (1);
 
 					List<AbstractPersistenceJob> jobs = generator.CreateUpdateJobs (entity).ToList ();
 
-					Assert.IsTrue (jobs.Count == 3);
+					Assert.IsTrue (jobs.Count == 4);
 					Assert.IsTrue (jobs.All (j => j.Entity == entity));
 					Assert.IsTrue (jobs.All (j => ((AbstractFieldPersistenceJob) j).JobType == PersistenceJobType.Update));
 
-					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Count () == 1);
+					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Count () == 2);
 					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().IsRootTypeJob == false);
 					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AN]"));
 					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().Count () == 1);
 					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[L0A61]"));
 					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().First ().Value == null);
+
+					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).IsRootTypeJob);
+					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).LocalEntityId == Druid.Parse ("[L0AM]"));
+					Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).GetFieldIdsWithValues ().Count () == 0);
 
 					Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().Count () == 1);
 					Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AN]"));
@@ -429,6 +480,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
@@ -447,6 +500,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);

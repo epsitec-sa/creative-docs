@@ -1,4 +1,5 @@
 ﻿using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
 
@@ -99,8 +100,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		    IList<DbColumn> regularDbColumns = dbTable.Columns
 		        .Where (c => !idDbColumns.Contains (c))
-		        .Where (c => c != dbTable.Columns[Tags.ColumnStatus])
-		        .Where (c => c != dbTable.Columns[Tags.ColumnRefLog])
+		        .Where (c => c.Name != Tags.ColumnStatus)
+		        .Where (c => c.Name != Tags.ColumnRefLog)
 		        .Where (c => c.Cardinality == DbCardinality.None)
 		        .ToList ();
 
@@ -133,7 +134,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			IEnumerable<ColumnDefinition> idColumns = EpsitecEntitySerializer.GetColumnDefinitions (idDbColumns, true);
 			IEnumerable<ColumnDefinition> regularColumns = EpsitecEntitySerializer.GetColumnDefinitions (regularDbColumns, false);
 
-			return new TableDefinition (tableName, tableCategory, idColumns.Concat (regularColumns));
+			bool containsLogColumn = dbTable.Columns.Any (c => c.Name == Tags.ColumnRefLog);
+
+			return new TableDefinition (tableName, tableCategory,  containsLogColumn, idColumns.Concat (regularColumns));
 		}
 
 
@@ -197,14 +200,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure)
+		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
 				EpsitecEntitySerializer.ReadDocumentStart (xmlReader);
 				EpsitecEntitySerializer.ReadHeader (xmlReader);
-				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition (xmlReader);
-				EpsitecEntitySerializer.ReadData (dbInfrastructure, xmlReader, tableDefinitions);
+				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
+				EpsitecEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions);
 				EpsitecEntitySerializer.ReadDocumentEnd (xmlReader);
 			}
 		}
@@ -245,7 +248,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				while (xmlReader.IsStartElement () && string.Equals (xmlReader.Name, "table"))
 				{
-					TableDefinition tableDefinition = TableDefinition.ReadXmlDefinition (xmlReader, tableDefinitions.Count);
+					TableDefinition tableDefinition = TableDefinition.ReadXmlDefinition(xmlReader, tableDefinitions.Count);
 
 					tableDefinitions.Add (tableDefinition);
 				}
@@ -257,7 +260,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, IList<TableDefinition> tableDefinitions)
+		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 
@@ -271,7 +274,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				{
 					if (index < tableDefinitions.Count)
 					{
-						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, index);
+						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, dbLogEntry, index);
 					}
 
 					index++;
@@ -300,7 +303,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				EpsitecEntitySerializer.ReadDocumentStart (xmlReader);
 				EpsitecEntitySerializer.ReadHeader (xmlReader);
 
-				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition (xmlReader);
+				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
 
 				EpsitecEntitySerializer.CleanTables (dbInfrastructure, tableDefinitions);
 			}

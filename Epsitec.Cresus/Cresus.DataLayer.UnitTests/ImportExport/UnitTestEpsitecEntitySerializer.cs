@@ -1,4 +1,5 @@
 ﻿using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
@@ -43,6 +44,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -56,11 +59,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
+			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (1));
+
 			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
-			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure);
+			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure(DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -77,6 +84,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					Assert.IsNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))));

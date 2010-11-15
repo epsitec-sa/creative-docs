@@ -4,6 +4,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -51,6 +52,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -64,6 +67,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new PersistenceJobProcessor (dataContext);
@@ -87,20 +92,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
 						ExceptionAssert.Throw<System.ArgumentNullException>
 						(
-							() => processor.ProcessJobs (transaction, null)
+							() => processor.ProcessJobs (transaction, dbLogEntry, null)
 						);
 
 						ExceptionAssert.Throw<System.ArgumentNullException>
 						(
-							() => processor.ProcessJobs (null, new List<AbstractPersistenceJob> ())
+							() => processor.ProcessJobs (null, dbLogEntry, new List<AbstractPersistenceJob> ())
 						);
 
 						transaction.Commit ();
@@ -115,6 +124,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -130,7 +141,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -155,6 +168,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -181,7 +196,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -208,6 +225,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -231,7 +250,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -257,6 +278,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -284,7 +307,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -315,6 +340,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -342,7 +369,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -368,6 +397,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -399,7 +430,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -426,6 +459,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -453,7 +488,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}
@@ -488,6 +525,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
@@ -616,7 +655,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+
+						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
 						transaction.Commit ();
 					}

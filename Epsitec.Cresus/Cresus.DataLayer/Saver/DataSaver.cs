@@ -3,6 +3,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
@@ -228,7 +229,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 			{
-				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
+				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);
+				DbLogEntry dbLogEntry = this.DbInfrastructure.Logger.CreateLogEntry (connectionId);
+				
+				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, dbLogEntry, jobs);
 
 				transaction.Commit ();
 			}

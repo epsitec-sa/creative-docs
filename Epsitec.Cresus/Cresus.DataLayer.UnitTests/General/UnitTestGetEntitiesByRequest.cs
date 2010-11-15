@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -61,6 +63,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -94,6 +98,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -126,6 +132,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -157,6 +165,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -193,6 +203,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -233,6 +245,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -272,6 +286,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -315,6 +331,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -350,6 +368,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -386,6 +406,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					CountryEntity country1 = DatabaseHelper.CreateCountry (dataContext, "c1", "test%test");
@@ -535,6 +557,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -560,6 +584,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -587,6 +613,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -612,6 +640,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();
@@ -638,6 +668,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
@@ -671,6 +703,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
@@ -702,6 +736,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					ContactRoleEntity example = new ContactRoleEntity ();
@@ -734,6 +770,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					ContactRoleEntity example = new ContactRoleEntity ();
@@ -774,6 +812,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					ContactRoleEntity example = new ContactRoleEntity ();
@@ -805,6 +845,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -838,6 +880,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity example = new NaturalPersonEntity ();

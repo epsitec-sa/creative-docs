@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 			TestHelper.Initialize ();
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.PupulateDatabase (dataContext);
-				}
-			}
 		}
 
 

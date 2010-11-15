@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -57,6 +59,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new PersistenceJobTableComputer (dataContext);
@@ -80,6 +84,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
@@ -115,6 +121,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
@@ -122,15 +130,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 					DeletePersistenceJob job = new DeletePersistenceJob (entity);
 
 					List<DbTable> tables1 = new List<DbTable> ()
-                {
-                    dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AM]")),
-                    dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AN]")),
-                    dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AS]")),
-                    dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AD1]")),
-                    dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AU]")),
-                    dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0A11]")),
-                    dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A71]")),
-                };
+					{
+						dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AM]")),
+						dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AN]")),
+						dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AS]")),
+						dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AD1]")),
+						dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AU]")),
+						dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0A11]")),
+						dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A71]")),
+					};
 
 					List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
 
@@ -156,6 +164,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
@@ -185,6 +195,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
@@ -219,6 +231,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);

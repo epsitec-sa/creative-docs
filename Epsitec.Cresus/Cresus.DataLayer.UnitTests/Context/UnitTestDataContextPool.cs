@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DatabaseCreator2.PupulateDatabase (dataContext);
@@ -62,6 +64,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
 					dataInfrastructure.CreateDataContext (),
@@ -116,6 +120,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
 					dataInfrastructure.CreateDataContext (),
@@ -187,6 +193,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
@@ -232,6 +240,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
@@ -285,6 +295,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -331,6 +343,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -381,6 +395,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -446,6 +462,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				DataContext dataContext1 = dataInfrastructure.CreateDataContext ();

@@ -182,7 +182,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				select fieldId
 			);
 
-			if (fieldIds.Any ())
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+			bool isRootType = localEntityId == rootEntityId;
+
+			if (fieldIds.Any () || isRootType)
 			{
 				job = this.CreateValueJob (entity, localEntityId, fieldIds, PersistenceJobType.Update);
 			}

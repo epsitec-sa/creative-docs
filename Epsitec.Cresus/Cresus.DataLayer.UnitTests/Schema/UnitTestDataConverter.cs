@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+				
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					new DataConverter (dataContext);
@@ -66,6 +68,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataConverter dataConverter = new DataConverter (dataContext);
@@ -87,6 +91,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataConverter dataConverter = new DataConverter (dataContext);
@@ -135,6 +141,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataConverter dataConverter = new DataConverter (dataContext);
@@ -166,6 +174,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataConverter dataConverter = new DataConverter (dataContext);
@@ -220,6 +230,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					DataConverter dataConverter = new DataConverter (dataContext);

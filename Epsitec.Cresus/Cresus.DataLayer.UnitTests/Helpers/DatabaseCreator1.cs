@@ -193,6 +193,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 		{
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+				
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					dataContext.CreateSchema<AbstractPersonEntity> ();

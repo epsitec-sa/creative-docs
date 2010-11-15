@@ -1,105 +1,41 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
 namespace Epsitec.Cresus.Database.Services
 {
-	/// <summary>
-	/// The <c>DbLogEntry</c> class represents a log entry (see <see cref="DbLogger"/>).
-	/// </summary>
-	[System.Serializable]
-	public struct DbLogEntry : System.IEquatable<DbLogEntry>, System.IComparable<DbLogEntry>
+	
+	
+	public sealed class DbLogEntry
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbLogEntry"/> class.
-		/// </summary>
-		/// <param name="id">The id.</param>
-		public DbLogEntry(DbId id)
+		
+		
+		public DbLogEntry(DbId entryId, DbId connectionId, System.DateTime dateTime)
 		{
-			this.id        = id;
-			this.dateTime = System.DateTime.UtcNow;
+			this.EntryId = entryId;
+			this.ConnectionId = connectionId;
+			this.DateTime = dateTime;
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbLogEntry"/> class.
-		/// </summary>
-		/// <param name="id">The id.</param>
-		/// <param name="dateTime">The date and time.</param>
-		public DbLogEntry(DbId id, System.DateTime dateTime)
+
+		public DbId EntryId
 		{
-			this.id        = id;
-			this.dateTime = dateTime;
+			get;
+			private set;
 		}
 
-		/// <summary>
-		/// Gets the log entry id.
-		/// </summary>
-		/// <value>The id.</value>
-		public DbId								Id
+
+		public DbId ConnectionId
 		{
-			get
-			{
-				return this.id;
-			}
+			get;
+			private set;
 		}
 
-		/// <summary>
-		/// Gets the log entry date time.
-		/// </summary>
-		/// <value>The date time.</value>
-		public System.DateTime					DateTime
+
+		public System.DateTime DateTime
 		{
-			get
-			{
-				return this.dateTime;
-			}
+			get;
+			private set;
 		}
 
-		#region IEquatable<DbLogEntry> Members
 
-		public bool Equals(DbLogEntry other)
-		{
-			return (this.Id == other.Id)
-				&& (this.DateTime == other.DateTime);
-		}
-
-		#endregion
-
-		#region IComparable<DbLogEntry> Members
-
-		public int CompareTo(DbLogEntry other)
-		{
-			int result = this.DateTime.CompareTo (other.DateTime);
-
-			if (result == 0)
-			{
-				return this.Id.CompareTo (other.Id);
-			}
-			else
-			{
-				return result;
-			}
-		}
-
-		#endregion
-
-		public override bool Equals(object obj)
-		{
-			if (obj is DbLogEntry)
-			{
-				return this.Equals ((DbLogEntry) obj);
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public override int GetHashCode()
-		{
-			return this.Id.GetHashCode () ^ this.DateTime.GetHashCode ();
-		}
-
-		private DbId							id;
-		private System.DateTime					dateTime;
 	}
+
+
 }

@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					dataContext.CreateSchema<NaturalPersonEntity> ();
@@ -194,6 +196,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
@@ -258,6 +262,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
@@ -304,6 +310,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 					{
 						List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
@@ -345,6 +353,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -372,6 +382,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
@@ -432,6 +444,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -459,6 +473,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
@@ -558,6 +574,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -588,6 +606,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
@@ -642,6 +662,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 					{
 						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -698,6 +720,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 					{
+						dataInfrastructure.OpenConnection ("id");
+
 						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 						{
 							this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);

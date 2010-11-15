@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
+				dataInfrastructure.OpenConnection ("id");
+
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
 
@@ -50,6 +52,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -75,6 +79,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -100,6 +106,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -125,6 +133,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -150,6 +160,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -179,6 +191,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -206,6 +220,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -232,6 +248,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -257,6 +275,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -279,6 +299,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -301,6 +323,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -345,6 +369,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -367,6 +393,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -389,6 +417,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -411,6 +441,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -433,6 +465,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -455,6 +489,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -477,6 +513,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -499,6 +537,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{
@@ -521,6 +561,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
 				{
+					dataInfrastructure.OpenConnection ("id");
+
 					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
 					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
 					{

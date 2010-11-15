@@ -102,8 +102,6 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				infrastructure.Logger.CreateTemporaryEntry (null);
-
 				DbTypeDef db_type_str  = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
 				DbTypeDef db_type_num  = new DbTypeDef ("NUPO", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
 				DbTypeDef db_type_bool = new DbTypeDef ("IsMale", DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), 0, false, DbNullability.Yes);
@@ -123,8 +121,6 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual ("Nom",    db_type_1.Name);
 				Assert.AreEqual ("NUPO",   db_type_2.Name);
 				Assert.AreEqual ("IsMale", db_type_3.Name);
-
-				infrastructure.Logger.CreateTemporaryEntry (null);
 
 				infrastructure.UnregisterDbType (db_type_1);
 				infrastructure.UnregisterDbType (db_type_2);
@@ -148,8 +144,6 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				infrastructure.Logger.CreateTemporaryEntry (null);
-
 				DbTypeDef db_type_1 = infrastructure.ResolveDbType ("Nom");
 				DbTypeDef db_type_2 = infrastructure.ResolveDbType ("NUPO");
 				DbTypeDef db_type_3 = infrastructure.ResolveDbType ("IsMale");
@@ -177,8 +171,7 @@ namespace Epsitec.Cresus.Database
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
-				infrastructure.Logger.CreateTemporaryEntry (null);
-
+				
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 
 				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
@@ -303,8 +296,6 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				infrastructure.Logger.CreateTemporaryEntry (null);
-
 				DbTable db_table1 = infrastructure.ResolveDbTable ("SimpleTest");
 
 				Assert.IsNotNull (db_table1);
@@ -348,41 +339,6 @@ namespace Epsitec.Cresus.Database
 				infrastructure.UnregisterDbTable (db_table);
 				Assert.IsNull (infrastructure.ResolveDbTable (db_table.Name));
 				infrastructure.UnregisterDbTable (db_table);
-			}
-		}
-
-		[Test]
-		public void Check12LoggerFind()
-		{
-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
-			{
-				DbLogEntry[] entries = infrastructure.Logger.Find (null, DbId.MinimumTemp, DbId.MaximumTemp);
-
-				foreach (DbLogEntry entry in entries)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("ID={1}:{0}, created at {2} - ticks = {3}", entry.Id.LocalId, entry.Id.ClientId, entry.DateTime, entry.DateTime.Ticks));
-				}
-			}
-		}
-
-		[Test]
-		public void Check13LoggerRemove()
-		{
-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
-			{
-				Assert.AreEqual (DbId.TempClientId, infrastructure.Logger.CurrentId.ClientId);
-				Assert.AreEqual (6L, infrastructure.Logger.CurrentId.LocalId);
-
-				infrastructure.Logger.CreateTemporaryEntry (null);
-				infrastructure.Logger.CreateTemporaryEntry (null);
-				infrastructure.Logger.CreateTemporaryEntry (null);
-
-				Assert.IsTrue (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 7));
-
-				infrastructure.Logger.RemoveRange (null, DbId.MinimumTemp + 7, DbId.MinimumTemp + 8);
-
-				Assert.IsTrue (!infrastructure.Logger.Remove (null, DbId.MinimumTemp + 8));
-				Assert.IsTrue (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 9));
 			}
 		}
 
