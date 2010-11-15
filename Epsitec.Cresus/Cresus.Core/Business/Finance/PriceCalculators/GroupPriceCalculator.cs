@@ -136,9 +136,34 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var group = calculator.Group;
 
 			this.members.Add (calculator);
+
+			decimal totalBeforeAdjustment = group.TotalPriceBeforeTax;
+			decimal totalAfterAdjustment  = calculator.Item.ResultingPriceBeforeTax.GetValueOrDefault (0M);
+			decimal delta = totalAfterAdjustment - totalBeforeAdjustment;
+			decimal discountableBefore = group.totalPriceBeforeTaxDiscountable;
+			decimal discountableAfter  = discountableBefore + delta;
+
+			decimal ratio = GroupPriceCalculator.GetRatio (discountableBefore, discountableAfter);
+
+			Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
 			
-			this.Accumulate (group.TaxDiscountable, neverApplyDiscount: false);
+			this.Accumulate (discountedTax, neverApplyDiscount: false);
 			this.Accumulate (group.TaxNotDiscountable, neverApplyDiscount: true);
+		}
+
+
+		public void AdjustFinalPrices(decimal desiredPriceBeforeTax)
+		{
+			decimal delta  = desiredPriceBeforeTax - this.TotalPriceBeforeTax;
+			decimal result = this.TotalPriceBeforeTaxDiscountable;
+			decimal final  = result + delta;
+			decimal ratio = GroupPriceCalculator.GetRatio (result, final);
+			this.members.ForEach (x => x.ApplyFinalPriceAdjustment (ratio));
+		}
+
+		public override void ApplyFinalPriceAdjustment(decimal adjustment)
+		{
+			throw new System.NotImplementedException ();
 		}
 
 
@@ -175,12 +200,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public void ComputeDiscountBeforeTax(decimal expectedPriceBeforeTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable, out Tax taxDiscountable)
 		{
 			decimal total = this.TotalPriceBeforeTax;
-			decimal minus = total - expectedPriceBeforeTax;
+			decimal delta = expectedPriceBeforeTax - total;
 
-			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
+			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable + delta;
 			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
 
-			taxDiscountable = this.ComputeAdjustedTax (totalBeforeTaxDiscountable);
+			taxDiscountable = this.ComputeAdjustedTax (this.totalPriceBeforeTaxDiscountable, totalBeforeTaxDiscountable);
 		}
 
 		public void ComputeDiscountAfterTax(decimal expectedPriceAfterTax, out decimal totalBeforeTaxDiscountable, out decimal totalTaxDiscountable, out Tax taxDiscountable)
@@ -193,14 +218,33 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			totalBeforeTaxDiscountable = this.TotalPriceBeforeTaxDiscountable - minus;
 			totalTaxDiscountable       = totalBeforeTaxDiscountable * this.MeanDiscountableTaxRate;
 
-			taxDiscountable = this.ComputeAdjustedTax (totalBeforeTaxDiscountable);
+			taxDiscountable = this.ComputeAdjustedTax (this.totalPriceBeforeTaxDiscountable, totalBeforeTaxDiscountable);
 		}
 
-		private Tax ComputeAdjustedTax(decimal newTotal)
+		private static decimal GetRatio(decimal before, decimal after)
 		{
-			decimal oldTotal = this.TotalPriceBeforeTax;
+			decimal ratio  = 1;
 
-			if (oldTotal == 0)
+			if (System.Math.Abs (after - before) < 0.01M)
+			{
+				//	Same totals, within 0.01 monetary unit. We won't need to do any
+				//	real adjustments.
+			}
+			else if (before == 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Cannot adjust final price since it is zero");
+			}
+			else
+			{
+				ratio = after / before;
+			}
+
+			return ratio;
+		}
+
+		private Tax ComputeAdjustedTax(decimal before, decimal after)
+		{
+			if (before == 0)
 			{
 				//	There is no total price before we apply the discount; we cannot produce a
 				//	meaningful Tax record :
@@ -209,7 +253,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 			else
 			{
-				decimal ratio = newTotal / oldTotal;
+				decimal ratio = after / before;
 				
 				return new Tax (this.taxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
 			}

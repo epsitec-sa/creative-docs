@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (1));
 		}
 
-		public void AdjustFinalPrice(decimal adjustmentRate)
+		public override void ApplyFinalPriceAdjustment(decimal adjustment)
 		{
 			if (this.articleItem.NeverApplyDiscount)
 			{
@@ -80,10 +80,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 			else
 			{
-				this.articleItem.FinalLinePriceBeforeTax = PriceCalculator.ClipPriceValue (this.articleItem.ResultingLinePriceBeforeTax * adjustmentRate, this.currencyCode);
+				this.articleItem.FinalLinePriceBeforeTax = PriceCalculator.ClipPriceValue (this.articleItem.ResultingLinePriceBeforeTax * adjustment, this.currencyCode);
 			}
 		}
-
 
 		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
 		{

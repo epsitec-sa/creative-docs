@@ -6,7 +6,9 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -18,15 +20,23 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	{
 		public DocumentPriceCalculator(BusinessContext context, BusinessDocumentEntity document)
 		{
-			this.context  = context;
-			this.document = document;
+			this.context     = context;
+			this.document    = document;
 			this.calculators = new List<AbstractPriceCalculator> ();
-			this.groups = new Stack<GroupPriceCalculator> ();
-			this.suspender = this.document.DisableEvents ();
+			this.groups      = new Stack<GroupPriceCalculator> ();
+			this.suspender   = this.document.DisableEvents ();
 		}
 
 
-		public void SortLines()
+		public void UpdatePrices()
+		{
+			this.SortLines ();
+			
+			this.ComputeLinePrices ();
+			this.ComputeTaxesAndGrandTotal (this.GetLastGroup ());
+		}
+
+		private void SortLines()
 		{
 			List<AbstractDocumentItemEntity> lines = new List<AbstractDocumentItemEntity> ();
 
@@ -40,11 +50,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				this.document.Lines.AddRange (lines);
 			}
 		}
-		
-		public void UpdatePrices()
-		{
-			this.SortLines ();
 
+		private void ComputeLinePrices()
+		{
 			this.currentState = State.None;
 
 			this.calculators.Clear ();
@@ -56,22 +64,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 
 			this.RecordCurrentGroup ();
-			this.GenerateVatLinesAndGrandTotal ();
 		}
 
-		private void GenerateVatLinesAndGrandTotal()
+		private void ComputeTaxesAndGrandTotal(GroupPriceCalculator group)
 		{
-			DataContext context = this.context.DataContext;
-			
-			var taxReservoir   = new Reservoir<TaxDocumentItemEntity> (context, this.document.Lines.OfType<TaxDocumentItemEntity> ());
-			var totalReservoir = new Reservoir<EndTotalDocumentItemEntity> (context, this.document.Lines.OfType<EndTotalDocumentItemEntity> ());
-
-			var group = this.GetLastGroup ();
-
 			if (group == null)
 			{
 				return;
 			}
+
+			DataContext context = this.context.DataContext;
+			
+			var taxReservoir   = new Reservoir<TaxDocumentItemEntity> (context, this.document.Lines.OfType<TaxDocumentItemEntity> ());
+			var totalReservoir = new Reservoir<EndTotalDocumentItemEntity> (context, this.document.Lines.OfType<EndTotalDocumentItemEntity> ());
 
 			Tax taxTotals = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable);
 
@@ -86,12 +91,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			var currency = this.document.BillingCurrencyCode;
 
-			taxReservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
-			totalReservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
+			this.GenerateVatLines (taxReservoir, taxInfos, currency);
+			this.GenerateGrandTotalLine (totalReservoir, taxTotals, currency);
 
+			group.AdjustFinalPrices (taxTotals.TotalAmount);
+		}
+
+		private void GenerateVatLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
+		{
+			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
+			
 			foreach (var taxInfo in taxInfos)
 			{
-				var taxLine = taxReservoir.Pull ();
+				var taxLine = reservoir.Pull ();
 
 				taxLine.VatCode      = taxInfo.Code;
 				taxLine.BaseAmount   = PriceCalculator.ClipPriceValue (taxInfo.Amount, currency);
@@ -100,8 +112,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 				this.document.Lines.Add (taxLine);
 			}
+		}
 
-			var grandTotalLine = totalReservoir.Pull ();
+		private void GenerateGrandTotalLine(Reservoir<EndTotalDocumentItemEntity> reservoir, Tax taxTotals, CurrencyCode currency)
+		{
+			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
+			
+			var grandTotalLine = reservoir.Pull ();
 
 			grandTotalLine.PriceBeforeTax = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount, currency);
 			grandTotalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax, currency);
@@ -171,12 +188,24 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		void IDocumentPriceCalculator.Process(ArticlePriceCalculator calculator)
 		{
 			int groupLevel = calculator.ArticleItem.GroupLevel;
-			
+
 			if (this.currentState != State.Article)
 			{
+				//	We reached the first article line of a new group. Record the current
+				//	group and create a new one for the current level.
+
 				this.RecordCurrentGroup ();
 				this.currentState = State.Article;
 				this.currentGroup = new GroupPriceCalculator (groupLevel);
+			}
+
+			System.Diagnostics.Debug.Assert (this.currentGroup != null);
+			System.Diagnostics.Debug.Assert (this.currentGroup.GroupLevel == groupLevel);
+
+			if (this.currentGroup.GroupLevel != groupLevel)
+			{
+				//	TODO: implement multi-level articles ? or add a foolproof system in the UI to avoid that the user creates such invalid constructs...
+				throw new System.NotImplementedException ("Found articles of different group levels without summarizing sub-totals");
 			}
 
 			this.calculators.Add (calculator);
@@ -184,11 +213,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			calculator.ComputePrice ();
 			
 			this.currentGroup.Add (calculator);
-
-			while (this.groups.Count > 0 && this.groups.Peek ().GroupLevel > groupLevel)
-			{
-				this.currentGroup.Add (this.groups.Pop ());
-			}
+			this.IncludeSubgroups (this.currentGroup, groupLevel);
 		}
 
 		void IDocumentPriceCalculator.Process(SubTotalPriceCalculator calculator)
@@ -204,16 +229,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 			else if (localGroup.GroupLevel > groupLevel)
 			{
+				//	Summing groups of higher level into a new lower-level group. Add the
+				//	groups of the higher level into the new local group, as if they were
+				//	simple article lines.
+
 				this.groups.Push (localGroup);
-				
+
 				localGroup = new GroupPriceCalculator (groupLevel);
 
-				while (this.groups.Count > 0 && this.groups.Peek ().GroupLevel > groupLevel)
-				{
-					localGroup.Add (this.groups.Pop ());
-				}
+				this.IncludeSubgroups (localGroup, groupLevel);
 			}
-			
+
 			calculator.ComputePrice (localGroup);
 
 			this.currentState = State.SubTotal;
@@ -254,6 +280,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
+		private void IncludeSubgroups(GroupPriceCalculator localGroup, int groupLevel)
+		{
+			while (this.groups.Count > 0 && this.groups.Peek ().GroupLevel > groupLevel)
+			{
+				localGroup.Add (this.groups.Pop ());
+			}
+		}
 		
 		private readonly BusinessContext				context;
 		private readonly BusinessDocumentEntity			document;
