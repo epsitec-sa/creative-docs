@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Drawing;
 
-using System.Collections.Generic;
+using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -11,54 +11,19 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class DeserializedPage
 	{
-		public DeserializedPage(string title, string printerLogicalName, string printerPhysicalName, string printerPhysicalTray, Size pageSize, int pageRank)
+		public DeserializedPage(DeserializedSection parentSection, int pageRank, XElement xRoot)
 		{
-			this.title               = title;
-			this.printerLogicalName  = printerLogicalName;
-			this.printerPhysicalName = printerPhysicalName;
-			this.printerPhysicalTray = printerPhysicalTray;
-			this.pageSize            = pageSize;
-			this.pageRank            = pageRank;
+			this.parentSection = parentSection;
+			this.pageRank      = pageRank;
+			this.xRoot         = xRoot;
 		}
 
 
-		public string Title
+		public DeserializedSection ParentSection
 		{
 			get
 			{
-				return this.title;
-			}
-		}
-
-		public string PrinterLogicalName
-		{
-			get
-			{
-				return this.printerLogicalName;
-			}
-		}
-
-		public string PrinterPhysicalName
-		{
-			get
-			{
-				return this.printerPhysicalName;
-			}
-		}
-
-		public string PrinterPhysicalTray
-		{
-			get
-			{
-				return this.printerPhysicalTray;
-			}
-		}
-
-		public Size PageSize
-		{
-			get
-			{
-				return this.pageSize;
+				return this.parentSection;
 			}
 		}
 
@@ -70,11 +35,27 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public XElement XRoot
+		{
+			get
+			{
+				return this.xRoot;
+			}
+		}
+
+
 		public string FullDescription
 		{
 			get
 			{
-				return string.Format ("● Titre: <b>{0}</b><br/>● Nom logique: {1}<br/>● Imprimante: {2}<br/>● Bac: {3}<br/>● Dimensions: {4}×{5} mm<br/>● N° page: {6}", this.title, this.printerLogicalName, this.printerPhysicalName, this.printerPhysicalTray, this.pageSize.Width, this.pageSize.Height, this.pageRank+1);
+				string s1 = string.Concat ("● Titre: <b>",    this.parentSection.ParentJob.JobFullName, "</b><br/>");
+				string s2 = string.Concat ("● Nom logique: ", this.parentSection.PrinterLogicalName, "<br/>");
+				string s3 = string.Concat ("● Imprimante: ",  this.parentSection.ParentJob.PrinterPhysicalName, "<br/>");
+				string s4 = string.Concat ("● Bac: ",         this.parentSection.PrinterPhysicalTray, "<br/>");
+				string s5 = string.Concat ("● Dimensions: ",  this.parentSection.PageSize.Width, "×", this.parentSection.PageSize.Height, "<br/>");
+				string s6 = string.Concat ("● N° page: ",     this.pageRank+1, "<br/>");
+
+				return string.Concat (s1, s2, s3, s4, s5, s6);
 			}
 		}
 
@@ -85,11 +66,8 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly string		title;
-		private readonly string		printerLogicalName;
-		private readonly string		printerPhysicalName;
-		private readonly string		printerPhysicalTray;
-		private readonly Size		pageSize;
-		private readonly int		pageRank;
+		private readonly DeserializedSection	parentSection;
+		private readonly int					pageRank;
+		private readonly XElement				xRoot;
 	}
 }

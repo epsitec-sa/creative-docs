@@ -68,6 +68,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private List<SectionToPrint> sections;
+		private readonly List<SectionToPrint> sections;
 	}
 }

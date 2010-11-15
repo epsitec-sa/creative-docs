@@ -374,50 +374,73 @@ namespace Epsitec.Cresus.Core.Printers
 
 			foreach (var job in jobs)
 			{
-				var xJob = new XElement ("job");
-				xJob.Add (new XAttribute ("title",        job.JobFullName));
-				xJob.Add (new XAttribute ("printer-name", job.PrinterPhysicalName));
-
 				List<SectionToPrint> sectionsToPrint = job.Sections.Where (x => x.Enable).ToList ();
 
-				foreach (var section in sectionsToPrint)
+				if (sectionsToPrint.Count != 0)
 				{
-					var xSection = new XElement ("section");
-					xSection.Add (new XAttribute ("printer-unit",     section.PrinterUnit.LogicalName));
-					xSection.Add (new XAttribute ("printer-tray",     section.PrinterUnit.PhysicalPrinterTray));
-					xSection.Add (new XAttribute ("printer-x-offset", section.PrinterUnit.XOffset));
-					xSection.Add (new XAttribute ("printer-y-offset", section.PrinterUnit.YOffset));
-					xSection.Add (new XAttribute ("printer-width",    section.DocumentPrinter.RequiredPageSize.Width));
-					xSection.Add (new XAttribute ("printer-height",   section.DocumentPrinter.RequiredPageSize.Height));
+					var xJob = new XElement ("job");
+					xJob.Add (new XAttribute ("title",        job.JobFullName));
+					xJob.Add (new XAttribute ("printer-name", job.PrinterPhysicalName));
 
-					for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
+					foreach (var section in sectionsToPrint)
 					{
-						var xPage = new XElement ("page");
-						xPage.Add (new XAttribute ("rank", page));
+						var xSection = new XElement ("section");
+						xSection.Add (new XAttribute ("printer-unit",     section.PrinterUnit.LogicalName));
+						xSection.Add (new XAttribute ("printer-tray",     section.PrinterUnit.PhysicalPrinterTray));
+						xSection.Add (new XAttribute ("printer-x-offset", section.PrinterUnit.XOffset));
+						xSection.Add (new XAttribute ("printer-y-offset", section.PrinterUnit.YOffset));
+						xSection.Add (new XAttribute ("printer-width",    section.DocumentPrinter.RequiredPageSize.Width));
+						xSection.Add (new XAttribute ("printer-height",   section.DocumentPrinter.RequiredPageSize.Height));
 
-						var port = new XmlPort (xPage);
-						section.DocumentPrinter.IsPreview = false;
-						section.DocumentPrinter.CurrentPage = page;
-						section.DocumentPrinter.PrintBackgroundCurrentPage (port);
-						section.DocumentPrinter.PrintForegroundCurrentPage (port);
+						for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
+						{
+							var xPage = new XElement ("page");
+							xPage.Add (new XAttribute ("rank", page));
 
-						xSection.Add (xPage);
+							var port = new XmlPort (xPage);
+							section.DocumentPrinter.IsPreview = false;
+							section.DocumentPrinter.CurrentPage = page;
+							section.DocumentPrinter.SetPrinterUnit (section.PrinterUnit);
+							section.DocumentPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);
+							section.DocumentPrinter.PrintBackgroundCurrentPage (port);
+							section.DocumentPrinter.PrintForegroundCurrentPage (port);
+
+							xSection.Add (xPage);
+						}
+
+						xJob.Add (xSection);
 					}
 
-					xJob.Add (xSection);
+					xRoot.Add (xJob);
 				}
-
-				xRoot.Add (xJob);
 			}
 
 			return xDocument.ToString (SaveOptions.None);
 		}
 
-		public static List<DeserializedPage> DeserializeJobs(string xmlSource, double zoom=0)
+		public static void DeserializeAndPrintJobs(string xmlSource)
+		{
+			List<DeserializedJob> jobs = PrintEngine.DeserializeJobs (xmlSource);
+
+			foreach (var job in jobs)
+			{
+				PrintDocument printDocument = new PrintDocument ();
+
+				printDocument.DocumentName = job.JobFullName;
+				printDocument.SelectPrinter (FormattedText.Unescape (job.PrinterPhysicalName));
+				printDocument.PrinterSettings.Copies = 1;
+				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
+
+				var engine = new JobPrintEngine2 (printDocument, job.Sections);
+				printDocument.Print (engine);
+			}
+		}
+
+		public static List<DeserializedJob> DeserializeJobs(string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
 			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
-			var pages = new List<DeserializedPage> ();
+			var jobs = new List<DeserializedJob> ();
 
 			if (!string.IsNullOrWhiteSpace (xmlSource))
 			{
@@ -429,6 +452,8 @@ namespace Epsitec.Cresus.Core.Printers
 					string title               = (string) xJob.Attribute ("title");
 					string printerPhysicalName = (string) xJob.Attribute ("printer-name");
 
+					var job = new DeserializedJob (title, printerPhysicalName);
+
 					foreach (var xSection in xJob.Elements ())
 					{
 						string printerLogicalName  = (string) xSection.Attribute ("printer-unit");
@@ -436,25 +461,31 @@ namespace Epsitec.Cresus.Core.Printers
 						double width               = (double) xSection.Attribute ("printer-width");
 						double height              = (double) xSection.Attribute ("printer-height");
 
+						var section = new DeserializedSection (job, printerLogicalName, printerPhysicalTray, new Size (width, height));
+
 						foreach (var xPage in xSection.Elements ())
 						{
 							int pageRank = (int) xPage.Attribute ("rank");
 
-							var dp = new DeserializedPage (title, printerLogicalName, printerPhysicalName, printerPhysicalTray, new Size (width, height), pageRank);
+							var page = new DeserializedPage (section, pageRank, xPage);
 
-							if (zoom > 0)
+							if (zoom > 0)  // génère une miniature de la page ?
 							{
 								var port = new XmlPort (xPage);
-								dp.Miniature = port.Deserialize (new Size (width, height), zoom);
+								page.Miniature = port.Deserialize (new Size (width, height), zoom);
 							}
 
-							pages.Add (dp);
+							section.Pages.Add (page);
 						}
+
+						job.Sections.Add (section);
 					}
+
+					jobs.Add (job);
 				}
 			}
 
-			return pages;
+			return jobs;
 		}
 
 

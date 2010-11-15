@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application = application;
 			this.xmlSource   = xmlSource;
 
-			this.pages = Printers.PrintEngine.DeserializeJobs (this.xmlSource, zoom: 2);
+			this.jobs = Printers.PrintEngine.DeserializeJobs (this.xmlSource, zoom: 2);
+			this.pages = this.Pages.ToList ();
 		}
 
 
@@ -129,7 +130,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					Parent = footer,
 					Text = "Fermer",
-					PreferredWidth = 60,
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 					Dock = DockStyle.Right,
 					Margins = new Margins (20, 0, 0, 0),
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					GlyphShape = GlyphShape.ArrowLeft,
 					PreferredWidth = 30,
 					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
+					Margins = new Margins (20, 0, 0, 0),
 				};
 
 				next.Clicked += delegate
@@ -162,6 +162,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 				prev.Clicked += delegate
 				{
 					this.ChangePage (-1);
+				};
+
+				var b = new Button
+				{
+					Parent = footer,
+					Text = "Re-print",
+					Dock = DockStyle.Right,
+					Margins = new Margins (0, 20, 0, 0),
+				};
+
+				b.Clicked += delegate
+				{
+					PrintEngine.DeserializeAndPrintJobs (this.xmlSource);
 				};
 			}
 
@@ -192,20 +205,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void ChangePage(int direction)
 		{
-			if (this.pages != null)
-			{
-				this.page += direction;
+			this.page += direction;
 
-				this.page = System.Math.Max (this.page, 0);
-				this.page = System.Math.Min (this.page, this.pages.Count-1);
+			this.page = System.Math.Max (this.page, 0);
+			this.page = System.Math.Min (this.page, this.pages.Count-1);
 
-				this.UpdateWidgets ();
-			}
+			this.UpdateWidgets ();
 		}
 
 		private void UpdateWidgets()
 		{
-			if (this.pages == null || this.page < 0 || this.page >= this.pages.Count)
+			if (this.page < 0 || this.page >= this.pages.Count)
 			{
 				this.description.Text = null;
 				this.previewer.Bitmap = null;
@@ -224,10 +234,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private IEnumerable<DeserializedPage> Pages
+		{
+			get
+			{
+				foreach (var job in this.jobs)
+				{
+					foreach (var section in job.Sections)
+					{
+						foreach (var page in section.Pages)
+						{
+							yield return page;
+						}
+					}
+				}
+			}
+		}
+
 
 		private readonly CoreApplication						application;
 		private readonly string									xmlSource;
 
+		private List<Printers.DeserializedJob>					jobs;
 		private List<Printers.DeserializedPage>					pages;
 		private int												page;
 

@@ -195,6 +195,9 @@
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
+    <Compile Include="Printers\JobPrintEngine2.cs" />
+    <Compile Include="Printers\DeserializedJob.cs" />
+    <Compile Include="Printers\DeserializedSection.cs" />
     <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
