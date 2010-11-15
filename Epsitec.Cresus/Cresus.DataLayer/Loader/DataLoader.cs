@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Serialization;
@@ -253,6 +254,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			if (data != null)
 			{
 				this.DataContext.SerializationManager.Deserialize (entity, data);
+				this.DataContext.DefineLogSequenceNumber (entity, data.LogSequenceNumber);
 
 				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);
 			}
@@ -283,7 +285,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);			
 		}
-		
+
+
+		/// <summary>
+		/// Gets the value of the sequence number of the log entry that is currently associated with the
+		/// <see cref="AbstractEntity"/> defined by the given <see cref="EntityKey"/>.
+		/// </summary>
+		/// <param name="normalizedEntityKey">The normalized <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/>.</param>
+		/// <returns>The value of the sequence number of the log entry.</returns>
+		public long? GetLogSequenceNumberForEntity(EntityKey normalizedEntityKey)
+		{
+			return this.LoaderQueryGenerator.GetLogSequenceNumberForEntity (normalizedEntityKey);
+		}
+
 
 	}
 

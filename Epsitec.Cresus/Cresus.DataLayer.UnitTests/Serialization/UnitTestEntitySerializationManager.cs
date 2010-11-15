@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 				{
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
-					   () => new EntitySerializationManager (dataContext).Serialize (null)
+					   () => new EntitySerializationManager (dataContext).Serialize (null, 0)
 					);
 				}
 			}
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
-					   () => new EntitySerializationManager (dataContext).Deserialize (null, new EntityData (new DbKey (new DbId (1)), Druid.FromLong (1), Druid.FromLong (1), new ValueData (), new ReferenceData (), new CollectionData ()))
+					   () => new EntitySerializationManager (dataContext).Deserialize (null, new EntityData (new DbKey (new DbId (1)), Druid.FromLong (1), Druid.FromLong (1), 0, new ValueData (), new ReferenceData (), new CollectionData ()))
 					);
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 					foreach (AbstractEntity entity in this.GetSampleEntities (dataContext))
 					{
-						EntityData serializedEntity = serializer.Serialize (entity);
+						EntityData serializedEntity = serializer.Serialize (entity, 0);
 						AbstractEntity deserializedEntity = serializer.Deserialize (serializedEntity);
 
 						this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
@@ -164,11 +164,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-					
+
 					ValueData valueData = new ValueData ();
-					valueData[Druid.Parse("[L0AV]")] = "Albert";
+					valueData[Druid.Parse ("[L0AV]")] = "Albert";
 					valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
-					
+
 					ReferenceData referenceData = new ReferenceData ();
 					referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (1000000002));
 					referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1000000001));
@@ -177,7 +177,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000002)));
 					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000001)));
 
-					EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), valueData, referenceData, collectionData);
+					int logSequenceId = 4;
+					EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), logSequenceId, valueData, referenceData, collectionData);
 
 					new EntitySerializationManager (dataContext).Deserialize (alfred, data);
 
@@ -188,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
 					Assert.IsNull (alfred.Gender);
 					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[0]);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[logSequenceId]);
 					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))), alfred.Contacts[1]);
 				}
 			}

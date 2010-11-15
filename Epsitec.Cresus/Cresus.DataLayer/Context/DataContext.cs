@@ -392,6 +392,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
+		/// Associates the given log sequence number to the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to associate with the log sequence number.</param>
+		/// <param name="logSequenceNumber">The value of the log sequence number to associate with the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void DefineLogSequenceNumber(AbstractEntity entity, long logSequenceNumber)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			this.entitiesCache.DefineLogSequenceNumber (entity, logSequenceNumber);
+		}
+
+
+		/// <summary>
 		/// Tells whether the <see cref="AbstractEntity"/> managed by this instance have been
 		/// modified since the last call to <see cref="SaveChanges"/>.
 		/// </summary>
@@ -582,7 +596,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				return allLiveEntities.OfType<T> ().Where (x => filter (x)).ToList ();
 			}
-
 		}
 
 
@@ -837,24 +850,36 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to reload.</param>
 		public void ReloadEntity(AbstractEntity entity)
 		{
-			if (entity == null)
+			bool reload = entity != null
+				&& this.IsPersistent (entity)
+				&& entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration;
+
+			if (!reload)
 			{
-				return;
+				EntityKey entityKey = this.GetNormalizedEntityKey (entity).Value;
+				
+				long? databaseLogSequenceNumber = this.DataLoader.GetLogSequenceNumberForEntity (entityKey);
+				long? dataContextLogSequenceNumber = this.entitiesCache.GetLogSequenceNumber (entity);
+
+				reload = !dataContextLogSequenceNumber.HasValue
+					|| !databaseLogSequenceNumber.HasValue
+					|| databaseLogSequenceNumber > dataContextLogSequenceNumber.Value;
 			}
 
-			if (!this.IsPersistent (entity))
+			if (reload)
 			{
-				return;
+				this.AssertDataContextIsNotDisposed ();
+				this.AssertEntityIsNotForeign (entity);
+
+				using (entity.UseSilentUpdates ())
+				using (entity.DefineOriginalValues ())
+				using (entity.DisableEvents ())
+				{
+					this.DataLoader.ReloadEntity (entity);
+				}
 			}
-
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (entity);
-
-			using (entity.UseSilentUpdates ())
-			using (entity.DefineOriginalValues ())
-			using (entity.DisableEvents ())
+			else
 			{
-				this.DataLoader.ReloadEntity (entity);
 			}
 		}
 
@@ -1615,8 +1640,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
 			entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
-						
-			EntityData data = sender.SerializationManager.Serialize (entity);
+
+			long logSequenceNumber = sender.entitiesCache.GetLogSequenceNumber (entity).Value;
+			EntityData data = sender.SerializationManager.Serialize (entity, logSequenceNumber);
 			
 			return (TEntity) receiver.DataLoader.DeserializeEntityData (data);
 		}

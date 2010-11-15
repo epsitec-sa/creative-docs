@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
+			this.entityIdToLogSequenceNumber = new Dictionary<long, long> ();
 		}
 
 
@@ -84,6 +85,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.entityIdToEntityKey.Remove (id);
 				this.entityKeyToEntity.Remove (entityKey);
 			}
+
+			if (this.entityIdToLogSequenceNumber.ContainsKey (id))
+			{
+				this.entityIdToLogSequenceNumber.Remove (id);
+			}
 		}
 
 
@@ -114,6 +120,29 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entityIdToEntityKey[id] = normalizedEntityKey;
 			this.entityKeyToEntity[normalizedEntityKey] = entity;
+		}
+
+
+		/// <summary>
+		/// Associates the given log sequence number to the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to associate with the log sequence number.</param>
+		/// <param name="logSequenceNumber">The value of the log sequence number to associate with the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentException">
+		/// If <paramref name="entity"/> is null.
+		/// If <paramref name="entity"/>is not in the cache.
+		public void DefineLogSequenceNumber(AbstractEntity entity, long logSequenceNumber)
+		{
+			entity.ThrowIfNull ("entity");
+
+			long id = entity.GetEntitySerialId ();
+
+			if (!this.entityIdToEntity.ContainsKey (id))
+			{
+				throw new System.ArgumentException ("Entity is not yet defined cache");
+			}
+
+			this.entityIdToLogSequenceNumber[id] = logSequenceNumber;
 		}
 
 
@@ -169,7 +198,30 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
 
-				return this.entityKeyToEntity[entityKey];
+				return this.entityKeyToEntity[normalizedEntityKey];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the log sequence number corresponding th the given <see cref="AbstracEntity"/> if
+		/// there is any.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose log sequence number to retrieve.</param>
+		/// <returns>The log sequence number.</returns>
+		public long? GetLogSequenceNumber(AbstractEntity entity)
+		{
+			entity.ThrowIfNull ("entity");
+
+			long id = entity.GetEntitySerialId ();
+
+			if (this.entityIdToLogSequenceNumber.ContainsKey (id))
+			{
+				return this.entityIdToLogSequenceNumber[id];
 			}
 			else
 			{
@@ -204,6 +256,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Maps the <see cref="EntityKey"/> to the corresponding <see cref="AbstractEntity"/>.
 		/// </summary>
 		private readonly Dictionary<EntityKey, AbstractEntity> entityKeyToEntity;
+
+
+		/// <summary>
+		/// Maps the entity serial ids to their corresponding log sequence number.
+		/// </summary>
+		private readonly Dictionary<long, long> entityIdToLogSequenceNumber;
 
 
 	}

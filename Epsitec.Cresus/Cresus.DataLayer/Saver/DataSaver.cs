@@ -128,13 +128,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
 
+			// TODO Bug here? What happens if an entity has been deleted and modified?
+			// Marc
+
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
 			var affectedTables = this.GetAffectedTables (persistenceJobs).ToList ();
 			
-			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs, affectedTables);
+			var result = this.ProcessPersistenceJobs (persistenceJobs, affectedTables);
+			var dbLogEntry = result.Item1;
+			var newEntityKeys = result.Item2;
 
 			this.CleanSavedEntities (entitiesToSave);
 			this.AssignNewEntityKeys (newEntityKeys);
+			this.AssignNewLogSequenceNumber (entitiesToSave, dbLogEntry);
 			
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
@@ -222,22 +228,22 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="jobs">The <see cref="AbstractPersistenceJob"/> to execute.</param>
 		/// <param name="affectedTables">The <see cref="DbTable"/> that will be modified during the execution.</param>
-		/// <returns>The mapping between the <see cref="AbstractEntity"/> that have been inserted in the database and their newly assigned <see cref="DbKey"/>.</returns>
-		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
+		/// <returns>The <see cref="DbLogEntry"/> used by the operation and the mapping between the <see cref="AbstractEntity"/> that have been inserted in the database and their newly assigned <see cref="DbKey"/>.</returns>
+		private System.Tuple<DbLogEntry, IEnumerable<KeyValuePair<AbstractEntity, DbKey>>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
 		{
-			IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
-
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 			{
-				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);
+				IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
+			
+				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);	
 				DbLogEntry dbLogEntry = this.DbInfrastructure.Logger.CreateLogEntry (connectionId);
 				
 				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, dbLogEntry, jobs);
 
 				transaction.Commit ();
-			}
 
-			return newEntityKeys;
+				return System.Tuple.Create (dbLogEntry, newEntityKeys);
+			}
 		}
 
 
@@ -285,6 +291,21 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				DbKey key = newEntityKey.Value;
 
 				this.DataContext.DefineRowKey (entity, key);
+			}
+		}
+
+
+		/// <summary>
+		/// Assigns the log sequence number to the <see cref="AbstractEntity"/> that have been
+		/// inserted in the database.
+		/// </summary>
+		/// <param name="entities">The sequence of <see cref="AbstractEntity"/> that have been inserted in the database.</param>
+		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that has been used for the insertions.</param>
+		private void AssignNewLogSequenceNumber(IEnumerable<AbstractEntity> entities, DbLogEntry dbLogEntry)
+		{
+			foreach (AbstractEntity entity in entities)
+			{
+				this.DataContext.DefineLogSequenceNumber (entity, dbLogEntry.SequenceNumber);
 			}
 		}
 
