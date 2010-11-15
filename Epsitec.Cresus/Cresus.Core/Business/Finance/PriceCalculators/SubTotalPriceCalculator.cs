@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
             {
 				return;
             }
+			
 			if (this.discount.DiscountRate.HasValue)
 			{
 				decimal discountRatio = 1.00M - this.discount.DiscountRate.Value;

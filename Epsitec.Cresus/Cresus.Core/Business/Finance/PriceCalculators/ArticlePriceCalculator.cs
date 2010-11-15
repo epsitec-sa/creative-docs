@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, quantity);
 			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
 
-			decimal primaryLineTax = this.ComputeTax (primaryLinePriceBeforeTax).TotalTax;
+			decimal primaryLineTax = this.ComputeTaxTotal (primaryLinePriceBeforeTax);
 			
 			this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
@@ -104,6 +104,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (1));
 		}
 
+		private decimal ComputeTaxTotal(decimal price)
+		{
+			return this.ComputeTax (price).TotalTax;
+		}
+		
 		public override void ApplyFinalPriceAdjustment(decimal adjustment)
 		{
 			if (this.notDiscountable)
@@ -118,10 +123,66 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
 		{
-			//	TODO: implement discount & rounding, based either on price before or after tax...
+			if (discount.IsNull ())
+			{
+				return price;
+			}
+
+			decimal tax = this.ComputeTaxTotal (price);
+
+			if (discount.DiscountRate.HasValue)
+			{
+				decimal discountRatio = 1.00M - discount.DiscountRate.Value;
+				return this.ApplyDiscountRatio (discount, price, tax, discountRatio);
+			}
+/*
+			if (discount.Value.HasValue)
+			{
+				if (discount.ValueIncludesTaxes)
+				{
+					decimal discountedPriceAfterTax = price + tax - discount.Value.Value;
+					return this.ApplyFixedDiscount (discount, discountedPriceAfterTax, true);
+				}
+				else
+				{
+					decimal discountedPriceBeforeTax = price - discount.Value.Value;
+					return this.ApplyFixedDiscount (discount, discountedPriceBeforeTax, false);
+				}
+			}
+ * */
 			return price;
 		}
 
+
+		private decimal ApplyDiscountRatio(DiscountEntity discount, decimal priceBeforeTax, decimal tax, decimal discountRatio)
+		{
+			if (discount.ValueIncludesTaxes)
+			{
+				decimal priceAfterTax = priceBeforeTax + tax;
+				decimal taxRatio      = priceBeforeTax / priceAfterTax;
+				
+				decimal discountedPriceAfterTax = priceAfterTax * discountRatio;
+
+				if (discount.RoundingMode.IsNotNull ())
+				{
+					discountedPriceAfterTax = discount.RoundingMode.Round (discountedPriceAfterTax);
+				}
+
+				return discountedPriceAfterTax * taxRatio;
+			}
+			else
+			{
+				decimal discountedPriceBeforeTax = priceBeforeTax * discountRatio;
+
+				if (discount.RoundingMode.IsNotNull ())
+				{
+					discountedPriceBeforeTax = discount.RoundingMode.Round (discountedPriceBeforeTax);
+				}
+
+				return discountedPriceBeforeTax;
+			}
+		}
+		
 		public decimal GetTotalQuantity()
 		{
 			InclusionMode inclusionMode = this.IsRealBill () ? InclusionMode.Billed : InclusionMode.Ordered;
@@ -192,6 +253,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			if (roundingPolicy == RoundingPolicy.OnFinalPriceAfterTax)
 			{
+				tax = this.ComputeTax (linePriceBeforeTax);
 				decimal linePriceAfterTax = linePriceBeforeTax + tax.TotalTax;
 
 				linePriceAfterTax  = this.priceRoundingMode.Round (linePriceAfterTax);
