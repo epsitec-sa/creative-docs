@@ -1,7 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 using Epsitec.Cresus.Core.Controllers.TabIds;
 
 using System.Collections.Generic;

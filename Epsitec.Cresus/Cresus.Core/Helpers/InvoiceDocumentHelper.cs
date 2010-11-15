@@ -236,8 +236,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
 #else
-			var calculator = new Epsitec.Cresus.Core.Business.Finance.DocumentPriceCalculator (dataContext, x);
-			calculator.UpdatePrices ();
+			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (dataContext, x);
 #endif
 		}
 
