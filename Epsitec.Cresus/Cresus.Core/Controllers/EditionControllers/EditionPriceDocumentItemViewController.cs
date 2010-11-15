@@ -141,6 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void UpdatePrices()
 		{
+#if false
 			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as BusinessDocumentEntity;
 
 			if (invoiceDocument != null)
@@ -149,6 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			this.TileContainer.UpdateAllWidgets ();
+#endif
 		}
 	}
 }

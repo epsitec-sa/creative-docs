@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		protected override void Apply(BusinessDocumentEntity entity)
 		{
-			var dataContext = Logic.Current.DataContext;
-
-			Epsitec.Cresus.Core.Helpers.InvoiceDocumentHelper.UpdatePrices (entity, dataContext);
+			var businessContext = Logic.Current.BusinessContext;
+            
+			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (businessContext, entity);
 		}
 	}
 }

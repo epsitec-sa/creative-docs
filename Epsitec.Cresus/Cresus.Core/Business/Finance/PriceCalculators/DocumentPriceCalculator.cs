@@ -16,20 +16,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 	public sealed class DocumentPriceCalculator : IDocumentPriceCalculator, System.IDisposable
 	{
-		public DocumentPriceCalculator(DataContext context, BusinessDocumentEntity document)
+		public DocumentPriceCalculator(BusinessContext context, BusinessDocumentEntity document)
 		{
-			IEntityCollection collection = document.Lines as IEntityCollection;
-
-			if (collection == null)
-			{
-				throw new System.ArgumentException ("The document does not provide an IEntityCollection compatible collection of lines");
-			}
-			
 			this.context  = context;
 			this.document = document;
 			this.calculators = new List<AbstractPriceCalculator> ();
 			this.groups = new Stack<GroupPriceCalculator> ();
-			this.suspender = collection.SuspendNotifications ();
+			this.suspender = this.document.DisableEvents ();
 		}
 
 
@@ -68,8 +61,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private void GenerateVatLinesAndGrandTotal()
 		{
-			var taxReservoir   = new Reservoir<TaxDocumentItemEntity> (this.context, this.document.Lines.OfType<TaxDocumentItemEntity> ());
-			var totalReservoir = new Reservoir<EndTotalDocumentItemEntity> (this.context, this.document.Lines.OfType<EndTotalDocumentItemEntity> ());
+			DataContext context = this.context.DataContext;
+			
+			var taxReservoir   = new Reservoir<TaxDocumentItemEntity> (context, this.document.Lines.OfType<TaxDocumentItemEntity> ());
+			var totalReservoir = new Reservoir<EndTotalDocumentItemEntity> (context, this.document.Lines.OfType<EndTotalDocumentItemEntity> ());
 
 			var group = this.GetLastGroup ();
 
@@ -77,23 +72,23 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				return;
 			}
-			
+
 			Tax taxTotals = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable);
 
 			if (taxTotals == null)
 			{
 				return;
 			}
-			
+
 			var taxInfos = from tax in taxTotals.RateAmounts
-							orderby tax.CodeRate ascending
-							select tax;
+						   orderby tax.CodeRate ascending
+						   select tax;
 
 			var currency = this.document.BillingCurrencyCode;
 
 			taxReservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
 			totalReservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
-				
+
 			foreach (var taxInfo in taxInfos)
 			{
 				var taxLine = taxReservoir.Pull ();
@@ -260,7 +255,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 		
-		private readonly DataContext					context;
+		private readonly BusinessContext				context;
 		private readonly BusinessDocumentEntity			document;
 		private readonly List<AbstractPriceCalculator>	calculators;
 		private readonly Stack<GroupPriceCalculator>	groups;
