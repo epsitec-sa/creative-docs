@@ -18,6 +18,17 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.GetCompactSummary ();
 		}
 
+		public bool IsEmptyQuantity()
+		{
+			if (this.Quantity == 0)
+			{
+				return this.Unit.IsNull ()
+					|| this.Unit.GetEntityStatus () == EntityStatus.Empty;
+			}
+
+			return false;
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			string type = null;
