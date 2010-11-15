@@ -569,7 +569,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public FrameBox CreateGroup(EditionTile tile, string label)
+		public FrameBox CreateGroup(EditionTile tile, string label = null)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -667,7 +667,7 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldEx
 			{
 				Parent = parent,
-				IsReadOnly = this.ReadOnly,
+				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly,
 				PreferredHeight = 20,
 				Dock = dockStyle,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),

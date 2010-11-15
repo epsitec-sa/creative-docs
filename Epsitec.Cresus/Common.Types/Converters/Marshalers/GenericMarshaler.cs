@@ -39,6 +39,20 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
+		/// </value>
+		public override bool IsReadOnly
+		{
+			get
+			{
+				return this.ValueSetter == null;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the value using the value getter.
@@ -71,7 +85,6 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 				this.ValueSetter (value);
 			}
 		}
-
 
 		private static readonly bool usesNullableType = typeof (T1).IsGenericType && typeof (T1).FullName.StartsWith ("System.Nullable`1");
 		private static readonly GenericConverter<T2> converter = GenericConverter.GetConverter<T2> ();

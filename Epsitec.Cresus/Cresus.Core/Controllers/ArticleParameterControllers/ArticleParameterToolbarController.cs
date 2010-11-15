@@ -51,7 +51,17 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.toolbar.Margins = new Margins (0, UIBuilder.RightMargin, 0, -1);
 		}
 
-		public void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)
+		public void UpdateUI(ArticleDefinitionEntity articleDefinition, AbstractTextField textField)
+		{
+			this.UpdateUI (articleDefinition, null, textField);
+		}
+
+		public void UpdateUI(ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)
+		{
+			this.UpdateUI (articleDocumentItem.ArticleDefinition, articleDocumentItem, textField);
+		}
+
+		private void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)
 		{
 			//	Met à jour l'interface en créant les boutons pour chaque paramètre.
 			//	Si articleDocumentItem == null, on ne spécifie pas les valeurs dans le texte éditable.

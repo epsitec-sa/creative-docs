@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'inteface IReadOnly permet de déterminer si un objet est accessible en
-	/// lecture seule, ou non.
+	/// The <c>IReadOnly</c> interface is used to check if an object is read
+	/// only or not.
 	/// </summary>
 	public interface IReadOnly
 	{

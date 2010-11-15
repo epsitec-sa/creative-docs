@@ -39,21 +39,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateTabBook (builder);
 
-				this.CreateUIArticleDefinition (builder);
-				this.CreateUIParameter         (builder);
-				this.CreateUIDesignation       (builder);
-				this.CreateUIPrice             (builder);
+				this.CreateUIArticleDefinition  (builder);
+				this.CreateUIParameter          (builder);
+				this.CreateUIArticleDescription (builder);
+				this.CreateUIPrice              (builder);
 
+				using (var data = TileContainerController.Setup (this))
+				{
+					this.CreateUIQuantities (data);
+				}
+				
 				builder.CreateFooterEditorTile ();
 			}
 
-			//	Summary:
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIQuantities (data);
-			}
-
-			this.DataContext.EntityChanged += new Epsitec.Common.Support.EventHandler<EntityChangedEventArgs> (this.HandleDataContextEntityChanged);
+//-			this.DataContext.EntityChanged += new Epsitec.Common.Support.EventHandler<EntityChangedEventArgs> (this.HandleDataContextEntityChanged);
 		}
 
 
@@ -72,30 +71,30 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 			};
 
-			builder.CreateAutoCompleteTextField ("Article à facturer", controller);
+			builder.CreateAutoCompleteTextField ("Article", controller);
 		}
 
 		private void CreateUIParameter(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
+			var group = builder.CreateGroup (tile);
 
-			var group = builder.CreateGroup (tile, null);  // groupe sans titre
 			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.TileContainer, tile);
 			this.parameterController.CallbackParameterChanged = this.ParameterChanged;
 			this.parameterController.CreateUI (group);
 			this.parameterController.UpdateUI (this.Entity);
 		}
 
-		private void CreateUIDesignation(UIBuilder builder)
+		private void CreateUIArticleDescription(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
 			this.toolbarController.CreateUI (tile.Container, "Désignation");
 
-			this.designationTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
+			this.articleDescriptionTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
 
-			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 		}
 
 		private void CreateUIPrice(Epsitec.Cresus.Core.UIBuilder builder)
@@ -107,9 +106,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 
 			FrameBox group = builder.CreateGroup (tile, "Prix unitaire et total HT");
-			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetPrice (),      this.SetPrice));
-			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetTotalPrice (), this.SetTotalPrice));
-			t.IsReadOnly = true;
+			builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetPrice (),      this.SetPrice));
+			builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingLinePriceBeforeTax, null));
 		}
 
 		private void CreateUIQuantities(SummaryDataItems data)
@@ -162,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.SetArticleDescription (this.GetArticleDescription ());
 
 					this.parameterController.UpdateUI (this.Entity);
-					this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+					this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
 					this.TileContainer.UpdateAllWidgets ();
 				}
@@ -393,7 +391,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
-			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.designationTextField);
+			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.articleDescriptionTextField);
 		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
@@ -406,7 +404,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				e.Entity is FreeTextValueArticleParameterDefinitionEntity)
 			{
 				this.parameterController.UpdateUI (this.Entity);
-				this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 			}
 		}
 
@@ -414,6 +412,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
-		private TextFieldMultiEx												designationTextField;
+		private TextFieldMultiEx												articleDescriptionTextField;
 	}
 }

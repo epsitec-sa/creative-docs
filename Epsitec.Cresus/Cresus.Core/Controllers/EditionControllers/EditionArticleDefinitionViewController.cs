@@ -80,12 +80,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var shortToolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
 			shortToolbarController.CreateUI (tile.Container, "Description courte");
 			var shortTextField = builder.CreateTextField (tile, 0, null, Marshaler.Create (() => this.Entity.ShortDescription, x => this.Entity.ShortDescription = x));
-			shortToolbarController.UpdateUI (this.Entity, null, shortTextField);
+			shortToolbarController.UpdateUI (this.Entity, shortTextField);
 
 			var longToolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
 			longToolbarController.CreateUI (tile.Container, "Description longue");
 			var longTextField = builder.CreateTextFieldMulti (tile, 68, null, Marshaler.Create (() => this.Entity.LongDescription, x => this.Entity.LongDescription = x));
-			longToolbarController.UpdateUI (this.Entity, null, longTextField);
+			longToolbarController.UpdateUI (this.Entity, longTextField);
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
