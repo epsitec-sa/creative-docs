@@ -6,11 +6,12 @@ namespace Epsitec.Cresus.Database.Services
 	{
 		
 		
-		public DbLogEntry(DbId entryId, DbId connectionId, System.DateTime dateTime)
+		public DbLogEntry(DbId entryId, DbId connectionId, System.DateTime dateTime, long sequenceNumber)
 		{
 			this.EntryId = entryId;
 			this.ConnectionId = connectionId;
 			this.DateTime = dateTime;
+			this.SequenceNumber = sequenceNumber;
 		}
 
 
@@ -29,6 +30,13 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		public System.DateTime DateTime
+		{
+			get;
+			private set;
+		}
+
+
+		public long SequenceNumber
 		{
 			get;
 			private set;

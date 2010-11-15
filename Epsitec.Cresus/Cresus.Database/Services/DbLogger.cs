@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Database.Services
 				{
 					this.DbTable.Columns[Tags.ColumnConnectionId],
 					this.DbTable.Columns[Tags.ColumnDateTime],
+					this.DbTable.Columns[Tags.ColumnSequenceNumber],
 				};
 
 				SqlFieldList conditions = new SqlFieldList ()
@@ -61,8 +62,9 @@ namespace Epsitec.Cresus.Database.Services
 
 				DbId connectionId = new DbId ((long) data[0]);
 				System.DateTime dateTime = (System.DateTime) data[1];
+				long sequenceNumber = (long) data[2];
 
-				return new DbLogEntry (entryId, connectionId, dateTime);
+				return new DbLogEntry (entryId, connectionId, dateTime, sequenceNumber);
 			}
 		}
 
