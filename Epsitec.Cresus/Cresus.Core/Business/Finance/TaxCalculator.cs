@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			{
 				var vatDef = TaxContext.Current.GetVatDefinition (this.date.Value, vatCode);
 
-				return new Tax (new TaxRateAmount (amount, vatCode, vatDef.Rate));
+				return vatDef == null ? new Tax () : new Tax (new TaxRateAmount (amount, vatCode, vatDef.Rate));
 			}
 
 			if (this.dateRange != null)
