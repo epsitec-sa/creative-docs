@@ -135,21 +135,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				decimal discountRatio = 1.00M - discount.DiscountRate.Value;
 				return this.ApplyDiscountRatio (discount, price, tax, discountRatio);
 			}
-/*
+			
 			if (discount.Value.HasValue)
 			{
-				if (discount.ValueIncludesTaxes)
-				{
-					decimal discountedPriceAfterTax = price + tax - discount.Value.Value;
-					return this.ApplyFixedDiscount (discount, discountedPriceAfterTax, true);
-				}
-				else
-				{
-					decimal discountedPriceBeforeTax = price - discount.Value.Value;
-					return this.ApplyFixedDiscount (discount, discountedPriceBeforeTax, false);
-				}
+				decimal discountAmount = discount.Value.Value;
+				return this.ApplyDiscountFixed (discount, price, tax, discountAmount);
 			}
- * */
+			
 			return price;
 		}
 
@@ -159,30 +151,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			if (discount.ValueIncludesTaxes)
 			{
 				decimal priceAfterTax = priceBeforeTax + tax;
-				decimal taxRatio      = priceBeforeTax / priceAfterTax;
+				decimal taxRatio      = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
 				
-				decimal discountedPriceAfterTax = priceAfterTax * discountRatio;
-
-				if (discount.RoundingMode.IsNotNull ())
-				{
-					discountedPriceAfterTax = discount.RoundingMode.Round (discountedPriceAfterTax);
-				}
-
-				return discountedPriceAfterTax * taxRatio;
+				return priceAfterTax * discountRatio * taxRatio;
 			}
 			else
 			{
-				decimal discountedPriceBeforeTax = priceBeforeTax * discountRatio;
-
-				if (discount.RoundingMode.IsNotNull ())
-				{
-					discountedPriceBeforeTax = discount.RoundingMode.Round (discountedPriceBeforeTax);
-				}
-
-				return discountedPriceBeforeTax;
+				return priceBeforeTax * discountRatio;
 			}
 		}
-		
+
+		private decimal ApplyDiscountFixed(DiscountEntity discount, decimal price, decimal tax, decimal discountAmount)
+		{
+			if (discount.ValueIncludesTaxes)
+			{
+				decimal priceBeforeTax = price;
+				decimal priceAfterTax  = priceBeforeTax + tax;
+				decimal taxRatio       = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
+				
+				return taxRatio * (priceAfterTax + discountAmount);
+			}
+			else
+			{
+				return price - discountAmount;
+			}
+		}
+
 		public decimal GetTotalQuantity()
 		{
 			InclusionMode inclusionMode = this.IsRealBill () ? InclusionMode.Billed : InclusionMode.Ordered;
@@ -244,6 +238,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			foreach (var discount in this.articleItem.Discounts)
 			{
 				linePriceBeforeTax = this.ApplyDiscount (linePriceBeforeTax, discount);
+				
+				if ((discount.RoundingMode.IsNotNull ()) &&
+					(discount.RoundingMode.PriceRoundingPolicy != RoundingPolicy.None))
+				{
+					roundingPolicy = discount.RoundingMode.PriceRoundingPolicy;
+				}
 			}
 
 			if (roundingPolicy == RoundingPolicy.OnFinalPriceBeforeTax)
