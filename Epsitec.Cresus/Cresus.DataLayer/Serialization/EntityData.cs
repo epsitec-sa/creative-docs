@@ -32,13 +32,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
 		/// <param name="leafEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="logSequenceNumber">The sequence number of log entry currently associated witht the <see cref="AbstractEntity"/>.</param>
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="valueData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="referenceData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
-		public EntityData(DbKey rowKey, Druid leafEntityId, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		public EntityData(DbKey rowKey, Druid leafEntityId, Druid loadedEntityId, long logSequenceNumber, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
 			valueData.ThrowIfNull ("valueData");
 			referenceData.ThrowIfNull ("referenceData");
@@ -47,6 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			this.RowKey = rowKey;
 			this.LeafEntityId = leafEntityId;
 			this.LoadedEntityId = loadedEntityId;
+			this.LogSequenceNumber = logSequenceNumber;
 			this.ValueData = valueData;
 			this.ReferenceData = referenceData;
 			this.CollectionData = collectionData;
@@ -54,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
+		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
 		/// <value>The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</value>
 		public DbKey RowKey
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the <see cref="Druid"/> that identifies the concrete type of the
+		/// Gets the <see cref="Druid"/> that identifies the concrete type of the
 		/// <see cref="AbstractEntity"/>.
 		/// </summary>
 		public Druid LeafEntityId
@@ -76,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the loaded entity id of the <see cref="AbstractEntity"/>. This is the id of
+		/// Gets the loaded entity id of the <see cref="AbstractEntity"/>. This is the id of
 		/// the most derived type that it implements and has been loaded in memory.
 		/// </summary>
 		/// <value>The loaded entity id of the <see cref="AbstractEntity"/>.</value>
@@ -88,7 +90,18 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the value data of the <see cref="AbstractEntity"/>.
+		/// Gets the sequence number of the log entry currently associated with the
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		public long LogSequenceNumber
+		{
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// Gets the value data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The value data of the <see cref="AbstractEntity"/>.</value>
 		public ValueData ValueData
@@ -99,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the reference data of the <see cref="AbstractEntity"/>.
+		/// Gets the reference data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The reference data of the <see cref="AbstractEntity"/>.</value>
 		public ReferenceData ReferenceData
@@ -110,7 +123,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the collection data of the <see cref="AbstractEntity"/>.
+		/// Gets the collection data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The collection data of the <see cref="AbstractEntity"/>.</value>
 		public CollectionData CollectionData
