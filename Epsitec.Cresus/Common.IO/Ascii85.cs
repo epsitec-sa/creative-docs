@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 //	This file is based on work from Jeff Atwood :
@@ -17,10 +17,15 @@ namespace Epsitec.Common.IO
 		/// Encodes binary data into a plaintext ASCII85 format string.
 		/// </summary>
 		/// <param name="data">Binary data to encode.</param>
+		/// <param name="outputMarks">if set to <c>true</c> output marks.</param>
 		/// <returns>ASCII85 encoded string.</returns>
-		public static string Encode(byte[] data)
+		public static string Encode(byte[] data, bool outputMarks = true)
 		{
-			Engine engine = new Engine ();
+			Engine engine = new Engine ()
+			{
+				EnforceMarks = outputMarks
+			};
+
 			return engine.Encode (data);
 		}
 
@@ -28,10 +33,15 @@ namespace Epsitec.Common.IO
 		/// Decodes an ASCII85 encoded string into the original binary data.
 		/// </summary>
 		/// <param name="value">ASCII85 encoded string.</param>
+		/// <param name="enforceMarks">if set to <c>true</c> enforce marks.</param>
 		/// <returns>Byte array of decoded binary data.</returns>
-		public static byte[] Decode(string value)
+		public static byte[] Decode(string value, bool enforceMarks = true)
 		{
-			Engine engine = new Engine ();
+			Engine engine = new Engine ()
+			{
+				EnforceMarks = enforceMarks
+			};
+			
 			return engine.Decode (value);
 		}
 

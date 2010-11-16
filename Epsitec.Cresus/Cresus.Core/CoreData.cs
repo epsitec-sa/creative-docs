@@ -6,13 +6,15 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +36,10 @@ namespace Epsitec.Cresus.Core
 			this.connectionManager = new CoreDataConnectionManager (this);
 			this.locker = new CoreDataLocker (this.dataInfrastructure);
 			this.businessContextPool =  new BusinessContextPool (this);
+			this.imageDataStore = new ImageDataStore (this);
 		}
 
-		public DataLayer.Infrastructure.DataInfrastructure DataInfrastructure
+		public DataInfrastructure				DataInfrastructure
 		{
 			get
 			{
@@ -44,7 +47,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public bool IsDataContextActive
+		public bool								IsDataContextActive
 		{
 			get
 			{
@@ -52,7 +55,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public DataContext DataContext
+		public DataContext						DataContext
 		{
 			get
 			{
@@ -60,7 +63,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public DataContextPool DataContextPool
+		public DataContextPool					DataContextPool
 		{
 			get
 			{
@@ -68,7 +71,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public CoreDataLocker DataLocker
+		public CoreDataLocker					DataLocker
 		{
 			get
 			{
@@ -76,7 +79,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public CoreDataConnectionManager ConnectionManager
+		public CoreDataConnectionManager		ConnectionManager
 		{
 			get
 			{
@@ -84,7 +87,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public RefIdGeneratorPool RefIdGeneratorPool
+		public RefIdGeneratorPool				RefIdGeneratorPool
 		{
 			get
 			{
@@ -92,16 +95,24 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public bool IsReady
+		public bool								IsReady
 		{
 			get;
 			private set;
 		}
 
-		public bool ForceDatabaseCreation
+		public bool								ForceDatabaseCreation
 		{
 			get;
 			private set;
+		}
+
+		public ImageDataStore					ImageDataStore
+		{
+			get
+			{
+				return this.imageDataStore;
+			}
 		}
 
 
@@ -650,6 +661,7 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreDataConnectionManager connectionManager;
 		private readonly BusinessContextPool businessContextPool;
 		private readonly CoreDataLocker locker;
+		private readonly ImageDataStore imageDataStore;
 
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;

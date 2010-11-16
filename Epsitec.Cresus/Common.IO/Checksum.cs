@@ -1,5 +1,7 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Security.Cryptography;
 
 namespace Epsitec.Common.IO
 {
@@ -11,7 +13,12 @@ namespace Epsitec.Common.IO
 	/// </summary>
 	public static class Checksum
 	{
-		public static long ComputeCrc32(ChecksumCallback callback)
+		public static int ComputeCrc32(byte[] data)
+		{
+			return Checksum.ComputeCrc32 (engine => engine.Update (data));
+		}
+
+		public static int ComputeCrc32(ChecksumCallback callback)
 		{
 			if (Checksum.sharedCrc32 == null)
 			{
@@ -19,11 +26,18 @@ namespace Epsitec.Common.IO
 			}
 
 			Checksum.sharedCrc32.Reset ();
+
 			callback (Checksum.sharedCrc32);
-			return Checksum.sharedCrc32.Value;
+
+			return (int) (Checksum.sharedCrc32.Value & 0x7fffffff);
 		}
 
-		public static long ComputeAdler32(ChecksumCallback callback)
+		public static int ComputeAdler32(byte[] data)
+		{
+			return Checksum.ComputeAdler32 (engine => engine.Update (data));
+		}
+
+		public static int ComputeAdler32(ChecksumCallback callback)
 		{
 			if (Checksum.sharedAdler32 == null)
 			{
@@ -31,8 +45,21 @@ namespace Epsitec.Common.IO
 			}
 
 			Checksum.sharedAdler32.Reset ();
+			
 			callback (Checksum.sharedAdler32);
-			return Checksum.sharedAdler32.Value;
+			
+			return (int) (Checksum.sharedAdler32.Value & 0x7fffffff);
+		}
+
+		public static string ComputeMd5Hash(byte[] data)
+		{
+			if (Checksum.sharedMd5 == null)
+			{
+				Checksum.sharedMd5 = new MD5CryptoServiceProvider ();
+			}
+
+			byte[] hash = Checksum.sharedMd5.ComputeHash (data);
+			return Ascii85.Encode (hash, outputMarks: false);
 		}
 		
 		
@@ -46,6 +73,8 @@ namespace Epsitec.Common.IO
 			return new Adler32Wrapper ();
 		}
 
+
+		#region ChecksumWrapper Class
 
 		private abstract class ChecksumWrapper : IChecksum
 		{
@@ -157,26 +186,40 @@ namespace Epsitec.Common.IO
 			private double[]					doubles = new double[1];
 			private byte[]						buffer = new byte[32];
 		}
-		
-		
+
+		#endregion
+
+		#region Crc32Wrapper Class
+
 		private class Crc32Wrapper : ChecksumWrapper
 		{
-			public Crc32Wrapper() : base (new ICSharpCode.SharpZipLib.Checksums.Crc32 ())
+			public Crc32Wrapper()
+				: base (new ICSharpCode.SharpZipLib.Checksums.Crc32 ())
 			{
 			}
 		}
 
+		#endregion
+
+		#region Adler32Wrapper
+
 		private class Adler32Wrapper : ChecksumWrapper
 		{
-			public Adler32Wrapper() : base (new ICSharpCode.SharpZipLib.Checksums.Adler32 ())
+			public Adler32Wrapper()
+				: base (new ICSharpCode.SharpZipLib.Checksums.Adler32 ())
 			{
 			}
 		}
+
+		#endregion
 
 		[System.ThreadStatic]
 		private static IChecksum sharedCrc32;
 		
 		[System.ThreadStatic]
 		private static IChecksum sharedAdler32;
+
+		[System.ThreadStatic]
+		private static MD5CryptoServiceProvider sharedMd5;
 	}
 }
