@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -15,9 +16,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionDocumentViewController : EditionViewController<Entities.DocumentMetadataEntity>
+	public class EditionDocumentMetadataViewController : EditionViewController<Entities.DocumentMetadataEntity>
 	{
-		public EditionDocumentViewController(string name, Entities.DocumentMetadataEntity entity)
+		public EditionDocumentMetadataViewController(string name, Entities.DocumentMetadataEntity entity)
 			: base (name, entity)
 		{
 			this.InitializeDefaultValues ();
@@ -67,9 +68,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile,   0, "Description",                            Marshaler.Create (() => this.Entity.Description,          x => this.Entity.Description = x));
-			builder.CreateTextField (tile, 150, "Date et heure de création",              Marshaler.Create (() => this.Entity.CreationDate,         x => this.Entity.CreationDate = x));
-			builder.CreateTextField (tile, 150, "Date et heure de dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate, x => this.Entity.LastModificationDate = x));
+			FrameBox group = builder.CreateGroup (tile, "N° de document (principal, externe et interne)");
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
+			
+			builder.CreateTextField (tile, 0, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField (tile, 150, "Date et heure de création",              Marshaler.Create (() => this.Entity.CreationDate));
+			builder.CreateTextField (tile, 150, "Date et heure de dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate));
 		}
 	}
 }

@@ -107,6 +107,7 @@
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessBillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
+    <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
     <Compile Include="Business\Rules\SoftwareUserGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\SoftwareUserBusinessRules.cs" />
     <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
@@ -348,7 +349,7 @@
     <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentMetadataViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
     <Compile Include="Controllers\EnumKeyValues.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
