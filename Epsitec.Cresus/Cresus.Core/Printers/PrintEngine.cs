@@ -352,7 +352,9 @@ namespace Epsitec.Cresus.Core.Printers
 			string xmlSource = PrintEngine.SerializeJobs (jobs);
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
 
-			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, xmlSource);
+			var deserializeJobs = Printers.PrintEngine.DeserializeJobs (xmlSource);
+
+			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 		}

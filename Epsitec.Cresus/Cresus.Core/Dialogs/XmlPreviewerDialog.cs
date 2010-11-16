@@ -23,19 +23,19 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour choisir l'utilisateur (loggin).
+	/// Dialogue pour monter un aperçu d'une page avant l'impression. On peut naviguer dans les différentes
+	/// pages du document.
 	/// </summary>
 	class XmlPreviewerDialog : AbstractDialog
 	{
-		public XmlPreviewerDialog(CoreApplication application, string xmlSource)
+		public XmlPreviewerDialog(CoreApplication application, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			this.application = application;
-			this.xmlSource   = xmlSource;
-
-			this.jobs = Printers.PrintEngine.DeserializeJobs (this.xmlSource, zoom: 2);
-			this.pages = this.Pages.ToList ();
+			this.jobs = jobs;
+			this.pages = Printers.Common.GetDeserializedPages (this.jobs).ToList ();
+			this.previewerController = new XmlPreviewerController (this.jobs);
 		}
 
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
-			window.Text = "Visualisation de la désérialisation d'un document";
+			window.Text = "Aperçu de l'impression";
 			window.ClientSize = new Size (1024, 768);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
@@ -71,22 +71,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int tabIndex = 1;
 
-			var topPane = new FrameBox
+			var previewBox = new FrameBox
 			{
 				Parent = window.Root,
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 10, 10, 0),
-				TabIndex = tabIndex++,
-			};
-
-			var leftPane = new FrameBox
-			{
-				Parent = topPane,
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 10, 0, 0),
-				TabIndex = tabIndex++,
+				Margins = new Margins (10, 10, 10, 10),
 			};
 
 			var footer = new FrameBox
@@ -94,90 +83,29 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = window.Root,
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (10, 10, 10, 10),
+				Margins = new Margins (10, 10, 0, 10),
 				TabIndex = tabIndex++,
 			};
 
-			//	Crée la partie principale.
-			this.textField = new TextFieldMulti
+			//	Crée le pied de page.
+			this.closeButton = new Button
 			{
-				Parent = leftPane,
-				MaxLength = 100000,
-				Text = TextLayout.ConvertToTaggedText (this.xmlSource),
-				IsReadOnly = true,
+				Parent = footer,
+				Text = "Fermer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
+				Dock = DockStyle.Right,
+				Margins = new Margins (20, 0, 0, 0),
+				TabIndex = tabIndex++,
+			};
+
+			var pagesToolbarBox = new FrameBox
+			{
+				Parent = footer,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			this.description = new TextFieldMulti
-			{
-				Parent = leftPane,
-				IsReadOnly = true,
-				PreferredHeight = 100,
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 10, 0),
-			};
-
-			this.previewer = new XmlPrintedPagePreviewer
-			{
-				Parent = topPane,
-				Dock = DockStyle.Fill,
-			};
-
-			//	Crée le pied de page.
-			{
-				this.closeButton = new Button
-				{
-					Parent = footer,
-					Text = "Fermer",
-					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
-					Dock = DockStyle.Right,
-					Margins = new Margins (20, 0, 0, 0),
-					TabIndex = tabIndex++,
-				};
-
-				var next = new GlyphButton
-				{
-					Parent = footer,
-					GlyphShape = GlyphShape.ArrowRight,
-					PreferredWidth = 30,
-					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
-				};
-
-				var prev = new GlyphButton
-				{
-					Parent = footer,
-					GlyphShape = GlyphShape.ArrowLeft,
-					PreferredWidth = 30,
-					Dock = DockStyle.Right,
-					Margins = new Margins (20, 0, 0, 0),
-				};
-
-				next.Clicked += delegate
-				{
-					this.ChangePage (1);
-				};
-
-				prev.Clicked += delegate
-				{
-					this.ChangePage (-1);
-				};
-
-				var b = new Button
-				{
-					Parent = footer,
-					Text = "Re-print",
-					Dock = DockStyle.Right,
-					Margins = new Margins (0, 20, 0, 0),
-				};
-
-				b.Clicked += delegate
-				{
-					PrintEngine.DeserializeAndPrintJobs (this.xmlSource);
-				};
-			}
-
+			this.previewerController.CreateUI (previewBox, pagesToolbarBox);
 			this.UpdateWidgets ();
 		}
 
@@ -203,28 +131,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 		}
 
-		private void ChangePage(int direction)
-		{
-			this.page += direction;
-
-			this.page = System.Math.Max (this.page, 0);
-			this.page = System.Math.Min (this.page, this.pages.Count-1);
-
-			this.UpdateWidgets ();
-		}
-
 		private void UpdateWidgets()
 		{
-			if (this.page < 0 || this.page >= this.pages.Count)
-			{
-				this.description.Text = null;
-				this.previewer.Bitmap = null;
-			}
-			else
-			{
-				this.description.Text = this.pages[this.page].FullDescription;
-				this.previewer.Bitmap = this.pages[this.page].Miniature;
-			}
 		}
 
 
@@ -234,34 +142,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private IEnumerable<DeserializedPage> Pages
-		{
-			get
-			{
-				foreach (var job in this.jobs)
-				{
-					foreach (var section in job.Sections)
-					{
-						foreach (var page in section.Pages)
-						{
-							yield return page;
-						}
-					}
-				}
-			}
-		}
-
-
 		private readonly CoreApplication						application;
-		private readonly string									xmlSource;
+		private readonly List<Printers.DeserializedJob>			jobs;
+		private readonly List<Printers.DeserializedPage>		pages;
+		private readonly Printers.XmlPreviewerController		previewerController;
 
-		private List<Printers.DeserializedJob>					jobs;
-		private List<Printers.DeserializedPage>					pages;
 		private int												page;
 
 		private TextFieldMulti									textField;
 		private TextFieldMulti									description;
-		private XmlPrintedPagePreviewer						previewer;
+		private XmlPrintedPagePreviewer							previewer;
 		private Button											closeButton;
 	}
 }
