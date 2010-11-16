@@ -14,11 +14,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
-	/// Ce widget montre le contenu d'une page dans une zone rectanghlaire.
+	/// Ce widget montre le contenu d'une page imprimée dans une zone rectanghlaire.
 	/// </summary>
-	public class EntityPreviewer : Widget
+	public class PrintedPagePreviewer : Widget
 	{
-		public EntityPreviewer()
+		public PrintedPagePreviewer()
 		{
 			this.currentPage = -1;
 		}
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					graphics.LineWidth = 1;
 					graphics.Color = Color.FromBrightness (0);
-					EntityPreviewer.PaintDashedRectangle (graphics, bounds);
+					PrintedPagePreviewer.PaintDashedRectangle (graphics, bounds);
 				}
 				else
 				{

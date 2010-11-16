@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Core.Printers
 			string xmlSource = PrintEngine.SerializeJobs (jobs);
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
 
-			var dialog = new Dialogs.XmlDeserializerPreviewerDialog (CoreProgram.Application, xmlSource);
+			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, xmlSource);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 		}
@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Core.Printers
 				printDocument.PrinterSettings.Copies = 1;
 				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-				var engine = new JobPrintEngine2 (printDocument, job.Sections);
+				var engine = new XmlJobPrintEngine (printDocument, job.Sections);
 				printDocument.Print (engine);
 			}
 		}

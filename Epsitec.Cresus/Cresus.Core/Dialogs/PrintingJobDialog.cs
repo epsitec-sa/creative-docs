@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.checkButtons   = new List<CheckButton> ();
 			this.previewButtons = new List<GlyphButton> ();
-			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
+			this.pagePreviewers = new List<Widgets.PrintedPagePreviewer> ();
 		}
 
 
@@ -410,7 +410,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				for (int i = 0; i < count; i++)
 				{
-					var preview = new Widgets.EntityPreviewer
+					var preview = new Widgets.PrintedPagePreviewer
 					{
 						Parent = this.previewFrame,
 						DocumentPrinter = this.previewedSection.DocumentPrinter,
@@ -528,6 +528,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private SectionToPrint							previewedSection;
 		private List<CheckButton>						checkButtons;
 		private List<GlyphButton>						previewButtons;
-		private List<Widgets.EntityPreviewer>			pagePreviewers;
+		private List<Widgets.PrintedPagePreviewer>			pagePreviewers;
 	}
 }
