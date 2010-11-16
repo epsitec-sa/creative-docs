@@ -26,8 +26,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			entity.DocumentTitle         = "";
 			entity.Description           = "";
 			entity.FileName              = null;
-			entity.FileUriOrPath         = null;
-			entity.FileUserAndMachine    = null;
+			entity.FileUri               = null;
 			entity.FileMimeType          = null;
 			entity.CreationDate          = System.DateTime.Now;
 			entity.LastModificationDate  = entity.CreationDate;

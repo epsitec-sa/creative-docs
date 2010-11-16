@@ -154,6 +154,8 @@
     <Compile Include="ExpressionAnalyzer.cs" />
     <Compile Include="ISuspendCollectionChanged.cs" />
     <Compile Include="IValidationResult.cs" />
+    <Compile Include="MimeType.cs" />
+    <Compile Include="MimeTypeDictionary.cs" />
     <Compile Include="Support\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\HashSetExtensions.cs" />
     <Compile Include="Support\Extensions\IListExtensions.cs" />
