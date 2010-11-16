@@ -19,8 +19,6 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	using CollectionGetterFunction = System.Func<DataContext, IEnumerable<AbstractEntity>>;
-
 	/// <summary>
 	/// The <c>BrowserViewController</c> manages the browser view, which lists
 	/// entities in a compact form (this is used as the entity selector in the
@@ -183,32 +181,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SelectContentsBasedOnDataSet()
 		{
-			switch (this.dataSetName)
-			{
-				case "Customers":
-					this.SetContents (context => this.data.GetAllEntities<RelationEntity> (dataContext: context));
-					break;
-
-				case "ArticleDefinitions":
-					this.SetContents (context => this.data.GetAllEntities<ArticleDefinitionEntity> (dataContext: context));
-					break;
-
-				case "Documents":
-				case "InvoiceDocuments":
-					this.SetContents (context => this.data.GetAllEntities<BusinessDocumentEntity> (dataContext: context));
-					break;
-
-				case "BusinessSettings":
-					this.SetContents (context => this.data.GetAllEntities<BusinessSettingsEntity> (dataContext: context));
-					break;
-
-				case "WorkflowDefinitions":
-					this.SetContents (context => this.data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context));
-					break;
-			}
+			var getter = DataSetGetter.ResolveDataSet (this.data, this.dataSetName);
+			this.SetContents (getter);
 		}
 
-		private void SetContents(CollectionGetterFunction collectionGetter)
+		private void SetContents(DataSetCollectionGetter collectionGetter)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -376,7 +353,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private string							dataSetName;
 		private DataContext						browserDataContext;
 
-		private CollectionGetterFunction		collectionGetter;
+		private DataSetCollectionGetter			collectionGetter;
 		private int								suspendUpdates;
 
 		private ScrollList						scrollList;

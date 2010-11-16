@@ -106,6 +106,7 @@
     <Compile Include="Business\Rules\ArticleGroupSetupRule.cs" />
     <Compile Include="Business\Rules\ArticlePriceSetupRule.cs" />
     <Compile Include="Business\Rules\BusinessBillingDetailSetupRule.cs" />
+    <Compile Include="Business\Rules\BusinessDocumentSetupRule.cs" />
     <Compile Include="Business\Rules\SoftwareUserGroupSetupRule.cs" />
     <Compile Include="Business\Rules\SoftwareUserSetupRule.cs" />
     <Compile Include="Business\Rules\WorkflowSetupRule.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
+    <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
+    <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
@@ -209,7 +212,7 @@
     <Compile Include="Business\GenericBusinessRule`1.cs" />
     <Compile Include="Business\Logic.cs" />
     <Compile Include="Business\GenericBusinessRule.cs" />
-    <Compile Include="Business\Rules\InvoiceDocumentUpdateRule.cs" />
+    <Compile Include="Business\Rules\BusinessDocumentUpdateRule.cs" />
     <Compile Include="Business\Rules\LegalPersonUpdateRule.cs" />
     <Compile Include="Business\Rules\NaturalPersonUpdateRule.cs" />
     <Compile Include="Business\Rules\RelationBindRule.cs" />
