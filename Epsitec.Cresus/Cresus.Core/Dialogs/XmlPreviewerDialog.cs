@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Aperçu de l'impression";
-			window.ClientSize = new Size (1024, 768);
+			window.ClientSize = new Size (800, 600);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate

@@ -60,6 +60,8 @@ namespace Epsitec.Cresus.Core.Printers
 			this.previewFrame.SizeChanged += delegate
 			{
 				this.UpdatePreview ();
+				this.UpdatePageSlider ();
+				this.UpdateButtons ();
 			};
 
 			//	PagesToolbarBox.
@@ -161,7 +163,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.pageSlider.ValueChanged += delegate
 			{
-				this.currentPage = (int) this.pageSlider.Value;
+				this.currentPage = (int) this.pageSlider.Value * this.showedPageCount;
 				this.UpdatePages (rebuild: false);
 			};
 
@@ -216,12 +218,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdatePreview()
 		{
-			int maxPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
-			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.BoundsPageSize, 5, maxPageCount);
+			int minimalHope = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+			var additionnalSize = new Size (0, Widgets.XmlPrintedPagePreviewer.titleHeight);
+			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.BoundsPageSize, additionnalSize, 5, minimalHope);
 			this.showedPageCount = System.Math.Max (placer.Total, 1);
 
-			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.pages.Count);
-			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
+			this.currentPage = this.currentPage /this.showedPageCount * this.showedPageCount;
 
 			this.pagePreviewers.Clear ();
 			this.previewFrame.Viewport.Children.Clear ();
@@ -269,19 +271,18 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePageSlider()
 		{
 			this.pageSlider.MinValue = 0;
-			this.pageSlider.MaxValue = System.Math.Max (this.pages.Count - this.showedPageCount, 0);
+			this.pageSlider.MaxValue = System.Math.Max (((this.pages.Count+this.showedPageCount-1) / this.showedPageCount)-1, 0);
 			this.pageSlider.Resolution = 1;
-			//?this.pageSlider.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.pages.Count, 1);
 			this.pageSlider.SmallChange = 1;
-			this.pageSlider.LargeChange = 10;
-			this.pageSlider.Value = this.currentPage;
+			this.pageSlider.LargeChange = 1;
+			this.pageSlider.Value = this.currentPage / this.showedPageCount;
 		}
 
 		private void UpdateButtons()
 		{
 			int t = this.pages.Count;
 			int p = this.currentPage + 1;
-			int q = this.currentPage+this.showedPageCount-1 + 1;
+			int q = System.Math.Min (this.currentPage+this.showedPageCount-1, this.pages.Count-1) +1;
 
 			if (this.showedPageCount <= 1 || p == q)
 			{
@@ -333,24 +334,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 				return new Size (maxWidth, maxHeight);
 			}
-		}
-
-
-		private static int GetStep(MessageEventArgs e)
-		{
-			int step = 1;
-
-			if ((e.Message.ModifierKeys & ModifierKeys.Control) != 0)
-			{
-				step *= 10;
-			}
-
-			if ((e.Message.ModifierKeys & ModifierKeys.Shift) != 0)
-			{
-				step *= 100;
-			}
-
-			return step;
 		}
 
 
