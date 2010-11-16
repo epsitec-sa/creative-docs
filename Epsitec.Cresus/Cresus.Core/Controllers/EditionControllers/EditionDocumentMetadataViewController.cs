@@ -21,21 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public EditionDocumentMetadataViewController(string name, Entities.DocumentMetadataEntity entity)
 			: base (name, entity)
 		{
-			this.InitializeDefaultValues ();
-		}
-
-
-		private void InitializeDefaultValues()
-		{
-			if (this.Entity.CreationDate.HasValue == false)
-			{
-				this.Entity.CreationDate = System.DateTime.Now;
-			}
-
-			if (this.Entity.LastModificationDate.HasValue == false)
-			{
-				this.Entity.LastModificationDate = System.DateTime.Now;
-			}
 		}
 
 
