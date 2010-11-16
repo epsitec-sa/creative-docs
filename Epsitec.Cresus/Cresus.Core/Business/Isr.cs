@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		/// <summary>
-		/// Formats the subscriber number, such as <c>"1-69444-3"</c>. This removes
+		/// Formats the subscriber number, such as <c>"01-69444-3"</c>. This removes
 		/// the leading zeroes which are in excess.
 		/// </summary>
 		/// <param name="number">The compact (9 digit) number.</param>
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Core.Business
 
 			System.Diagnostics.Debug.Assert (Isr.IsCompactSubscriberNumber (number));
 
-			string s1 = Isr.RemoveLeadingZeroes (number.Substring (0, 2));
+			string s1 = number.Substring (0, 2);
 			string s2 = Isr.RemoveLeadingZeroes (number.Substring (2, 6));
 			string s3 = number.Substring (8);
 
