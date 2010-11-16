@@ -123,6 +123,7 @@
     <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentMetadataViewController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
@@ -292,7 +293,7 @@
     <Compile Include="V11\V11RecordLine.cs" />
     <Compile Include="V11\ImportFile.cs" />
     <Compile Include="Repositories\AffairRepository.cs" />
-    <Compile Include="Repositories\DocumentRepository.cs" />
+    <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
     <Compile Include="Dialogs\PrinterUnitListDialog.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
