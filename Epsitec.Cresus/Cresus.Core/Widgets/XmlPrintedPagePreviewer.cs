@@ -61,16 +61,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			double dx = this.bitmap.Width;
 			double dy = this.bitmap.Height;
 
-			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+2);  // léger chevauchement avec rectPreview
+			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+3);  // léger chevauchement avec rectPreview
 			var rectPreview = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
 
 			//	Affiche le texte en bas.
-			rectTitle.Deflate (8, 0);
+			rectTitle.Deflate (7.5, 0.5);
 
 			var path = new Path ();
-			path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.75);
+			path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.6);
 			graphics.Rasterizer.AddSurface (path);
-			graphics.RenderSolid (Color.FromBrightness (0.5));
+			var shadow = new Rectangle (rectTitle.Left, rectTitle.Top-8, rectTitle.Width, 8);
+			Misc.DrawVerticalGradient (graphics, shadow, Color.FromBrightness (0.6), Color.FromBrightness (0.1));
+
+			graphics.Rasterizer.AddOutline (path);
+			graphics.RenderSolid (Color.FromBrightness (0));
 
 			rectTitle.Deflate (8, 0);
 			this.titleLayout.LayoutSize = rectTitle.Size;
@@ -115,7 +119,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private static readonly double		titleHeight = 18;
+		public static readonly double		titleHeight = 18;
 
 		private Printers.DeserializedPage	page;
 		private Bitmap						bitmap;
