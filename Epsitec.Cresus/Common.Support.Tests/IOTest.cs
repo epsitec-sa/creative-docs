@@ -185,7 +185,28 @@ namespace Epsitec.Common.Support
 			
 			Assert.IsTrue (value_0 != value_1);
 		}
-		
+
+		[Test]
+		public void CheckChecksumMd5()
+		{
+			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
+
+			string value_0 = IO.Checksum.ComputeMd5Hash (buffer);
+
+			byte b10 = buffer[10];
+
+			buffer[10] = buffer[20];
+			buffer[20] = b10;
+
+			string value_1 = IO.Checksum.ComputeMd5Hash (buffer);
+
+			System.Console.Out.WriteLine ();
+			System.Console.Out.WriteLine ("MD5 before: {0}\n" +
+										  "MD5 after:  {1}", value_0, value_1);
+
+			Assert.IsTrue (value_0 != value_1);
+		}
+
 		[Test]
 		public void CheckDeflateCompressor()
 		{
@@ -279,6 +300,7 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
+
 
 		private static string SampleText
 		{

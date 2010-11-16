@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class ImageDataStore
+	public sealed class ImageDataStore
 	{
 		public ImageDataStore(CoreData data)
 		{
@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Core.Data
 			this.NewDataContext ();
 		}
 
-		public DataContext DataContext
+		
+		private DataContext						DataContext
 		{
 			get
 			{
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-
+		
 		public ImageData GetImageData(string code)
 		{
 			var repository = new ImageBlobRepository (this.data, this.DataContext);
@@ -58,8 +59,25 @@ namespace Epsitec.Cresus.Core.Data
 			return null;
 		}
 
-
 		public string PersistImage(System.IO.FileInfo file)
+		{
+			var imageBlob = this.CreateImageBlob (file);
+			var otherBlob = FindSimilarImageBlob (imageBlob);
+			
+			if (otherBlob == null)
+			{
+				this.DataContext.SaveChanges ();
+				return imageBlob.Code;
+			}
+			else
+			{
+				this.DataContext.DeleteEntity (imageBlob);
+				return otherBlob.Code;
+			}
+		}
+
+
+		private ImageBlobEntity CreateImageBlob(System.IO.FileInfo file)
 		{
 			var path = file.FullName;
 			var data = System.IO.File.ReadAllBytes (path);
@@ -77,17 +95,28 @@ namespace Epsitec.Cresus.Core.Data
 			blob.Code                 = System.Guid.NewGuid ().ToString ("N");
 			blob.Data                 = data;
 
-			this.DataContext.SaveChanges ();
+			blob.SetHashes (data);
 
-			return blob.Code;
+			return blob;
 		}
 
+		private ImageBlobEntity FindSimilarImageBlob(ImageBlobEntity imageBlob)
+		{
+			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var example    = new ImageBlobEntity ()
+			{
+				WeakHash = imageBlob.WeakHash,
+				StrongHash = imageBlob.StrongHash,
+			};
 
+			return repository.GetByExample (example).FirstOrDefault ();
+		}
+		
 		private void NewDataContext()
 		{
 			this.DisposeDataContext ();
 
-			int contextId   = System.Threading.Interlocked.Increment (ref ImageDataStore.nextContextId);
+			int contextId   = ImageDataStore.GetNextContextId ();
 			var contextName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "ImageDataStore #{0}", contextId);
 			
 			this.context = this.data.CreateDataContext (contextName);
@@ -102,6 +131,11 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+
+		private static int GetNextContextId()
+		{
+			return System.Threading.Interlocked.Increment (ref ImageDataStore.nextContextId);
+		}
 
 		private static int nextContextId;
 

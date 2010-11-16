@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 			//	calling Release, so be very cautious in this method !
 			
 			byte[] sourceData = image.BitmapImage.GetRawBitmapBytes ();
-			long   sourceCrc  = IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (sourceData); });
+			int    sourceCrc  = IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (sourceData); });
 
 			Item[] items;
 			Item matchingItem = new Item ();
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Support
 		private struct Item
 		{
 			public Drawing.Image image;
-			public long crc;
+			public int crc;
 			public long id;
 			public int count;
 		}
