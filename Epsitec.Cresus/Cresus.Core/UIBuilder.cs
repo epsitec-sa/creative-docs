@@ -69,6 +69,19 @@ namespace Epsitec.Cresus.Core
 			UIBuilder.current = this;
 		}
 
+		public static UIBuilder Create(EntityViewController controller)
+		{
+			if (UIBuilder.current == null)
+			{
+				return new UIBuilder (controller);
+			}
+			else
+			{
+				UIBuilder.current.recursionCount++;
+				return UIBuilder.current;
+			}
+		}
+
 
 		public Widget Container
 		{
@@ -1555,20 +1568,27 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
-			if (!this.isDisposed)
+			if (this.recursionCount > 0)
 			{
-				UI.SetInitialFocus (this.Container);
-
-				if (this.nextBuilder != null)
+				this.recursionCount--;
+			}
+			else
+			{
+				if (!this.isDisposed)
 				{
-					this.nextBuilder.tabIndex = this.tabIndex;
+					UI.SetInitialFocus (this.Container);
+
+					if (this.nextBuilder != null)
+					{
+						this.nextBuilder.tabIndex = this.tabIndex;
+					}
+
+					UIBuilder.current = this.nextBuilder;
+					this.isDisposed = true;
 				}
 
-				UIBuilder.current = this.nextBuilder;
-				this.isDisposed = true;
+				System.GC.SuppressFinalize (this);
 			}
-
-			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion
@@ -1580,7 +1600,8 @@ namespace Epsitec.Cresus.Core
 		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
 		public static readonly double ComboButtonWidth			= 14;
 
-		private static UIBuilder current;
+		[System.ThreadStatic]
+		private static UIBuilder				current;
 
 		private readonly CoreViewController controller;
 		private readonly TileContainer container;
@@ -1588,6 +1609,7 @@ namespace Epsitec.Cresus.Core
 		private readonly UIBuilder nextBuilder;
 		private bool isDisposed;
 		private int tabIndex;
+		private int recursionCount;
 		private TitleTile titleTile;
 		private PanelTitleTile panelTitleTile;
 		private TileTabBook tileTabBook;
