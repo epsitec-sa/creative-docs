@@ -160,23 +160,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private Druid GetRootEntityId()
 			{
-				switch (this.dataSetName)
+				Druid druid = DataSetGetter.GetRootEntityId (this.dataSetName);
+
+				if (druid.IsEmpty)
 				{
-					case "Customers":
-						return EntityInfo<RelationEntity>.GetTypeId ();
-
-					case "ArticleDefinitions":
-						return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
-
-					case "Documents":
-					case "InvoiceDocuments":
-						return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
-
-					case "WorkflowDefinitions":
-						return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();
+					throw new System.NotImplementedException ();
 				}
 
-				throw new System.NotImplementedException ();
+				return druid;
 			}
 
 			
