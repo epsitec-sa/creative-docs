@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
-			using (var builder = new UIBuilder (this))
+			using (var builder = UIBuilder.Create (this))
 			{
 				using (var data = TileContainerController.Setup (builder))
 				{
@@ -57,12 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIPreviewPanel()
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
-			DocumentMetadataEntity example = new DocumentMetadataEntity ();
-			example.BusinessDocument = this.Entity;
-			example.IsArchive = false;
-
-			var metadoc = this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+			DocumentMetadataEntity metadoc = this.GetMetadoc ();
 
 			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
 
@@ -113,6 +108,24 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
+		}
+
+		private DocumentMetadataEntity GetMetadoc()
+		{
+			var metadoc = this.DataContext.GetEntitiesOfType<DocumentMetadataEntity> ().FirstOrDefault ();
+
+			if (metadoc == null)
+			{
+				DocumentMetadataEntity example = new DocumentMetadataEntity ();
+				example.BusinessDocument = this.Entity;
+				example.IsArchive = false;
+
+				return this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+			}
+			else
+			{
+				return metadoc;
+			}
 		}
 
 		private void CloseUIPreviewPanel()
