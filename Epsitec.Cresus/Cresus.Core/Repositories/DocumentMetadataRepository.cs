@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class DocumentRepository : Repository<DocumentMetadataEntity>
+	public class DocumentMetadataRepository : Repository<DocumentMetadataEntity>
 	{
-		public DocumentRepository(CoreData data, DataContext context = null)
+		public DocumentMetadataRepository(CoreData data, DataContext context = null)
 			: base (data, context)
 		{
 		}

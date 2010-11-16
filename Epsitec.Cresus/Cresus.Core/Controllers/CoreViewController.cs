@@ -198,10 +198,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected virtual void AboutToCreateUI()
 		{
+			this.GetSubControllers ().OfType<CoreViewController> ().ForEach (x => x.AboutToCreateUI ());
 		}
 		
 		protected virtual void AboutToCloseUI()
 		{
+			this.GetSubControllers ().OfType<CoreViewController> ().ForEach (x => x.AboutToCloseUI ());
 		}
 
 		private readonly DataViewOrchestrator	orchestrator;
