@@ -9,12 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Bind)]
-	internal class RelationBindRule : GenericBusinessRule<RelationEntity>
+	[BusinessRule]
+	internal class NaturalPersonBusinessRules : GenericBusinessRule<NaturalPersonEntity>
 	{
-		protected override void Apply(RelationEntity relation)
+		public override void ApplyUpdateRule(NaturalPersonEntity person)
 		{
-			Logic.Current.BusinessContext.Register (relation.Person);
+			person.Contacts.ForEach (x => x.NaturalPerson = person);
 		}
 	}
 }

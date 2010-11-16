@@ -33,18 +33,62 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static IEnumerable<System.Type> FindBusinessRuleSystemTypes(System.Type entityType, RuleType ruleType)
 		{
-			var baseTypeName = "GenericBusinessRule`1";
+			string baseTypeName = "GenericBusinessRule`1";
+			string methodName   = BusinessRuleResolver.GetMethodName (ruleType);
 
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
 						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes (typeof (BusinessRuleAttribute), false).Length > 0
 						let baseType = type.BaseType
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
+						where BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
 						select type;
 
-			types = types.Where (type => type.GetCustomAttributes (typeof (BusinessRuleAttribute), false).Cast<BusinessRuleAttribute> ().Any (attribute => attribute.RuleType == ruleType));
-
 			return types;
+		}
+
+		private static bool ImplementsRuleMethod(System.Type type, string methodName)
+		{
+			var method = type.GetMethod (methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+			if ((method != null) &&
+				(method.DeclaringType == type) &&
+				(method.Attributes.HasFlag (System.Reflection.MethodAttributes.Virtual)) &&
+				(method.Attributes.HasFlag (System.Reflection.MethodAttributes.VtableLayoutMask) == false) &&
+				(method.ReturnType == typeof (void)))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the method as it is implemented in <see cref="GenericBusinessRule{T}"/>.
+		/// </summary>
+		/// <param name="ruleType">Business rule type.</param>
+		/// <returns>The name of the method which implements the specified business rule.</returns>
+		private static string GetMethodName(RuleType ruleType)
+		{
+			switch (ruleType)
+			{
+				case RuleType.Bind:
+					return "ApplyBindRule";
+
+				case RuleType.Setup:
+					return "ApplySetupRule";
+
+				case RuleType.Update:
+					return "ApplyUpdateRule";
+
+				case RuleType.Validate:
+					return "ApplyValidateRule";
+
+				default:
+					throw new System.NotImplementedException ();
+			}
 		}
 
 		private static IEnumerable<GenericBusinessRule> CreateBusinessRules(System.Type entityType, RuleType ruleType)

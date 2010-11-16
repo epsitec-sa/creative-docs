@@ -20,6 +20,6 @@ namespace Epsitec.Cresus.Core.Business
 			set;
 		}
 
-		public abstract void Apply(AbstractEntity entity);
+		public abstract void Apply(RuleType ruleType, AbstractEntity entity);
 	}
 }

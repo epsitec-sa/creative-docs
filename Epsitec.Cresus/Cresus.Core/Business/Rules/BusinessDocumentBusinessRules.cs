@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Setup)]
-	internal class BusinessDocumentSetupRule : GenericBusinessRule<BusinessDocumentEntity>
+	[BusinessRule]
+	internal class BusinessDocumentBusinessRules : GenericBusinessRule<BusinessDocumentEntity>
 	{
-		protected override void Apply(BusinessDocumentEntity entity)
+		public override void ApplySetupRule(BusinessDocumentEntity entity)
 		{
 			var businessContext = Logic.Current.BusinessContext;
 
@@ -21,6 +21,13 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			entity.BillingDate = Date.Today;
 			entity.BillingStatus = Finance.BillingStatus.NotAnInvoice;
 			entity.PriceRefDate = Date.Today;
+		}
+		
+		public override void ApplyUpdateRule(BusinessDocumentEntity entity)
+		{
+			var businessContext = Logic.Current.BusinessContext;
+
+			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (businessContext, entity);
 		}
 	}
 }

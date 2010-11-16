@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Business
 
 			try
 			{
-				rule.Apply (entity);
+				rule.Apply (ruleType, entity);
 			}
 			finally
 			{

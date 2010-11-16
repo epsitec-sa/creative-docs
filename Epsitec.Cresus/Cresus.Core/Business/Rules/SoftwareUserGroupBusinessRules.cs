@@ -9,14 +9,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Setup)]
-	internal class WorkflowSetupRule : GenericBusinessRule<WorkflowEntity>
+	[BusinessRule]
+	internal class SoftwareUserGroupBusinessRules : GenericBusinessRule<SoftwareUserGroupEntity>
 	{
-		protected override void Apply(WorkflowEntity workflow)
+		public override void ApplySetupRule(SoftwareUserGroupEntity group)
 		{
-			var affair = Logic.Current.BusinessContext.GetMasterEntity<AffairEntity> ();
-
-			workflow.Affair = affair;
+			group.Code = System.Guid.NewGuid ().ToString ("N");
+			group.UserPowerLevel = Business.UserManagement.UserPowerLevel.None;
 		}
 	}
 }

@@ -12,10 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Setup)]
-	internal class BusinessBillingDetailSetupRule : GenericBusinessRule<BillingDetailEntity>
+	[BusinessRule]
+	internal class BusinessBillingDetailBusinessRules : GenericBusinessRule<BillingDetailEntity>
 	{
-		protected override void Apply(BillingDetailEntity billingDetails)
+		public override void ApplySetupRule(BillingDetailEntity billingDetails)
 		{
 			var context      = Logic.Current.BusinessContext;
 			var dueDate      = Date.Today;

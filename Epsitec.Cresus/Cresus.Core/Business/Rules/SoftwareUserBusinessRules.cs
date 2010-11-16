@@ -9,10 +9,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Setup)]
-	internal class SoftwareUserSetupRule : GenericBusinessRule<SoftwareUserEntity>
+	[BusinessRule]
+	internal class SoftwareUserBusinessRules : GenericBusinessRule<SoftwareUserEntity>
 	{
-		protected override void Apply(SoftwareUserEntity user)
+		public override void ApplySetupRule(SoftwareUserEntity user)
 		{
 			user.Code = System.Guid.NewGuid ().ToString ("N");
 			user.DisplayName = new FormattedText ("");

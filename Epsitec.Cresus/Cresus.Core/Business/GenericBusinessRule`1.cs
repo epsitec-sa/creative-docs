@@ -22,13 +22,53 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public sealed override void Apply(AbstractEntity entity)
+		public sealed override void Apply(RuleType ruleType, AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.Assert (entity is T);
 
-			this.Apply (entity as T);
+			this.Apply (ruleType, entity as T);
 		}
 
-		protected abstract void Apply(T entity);
+		protected void Apply(RuleType ruleType, T entity)
+		{
+			switch (ruleType)
+			{
+				case Business.RuleType.Bind:
+					this.ApplyBindRule (entity);
+					break;
+
+				case Business.RuleType.Setup:
+					this.ApplySetupRule (entity);
+					break;
+
+				case Business.RuleType.Update:
+					this.ApplyUpdateRule (entity);
+					break;
+
+				case Business.RuleType.Validate:
+					this.ApplyValidateRule (entity);
+					break;
+			}
+		}
+		
+		public virtual void ApplySetupRule(T entity)
+		{
+			//	The name of this method is also referenced by BusinessRuleResolver.GetMethodName
+		}
+
+		public virtual void ApplyBindRule(T entity)
+		{
+			//	The name of this method is also referenced by BusinessRuleResolver.GetMethodName
+		}
+
+		public virtual void ApplyUpdateRule(T entity)
+		{
+			//	The name of this method is also referenced by BusinessRuleResolver.GetMethodName
+		}
+
+		public virtual void ApplyValidateRule(T entity)
+		{
+			//	The name of this method is also referenced by BusinessRuleResolver.GetMethodName
+		}
 	}
 }
