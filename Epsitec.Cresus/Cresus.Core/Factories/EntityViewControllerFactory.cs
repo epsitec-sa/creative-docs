@@ -5,6 +5,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Resolvers;
@@ -55,24 +56,26 @@ namespace Epsitec.Cresus.Core.Factories
 				return null;
 			}
 
-			System.Diagnostics.Debug.Assert (EntityViewControllerFactory.defaults == null);
+			System.Diagnostics.Debug.Assert (entity.IsNotNull ());
 
-			EntityViewControllerFactory.defaults = new DefaultSettings
-			{
-				Orchestrator = orchestrator,
-				Mode = mode,
-				ControllerSubTypeId = controllerSubTypeId,
-				NavigationPathElement = navigationPathElement,
-			};
+			var callerDefaults = EntityViewControllerFactory.defaults;
 
 			try
 			{
+				EntityViewControllerFactory.defaults = new DefaultSettings
+				{
+					Orchestrator = orchestrator,
+					Mode = mode,
+					ControllerSubTypeId = controllerSubTypeId,
+					NavigationPathElement = navigationPathElement,
+				};
+
 				return EntityViewControllerResolver.Resolve (name, entity, mode, controllerSubTypeId, resolutionMode);
 			}
 			finally
 			{
 				//	Don't forget to clear the defaults before leaving:
-				EntityViewControllerFactory.defaults = null;
+				EntityViewControllerFactory.defaults = callerDefaults;
 			}
 		}
 
