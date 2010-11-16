@@ -14,7 +14,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
-	/// Ce widget montre le contenu d'une page imprimée dans une zone rectanghlaire.
+	/// Ce widget montre le contenu d'une page imprimée dans une zone rectangulaire.
 	/// </summary>
 	public class PrintedPagePreviewer : Widget
 	{

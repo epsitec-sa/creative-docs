@@ -56,14 +56,14 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				string s1 = string.Concat ("● Titre: <b>",           this.parentSection.ParentJob.JobFullName, "</b><br/>");
-				string s2 = string.Concat ("● Unité d'impression: ", this.parentSection.PrinterLogicalName, "<br/>");
-				string s3 = string.Concat ("● Imprimante: ",         this.parentSection.ParentJob.PrinterPhysicalName, "<br/>");
-				string s4 = string.Concat ("● Bac: ",                this.parentSection.PrinterPhysicalTray, "<br/>");
-				string s5 = string.Concat ("● Dimensions: ",         this.parentSection.PageSize.Width, "×", this.parentSection.PageSize.Height, " mm<br/>");
+				string s1 = string.Concat ("● Titre: <b>",           this.parentSection.ParentJob.JobFullName, "</b>");
+				string s2 = string.Concat ("● Unité d'impression: ", this.parentSection.PrinterLogicalName);
+				string s3 = string.Concat ("● Imprimante: ",         this.parentSection.ParentJob.PrinterPhysicalName);
+				string s4 = string.Concat ("● Bac: ",                this.parentSection.PrinterPhysicalTray);
+				string s5 = string.Concat ("● Dimensions: ",         this.parentSection.PageSize.Width, "×", this.parentSection.PageSize.Height, " mm");
 				string s6 = string.Concat ("● Numéro de la page: ",  this.pageRank+1);
 
-				return string.Concat (s1, s2, s3, s4, s5, s6);
+				return string.Join ("<br/>", s1, s2, s3, s4, s5, s6);
 			}
 		}
 

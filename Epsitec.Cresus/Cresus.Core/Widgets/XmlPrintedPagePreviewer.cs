@@ -12,13 +12,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Ce widget montre le contenu d'une page imprimée désérialisée dans une zone rectangulaire.
+	/// </summary>
 	public class XmlPrintedPagePreviewer : Widget
 	{
 		public XmlPrintedPagePreviewer()
 		{
 			this.titleLayout = new TextLayout
 			{
-				DefaultFontSize = 10,
+				DefaultFontSize = 11,
 				Alignment = ContentAlignment.MiddleCenter,
 				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 			};
@@ -27,6 +30,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public Printers.DeserializedPage Page
 		{
+			//	Page affichée.
 			get
 			{
 				return this.page;
@@ -57,19 +61,25 @@ namespace Epsitec.Cresus.Core.Widgets
 			double dx = this.bitmap.Width;
 			double dy = this.bitmap.Height;
 
-			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+2);
+			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+2);  // léger chevauchement avec rectPreview
 			var rectPreview = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
 
+			//	Affiche le texte en bas.
 			if (this.titleLayout != null)
 			{
-				rectTitle.Deflate (0.5);
-				graphics.AddRectangle (rectTitle);
-				graphics.RenderSolid (Color.FromBrightness (0));
+				rectTitle.Deflate (8, 0);
 
+				var path = new Path ();
+				path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.75);
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (Color.FromBrightness (0.5));
+
+				rectTitle.Deflate (8, 0);
 				this.titleLayout.LayoutSize = rectTitle.Size;
-				this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+				this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (1), GlyphPaintStyle.Normal);
 			}
 
+			//	Affiche le bitmap.
 			if (this.bitmap != null)
 			{
 				rectPreview.Deflate (1);
