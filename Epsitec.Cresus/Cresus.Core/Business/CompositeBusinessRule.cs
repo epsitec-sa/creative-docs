@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
 	/// A <c>CompositeBusinessRule</c> implements zero, one or several rules for a specified
-	/// entity type. It is instanciated by the <see cref="BusinessRuleResolver"/>.
+	/// entity type. It is instantiated by the <see cref="BusinessRuleResolver"/>.
 	/// </summary>
 	public class CompositeBusinessRule : GenericBusinessRule
 	{
@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		
-		public override void Apply(AbstractEntity entity)
+		public override void Apply(RuleType ruleType, AbstractEntity entity)
 		{
-			this.rules.ForEach (rule => rule.Apply (entity));
+			this.rules.ForEach (rule => rule.Apply (ruleType, entity));
 		}
 
 		

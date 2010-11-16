@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Setup)]
-	internal class AffairSetupRule : GenericBusinessRule<AffairEntity>
+	[BusinessRule]
+	internal class AffairBusinessRules : GenericBusinessRule<AffairEntity>
 	{
-		protected override void Apply(AffairEntity affair)
+		public override void ApplySetupRule(AffairEntity affair)
 		{
 			var pool = Logic.Current.Data.RefIdGeneratorPool;
 			var generator = pool.GetGenerator<AffairEntity> ();
