@@ -461,7 +461,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePagePreviewsGeometry()
 		{
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
-			this.placer = new Dialogs.OptimalPreviewPlacer (this.pagePreviewers);
+			this.placer = new Dialogs.OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> (this.pagePreviewers);
 			this.placer.PageSize = this.entityPrinter.BoundsPageSize;
 
 			if (this.currentZoom > 1)  // agrandissement ?
@@ -851,7 +851,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private readonly IEnumerable<AbstractEntity>		entities;
 		private readonly Printers.AbstractEntityPrinter		entityPrinter;
-		private readonly List<Widgets.PrintedPagePreviewer>		pagePreviewers;
+		private readonly List<Widgets.PrintedPagePreviewer>	pagePreviewers;
 		private readonly List<Dictionary<PrinterUnit, int>>	printerUnitsUsed;
 		private readonly List<PrinterUnit>					printerUnitList;
 		private readonly List<PrinterUnit>					printerUnitFieldList;
@@ -862,7 +862,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private FrameBox									printerUnitsToolbarBox;
 
 		private Scrollable									previewFrame;
-		private Dialogs.OptimalPreviewPlacer				placer;
+		private Dialogs.OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> placer;
 
 		private StaticText									pageRank;
 		private HSlider										pageSlider;

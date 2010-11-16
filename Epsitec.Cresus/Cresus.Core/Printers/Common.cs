@@ -81,6 +81,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public static IEnumerable<DeserializedPage> GetDeserializedPages(List<DeserializedJob> jobs)
+		{
+			foreach (var job in jobs)
+			{
+				foreach (var section in job.Sections)
+				{
+					foreach (var page in section.Pages)
+					{
+						yield return page;
+					}
+				}
+			}
+		}
+
 		public static PrinterUnit GetPrinterUnit(string logicalPrinterName)
 		{
 			//	Cherche une unité d'impression d'après son nom.

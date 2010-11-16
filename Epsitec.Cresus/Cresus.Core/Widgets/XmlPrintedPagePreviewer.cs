@@ -16,20 +16,29 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public XmlPrintedPagePreviewer()
 		{
+			this.titleLayout = new TextLayout
+			{
+				DefaultFontSize = 10,
+				Alignment = ContentAlignment.MiddleCenter,
+				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+			};
 		}
 
 
-		public Bitmap Bitmap
+		public Printers.DeserializedPage Page
 		{
 			get
 			{
-				return this.bitmap;
+				return this.page;
 			}
 			set
 			{
-				if (this.bitmap != value)
+				if (this.page != value)
 				{
-					this.bitmap = value;
+					this.page = value;
+
+					this.UpdateTitle ();
+					this.bitmap = null;
 					this.Invalidate ();
 				}
 			}
@@ -38,26 +47,23 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			var rect = this.Client.Bounds;
-			rect.Deflate (0.5);
+			this.UpdateBitmap ();
 
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (0.9));
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (0));
+			if (this.titleLayout != null)
+			{
+				var rect = new Rectangle (0, 0, this.Client.Bounds.Width, XmlPrintedPagePreviewer.titleHeight);
+				this.titleLayout.LayoutSize = rect.Size;
+				this.titleLayout.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+			}
 
 			if (this.bitmap != null)
 			{
 				double dx = this.bitmap.Width;
 				double dy = this.bitmap.Height;
 
-				Rectangle bounds = new Rectangle (10, 10, dx, dy);
+				Rectangle bounds = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
 
-				graphics.AddFilledRectangle (bounds);
-				graphics.RenderSolid (Color.FromBrightness (1));
-
-				rect.Deflate (0.5);
+				bounds.Deflate (1);
 				graphics.PaintImage (this.bitmap, bounds);
 
 				bounds.Inflate (0.5);
@@ -66,7 +72,39 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private void UpdateTitle()
+		{
+			this.titleLayout.Text = this.page.ShortDescription;
+		}
 
-		private Bitmap								bitmap;
+		private void UpdateBitmap()
+		{
+			double widgetWidth  = this.Client.Bounds.Width;
+			double widgetHeight = this.Client.Bounds.Height - XmlPrintedPagePreviewer.titleHeight;
+
+			double pageWidth  = this.page.ParentSection.PageSize.Width;
+			double pageHeight = this.page.ParentSection.PageSize.Height;
+
+			double zoomX = widgetWidth  / pageWidth;
+			double zoomY = widgetHeight / pageHeight;
+
+			double zoom = System.Math.Min (zoomX, zoomY);
+
+			if (this.bitmap == null || this.lastZoom != zoom)
+			{
+				this.lastZoom = zoom;
+
+				var port = new XmlPort (page.XRoot);
+				this.bitmap = port.Deserialize (new Size (pageWidth, pageHeight), zoom);
+			}
+		}
+
+
+		private static readonly double		titleHeight = 18;
+
+		private Printers.DeserializedPage	page;
+		private Bitmap						bitmap;
+		private double						lastZoom;
+		private TextLayout					titleLayout;
 	}
 }
