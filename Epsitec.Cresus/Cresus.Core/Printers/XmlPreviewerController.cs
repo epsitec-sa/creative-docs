@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.previewFrame.SizeChanged += delegate
 			{
-				this.UpdatePagePreviewsGeometry ();
+				this.UpdatePreview ();
 			};
 
 			//	PagesToolbarBox.
@@ -152,11 +152,11 @@ namespace Epsitec.Cresus.Core.Printers
 					Dock = DockStyle.Left,
 				};
 
-				ToolTip.Default.SetToolTip (this.zoom18Button, "Montre jusqu'à 8 pages simultanément");
-				ToolTip.Default.SetToolTip (this.zoom14Button, "Montre jusqu'à 4 pages simultanément");
-				ToolTip.Default.SetToolTip (this.zoom11Button, "Montre une page intégralement");
-				ToolTip.Default.SetToolTip (this.zoom21Button, "Montre une page agrandie 2 fois");
-				ToolTip.Default.SetToolTip (this.zoom41Button, "Montre une page agrandie 4 fois");
+				ToolTip.Default.SetToolTip (this.zoom18Button, "Réduction 8 fois");
+				ToolTip.Default.SetToolTip (this.zoom14Button, "Réduction 4 fois");
+				ToolTip.Default.SetToolTip (this.zoom11Button, "Echelle optimale");
+				ToolTip.Default.SetToolTip (this.zoom21Button, "Agrandissement 2 fois");
+				ToolTip.Default.SetToolTip (this.zoom41Button, "Agrandissement 4 fois");
 			}
 
 			this.pageSlider.ValueChanged += delegate
@@ -209,7 +209,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePages(bool rebuild)
 		{
 			this.UpdatePreview ();
-			this.UpdatePagePreviewsGeometry ();
 			this.UpdatePageSlider ();
 			this.UpdateButtons ();
 			this.UpdateZoom ();
@@ -217,7 +216,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdatePreview()
 		{
-			this.showedPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+			int maxPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.BoundsPageSize, 5, maxPageCount);
+			this.showedPageCount = System.Math.Max (placer.Total, 1);
 
 			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.pages.Count);
 			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
@@ -244,21 +245,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 				pageRank++;
 			}
-		}
 
-		private void UpdatePagePreviewsGeometry()
-		{
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
-			this.placer = new Dialogs.OptimalPreviewPlacer<Widgets.XmlPrintedPagePreviewer> (this.pagePreviewers);
-			this.placer.PageSize = this.BoundsPageSize;
-
 			if (this.currentZoom > 1)  // agrandissement ?
 			{
 				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviewers[0].PreferredSize = this.placer.AdjustRatioPageSize (this.previewFrame.Client.Bounds.Size * this.currentZoom);
+				this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
 				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
@@ -267,9 +262,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
-				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
-				this.placer.PageCount = this.pagePreviewers.Count;
-				this.placer.UpdateGeometry ();
+				placer.UpdateGeometry (this.pagePreviewers);
 			}
 		}
 
@@ -370,7 +363,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private FrameBox										pagesToolbarBox;
 
 		private Scrollable										previewFrame;
-		private Dialogs.OptimalPreviewPlacer<Widgets.XmlPrintedPagePreviewer> placer;
 
 		private StaticText										pageRank;
 		private HSlider											pageSlider;

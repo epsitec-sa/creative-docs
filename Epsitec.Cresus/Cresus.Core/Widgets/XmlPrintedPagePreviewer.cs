@@ -65,30 +65,24 @@ namespace Epsitec.Cresus.Core.Widgets
 			var rectPreview = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
 
 			//	Affiche le texte en bas.
-			if (this.titleLayout != null)
-			{
-				rectTitle.Deflate (8, 0);
+			rectTitle.Deflate (8, 0);
 
-				var path = new Path ();
-				path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.75);
-				graphics.Rasterizer.AddSurface (path);
-				graphics.RenderSolid (Color.FromBrightness (0.5));
+			var path = new Path ();
+			path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.75);
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (Color.FromBrightness (0.5));
 
-				rectTitle.Deflate (8, 0);
-				this.titleLayout.LayoutSize = rectTitle.Size;
-				this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (1), GlyphPaintStyle.Normal);
-			}
+			rectTitle.Deflate (8, 0);
+			this.titleLayout.LayoutSize = rectTitle.Size;
+			this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (1), GlyphPaintStyle.Normal);
 
 			//	Affiche le bitmap.
-			if (this.bitmap != null)
-			{
-				rectPreview.Deflate (1);
-				graphics.PaintImage (this.bitmap, rectPreview);
+			rectPreview.Deflate (1);
+			graphics.PaintImage (this.bitmap, rectPreview);
 
-				rectPreview.Inflate (0.5);
-				graphics.AddRectangle (rectPreview);
-				graphics.RenderSolid (Color.FromBrightness (0));
-			}
+			rectPreview.Inflate (0.5);
+			graphics.AddRectangle (rectPreview);
+			graphics.RenderSolid (Color.FromBrightness (0));
 		}
 
 		private void UpdateTitle()
