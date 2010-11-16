@@ -49,25 +49,34 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.UpdateBitmap ();
 
+			if (this.bitmap == null)
+			{
+				return;
+			}
+
+			double dx = this.bitmap.Width;
+			double dy = this.bitmap.Height;
+
+			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+2);
+			var rectPreview = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
+
 			if (this.titleLayout != null)
 			{
-				var rect = new Rectangle (0, 0, this.Client.Bounds.Width, XmlPrintedPagePreviewer.titleHeight);
-				this.titleLayout.LayoutSize = rect.Size;
-				this.titleLayout.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+				rectTitle.Deflate (0.5);
+				graphics.AddRectangle (rectTitle);
+				graphics.RenderSolid (Color.FromBrightness (0));
+
+				this.titleLayout.LayoutSize = rectTitle.Size;
+				this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (0), GlyphPaintStyle.Normal);
 			}
 
 			if (this.bitmap != null)
 			{
-				double dx = this.bitmap.Width;
-				double dy = this.bitmap.Height;
+				rectPreview.Deflate (1);
+				graphics.PaintImage (this.bitmap, rectPreview);
 
-				Rectangle bounds = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
-
-				bounds.Deflate (1);
-				graphics.PaintImage (this.bitmap, bounds);
-
-				bounds.Inflate (0.5);
-				graphics.AddRectangle (bounds);
+				rectPreview.Inflate (0.5);
+				graphics.AddRectangle (rectPreview);
 				graphics.RenderSolid (Color.FromBrightness (0));
 			}
 		}
@@ -75,6 +84,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void UpdateTitle()
 		{
 			this.titleLayout.Text = this.page.ShortDescription;
+
+			ToolTip.Default.SetToolTip (this, this.page.FullDescription);
 		}
 
 		private void UpdateBitmap()
