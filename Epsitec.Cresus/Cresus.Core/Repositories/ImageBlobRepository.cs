@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class AffairRepository : Repository<AffairEntity>
+	public class ImageBlobRepository : Repository<ImageBlobEntity>
 	{
-		public AffairRepository(CoreData data, DataContext context = null)
+		public ImageBlobRepository(CoreData data, DataContext context = null)
 			: base (data, context)
 		{
 		}

@@ -141,7 +141,9 @@
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="CoreData.Hack.Workflows.cs" />
+    <Compile Include="Data\ImageData.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer2.cs" />
+    <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Printers\DeserializedSection.cs" />
     <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
+    <Compile Include="Repositories\ImageBlobRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
     <Compile Include="Repositories\VatDefinitionRepository.cs" />

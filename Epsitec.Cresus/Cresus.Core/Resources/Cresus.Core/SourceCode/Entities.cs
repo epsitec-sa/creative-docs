@@ -79,6 +79,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAL]", typeof (Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ANL]", typeof (Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ATL]", typeof (Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A5N]", typeof (Epsitec.Cresus.Core.Entities.ImageBlobEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2542,35 +2543,19 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FileUriOrPath</c> field.
+		///	The <c>FileUri</c> field.
 		///	designer:fld/L0AO2/L0ATM
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ATM]")]
-		public string FileUriOrPath
+		public string FileUri
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUriOrPath (this);
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUri (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUriOrPath (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>FileUserAndMachine</c> field.
-		///	designer:fld/L0AO2/L0A1N
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A1N]")]
-		public string FileUserAndMachine
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUserAndMachine (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUserAndMachine (this, value);
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUri (this, value);
 			}
 		}
 		///	<summary>
@@ -11502,21 +11487,11 @@ namespace Epsitec.Cresus.Core.Entities
 			set;
 		}
 		///	<summary>
-		///	The <c>FileUriOrPath</c> field.
+		///	The <c>FileUri</c> field.
 		///	designer:fld/L0ARM/L0ATM
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ATM]")]
-		string FileUriOrPath
-		{
-			get;
-			set;
-		}
-		///	<summary>
-		///	The <c>FileUserAndMachine</c> field.
-		///	designer:fld/L0ARM/L0A1N
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A1N]")]
-		string FileUserAndMachine
+		string FileUri
 		{
 			get;
 			set;
@@ -11552,42 +11527,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnFileNameChanged(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
 		static partial void OnFileNameChanging(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
-		public static string GetFileUriOrPath(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj)
+		public static string GetFileUri(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[L0ATM]");
 		}
-		public static void SetFileUriOrPath(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string value)
+		public static void SetFileUri(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.FileUriOrPath;
+			string oldValue = obj.FileUri;
 			if (oldValue != value)
 			{
-				IFileMetadataInterfaceImplementation.OnFileUriOrPathChanging (obj, oldValue, value);
+				IFileMetadataInterfaceImplementation.OnFileUriChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0ATM]", oldValue, value);
-				IFileMetadataInterfaceImplementation.OnFileUriOrPathChanged (obj, oldValue, value);
+				IFileMetadataInterfaceImplementation.OnFileUriChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnFileUriOrPathChanged(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
-		static partial void OnFileUriOrPathChanging(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
-		public static string GetFileUserAndMachine(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			return entity.GetField<string> ("[L0A1N]");
-		}
-		public static void SetFileUserAndMachine(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string value)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.FileUserAndMachine;
-			if (oldValue != value)
-			{
-				IFileMetadataInterfaceImplementation.OnFileUserAndMachineChanging (obj, oldValue, value);
-				entity.SetField<string> ("[L0A1N]", oldValue, value);
-				IFileMetadataInterfaceImplementation.OnFileUserAndMachineChanged (obj, oldValue, value);
-			}
-		}
-		static partial void OnFileUserAndMachineChanged(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
-		static partial void OnFileUserAndMachineChanging(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
+		static partial void OnFileUriChanged(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
+		static partial void OnFileUriChanging(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj, string oldValue, string newValue);
 		public static string GetFileMimeType(global::Epsitec.Cresus.Core.Entities.IFileMetadata obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
@@ -11678,6 +11635,177 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnLastModificationDateChanged(global::Epsitec.Cresus.Core.Entities.IDateMetadata obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		static partial void OnLastModificationDateChanging(global::Epsitec.Cresus.Core.Entities.IDateMetadata obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ImageBlob Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ImageBlob</c> entity.
+	///	designer:cap/L0A5N
+	///	</summary>
+	public partial class ImageBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.ILifetime
+	{
+		#region IDateMetadata Members
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/L0A5N/L0A3N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A3N]")]
+		public global::System.DateTime? CreationDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.GetCreationDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetCreationDate (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0A5N/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0A5N/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region IDateMetadata Members
+		///	<summary>
+		///	The <c>LastModificationDate</c> field.
+		///	designer:fld/L0A5N/L0A4N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A4N]")]
+		public global::System.DateTime? LastModificationDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.GetLastModificationDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetLastModificationDate (this, value);
+			}
+		}
+		#endregion
+		#region IFileMetadata Members
+		///	<summary>
+		///	The <c>FileName</c> field.
+		///	designer:fld/L0A5N/L0ASM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASM]")]
+		public string FileName
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>FileUri</c> field.
+		///	designer:fld/L0A5N/L0ATM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATM]")]
+		public string FileUri
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUri (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUri (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>FileMimeType</c> field.
+		///	designer:fld/L0A5N/L0AUM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUM]")]
+		public string FileMimeType
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileMimeType (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileMimeType (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Data</c> field.
+		///	designer:fld/L0A5N/L0A6N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A6N]")]
+		public global::System.Byte[] Data
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[L0A6N]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.Data;
+				if (oldValue != value)
+				{
+					this.OnDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0A6N]", oldValue, value);
+					this.OnDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ImageBlobEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ImageBlobEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 741);	// [L0A5N]
+		public static readonly new string EntityStructuredTypeKey = "[L0A5N]";
 	}
 }
 #endregion
