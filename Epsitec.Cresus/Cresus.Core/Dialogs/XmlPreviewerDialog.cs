@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour choisir l'utilisateur (loggin).
 	/// </summary>
-	class XmlDeserializerPreviewerDialog : AbstractDialog
+	class XmlPreviewerDialog : AbstractDialog
 	{
-		public XmlDeserializerPreviewerDialog(CoreApplication application, string xmlSource)
+		public XmlPreviewerDialog(CoreApplication application, string xmlSource)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
-			this.previewer = new XmlDeserializerPreviewer
+			this.previewer = new XmlPrintedPagePreviewer
 			{
 				Parent = topPane,
 				Dock = DockStyle.Fill,
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private TextFieldMulti									textField;
 		private TextFieldMulti									description;
-		private XmlDeserializerPreviewer						previewer;
+		private XmlPrintedPagePreviewer						previewer;
 		private Button											closeButton;
 	}
 }

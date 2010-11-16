@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class XmlDeserializerPreviewer : Widget
+	public class XmlPrintedPagePreviewer : Widget
 	{
-		public XmlDeserializerPreviewer()
+		public XmlPrintedPagePreviewer()
 		{
 		}
 

@@ -140,7 +140,7 @@
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="CoreData.Hack.Workflows.cs" />
-    <Compile Include="Dialogs\XmlDeserializerPreviewerDialog.cs" />
+    <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
@@ -199,7 +199,7 @@
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
-    <Compile Include="Printers\JobPrintEngine2.cs" />
+    <Compile Include="Printers\XmlJobPrintEngine.cs" />
     <Compile Include="Printers\DeserializedJob.cs" />
     <Compile Include="Printers\DeserializedSection.cs" />
     <Compile Include="Printers\DeserializedPage.cs" />
@@ -494,11 +494,11 @@
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
-    <Compile Include="Widgets\XmlDeserializerPreviewer.cs" />
+    <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />
-    <Compile Include="Widgets\EntityPreviewer.cs" />
+    <Compile Include="Widgets\PrintedPagePreviewer.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.currentZoom = 1;
 
-			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
+			this.pagePreviewers = new List<Widgets.PrintedPagePreviewer> ();
 			this.printerUnitsUsed = new List<Dictionary<PrinterUnit, int>> ();
 			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
 			this.printerUnitFieldList = new List<PrinterUnit> ();
@@ -441,7 +441,7 @@ namespace Epsitec.Cresus.Core.Printers
 					description = FormattedText.Concat (description, "<br/>L'aspect peut varier selon l'unité d'impression.");
 				}
 
-				var preview = new Widgets.EntityPreviewer
+				var preview = new Widgets.PrintedPagePreviewer
 				{
 					Parent = this.previewFrame.Viewport,
 					DocumentPrinter = documentPrinter,
@@ -851,7 +851,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private readonly IEnumerable<AbstractEntity>		entities;
 		private readonly Printers.AbstractEntityPrinter		entityPrinter;
-		private readonly List<Widgets.EntityPreviewer>		pagePreviewers;
+		private readonly List<Widgets.PrintedPagePreviewer>		pagePreviewers;
 		private readonly List<Dictionary<PrinterUnit, int>>	printerUnitsUsed;
 		private readonly List<PrinterUnit>					printerUnitList;
 		private readonly List<PrinterUnit>					printerUnitFieldList;

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class OptimalPreviewPlacer
 	{
-		public OptimalPreviewPlacer(List<Widgets.EntityPreviewer> pagePreviews)
+		public OptimalPreviewPlacer(List<Widgets.PrintedPagePreviewer> pagePreviews)
 		{
 			this.pagePreviews = pagePreviews;
 		}
@@ -153,6 +153,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly List<Widgets.EntityPreviewer>	pagePreviews;
+		private readonly List<Widgets.PrintedPagePreviewer>	pagePreviews;
 	}
 }

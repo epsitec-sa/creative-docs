@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class JobPrintEngine2 : IPrintEngine
+	public class XmlJobPrintEngine : IPrintEngine
 	{
 		/// <summary>
 		/// JobPrintEngine2 s'occupe de l'impression à proprement parler de sections.
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="printDocument"></param>
 		/// <param name="sections"></param>
-		public JobPrintEngine2(PrintDocument printDocument, List<DeserializedSection> sections)
+		public XmlJobPrintEngine(PrintDocument printDocument, List<DeserializedSection> sections)
 		{
 			this.printDocument = printDocument;
 			this.sections      = sections;
