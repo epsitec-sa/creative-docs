@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void Register(AbstractEntity entity)
 		{
-			if (entity != null)
+			if (entity.IsNotNull ())
 			{
 				if (this.entityRecords.Any (x => x.Entity == entity))
 				{
