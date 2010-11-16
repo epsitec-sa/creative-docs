@@ -141,6 +141,7 @@
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="CoreData.Hack.Workflows.cs" />
+    <Compile Include="Dialogs\OptimalPreviewPlacer2.cs" />
     <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
