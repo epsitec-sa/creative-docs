@@ -400,8 +400,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			int minimalHope = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
 			minimalHope = System.Math.Min (minimalHope, this.filteredPages.Count);
-			var additionnalSize = new Size (0, 0);
-			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.entityPrinter.BoundsPageSize, additionnalSize, 5, minimalHope);
+			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.entityPrinter.BoundsPageSize, Size.Zero, 5, minimalHope);
 			this.showedPageCount = System.Math.Max (placer.Total, 1);
 
 			this.currentPage = this.currentPage /this.showedPageCount * this.showedPageCount;

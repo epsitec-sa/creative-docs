@@ -204,8 +204,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 #endif
 
-			this.placer = new OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> (this.pagePreviewers);
-
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
 			this.UpdateInformation ();
@@ -429,10 +427,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
-				this.placer.PageSize = this.MaximalPageSize;
-				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
-				this.placer.PageCount = this.previewedSection.PageCount;
-				this.placer.UpdateGeometry ();
+				var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.MaximalPageSize, Size.Zero, 5, this.previewedSection.PageCount);
+				placer.UpdateGeometry (this.pagePreviewers);
 			}
 		}
 
@@ -518,7 +514,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<JobToPrint>				jobs;
 
 		private Window									window;
-		private OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> placer;
 		private FrameBox								previewFrame;
 		private StaticText								informationText;
 		private Button									invertButton;
