@@ -180,16 +180,16 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public bool IsPreview
+		public PreviewMode PreviewMode
 		{
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
 			get
 			{
-				return this.entityPrinter.IsPreview;
+				return this.entityPrinter.PreviewMode;
 			}
 			set
 			{
-				this.entityPrinter.IsPreview = value;
+				this.entityPrinter.PreviewMode = value;
 			}
 		}
 
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var layout = new TextLayout
 			{
 				Text = "SPECIMEN",
-				DefaultColor = Color.FromBrightness (this.IsPreview ? 0.95 : 0.80),  // plus foncé si impression réelle
+				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
 				DefaultFont = Font.GetFont ("Arial", "Bold"),
 				DefaultFontSize = diagonal / 6.5,
 				Alignment = ContentAlignment.MiddleCenter,

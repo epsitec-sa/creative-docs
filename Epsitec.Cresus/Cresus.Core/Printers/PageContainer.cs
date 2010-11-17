@@ -79,13 +79,13 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public bool PaintBackground(IPaintPort port, bool isPreview)
+		public bool PaintBackground(IPaintPort port, PreviewMode previewMode)
 		{
 			bool ok = true;
 
 			foreach (var band in this.bands)
 			{
-				if (!band.PaintBackground (port, isPreview))
+				if (!band.PaintBackground (port, previewMode))
 				{
 					ok = false;
 				}
@@ -99,13 +99,13 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public bool PaintForeground(IPaintPort port, bool isPreview)
+		public bool PaintForeground(IPaintPort port, PreviewMode previewMode)
 		{
 			bool ok = true;
 
 			foreach (var band in this.bands)
 			{
-				if (!band.PaintForeground (port, isPreview))
+				if (!band.PaintForeground (port, previewMode))
 				{
 					ok = false;
 				}

@@ -128,8 +128,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintForegroundCurrentPage (port);
 
-			this.documentContainer.PaintBackground (port, this.CurrentPage, this.IsPreview);
-			this.documentContainer.PaintForeground (port, this.CurrentPage, this.IsPreview);
+			this.documentContainer.PaintBackground (port, this.CurrentPage, this.PreviewMode);
+			this.documentContainer.PaintForeground (port, this.CurrentPage, this.PreviewMode);
 		}
 
 

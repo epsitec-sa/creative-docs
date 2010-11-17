@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné correctement</returns>
-		public override bool PaintForeground(IPaintPort port, bool isPreview, int section, Point topLeft)
+		public override bool PaintForeground(IPaintPort port, PreviewMode previewMode, int section, Point topLeft)
 		{
 			if (section < 0 || section >= this.sectionsInfo.Count)
 			{

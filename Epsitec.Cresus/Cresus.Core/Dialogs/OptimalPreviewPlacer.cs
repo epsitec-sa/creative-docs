@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		public Size GetZoomedSize(Size pageSize, double zoom)
 		{
+			//	Retourne la taille à utiliser pour afficher une seule page zoomée.
 			double dx = this.availableSurface.Width  * zoom;
 			double dy = this.availableSurface.Height * zoom;
 

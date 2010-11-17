@@ -99,8 +99,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.SelectedDocumentType == DocumentType.Summary)
 			{
-				this.documentContainer.PaintBackground (port, this.CurrentPage, this.IsPreview);
-				this.documentContainer.PaintForeground (port, this.CurrentPage, this.IsPreview);
+				this.documentContainer.PaintBackground (port, this.CurrentPage, this.PreviewMode);
+				this.documentContainer.PaintForeground (port, this.CurrentPage, this.PreviewMode);
 			}
 
 			if (this.SelectedDocumentType == DocumentType.Debug1)
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				for (int i = 0; i < textBand.SectionCount; i++)
 				{
-					textBand.PaintForeground (port, false, i, new Point (10+(width+1)*i, top));
+					textBand.PaintForeground (port, PreviewMode.Print, i, new Point (10+(width+1)*i, top));
 				}
 
 				port.LineWidth = 0.1;
@@ -404,7 +404,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double y = 280-(height+2)*i;
 
-				table.PaintForeground (port, false, i, new Point (10, y));
+				table.PaintForeground (port, PreviewMode.Print, i, new Point (10, y));
 
 				port.Color = Color.FromName (ok ? "Black" : "Red");
 				port.PaintSurface (Path.FromRectangle (8, y-height, 1, height));

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.previewerController = new PreviewerController (this.entityPrinter, this.entities);
 			this.previewerController.ShowNotPrinting = true;
 
-			this.entityPrinter.IsPreview = true;
+			this.entityPrinter.PreviewMode = PreviewMode.PagedPreview;
 			this.entityPrinter.SetPrinterUnit ();
 			this.entityPrinter.BuildSections ();
 		}

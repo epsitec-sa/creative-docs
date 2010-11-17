@@ -196,14 +196,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void PrintBackgroundCurrentPage(IPaintPort port)
 		{
-			this.documentContainer.PaintBackground (port, this.CurrentPage, this.IsPreview);
+			this.documentContainer.PaintBackground (port, this.CurrentPage, this.PreviewMode);
 
 			base.PrintBackgroundCurrentPage (port);
 		}
 
 		public override void PrintForegroundCurrentPage(IPaintPort port)
 		{
-			this.documentContainer.PaintForeground (port, this.CurrentPage, this.IsPreview);
+			this.documentContainer.PaintForeground (port, this.CurrentPage, this.PreviewMode);
 
 			base.PrintForegroundCurrentPage (port);
 		}
