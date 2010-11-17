@@ -77,7 +77,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.previewFrame.SizeChanged += delegate
 			{
-				this.UpdatePagePreviewsGeometry ();
+				this.UpdatePreview ();
+				this.UpdatePageSlider ();
+				this.UpdateButtons ();
 			};
 
 			//	PagesToolbarBox.
@@ -253,7 +255,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.pageSlider.ValueChanged += delegate
 			{
-				this.currentPage = (int) this.pageSlider.Value;
+				this.currentPage = (int) this.pageSlider.Value * this.showedPageCount;
 				this.UpdatePages (rebuild: false);
 			};
 
@@ -358,7 +360,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.UpdateFilteredPages ();
 			this.UpdatePreview ();
-			this.UpdatePagePreviewsGeometry ();
 			this.UpdatePageSlider ();
 			this.UpdatePrinterUnitField ();
 			this.UpdateButtons ();
@@ -397,10 +398,13 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			this.showedPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+			int minimalHope = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+			minimalHope = System.Math.Min (minimalHope, this.filteredPages.Count);
+			var additionnalSize = new Size (0, 0);
+			var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.entityPrinter.BoundsPageSize, additionnalSize, 5, minimalHope);
+			this.showedPageCount = System.Math.Max (placer.Total, 1);
 
-			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.filteredPages.Count);
-			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
+			this.currentPage = this.currentPage /this.showedPageCount * this.showedPageCount;
 
 			this.pagePreviewers.Clear ();
 			this.printerUnitsUsed.Clear ();
@@ -456,21 +460,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 				pageRank++;
 			}
-		}
 
-		private void UpdatePagePreviewsGeometry()
-		{
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
-			this.placer = new Dialogs.OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> (this.pagePreviewers);
-			this.placer.PageSize = this.entityPrinter.BoundsPageSize;
-
 			if (this.currentZoom > 1)  // agrandissement ?
 			{
 				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviewers[0].PreferredSize = this.placer.AdjustRatioPageSize (this.previewFrame.Client.Bounds.Size * this.currentZoom);
+				this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
 				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
@@ -479,21 +477,18 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
-				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
-				this.placer.PageCount = this.pagePreviewers.Count;
-				this.placer.UpdateGeometry ();
+				placer.UpdateGeometry (this.pagePreviewers);
 			}
 		}
 
 		private void UpdatePageSlider()
 		{
 			this.pageSlider.MinValue = 0;
-			this.pageSlider.MaxValue = System.Math.Max (this.filteredPages.Count - this.showedPageCount, 0);
+			this.pageSlider.MaxValue = (this.showedPageCount == 0) ? 0 : System.Math.Max (((this.filteredPages.Count+this.showedPageCount-1) / this.showedPageCount)-1, 0);
 			this.pageSlider.Resolution = 1;
-			//?this.pageSlider.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.filteredPages.Count, 1);
 			this.pageSlider.SmallChange = 1;
-			this.pageSlider.LargeChange = 10;
-			this.pageSlider.Value = this.currentPage;
+			this.pageSlider.LargeChange = 1;
+			this.pageSlider.Value = (this.showedPageCount == 0) ? 0 : this.currentPage / this.showedPageCount;
 		}
 
 		private void UpdateButtons()
@@ -862,7 +857,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private FrameBox									printerUnitsToolbarBox;
 
 		private Scrollable									previewFrame;
-		private Dialogs.OptimalPreviewPlacer<Widgets.PrintedPagePreviewer> placer;
 
 		private StaticText									pageRank;
 		private HSlider										pageSlider;
