@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.previewFrame.SizeChanged += delegate
 			{
 				this.UpdatePreview ();
-				this.UpdatePageSlider ();
+				this.UpdateGroups ();
 				this.UpdateButtons ();
 			};
 
@@ -68,30 +68,9 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pagesToolbarBox.PreferredHeight = 24;
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
-				frame.PreferredWidth = 60;
-				frame.Dock = DockStyle.Left;
-
-				this.pageRank = new StaticText
-				{
-					Parent = frame,
-					ContentAlignment = ContentAlignment.MiddleCenter,
-					Dock = DockStyle.Fill,
-				};
-			}
-
-			{
-				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
-				frame.Margins = new Margins (-1, 0, 0, 0);
-				frame.Dock = DockStyle.Fill;
-
-				this.pageSlider = new HSlider
-				{
-					Parent = frame,
-					UseArrowGlyphs = true,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (2),
-				};
+				this.groupsToolbarBox = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
+				this.groupsToolbarBox.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				this.groupsToolbarBox.Dock = DockStyle.Fill;
 			}
 
 			{
@@ -161,12 +140,6 @@ namespace Epsitec.Cresus.Core.Printers
 				ToolTip.Default.SetToolTip (this.zoom41Button, "Agrandissement 4 fois");
 			}
 
-			this.pageSlider.ValueChanged += delegate
-			{
-				this.currentPage = (int) this.pageSlider.Value * this.showedPageCount;
-				this.UpdatePages (rebuild: false);
-			};
-
 			this.zoom18Button.Clicked += delegate
 			{
 				this.currentZoom = 1.0/8.0;
@@ -211,7 +184,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePages(bool rebuild)
 		{
 			this.UpdatePreview ();
-			this.UpdatePageSlider ();
+			this.UpdateGroups ();
 			this.UpdateButtons ();
 			this.UpdateZoom ();
 		}
@@ -222,7 +195,7 @@ namespace Epsitec.Cresus.Core.Printers
 			minimalHope = System.Math.Min (minimalHope, this.pages.Count);
 			var additionnalSize = new Size (0, Widgets.XmlPrintedPagePreviewer.titleHeight);
 			var placer = new Dialogs.OptimalPreviewPlacer (this.previewFrame.Client.Bounds, this.BoundsPageSize, additionnalSize, 5, minimalHope);
-			this.showedPageCount = System.Math.Max (placer.Total, 1);
+			this.showedPageCount = (this.currentZoom > 1) ? 1 : System.Math.Max (placer.Total, 1);
 
 			this.currentPage = this.currentPage /this.showedPageCount * this.showedPageCount;
 
@@ -256,7 +229,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
+				this.pagePreviewers[0].PreferredSize = placer.GetZoomedSize (this.pages[this.currentPage].ParentSection.PageSize, this.currentZoom);
 				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
@@ -269,39 +242,107 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void UpdatePageSlider()
+		private void UpdateGroups()
 		{
-			this.pageSlider.MinValue = 0;
-			this.pageSlider.MaxValue = System.Math.Max (((this.pages.Count+this.showedPageCount-1) / this.showedPageCount)-1, 0);
-			this.pageSlider.Resolution = 1;
-			this.pageSlider.SmallChange = 1;
-			this.pageSlider.LargeChange = 1;
-			this.pageSlider.Value = this.currentPage / this.showedPageCount;
+			this.groupsToolbarBox.Children.Clear ();
+
+			if (this.showedPageCount != 0)
+			{
+				int total = System.Math.Max (((this.pages.Count+this.showedPageCount-1) / this.showedPageCount), 0);
+
+				if (total > 1)
+				{
+					//	Met le bouton '<'.
+					if (this.currentPage > 0)
+					{
+						var button = new GlyphButton
+						{
+							Parent = this.groupsToolbarBox,
+							GlyphShape = GlyphShape.ArrowLeft,
+							ButtonStyle = ButtonStyle.ToolItem,
+							Dock = DockStyle.Left,
+						};
+
+						button.Clicked += delegate
+						{
+							this.currentPage -= this.showedPageCount;
+							this.UpdatePages (rebuild: false);
+						};
+
+						ToolTip.Default.SetToolTip (button, (this.showedPageCount == 1) ? "Montre la page précédente" : "Montre les pages précédentes");
+					}
+
+					//	Met les boutons pour les groupes de pages.
+					for (int i = 0; i < total; i++)
+					{
+						int from = i*this.showedPageCount+1;
+						int to = System.Math.Min (i*this.showedPageCount+this.showedPageCount, this.pages.Count);
+
+						string textSep    = (from == to-1) ? ", " : "..";
+						string tooltipSep = (from == to-1) ? "et" : "à";
+
+						string text, tooltip;
+
+						if (from == to)
+						{
+							text = from.ToString ();
+							tooltip = string.Format ("Montre la page {0}", from.ToString ());
+						}
+						else
+						{
+							text = string.Concat (from.ToString (), textSep, to.ToString ());
+							tooltip = string.Format ("Montre les pages {0} {1} {2}", from.ToString (), tooltipSep, to.ToString ());
+						}
+
+						int cp = i*this.showedPageCount;
+
+						var button = new Button
+						{
+							Parent = this.groupsToolbarBox,
+							Text = text,
+							Name = cp.ToString (System.Globalization.CultureInfo.InvariantCulture),
+							ButtonStyle = ButtonStyle.ToolItem,
+							AutoFocus = false,
+							ActiveState = (cp == this.currentPage) ? ActiveState.Yes : ActiveState.No,
+							Dock = DockStyle.Fill,
+						};
+
+						button.Clicked += delegate
+						{
+							this.currentPage = int.Parse (button.Name);
+							this.UpdatePages (rebuild: false);
+						};
+
+						ToolTip.Default.SetToolTip (button, tooltip);
+					}
+
+					//	Met le bouton '>'.
+					if (this.currentPage < this.pages.Count-this.showedPageCount)
+					{
+						var button = new GlyphButton
+						{
+							Parent = this.groupsToolbarBox,
+							GlyphShape = GlyphShape.ArrowRight,
+							ButtonStyle = ButtonStyle.ToolItem,
+							Dock = DockStyle.Right,
+						};
+
+						button.Clicked += delegate
+						{
+							this.currentPage += this.showedPageCount;
+							this.UpdatePages (rebuild: false);
+						};
+
+						ToolTip.Default.SetToolTip (button, (this.showedPageCount == 1) ? "Montre la page suivante" : "Montre les pages suivantes");
+					}
+				}
+			}
 		}
 
 		private void UpdateButtons()
 		{
-			int t = this.pages.Count;
-			int p = this.currentPage + 1;
-			int q = System.Math.Min (this.currentPage+this.showedPageCount-1, this.pages.Count-1) +1;
-
-			if (this.showedPageCount <= 1 || p == q)
-			{
-				this.pageRank.Text = string.Format ("{0} / {1}", p.ToString (), t.ToString ());
-
-				ToolTip.Default.SetToolTip (this.pageRank,   "Page visible / Nombre total de pages");
-				ToolTip.Default.SetToolTip (this.pageSlider, "Montre une autre page");
-			}
-			else
-			{
-				this.pageRank.Text = string.Format ("{0}..{1} / {2}", p.ToString (), q.ToString (), t.ToString ());
-
-				ToolTip.Default.SetToolTip (this.pageRank,   "Pages visibles / Nombre total de pages");
-				ToolTip.Default.SetToolTip (this.pageSlider, "Montre d'autres pages");
-			}
-
-			this.zoom14Button.Enable = t > 1;
-			this.zoom18Button.Enable = t > 4;
+			this.zoom14Button.Enable = this.pages.Count > 1;
+			this.zoom18Button.Enable = this.pages.Count > 4;
 		}
 
 		private void UpdateZoom()
@@ -348,8 +389,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private Scrollable										previewFrame;
 
-		private StaticText										pageRank;
-		private HSlider											pageSlider;
+		private FrameBox										groupsToolbarBox;
 
 		private Button											zoom18Button;
 		private Button											zoom14Button;

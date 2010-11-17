@@ -467,7 +467,16 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
+				var documentPrinter = this.entityPrinter.GetDocumentPrinter (this.currentPage);
+				if (documentPrinter == null)
+				{
+					this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
+				}
+				else
+				{
+					this.pagePreviewers[0].PreferredSize = placer.GetZoomedSize (documentPrinter.RequiredPageSize, this.currentZoom);
+				}
+
 				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
