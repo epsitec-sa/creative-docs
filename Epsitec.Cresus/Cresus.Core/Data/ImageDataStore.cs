@@ -83,16 +83,20 @@ namespace Epsitec.Cresus.Core.Data
 			var data = System.IO.File.ReadAllBytes (path);
 			var blob = this.DataContext.CreateEntity<ImageBlobEntity> ();
 
-			var uriPath = System.Uri.EscapeUriString (path.Replace ('\\', '/'));
-			var uriHost = System.Uri.EscapeUriString (System.Environment.MachineName.ToLowerInvariant ());
-			var uriUser = System.Uri.EscapeUriString (System.Environment.UserName.ToLowerInvariant ());
+			var uri  = new Epsitec.Common.IO.UriBuilder ()
+			{
+				Scheme   = System.Uri.UriSchemeFile,
+				Path     = path,
+				Host     = System.Environment.MachineName.ToLowerInvariant (),
+				UserName = System.Environment.UserName.ToLowerInvariant ()
+			};
 
 			blob.CreationDate         = file.CreationTime;
 			blob.LastModificationDate = file.LastWriteTime;
 			blob.FileName             = file.Name;
-			blob.FileUri              = string.Concat ("file://", uriUser, "@", uriHost, "/", uriPath);
+			blob.FileUri              = uri.ToString ();
 			blob.FileMimeType         = MimeTypeDictionary.MimeTypeToString (MimeTypeDictionary.GetMimeTypeFromExtension (file.Extension));
-			blob.Code                 = System.Guid.NewGuid ().ToString ("N");
+			blob.Code                 = Business.ItemCodeGenerator.NewCode ();
 			blob.Data                 = data;
 
 			blob.SetHashes (data);
