@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				var documentPrinter = this.entityPrinter.GetDocumentPrinter (this.currentPage);
+				var documentPrinter = this.entityPrinter.GetDocumentPrinter (this.RealPage (this.currentPage));
 				if (documentPrinter == null)
 				{
 					this.pagePreviewers[0].PreferredSize = placer.Size * this.currentZoom;
