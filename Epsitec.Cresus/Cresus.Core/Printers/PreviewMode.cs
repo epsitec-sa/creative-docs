@@ -9,9 +9,9 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public enum PreviewMode
 	{
-		Print,
+		Print,					// inmpression réelle
 
-		PagedPreview,
-		ContinousPreview,
+		PagedPreview,			// aperçu avant impression paginé
+		ContinuousPreview,		// aperçu avant impression sur un ruban de hauteur infinie
 	}
 }

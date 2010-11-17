@@ -59,7 +59,10 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Size (210, 297);  // A4
+				double dx = 210;
+				double dy = (this.entityPrinter.PreviewMode == Printers.PreviewMode.ContinuousPreview) ? AbstractDocumentPrinter.continuousHeight : 297;
+
+				return new Size (dx, dy);  // A4
 			}
 		}
 

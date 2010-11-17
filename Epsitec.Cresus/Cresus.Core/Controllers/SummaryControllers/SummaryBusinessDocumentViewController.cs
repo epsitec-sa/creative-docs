@@ -69,42 +69,30 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var mainViewController = this.Orchestrator.MainViewController;
 			var previewController  = mainViewController.PreviewViewController;
 
-			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithInsideESR);
-			entityPrinter.PreviewMode = Printers.PreviewMode.ContinousPreview;
+			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithoutESR);
+			entityPrinter.PreviewMode = Printers.PreviewMode.ContinuousPreview;
 			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
 
 			mainViewController.SetPreviewPanelVisibility (true);
 
-			var previewFrame = new FrameBox ()
+			var previewFrame = new FrameBox
 			{
 				Dock = DockStyle.Fill,
 				Padding = new Margins (5),
 				BackColor = adorner.ColorWindow,
 			};
 
-			var printerUnitsToolbarBox = new FrameBox
-			{
-				Parent = previewFrame,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
-			};
+			var documentPrinter = entityPrinter.GetDocumentPrinter (0);
 
-			var previewBox = new FrameBox
+			new PrintedPagePreviewer
 			{
 				Parent = previewFrame,
+				DocumentPrinter = documentPrinter,
+				IsContinuousPreview = true,
+				CurrentPage = entityPrinter.GetPageRelative (0),
 				Dock = DockStyle.Fill,
 			};
-
-			var pagesToolbarBox = new FrameBox
-			{
-				Parent = previewFrame,
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 10, 0),
-			};
-
-			this.previewerController = new Printers.PreviewerController (entityPrinter, new AbstractEntity[] { this.Entity });
-			this.previewerController.CreateUI (previewBox, pagesToolbarBox, printerUnitsToolbarBox);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
@@ -141,7 +129,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void HandlePreviewPanelUpdating(object sender)
 		{
-			this.previewerController.Update ();
 		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
@@ -367,8 +354,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			return TextFormatter.FormatText ("HT~", ht, "~,", "TVA~", vat, "\n", "TTC~", ttc, "arrêté à~", fix);
 		}
-
-
-		private Printers.PreviewerController		previewerController;
 	}
 }
