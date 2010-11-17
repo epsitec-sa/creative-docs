@@ -15,9 +15,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class ImageData
+	/// <summary>
+	/// The <c>ImageData</c> class represents an image as stored in the database
+	/// in a <see cref="ImageBlobEntity"/>.
+	/// </summary>
+	public sealed class ImageData
 	{
-		public ImageData(ImageBlobEntity image)
+		internal ImageData(ImageBlobEntity image)
 		{
 			this.imageBytes = image.Data;
 			this.mimeType   = MimeTypeDictionary.ParseMimeType (image.FileMimeType);
@@ -27,7 +31,7 @@ namespace Epsitec.Cresus.Core.Data
 			this.strongHash = image.StrongHash;
 		}
 
-		public ImageData(byte[] imageBytes)
+		internal ImageData(byte[] imageBytes)
 		{
 			this.imageBytes = imageBytes;
 			this.mimeType   = Common.Types.MimeType.Unknown;
@@ -103,6 +107,12 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		/// <summary>
+		/// Gets the real image, which can be used for actual painting. An internal
+		/// cache will be used to avoid decompressing the image every time it is
+		/// requested, until the next GC happens.
+		/// </summary>
+		/// <returns>The image.</returns>
 		public Image GetImage()
 		{
 			Image cache = this.cache == null ? null : this.cache.Target;
