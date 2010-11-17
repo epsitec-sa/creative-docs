@@ -122,6 +122,15 @@ namespace Epsitec.Cresus.Core.Data
 			return this.PersistImageBlob (imageBlob);
 		}
 
+		/// <summary>
+		/// Reduce the memory consumption of the image data store. The
+		/// images will have to be reloaded from the database.
+		/// </summary>
+		public void Trim()
+		{
+			this.DisposeDataContext ();
+		}
+
 		
 		/// <summary>
 		/// Gets the image BLOB for the specified item code. If duplicates are found, returns the
@@ -308,15 +317,15 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-
 		private static int GetNextContextId()
 		{
 			return System.Threading.Interlocked.Increment (ref ImageDataStore.nextContextId);
 		}
 
-		private static int nextContextId;
+		
+		private static int						nextContextId;
 
-		private readonly CoreData data;
-		private DataContext context;
+		private readonly CoreData				data;
+		private DataContext						context;
 	}
 }
