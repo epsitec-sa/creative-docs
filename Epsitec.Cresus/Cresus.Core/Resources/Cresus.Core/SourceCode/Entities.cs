@@ -11646,7 +11646,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageBlob</c> entity.
 	///	designer:cap/L0A5N
 	///	</summary>
-	public partial class ImageBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ImageBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDataHash
 	{
 		#region IDateMetadata Members
 		///	<summary>
@@ -11663,6 +11663,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetCreationDate (this, value);
+			}
+		}
+		#endregion
+		#region IDataHash Members
+		///	<summary>
+		///	The <c>WeakHash</c> field.
+		///	designer:fld/L0A5N/L0A9N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9N]")]
+		public int? WeakHash
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.GetWeakHash (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.SetWeakHash (this, value);
 			}
 		}
 		#endregion
@@ -11717,6 +11735,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetLastModificationDate (this, value);
+			}
+		}
+		#endregion
+		#region IDataHash Members
+		///	<summary>
+		///	The <c>StrongHash</c> field.
+		///	designer:fld/L0A5N/L0AAN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAN]")]
+		public string StrongHash
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.GetStrongHash (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.SetStrongHash (this, value);
 			}
 		}
 		#endregion
@@ -11806,6 +11842,78 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 741);	// [L0A5N]
 		public static readonly new string EntityStructuredTypeKey = "[L0A5N]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IDataHash Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IDataHash</c> entity.
+	///	designer:cap/L0A8N
+	///	</summary>
+	public interface IDataHash
+	{
+		///	<summary>
+		///	The <c>WeakHash</c> field.
+		///	designer:fld/L0A8N/L0A9N
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9N]")]
+		int? WeakHash
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>StrongHash</c> field.
+		///	designer:fld/L0A8N/L0AAN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAN]")]
+		string StrongHash
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IDataHashInterfaceImplementation
+	{
+		public static int? GetWeakHash(global::Epsitec.Cresus.Core.Entities.IDataHash obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<int?> ("[L0A9N]");
+		}
+		public static void SetWeakHash(global::Epsitec.Cresus.Core.Entities.IDataHash obj, int? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			int? oldValue = obj.WeakHash;
+			if (oldValue != value)
+			{
+				IDataHashInterfaceImplementation.OnWeakHashChanging (obj, oldValue, value);
+				entity.SetField<int?> ("[L0A9N]", oldValue, value);
+				IDataHashInterfaceImplementation.OnWeakHashChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWeakHashChanged(global::Epsitec.Cresus.Core.Entities.IDataHash obj, int? oldValue, int? newValue);
+		static partial void OnWeakHashChanging(global::Epsitec.Cresus.Core.Entities.IDataHash obj, int? oldValue, int? newValue);
+		public static string GetStrongHash(global::Epsitec.Cresus.Core.Entities.IDataHash obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[L0AAN]");
+		}
+		public static void SetStrongHash(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.StrongHash;
+			if (oldValue != value)
+			{
+				IDataHashInterfaceImplementation.OnStrongHashChanging (obj, oldValue, value);
+				entity.SetField<string> ("[L0AAN]", oldValue, value);
+				IDataHashInterfaceImplementation.OnStrongHashChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnStrongHashChanged(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
+		static partial void OnStrongHashChanging(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
 	}
 }
 #endregion

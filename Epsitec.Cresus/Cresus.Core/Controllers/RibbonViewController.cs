@@ -4,11 +4,12 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers
 {

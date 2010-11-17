@@ -3,9 +3,10 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer;
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core

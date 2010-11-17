@@ -199,6 +199,7 @@
     <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
+    <Compile Include="Library\ExceptionManager.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
     <Compile Include="PlugIns\ICorePlugIn.cs" />
@@ -278,8 +279,8 @@
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="TextBuilder.cs" />
-    <Compile Include="UI.CultureSettings.cs" />
-    <Compile Include="UI.Properties.cs" />
+    <Compile Include="Library\UI.CultureSettings.cs" />
+    <Compile Include="Library\UI.Properties.cs" />
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintingJobDialog.cs" />
@@ -480,7 +481,7 @@
     <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="Printers\PrinterUnit.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
-    <Compile Include="UI.WindowPlacementHint.cs" />
+    <Compile Include="Library\UI.WindowPlacementHint.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="PersistenceManager.cs" />
@@ -488,7 +489,7 @@
     <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
-    <Compile Include="UI.cs" />
+    <Compile Include="Library\UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Binders\IFieldBinder.cs" />
@@ -635,10 +636,6 @@
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.CoreLibrary\Cresus.CoreLibrary.csproj">
-      <Project>{678BC79B-6AF9-4E5E-9B59-DD78DA0A06D0}</Project>
-      <Name>Cresus.CoreLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>

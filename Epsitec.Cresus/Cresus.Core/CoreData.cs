@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
