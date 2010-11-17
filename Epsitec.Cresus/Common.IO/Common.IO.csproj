@@ -164,6 +164,7 @@
     <Compile Include="Tools.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UriBuilder.cs" />
     <Compile Include="WaitCondition.cs" />
     <Compile Include="ZipFile.cs" />
   </ItemGroup>
