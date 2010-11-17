@@ -38,6 +38,10 @@ namespace Epsitec.Common.IO
             {
 				length = data.Length;
             }
+			else
+			{
+				length = System.Math.Min (length, data.Length);
+			}
 
 			return Checksum.ComputeAdler32 (engine => engine.Update (data, 0, length));
 		}

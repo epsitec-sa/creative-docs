@@ -148,6 +148,21 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
+		public double							DpiX
+		{
+			get
+			{
+				return this.bitmapSource == null ? 72 : this.bitmapSource.DpiX;
+			}
+		}
+
+		public double							DpiY
+		{
+			get
+			{
+				return this.bitmapSource == null ? 72 : this.bitmapSource.DpiY;
+			}
+		}
 
 
 		#region IDisposable Members

@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		private static void GetArticleTotalAmoutForTax(BusinessDocumentEntity x, string categoryName, out decimal amount, out decimal rate)
+		private static void GetArticleTotalAmoutForTax(BusinessDocumentEntity x, FormattedText categoryName, out decimal amount, out decimal rate)
 		{
 			//	Calcule le montant total et le taux de tva, pour une catégorie, parmi tous les articles d'une facture.
 			amount = 0;

@@ -323,7 +323,19 @@ namespace Epsitec.Cresus.Core
 			this.data.SetupBusiness ();
 			this.OnSetupDataDone ();
 
-//-			this.data.ImageDataStore.PersistImage (new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
+#if false
+			var blob  = this.data.ImageDataStore.PersistImageBlob (new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
+			var image = this.data.ImageDataStore.GetImageData (blob.Code);
+			bool same1 = this.data.ImageDataStore.CheckEqual (blob.Code, image);
+			bool same2 = this.data.ImageDataStore.CheckEqual (blob.Code, new Epsitec.Cresus.Core.Data.ImageData (System.IO.File.ReadAllBytes (image.Uri.Path)));
+
+			var imageEntity = this.Data.DataContext.CreateEntity<ImageEntity> ();
+
+			this.data.ImageDataStore.UpdateImage (this.Data.DataContext, imageEntity, new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
+			this.data.ImageDataStore.GetImageData (blob.Code, 100);
+			this.data.ImageDataStore.GetImageData (blob.Code, 200);
+			this.data.ImageDataStore.GetImageData (blob.Code, 100);
+#endif
 		}
 
 		internal void DiscoverPlugIns()
