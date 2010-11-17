@@ -143,7 +143,7 @@
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="CoreData.Hack.Workflows.cs" />
     <Compile Include="Data\ImageData.cs" />
-    <Compile Include="Dialogs\OptimalPreviewPlacer2.cs" />
+    <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
@@ -284,7 +284,6 @@
     <Compile Include="Library\UI.CultureSettings.cs" />
     <Compile Include="Library\UI.Properties.cs" />
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
-    <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintingJobDialog.cs" />
     <Compile Include="V11\V11LineCodeRejet.cs" />
     <Compile Include="V11\V11LineOrigine.cs" />
