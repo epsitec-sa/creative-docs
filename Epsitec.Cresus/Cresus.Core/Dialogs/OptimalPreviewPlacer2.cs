@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		public OptimalPreviewPlacer2(Rectangle availableSurface, Size pageSize, Size additionnalSize, double margin, int minimalHope)
 		{
 			//	pageSize détermine la proportion largeur/hauteur des widgets à placer.
+			//	additionnalSize détermine une taille fixe et indépendante du zoom pour les widgets à placer.
 			this.availableSurface = availableSurface;
 			this.pageSize         = pageSize;
 			this.additionnalSize  = additionnalSize;

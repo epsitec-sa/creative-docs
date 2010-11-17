@@ -425,13 +425,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return xDocument.ToString (SaveOptions.None);
 		}
 
-		public static void DeserializeAndPrintJobs(string xmlSource)
-		{
-			List<DeserializedJob> jobs = PrintEngine.DeserializeJobs (xmlSource);
-			PrintEngine.PrintJobs (jobs);
-		}
-
-		public static void PrintJobs(List<DeserializedJob> jobs)
+		private static void PrintJobs(List<DeserializedJob> jobs)
 		{
 			foreach (var job in jobs)
 			{
@@ -447,7 +441,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public static List<DeserializedJob> DeserializeJobs(string xmlSource, double zoom=0)
+		private static List<DeserializedJob> DeserializeJobs(string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
 			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
