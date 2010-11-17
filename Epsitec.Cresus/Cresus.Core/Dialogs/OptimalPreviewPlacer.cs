@@ -50,6 +50,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		public Size GetZoomedSize(Size pageSize, double zoom)
+		{
+			double dx = this.availableSurface.Width  * zoom;
+			double dy = this.availableSurface.Height * zoom;
+
+			if (pageSize.Width/pageSize.Height < dx/dy)
+			{
+				dx = dy*pageSize.Width/pageSize.Height;
+			}
+			else
+			{
+				dy = dx*pageSize.Height/pageSize.Width;
+			}
+
+			return new Size (dx, dy);
+		}
+
 		public void UpdateGeometry<T>(List<T> widgets)
 			where T: Widget
 		{
