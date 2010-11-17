@@ -1039,7 +1039,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description);
+			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, billingDetails.Text, billingDetails.AmountDue.PaymentMode.Description);
 
 			if (!conditions.IsNullOrEmpty)
 			{
