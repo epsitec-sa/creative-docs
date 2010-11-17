@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.UpdateFilteredPages ();
 
-			this.entityPrinter.IsPreview = true;
+			this.entityPrinter.PreviewMode = PreviewMode.PagedPreview;
 			this.SetPrinterUnits ();
 			this.entityPrinter.BuildSections ();
 		}

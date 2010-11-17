@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public bool IsPreview
+		public PreviewMode PreviewMode
 		{
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
 			get;

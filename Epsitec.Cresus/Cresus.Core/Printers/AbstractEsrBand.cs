@@ -104,12 +104,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected virtual Color LightPinkColor(bool isPreview)
+		protected virtual Color LightPinkColor(PreviewMode previewMode)
 		{
 			return Color.Empty;
 		}
 
-		protected virtual Color DarkPinkColor(bool isPreview)
+		protected virtual Color DarkPinkColor(PreviewMode previewMode)
 		{
 			return Color.Empty;
 		}
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool PaintBackground(IPaintPort port, bool isPreview, int section, Point topLeft)
+		public override bool PaintBackground(IPaintPort port, PreviewMode previewMode, int section, Point topLeft)
 		{
 			if (section != 0)
 			{
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.PaintEsrSimulator)
 			{
-				this.PaintFix (port, isPreview, topLeft);
+				this.PaintFix (port, previewMode, topLeft);
 			}
 
 			return true;
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool PaintForeground(IPaintPort port, bool isPreview, int section, Point topLeft)
+		public override bool PaintForeground(IPaintPort port, PreviewMode previewMode, int section, Point topLeft)
 		{
 			if (section != 0)
 			{
@@ -193,12 +193,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected virtual void PaintFix(IPaintPort port, bool isPreview, Point topLeft)
+		protected virtual void PaintFix(IPaintPort port, PreviewMode previewMode, Point topLeft)
 		{
 			//	Dessine tous éléments fixes, pour simuler un BV sur un fond blanc.
 
 			//	Dessine les fonds.
-			port.Color = this.LightPinkColor (isPreview);
+			port.Color = this.LightPinkColor (previewMode);
 			port.PaintSurface (Path.FromRectangle (topLeft.X, topLeft.Y-106, 210, 106));
 
 			port.Color = Color.FromBrightness (1);
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintOutline (Path.FromLine (topLeft.X+204, topLeft.Y-81, topLeft.X+199, topLeft.Y-81));
 
 			//	Dessine les cercles.
-			port.Color = this.DarkPinkColor (isPreview);
+			port.Color = this.DarkPinkColor (previewMode);
 			port.LineWidth = 0.1;
 			AbstractEsrBand.PaintDashedCircle (port, new Point (topLeft.X+194, topLeft.Y-17), 9);
 			AbstractEsrBand.PaintDashedCircle (port, new Point (topLeft.X+17, topLeft.Y-95), 9);
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintText (topLeft.X+2, topLeft.Y-48.5, "CHF", AbstractEsrBand.fixFontRegular, 3.0);
 			port.PaintText (topLeft.X+63, topLeft.Y-48.5, "CHF", AbstractEsrBand.fixFontRegular, 3.0);
 
-			port.Color = this.DarkPinkColor (isPreview);
+			port.Color = this.DarkPinkColor (previewMode);
 			port.PaintText (topLeft.X+2, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractEsrBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+63, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractEsrBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+2, topLeft.Y-45, "Konto / Compte / Conto", AbstractEsrBand.fixFontRegular, 2.0);
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintText (topLeft.X+32, topLeft.Y-95.0, "L'ufficio d'accettazione", AbstractEsrBand.fixFontRegular, 2.0);
 
 			//	Dessine la zone de découpe.
-			port.Color = this.DarkPinkColor (isPreview);
+			port.Color = this.DarkPinkColor (previewMode);
 			port.PaintText (topLeft.X+60, topLeft.Y+2, "Vor der Einzahlung abzutrennen / A détacher avant le versement / Da staccare prima del vertamento", AbstractEsrBand.fixFontRegular, 2.0);
 
 			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*0, topLeft.Y+2));

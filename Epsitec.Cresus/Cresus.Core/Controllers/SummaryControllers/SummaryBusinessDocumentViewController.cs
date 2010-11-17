@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var previewController  = mainViewController.PreviewViewController;
 
 			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithInsideESR);
-			entityPrinter.IsPreview = true;
+			entityPrinter.PreviewMode = Printers.PreviewMode.ContinousPreview;
 			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
 

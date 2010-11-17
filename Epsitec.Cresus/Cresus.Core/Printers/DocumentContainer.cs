@@ -281,11 +281,11 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
-		public bool PaintBackground(IPaintPort port, int page, bool isPreview)
+		public bool PaintBackground(IPaintPort port, int page, PreviewMode previewMode)
 		{
 			if (page >= 0 && page < this.pages.Count)
 			{
-				return this.pages[page].PaintBackground (port, isPreview);
+				return this.pages[page].PaintBackground (port, previewMode);
 			}
 
 			return true;
@@ -294,11 +294,11 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
-		public bool PaintForeground(IPaintPort port, int page, bool isPreview)
+		public bool PaintForeground(IPaintPort port, int page, PreviewMode previewMode)
 		{
 			if (page >= 0 && page < this.pages.Count)
 			{
-				return this.pages[page].PaintForeground (port, isPreview);
+				return this.pages[page].PaintForeground (port, previewMode);
 			}
 
 			return true;

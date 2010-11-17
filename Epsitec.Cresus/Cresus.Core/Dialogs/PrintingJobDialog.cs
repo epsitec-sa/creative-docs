@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PrintingJobDialog.SetPreviewButtonState (button, true);
 
 				this.previewedSection = section;
-				this.previewedSection.DocumentPrinter.IsPreview = true;
+				this.previewedSection.DocumentPrinter.PreviewMode = PreviewMode.PagedPreview;
 				this.previewedSection.DocumentPrinter.SetPrinterUnit (section.PrinterUnit);
 				this.previewedSection.DocumentPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);
 

@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Core.Printers
 							xPage.Add (new XAttribute ("rank", page));
 
 							var port = new XmlPort (xPage);
-							section.DocumentPrinter.IsPreview = false;
+							section.DocumentPrinter.PreviewMode = PreviewMode.Print;
 							section.DocumentPrinter.CurrentPage = page;
 							section.DocumentPrinter.SetPrinterUnit (section.PrinterUnit);
 							section.DocumentPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);

@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			section.DocumentPrinter.IsPreview = false;
+			section.DocumentPrinter.PreviewMode = PreviewMode.Print;
 			section.DocumentPrinter.CurrentPage = section.FirstPage;
 		}
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				section = this.sections[this.sectionIndex];  // section <- nouvelle section à imprimer
 
-				section.DocumentPrinter.IsPreview = false;
+				section.DocumentPrinter.PreviewMode = PreviewMode.Print;
 				section.DocumentPrinter.CurrentPage = section.FirstPage;
 
 				return PrintEngineStatus.MorePages;
