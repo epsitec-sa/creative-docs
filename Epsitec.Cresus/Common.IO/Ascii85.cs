@@ -45,6 +45,17 @@ namespace Epsitec.Common.IO
 			return engine.Decode (value);
 		}
 
+
+		public static string EncodeGuid(System.Guid guid)
+		{
+			return Ascii85.Encode (guid.ToByteArray (), outputMarks: false);
+		}
+
+		public static System.Guid DecodeGuid(string value)
+		{
+			return new System.Guid (Ascii85.Decode (value, enforceMarks: false));
+		}
+
 		#region Engine Class
 
 		public sealed class Engine

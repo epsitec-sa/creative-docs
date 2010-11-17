@@ -322,6 +322,8 @@ namespace Epsitec.Cresus.Core
 			this.data.SetupDatabase ();
 			this.data.SetupBusiness ();
 			this.OnSetupDataDone ();
+
+//-			this.data.ImageDataStore.PersistImage (new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
 		}
 
 		internal void DiscoverPlugIns()
