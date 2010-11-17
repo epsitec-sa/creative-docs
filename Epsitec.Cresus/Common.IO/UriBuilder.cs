@@ -19,6 +19,11 @@ namespace Epsitec.Common.IO
 
 		public UriBuilder(string fullUri)
 		{
+			if (string.IsNullOrEmpty (fullUri))
+			{
+				return;
+			}
+
 			int schemeEnd = fullUri.IndexOf ("://");
 
 			if (schemeEnd < 0)

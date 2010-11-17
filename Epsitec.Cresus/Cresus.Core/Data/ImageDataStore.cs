@@ -10,6 +10,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -44,28 +45,20 @@ namespace Epsitec.Cresus.Core.Data
 		/// most up-to-date image data found in the database.
 		/// </summary>
 		/// <param name="code">The item code.</param>
-		/// <returns>The image data from the database or <c>null</c> if it cannot be found.</returns>
-		public ImageData GetImageData(string code)
+		/// <param name="thumbnailSize">Size of the thumbnail (or 0 to get the original image).</param>
+		/// <returns>
+		/// The image data from the database or <c>null</c> if it cannot be found.
+		/// </returns>
+		public ImageData GetImageData(string code, int thumbnailSize = 0)
 		{
-			var repository = new ImageBlobRepository (this.data, this.DataContext);
-			var example    = new ImageBlobEntity ()
-			{
-				Code = code
-			};
+			var blob = this.GetImageBlob (code, thumbnailSize);
 
-			var allImages = repository.GetByExample (example).OrderByDescending (x => x.LastModificationDate).ToList ();
-			var liveImage = allImages.Where (x => x.IsArchive == false).FirstOrDefault ();
-
-			if (liveImage != null)
-            {
-				return new ImageData (liveImage);
-            }
-			if (allImages.Count > 0)
+			if (blob == null)
 			{
-				return new ImageData (allImages[0]);
+				return null;
 			}
 
-			return null;
+			return new ImageData (blob);
 		}
 
 		/// <summary>
@@ -82,13 +75,38 @@ namespace Epsitec.Cresus.Core.Data
 			var example    = new ImageBlobEntity ()
 			{
 				Code = code,
-				WeakHash = imageData.WeakHash
+				WeakHash = imageData.WeakHash,
+				ThumbnailSize = 0,
 			};
 
 			var matches = repository.GetByExample (example);
 			
 			return matches.Where (x => x.StrongHash == imageData.StrongHash).Any ();
+		}
 
+		/// <summary>
+		/// Updates the specified image entity.
+		/// </summary>
+		/// <param name="context">The data context used by the image entity.</param>
+		/// <param name="image">The image entity.</param>
+		/// <param name="file">The file to read data from.</param>
+		public void UpdateImage(DataContext context, ImageEntity image, System.IO.FileInfo file)
+		{
+			var imageBlob = this.PersistImageBlob (file);
+
+			if ((image.ImageBlob.IsNotNull ()) &&
+				(image.ImageBlob.Code == imageBlob.Code))
+			{
+				//	The image data did not change. This image still points to the exact same
+				//	bytes in the database.
+			}
+			else
+			{
+				image.ImageBlob = context.GetLocalEntity (imageBlob);
+			}
+
+			//	Note: there is no need to refresh the thumbnails; they will be created on the fly
+			//	if the image was updated, since they no longer exist for the new IItemCode.Code.
 		}
 
 		/// <summary>
@@ -101,8 +119,59 @@ namespace Epsitec.Cresus.Core.Data
 		public ImageBlobEntity PersistImageBlob(System.IO.FileInfo file)
 		{
 			var imageBlob = this.CreateImageBlob (file);
-			
 			return this.PersistImageBlob (imageBlob);
+		}
+
+		
+		/// <summary>
+		/// Gets the image BLOB for the specified item code. If duplicates are found, returns the
+		/// most up-to-date image BLOB found in the database.
+		/// </summary>
+		/// <param name="code">The item code.</param>
+		/// <param name="thumbnailSize">Size of the thumbnail (or 0 to get the original image).</param>
+		/// <returns>
+		/// The image BLOB from the database or <c>null</c> if it cannot be found.
+		/// </returns>
+		private ImageBlobEntity GetImageBlob(string code, int thumbnailSize = 0)
+		{
+			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var example    = new ImageBlobEntity ()
+			{
+				Code = code,
+			};
+
+			example.ThumbnailSize = -1;
+			example.ThumbnailSize = thumbnailSize;
+
+			int pass = 0;
+
+		again:
+
+			var match = repository.GetByExample (example).OrderByDescending (x => x.LastModificationDate).FirstOrDefault ();
+
+			if (match == null)
+			{
+				if (thumbnailSize == 0)
+				{
+					return null;
+				}
+
+				var blob = this.GetImageBlob (code);
+
+				if (blob == null)
+				{
+					return null;
+				}
+
+				this.UpdateThumbnails (blob, thumbnailSize);
+
+				if (pass++ == 0)
+				{
+					goto again;
+				}
+			}
+
+			return match;
 		}
 
 		private ImageBlobEntity PersistImageBlob(ImageBlobEntity imageBlob)
@@ -120,26 +189,31 @@ namespace Epsitec.Cresus.Core.Data
 				return otherBlob;
 			}
 		}
-		
-		public void UpdateImage(DataContext context, ImageEntity image, System.IO.FileInfo file)
+
+		private void UpdateThumbnails(ImageBlobEntity imageBlob, params int[] thumbnailSizes)
 		{
-			var imageBlob = this.PersistImageBlob (file);
-
-			if ((image.ImageBlob.IsNotNull ()) &&
-				(image.ImageBlob.Code == imageBlob.Code))
+			var nativeImage = NativeBitmap.Load (imageBlob.Data);
+			
+			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var example    = new ImageBlobEntity ()
 			{
-				//	The image data did not change. This image still points to the exact same
-				//	bytes in the database and therefore, we need not update the thumbnail.
-			}
-			else
-			{
-				var nativeImage = Epsitec.Common.Drawing.Platform.NativeBitmap.Load (imageBlob.Data);
-				
-				var thumbnailImage = nativeImage.MakeThumbnail (512);
-				var thumbnailBlob  = this.CreateImageBlob (thumbnailImage.SaveToMemory (Epsitec.Common.Drawing.Platform.BitmapFileType.Png), MimeType.ImagePng);
+				Code = imageBlob.Code,
+			};
 
-				image.ImageBlob     = context.GetLocalEntity (imageBlob);
-				image.ThumbnailBlob = context.GetLocalEntity (this.PersistImageBlob (thumbnailBlob));
+			var thumbnails = repository.GetByExample (example).ToList ();
+			var sizes      = new HashSet<int> (thumbnailSizes.Concat (thumbnails.Select (x => x.ThumbnailSize)));
+
+			foreach (int size in sizes)
+			{
+				if (size == 0)
+                {
+					continue;
+                }
+
+				var thumbnailImage = nativeImage.MakeThumbnail (size);
+				var thumbnailBlob  = this.CreateThumbnailImageBlob (imageBlob, thumbnailImage, size);
+
+				this.PersistImageBlob (thumbnailBlob);
 			}
 		}
 
@@ -165,26 +239,42 @@ namespace Epsitec.Cresus.Core.Data
 			blob.Code                 = Business.ItemCodeGenerator.NewCode ();
 			blob.Data                 = data;
 
-			blob.SetHashes (data);
+			using (var bitmap = NativeBitmap.Load (data))
+			{
+				ImageDataStore.FillBlobMetadata (bitmap, blob);
+			}
 
 			return blob;
 		}
 
-		private ImageBlobEntity CreateImageBlob(byte[] data, MimeType mimeType)
+		private ImageBlobEntity CreateThumbnailImageBlob(ImageBlobEntity fullSizeImageBlob, NativeBitmap bitmap, int thumbnailSize)
 		{
+			byte[] data = bitmap.SaveToMemory (BitmapFileType.Png);
+		
 			var blob = this.DataContext.CreateEntity<ImageBlobEntity> ();
 
 			blob.CreationDate         = System.DateTime.Now;
 			blob.LastModificationDate = blob.CreationDate;
 			blob.FileName             = null;
 			blob.FileUri              = null;
-			blob.FileMimeType         = MimeTypeDictionary.MimeTypeToString (mimeType);
-			blob.Code                 = Business.ItemCodeGenerator.NewCode ();
+			blob.FileMimeType         = MimeTypeDictionary.MimeTypeToString (MimeType.ImagePng);
+			blob.Code                 = fullSizeImageBlob.Code;
 			blob.Data                 = data;
 
-			blob.SetHashes (data);
+			ImageDataStore.FillBlobMetadata (bitmap, blob, thumbnailSize);
 
 			return blob;
+		}
+
+		private static void FillBlobMetadata(NativeBitmap bitmap, ImageBlobEntity blob, int thumbnailSize = 0)
+		{
+			blob.PixelWidth    = bitmap.Width;
+			blob.PixelHeight   = bitmap.Height;
+			blob.ThumbnailSize = thumbnailSize;
+			blob.BitsPerPixel  = bitmap.BitsPerPixel;
+			blob.Dpi           = ((decimal) System.Math.Round (1000 * (bitmap.DpiX + bitmap.DpiY) / 2)) / 1000M;
+
+			blob.SetHashes (blob.Data);
 		}
 
 		private ImageBlobEntity FindSimilarImageBlob(ImageBlobEntity imageBlob)
