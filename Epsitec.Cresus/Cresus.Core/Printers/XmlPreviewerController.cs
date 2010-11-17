@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateGroups()
 		{
-			this.groupsToolbarBox.Children.Clear ();
+			this.groupsToolbarBox.Children.Clear ();  // supprime les boutons précédents
 
 			if (this.showedPageCount != 0)
 			{
@@ -278,19 +278,19 @@ namespace Epsitec.Cresus.Core.Printers
 						int from = i*this.showedPageCount+1;
 						int to = System.Math.Min (i*this.showedPageCount+this.showedPageCount, this.pages.Count);
 
-						string textSep    = (from == to-1) ? ", " : "..";
-						string tooltipSep = (from == to-1) ? "et" : "à";
+						string textSep    = (from == to-1) ? ", " : "..";  // "4, 5" ou "4..7"
+						string tooltipSep = (from == to-1) ? "et" : "à";   // "4 et 5" ou "4 à 7"
 
 						string text, tooltip;
 
 						if (from == to)
 						{
-							text = from.ToString ();
+							text    = from.ToString ();
 							tooltip = string.Format ("Montre la page {0}", from.ToString ());
 						}
 						else
 						{
-							text = string.Concat (from.ToString (), textSep, to.ToString ());
+							text    = string.Concat (from.ToString (), textSep, to.ToString ());
 							tooltip = string.Format ("Montre les pages {0} {1} {2}", from.ToString (), tooltipSep, to.ToString ());
 						}
 
