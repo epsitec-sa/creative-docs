@@ -135,9 +135,6 @@
     <None Include="App.res" />
     <None Include="App.rc" />
     <None Include="uac.manifest" />
-    <Content Include="..\External\System.Core.dll">
-      <Link>System.Core.dll</Link>
-    </Content>
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Strings.de.resource" />
