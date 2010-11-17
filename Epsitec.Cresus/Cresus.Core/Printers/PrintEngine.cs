@@ -357,6 +357,11 @@ namespace Epsitec.Cresus.Core.Printers
 			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
+
+			if (dialog.Result == DialogResult.Accept)  // imprimer ?
+			{
+				PrintEngine.PrintJobs (deserializeJobs);
+			}
 		}
 
 		private static string SerializeJobs(List<JobToPrint> jobs)
@@ -423,7 +428,11 @@ namespace Epsitec.Cresus.Core.Printers
 		public static void DeserializeAndPrintJobs(string xmlSource)
 		{
 			List<DeserializedJob> jobs = PrintEngine.DeserializeJobs (xmlSource);
+			PrintEngine.PrintJobs (jobs);
+		}
 
+		public static void PrintJobs(List<DeserializedJob> jobs)
+		{
 			foreach (var job in jobs)
 			{
 				PrintDocument printDocument = new PrintDocument ();

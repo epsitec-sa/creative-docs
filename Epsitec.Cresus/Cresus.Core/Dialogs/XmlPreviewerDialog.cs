@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = window.Root,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 10, 10, 10),
+				TabIndex = tabIndex++,
 			};
 
 			var footer = new FrameBox
@@ -94,6 +95,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Text = "Fermer",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
+				TabIndex = tabIndex++,
+			};
+
+			this.printButton = new Button
+			{
+				Parent = footer,
+				Text = "Imprimer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
+				Dock = DockStyle.Right,
 				Margins = new Margins (20, 0, 0, 0),
 				TabIndex = tabIndex++,
 			};
@@ -103,6 +114,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = footer,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
+				TabIndex = tabIndex++,
 			};
 
 			this.previewerController.CreateUI (previewBox, pagesToolbarBox);
@@ -111,6 +123,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupEvents(Window window)
 		{
+			this.printButton.Clicked += delegate
+			{
+				this.CloseAction (cancel: false);
+			};
+
 			this.closeButton.Clicked += delegate
 			{
 				this.CloseAction (cancel: true);
@@ -147,11 +164,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<Printers.DeserializedPage>		pages;
 		private readonly Printers.XmlPreviewerController		previewerController;
 
-		private int												page;
-
-		private TextFieldMulti									textField;
-		private TextFieldMulti									description;
-		private XmlPrintedPagePreviewer							previewer;
+		private Button											printButton;
 		private Button											closeButton;
 	}
 }
