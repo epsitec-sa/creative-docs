@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public FormattedText GetCompactSummary(BusinessDocumentEntity invoiceDocument)
 		{
 			string amount = Misc.PriceToString (this.AmountDue.Amount);
-			FormattedText title = Misc.FirstLine (this.Title);
+			FormattedText title = Misc.FirstLine (this.Text);
 			FormattedText ratio = Helpers.InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, this, true);
 
 			if (ratio.IsNullOrWhiteSpace)
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Title.GetEntityStatus ());
+				a.Accumulate (this.Text.GetEntityStatus ());
 				a.Accumulate (this.TransactionId.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.InstalmentName.GetEntityStatus ().TreatAsOptional ());
 

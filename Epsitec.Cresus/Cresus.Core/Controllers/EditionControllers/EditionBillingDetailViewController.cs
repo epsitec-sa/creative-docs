@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField      (tile, 100, "Date d'échéance",                     Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
-			builder.CreateTextFieldMulti (tile,  36, "Description",                         Marshaler.Create (() => this.Entity.Title, x => this.Entity.Title = x));
+			builder.CreateTextFieldMulti (tile,  36, "Description",                         Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,  50, "Rang de la mensualité",               Marshaler.Create (() => this.InstalmentRank, x => this.InstalmentRank = x));
 			builder.CreateTextField      (tile,   0, "Description de la mensualité",        Marshaler.Create (() => this.Entity.InstalmentName, x => this.Entity.InstalmentName = x));

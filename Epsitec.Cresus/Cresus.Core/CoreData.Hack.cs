@@ -938,7 +938,7 @@ namespace Epsitec.Cresus.Core
 
 			var discountA1 = this.DataContext.CreateEntity<DiscountEntity> ();
 
-			discountA1.Description = "Rabais de quantité";
+			discountA1.Text = "Rabais de quantité";
 			discountA1.DiscountRate = 0.20M;
 
 			var totalA1 = this.DataContext.CreateEntity<SubTotalDocumentItemEntity> ();
@@ -1054,14 +1054,14 @@ namespace Epsitec.Cresus.Core
 			var isrRef1 = Isr.GetNewReferenceNumber (this, isrSubscriber);
 			var isrRef2 = Isr.GetNewReferenceNumber (this, isrSubscriber);
 
-			billingA1.Title = "Facture 1000-00, 1ère tranche";
+			billingA1.Text = "Facture 1000-00, 1ère tranche";
 			billingA1.AmountDue = paymentA1;
 			billingA1.IsrDefinition = isrDefiniton;			//	compte BVR
 			billingA1.IsrReferenceNumber = isrRef1;			//	n° de réf BVR lié
 			billingA1.InstalmentRank = 0;
 			billingA1.InstalmentName = "1/2";
 
-			billingA2.Title = "Facture 1000-00, 2ème tranche";
+			billingA2.Text = "Facture 1000-00, 2ème tranche";
 			billingA2.AmountDue = paymentA2;
 			billingA2.IsrDefinition = isrDefiniton;			//	compte BVR
 			billingA2.IsrReferenceNumber = isrRef2;			//	n° de réf BVR lié
