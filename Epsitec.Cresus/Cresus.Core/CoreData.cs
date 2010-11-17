@@ -510,6 +510,7 @@ namespace Epsitec.Cresus.Core
 			yield return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
 			yield return EntityInfo<DocumentMetadataEntity>.GetTypeId ();
 			yield return EntityInfo<ImageBlobEntity>.GetTypeId ();
+			yield return EntityInfo<ImageEntity>.GetTypeId ();
 			
 			yield return EntityInfo<ArticleDocumentItemEntity>.GetTypeId ();
 			yield return EntityInfo<TextDocumentItemEntity>.GetTypeId ();

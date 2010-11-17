@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public static void SetHashes(this IDataHash dataHash, byte[] data)
 		{
-			dataHash.WeakHash   = Checksum.ComputeAdler32 (data);
+			dataHash.WeakHash   = Checksum.ComputeAdler32 (data, 32*1024);
 			dataHash.StrongHash = Checksum.ComputeMd5Hash (data);
 		}
 	}

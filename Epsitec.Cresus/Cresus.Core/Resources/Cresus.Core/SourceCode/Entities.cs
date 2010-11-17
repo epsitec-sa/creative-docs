@@ -80,6 +80,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ANL]", typeof (Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ATL]", typeof (Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A5N]", typeof (Epsitec.Cresus.Core.Entities.ImageBlobEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0ABN]", typeof (Epsitec.Cresus.Core.Entities.ImageEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -11914,6 +11915,127 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnStrongHashChanged(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
 		static partial void OnStrongHashChanging(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.Image Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>Image</c> entity.
+	///	designer:cap/L0ABN
+	///	</summary>
+	public partial class ImageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0ABN/L0ACN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ACN]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACN]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACN]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0ABN/L0ADN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADN]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ADN]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ADN]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ImageBlob</c> field.
+		///	designer:fld/L0ABN/L0AEN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AEN]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageBlobEntity ImageBlob
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageBlobEntity> ("[L0AEN]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue = this.ImageBlob;
+				if (oldValue != value)
+				{
+					this.OnImageBlobChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageBlobEntity> ("[L0AEN]", oldValue, value);
+					this.OnImageBlobChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ThumbnailBlob</c> field.
+		///	designer:fld/L0ABN/L0AFN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AFN]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageBlobEntity ThumbnailBlob
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageBlobEntity> ("[L0AFN]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue = this.ThumbnailBlob;
+				if (oldValue != value)
+				{
+					this.OnThumbnailBlobChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageBlobEntity> ("[L0AFN]", oldValue, value);
+					this.OnThumbnailBlobChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnImageBlobChanging(global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageBlobEntity newValue);
+		partial void OnImageBlobChanged(global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageBlobEntity newValue);
+		partial void OnThumbnailBlobChanging(global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageBlobEntity newValue);
+		partial void OnThumbnailBlobChanged(global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageBlobEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ImageEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ImageEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 747);	// [L0ABN]
+		public static readonly new string EntityStructuredTypeKey = "[L0ABN]";
 	}
 }
 #endregion
