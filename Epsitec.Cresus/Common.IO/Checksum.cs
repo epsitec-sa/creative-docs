@@ -32,9 +32,14 @@ namespace Epsitec.Common.IO
 			return (int) (Checksum.sharedCrc32.Value & 0x7fffffff);
 		}
 
-		public static int ComputeAdler32(byte[] data)
+		public static int ComputeAdler32(byte[] data, int length = 0)
 		{
-			return Checksum.ComputeAdler32 (engine => engine.Update (data));
+			if (length == 0)
+            {
+				length = data.Length;
+            }
+
+			return Checksum.ComputeAdler32 (engine => engine.Update (data, 0, length));
 		}
 
 		public static int ComputeAdler32(ChecksumCallback callback)

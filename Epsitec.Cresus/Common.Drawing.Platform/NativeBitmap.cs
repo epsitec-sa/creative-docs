@@ -280,6 +280,12 @@ namespace Epsitec.Common.Drawing.Platform
 			return new NativeBitmap (cropped, this.fileFormat);
 		}
 
+
+		public byte[] SaveToMemory(BitmapFileType fileType, int quality = 80, TiffCompressionOption tiffCompressionOption = TiffCompressionOption.Lzw)
+		{
+			return this.SaveToMemory (new BitmapFileFormat () { Type = fileType, Quality = quality, TiffCompression = tiffCompressionOption });
+		}
+
 		public byte[] SaveToMemory(BitmapFileFormat fileFormat)
 		{
 			var stream = new System.IO.MemoryStream ();
@@ -339,6 +345,15 @@ namespace Epsitec.Common.Drawing.Platform
 			{
 				scaleY = ((double) size) / this.Height;
 				scaleX = scaleY;
+			}
+
+			if ((scaleX >= 1) &&
+				(scaleY >= 1))
+			{
+				//	If the thumbnail is larger than the original image, then simply
+				//	use the original image instead:
+
+				return this;
 			}
 
 			var transform = new System.Windows.Media.ScaleTransform (scaleX, scaleY);
