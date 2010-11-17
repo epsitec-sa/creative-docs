@@ -1026,6 +1026,12 @@ namespace Epsitec.Cresus.Core
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3
 			invoiceA.Lines.Add (lineA2);		//	  Crésus Facturation LARGO x 1 (et 1 qui sera livré le 19/07/2010)
+#if true
+			for (int i = 0; i < 9; i++)  // pour faire une longue facture !
+			{
+				invoiceA.Lines.Add (lineA2);
+			}
+#endif
 			invoiceA.Lines.Add (lineA3);		//	  Crésus Salaires PRO x 0 (et 2+1 qui seront livrés les 01/09/2010 et 31.01.2011)
 			invoiceA.Lines.Add (totalA1);		//	Rabais de quantité et sous-total après rabais
 			invoiceA.Lines.Add (lineA4);		//	Frais de port

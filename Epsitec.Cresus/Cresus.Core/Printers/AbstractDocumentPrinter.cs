@@ -317,8 +317,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-	
-		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
+
+		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
+		public static readonly double						continuousHeight = 100000;  // 100m
 
 		protected readonly AbstractEntityPrinter			entityPrinter;
 		protected readonly AbstractEntity					entity;
