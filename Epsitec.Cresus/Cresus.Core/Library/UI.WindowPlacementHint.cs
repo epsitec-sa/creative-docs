@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library
 {
 	public static partial class UI
 	{

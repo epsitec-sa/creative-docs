@@ -9,14 +9,15 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.CoreLibrary;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core
 {
@@ -31,6 +32,8 @@ namespace Epsitec.Cresus.Core
 			CoreProgram.Application = this;
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
+			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
+			
 			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData (forceDatabaseCreation: false);
@@ -42,7 +45,6 @@ namespace Epsitec.Cresus.Core
 			this.mainWindowOrchestrator = new DataViewOrchestrator (this.data, this.CommandContext);
 			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator);
 
-			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 			this.userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
@@ -130,15 +132,15 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public List<Dialogs.IAttachedDialog>	AttachedDialogs
+		public IList<Dialogs.IAttachedDialog>	AttachedDialogs
 		{
 			get
 			{
-				return this.attachedDialogs;
+				return this.attachedDialogs.AsReadOnly ();
 			}
 		}
 
-		public Business.UserManagement.UserManager UserManager
+		public UserManager						UserManager
 		{
 			get
 			{
@@ -146,6 +148,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		
 		public void AttachDialog(Dialogs.IAttachedDialog dialog)
 		{
 			if (!this.attachedDialogs.Contains (dialog))
@@ -481,6 +484,7 @@ namespace Epsitec.Cresus.Core
 		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
+		private readonly List<Dialogs.IAttachedDialog>	attachedDialogs;
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;
@@ -489,7 +493,6 @@ namespace Epsitec.Cresus.Core
 		private CoreCommandDispatcher					commands;
 		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
-		private List<Dialogs.IAttachedDialog>			attachedDialogs;
 		private BusinessSettingsEntity					businessSettings;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}

@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;

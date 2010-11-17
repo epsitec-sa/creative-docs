@@ -6,9 +6,9 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-[assembly: DependencyClass (typeof (Epsitec.Cresus.Core.UI.Properties))]
+[assembly: DependencyClass (typeof (Epsitec.Cresus.Core.Library.UI.Properties))]
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library
 {
 	public static partial class UI
 	{

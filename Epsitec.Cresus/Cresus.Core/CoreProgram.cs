@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Splash;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library
 {
 	using FormResourceAccessor=Epsitec.Common.Support.ResourceAccessors.FormResourceAccessor;
 
