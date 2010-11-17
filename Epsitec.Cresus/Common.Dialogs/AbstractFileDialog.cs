@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -11,6 +11,7 @@ using Epsitec.Common.Widgets;
 
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -1276,27 +1277,18 @@ namespace Epsitec.Common.Dialogs
 			public static void Start(AbstractFileDialog dialog, CancellableProcessCallback process)
 			{
 				FileListJob job = new FileListJob (dialog, process);
-
-				job.Register ();
-				job.Begin ();
 			}
 
 			private FileListJob(AbstractFileDialog dialog, CancellableProcessCallback process)
 			{
-				this.dialog = dialog;
-				this.process = process;
-				this.running = true;
-				this.callback = new JobCallback (this.ProcessJob);
-			}
+				this.dialog   = dialog;
+				this.process  = process;
+				this.running  = true;
+				this.callback = this.ProcessJob;
 
-			private void Register()
-			{
 				this.dialog.AddJob (this);
-			}
-
-			private void Begin()
-			{
 				this.dialog.timer.Start ();
+				
 				this.callback.BeginInvoke (this.ProcessResult, null);
 			}
 
@@ -1305,7 +1297,7 @@ namespace Epsitec.Common.Dialogs
 				this.cancelRequested = true;
 			}
 
-			public bool Running
+			public bool							Running
 			{
 				get
 				{
@@ -1313,7 +1305,7 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			public bool Interrupted
+			public bool							Interrupted
 			{
 				get
 				{
@@ -1323,28 +1315,32 @@ namespace Epsitec.Common.Dialogs
 
 			private void ProcessJob()
 			{
-				this.interrupted = this.process (
-					delegate ()
-					{
-						return this.cancelRequested;
-					});
+				this.interrupted = this.process (() => this.cancelRequested);
 			}
 
 			private void ProcessResult(System.IAsyncResult result)
 			{
+				System.Diagnostics.Debug.Assert (this.running);
+
 				this.running = false;
 				this.dialog.RemoveJob (this);
-				this.callback.EndInvoke (result);
+
+				try
+				{
+					this.callback.EndInvoke (result);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine ("Async callback crashed: " + ex.Message);
+				}
 			}
 
-			delegate void JobCallback();
-
-			AbstractFileDialog dialog;
-			CancellableProcessCallback process;
-			JobCallback callback;
-			bool running;
-			bool interrupted;
-			volatile bool cancelRequested;
+			AbstractFileDialog					dialog;
+			CancellableProcessCallback			process;
+			System.Action						callback;
+			volatile bool						running;
+			volatile bool						interrupted;
+			volatile bool						cancelRequested;
 		}
 
 
@@ -1534,16 +1530,19 @@ namespace Epsitec.Common.Dialogs
 					string[] validExt = this.fileFilterPattern.Split (new char[] { '*', '|' }, System.StringSplitOptions.RemoveEmptyEntries);
 					string currentExt = System.IO.Path.GetExtension (fileName);
 
-					okEnable = false;
-
-					if (currentExt.Length > 0)
+					if (validExt.Length > 1)
 					{
-						for (int i = 0; i < validExt.Length; i++)
+						okEnable = false;
+
+						if (currentExt.Length > 0)
 						{
-							if (currentExt == validExt[i])
+							for (int i = 0; i < validExt.Length; i++)
 							{
-								okEnable = true;
-								break;
+								if (currentExt == validExt[i])
+								{
+									okEnable = true;
+									break;
+								}
 							}
 						}
 					}

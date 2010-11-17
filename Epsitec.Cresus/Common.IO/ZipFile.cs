@@ -1,5 +1,5 @@
-//	Copyright © 2006-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -211,49 +211,68 @@ namespace Epsitec.Common.IO
 		/// Loads the specified ZIP stream.
 		/// </summary>
 		/// <param name="stream">The file stream.</param>
-		public void LoadFile(System.IO.Stream stream, LoadPredicate loadPredicate)
+		/// <param name="loadPredicate">The load predicate.</param>
+		/// <returns><c>true</c> if the ZIP file could be loaded; otherwise, <c>false</c>.</returns>
+		public bool LoadFile(System.IO.Stream stream, LoadPredicate loadPredicate)
 		{
 			this.entries.Clear ();
 
 			ICSharpCode.SharpZipLib.Zip.ZipInputStream zip = new ICSharpCode.SharpZipLib.Zip.ZipInputStream (stream);
 			ICSharpCode.SharpZipLib.Zip.ZipEntry entry;
-			
-			while ((entry = zip.GetNextEntry ()) != null)
+
+			try
 			{
-				if (entry.IsDirectory == false)
+				while ((entry = zip.GetNextEntry ()) != null)
 				{
-					if (loadPredicate (entry.Name))
+					if (entry.IsDirectory == false)
 					{
-						byte[] data = new byte[entry.Size];
-						
-						int size   = data.Length;
-						int offset = 0;
-
-						while (true)
+						if (loadPredicate (entry.Name))
 						{
-							int length = zip.Read (data, offset, size);
+							byte[] data = new byte[entry.Size];
 
-							offset += length;
-							size   -= length;
+							int size   = data.Length;
+							int offset = 0;
 
-							if (length == 0)
+							while (true)
 							{
-								break;
+								int length = zip.Read (data, offset, size);
+
+								offset += length;
+								size   -= length;
+
+								if (length == 0)
+								{
+									break;
+								}
 							}
+
+							System.Diagnostics.Debug.Assert (size == 0);
+
+							this.entries.Add (new Entry (entry.Name, data, entry.DateTime, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 						}
-
-						System.Diagnostics.Debug.Assert (size == 0);
-
-						this.entries.Add (new Entry (entry.Name, data, entry.DateTime, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
+					}
+					else
+					{
+						this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 					}
 				}
-				else
-				{
-					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
-				}
 			}
-			
-			zip.Close ();
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("ZipFile.LoadFile failed: " + ex.Message);
+
+				//	Error while reading the ZIP file : we won't crash, but return an empty entry list.
+				
+				this.entries.Clear ();
+				
+				return false;
+			}
+			finally
+			{
+				zip.Close ();
+			}
+
+			return true;
 		}
 
 		/// <summary>
