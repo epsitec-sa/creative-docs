@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
-				var placer = new Dialogs.OptimalPreviewPlacer2 (this.previewFrame.Client.Bounds, this.MaximalPageSize, Size.Zero, 5, this.previewedSection.PageCount);
+				var placer = new Dialogs.OptimalPreviewPlacer (this.previewFrame.Client.Bounds, this.MaximalPageSize, Size.Zero, 5, this.previewedSection.PageCount);
 				placer.UpdateGeometry (this.pagePreviewers);
 			}
 		}
