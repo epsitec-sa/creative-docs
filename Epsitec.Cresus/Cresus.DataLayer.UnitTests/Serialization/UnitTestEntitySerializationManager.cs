@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
 					Assert.IsNull (alfred.Gender);
 					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[logSequenceId]);
+					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[0]);
 					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))), alfred.Contacts[1]);
 				}
 			}
