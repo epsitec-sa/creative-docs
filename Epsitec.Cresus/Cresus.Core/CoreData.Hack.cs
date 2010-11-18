@@ -793,7 +793,7 @@ namespace Epsitec.Cresus.Core
 
 			metadocA.IdA = "1000-00";
 			metadocA.BusinessDocument = invoiceA;
-			metadocA.DocumentType = DocumentType.Invoice;
+//-			metadocA.DocumentCategory = DocumentType.Invoice;
 			metadocA.DocumentSource = DocumentSource.Generated;
 			metadocA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
 			metadocA.Description = "Facture de test #1000";

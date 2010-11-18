@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var nextId    = generator.GetNextId ();
 
 			entity.IdA                   = string.Format ("{0:000000}", nextId);
-			entity.DocumentType          = DocumentType.None;
+//-			entity.DocumentCategory      = DocumentType.None;
 			entity.DocumentSource        = DocumentSource.None;
 			entity.DocumentFlowDirection = DocumentFlowDirection.Unknown;
 			entity.DocumentTitle         = "";
