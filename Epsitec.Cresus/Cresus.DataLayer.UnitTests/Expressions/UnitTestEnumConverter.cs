@@ -14,44 +14,89 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
     [TestClass]
 	public sealed class UnitTestEnumConverter
 	{
-		
+
 
 		[TestMethod]
-		public void ToDbConditionCombinerOperatorTest()
+		public void ToSqlFunctionCodeTest1()
 		{
-			var matches = new Dictionary<BinaryOperator, DbConditionCombinerOperator> ()
+			var matches = new Dictionary<UnaryComparator, SqlFunctionCode> ()
 			{
-				{ BinaryOperator.And, DbConditionCombinerOperator.And },
-				{ BinaryOperator.Or, DbConditionCombinerOperator.Or },
+				{ UnaryComparator.IsNull, SqlFunctionCode.CompareIsNull },
+				{ UnaryComparator.IsNotNull, SqlFunctionCode.CompareIsNotNull },
 			};
 
-			foreach (BinaryOperator match in matches.Keys)
+			foreach (UnaryComparator match in matches.Keys)
 			{
-				DbConditionCombinerOperator result1 = matches[match];
-				DbConditionCombinerOperator result2 = EnumConverter.ToDbConditionCombinerOperator (match);
+				SqlFunctionCode result1 = matches[match];
+				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
 
 				Assert.AreEqual (result1, result2);
 			}
 		}
+		
 
+		[TestMethod]
+		public void ToSqlFunctionCodeTest2()
+		{
+			var matches = new Dictionary<BinaryComparator, SqlFunctionCode> ()
+			{
+				{ BinaryComparator.IsEqual, SqlFunctionCode.CompareEqual },
+				{ BinaryComparator.IsNotEqual, SqlFunctionCode.CompareNotEqual },
+				{ BinaryComparator.IsLower, SqlFunctionCode.CompareLessThan },
+				{ BinaryComparator.IsLowerOrEqual, SqlFunctionCode.CompareLessThanOrEqual },
+				{ BinaryComparator.IsGreater, SqlFunctionCode.CompareGreaterThan },
+				{ BinaryComparator.IsGreaterOrEqual, SqlFunctionCode.CompareGreaterThanOrEqual },
+				{ BinaryComparator.IsLike, SqlFunctionCode.CompareLike },
+				{ BinaryComparator.IsNotLike, SqlFunctionCode.CompareNotLike },
+				{ BinaryComparator.IsLikeEscape, SqlFunctionCode.CompareLikeEscape },
+				{ BinaryComparator.IsNotLikeEscape, SqlFunctionCode.CompareNotLikeEscape },
+			};
+
+			foreach (BinaryComparator match in matches.Keys)
+			{
+				SqlFunctionCode result1 = matches[match];
+				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
+
+				Assert.AreEqual (result1, result2);
+			}
+		}
+		
 		
 		[TestMethod]
-		public void ToDbConditionModifierOperatorTest()
+		public void ToSqlFunctionCodeTest3()
 		{
-			var matches = new Dictionary<UnaryOperator, DbConditionModifierOperator> ()
+			var matches = new Dictionary<UnaryOperator, SqlFunctionCode> ()
 			{
-				{ UnaryOperator.Not, DbConditionModifierOperator.Not },
+				{ UnaryOperator.Not, SqlFunctionCode.LogicNot },
 			};
 
 			foreach (UnaryOperator match in matches.Keys)
 			{
-				DbConditionModifierOperator result1 = matches[match];
-				DbConditionModifierOperator result2 = EnumConverter.ToDbConditionModifierOperator (match);
+				SqlFunctionCode result1 = matches[match];
+				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
 
 				Assert.AreEqual (result1, result2);
 			}
 		}
+		
 
+		[TestMethod]
+		public void ToSqlFunctionCodeTest4()
+		{var matches = new Dictionary<BinaryOperator, SqlFunctionCode> ()
+			{
+				{ BinaryOperator.And, SqlFunctionCode.LogicAnd },
+				{ BinaryOperator.Or, SqlFunctionCode.LogicOr },
+			};
+
+			foreach (BinaryOperator match in matches.Keys)
+			{
+				SqlFunctionCode result1 = matches[match];
+				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
+
+				Assert.AreEqual (result1, result2);
+			}
+		}
+		
 
 		[TestMethod]
 		public void ToDbRawTypeTest()
@@ -130,51 +175,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			}
 		}
 
-
-		[TestMethod]
-		public void ToDbSimpleConditionOperatorTest1()
-		{
-			var matches = new Dictionary<UnaryComparator, DbSimpleConditionOperator> ()
-			{
-				{ UnaryComparator.IsNull, DbSimpleConditionOperator.IsNull },
-				{ UnaryComparator.IsNotNull, DbSimpleConditionOperator.IsNotNull },
-			};
-
-			foreach (UnaryComparator match in matches.Keys)
-			{
-				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = EnumConverter.ToDbSimpleConditionOperator (match);
-
-				Assert.AreEqual (result1, result2);
-			}
-		}
-
-
-		[TestMethod]
-		public void ToDbSimpleConditionOperatorTest2()
-		{
-			var matches = new Dictionary<BinaryComparator, DbSimpleConditionOperator> ()
-			{
-				{ BinaryComparator.IsEqual, DbSimpleConditionOperator.Equal },
-				{ BinaryComparator.IsNotEqual, DbSimpleConditionOperator.NotEqual },
-				{ BinaryComparator.IsLower, DbSimpleConditionOperator.LessThan },
-				{ BinaryComparator.IsLowerOrEqual, DbSimpleConditionOperator.LessThanOrEqual },
-				{ BinaryComparator.IsGreater, DbSimpleConditionOperator.GreaterThan },
-				{ BinaryComparator.IsGreaterOrEqual, DbSimpleConditionOperator.GreaterThanOrEqual },
-				{ BinaryComparator.IsLike, DbSimpleConditionOperator.Like },
-				{ BinaryComparator.IsNotLike, DbSimpleConditionOperator.NotLike },
-				{ BinaryComparator.IsLikeEscape, DbSimpleConditionOperator.LikeEscape },
-				{ BinaryComparator.IsNotLikeEscape, DbSimpleConditionOperator.NotLikeEscape },
-			};
-
-			foreach (BinaryComparator match in matches.Keys)
-			{
-				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = EnumConverter.ToDbSimpleConditionOperator (match);
-
-				Assert.AreEqual (result1, result2);
-			}
-		}
 
 	}
 

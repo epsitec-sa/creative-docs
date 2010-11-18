@@ -238,11 +238,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the name of the <see cref="DbTableColumn"/> corresponding to the <see cref="Druid"/>
+		/// Gets the name of the <see cref="DbColumn"/> corresponding to the <see cref="Druid"/>
 		/// of a field.
 		/// </summary>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
-		/// <returns>The name of the <see cref="DbTableColumn"/>.</returns>
+		/// <returns>The name of the <see cref="DbColumn"/>.</returns>
 		public string GetEntityColumnName(Druid fieldId)
 		{
 			return DbColumn.GetColumnName (fieldId);

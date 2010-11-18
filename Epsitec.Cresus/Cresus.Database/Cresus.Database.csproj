@@ -129,8 +129,6 @@
   <ItemGroup>
     <Compile Include="Services\DbInfoManager.cs" />
     <Compile Include="DbAbstractAttachable.cs" />
-    <Compile Include="DbAbstractCondition.cs" />
-    <Compile Include="DbConditionCombiner.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -156,20 +154,13 @@
     <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbConditionModifier.cs" />
-    <Compile Include="DbConditionModifierOperator.cs" />
     <Compile Include="Services\DbConnectionManager.cs" />
     <Compile Include="Services\DbConnectionStatus.cs" />
     <Compile Include="Services\DbLockManager.cs" />
-    <Compile Include="DbSimpleCondition.cs" />
-    <Compile Include="DbJoin.cs" />
-    <Compile Include="DbTableColumn.cs" />
-    <Compile Include="DbReader.cs" />
     <Compile Include="DbSchemaChecker.cs" />
     <Compile Include="Services\DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
     <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />
-    <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="SqlIndex.cs" />
     <Compile Include="DbIndex.cs" />
     <Compile Include="DbCardinality.cs" />
@@ -197,12 +188,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbCommandType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbSimpleConditionOperator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbConditionCombinerOperator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbElementCat.cs">
@@ -239,12 +224,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbRowStatus.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbSelectCondition.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbSelectRevision.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbSimpleType.cs">

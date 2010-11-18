@@ -74,7 +74,7 @@
     <Compile Include="Infrastructure\UnitTestConnectionInformation.cs" />
     <Compile Include="Infrastructure\UnitTestDataInfrastructure.cs" />
     <Compile Include="Infrastructure\UnitTestUidSlot.cs" />
-    <Compile Include="Loader\UnitTestExpressionConversion.cs" />
+    <Compile Include="Loader\UnitTestSqlContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\TestStore.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
