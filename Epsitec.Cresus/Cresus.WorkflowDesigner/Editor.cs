@@ -93,9 +93,16 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.businessContext = businessContext;
 		}
 
-		public void SetWorkflowDefinitionEntity(WorkflowDefinitionEntity entity)
+		public WorkflowDefinitionEntity WorkflowDefinitionEntity
 		{
-			this.workflowDefinitionEntity = entity;
+			get
+			{
+				return this.workflowDefinitionEntity;
+			}
+			set
+			{
+				this.workflowDefinitionEntity = value;
+			}
 		}
 
 		public void SetLocalDirty()
