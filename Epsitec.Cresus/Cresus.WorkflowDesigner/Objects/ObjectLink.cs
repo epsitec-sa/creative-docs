@@ -129,6 +129,62 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
+		public override void ContextMenu()
+		{
+			if (this.IsButtonEnable (ActiveElement.LinkComment))
+			{
+				this.editor.CreateMenuItem (null, this.comment == null ? "Ajoute un commentaire" : "Ferme le commentaire", "Link.Comment");
+			}
+
+			if (this.IsButtonEnable (ActiveElement.LinkCreateDst))
+			{
+				this.editor.CreateMenuSeparator ();
+
+				if (this.srcObject is ObjectNode)
+				{
+					this.editor.CreateMenuItem (null, "Crée une nouvelle transition", "Link.CreateEdge");
+				}
+				else
+				{
+					this.editor.CreateMenuItem (null, "Crée un nouveau nœud privé", "Link.CreatePrivateNode");
+					this.editor.CreateMenuItem (null, "Choisi un nœud public",      "Link.CreatePublicNode");
+				}
+			}
+
+			if (this.IsButtonEnable (ActiveElement.LinkClose))
+			{
+				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (null, "Supprime le connexion", "Link.Delete");
+			}
+		}
+
+		public override void MenuAction(string name)
+		{
+			switch (name)
+			{
+				case "Link.Comment":
+					this.SwapComment ();
+					break;
+
+				case "Link.CreateEdge":
+					this.CreateEdge ();
+					break;
+
+				case "Link.CreatePrivateNode":
+					this.CreateNode ();
+					break;
+
+				case "Link.CreatePublicNode":
+					this.CreatePublicNode ();
+					break;
+
+				case "Link.Delete":
+					this.LinkClose ();
+					break;
+			}
+		}
+
+	
 		public override List<AbstractObject> FriendObjects
 		{
 			//	Les objets amis sont les node/edge à chaque extrémité de la connexion.
@@ -161,15 +217,15 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				case ActiveElement.LinkChangeDst:
 					if (this.dstObject == null)
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte à une transition" : "Connecte à un noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une transition" : "Connecte à un nœud";
 					}
 					else
 					{
-						return (this.srcObject is ObjectNode) ? "Connecte à une autre transition" : "Connecte à un autre noeud";
+						return (this.srcObject is ObjectNode) ? "Connecte à une autre transition" : "Connecte à un autre nœud";
 					}
 
 				case ActiveElement.LinkCreateDst:
-					return (this.srcObject is ObjectNode) ? "Crée une nouvelle transition" : "Crée un nouveau noeud<br/>Ctrl+clic choisi un noeud public";
+					return (this.srcObject is ObjectNode) ? "Crée une nouvelle transition" : "Crée un nouveau nœud<br/>Ctrl+clic choisi un nœud public";
 
 				case ActiveElement.LinkClose:
 					return "Supprime la connexion";
@@ -240,19 +296,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.hilitedElement == ActiveElement.LinkComment)
 			{
-				this.AddComment();
+				this.SwapComment();
 			}
 
 			if (this.hilitedElement == ActiveElement.LinkClose)
 			{
-				this.srcObject.ObjectLinks.Remove (this);
-
-				if (!this.IsNoneDstObject)
-				{
-					this.srcObject.RemoveEntityLink (this.dstObject, this.IsContinuation);
-				}
-
-				this.editor.UpdateAfterGeometryChanged (null);
+				this.LinkClose ();
 			}
 
 			if (this.hilitedElement == ActiveElement.LinkCreateDst)
@@ -416,7 +465,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (obj.Entity.IsForeign)
 			{
-				obj.AddInfo ();  // montre la bulle des informations
+				obj.SwapInfo ();  // montre la bulle des informations
 			}
 		}
 
@@ -617,7 +666,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 
-		private void AddComment()
+		private void SwapComment()
 		{
 			//	Ajoute un commentaire à la connexion.
 			if (this.comment == null)
@@ -652,7 +701,19 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.SetLocalDirty ();
 		}
 
+		private void LinkClose()
+		{
+			this.srcObject.ObjectLinks.Remove (this);
+
+			if (!this.IsNoneDstObject)
+			{
+				this.srcObject.RemoveEntityLink (this.dstObject, this.IsContinuation);
+			}
+
+			this.editor.UpdateAfterGeometryChanged (null);
+		}
 		
+
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine l'objet.
@@ -1185,7 +1246,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateClose(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && !this.IsDragging;
+			button.State.Visible = this.IsHilite && !this.IsDragging && !this.HasSrcWithSingleLink;
+			button.State.Enable = button.State.Visible;
 			button.State.Detectable = button.State.Visible;
 		}
 
@@ -1193,6 +1255,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
 			button.State.Visible = this.IsHilite && this.HasLinkCommentButton && !this.IsDragging && !this.IsTooShortLink;
+			button.State.Enable = button.State.Visible;
 			button.State.Detectable = button.State.Visible;
 		}
 
@@ -1205,7 +1268,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateCreateDst(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHilite && !this.IsDragging;
+			button.State.Visible = this.IsHilite && !this.IsDragging && this.IsNoneDstObject;
+			button.State.Enable = button.State.Visible;
 		}
 
 		private void UpdateButtonStateCustomizeStart(ActiveButton button)

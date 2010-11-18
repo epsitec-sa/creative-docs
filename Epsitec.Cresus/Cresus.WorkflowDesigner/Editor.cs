@@ -1257,14 +1257,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				this.hilitedObject.ContextMenu ();
 			}
 
-			if (this.contextMenu.Items.Count != 0)
+			if (this.contextMenu.Items.Count == 0)
+			{
+				this.CreateMenuItem (null, "Crée un nœud solitaire privé",  "Editor.CreatePrivateNode");
+				this.CreateMenuItem (null, "Crée un nœud solitaire public", "Editor.CreatePublicNode");
+
+				this.menuObject = null;
+			}
+			else
 			{
 				this.menuObject = this.hilitedObject;
-
-				this.contextMenu.AdjustSize ();
-				this.contextMenu.Host = this.Window;
-				this.contextMenu.ShowAsContextMenu (this, this.MapClientToScreen (this.brutPos));
 			}
+
+			this.contextMenu.AdjustSize ();
+			this.contextMenu.Host = this.Window;
+			this.contextMenu.ShowAsContextMenu (this, this.MapClientToScreen (this.brutPos));
 		}
 
 		public void CreateMenuItem(bool radioState, string text, string name)
@@ -1282,14 +1289,49 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateMenuSeparator()
 		{
-			this.contextMenu.Items.Add (new MenuSeparator ());
+			if (this.contextMenu.Items.Count != 0 &&
+				(this.contextMenu.Items[this.contextMenu.Items.Count-1] is MenuSeparator) == false)
+			{
+				this.contextMenu.Items.Add (new MenuSeparator ());
+			}
 		}
 
 		private void HandleItemPressed(object sender, MessageEventArgs e)
 		{
 			var item = sender as MenuItem;
 
-			this.menuObject.MenuAction (item.Name);
+			//?this.contextMenu.Hide ();
+			Window.PumpEvents ();
+			// TODO: Comment fermer le menu et rafraîchir la boucle des événements ?
+
+			switch (item.Name)
+			{
+				case "Editor.CreatePrivateNode":
+					this.CreateNode (this.lastMessagePos, isPublic: false);
+					break;
+
+				case "Editor.CreatePublicNode":
+					this.CreateNode (this.lastMessagePos, isPublic: true);
+					break;
+			}
+
+			if (this.menuObject != null)
+			{
+				this.menuObject.MenuAction (item.Name);
+			}
+		}
+
+		private void CreateNode(Point pos, bool isPublic)
+		{
+			var nodeEntity = this.CreateEntity<WorkflowNodeEntity> ();
+			nodeEntity.IsPublic = isPublic;
+
+			var obj = new ObjectNode (this, nodeEntity);
+
+			this.EditableObject = obj;
+			this.AddNode (obj);
+			obj.SetBoundsAtEnd (pos, pos);
+			this.UpdateGeometry ();
 		}
 
 
