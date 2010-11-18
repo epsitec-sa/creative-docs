@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
-			ContactRoleEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
+			ContactGroupEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
 			UriSchemeEntity[] uriSchemes = this.InsertUriSchemesInDatabase ().ToArray ();
 			TelecomTypeEntity[] telecomTypes = this.InsertTelecomTypesInDatabase ().ToArray ();
 			PersonTitleEntity[] personTitles = this.InsertPersonTitlesInDatabase ().ToArray ();
@@ -95,14 +95,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<ContactRoleEntity> InsertContactRolesInDatabase()
+		private IEnumerable<ContactGroupEntity> InsertContactRolesInDatabase()
 		{
 			string[] names = new string[] { "Professionnel", "Commande", "Livraison", "Facturation", "Privé" };
 			int rank = 0;
 
 			foreach (string name in names)
 			{
-				ContactRoleEntity contactRole = this.DataContext.CreateEntity<ContactRoleEntity> ();
+				ContactGroupEntity contactRole = this.DataContext.CreateEntity<ContactGroupEntity> ();
 
 				contactRole.Name = name;
 				contactRole.Rank = rank++;
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactRoleEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
+		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactGroupEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
 		{
 			LegalPersonEntity companyEpsitec = this.DataContext.CreateEntity<LegalPersonEntity> ();
 			LegalPersonEntity companyMigros  = this.DataContext.CreateEntity<LegalPersonEntity> ();
@@ -185,9 +185,9 @@ namespace Epsitec.Cresus.Core
 			NaturalPersonEntity personPA = this.DataContext.CreateEntity<NaturalPersonEntity> ();
 			NaturalPersonEntity personDR = this.DataContext.CreateEntity<NaturalPersonEntity> ();
 
-			ContactRoleEntity roleFact  = roles.Where (x => x.Name == "Facturation").First ();
-			ContactRoleEntity roleProf  = roles.Where (x => x.Name == "Professionnel").First ();
-			ContactRoleEntity rolePrive = roles.Where (x => x.Name == "Privé").First ();
+			ContactGroupEntity roleFact  = roles.Where (x => x.Name == "Facturation").First ();
+			ContactGroupEntity roleProf  = roles.Where (x => x.Name == "Professionnel").First ();
+			ContactGroupEntity rolePrive = roles.Where (x => x.Name == "Privé").First ();
 
 			TelecomTypeEntity telecomTypeFix    = telecomTypes.Where (x => x.Code == "fixnet").First ();
 			TelecomTypeEntity telecomTypeMobile = telecomTypes.Where (x => x.Code == "mobile").First ();
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core
 			mailEpsitec1.LegalPerson = companyEpsitec;
 			mailEpsitec1.Address = addressEpsitec;
 			mailEpsitec1.Comments.Add (commentEpsitec);
-			mailEpsitec1.Roles.Add (roleFact);
+			mailEpsitec1.ContactGroups.Add (roleFact);
 
 			CommentEntity commentEpsitecT1 = this.DataContext.CreateEntity<CommentEntity> ();
 			commentEpsitecT1.Text = "Administration et vente";
@@ -242,8 +242,8 @@ namespace Epsitec.Cresus.Core
 			telecomEpsitec1.TelecomType = telecomTypeFix;
 			telecomEpsitec1.Number = "+41 848 27 37 87";
 			telecomEpsitec1.Comments.Add (commentEpsitecT1);
-			telecomEpsitec1.Roles.Add (roleProf);
-			telecomEpsitec1.Roles.Add (roleFact);
+			telecomEpsitec1.ContactGroups.Add (roleProf);
+			telecomEpsitec1.ContactGroups.Add (roleFact);
 
 			CommentEntity commentEpsitecT2 = this.DataContext.CreateEntity<CommentEntity> ();
 			commentEpsitecT2.Text = "Assistance technique (hotline)";
@@ -253,19 +253,19 @@ namespace Epsitec.Cresus.Core
 			telecomEpsitec2.TelecomType = telecomTypeFix;
 			telecomEpsitec2.Number = "+41 848 27 37 89";
 			telecomEpsitec2.Comments.Add (commentEpsitecT2);
-			telecomEpsitec2.Roles.Add (roleProf);
+			telecomEpsitec2.ContactGroups.Add (roleProf);
 
 			UriContactEntity uriEpsitec1 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriEpsitec1.LegalPerson = companyEpsitec;
 			uriEpsitec1.Uri = "epsitec@epsitec.ch";
 			uriEpsitec1.UriScheme = uriSchemeMailto;
-			uriEpsitec1.Roles.Add (roleProf);
+			uriEpsitec1.ContactGroups.Add (roleProf);
 
 			UriContactEntity uriEpsitec2 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriEpsitec2.LegalPerson = companyEpsitec;
 			uriEpsitec2.Uri = "support@epsitec.ch";
 			uriEpsitec2.UriScheme = uriSchemeMailto;
-			uriEpsitec2.Roles.Add (roleProf);
+			uriEpsitec2.ContactGroups.Add (roleProf);
 
 			companyEpsitec.Complement = "Logiciels de gestion Crésus";
 			companyEpsitec.Name = "Epsitec SA";
@@ -287,44 +287,44 @@ namespace Epsitec.Cresus.Core
 			mailPA1.LegalPerson = companyEpsitec;
 			mailPA1.Address = addressEpsitec;
 			mailPA1.Complement = "Direction";
-			mailPA1.Roles.Add (roleProf);
+			mailPA1.ContactGroups.Add (roleProf);
 
 			MailContactEntity mailPA2 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailPA2.NaturalPerson = personPA;
 			mailPA2.Address = addressPA;
-			mailPA2.Roles.Add (rolePrive);
+			mailPA2.ContactGroups.Add (rolePrive);
 
 			TelecomContactEntity telecomPA1 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA1.NaturalPerson = personPA;
 			telecomPA1.TelecomType = telecomTypeMobile;
 			telecomPA1.Number = "+41 79 367 45 97";
-			telecomPA1.Roles.Add (rolePrive);
-			telecomPA1.Roles.Add (roleProf);
+			telecomPA1.ContactGroups.Add (rolePrive);
+			telecomPA1.ContactGroups.Add (roleProf);
 
 			TelecomContactEntity telecomPA2 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA2.NaturalPerson = personPA;
 			telecomPA2.TelecomType = telecomTypeFix;
 			telecomPA2.Number = "+41 24 425 08 09";
-			telecomPA2.Roles.Add (roleProf);
+			telecomPA2.ContactGroups.Add (roleProf);
 
 			TelecomContactEntity telecomPA3 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA3.NaturalPerson = personPA;
 			telecomPA3.TelecomType = telecomTypeFax;
 			telecomPA3.Number = "+41 24 555 83 59";
-			telecomPA3.Roles.Add (rolePrive);
-			telecomPA3.Roles.Add (roleProf);
+			telecomPA3.ContactGroups.Add (rolePrive);
+			telecomPA3.ContactGroups.Add (roleProf);
 
 			UriContactEntity uriPA1 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriPA1.NaturalPerson = personPA;
 			uriPA1.Uri = "arnaud@epsitec.ch";
 			uriPA1.UriScheme = uriSchemeMailto;
-			uriPA1.Roles.Add (rolePrive);
+			uriPA1.ContactGroups.Add (rolePrive);
 
 			UriContactEntity uriPA2 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriPA2.NaturalPerson = personPA;
 			uriPA2.Uri = "pierre.arnaud@opac.ch";
 			uriPA2.UriScheme = uriSchemeMailto;
-			uriPA2.Roles.Add (rolePrive);
+			uriPA2.ContactGroups.Add (rolePrive);
 
 			personPA.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
 			personPA.Firstname = "Pierre";
@@ -526,8 +526,8 @@ namespace Epsitec.Cresus.Core
 			var articleDef6 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 
 			articleDef1.IdA = "CR-CP";
-			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
-			articleDef1.LongDescription  = "Crésus Comptabilité PRO<br/>Logiciel de comptabilité pour PME, artisans et indépendants.<br/>Jusqu'à 64'000 écritures par année.";
+			articleDef1.Name = "Crésus Comptabilité PRO";
+			articleDef1.Description  = "Crésus Comptabilité PRO<br/>Logiciel de comptabilité pour PME, artisans et indépendants.<br/>Jusqu'à 64'000 écritures par année.";
 			articleDef1.ArticleGroups.Add (articleGroup1);
 			articleDef1.ArticleCategory = articleCategory1;
 			articleDef1.BillingUnit = uomUnit1;
@@ -535,8 +535,8 @@ namespace Epsitec.Cresus.Core
 			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
 			articleDef2.IdA = "CR-SP";
-			articleDef2.ShortDescription = "Crésus Salaires PRO";
-			articleDef2.LongDescription  = "Crésus Salaires PRO<br/>Logiciel de comptabilité salariale.<br/>Jusqu'à 20 salaires par mois.";
+			articleDef2.Name = "Crésus Salaires PRO";
+			articleDef2.Description  = "Crésus Salaires PRO<br/>Logiciel de comptabilité salariale.<br/>Jusqu'à 20 salaires par mois.";
 			articleDef2.ArticleGroups.Add (articleGroup1);
 			articleDef2.ArticleCategory = articleCategory1;
 			articleDef2.BillingUnit = uomUnit1;
@@ -547,8 +547,8 @@ namespace Epsitec.Cresus.Core
 			priceDef3.ValueIncludesTaxes = true;
 
 			articleDef3.IdA = "CR-FL";
-			articleDef3.ShortDescription = "Crésus Facturation LARGO";
-			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.<br/><br/>Quelques textes pour faire long :<br/>Lundi<br/>Mardi<br/>Mercredi<br/>Jeudi<br/>Vendredi<br/>Samedi<br/>Dimanche";
+			articleDef3.Name = "Crésus Facturation LARGO";
+			articleDef3.Description  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.<br/><br/>Quelques textes pour faire long :<br/>Lundi<br/>Mardi<br/>Mercredi<br/>Jeudi<br/>Vendredi<br/>Samedi<br/>Dimanche";
 			articleDef3.ArticleGroups.Add (articleGroup1);
 			articleDef3.ArticleCategory = articleCategory1;
 			articleDef3.BillingUnit = uomUnit1;
@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.Core
 			articleDef3.ArticlePrices.Add (priceDef3);
 
 			articleDef4.IdA = "EMB";
-			articleDef4.ShortDescription = "Port et emballage";
+			articleDef4.Name = "Port et emballage";
 			articleDef4.ArticleCategory = articleCategory2;
 			articleDef4.BillingUnit = uomUnit3;
 			articleDef4.Units = uomGroup3;
@@ -597,8 +597,8 @@ namespace Epsitec.Cresus.Core
 
 
 			articleDef5.IdA = "WDO-DESIGN";
-			articleDef5.ShortDescription = "Fenêtre Design";
-			articleDef5.LongDescription  = "Fenêtre Design pour tout type de façades, produite à la main par des artisans de la région";
+			articleDef5.Name = "Fenêtre Design";
+			articleDef5.Description  = "Fenêtre Design pour tout type de façades, produite à la main par des artisans de la région";
 			articleDef5.ArticleGroups.Add (articleGroup2);
 			articleDef5.ArticleCategory = articleCategory3;
 			articleDef5.BillingUnit = uomUnit1;
@@ -609,8 +609,8 @@ namespace Epsitec.Cresus.Core
 			articleDef5.ArticleParameterDefinitions.Add (param5_3);
 
 			articleDef6.IdA = "FOOD-MILCH";
-			articleDef6.ShortDescription = "Lait";
-			articleDef6.LongDescription  = "Lait pasteurisé";
+			articleDef6.Name = "Lait";
+			articleDef6.Description  = "Lait pasteurisé";
 			articleDef6.ArticleGroups.Add (articleGroup2);
 			articleDef6.ArticleCategory = articleCategory4;
 			articleDef6.BillingUnit = uomUnit4;
@@ -693,56 +693,56 @@ namespace Epsitec.Cresus.Core
 			vatDef2010_1.Rank = 0;
 			vatDef2010_1.BeginDate = new Date (2000, 1, 1);
 			vatDef2010_1.EndDate   = new Date (2010, 12, 31);
-			vatDef2010_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2010_1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2010_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2010_1.Rate = 7.6M * 0.01M;
 
 			vatDef2010_2.Rank = 1;
 			vatDef2010_2.BeginDate = new Date (2000, 1, 1);
 			vatDef2010_2.EndDate   = new Date (2010, 12, 31);
-			vatDef2010_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2010_2.VatCode = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2010_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2010_2.Rate = 2.4M * 0.01M;
 
 			vatDef2010_3.Rank = 2;
 			vatDef2010_3.BeginDate = new Date (2000, 1, 1);
 			vatDef2010_3.EndDate   = new Date (2010, 12, 31);
-			vatDef2010_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2010_3.VatCode = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2010_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2010_3.Rate = 3.6M * 0.01M;
 
 			vatDef2010_4.Rank = 3;
 			vatDef2010_4.BeginDate = new Date (2000, 1, 1);
 			vatDef2010_4.EndDate   = new Date (2010, 12, 31);
-			vatDef2010_4.Code = Business.Finance.VatCode.Excluded;
+			vatDef2010_4.VatCode = Business.Finance.VatCode.Excluded;
 			vatDef2010_4.Name = "Exclu du champ d'application de la TVA";
 			vatDef2010_4.Rate = 0.0M * 0.01M;
 
 			vatDef2011_1.Rank = 0;
 			vatDef2011_1.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_1.EndDate   = null;
-			vatDef2011_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2011_1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2011_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2011_1.Rate = 8.0M * 0.01M;
 
 			vatDef2011_2.Rank = 1;
 			vatDef2011_2.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_2.EndDate   = null;
-			vatDef2011_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2011_2.VatCode = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2011_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2011_2.Rate = 2.5M * 0.01M;
 
 			vatDef2011_3.Rank = 2;
 			vatDef2011_3.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_3.EndDate   = null;
-			vatDef2011_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2011_3.VatCode = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2011_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2011_3.Rate = 3.8M * 0.01M;
 
 			vatDef2011_4.Rank = 3;
 			vatDef2011_4.BeginDate = new Date (2011, 1, 1);
 			vatDef2011_4.EndDate   = null;
-			vatDef2011_4.Code = Business.Finance.VatCode.Excluded;
+			vatDef2011_4.VatCode = Business.Finance.VatCode.Excluded;
 			vatDef2011_4.Name = "Exclu du champ d'application de la TVA";
 			vatDef2011_4.Rate = 0.0M * 0.01M;
 
@@ -784,7 +784,7 @@ namespace Epsitec.Cresus.Core
 		private IEnumerable<DocumentMetadataEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
 		{
 			var decimalType = DecimalType.Default;
-			decimal vatRate = vatDefs.Where (x => x.Code == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
+			decimal vatRate = vatDefs.Where (x => x.VatCode == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
 
 			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
@@ -799,11 +799,11 @@ namespace Epsitec.Cresus.Core
 			metadocA.Description = "Facture de test #1000";
 
 			invoiceA.BillingDate = new Date (2010, 7, 8);
-			invoiceA.BillingMailContact = billingAddress;
-			invoiceA.ShippingMailContact = billingAddress;
+			invoiceA.BillToMailContact = billingAddress;
+			invoiceA.ShipToMailContact = billingAddress;
 			invoiceA.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
 			invoiceA.OtherPartyTaxMode = Business.Finance.TaxMode.LiableForVat;
-			invoiceA.BillingCurrencyCode = Business.Finance.CurrencyCode.Chf;
+			invoiceA.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 			invoiceA.BillingStatus = Business.Finance.BillingStatus.NotAnInvoice;
 			invoiceA.BillingDetails.Add (billingA1);
 			invoiceA.BillingDetails.Add (billingA2);
@@ -828,8 +828,8 @@ namespace Epsitec.Cresus.Core
 			lineA1.NeverApplyDiscount = false;
 			lineA1.ResultingLinePriceBeforeTax = (int) lineA1.PrimaryLinePriceBeforeTax;
 			lineA1.ResultingLineTax1 = lineA1.ResultingLinePriceBeforeTax * vatRate;
-			lineA1.ArticleShortDescriptionCache = lineA1.ArticleDefinition.ShortDescription;
-			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.LongDescription;
+			lineA1.ArticleShortDescriptionCache = lineA1.ArticleDefinition.Name;
+			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.Description;
 			
 			quantityA1.ColumnName = "livré";
 			quantityA1.QuantityType = Business.ArticleQuantityType.Billed;
@@ -854,8 +854,8 @@ namespace Epsitec.Cresus.Core
 			lineA2.NeverApplyDiscount = false;
 			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryLinePriceBeforeTax;
 			lineA2.ResultingLineTax1 = lineA2.ResultingLinePriceBeforeTax * vatRate;
-			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.ShortDescription;
-			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
+			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.Name;
+			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.Description;
 
 			quantityA2_1.ColumnName = "livré";
 			quantityA2_1.QuantityType = Business.ArticleQuantityType.Billed;
@@ -892,8 +892,8 @@ namespace Epsitec.Cresus.Core
 			lineA3.NeverApplyDiscount = false;
 			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryLinePriceBeforeTax;
 			lineA3.ResultingLineTax1 = lineA3.ResultingLinePriceBeforeTax * vatRate;
-			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
-			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
+			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.Name;
+			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.Description;
 			lineA3.Discounts.Add (lineA3discount);
 
 			quantityA3_1.ColumnName = "suivra";
@@ -925,8 +925,8 @@ namespace Epsitec.Cresus.Core
 			lineA4.NeverApplyDiscount = true;
 			lineA4.ResultingLinePriceBeforeTax = (int) lineA4.PrimaryUnitPriceBeforeTax;
 			lineA4.ResultingLineTax1 = lineA4.ResultingLinePriceBeforeTax * vatRate;
-			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.ShortDescription;
-			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
+			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.Name;
+			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.Description;
 
 			quantityA4.ColumnName = "livré";
 			quantityA4.QuantityType = Business.ArticleQuantityType.Billed;

@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIRoles(UIBuilder builder)
 		{
-			var controller = new SelectionController<ContactRoleEntity> (this.BusinessContext)
+			var controller = new SelectionController<ContactGroupEntity> (this.BusinessContext)
 			{
-				CollectionValueGetter    = () => this.Entity.Roles,
+				CollectionValueGetter    = () => this.Entity.ContactGroups,
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 

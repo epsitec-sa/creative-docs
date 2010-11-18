@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ContactRoleEntity> ("ContactRoles", this.BusinessContext);
+			var template = new CollectionTemplate<ContactGroupEntity> ("ContactRoles", this.BusinessContext);
 
 			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());

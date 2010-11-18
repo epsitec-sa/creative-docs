@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		public VatDefinitionEntity[] GetVatDefinitions(VatCode vatCode)
 		{
 			var results = from def in this.vatDefs
-						  where def.Code == vatCode
+						  where def.VatCode == vatCode
 						  select def;
 
 			return results.ToArray ();
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 			var results = from def in this.vatDefs
 						  where date.InRange (def.BeginDate, def.EndDate)
-						  where def.Code == vatCode
+						  where def.VatCode == vatCode
 						  select def;
 
 			return results.FirstOrDefault ();
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 			var results = from def in this.vatDefs
 						  where dateRange.Overlaps (def)
-						  where def.Code == vatCode
+						  where def.VatCode == vatCode
 						  select def;
 
 			return results.ToArray ();

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var businessContext = Logic.Current.BusinessContext;
 
-			entity.BillingCurrencyCode = Finance.CurrencyCode.Chf;
+			entity.CurrencyCode = Finance.CurrencyCode.Chf;
 			entity.BillingDate = Date.Today;
 			entity.BillingStatus = Finance.BillingStatus.NotAnInvoice;
 			entity.PriceRefDate = Date.Today;

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "MailContact",
 					IconUri				= "Data.Mail",
-					Title				= TextFormatter.FormatText ("Adresse", "(", string.Join (", ", this.Entity.Roles.Select (role => role.Name)), ")"),
+					Title				= TextFormatter.FormatText ("Adresse", "(", string.Join (", ", this.Entity.ContactGroups.Select (role => role.Name)), ")"),
 					CompactTitle		= TextFormatter.FormatText ("Adresse"),
 					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
 					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),

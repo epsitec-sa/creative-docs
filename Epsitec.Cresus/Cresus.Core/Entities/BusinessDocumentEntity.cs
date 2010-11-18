@@ -18,11 +18,11 @@ namespace Epsitec.Cresus.Core.Entities
 			string date = Misc.GetDateShortDescription (this.BillingDate);
 			string total = Misc.PriceToString (Helpers.InvoiceDocumentHelper.GetTotalPriceTTC (this));
 
-			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillingMailContact);
-			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShippingMailContact);
+			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillToMailContact);
+			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShipToMailContact);
 
 			FormattedText addresses;
-			if (this.BillingMailContact == this.ShippingMailContact || (!this.BillingMailContact.IsNotNull () && !this.ShippingMailContact.IsNotNull ()))
+			if (this.BillToMailContact == this.ShipToMailContact || (!this.BillToMailContact.IsNotNull () && !this.ShipToMailContact.IsNotNull ()))
 			{
 				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}

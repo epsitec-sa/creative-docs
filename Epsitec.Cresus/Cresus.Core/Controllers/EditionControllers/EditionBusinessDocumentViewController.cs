@@ -63,9 +63,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var controller = new SelectionController<MailContactEntity> (this.BusinessContext)
 			{
-				ValueGetter = () => this.Entity.BillingMailContact,
-				ValueSetter = x => this.Entity.BillingMailContact = x,
-				ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
+				ValueGetter = () => this.Entity.BillToMailContact,
+				ValueSetter = x => this.Entity.BillToMailContact = x,
+				ReferenceController = new ReferenceController (() => this.Entity.BillToMailContact, creator: this.CreateNewMailContact),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 			};
 
@@ -76,9 +76,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var controller = new SelectionController<MailContactEntity> (this.BusinessContext)
 			{
-				ValueGetter = () => this.Entity.ShippingMailContact,
-				ValueSetter = x => this.Entity.ShippingMailContact = x,
-				ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
+				ValueGetter = () => this.Entity.ShipToMailContact,
+				ValueSetter = x => this.Entity.ShipToMailContact = x,
+				ReferenceController = new ReferenceController (() => this.Entity.ShipToMailContact, creator: this.CreateNewMailContact),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 			};
 

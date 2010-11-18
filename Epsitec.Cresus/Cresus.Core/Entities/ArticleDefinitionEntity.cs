@@ -19,18 +19,18 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					"N°~", this.IdA, "\n",
-					this.ShortDescription
+					this.Name
 				);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.IdA, "~-~", this.ShortDescription);
+			return TextFormatter.FormatText (this.IdA, "~-~", this.Name);
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.IdA, this.ShortDescription.ToSimpleText () };
+			return new string[] { this.IdA, this.Name.ToSimpleText () };
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 
-				a.Accumulate (this.ShortDescription.GetEntityStatus ());
-				a.Accumulate (this.LongDescription.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ArticleGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.ArticleCategory.GetEntityStatus ());
 				a.Accumulate (this.ArticlePrices.Select (x => x.GetEntityStatus ()));

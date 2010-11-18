@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	languages; compare and replace only the text for the active language :
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
-			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.LongDescription);
+			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
 			string currentReplacement = this.Entity.ReplacementText.IsNull ? null : TextFormatter.ConvertToText (this.Entity.ReplacementText);
 			
 			if (articleDescription == defaultDescription)  // description standard ?

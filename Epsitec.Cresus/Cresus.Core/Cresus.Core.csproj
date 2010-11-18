@@ -153,7 +153,7 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
-    <Compile Include="Entities\ContactRoleEntity.cs" />
+    <Compile Include="Entities\ContactGroupEntity.cs" />
     <Compile Include="Entities\ArticleGroupEntity.cs" />
     <Compile Include="Entities\ArticleDefinitionEntity.cs" />
     <Compile Include="Entities\ArticleCategoryEntity.cs" />
