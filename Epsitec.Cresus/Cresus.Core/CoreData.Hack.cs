@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateDatabaseHack()
 		{
-			var workflowDefinitions = this.InsertWorkflowDefinitionsInDatabase ().ToArray ();
-			
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
 			ContactGroupEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
@@ -361,7 +359,6 @@ namespace Epsitec.Cresus.Core
 				relation.IdA = (id++).ToString ();
 				relation.Person = person;
 				relation.FirstContactDate = Common.Types.Date.Today;
-				relation.Workflow = this.CreateRelationWorkflow ();
 
 				yield return relation;
 			}
