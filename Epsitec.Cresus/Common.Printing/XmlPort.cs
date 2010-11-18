@@ -87,14 +87,14 @@ namespace Epsitec.Common.Printing
 				else if (element.Name == "image")
 				{
 					string id           = (string) element.Attribute ("id");
-					double fillX        = (double) element.Attribute ("fill-x");
-					double fillY        = (double) element.Attribute ("fill-y");
-					double fillWidth    = (double) element.Attribute ("fill-width");
-					double fillHeight   = (double) element.Attribute ("fill-height");
-					double imageOriginX = (double) element.Attribute ("image-originX");
-					double imageOriginY = (double) element.Attribute ("image-originY");
-					double imageWidth   = (double) element.Attribute ("image-width");
-					double imageHeight  = (double) element.Attribute ("image-height");
+					double fillX        = (double) element.Attribute ("fillX");
+					double fillY        = (double) element.Attribute ("fillY");
+					double fillWidth    = (double) element.Attribute ("fillWidth");
+					double fillHeight   = (double) element.Attribute ("fillHeight");
+					double imageOriginX = (double) element.Attribute ("imageOriginX");
+					double imageOriginY = (double) element.Attribute ("imageOriginY");
+					double imageWidth   = (double) element.Attribute ("imageWidth");
+					double imageHeight  = (double) element.Attribute ("imageHeight");
 
 					Image bitmap = this.GetImage (id);
 
@@ -132,25 +132,25 @@ namespace Epsitec.Common.Printing
 		{
 			XAttribute attribute;
 
-			attribute = element.Attribute ("line-width");
+			attribute = element.Attribute ("lineWidth");
 			if (attribute != null)
 			{
 				this.currentState.lineWidth = (double) attribute;
 			}
 
-			attribute = element.Attribute ("line-join");
+			attribute = element.Attribute ("lineJoin");
 			if (attribute != null)
 			{
 				//?this.currentState.lineJoin = (JoinStyle) attribute;
 			}
 
-			attribute = element.Attribute ("line-cap");
+			attribute = element.Attribute ("lineCap");
 			if (attribute != null)
 			{
 				//?this.currentState.lineCap = (CapStyle) attribute;
 			}
 
-			attribute = element.Attribute ("line-miter-limit");
+			attribute = element.Attribute ("lineMiterLimit");
 			if (attribute != null)
 			{
 				this.currentState.lineMiterLimit = (double) attribute;
@@ -168,25 +168,25 @@ namespace Epsitec.Common.Printing
 				this.currentState.transform = XmlPort.DeserializeTransform ((string) attribute);
 			}
 
-			attribute = element.Attribute ("fill-mode");
+			attribute = element.Attribute ("fillMode");
 			if (attribute != null)
 			{
 				//?this.currentState.fillMode = (FillMode) attribute;
 			}
 
-			attribute = element.Attribute ("font-face");
+			attribute = element.Attribute ("fontFace");
 			if (attribute != null)
 			{
 				this.currentState.fontFace = (string) attribute;
 			}
 
-			attribute = element.Attribute ("font-style");
+			attribute = element.Attribute ("fontStyle");
 			if (attribute != null)
 			{
 				this.currentState.fontStyle = (string) attribute;
 			}
 
-			attribute = element.Attribute ("font-size");
+			attribute = element.Attribute ("fontSize");
 			if (attribute != null)
 			{
 				this.currentState.fontSize = (double) attribute;
@@ -618,15 +618,15 @@ namespace Epsitec.Common.Printing
 			var xml = new XElement ("image");
 
 			//	L'image doit avoir un identificateur, pour permettre la désérialisation !
-			xml.Add (new XAttribute ("id",            bitmap.Id));
-			xml.Add (new XAttribute ("fill-x",        this.Truncate (fillX)));
-			xml.Add (new XAttribute ("fill-y",        this.Truncate (fillY)));
-			xml.Add (new XAttribute ("fill-width",    this.Truncate (fillWidth)));
-			xml.Add (new XAttribute ("fill-height",   this.Truncate (fillHeight)));
-			xml.Add (new XAttribute ("image-originX", this.Truncate (imageOriginX)));
-			xml.Add (new XAttribute ("image-originY", this.Truncate (imageOriginY)));
-			xml.Add (new XAttribute ("image-width",   this.Truncate (imageWidth)));
-			xml.Add (new XAttribute ("image-height",  this.Truncate (imageHeight)));
+			xml.Add (new XAttribute ("id",           bitmap.Id));
+			xml.Add (new XAttribute ("fillX",        this.Truncate (fillX)));
+			xml.Add (new XAttribute ("fillY",        this.Truncate (fillY)));
+			xml.Add (new XAttribute ("fillWidth",    this.Truncate (fillWidth)));
+			xml.Add (new XAttribute ("fillHeight",   this.Truncate (fillHeight)));
+			xml.Add (new XAttribute ("imageOriginX", this.Truncate (imageOriginX)));
+			xml.Add (new XAttribute ("imageOriginY", this.Truncate (imageOriginY)));
+			xml.Add (new XAttribute ("imageWidth",   this.Truncate (imageWidth)));
+			xml.Add (new XAttribute ("imageHeight",  this.Truncate (imageHeight)));
 			this.UpdateGraphicState (xml);
 
 			this.xRoot.Add (xml);
@@ -641,50 +641,50 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.lineWidth = this.currentState.lineWidth;
 
-				xml.Add (new XAttribute ("line-width", this.Truncate (this.lastState.lineWidth)));
+				xml.Add (new XAttribute ("lineWidth", this.Truncate (this.lastState.lineWidth)));
 			}
 
 			if (this.lastState.lineJoin != this.currentState.lineJoin)
 			{
 				this.lastState.lineJoin = this.currentState.lineJoin;
 
-				xml.Add (new XAttribute ("line-join", this.lastState.lineJoin));
+				xml.Add (new XAttribute ("lineJoin", this.lastState.lineJoin));
 			}
 
 			if (this.lastState.lineCap != this.currentState.lineCap)
 			{
 				this.lastState.lineCap = this.currentState.lineCap;
 
-				xml.Add (new XAttribute ("line-cap", this.lastState.lineCap));
+				xml.Add (new XAttribute ("lineCap", this.lastState.lineCap));
 			}
 
 			if (this.lastState.lineMiterLimit != this.currentState.lineMiterLimit)
 			{
 				this.lastState.lineMiterLimit = this.currentState.lineMiterLimit;
 
-				xml.Add (new XAttribute ("line-miter-limit", this.Truncate (this.lastState.lineMiterLimit)));
+				xml.Add (new XAttribute ("lineMiterLimit", this.Truncate (this.lastState.lineMiterLimit)));
 			}
 
 			if (this.lastState.imageFilter != this.currentState.imageFilter)
 			{
 				this.lastState.imageFilter = this.currentState.imageFilter;
 
-				xml.Add (new XAttribute ("image-filter", this.lastState.imageFilter));
+				xml.Add (new XAttribute ("imageFilter", this.lastState.imageFilter));
 			}
 
 			if (this.lastState.imageCrop != this.currentState.imageCrop)
 			{
 				this.lastState.imageCrop = this.currentState.imageCrop;
 
-				xml.Add (new XAttribute ("image-crop", this.lastState.imageCrop));
+				xml.Add (new XAttribute ("imageCrop", this.lastState.imageCrop));
 			}
 
 			if (this.lastState.imageFinalSize != this.currentState.imageFinalSize)
 			{
 				this.lastState.imageFinalSize = this.currentState.imageFinalSize;
 
-				xml.Add (new XAttribute ("image-final-size-width",  this.Truncate (this.lastState.imageFinalSize.Width)));
-				xml.Add (new XAttribute ("image-final-size-height", this.Truncate (this.lastState.imageFinalSize.Height)));
+				xml.Add (new XAttribute ("imageFinalSizeWidth",  this.Truncate (this.lastState.imageFinalSize.Width)));
+				xml.Add (new XAttribute ("imageFinalSizeHeight", this.Truncate (this.lastState.imageFinalSize.Height)));
 			}
 
 			if (this.lastState.color != this.currentState.color)
@@ -698,10 +698,10 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.clip = this.currentState.clip;
 
-				xml.Add (new XAttribute ("clip-left",   this.Truncate (this.lastState.clip.Left)));
-				xml.Add (new XAttribute ("clip-bottom", this.Truncate (this.lastState.clip.Bottom)));
-				xml.Add (new XAttribute ("clip-width",  this.Truncate (this.lastState.clip.Width)));
-				xml.Add (new XAttribute ("clip-height", this.Truncate (this.lastState.clip.Height)));
+				xml.Add (new XAttribute ("clipLeft",   this.Truncate (this.lastState.clip.Left)));
+				xml.Add (new XAttribute ("clipBottom", this.Truncate (this.lastState.clip.Bottom)));
+				xml.Add (new XAttribute ("clipWidth",  this.Truncate (this.lastState.clip.Width)));
+				xml.Add (new XAttribute ("clipHeight", this.Truncate (this.lastState.clip.Height)));
 			}
 
 			if (this.lastState.transform != this.currentState.transform)
@@ -715,28 +715,28 @@ namespace Epsitec.Common.Printing
 			{
 				this.lastState.fillMode = this.currentState.fillMode;
 
-				xml.Add (new XAttribute ("fill-mode", this.lastState.fillMode));
+				xml.Add (new XAttribute ("fillMode", this.lastState.fillMode));
 			}
 
 			if (this.lastState.fontFace != this.currentState.fontFace)
 			{
 				this.lastState.fontFace = this.currentState.fontFace;
 
-				xml.Add (new XAttribute ("font-face", this.lastState.fontFace));
+				xml.Add (new XAttribute ("fontFace", this.lastState.fontFace));
 			}
 
 			if (this.lastState.fontStyle != this.currentState.fontStyle)
 			{
 				this.lastState.fontStyle = this.currentState.fontStyle;
 
-				xml.Add (new XAttribute ("font-style", this.lastState.fontStyle));
+				xml.Add (new XAttribute ("fontStyle", this.lastState.fontStyle));
 			}
 
 			if (this.lastState.fontSize != this.currentState.fontSize)
 			{
 				this.lastState.fontSize = this.currentState.fontSize;
 
-				xml.Add (new XAttribute ("font-size", this.Truncate (this.lastState.fontSize)));
+				xml.Add (new XAttribute ("fontSize", this.Truncate (this.lastState.fontSize)));
 			}
 		}
 
