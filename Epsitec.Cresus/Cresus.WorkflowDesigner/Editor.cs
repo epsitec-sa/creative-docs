@@ -134,21 +134,28 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool CreateInitialWorkflow()
+		public void CreateInitialWorkflow()
 		{
 			//	Crée le workflow initial en désérialisant le diagramme.
 			if (this.RestoreDesign ())
 			{
 				this.UpdateWorlflowNodes ();
-				this.UpdateUniqueId ();
-				this.UpdateAfterGeometryChanged (null);
-
-				return true;
 			}
 			else
 			{
-				return false;
+				//	Désérialisation échouée. On suppose être en présence d'un nouveau
+				//	workflow fraichement créé, dont il faut juste reprendre le noeud initial.
+				var node = new ObjectNode (this, this.workflowDefinitionEntity);
+				node.IsRoot = true;
+				this.AddNode (node);
+
+				node.Bounds = new Rectangle (new Point (0, 150), node.Bounds.Size);
+
+				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 			}
+
+			this.UpdateUniqueId ();
+			this.UpdateAfterGeometryChanged (null);
 		}
 
 		private void UpdateWorlflowNodes()
@@ -439,9 +446,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public bool IsUsedCode(string code)
+		public bool IsUnusedCode(string code)
 		{
-			return this.workflowDefinitionEntity.WorkflowNodes.Where (x => x.Code == code).Count () != 0;
+			return this.workflowDefinitionEntity.WorkflowNodes.Where (x => x.Code == code).Any () == false;
 		}
 
 		public LinkableObject SearchInitialObject(AbstractEntity entity)
@@ -721,7 +728,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public bool IsUnusedPublicNode(WorkflowNodeEntity nodeEntity)
 		{
-			//	Indique si un noeud public n'a aucun "jumeau" de type IsForeign.
+			//	Indique si un noeud public n'a aucun "jumeau" (même Code) de type IsForeign.
 			if (!nodeEntity.IsPublic)
 			{
 				return true;
@@ -729,7 +736,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			var example = new WorkflowNodeEntity ();
 			example.Code = nodeEntity.Code;
-			example.IsForeign = true;			//	nécessaire pour que le 'false' ci-dessous soit pris en compte
+			example.IsForeign = true;  // nécessaire pour que le 'false' ci-dessous soit pris en compte
 			example.IsForeign = false;
 
 			return this.businessContext.DataContext.GetByExample (example).Any () == false;
@@ -1963,8 +1970,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private AbstractObject					menuObject;
 		private AbstractObject					editingObject;
 		private AbstractObject					editableObject;
-		private Point							initialNodePos;
-		private Point							initialEdgePos;
 		private int								nextUniqueId;
 		private readonly List<MagnetConstrain>	verticalMagnetConstrains;
 		private readonly List<MagnetConstrain>	horizontalMagnetConstrains;

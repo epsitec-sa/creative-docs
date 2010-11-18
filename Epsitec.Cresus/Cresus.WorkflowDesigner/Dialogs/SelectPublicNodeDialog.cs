@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 				foreach (var node in def.WorkflowNodes)
 				{
-					if (node.IsPublic && !this.editor.IsUsedCode (node.Code))
+					if (node.IsPublic && this.editor.IsUnusedCode (node.Code))
 					{
 						this.workflowNodeEntities.Add (node);
 						this.listNodes.Items.Add (this.GetNodeDescription (node));
