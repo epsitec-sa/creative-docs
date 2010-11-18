@@ -164,6 +164,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Builds an <see cref="SqlField"/> that corresponds to this instance.
+		/// </summary>
+		/// <param name="sqlConstantResolver">A function used to build the <see cref="SqlField"/> that represent constants.</param>
+		/// <returns>The new <see cref="SqlField"/>.</returns>
 		internal SqlField CreateSqlField(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver)
 		{
 			DbRawType dbRawType = EnumConverter.ToDbRawType (this.Type);

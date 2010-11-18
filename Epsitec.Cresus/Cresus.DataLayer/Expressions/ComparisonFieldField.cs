@@ -88,6 +88,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Creates an <see cref="SqlFunction"/> that corresponds to this instance.
+		/// </summary>
+		/// <param name="sqlConstantResolver">A function used to build the <see cref="SqlField"/> that represent constants.</param>
+		/// <param name="sqlColumnResolver">A function used to build the <see cref="SqlField"/> that represent columns in a table.</param>
+		/// <returns>The new <see cref="SqlFunction"/>.</returns>
 		internal override SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver)
 		{
 			return new SqlFunction
