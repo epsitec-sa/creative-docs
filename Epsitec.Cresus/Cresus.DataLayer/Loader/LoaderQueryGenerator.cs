@@ -799,7 +799,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					(
 						SqlFunctionCode.CompareEqual,
 						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+						SqlField.CreateConstant ((long) fieldValue, DbRawType.String)
 					);
 					break;
 
@@ -808,7 +808,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					(
 						SqlFunctionCode.CompareEqual,
 						this.BuildSqlFieldForEntityColumn(rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+						SqlField.CreateConstant ((bool) fieldValue, DbRawType.String)
 					);
 					break;
 
