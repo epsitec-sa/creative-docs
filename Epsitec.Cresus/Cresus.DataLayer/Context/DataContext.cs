@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// point for everything which is related to them.
 	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
-	public sealed class DataContext : System.IDisposable, IEntityPersistenceManager, IIsDisposed
+	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed
 	{
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.

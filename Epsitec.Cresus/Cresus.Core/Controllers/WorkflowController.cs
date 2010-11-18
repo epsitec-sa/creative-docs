@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// The <c>WorkflowController</c> handles the interaction between a workflow and
 	/// the other view controllers.
 	/// </summary>
-	public class WorkflowController : System.IDisposable, IIsDisposed
+	public class WorkflowController : IIsDisposed
 	{
 		internal WorkflowController(DataViewOrchestrator orchestrator)
 		{

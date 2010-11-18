@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// in the application. Note: a controller is responsible for the management
 	/// of a specific piece of UI.
 	/// </summary>
-	public abstract class CoreController : System.IDisposable, IIsDisposed
+	public abstract class CoreController : IIsDisposed
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CoreController"/> class.

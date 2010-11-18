@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public sealed class WorkflowExecutionEngine : System.IDisposable, IIsDisposed
+	public sealed class WorkflowExecutionEngine : IIsDisposed
 	{
 		public WorkflowExecutionEngine(WorkflowController controller, WorkflowTransition transition)
 		{
