@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Builds an <see cref="SqlField"/> that corresponds to this instance.
+		/// </summary>
+		/// <param name="sqlColumnResolver">A function used to build the <see cref="SqlField"/> that represent columns in a table.</param>
+		/// <returns>The new <see cref="SqlField"/>.</returns>
 		internal SqlField CreateSqlField(System.Func<Druid, SqlField> sqlColumnResolver)
 		{
 			return sqlColumnResolver (this.FieldId);

@@ -13,6 +13,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
+		/// <summary>
+		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
+		/// <see cref="UnaryComparator"/>.
+		/// </summary>
+		/// <param name="unaryComparator">The <see cref="UnaryComparator"/> to convert.</param>
+		/// <returns>The converted <see cref="UnaryComparator"/>.</returns>
 		public static SqlFunctionCode ToSqlFunctionCode(UnaryComparator unaryComparator)
 		{
 			switch (unaryComparator)
@@ -27,6 +33,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
+		/// <see cref="BinaryComparator"/>.
+		/// </summary>
+		/// <param name="binaryComparator">The <see cref="BinaryComparator"/> to convert.</param>
+		/// <returns>The converted <see cref="BinaryComparator"/>.</returns>
 		public static SqlFunctionCode ToSqlFunctionCode(BinaryComparator binaryComparator)
 		{
 			switch (binaryComparator)
@@ -57,6 +69,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
+		/// <see cref="UnaryOperator"/>.
+		/// </summary>
+		/// <param name="unaryOperator">The <see cref="UnaryOperator"/> to convert.</param>
+		/// <returns>The converted <see cref="UnaryOperator"/>.</returns>
 		public static SqlFunctionCode ToSqlFunctionCode(UnaryOperator unaryOperator)
 		{
 			switch (unaryOperator)
@@ -69,6 +87,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
+		/// <see cref="BinaryOperator"/>.
+		/// </summary>
+		/// <param name="binaryOperator">The <see cref="BinaryOperator"/> to convert.</param>
+		/// <returns>The converted <see cref="BinaryOperator"/>.</returns>
 		public static SqlFunctionCode ToSqlFunctionCode(BinaryOperator binaryOperator)
 		{
 			switch (binaryOperator)
