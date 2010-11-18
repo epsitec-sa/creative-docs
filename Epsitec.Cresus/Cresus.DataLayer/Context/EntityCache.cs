@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentException">
 		/// If <paramref name="entity"/> is null.
 		/// If <paramref name="entity"/>is not in the cache.
+		/// </exception>
 		public void DefineLogSequenceNumber(AbstractEntity entity, long logSequenceNumber)
 		{
 			entity.ThrowIfNull ("entity");
@@ -208,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets the log sequence number corresponding th the given <see cref="AbstracEntity"/> if
+		/// Gets the log sequence number corresponding th the given <see cref="AbstractEntity"/> if
 		/// there is any.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose log sequence number to retrieve.</param>

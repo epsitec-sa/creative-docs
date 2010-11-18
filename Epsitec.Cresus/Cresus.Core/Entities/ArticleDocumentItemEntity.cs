@@ -4,8 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Controllers.TabIds;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
+using Epsitec.Cresus.Core.Controllers.TabIds;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (this.PrimaryLinePriceAfterTax.HasValue)
 				{
-					return this.PrimaryLinePriceAfterTax.Value / this.BillingUnitQuantity;
+					return PriceCalculator.ClipPriceValue (this.PrimaryLinePriceAfterTax.Value / this.BillingUnitQuantity, CurrencyCode.None);
 				}
 				else
 				{
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (this.ResultingLinePriceAfterTax.HasValue)
 				{
-					return this.ResultingLinePriceAfterTax.Value / this.BillingUnitQuantity;
+					return PriceCalculator.ClipPriceValue (this.ResultingLinePriceAfterTax.Value / this.BillingUnitQuantity, CurrencyCode.None);
 				}
 				else
 				{
