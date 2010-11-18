@@ -1,14 +1,17 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Graph.ImportConverters;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -331,7 +334,7 @@ namespace Epsitec.Cresus.Graph
 						}
 					}
 					
-					Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
+					UI.RestoreWindowPositions (store.Element ("windowPositions"));
 					this.persistenceManager.Restore (store.Element ("uiSettings"));
 				}
 			}
@@ -355,7 +358,7 @@ namespace Epsitec.Cresus.Graph
 						new XAttribute ("status", saveStatus ? "done" : "open"),
 //						this.StateManager.SaveStates ("stateManager"),
 						this.SaveOpenDocumentSettings ("documents"),
-						Core.UI.SaveWindowPositions ("windowPositions"),
+						UI.SaveWindowPositions ("windowPositions"),
 						this.persistenceManager.Save ("uiSettings")));
 
 				doc.Save (GraphApplication.Paths.SettingsPath);
