@@ -11,14 +11,26 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 	
 	
-	// TODO Comment this class.
-	// Marc
-
-
+	/// <summary>
+	/// The <see cref="SqlContainer"/> is used to contain several SQL objects used to build SQL
+	/// queries. It is an immutable object and two of them can be used to be combined together, kind
+	/// of like you would add two 4-dimension vector together.
+	/// </summary>
 	internal sealed class SqlContainer
 	{
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> with some given elements.
+		/// </summary>
+		/// <param name="sqlTables">The collection of <see cref="SqlField"/> that represent the tables of the query.</param>
+		/// <param name="sqlFields">The collection of <see cref="SqlField"/> that represent the query fields of the query.</param>
+		/// <param name="sqlJoins">The collection of <see cref="SqlJoin"/> that represent the joins of the query.</param>
+		/// <param name="sqlConditions">The collection of <see cref="SqlFunction"/> that represent the conditions of the query.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlTables"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlFields"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlJoins"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlConditions"/> is <c>null</c>.</exception>
 		public SqlContainer(IEnumerable<SqlField> sqlTables, IEnumerable<SqlField> sqlFields, IEnumerable<SqlJoin> sqlJoins, IEnumerable<SqlFunction> sqlConditions)
 		{
 			sqlTables.ThrowIfNull ("sqlTables");
@@ -33,6 +45,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Gets the collection of <see cref="SqlField"/> that represent the tables of the query.
+		/// </summary>
 		public IEnumerable<SqlField> SqlTables
 		{
 			get;
@@ -40,6 +55,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Gets the collection of <see cref="SqlField"/> that represent the query fields of the query.
+		/// </summary>
 		public IEnumerable<SqlField> SqlFields
 		{
 			get;
@@ -47,6 +65,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Gets the collection of <see cref="SqlJoin"/> that represent the joins of the query.
+		/// </summary>
 		public IEnumerable<SqlJoin> SqlJoins
 		{
 			get;
@@ -54,6 +75,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Gets the collection of <see cref="SqlFunction"/> that represent the conditions of the query.
+		/// </summary>
 		public IEnumerable<SqlFunction> SqlConditions
 		{
 			get;
@@ -61,6 +85,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds the <see cref="SqlSelect"/> that is the query that corresponds to this instance.
+		/// </summary>
+		/// <returns>The <see cref="SqlSelect"/>.</returns>
 		public SqlSelect BuildSqlSelect()
 		{
 			SqlSelect sqlSelect = new SqlSelect ();
@@ -74,6 +102,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Adds the elements of another <see cref="SqlContainer"/> to the ones of this instance and
+		/// returns the result as a new <see cref="SqlContainer"/>.
+		/// </summary>
+		/// <param name="that">The other <see cref="SqlContainer"/>.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="that"/> is <c>null</c>.</exception>
 		public SqlContainer Plus(SqlContainer that)
 		{
 			that.ThrowIfNull ("that");
@@ -87,6 +122,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> whose elements are the one of this instance plus
+		/// the given collection <see cref="SqlField"/> for the tables.
+		/// </summary>
+		/// <param name="sqlTables">The tables to add.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlTables"/> is <c>null</c>.</exception>
 		public SqlContainer PlusSqlTables(params SqlField[] sqlTables)
 		{
 			sqlTables.ThrowIfNull ("sqlTables");
@@ -100,6 +142,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> whose elements are the one of this instance plus
+		/// the given collection <see cref="SqlField"/> for the query fields.
+		/// </summary>
+		/// <param name="sqlFields">The query fields to add.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlFields"/> is <c>null</c>.</exception>
 		public SqlContainer PlusSqlFields(params SqlField[] sqlFields)
 		{
 			sqlFields.ThrowIfNull ("sqlFields");
@@ -113,6 +162,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> whose elements are the one of this instance plus
+		/// the given collection <see cref="SqlJoin"/> for the joins.
+		/// </summary>
+		/// <param name="sqlJoins">The joins to add.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlJoins"/> is <c>null</c>.</exception>
 		public SqlContainer PlusSqlJoins(params SqlJoin[] sqlJoins)
 		{
 			sqlJoins.ThrowIfNull ("sqlJoins");
@@ -126,6 +182,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> whose elements are the one of this instance plus
+		/// the given collection <see cref="SqlFunction"/> for the conditions.
+		/// </summary>
+		/// <param name="sqlConditions">The conditions to add.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlConditions"/> is <c>null</c>.</exception>
 		public SqlContainer PlusSqlConditions(params SqlFunction[] sqlConditions)
 		{
 			sqlConditions.ThrowIfNull ("sqlConditions");
@@ -139,6 +202,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new empty <see cref="SqlContainer"/>.
+		/// </summary>
+		/// <returns>The <see cref="SqlContainer"/>.</returns>
 		public static SqlContainer CreateEmpty()
 		{
 			var newSqlTables = new List<SqlField> ();
@@ -150,6 +217,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> which contains only tables.
+		/// </summary>
+		/// <param name="sqlTables">The collection of <see cref="SqlField"/> that are the tables.</param>
+		/// <returns>The new <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlTables"/> is <c>null</c>.</exception>
 		public static SqlContainer CreateSqlTables(params SqlField[] sqlTables)
 		{
 			sqlTables.ThrowIfNull ("sqlTables");
@@ -158,6 +231,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> which contains only query fields.
+		/// </summary>
+		/// <param name="sqlFields">The collection of <see cref="SqlField"/> that are the query fields.</param>
+		/// <returns>The new <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlFields"/> is <c>null</c>.</exception>
 		public static SqlContainer CreateSqlFields(params SqlField[] sqlFields)
 		{
 			sqlFields.ThrowIfNull ("sqlFields");
@@ -166,6 +245,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> which contains only joins.
+		/// </summary>
+		/// <param name="sqlJoins">The collection of <see cref="SqlJoin"/> that are the joins.</param>
+		/// <returns>The new <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlJoins"/> is <c>null</c>.</exception>
 		public static SqlContainer CreateSqlJoins(params SqlJoin[] sqlJoins)
 		{
 			sqlJoins.ThrowIfNull ("sqlJoins");
@@ -174,6 +259,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> which contains only conditions.
+		/// </summary>
+		/// <param name="sqlConditions">The collection of <see cref="SqlFunction"/> that are the conditions.</param>
+		/// <returns>The new <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlConditions"/> is <c>null</c>.</exception>
 		public static SqlContainer CreateSqlConditions(params SqlFunction[] sqlConditions)
 		{
 			sqlConditions.ThrowIfNull ("sqlConditions");
@@ -182,6 +273,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Gets the empty <see cref="SqlContainer"/>.
+		/// </summary>
 		public static SqlContainer Empty
 		{
 			get
@@ -191,6 +285,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// An instance of the empty <see cref="SqlContainer"/>.
+		/// </summary>
 		private static SqlContainer empty = SqlContainer.CreateEmpty ();
 
 
