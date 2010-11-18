@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
@@ -9,6 +11,8 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Collections.Generic;
 
 using System.IO;
 
@@ -66,9 +70,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					List<AbstractEntity> entities = new List<AbstractEntity> ()
+					{
+						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+					};
 
-					ImportExportManager.Export (file, dataContext, alfred, e => true);
+					ImportExportManager.Export (file, dataContext, entities, e => true);
 				}
 			}
 
@@ -109,9 +116,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					List<AbstractEntity> entities = new List<AbstractEntity> ()
+					{
+						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+					};
 
-					ImportExportManager.Export (file, dataContext, alfred, e => e is NaturalPersonEntity || e is UriContactEntity);
+					ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity);
 				}
 			}
 
@@ -167,9 +177,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					List<AbstractEntity> entities = new List<AbstractEntity> ()
+					{
+						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+					};
 
-					ImportExportManager.Export (file, dataContext, alfred, e => false);
+					ImportExportManager.Export (file, dataContext, entities, e => false);
 				}
 			}
 
