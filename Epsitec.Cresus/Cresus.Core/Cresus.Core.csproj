@@ -219,6 +219,7 @@
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
     <Compile Include="Repositories\VatDefinitionRepository.cs" />
     <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
+    <Compile Include="Repositories\WorkflowNodeRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />

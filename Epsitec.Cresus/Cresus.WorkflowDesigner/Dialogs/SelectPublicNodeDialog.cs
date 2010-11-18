@@ -127,13 +127,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
-			this.listEntties = new ScrollList
+			this.listEntities = new ScrollList
 			{
 				Parent = leftBox,
 				Dock = DockStyle.Fill,
 			};
 
-			this.listEntties.SelectedItemChanged += new EventHandler (this.HandlelistEnttiesSelectedItemChanged);
+			this.listEntities.SelectedItemChanged += new EventHandler (this.HandlelistEnttiesSelectedItemChanged);
 
 			//	Crée la partie de droite.
 			var rightLabel = new StaticText
@@ -216,12 +216,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 		private void UpdateListEntities()
 		{
-			this.listEntties.Items.Clear ();
+			this.listEntities.Items.Clear ();
 
 			this.workflowDefinitionEntities = this.businessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
 			foreach (var def in this.workflowDefinitionEntities)
 			{
-				this.listEntties.Items.Add (this.GetDefinitionDescription (def));
+				this.listEntities.Items.Add (this.GetDefinitionDescription (def));
 			}
 		}
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			this.workflowNodeEntities.Clear ();
 			this.listNodes.Items.Clear ();
 
-			int sel = this.listEntties.SelectedItemIndex;
+			int sel = this.listEntities.SelectedItemIndex;
 
 			if (sel != -1)
 			{
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 		private void UpdateButtons()
 		{
-			this.acceptButton.Enable = this.listEntties.SelectedItemIndex != -1 && this.listNodes.SelectedItemIndex != -1;
+			this.acceptButton.Enable = this.listEntities.SelectedItemIndex != -1 && this.listNodes.SelectedItemIndex != -1;
 		}
 
 
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 		private readonly BusinessContext		businessContext;
 
 		private Window							window;
-		private ScrollList						listEntties;
+		private ScrollList						listEntities;
 		private ScrollList						listNodes;
 		private Button							acceptButton;
 		private Button							cancelButton;
