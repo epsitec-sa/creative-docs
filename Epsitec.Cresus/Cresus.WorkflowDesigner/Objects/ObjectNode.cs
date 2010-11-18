@@ -118,22 +118,45 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void ContextMenu()
 		{
-			if (this.Entity.IsForeign)  // noeud étranger ?
+			if (!this.Entity.IsForeign)  // pas un noeud étranger ?
 			{
-				//	Aucune modification possible pour un noeud étranger.
-				return;
-			}
-
-			if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
-			{
-				this.editor.CreateMenuItem (!this.Entity.IsPublic, "Noeud privé",  "Node.Private");
-				this.editor.CreateMenuItem ( this.Entity.IsPublic, "Noeud public", "Node.Public");
+				if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
+				{
+					this.editor.CreateMenuItem (!this.Entity.IsPublic, "Nœud privé",  "Node.Private");
+					this.editor.CreateMenuItem (this.Entity.IsPublic,  "Nœud public", "Node.Public");
+				}
 
 				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (!this.Entity.IsAuto, "Nœud manuel",      "Node.Manuel");
+				this.editor.CreateMenuItem (this.Entity.IsAuto,  "Nœud automatique", "Node.Auto");
 			}
 
-			this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
-			this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
+			if (this.IsButtonEnable (ActiveElement.NodeOpenLink))
+			{
+				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (null, "Crée une nouvelle connexion", "Node.OpenLink");
+			}
+
+			if (this.IsButtonEnable (ActiveElement.NodeComment) || this.IsButtonEnable (ActiveElement.NodeInfo))
+			{
+				this.editor.CreateMenuSeparator ();
+
+				if (this.IsButtonEnable (ActiveElement.NodeComment))
+				{
+					this.editor.CreateMenuItem (null, this.comment == null ? "Ajoute un commentaire" : "Ferme le commentaire", "Node.Comment");
+				}
+
+				if (this.IsButtonEnable (ActiveElement.NodeInfo))
+				{
+					this.editor.CreateMenuItem (null, this.info == null ? "Monte les informations" : "Ferme les informations", "Node.Info");
+				}
+			}
+
+			if (this.IsButtonEnable (ActiveElement.NodeClose))
+			{
+				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (null, "Supprime le nœud", "Node.Delete");
+			}
 		}
 
 		public override void MenuAction(string name)
@@ -159,6 +182,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.Entity.IsAuto = true;
 					this.editor.SetLocalDirty ();
 					break;
+
+				case "Node.OpenLink":
+					this.OpenLink ();
+					break;
+
+				case "Node.Comment":
+					this.SwapComment ();
+					break;
+
+				case "Node.Info":
+					this.SwapInfo ();
+					break;
+
+				case "Node.Delete":
+					this.DeleteNode ();
+					break;
 			}
 		}
 
@@ -170,10 +209,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void SetBoundsAtEnd(Point start, Point end)
 		{
-			Point center = Point.Move (end, start, -ObjectNode.frameRadius);
-			Rectangle rect = new Rectangle (center.X-ObjectNode.frameRadius, center.Y-ObjectNode.frameRadius, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
+			Point center;
 
-			this.Bounds = rect;
+			if (start == end)
+			{
+				center = start;
+			}
+			else
+			{
+				center = Point.Move (end, start, -ObjectNode.frameRadius);
+			}
+
+			this.Bounds = new Rectangle (center.X-ObjectNode.frameRadius, center.Y-ObjectNode.frameRadius, ObjectNode.frameRadius*2, ObjectNode.frameRadius*2);
 		}
 
 
@@ -296,13 +343,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
 				case ActiveElement.NodeClose:
-					return "<b>Supprime</b> le noeud";
+					return "<b>Supprime</b> le nœud";
 
 				case ActiveElement.NodeComment:
-					return (this.comment == null) ? "Ajoute un commentaire au noeud" : "Ferme le commentaire";
+					return (this.comment == null) ? "Ajoute un commentaire au nœud" : "Ferme le commentaire";
 
 				case ActiveElement.NodeInfo:
-					return (this.info == null) ? "Monte les informations du noeud" : "Ferme les informations du noeud";
+					return (this.info == null) ? "Monte les informations du nœud" : "Ferme les informations du nœud";
 
 				case ActiveElement.NodeOpenLink:
 					return "Crée une nouvelle connexion";
@@ -400,56 +447,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.HilitedElement == ActiveElement.NodeOpenLink)
 			{
-				//	Crée un moignon de lien o--->
-				var link = new ObjectLink (this.editor, this.entity);
-				link.SrcObject = this;
-				link.SetStumpAngle (this.ComputeBestStumpAngle ());
-				link.UpdateLink ();
-
-				this.objectLinks.Add (link);
-				this.editor.UpdateAfterGeometryChanged (null);
+				this.OpenLink ();
 			}
 
 			if (this.HilitedElement == ActiveElement.NodeComment)
 			{
-				this.AddComment();
-			}
-
-			if (this.HilitedElement == ActiveElement.NodeClose)
-			{
-				if (!this.isRoot)
-				{
-					if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
-					{
-						var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer le noeud ?", this.editor.Window);
-						if (result != Common.Dialogs.DialogResult.Yes)
-						{
-							return;
-						}
-
-						if (this.comment != null)
-						{
-							this.AddComment ();  // ferme le commentaire
-						}
-
-						if (this.info != null)
-						{
-							this.AddInfo ();  // ferme le noeud
-						}
-
-						this.editor.CloseObject (this);
-						this.editor.UpdateAfterGeometryChanged (null);
-					}
-					else
-					{
-						Common.Dialogs.MessageDialog.ShowMessage ("Il n'est pas possible de supprimer ce noeud public,<br/>car il est utilisé dans d'autres workflows !", this.editor.Window);
-					}
-				}
+				this.SwapComment();
 			}
 
 			if (this.HilitedElement == ActiveElement.NodeInfo)
 			{
-				this.AddInfo ();
+				this.SwapInfo ();
+			}
+
+			if (this.HilitedElement == ActiveElement.NodeClose)
+			{
+				this.DeleteNode ();
 			}
 
 			if (this.HilitedElement == ActiveElement.NodeColor1)
@@ -563,7 +576,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 	
-		private void AddComment()
+		private void SwapComment()
 		{
 			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
@@ -593,7 +606,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.SetLocalDirty ();
 		}
 
-		public void AddInfo()
+		public void SwapInfo()
 		{
 			//	Ajoute une information à la boîte.
 			if (this.info == null)
@@ -601,7 +614,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.info = new ObjectInfo (this.editor, this.Entity);
 				this.info.AttachObject = this;
 
-				Rectangle rect = new Rectangle (this.bounds.Right+40, this.bounds.Bottom+15, 200, 20);
+				double width  = this.Entity.IsForeign ? 180 : 140;
+				double height = this.Entity.IsForeign ? ObjectInfo.foreignHeight : ObjectInfo.lineHeight;
+				Rectangle rect = new Rectangle (this.bounds.Right+40, this.bounds.Center.Y-height/2, width, height);
 				this.info.Bounds = rect;
 				this.info.UpdateAfterAttachChanged ();
 
@@ -615,6 +630,54 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.editor.SetLocalDirty ();
+		}
+
+		private void OpenLink()
+		{
+			//	Crée un moignon de lien o--->
+			var link = new ObjectLink (this.editor, this.entity);
+			link.SrcObject = this;
+			link.SetStumpAngle (this.ComputeBestStumpAngle ());
+			link.UpdateLink ();
+
+			this.objectLinks.Add (link);
+			this.editor.UpdateAfterGeometryChanged (null);
+
+			this.editor.SetLocalDirty ();
+		}
+
+		private void DeleteNode()
+		{
+			if (!this.isRoot)
+			{
+				if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
+				{
+					var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer le nœud ?", this.editor.Window);
+					if (result != Common.Dialogs.DialogResult.Yes)
+					{
+						return;
+					}
+
+					if (this.comment != null)
+					{
+						this.SwapComment ();  // ferme le commentaire
+					}
+
+					if (this.info != null)
+					{
+						this.SwapInfo ();  // ferme le noeud
+					}
+
+					this.editor.CloseObject (this);
+					this.editor.UpdateAfterGeometryChanged (null);
+
+					this.editor.SetLocalDirty ();
+				}
+				else
+				{
+					Common.Dialogs.MessageDialog.ShowMessage ("Il n'est pas possible de supprimer ce nœud public,<br/>car il est utilisé dans d'autres workflows !", this.editor.Window);
+				}
+			}
 		}
 
 
@@ -762,6 +825,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			graphics.Rasterizer.AddOutline (path, 3);
 			graphics.RenderSolid (Color.FromRgb (1, 0, 0));  // rouge
+		}
+
+
+		private bool HasStump
+		{
+			get
+			{
+				foreach (var link in this.objectLinks)
+				{
+					if (link.DstObject == null)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
 		}
 
 
@@ -944,7 +1024,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateOpenLink(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && !this.Entity.IsForeign;
+			button.State.Enable = this.IsHeaderHilite && !this.IsDragging && !this.Entity.IsForeign && !this.HasStump;
+			button.State.Visible = button.State.Enable;
 		}
 
 		private void UpdateButtonStateExtend(ActiveButton button)

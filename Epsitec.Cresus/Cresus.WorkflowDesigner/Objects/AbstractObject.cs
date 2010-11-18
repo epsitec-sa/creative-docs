@@ -650,6 +650,24 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			return ActiveElement.None;
 		}
 
+		protected bool IsButtonEnable(ActiveElement element)
+		{
+			var button = this.GetButton (element);
+
+			if (button != null)
+			{
+				button.UpdateState ();
+				return button.State.Enable;
+			}
+
+			return false;
+		}
+
+		protected ActiveButton GetButton(ActiveElement element)
+		{
+			return this.buttons.Where (x => x.Element == element).FirstOrDefault ();
+		}
+
 
 		protected bool IsDragging
 		{

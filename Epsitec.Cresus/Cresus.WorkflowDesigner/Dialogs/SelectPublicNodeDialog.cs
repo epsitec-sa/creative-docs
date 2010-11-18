@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 		protected override Window CreateWindow()
 		{
-			this.CreateUserInterface ("SelectPublicNode", new Size (600, 400), "Choix d'un noeud public", this.parent.Window);
+			this.CreateUserInterface ("SelectPublicNode", new Size (600, 400), "Choix d'un nœud public", this.parent.Window);
 			this.UpdateLists ();
 			this.UpdateButtons ();
 
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			var rightLabel = new StaticText
 			{
 				Parent = rightBox,
-				Text = "Noeuds publics :",
+				Text = "Nœuds publics :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 			};

@@ -195,6 +195,18 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default, "Normal", "Edge.Normal");
 			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call,    "Call",   "Edge.Call");
 			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork,    "Fork",   "Edge.Fork");
+
+			if (this.IsButtonEnable (ActiveElement.EdgeComment))
+			{
+				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (null, this.comment == null ? "Ajoute un commentaire" : "Ferme le commentaire", "Edge.Comment");
+			}
+
+			if (this.IsButtonEnable (ActiveElement.EdgeClose))
+			{
+				this.editor.CreateMenuSeparator ();
+				this.editor.CreateMenuItem (null, "Supprime la transition", "Edge.Delete");
+			}
 		}
 
 		public override void MenuAction(string name)
@@ -217,6 +229,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
 					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
+					break;
+
+				case "Edge.Comment":
+					this.SwapComment ();
+					break;
+
+				case "Edge.Delete":
+					this.DeleteEdge ();
 					break;
 			}
 		}
@@ -700,24 +720,12 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.HilitedElement == ActiveElement.EdgeClose)
 			{
-				var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer la transition ?", this.editor.Window);
-				if (result != Common.Dialogs.DialogResult.Yes)
-				{
-					return;
-				}
-
-				if (this.comment != null)
-				{
-					this.AddComment ();  // ferme le commentaire
-				}
-
-				this.editor.CloseObject (this);
-				this.editor.UpdateAfterGeometryChanged (null);
+				this.DeleteEdge ();
 			}
 
 			if (this.HilitedElement == ActiveElement.EdgeComment)
 			{
-				this.AddComment ();
+				this.SwapComment ();
 			}
 
 			if (this.HilitedElement == ActiveElement.EdgeColor1)
@@ -843,7 +851,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		}
 
 	
-		private void AddComment()
+		private void SwapComment()
 		{
 			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
@@ -865,6 +873,23 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 
 			this.editor.SetLocalDirty ();
+		}
+
+		private void DeleteEdge()
+		{
+			var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer la transition ?", this.editor.Window);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+
+			if (this.comment != null)
+			{
+				this.SwapComment ();  // ferme le commentaire
+			}
+
+			this.editor.CloseObject (this);
+			this.editor.UpdateAfterGeometryChanged (null);
 		}
 
 

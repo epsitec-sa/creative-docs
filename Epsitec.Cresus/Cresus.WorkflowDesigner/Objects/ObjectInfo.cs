@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.colorFactory.ColorItem = ColorItem.Blue;
 
 			this.textLayoutTitle.Text = "Informations";
-
 			this.textLayouts = new List<TextLayout> ();
 		}
 
@@ -262,7 +261,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Adapte la hauteur de l'information en fonction de sa largeur et du contenu.
 			Rectangle rect = this.bounds;
 
-			double h = System.Math.Max (this.LineCount, 1) * ObjectInfo.lineHeight;
+			double h = this.LinkToForeign ? ObjectInfo.foreignHeight : System.Math.Max (this.LineCount, 1) * ObjectInfo.lineHeight;
 
 			var a = this.GetAttachMode();
 			if (a == AttachMode.Bottom || a == AttachMode.None)
@@ -420,7 +419,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				var textLayout = new TextLayout ();
 				textLayout.DefaultFontSize = 10;
-				textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				if (this.LinkToForeign)
+				{
+					textLayout.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
+				}
+				else
+				{
+					textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				}
 				textLayout.Alignment = ContentAlignment.MiddleLeft;
 
 				this.textLayouts.Add (textLayout);
@@ -454,21 +460,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						{
 							if (node.IsPublic && node.Code == code)
 							{
-								return string.Concat ("<i>Vers <b>", def.WorkflowName, "</b> noeud <b>", node.Name, "</b></i>");
+								return string.Concat ("<i>Vers le nœud <b>", node.Name, "</b> du workflow <b>", def.WorkflowName, "</b></i>");
 							}
 						}
 					}
 				}
 
 				return null;
-			}
-		}
-
-		private bool LinkToForeign
-		{
-			get
-			{
-				return this.Node != null && this.Node.Entity.IsForeign;
 			}
 		}
 
@@ -491,7 +489,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private Rectangle RectangleLine(int rank)
 		{
-			return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
+			if (this.LinkToForeign)
+			{
+				return this.bounds;
+			}
+			else
+			{
+				return new Rectangle (this.bounds.Left, this.bounds.Top-ObjectInfo.lineHeight*(rank+1), this.bounds.Width, ObjectInfo.lineHeight);
+			}
 		}
 
 		private Rectangle RectangleLineSeparator(int rank)
@@ -518,6 +523,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 						return this.Node.Entity.Edges.Count;
 					}
 				}
+			}
+		}
+
+		private bool LinkToForeign
+		{
+			get
+			{
+				return this.Node != null && this.Node.Entity.IsForeign;
 			}
 		}
 
@@ -572,8 +585,9 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		private static readonly double			lineHeight = 20;
-		public static readonly int				maxLines = 20;
+		public static readonly double			lineHeight = 20;
+		public static readonly double			foreignHeight = 40;
+		private static readonly int				maxLines = 20;
 
 		private List<TextLayout>				textLayouts;
 
