@@ -125,37 +125,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		public void CreateDbConditionTestArgumentCheck()
-		{
-			Field leftField = new Field (Druid.FromLong (1));
-			UnaryComparison left = new UnaryComparison (leftField, UnaryComparator.IsNull);
-
-			Field rightField = new Field (Druid.FromLong (1));
-			UnaryComparison right = new UnaryComparison (rightField, UnaryComparator.IsNull);
-
-			BinaryOperation operation = new BinaryOperation (left, BinaryOperator.And, right);
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => operation.CreateDbCondition (converter, null)
-					);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => operation.CreateDbCondition (null, id => null)
-					);
-				}
-			}
-		}
-
-
-		[TestMethod]
 		public void GetFieldsTest()
 		{
 			foreach (Field field1 in ExpressionHelper.GetSampleFields ())

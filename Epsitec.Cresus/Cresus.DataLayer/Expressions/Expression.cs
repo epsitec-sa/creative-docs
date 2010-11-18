@@ -35,17 +35,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		internal abstract IEnumerable<Druid> GetFields();
 
 
-		/// <summary>
-		/// Converts this instance to an equivalent <see cref="DbAbstractCondition"/>, using a
-		/// resolver to convert the <see cref="Druid"/> of the fields to the appropriate
-		/// <see cref="DbTableColumn"/>.
-		/// </summary>
-		/// <param name="expressionConverter">The <see cref="ExpressionConverter"/> used to convert this instance.</param>
-		/// <param name="columnResolver">The function used to resolve the <see cref="DbTableColumn"/> given an <see cref="Druid"/>.</param>
-		/// <returns>The new <see cref="DbAbstractCondition"/>.</returns>
-		internal abstract DbAbstractCondition CreateDbCondition(ExpressionConverter expressionConverter, System.Func<Druid, DbTableColumn> columnResolver);
-
-
 		internal abstract SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver);
 		
 

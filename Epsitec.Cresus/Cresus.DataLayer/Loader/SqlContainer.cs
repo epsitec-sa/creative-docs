@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
@@ -19,6 +21,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer(IEnumerable<SqlField> sqlTables, IEnumerable<SqlField> sqlFields, IEnumerable<SqlJoin> sqlJoins, IEnumerable<SqlFunction> sqlConditions)
 		{
+			sqlTables.ThrowIfNull ("sqlTables");
+			sqlFields.ThrowIfNull ("sqlFields");
+			sqlJoins.ThrowIfNull ("sqlJoins");
+			sqlConditions.ThrowIfNull ("sqlConditions");
+
 			this.SqlTables = sqlTables.ToList ();
 			this.SqlFields = sqlFields.ToList ();
 			this.SqlJoins = sqlJoins.ToList ();
@@ -69,6 +76,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer Plus(SqlContainer that)
 		{
+			that.ThrowIfNull ("that");
+
 			var newSqlTables = this.SqlTables.Concat (that.SqlTables);
 			var newSqlFields = this.SqlFields.Concat (that.SqlFields);
 			var newSqlJoins = this.SqlJoins.Concat (that.SqlJoins);
@@ -80,6 +89,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer PlusSqlTables(params SqlField[] sqlTables)
 		{
+			sqlTables.ThrowIfNull ("sqlTables");
+
 			var newSqlTables = this.SqlTables.Concat (sqlTables);
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins;
@@ -91,6 +102,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer PlusSqlFields(params SqlField[] sqlFields)
 		{
+			sqlFields.ThrowIfNull ("sqlFields");
+
 			var newSqlTables = this.SqlTables;
 			var newSqlFields = this.SqlFields.Concat (sqlFields);
 			var newSqlJoins = this.SqlJoins;
@@ -102,6 +115,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer PlusSqlJoins(params SqlJoin[] sqlJoins)
 		{
+			sqlJoins.ThrowIfNull ("sqlJoins");
+
 			var newSqlTables = this.SqlTables;
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins.Concat (sqlJoins);
@@ -113,6 +128,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlContainer PlusSqlConditions(params SqlFunction[] sqlConditions)
 		{
+			sqlConditions.ThrowIfNull ("sqlConditions");
+
 			var newSqlTables = this.SqlTables;
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins;
@@ -135,24 +152,32 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public static SqlContainer CreateSqlTables(params SqlField[] sqlTables)
 		{
+			sqlTables.ThrowIfNull ("sqlTables");
+
 			return SqlContainer.Empty.PlusSqlTables (sqlTables);
 		}
 
 
 		public static SqlContainer CreateSqlFields(params SqlField[] sqlFields)
 		{
+			sqlFields.ThrowIfNull ("sqlFields");
+
 			return SqlContainer.Empty.PlusSqlFields (sqlFields);
 		}
 
 
 		public static SqlContainer CreateSqlJoins(params SqlJoin[] sqlJoins)
 		{
+			sqlJoins.ThrowIfNull ("sqlJoins");
+
 			return SqlContainer.Empty.PlusSqlJoins (sqlJoins);
 		}
 
 
 		public static SqlContainer CreateSqlConditions(params SqlFunction[] sqlConditions)
 		{
+			sqlConditions.ThrowIfNull ("sqlConditions");
+
 			return SqlContainer.Empty.PlusSqlConditions (sqlConditions);
 		}
 

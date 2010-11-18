@@ -65,25 +65,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		/// <summary>
-		/// Converts this instance to an equivalent <see cref="DbAbstractCondition"/>, using a
-		/// resolver to convert the <see cref="Druid"/> of the fields to the appropriate
-		/// <see cref="DbTableColumn"/>.
-		/// </summary>
-		/// <param name="expressionConverter">The <see cref="ExpressionConverter"/> used to convert this instance.</param>
-		/// <param name="columnResolver">The function used to resolve the <see cref="DbTableColumn"/> given an <see cref="Druid"/>.</param>
-		/// <returns>The new <see cref="DbAbstractCondition"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="expressionConverter"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="columnResolver"/> is <c>null</c>.</exception>
-		internal override DbAbstractCondition CreateDbCondition(ExpressionConverter expressionConverter, System.Func<Druid, DbTableColumn> columnResolver)
-		{
-			expressionConverter.ThrowIfNull ("expressionConverter");
-			columnResolver.ThrowIfNull ("columnResolver");
-
-			return expressionConverter.CreateDbCondition (this, columnResolver);
-		}
-
-
 		internal override SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver)
 		{
 			return new SqlFunction

@@ -82,34 +82,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 			Assert.AreEqual (UnaryOperator.Not, operation.Operator);
 		}
-
-
-		[TestMethod]
-		public void CreateDbConditionTest1()
-		{
-			Field field = new Field (Druid.FromLong (1));
-			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
-
-			UnaryOperation operation = new UnaryOperation (UnaryOperator.Not, expression);
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => operation.CreateDbCondition (converter, null)
-					);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => operation.CreateDbCondition (null, id => null)
-					);
-				}
-			}
-		}
 		
 		
 		[TestMethod]
