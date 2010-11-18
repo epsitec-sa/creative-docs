@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Entities;
 
@@ -13,54 +14,66 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner
 {
-	public class Entity
+	public static class Entity
 	{
 		static public List<AbstractEntity> DeepSearch(WorkflowDefinitionEntity def)
 		{
 			//	Effectue une fouille profonde à la recherche de toutes les entités nodes et edges.
 			//	Il faut prendre garde, car la structure peut contenir des boucles !
 			var list = new List<AbstractEntity> ();
-			var alreadyFounded = new List<AbstractEntity> ();
+			var alreadyFound = new HashSet<AbstractEntity> ();
 
-			Entity.DeepSearch (list, alreadyFounded, def);
+			Entity.DeepSearch (list, alreadyFound, def);
 
 			return list;
 		}
 
-		static private void DeepSearch(List<AbstractEntity> list, List<AbstractEntity> alreadyFounded, WorkflowEdgeEntity edgeEntity)
+		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowEdgeEntity edgeEntity)
 		{
-			if (alreadyFounded.Contains (edgeEntity))
+			if (alreadyFound.Contains (edgeEntity))
 			{
 				return;
 			}
 
 			list.Add (edgeEntity);
-			alreadyFounded.Add (edgeEntity);
+			alreadyFound.Add (edgeEntity);
 
 			if (edgeEntity.NextNode.IsNotNull ())
 			{
-				Entity.DeepSearch (list, alreadyFounded, edgeEntity.NextNode);
+				Entity.DeepSearch (list, alreadyFound, edgeEntity.NextNode);
 			}
 
 			if (edgeEntity.Continuation.IsNotNull ())
 			{
-				Entity.DeepSearch (list, alreadyFounded, edgeEntity.Continuation);
+				Entity.DeepSearch (list, alreadyFound, edgeEntity.Continuation);
 			}
 		}
 
-		static private void DeepSearch(List<AbstractEntity> list, List<AbstractEntity> alreadyFounded, WorkflowNodeEntity nodeEntity)
+		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowDefinitionEntity defEntity)
 		{
-			if (alreadyFounded.Contains (nodeEntity))
+			if (alreadyFound.Contains (defEntity))
+			{
+				return;
+			}
+
+			Entity.DeepSearch (list, alreadyFound, defEntity as WorkflowNodeEntity);
+			
+			defEntity.WorkflowNodes.ForEach (node => Entity.DeepSearch (list, alreadyFound, node));
+		}
+
+		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowNodeEntity nodeEntity)
+		{
+			if (alreadyFound.Contains (nodeEntity))
 			{
 				return;
 			}
 
 			list.Add (nodeEntity);
-			alreadyFounded.Add (nodeEntity);
+			alreadyFound.Add (nodeEntity);
 
 			foreach (var edgeEntity in nodeEntity.Edges)
 			{
-				Entity.DeepSearch (list, alreadyFounded, edgeEntity);
+				Entity.DeepSearch (list, alreadyFound, edgeEntity);
 			}
 		}
 	}

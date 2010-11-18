@@ -359,24 +359,27 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="file">The file that will contain the exported data.</param>
 		/// <param name="dataContext">The <see cref="DataContext"/> that owns the given <see cref="AbstractEntity"/>.</param>
-		/// <param name="entity">The <see cref="AbstractEntity"/> which is the root of the graph.</param>
+		/// <param name="entities">The collection of entities which will be exported.</param>
 		/// <param name="predicate">The predicate used to determine whether to export an <see cref="AbstractEntity"/> or not.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="dataContext"/> has not been created by this instance.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is foreign to <paramref name="dataContext"/>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="predicate"/> is <c>null</c>.</exception>
-		public void Export(FileInfo file, DataContext dataContext, AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entities"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entities"/> contains any entity foreign to <paramref name="dataContext"/>.</exception>
+		public void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate = null)
 		{
 			file.ThrowIfNull ("file");
 			dataContext.ThrowIfNull ("dataContext");
 			dataContext.ThrowIf (d => d.DataInfrastructure != this, "dataContext has not been created by this instance.");
-			entity.ThrowIfNull ("entity");
-			entity.ThrowIf (e => dataContext.IsForeignEntity (e), "entity is not owned by dataContext.");
-			predicate.ThrowIfNull ("predicate");
-			
-			ImportExportManager.Export (file, dataContext, entity, predicate);
+			entities.ThrowIfNull ("entity");
+			entities.ThrowIf (e => e.Any (x => dataContext.IsForeignEntity (x)), "entity is not owned by dataContext.");
+
+			if (predicate == null)
+			{
+				predicate = x => true;
+			}
+
+			ImportExportManager.Export (file, dataContext, entities, predicate);
 		}
 
 		/// <summary>

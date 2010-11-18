@@ -1505,7 +1505,9 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		internal void Export(string path)
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo (path);
-			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, this.workflowDefinitionEntity, e => true);
+
+			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
+			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, list);
 		}
 
 		internal void SaveImage(string path, double zoom)

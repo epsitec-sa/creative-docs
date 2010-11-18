@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -6,11 +7,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using System.Collections.Generic;
-
 using System.IO;
-
 using System.Linq;
-
 using System.Xml.Linq;
 
 
@@ -39,9 +37,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DataContext dataContext, AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
+		public static void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
-			var result = ImportExportManager.GetEntities (entity, predicate);
+			var result = ImportExportManager.GetEntities (entities, predicate);
 
 			ISet<AbstractEntity> exportableEntities = result.Item1;
 			ISet<AbstractEntity> externalEntities = result.Item2;
@@ -52,13 +50,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 		
-		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(AbstractEntity entity, System.Func<AbstractEntity, bool> predicate)
+		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
 			Stack<AbstractEntity> entitiesToProcess = new Stack<AbstractEntity> ();
 			ISet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ();
 			ISet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
 
-			entitiesToProcess.Push (entity);
+			entitiesToProcess.PushRange (entities);
 
 			while (entitiesToProcess.Any ())
 			{
