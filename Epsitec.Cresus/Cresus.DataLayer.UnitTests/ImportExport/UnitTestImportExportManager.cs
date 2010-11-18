@@ -47,15 +47,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.PupulateDatabase (dataContext);
-				}
-			}
+			DatabaseCreator2.PupulateDatabase ();
 		}
 
 
@@ -85,10 +77,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				dataInfrastructure.OpenConnection ("id");
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.RegisterSchema (dataContext);
-				}
+				DatabaseCreator2.RegisterSchema (dataInfrastructure);
 				
 				ImportExportManager.Import (file, dataInfrastructure);
 
@@ -131,10 +120,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				dataInfrastructure.OpenConnection ("id");
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.RegisterSchema (dataContext);
-				}
+				DatabaseCreator2.RegisterSchema (dataInfrastructure);
 				
 				ImportExportManager.Import (file, dataInfrastructure);
 
@@ -192,10 +178,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			{
 				dataInfrastructure.OpenConnection ("id");
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.RegisterSchema (dataContext);
-				}
+				DatabaseCreator2.RegisterSchema (dataInfrastructure);
 				
 				ImportExportManager.Import (file, dataInfrastructure);
 

@@ -337,16 +337,42 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// is properly defined in the database.
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to check.</typeparam>
-		/// <returns><c>true</c> if the type of the <see cref="AbstractEntity"/> is properly defined in the database, <c>false</c> if it is not.</returns>
-		public bool CheckSchema<TEntity>()
-			where TEntity : AbstractEntity, new ()
+		/// <returns><c>true</c> if the type of the <see cref="AbstractEntity"/> is properly defined in the database, <c>false</c> if it is not.</returns>		
+		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
+		public bool CheckSchema<TEntity>() where TEntity : AbstractEntity, new ()
 		{
+			this.AssertIsConnected ();
+
 			return this.SchemaEngine.SchemaBuilder.CheckSchema (EntityInfo<TEntity>.GetTypeId ());
 		}
 
 		public bool CheckSchema(Druid entityId)
 		{
+			this.AssertIsConnected ();
+
 			return this.SchemaEngine.SchemaBuilder.CheckSchema (entityId);
+		}
+
+		/// <summary>
+		/// Creates and persists the schema describing an <see cref="AbstractEntity"/> to the
+		/// database. The schema for the <see cref="AbstractEntity"/> is created with all the
+		/// dependencies.
+		/// </summary>
+		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> whose schema to create.</typeparam>
+		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
+		public void CreateSchema<TEntity>()
+			where TEntity : AbstractEntity, new ()
+		{
+			this.AssertIsConnected ();
+
+			this.SchemaEngine.CreateSchema<TEntity> ();
+		}
+
+		public void CreateSchema(Druid entityId)
+		{
+			this.AssertIsConnected ();
+
+			this.SchemaEngine.CreateSchema (entityId);
 		}
 
 		/// <summary>

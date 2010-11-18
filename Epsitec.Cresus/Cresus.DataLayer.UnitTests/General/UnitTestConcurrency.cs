@@ -41,10 +41,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					dataContext.CreateSchema<NaturalPersonEntity> ();
-					dataContext.CreateSchema<UriContactEntity> ();
-					dataContext.CreateSchema<MailContactEntity> ();
-					dataContext.CreateSchema<TelecomContactEntity> ();
+					dataInfrastructure.CreateSchema<NaturalPersonEntity> ();
+					dataInfrastructure.CreateSchema<UriContactEntity> ();
+					dataInfrastructure.CreateSchema<MailContactEntity> ();
+					dataInfrastructure.CreateSchema<TelecomContactEntity> ();
 				}
 			}
 

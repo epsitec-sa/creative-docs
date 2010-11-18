@@ -140,18 +140,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
-		/// <summary>
-		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
-		/// </summary>
-		private SchemaEngine SchemaEngine
-		{
-			get
-			{
-				return this.DataInfrastructure.SchemaEngine;
-			}
-		}
-
 		/// <summary>
 		/// Gets the <see cref="DataLoader"/> associated with this instance.
 		/// </summary>
@@ -965,28 +953,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataInfrastructure.DataContextPool.Synchronize (this, jobs);
 		}
 
-		/// <summary>
-		/// Creates and persists the schema describing an <see cref="AbstractEntity"/> to the
-		/// database. The schema for the <see cref="AbstractEntity"/> is created with all the
-		/// dependencies.
-		/// </summary>
-		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> whose schema to create.</typeparam>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public void CreateSchema<TEntity>()
-			where TEntity : AbstractEntity, new()
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			this.SchemaEngine.CreateSchema<TEntity> ();
-		}
-
-		public void CreateSchema(Druid entityId)
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			this.SchemaEngine.CreateSchema (entityId);
-		}
-
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>
@@ -1563,7 +1529,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			
-			this.SchemaEngine.LoadSchema (leafEntityId);
+			this.DataInfrastructure.SchemaEngine.LoadSchema (leafEntityId);
 		}
 
 

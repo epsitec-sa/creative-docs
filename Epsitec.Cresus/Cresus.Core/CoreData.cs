@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var entityId in this.GetManagedEntityIds ())
 			{
-				dataContext.CreateSchema (entityId);
+				this.DataInfrastructure.CreateSchema (entityId);
 			}
 		}
 
