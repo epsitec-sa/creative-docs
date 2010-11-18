@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(SoftwareUserEntity user)
 		{
-			user.Code = System.Guid.NewGuid ().ToString ("N");
+			user.Code = ItemCodeGenerator.NewCode ();
 			user.DisplayName = new FormattedText ("");
 			user.LoginName = "";
 			user.BeginDate = System.DateTime.Now;

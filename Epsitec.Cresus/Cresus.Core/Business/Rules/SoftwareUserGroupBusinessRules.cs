@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(SoftwareUserGroupEntity group)
 		{
-			group.Code = System.Guid.NewGuid ().ToString ("N");
+			group.Code = ItemCodeGenerator.NewCode ();
 			group.UserPowerLevel = Business.UserManagement.UserPowerLevel.None;
 		}
 	}
