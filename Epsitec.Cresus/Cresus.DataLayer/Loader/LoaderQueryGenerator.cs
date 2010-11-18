@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction innerTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData (innerTransaction, request);
+				valuesData = this.GetValueData (innerTransaction, request, false);
 				referencesData = this.GetReferenceData (innerTransaction, request);
 				collectionsData = this.GetCollectionData (innerTransaction, request);
 
@@ -136,7 +136,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public object GetValueField(AbstractEntity entity, Druid fieldId)
 		{
 			// TODO Make a more optimized request that only fetches the requested field value and which
-			// is not as overkill (and overslow?).
+			// is not as overkill (and overslow?). If this method is improved, then it might be a
+			// good idea to remove the returnBinaryBlob arguments from the GetValueData(...) method.
+			// Marc
 
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
@@ -154,7 +156,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData (transaction, request);
+				valuesData = this.GetValueData (transaction, request, true);
 
 				transaction.Commit ();
 			}
@@ -214,11 +216,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				targetsData = this.GetCollectionEntityData (transaction, entity, fieldId)
+				targetsData = this.GetCollectionEntityData(entity, fieldId)
 					.ToDictionary (data => data.RowKey, data => data);
 
 				targetKeys = this.GetCollectionKeys (transaction, entity, fieldId)
 					.Select (d => d.Item2).ToList ();
+
+				transaction.Commit ();
 			}
 
 			List<EntityData> entityData = new List<EntityData> ();
@@ -235,7 +239,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private IEnumerable<EntityData> GetCollectionEntityData(DbTransaction transaction, AbstractEntity entity, Druid fieldId)
+		private IEnumerable<EntityData> GetCollectionEntityData(AbstractEntity entity, Druid fieldId)
 		{
 			string fieldName = fieldId.ToResourceId ();
 
@@ -340,7 +344,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region GET VALUE DATA
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> GetValueData(DbTransaction transaction, Request request)
+		private Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> GetValueData(DbTransaction transaction, Request request, bool returnBinaryBlobs)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> ();
 
@@ -349,10 +353,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var fields = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.None)
 				.Where (field => field.Source == FieldSource.Value)
+				.Where (field => returnBinaryBlobs || field.Type.SystemType != typeof (byte[]))
 				.OrderBy (field => field.CaptionId.ToResourceId ())
 				.ToList ();
 
-			SqlSelect select = this.CreateSqlSelectForValueData (request);
+			SqlSelect select = this.CreateSqlSelectForValueData (request, returnBinaryBlobs);
 
 			transaction.SqlBuilder.SelectData (select);
 			DataSet data = this.DbInfrastructure.ExecuteRetData (transaction);
@@ -397,7 +402,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlSelect CreateSqlSelectForValueData(Request request)
+		private SqlSelect CreateSqlSelectForValueData(Request request, bool returnBinaryBlobs)
 		{
 			AbstractEntity entity = request.RootEntity;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -416,7 +421,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				throw new System.Exception ("Requested entity not found.");
 			}
 
-			SqlContainer sqlContainerForValues = this.BuildSqlContainerForValues (requestedAlias, requestedEntity);
+			SqlContainer sqlContainerForValues = this.BuildSqlContainerForValues (requestedAlias, requestedEntity, returnBinaryBlobs);
 
 			return sqlContainerForConditions.Plus (sqlContainerForValues).BuildSqlSelect ();
 		}
@@ -1013,7 +1018,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region VALUE QUERY GENERATION
 
 
-		private SqlContainer BuildSqlContainerForValues(AliasNode rootEntityAlias, AbstractEntity entity)
+		private SqlContainer BuildSqlContainerForValues(AliasNode rootEntityAlias, AbstractEntity entity, bool returnBinaryBlobs)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
@@ -1023,6 +1028,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.None)
 				.Where (field => field.Source == FieldSource.Value)
+				.Where (field => returnBinaryBlobs || field.Type.SystemType != typeof (byte[]))
 				.Select (field => field.CaptionId)
 				.OrderBy (field => field.ToResourceId ())
 				.Select (field => this.BuildSqlFieldForValueField (rootEntityAlias, entity, field))

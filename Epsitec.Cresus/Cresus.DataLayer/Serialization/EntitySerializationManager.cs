@@ -370,7 +370,16 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			switch (field.Relation)
 			{
 				case FieldRelation.None:
-					this.DeserializeEntityLocalFieldValue (entity, entityData, field);
+
+					if (!entityData.ValueData.ContainsValue (field.CaptionId) && field.Type.SystemType == typeof (byte[]))
+					{
+						this.InsertProxyForField (entity, field);
+					}
+					else
+					{
+						this.DeserializeEntityLocalFieldValue (entity, entityData, field);
+					}
+
 					break;
 
 				case FieldRelation.Reference:
