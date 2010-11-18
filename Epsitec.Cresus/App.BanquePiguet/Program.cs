@@ -1,7 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Library;
+
 using Epsitec.Cresus.Graph.Splash;
 using Epsitec.Common.Debug;
 

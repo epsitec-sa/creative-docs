@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Graph
 {
