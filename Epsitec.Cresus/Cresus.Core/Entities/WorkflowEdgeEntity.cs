@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Collections.Generic;
 using System.Linq;
 
