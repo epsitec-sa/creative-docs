@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public void InitializeDefaultValues()
 		{
-			this.Code = System.Guid.NewGuid ().ToString ("N");
+			this.Code = ItemCodeGenerator.NewCode ();
 		}
 
 		public WorkflowNodeEntity GetContinuationOrDefault(WorkflowNodeEntity defaultNode)

@@ -10218,6 +10218,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>IsForeign</c> field.
+		///	designer:fld/L0A5J/L0A2O
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2O]")]
+		public bool IsForeign
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0A2O]");
+			}
+			set
+			{
+				bool oldValue = this.IsForeign;
+				if (oldValue != value)
+				{
+					this.OnIsForeignChanging (oldValue, value);
+					this.SetField<bool> ("[L0A2O]", oldValue, value);
+					this.OnIsForeignChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Edges</c> field.
 		///	designer:fld/L0A5J/L0A8J
 		///	</summary>
@@ -10234,6 +10256,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnIsAutoChanged(bool oldValue, bool newValue);
 		partial void OnIsPublicChanging(bool oldValue, bool newValue);
 		partial void OnIsPublicChanged(bool oldValue, bool newValue);
+		partial void OnIsForeignChanging(bool oldValue, bool newValue);
+		partial void OnIsForeignChanged(bool oldValue, bool newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
