@@ -134,57 +134,21 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
-		public void CreateInitialWorkflow()
+		public bool CreateInitialWorkflow()
 		{
-			//	Crée le workflow initial, soit en désérialisant le diagramme, soit un injectant toutes
-			//	les entités pointées à partir de la définition.
+			//	Crée le workflow initial en désérialisant le diagramme.
 			if (this.RestoreDesign ())
 			{
 				this.UpdateWorlflowNodes ();
 				this.UpdateUniqueId ();
+				this.UpdateAfterGeometryChanged (null);
+
+				return true;
 			}
 			else
 			{
-				//	Désérialisation échouée.
-				this.initialNodePos = new Point (  0, 150);
-				this.initialEdgePos = new Point (150, 150);
-
-				var list = Entity.DeepSearch (this.workflowDefinitionEntity);
-				bool isRoot = true;
-
-				foreach (var entity in list)
-				{
-					if (entity is WorkflowEdgeEntity)
-					{
-						var edge = new ObjectEdge (this, entity as WorkflowEdgeEntity);
-						this.AddEdge (edge);
-
-						edge.Bounds = new Rectangle (this.initialEdgePos, edge.Bounds.Size);
-						this.initialEdgePos.Y += 80;
-					}
-
-					if (entity is WorkflowNodeEntity)
-					{
-						var node = new ObjectNode (this, entity as WorkflowNodeEntity);
-						node.IsRoot = isRoot;
-						this.AddNode (node);
-
-						node.Bounds = new Rectangle (this.initialNodePos, node.Bounds.Size);
-						this.initialNodePos.Y += 80;
-
-						isRoot = false;
-					}
-				}
-
-				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
-
-				foreach (var obj in this.LinkableObjects)
-				{
-					obj.CreateInitialLinks ();
-				}
+				return false;
 			}
-
-			this.UpdateAfterGeometryChanged (null);
 		}
 
 		private void UpdateWorlflowNodes()
