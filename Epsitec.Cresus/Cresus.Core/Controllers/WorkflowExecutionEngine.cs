@@ -186,9 +186,9 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
             }
 
-			this.AddStepToThreadHistory (thread, edge, edge.NextNode);
-			
-			WorkflowNodeEntity node = edge.NextNode;
+			WorkflowNodeEntity node = this.ResolveForeignNode (edge.NextNode);
+
+			this.AddStepToThreadHistory (thread, edge, node);
 				
 			if ((node == null) ||
 				(node.Edges.Count == 0))
@@ -216,6 +216,29 @@ namespace Epsitec.Cresus.Core.Controllers
 			return true;
 		}
 
+		private WorkflowNodeEntity ResolveForeignNode(WorkflowNodeEntity node)
+		{
+			if ((node.IsNotNull ()) &&
+				(node.IsForeign))
+			{
+				//	This is a foreign node, which means that we have to find the real
+				//	target node in another workflow. The target must be marked as public
+				//	and shares the same item code.
+
+				var repo    = new Repositories.WorkflowNodeRepository (this.data);
+				var example = repo.CreateExample ();
+				
+				example.Code      = node.Code;
+				example.IsPublic  = true;
+				example.IsForeign = true;
+				example.IsForeign = false;
+
+				node = repo.GetByExample (example).FirstOrDefault ();
+			}
+
+			return node;
+		}
+
 		private void StartNewThread(Arc arc)
 		{
 			WorkflowThreadEntity thread = this.businessContext.CreateEntity<WorkflowThreadEntity> ();
@@ -223,7 +246,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			thread.Definition = null;
 
 			this.AddThreadToWorkflow (thread);
-			this.AddStepToThreadHistory (thread, arc.Edge, arc.Edge.NextNode);
+			this.AddStepToThreadHistory (thread, arc.Edge, this.ResolveForeignNode (arc.Edge.NextNode));
 		}
 
 		private void AddThreadToWorkflow(WorkflowThreadEntity thread)
