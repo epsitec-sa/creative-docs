@@ -16,6 +16,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 {
@@ -217,13 +218,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 		{
 			this.listEntities.Items.Clear ();
 
-			this.workflowDefinitionEntities = this.editor.BusinessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
+			this.workflowDefinitionEntities = this.editor.BusinessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().Where (x => x.Code != this.editor.WorkflowDefinitionEntity.Code).ToList ();
 			foreach (var def in this.workflowDefinitionEntities)
 			{
-				if (def.Code != this.editor.WorkflowDefinitionEntity.Code)
-				{
-					this.listEntities.Items.Add (this.GetDefinitionDescription (def));
-				}
+				this.listEntities.Items.Add (this.GetDefinitionDescription (def));
 			}
 		}
 
