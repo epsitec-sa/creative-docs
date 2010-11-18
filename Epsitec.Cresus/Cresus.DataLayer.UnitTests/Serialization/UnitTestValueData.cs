@@ -59,6 +59,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		}
 
 
+		[TestMethod]
+		public void ContainsTest()
+		{
+			ValueData valueData = new ValueData ();
+
+			Dictionary<Druid, object> values = new Dictionary<Druid, object> ()
+			{
+				{ Druid.FromLong(1), 1},
+				{ Druid.FromLong(2), 2.0},
+				{ Druid.FromLong(3), "trois"},
+				{ Druid.FromLong(4), System.Tuple.Create (1, 2, 3, 4) },
+				{ Druid.FromLong(5), null },
+			};
+
+			foreach (Druid druid in values.Keys)
+			{
+				valueData[druid] = values[druid];
+			}
+
+			for (int i = 1; i < 6; i++)
+			{
+				Assert.IsTrue (valueData.ContainsValue (Druid.FromLong (i)));
+			}
+
+			for (int i = 6; i < 10; i++)
+			{
+				Assert.IsFalse (valueData.ContainsValue (Druid.FromLong (i)));
+			}
+		}
+
+
 	}
 
 

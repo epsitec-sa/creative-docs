@@ -45,9 +45,21 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
+		/// Tells whether there is a value in this instance for the given field.
+		/// </summary>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field to check.</param>
+		/// <returns><c>true</c> if this  instance contains a value for the given field, <c>false</c> if it does not.</returns>
+		public bool ContainsValue(Druid fieldId)
+		{
+			return this.values.ContainsKey (fieldId);
+		}
+
+
+		/// <summary>
 		/// Stores the values of the fields of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		private Dictionary<Druid, object> values;
+
 
 	}
 
