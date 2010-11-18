@@ -137,23 +137,19 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void CreateInitialWorkflow()
 		{
 			//	Crée le workflow initial en désérialisant le diagramme.
-			if (this.RestoreDesign ())
-			{
-				this.UpdateWorlflowNodes ();
-			}
-			else
+			if (!this.RestoreDesign ())
 			{
 				//	Désérialisation échouée. On suppose être en présence d'un nouveau
 				//	workflow fraichement créé, dont il faut juste reprendre le noeud initial.
 				var node = new ObjectNode (this, this.workflowDefinitionEntity);
 				node.IsRoot = true;
-				this.AddNode (node);
-
 				node.Bounds = new Rectangle (new Point (0, 150), node.Bounds.Size);
+				this.AddNode (node);
 
 				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 			}
 
+			this.UpdateWorlflowNodes ();
 			this.UpdateUniqueId ();
 			this.UpdateAfterGeometryChanged (null);
 		}
