@@ -118,21 +118,22 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		public override void ContextMenu()
 		{
-			if (this.IsSecondaryPublic)
+			if (this.Entity.IsForeign)  // noeud étranger ?
 			{
+				//	Aucune modification possible pour un noeud étranger.
 				return;
 			}
 
-			if (!this.Entity.IsPublic || !this.editor.IsReferencedNode (this.Entity))
+			if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
 			{
 				this.editor.CreateMenuItem (!this.Entity.IsPublic, "Noeud privé",  "Node.Private");
-				this.editor.CreateMenuItem (this.Entity.IsPublic,  "Noeud public", "Node.Public");
+				this.editor.CreateMenuItem ( this.Entity.IsPublic, "Noeud public", "Node.Public");
 
 				this.editor.CreateMenuSeparator ();
-
-				this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
-				this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
 			}
+
+			this.editor.CreateMenuItem (!this.Entity.IsAuto, "Noeud manuel",      "Node.Manuel");
+			this.editor.CreateMenuItem ( this.Entity.IsAuto, "Noeud automatique", "Node.Auto");
 		}
 
 		public override void MenuAction(string name)
@@ -141,13 +142,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
             {
 				case "Node.Private":
 					this.Entity.IsPublic = false;
-					this.isOriginalPublic = false;
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Node.Public":
 					this.Entity.IsPublic = true;
-					this.isOriginalPublic = true;
 					this.editor.SetLocalDirty ();
 					break;
 
@@ -235,22 +234,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			}
 		}
 
-		public bool IsOriginalPublic
-		{
-			get
-			{
-				return this.isOriginalPublic;
-			}
-		}
-
-		private bool IsSecondaryPublic
-		{
-			get
-			{
-				return this.Entity.IsPublic && !this.IsOriginalPublic;
-			}
-		}
-
 
 		public override void AcceptEdition()
 		{
@@ -313,7 +296,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return this.isExtended ? "Réduit la boîte" : "Etend la boîte";
 
 				case ActiveElement.NodeClose:
-					return this.Entity.IsPublic ? "Fermer le noeud" : "<b>Supprime</b> le noeud";
+					return "<b>Supprime</b> le noeud";
 
 				case ActiveElement.NodeComment:
 					return (this.comment == null) ? "Ajoute un commentaire au noeud" : "Ferme le commentaire";
@@ -386,7 +369,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			//	Le bouton de la souris est relâché.
 			base.MouseUp (message, pos);
 
-			if (this.HilitedElement == ActiveElement.NodeHeader && this.draggingMode == DraggingMode.None)
+			if (this.HilitedElement == ActiveElement.NodeHeader && this.draggingMode == DraggingMode.None && !this.Entity.IsForeign)
 			{
 				this.StartEdition (this.HilitedElement);
 				return;
@@ -436,17 +419,21 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (!this.isRoot)
 				{
-					if (!this.Entity.IsPublic)
+					if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
 					{
 						var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer le noeud ?", this.editor.Window);
 						if (result != Common.Dialogs.DialogResult.Yes)
 						{
 							return;
 						}
-					}
 
-					this.editor.CloseObject (this);
-					this.editor.UpdateAfterGeometryChanged (null);
+						this.editor.CloseObject (this);
+						this.editor.UpdateAfterGeometryChanged (null);
+					}
+					else
+					{
+						Common.Dialogs.MessageDialog.ShowMessage ("Il n'est pas possible de supprimer ce noeud public,<br/>car il est utilisé dans d'autres workflows !", this.editor.Window);
+					}
 				}
 			}
 
@@ -525,7 +512,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (this.HilitedElement == ActiveElement.NodeHeader)
 				{
-					if (this.draggingMode == DraggingMode.MoveObject)
+					if (this.draggingMode == DraggingMode.MoveObject || this.Entity.IsForeign)
 					{
 						return MouseCursorType.Move;
 					}
@@ -574,7 +561,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
-				if (!this.IsSecondaryPublic && !this.Entity.Description.IsNullOrWhiteSpace)
+				if (!this.Entity.Description.IsNullOrWhiteSpace)
 				{
 					this.comment.Text = this.Entity.Description.ToString ();
 				}
@@ -719,18 +706,28 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 			if (this.Entity.IsPublic)
 			{
+				double offset = 5.0;
+				double width = 4;
+
+				if (this.isRoot)
+				{
+					offset += 2.0;
+				}
+
+				var circlePath = new Path ();
+				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + offset);
+
+				Misc.DrawPathDash (graphics, circlePath, width, 5, 8.4, false, colorFrame);
+			}
+
+			if (this.Entity.IsForeign)
+			{
 				double offset = 2.5;
 				double width = 1;
 
 				if (this.isRoot)
 				{
-					offset = 4.5;
-				}
-
-				if (this.isOriginalPublic)
-				{
-					offset += 2;
-					width = 3;
+					offset += 2.0;
 				}
 
 				var circlePath = new Path ();
@@ -937,7 +934,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private void UpdateButtonStateOpenLink(ActiveButton button)
 		{
 			button.State.Hilited = this.hilitedElement == button.Element;
-			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && !this.IsSecondaryPublic;
+			button.State.Visible = this.IsHeaderHilite && !this.IsDragging && !this.Entity.IsForeign;
 		}
 
 		private void UpdateButtonStateExtend(ActiveButton button)
@@ -990,16 +987,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.Serialize (xml);
 
-			xml.Add (new XAttribute ("IsRoot",           this.isRoot));
-			xml.Add (new XAttribute ("IsOriginalPublic", this.isOriginalPublic));
+			xml.Add (new XAttribute ("IsRoot", this.isRoot));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
 
-			this.isRoot           = (bool) xml.Attribute ("IsRoot");
-			this.isOriginalPublic = (bool) xml.Attribute ("IsOriginalPublic");
+			this.isRoot = (bool) xml.Attribute ("IsRoot");
 		}
 		#endregion
 
@@ -1008,7 +1003,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		private static readonly double			extendedHeight = 70;
 
 		private bool							isRoot;
-		private bool							isOriginalPublic;
 		private TextLayout						title;
 
 		private AbstractTextField				editingTextField;
