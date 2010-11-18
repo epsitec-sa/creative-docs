@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 {
 	public class SelectPublicNodeDialog : AbstractDialog
 	{
-		public SelectPublicNodeDialog(Widget parent, BusinessContext businessContext)
+		public SelectPublicNodeDialog(Widget parent, Editor editor)
 		{
 			this.parent = parent;
-			this.businessContext = businessContext;
+			this.editor = editor;
 
 			this.workflowNodeEntities = new List<WorkflowNodeEntity> ();
 		}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 		{
 			this.listEntities.Items.Clear ();
 
-			this.workflowDefinitionEntities = this.businessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
+			this.workflowDefinitionEntities = this.editor.BusinessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
 			foreach (var def in this.workflowDefinitionEntities)
 			{
 				this.listEntities.Items.Add (this.GetDefinitionDescription (def));
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 				foreach (var node in def.WorkflowNodes)
 				{
-					if (node.IsPublic)
+					if (node.IsPublic && !this.editor.IsUsedCode (node.Code))
 					{
 						this.workflowNodeEntities.Add (node);
 						this.listNodes.Items.Add (this.GetNodeDescription (node));
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 
 
 		private readonly Widget					parent;
-		private readonly BusinessContext		businessContext;
+		private readonly Editor					editor;
 
 		private Window							window;
 		private ScrollList						listEntities;

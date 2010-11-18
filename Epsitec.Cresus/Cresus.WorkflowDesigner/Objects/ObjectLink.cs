@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void CreatePublicNode()
 		{
-			var dialog = new Dialogs.SelectPublicNodeDialog (this.editor, this.editor.BusinessContext);
+			var dialog = new Dialogs.SelectPublicNodeDialog (this.editor, this.editor);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 

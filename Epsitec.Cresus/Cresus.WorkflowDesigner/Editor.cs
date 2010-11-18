@@ -466,6 +466,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		}
 
 
+		public bool IsUsedCode(string code)
+		{
+			return this.workflowDefinitionEntity.WorkflowNodes.Where (x => x.Code == code).Count () != 0;
+		}
+
 		public LinkableObject SearchInitialObject(AbstractEntity entity)
 		{
 			//	Cherche un objet d'après l'entité qu'il représente.
