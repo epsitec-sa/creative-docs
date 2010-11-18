@@ -732,8 +732,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			var example = new WorkflowNodeEntity ();
 			example.Code = nodeEntity.Code;
-			example.IsForeign = true;  // nécessaire pour que le 'false' ci-dessous soit pris en compte
-			example.IsForeign = false;
+			example.IsForeign = true;
 
 			return this.businessContext.DataContext.GetByExample (example).Any () == false;
 		}

@@ -427,6 +427,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 							return;
 						}
 
+						if (this.comment != null)
+						{
+							this.AddComment ();  // ferme le commentaire
+						}
+
+						if (this.info != null)
+						{
+							this.AddInfo ();  // ferme le noeud
+						}
+
 						this.editor.CloseObject (this);
 						this.editor.UpdateAfterGeometryChanged (null);
 					}
@@ -583,7 +593,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.SetLocalDirty ();
 		}
 
-		private void AddInfo()
+		public void AddInfo()
 		{
 			//	Ajoute une information à la boîte.
 			if (this.info == null)

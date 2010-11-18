@@ -706,6 +706,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return;
 				}
 
+				if (this.comment != null)
+				{
+					this.AddComment ();  // ferme le commentaire
+				}
+
 				this.editor.CloseObject (this);
 				this.editor.UpdateAfterGeometryChanged (null);
 			}
