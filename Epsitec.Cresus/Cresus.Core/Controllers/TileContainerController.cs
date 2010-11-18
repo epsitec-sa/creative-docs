@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
 	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
-	public sealed partial class TileContainerController : System.IDisposable, IClickSimulator, IWidgetUpdater, IIsDisposed
+	public sealed partial class TileContainerController : IClickSimulator, IWidgetUpdater, IIsDisposed
 	{
 		private TileContainerController(TileContainer container, Widget parent = null)
 		{
