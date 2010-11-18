@@ -42,15 +42,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DatabaseCreator2.PupulateDatabase (dataContext);
-				}
-			}
+			DatabaseCreator2.PupulateDatabase ();
 		}
 		
 

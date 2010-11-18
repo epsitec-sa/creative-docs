@@ -30,14 +30,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
+			DatabaseCreator2.PupulateDatabase ();
+
 			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
 			{
 				dataInfrastructure.OpenConnection ("id");
 
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					DatabaseCreator2.PupulateDatabase (dataContext);
-
 					for (int i = 0; i < 5; i++)
 					{
 						int? rank = (i % 2 == 0) ? (int?) null : i;

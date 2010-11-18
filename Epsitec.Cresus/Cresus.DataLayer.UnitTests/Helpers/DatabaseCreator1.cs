@@ -197,10 +197,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 				
 				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					dataContext.CreateSchema<AbstractPersonEntity> ();
-					dataContext.CreateSchema<MailContactEntity> ();
-					dataContext.CreateSchema<TelecomContactEntity> ();
-					dataContext.CreateSchema<UriContactEntity> ();
+					dataInfrastructure.CreateSchema<AbstractPersonEntity> ();
+					dataInfrastructure.CreateSchema<MailContactEntity> ();
+					dataInfrastructure.CreateSchema<TelecomContactEntity> ();
+					dataInfrastructure.CreateSchema<UriContactEntity> ();
 
 					System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 
