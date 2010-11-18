@@ -133,6 +133,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			//	les entités pointées à partir de la définition.
 			if (this.RestoreDesign ())
 			{
+				this.UpdateWorlflowNodes ();
 				this.UpdateUniqueId ();
 			}
 			else
@@ -179,15 +180,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.UpdateAfterGeometryChanged (null);
 		}
 
-		public TEntity CreateEntity<TEntity>()
-			where TEntity : AbstractEntity, new ()
+		private void UpdateWorlflowNodes()
 		{
-			var entity = this.BusinessContext.DataContext.CreateEntity<TEntity> ();
+			//	Reconstruit complètement la liste WorkflowDefinitionEntity.WorkflowNodes en fonction des
+			//	objets graphiques.
+			this.workflowDefinitionEntity.WorkflowNodes.Clear ();
 
-			Epsitec.Common.Support.EntityEngine.EntityContext.InitializeDefaultValues (entity);
-
-			return entity;
+			foreach (var node in this.nodes)
+			{
+				this.workflowDefinitionEntity.WorkflowNodes.Add (node.Entity);
+			}
 		}
+
 
 		#region Serialization
 		private bool RestoreDesign()
@@ -732,56 +736,38 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			//	Supprime l'entité dans la base.
-			bool delete = true;
-
-			if (obj is ObjectNode)
-			{
-				var node = obj as ObjectNode;
-				delete = this.IsDeletePossible (node.Entity);
-			}
-
-			if (delete)
-			{
-				this.businessContext.DataContext.DeleteEntity (obj.AbstractEntity);
-			}
+			this.DeleteEntity (obj.AbstractEntity);
 
 			this.SetLocalDirty ();
 		}
 
-		private bool IsDeletePossible(WorkflowNodeEntity nodeEntity)
+		public bool IsUnusedPublicNode(WorkflowNodeEntity nodeEntity)
 		{
-			//	Les noeuds publiques ne sont jamais supprimés dans la base.
-			if (nodeEntity.IsPublic)
+			//	Indique si un noeud public n'a aucun "jumeau" de type IsForeign.
+			if (!nodeEntity.IsPublic)
 			{
-				return false;
+				return true;
 			}
 
-			//	Si le noeud est référencé par un 'edge' qui ne fait pas partie de ce diagramme,
-			//	il ne faut pas le supprimer.
-			return !this.IsReferencedNode (nodeEntity);
-		}
+			var example = new WorkflowNodeEntity ();
+			example.Code = nodeEntity.Code;
+			example.IsForeign = true;  // TODO: est-ce nécessaire ?
+			example.IsForeign = false;
 
-		public bool IsReferencedNode(WorkflowNodeEntity nodeEntity)
-		{
-			//	Retourne true si le noeud est référencé par un 'edge' qui ne fait pas partie de ce diagramme.
-			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
-
-			var edgeEntities = this.FindEdges (nodeEntity);
-			foreach (var edgeEntity in edgeEntities)
+			Request request = new Request ()
 			{
-				if (!list.Contains (edgeEntity))  // edge d'un autre diagramme ?
-				{
-					return true;
-				}
-			}
+				RootEntity = example,
+			};
 
+			//?var list = this.businessContext.DataContext.GetByRequest<WorkflowEdgeEntity> (request);
+			//?return list.Count () == 0;
 			return false;
 		}
 
 		private List<WorkflowEdgeEntity> FindEdges(WorkflowNodeEntity nodeEntity)
 		{
 			//	Cherche toutes les entités 'edge' qui pointent un 'node' donné.
-			WorkflowEdgeEntity example = new WorkflowEdgeEntity ()
+			var example = new WorkflowEdgeEntity ()
 			{
 				NextNode = nodeEntity,
 				Code = null,
@@ -793,6 +779,42 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			};
 
 			return this.businessContext.DataContext.GetByRequest<WorkflowEdgeEntity> (request).ToList ();
+		}
+
+
+		public TEntity CreateEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
+		{
+			var entity = this.BusinessContext.DataContext.CreateEntity<TEntity> ();
+
+			EntityContext.InitializeDefaultValues (entity);
+
+			if (entity is WorkflowNodeEntity)
+			{
+				var node = entity as WorkflowNodeEntity;
+
+				if (!this.workflowDefinitionEntity.WorkflowNodes.Contains (node))
+				{
+					this.workflowDefinitionEntity.WorkflowNodes.Add (node);
+				}
+			}
+
+			return entity;
+		}
+
+		private void DeleteEntity(AbstractEntity entity)
+		{
+			this.businessContext.DataContext.DeleteEntity (entity);
+
+			if (entity is WorkflowNodeEntity)
+			{
+				var node = entity as WorkflowNodeEntity;
+
+				if (this.workflowDefinitionEntity.WorkflowNodes.Contains (node))
+				{
+					this.workflowDefinitionEntity.WorkflowNodes.Remove (node);
+				}
+			}
 		}
 
 
@@ -1506,7 +1528,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo (path);
 
-			var list = Entity.DeepSearch (this.workflowDefinitionEntity);
+			var list = new List<WorkflowDefinitionEntity> ();
+			list.Add (this.workflowDefinitionEntity);
 			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, list);
 		}
 

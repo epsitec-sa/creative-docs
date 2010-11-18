@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				{
 					if (message.IsControlPressed)
 					{
-						this.InsertPublicNode ();
+						this.CreatePublicNode ();
 					}
 					else
 					{
@@ -368,6 +368,36 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			var nodeEntity = this.editor.CreateEntity<WorkflowNodeEntity> ();
 
+			this.CreateNode (nodeEntity);
+		}
+
+		private void CreatePublicNode()
+		{
+			var dialog = new Dialogs.SelectPublicNodeDialog (this.editor, this.editor.BusinessContext);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
+
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
+
+			WorkflowNodeEntity publicEntity = dialog.NodeEntity;
+			if (publicEntity == null)
+			{
+				return;
+			}
+
+			var nodeEntity = this.editor.CreateEntity<WorkflowNodeEntity> ();
+			nodeEntity.Code = publicEntity.Code;
+			nodeEntity.Name = publicEntity.Name;
+			nodeEntity.IsForeign = true;
+
+			this.CreateNode (nodeEntity);
+		}
+
+		private void CreateNode(WorkflowNodeEntity nodeEntity)
+		{
 			var obj = new ObjectNode (this.editor, nodeEntity);
 			obj.ColorFartory.ColorItem = this.srcObject.ColorFartory.ColorItem;
 
@@ -385,32 +415,6 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
 		}
 
-		private void InsertPublicNode()
-		{
-			var dialog = new Dialogs.SelectPublicNodeDialog (this.editor, this.editor.BusinessContext);
-			dialog.IsModal = true;
-			dialog.OpenDialog ();
-
-			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
-			{
-				return;
-			}
-
-			var obj = new ObjectNode (this.editor, dialog.NodeEntity);
-
-			this.dstObject = obj;
-			this.srcObject.AddEntityLink (obj, this.IsContinuation);
-
-			this.startManual = false;
-			this.endManual = false;
-
-			this.editor.EditableObject = obj;
-			this.editor.AddNode (obj);
-			obj.SetBoundsAtEnd (this.startVector.Origin, this.endVector.Origin);
-			this.editor.UpdateGeometry ();
-
-			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
-		}
 
 		private void MoveObjectToFreeArea(LinkableObject obj, Point start, Point end)
 		{

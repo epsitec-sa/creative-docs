@@ -28,6 +28,34 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			return list;
 		}
 
+		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowDefinitionEntity defEntity)
+		{
+			if (alreadyFound.Contains (defEntity))
+			{
+				return;
+			}
+
+			Entity.DeepSearch (list, alreadyFound, defEntity as WorkflowNodeEntity);
+
+			defEntity.WorkflowNodes.ForEach (node => Entity.DeepSearch (list, alreadyFound, node));
+		}
+
+		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowNodeEntity nodeEntity)
+		{
+			if (alreadyFound.Contains (nodeEntity))
+			{
+				return;
+			}
+
+			list.Add (nodeEntity);
+			alreadyFound.Add (nodeEntity);
+
+			foreach (var edgeEntity in nodeEntity.Edges)
+			{
+				Entity.DeepSearch (list, alreadyFound, edgeEntity);
+			}
+		}
+
 		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowEdgeEntity edgeEntity)
 		{
 			if (alreadyFound.Contains (edgeEntity))
@@ -46,34 +74,6 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			if (edgeEntity.Continuation.IsNotNull ())
 			{
 				Entity.DeepSearch (list, alreadyFound, edgeEntity.Continuation);
-			}
-		}
-
-		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowDefinitionEntity defEntity)
-		{
-			if (alreadyFound.Contains (defEntity))
-			{
-				return;
-			}
-
-			Entity.DeepSearch (list, alreadyFound, defEntity as WorkflowNodeEntity);
-			
-			defEntity.WorkflowNodes.ForEach (node => Entity.DeepSearch (list, alreadyFound, node));
-		}
-
-		static private void DeepSearch(List<AbstractEntity> list, HashSet<AbstractEntity> alreadyFound, WorkflowNodeEntity nodeEntity)
-		{
-			if (alreadyFound.Contains (nodeEntity))
-			{
-				return;
-			}
-
-			list.Add (nodeEntity);
-			alreadyFound.Add (nodeEntity);
-
-			foreach (var edgeEntity in nodeEntity.Edges)
-			{
-				Entity.DeepSearch (list, alreadyFound, edgeEntity);
 			}
 		}
 	}

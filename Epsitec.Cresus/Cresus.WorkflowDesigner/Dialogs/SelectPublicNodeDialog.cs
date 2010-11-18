@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 				}
 				else
 				{
-					var node = this.workflowNodeEntities[sel];
-					return this.businessContext.GetLocalEntity (node);
+					return this.workflowNodeEntities[sel];
 				}
 			}
 		}
@@ -235,19 +234,13 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			if (sel != -1)
 			{
 				var def = this.workflowDefinitionEntities[sel];
-				var list = Entity.DeepSearch (def).Where (x => x is WorkflowNodeEntity).Cast<WorkflowNodeEntity> ().OrderBy (x => x.Name);
 
-				foreach (var entity in list)
+				foreach (var node in def.WorkflowNodes)
 				{
-					if (entity is WorkflowNodeEntity)
+					if (node.IsPublic)
 					{
-						var node = entity as WorkflowNodeEntity;
-
-						if (node.IsPublic)
-						{
-							this.workflowNodeEntities.Add (node);
-							this.listNodes.Items.Add (this.GetNodeDescription (node));
-						}
+						this.workflowNodeEntities.Add (node);
+						this.listNodes.Items.Add (this.GetNodeDescription (node));
 					}
 				}
 			}

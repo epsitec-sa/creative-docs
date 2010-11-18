@@ -53,11 +53,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.attachObject is ObjectNode)
 				{
 					var node = this.attachObject as ObjectNode;
-
-					if (node.IsOriginalPublic)
-					{
-						return node.Entity.Description.ToString ();
-					}
+					return node.Entity.Description.ToString ();
 				}
 
 				return null;
@@ -67,11 +63,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				if (this.attachObject is ObjectNode)
 				{
 					var node = this.attachObject as ObjectNode;
-
-					if (node.IsOriginalPublic)
-					{
-						node.Entity.Description = value;
-					}
+					node.Entity.Description = value;
 				}
 			}
 		}
