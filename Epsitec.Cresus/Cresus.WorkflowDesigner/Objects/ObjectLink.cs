@@ -413,6 +413,11 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.UpdateGeometry ();
 
 			this.MoveObjectToFreeArea (obj, this.startVector.Origin, this.endVector.Origin);
+
+			if (obj.Entity.IsForeign)
+			{
+				obj.AddInfo ();  // montre la bulle des informations
+			}
 		}
 
 

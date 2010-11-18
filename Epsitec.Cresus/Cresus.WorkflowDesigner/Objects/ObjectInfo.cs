@@ -118,7 +118,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.UpdateButtonsState ();
 			}
 
-			if (this.HilitedElement >= ActiveElement.InfoLine1 &&
+			if (!this.LinkToForeign &&
+				this.HilitedElement >= ActiveElement.InfoLine1 &&
 				this.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 			{
 				this.draggingMode = DraggingMode.MoveInfoLine;
@@ -244,7 +245,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					return MouseCursorType.Move;
 				}
 
-				if (this.HilitedElement >= ActiveElement.InfoLine1 &&
+				if (!this.LinkToForeign &&
+					this.HilitedElement >= ActiveElement.InfoLine1 &&
 					this.HilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 				{
 					return MouseCursorType.VerticalMove;
@@ -292,7 +294,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				int sel = -1;
 
-				if (this.hilitedElement >= ActiveElement.InfoLine1 &&
+				if (!this.LinkToForeign &&
+					this.hilitedElement >= ActiveElement.InfoLine1 &&
 					this.hilitedElement <= ActiveElement.InfoLine1+ObjectInfo.maxLines)
 				{
 					sel = this.hilitedElement - ActiveElement.InfoLine1;
@@ -423,9 +426,49 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.textLayouts.Add (textLayout);
 			}
 
-			for (int i = 0; i < lineCount; i++)
+			if (this.Node.Entity.IsForeign)
 			{
-				this.textLayouts[i].Text = this.Node.Entity.Edges[i].Name.ToString ();
+				this.textLayouts[0].Text = this.ForeignName;
+			}
+			else
+			{
+				for (int i = 0; i < lineCount; i++)
+				{
+					this.textLayouts[i].Text = this.Node.Entity.Edges[i].Name.ToString ();
+				}
+			}
+		}
+
+		private string ForeignName
+		{
+			get
+			{
+				if (this.LinkToForeign)
+				{
+					var code = this.Node.Entity.Code;
+					var defs = this.editor.BusinessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
+
+					foreach (var def in defs)
+					{
+						foreach (var node in def.WorkflowNodes)
+						{
+							if (node.IsPublic && node.Code == code)
+							{
+								return string.Concat ("<i>Vers <b>", def.WorkflowName, "</b> noeud <b>", node.Name, "</b></i>");
+							}
+						}
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private bool LinkToForeign
+		{
+			get
+			{
+				return this.Node != null && this.Node.Entity.IsForeign;
 			}
 		}
 
@@ -466,7 +509,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				}
 				else
 				{
-					return this.Node.Entity.Edges.Count;
+					if (this.LinkToForeign)
+					{
+						return 1;  // toujours une seule ligne pour afficher "Vers Entité.Noeud"
+					}
+					else
+					{
+						return this.Node.Entity.Edges.Count;
+					}
 				}
 			}
 		}
