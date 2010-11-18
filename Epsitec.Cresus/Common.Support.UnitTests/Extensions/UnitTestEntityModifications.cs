@@ -1,5 +1,4 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.UnitTests.Entities;
 
@@ -214,7 +213,7 @@ namespace Epsitec.Common.Support.UnitTests
 			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
 
 			person.Gender = null;
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
 		}
 
 
@@ -296,7 +295,7 @@ namespace Epsitec.Common.Support.UnitTests
 			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
 
 			person.BirthDate = null;
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
 		}
 
 
