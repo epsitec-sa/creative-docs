@@ -340,27 +340,29 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			string itemName = key.Substring (0, pos);
 			string itemCode = key.Substring (pos+1);
 
-			AbstractEntity example = null;
+			AbstractEntity example;
 
 			switch (itemName)
 			{
 				case "Node":
-					example = new WorkflowNodeEntity ();
-					break;
-				
+					return this.workflowDefinitionEntity.WorkflowNodes.Where (x => x.Code == itemCode).FirstOrDefault ();
+
 				case "Edge":
-					example = new WorkflowEdgeEntity ();
+					example = new WorkflowEdgeEntity { Code = itemCode };
 					break;
 				
 				case "Definition":
-					example = new WorkflowDefinitionEntity ();
+					if (this.workflowDefinitionEntity.Code == itemCode)
+					{
+						return this.workflowDefinitionEntity;
+					}
+
+					example = new WorkflowDefinitionEntity { Code = itemCode };
 					break;
 
 				default:
 					throw new System.FormatException ("Invalid entity specified by key");
 			}
-
-			((IItemCode) example).Code = itemCode;
 
 			return this.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
