@@ -371,10 +371,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return null;
 			}
 
-			string[] args = key.Split ('/');
-			
-			string itemName = args[0];
-			string itemCode = args[1];
+			int pos = key.IndexOf ('/');
+
+			string itemName = key.Substring (0, pos);
+			string itemCode = key.Substring (pos+1);
 
 			AbstractEntity example = null;
 
@@ -763,17 +763,10 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			var example = new WorkflowNodeEntity ();
 			example.Code = nodeEntity.Code;
-			example.IsForeign = true;  // TODO: est-ce nécessaire ?
+			example.IsForeign = true;			//	nécessaire pour que le 'false' ci-dessous soit pris en compte
 			example.IsForeign = false;
 
-			Request request = new Request ()
-			{
-				RootEntity = example,
-			};
-
-			//?var list = this.businessContext.DataContext.GetByRequest<WorkflowEdgeEntity> (request);
-			//?return list.Count () == 0;
-			return false;
+			return this.businessContext.DataContext.GetByExample (example).Any () == false;
 		}
 
 		private List<WorkflowEdgeEntity> FindEdges(WorkflowNodeEntity nodeEntity)

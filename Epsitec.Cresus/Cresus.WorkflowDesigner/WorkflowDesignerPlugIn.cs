@@ -103,6 +103,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			this.DisposeWorkflowDesigner ();
 
+			businessContext.AcquireLock ();
+			
 			this.activeDesigner   = new WorkflowDesigner (this.orchestrator, businessContext, workflow);
 			this.activeController = new DummyWorkflowController (this.orchestrator.Navigator, navigationPath);
 
