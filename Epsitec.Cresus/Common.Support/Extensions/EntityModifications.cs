@@ -30,13 +30,18 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			entity.ThrowIfNull ("entity");
 			
-			object originalValue = entity.GetOriginalValue (fieldId);
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
-			bool modifiedValueExists = (modifiedValue != UndefinedValue.Value);
-			bool bothValuesAreNotEqual = !System.Object.Equals (originalValue, modifiedValue);
+			bool change = false;
 
-			return modifiedValueExists && bothValuesAreNotEqual;
+			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
+			{
+				object originalValue = entity.GetOriginalValue (fieldId);
+
+				change = !System.Object.Equals (originalValue, modifiedValue);
+			}
+
+			return change;
 		}
 
 
@@ -49,14 +54,19 @@ namespace Epsitec.Common.Support.Extensions
 		public static bool HasReferenceChanged(this AbstractEntity entity, Druid fieldId)
 		{
 			entity.ThrowIfNull ("entity");
-			
-			object originalValue = entity.GetOriginalValue (fieldId);
+
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
-			bool modifiedValueExists = (modifiedValue != UndefinedValue.Value);
-			bool bothValuesAreNotEqual = !System.Object.Equals (originalValue, modifiedValue);
+			bool change = false;
 
-			return modifiedValueExists && bothValuesAreNotEqual;
+			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
+			{
+				object originalValue = entity.GetOriginalValue (fieldId);
+
+				change = !System.Object.Equals (originalValue, modifiedValue);
+			}
+
+			return change;
 		}
 
 
@@ -69,26 +79,29 @@ namespace Epsitec.Common.Support.Extensions
 		public static bool HasCollectionChanged(this AbstractEntity entity, Druid fieldId)
 		{
 			entity.ThrowIfNull ("entity");
-			
-			object originalValue = entity.GetOriginalValue (fieldId);
+
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
-			bool originalIsUndefined = UndefinedValue.IsUndefinedValue (originalValue);
-			bool modifiedIsUndefined = UndefinedValue.IsUndefinedValue (modifiedValue);
+			bool change = false;
 
-			if (originalIsUndefined || modifiedIsUndefined)
+			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
 			{
-				bool modifiedIsDefined = !modifiedIsUndefined;
+				object originalValue = entity.GetOriginalValue (fieldId);
 
-				return modifiedIsDefined;
-			}
-			else
-			{
-				IList<object> originalValues = (IList<object>) originalValue;
-				IList<object> modifiedValues = (IList<object>) modifiedValue;
+				if (UndefinedValue.IsUndefinedValue (originalValue))
+				{
+					change = true;
+				}
+				else
+				{
+					IList<object> originalValues = (IList<object>) originalValue;
+					IList<object> modifiedValues = (IList<object>) modifiedValue;
 
-				return !originalValues.SequenceEqual (modifiedValues);
+					change = !originalValues.SequenceEqual (modifiedValues);
+				}
 			}
+
+			return change;
 		}
 		
 
