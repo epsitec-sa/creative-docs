@@ -9,7 +9,7 @@ using System.Data;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database
+namespace Epsitec.Cresus.Database.Services
 {
 
 
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbAbstractAttachable</c> class provides the basic functions for classes that must deal
 	/// with a single <see cref="DbTable"/> in the database.
 	/// </summary>
-	public class DbAbstractAttachable : IAttachable
+	public class DbAbstractAttachable
 	{
 
 
@@ -60,9 +60,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 
-		#region IAttachable Members
-
-		
 		/// <summary>
 		/// Attaches this instance to the specified database table.
 		/// </summary>
@@ -92,9 +89,6 @@ namespace Epsitec.Cresus.Database
 			this.DbInfrastructure = null;
 			this.DbTable = null;
 		}
-
-
-		#endregion
 		
 
 		/// <summary>

@@ -128,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\DbInfoManager.cs" />
-    <Compile Include="DbAbstractAttachable.cs" />
+    <Compile Include="Services\DbAbstractAttachable.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -272,9 +272,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\SyntaxException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IAttachable.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbAbstraction.cs">
