@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.document  = document;
 			this.totalItem = totalItem;
 			this.discount  = this.totalItem.Discount.UnwrapNullEntity ();
-			this.currencyCode = this.document.BillingCurrencyCode;
+			this.currencyCode = this.document.CurrencyCode;
 		}
 
 

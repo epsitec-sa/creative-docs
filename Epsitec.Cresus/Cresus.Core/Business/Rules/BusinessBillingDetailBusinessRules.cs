@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					dueDate = invoice.BillingDate.Value;
 				}
 
-				currencyCode = invoice.BillingCurrencyCode;
+				currencyCode = invoice.CurrencyCode;
 			}
 
 

@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as MailContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
 					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name));
 					table.SetText (2, index, x.Address.Location.PostalCode);
 					table.SetText (3, index, x.Address.Location.Name);
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as TelecomContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
 					table.SetText (1, index, TextFormatter.FormatText (x.TelecomType.Name));
 					table.SetText (2, index, TextFormatter.FormatText (x.Number));
 					index++;
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as UriContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
 					table.SetText (1, index, TextFormatter.FormatText (x.Uri));
 					index++;
 				}

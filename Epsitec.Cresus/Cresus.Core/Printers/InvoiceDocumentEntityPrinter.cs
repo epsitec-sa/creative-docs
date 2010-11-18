@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, metadata, doc));
 
-			if (doc.BillingMailContact != null)
+			if (doc.BillToMailContact != null)
 			{
-				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, doc.BillingMailContact));
+				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, doc.BillToMailContact));
 			}
 
 			{

@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionContactRoleViewController : EditionViewController<Entities.ContactRoleEntity>
+	public class EditionContactRoleViewController : EditionViewController<Entities.ContactGroupEntity>
 	{
-		public EditionContactRoleViewController(string name, Entities.ContactRoleEntity entity)
+		public EditionContactRoleViewController(string name, Entities.ContactGroupEntity entity)
 			: base (name, entity)
 		{
 		}

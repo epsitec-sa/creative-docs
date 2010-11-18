@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Number, "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
+			return TextFormatter.FormatText (this.Number, "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Number.GetEntityStatus ());
 				a.Accumulate (this.Extension.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.Roles.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;

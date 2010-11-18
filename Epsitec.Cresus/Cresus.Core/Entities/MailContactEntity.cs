@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public FormattedText GetTitle()
 		{
-			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
+			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
 		public override FormattedText GetSummary()
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Address.GetEntityStatus ());
 				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.Roles.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;

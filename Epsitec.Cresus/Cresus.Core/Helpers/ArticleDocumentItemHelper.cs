@@ -120,13 +120,13 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					description = article.ReplacementText;
 				}
-				else if (!article.ArticleDefinition.ShortDescription.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
 				{
-					description = article.ArticleDefinition.ShortDescription;
+					description = article.ArticleDefinition.Name;
 				}
-				else if (!article.ArticleDefinition.LongDescription.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
 				{
-					description = article.ArticleDefinition.LongDescription;
+					description = article.ArticleDefinition.Description;
 				}
 			}
 			else  // description longue prioritaire ?
@@ -135,13 +135,13 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					description = article.ReplacementText;
 				}
-				else if (!article.ArticleDefinition.LongDescription.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
 				{
-					description = article.ArticleDefinition.LongDescription;
+					description = article.ArticleDefinition.Description;
 				}
-				else if (!article.ArticleDefinition.ShortDescription.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
 				{
-					description = article.ArticleDefinition.ShortDescription;
+					description = article.ArticleDefinition.Name;
 				}
 			}
 

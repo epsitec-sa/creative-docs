@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ContactRoleEntity
+	public partial class ContactGroupEntity
 	{
 		public override FormattedText GetSummary()
 		{

@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 						   orderby tax.CodeRate ascending
 						   select tax;
 
-			var currency = this.document.BillingCurrencyCode;
+			var currency = this.document.CurrencyCode;
 
 			this.GenerateVatLines (taxReservoir, taxInfos, currency);
 			this.GenerateEndTotalLine (totalReservoir, taxTotals, currency);

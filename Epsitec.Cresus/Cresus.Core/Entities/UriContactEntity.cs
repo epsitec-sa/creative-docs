@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Uri, "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
+			return TextFormatter.FormatText (this.Uri, "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Uri.GetEntityStatus ());
-				a.Accumulate (this.Roles.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;

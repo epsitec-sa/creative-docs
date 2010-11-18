@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.document     = document;
 			this.articleItem  = articleItem;
 			this.articleDef   = this.articleItem.ArticleDefinition;
-			this.currencyCode = this.document.BillingCurrencyCode;
-			this.priceGroup   = this.document.BillingPriceGroup.UnwrapNullEntity ();
+			this.currencyCode = this.document.CurrencyCode;
+			this.priceGroup   = this.document.PriceGroup.UnwrapNullEntity ();
 			this.date         = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
 
 			this.notDiscountable = this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
