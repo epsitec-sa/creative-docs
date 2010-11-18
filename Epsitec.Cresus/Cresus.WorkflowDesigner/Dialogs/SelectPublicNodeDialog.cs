@@ -220,7 +220,10 @@ namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
 			this.workflowDefinitionEntities = this.editor.BusinessContext.Data.GetAllEntities<WorkflowDefinitionEntity> ().ToList ();
 			foreach (var def in this.workflowDefinitionEntities)
 			{
-				this.listEntities.Items.Add (this.GetDefinitionDescription (def));
+				if (def.Code != this.editor.WorkflowDefinitionEntity.Code)
+				{
+					this.listEntities.Items.Add (this.GetDefinitionDescription (def));
+				}
 			}
 		}
 
