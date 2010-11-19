@@ -52,36 +52,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public bool IsContinuousPreview
-		{
-			get;
-			set;
-		}
-
-		public double ContinuousHeight
-		{
-			get
-			{
-				return (Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax) * this.ContinuousScale;
-			}
-		}
-
-		public double ContinuousVerticalOffset
-		{
-			get
-			{
-				return this.continuousVerticalOffset;
-			}
-			set
-			{
-				if (this.continuousVerticalOffset != value)
-				{
-					this.continuousVerticalOffset = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
 		/// <summary>
 		/// La description vient dans la deuxième ligne du tooltip.
 		/// </summary>
@@ -135,13 +105,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				double offsetX = clientBounds.Left   + System.Math.Ceiling ((clientBounds.Width  - this.documentPrinter.RequiredPageSize.Width *scale) / 2);
 				double offsetY = clientBounds.Bottom + System.Math.Ceiling ((clientBounds.Height - this.documentPrinter.RequiredPageSize.Height*scale) / 2);
 
-				if (this.IsContinuousPreview)
-				{
-					scale = this.ContinuousScale;
-					offsetX = 0;
-					offsetY = this.continuousVerticalOffset - Printers.AbstractDocumentPrinter.continuousHeight*scale + clientBounds.Height;
-				}
-
 				//	Dessine le fond d'une page blanche.
 				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.documentPrinter.RequiredPageSize.Width*scale), System.Math.Floor (this.documentPrinter.RequiredPageSize.Height*scale));
 
@@ -191,14 +154,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private double ContinuousScale
-		{
-			get
-			{
-				return this.Client.Bounds.Width / this.documentPrinter.RequiredPageSize.Width;
-			}
-		}
-
 		private static void PaintDashedRectangle(Graphics graphics, Rectangle rect)
 		{
 			var path = new DashedPath ();
@@ -213,43 +168,34 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void UpdateTooltip()
 		{
-			if (this.IsContinuousPreview)
+			var builder = new TextBuilder ();
+
+			builder.Append ("<font size=\"13\"><b>");
+			builder.Append ("Page ");
+			builder.Append ((this.currentPage+1).ToString ());
+			builder.Append ("</b></font>");
+
+			if (this.documentPrinter != null)
 			{
-				ToolTip.Default.HideToolTipForWidget (this);
+				builder.Append (" (");
+				builder.Append (this.documentPrinter.RequiredPageSize.Width.ToString ());
+				builder.Append (" × ");
+				builder.Append (this.documentPrinter.RequiredPageSize.Height.ToString ());
+				builder.Append (" mm)");
 			}
-			else
+
+			if (!this.description.IsNullOrEmpty)
 			{
-				var builder = new TextBuilder ();
-
-				builder.Append ("<font size=\"13\"><b>");
-				builder.Append ("Page ");
-				builder.Append ((this.currentPage+1).ToString ());
-				builder.Append ("</b></font>");
-
-				if (this.documentPrinter != null)
-				{
-					builder.Append (" (");
-					builder.Append (this.documentPrinter.RequiredPageSize.Width.ToString ());
-					builder.Append (" × ");
-					builder.Append (this.documentPrinter.RequiredPageSize.Height.ToString ());
-					builder.Append (" mm)");
-				}
-
-				if (!this.description.IsNullOrEmpty)
-				{
-					builder.Append ("<br/>");
-					builder.Append (this.description);
-				}
-
-				ToolTip.Default.SetToolTip (this, builder.ToFormattedText ());
+				builder.Append ("<br/>");
+				builder.Append (this.description);
 			}
+
+			ToolTip.Default.SetToolTip (this, builder.ToFormattedText ());
 		}
 
 
 		private Printers.AbstractDocumentPrinter	documentPrinter;
 		private int									currentPage;
 		private FormattedText						description;
-
-		private double								continuousVerticalOffset;
 	}
 }
