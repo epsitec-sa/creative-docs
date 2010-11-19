@@ -2997,7 +2997,7 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
 					{
-						IsAutoTimeStamp = true,
+						IsAutoTimeStampOnInsert = true,
 					},
 					new DbColumn (Tags.ColumnSequenceNumber, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
 					{

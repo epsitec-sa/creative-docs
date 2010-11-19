@@ -441,15 +441,28 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public bool IsAutoTimeStamp
+		public bool IsAutoTimeStampOnInsert
 		{
 			get
 			{
-				return this.isAutoTimeStamp;
+				return this.isAutoTimeStampOnInsert;
 			}
 			set
 			{
-				this.isAutoTimeStamp = value;
+				this.isAutoTimeStampOnInsert = value;
+			}
+		}
+
+
+		public bool IsAutoTimeStampOnUpdate
+		{
+			get
+			{
+				return this.isAutoTimeStampOnUpdate;
+			}
+			set
+			{
+				this.isAutoTimeStampOnUpdate = value;
 			}
 		}
 
@@ -847,7 +860,7 @@ namespace Epsitec.Cresus.Database
 			column.IsForeignKey = this.IsForeignKey;
 			column.IsAutoIncremented = this.IsAutoIncremented;
 			column.AutoIncrementStartIndex = this.AutoIncrementStartIndex;
-			column.IsAutoTimeStamp = this.IsAutoTimeStamp;
+			column.IsAutoTimeStampOnInsert = this.IsAutoTimeStampOnInsert;
 	
 			return column;
 		}
@@ -952,7 +965,8 @@ namespace Epsitec.Cresus.Database
 				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				column.isAutoIncremented = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("inc"));
 				column.IsNullable		 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
-				column.IsAutoTimeStamp	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("ats"));
+				column.IsAutoTimeStampOnInsert	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("atsi"));
+				column.IsAutoTimeStampOnUpdate	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("atsu"));
 
 				if (!isEmptyElement)
 				{
@@ -988,7 +1002,8 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
 			DbTools.WriteAttribute (xmlWriter, "inc", DbTools.BoolDefaultingToFalseToString (this.isAutoIncremented));
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.IsNullable));
-			DbTools.WriteAttribute (xmlWriter, "ats", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStamp));
+			DbTools.WriteAttribute (xmlWriter, "atsi", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStampOnInsert));
+			DbTools.WriteAttribute (xmlWriter, "atsu", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStampOnUpdate));
 			
 			xmlWriter.WriteEndElement ();
 		}
@@ -1036,7 +1051,8 @@ namespace Epsitec.Cresus.Database
 		
 		private bool							isPrimaryKey;
 		private bool							isAutoIncremented;
-		private bool							isAutoTimeStamp;
+		private bool							isAutoTimeStampOnInsert;
+		private bool							isAutoTimeStampOnUpdate;
 		private long							autoIncrementStartIndex;
 		private string							comment;
 		private DbElementCat					category;

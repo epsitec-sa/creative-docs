@@ -231,15 +231,28 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public bool IsAutoTimeStamp
+		public bool IsAutoTimeStampOnInsert
 		{
 			get
 			{
-				return this.isAutoTimeStamp;
+				return this.isAutoTimeStampOnInsert;
 			}
 			set
 			{
-				this.isAutoTimeStamp = value;
+				this.isAutoTimeStampOnInsert = value;
+			}
+		}
+
+
+		public bool IsAutoTimeStampOnUpdate
+		{
+			get
+			{
+				return this.isAutoTimeStampOnUpdate;
+			}
+			set
+			{
+				this.isAutoTimeStampOnUpdate = value;
 			}
 		}
 
@@ -297,7 +310,8 @@ namespace Epsitec.Cresus.Database
 		private bool							isNullable;
 		private bool							isAutoIncremented;
 		private long							autoIncrementStartIndex;
-		private bool							isAutoTimeStamp;
+		private bool							isAutoTimeStampOnInsert;
+		private bool							isAutoTimeStampOnUpdate;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
 		private DbCharacterEncoding				encoding;

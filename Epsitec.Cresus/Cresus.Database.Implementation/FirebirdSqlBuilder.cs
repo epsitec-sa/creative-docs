@@ -377,14 +377,27 @@ namespace Epsitec.Cresus.Database.Implementation
 			// a workaround described here : http://www.firebirdfaq.org/faq77/ . Basically, we need
 			// to create a trigger that assigns the timestamp on insert and updates.
 
-			if (sqlColumn.IsAutoTimeStamp)
+			if (sqlColumn.IsAutoTimeStampOnInsert || sqlColumn.IsAutoTimeStampOnUpdate)
 			{
 				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
 				string columnName = sqlColumn.Name;
 
 				this.commandCount++;
 				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
-				this.Append ("ACTIVE BEFORE INSERT OR UPDATE POSITION 0 ");
+
+				if (sqlColumn.IsAutoTimeStampOnInsert && sqlColumn.IsAutoTimeStampOnUpdate)
+				{
+					this.Append ("ACTIVE BEFORE INSERT OR UPDATE POSITION 0 ");
+				}
+				else if (sqlColumn.IsAutoTimeStampOnInsert)
+				{
+					this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
+				}
+				else
+				{
+					this.Append ("ACTIVE BEFORE UPDATE POSITION 0 ");
+				}
+
 				this.Append ("AS ");
 				this.Append ("BEGIN ");
 				this.Append ("IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);");
@@ -397,7 +410,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			// As Firebird does not support directly auto timestamp columns, we need to cleanup the
 			// database if we are removing such a column by removing the trigger.
 
-			if (sqlColumn.IsAutoTimeStamp)
+			if (sqlColumn.IsAutoTimeStampOnInsert || sqlColumn.IsAutoTimeStampOnUpdate)
 			{
 				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
 
