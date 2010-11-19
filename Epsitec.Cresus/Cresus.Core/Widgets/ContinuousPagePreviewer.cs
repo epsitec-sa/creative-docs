@@ -36,7 +36,32 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public double ContinuousHeight
+		public double Zoom
+		{
+			get
+			{
+				return this.zoom;
+			}
+			set
+			{
+				if (this.zoom != value)
+				{
+					this.zoom = value;
+					this.UpdateBitmap ();
+				}
+			}
+		}
+
+		public double TotalWidth
+		{
+			get
+			{
+				this.UpdateBitmap ();
+				return this.bitmap.Width;
+			}
+		}
+
+		public double TotalHeight
 		{
 			get
 			{
@@ -45,17 +70,33 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public double ContinuousVerticalOffset
+		public double HorizontalOffset
 		{
 			get
 			{
-				return this.continuousVerticalOffset;
+				return this.horizontalOffset;
 			}
 			set
 			{
-				if (this.continuousVerticalOffset != value)
+				if (this.horizontalOffset != value)
 				{
-					this.continuousVerticalOffset = value;
+					this.horizontalOffset = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public double VerticalOffset
+		{
+			get
+			{
+				return this.verticalOffset;
+			}
+			set
+			{
+				if (this.verticalOffset != value)
+				{
+					this.verticalOffset = value;
 					this.Invalidate ();
 				}
 			}
@@ -71,7 +112,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.UpdateBitmap ();
 
 				var bounds = this.Client.Bounds;
-				Point origin = new Point (0, this.continuousVerticalOffset);
+				Point origin = new Point (this.horizontalOffset, this.verticalOffset);
 				graphics.PaintImage (this.bitmap, this.Client.Bounds, origin);
 
 				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
@@ -80,38 +121,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.LineWidth = 1;
 				graphics.AddRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (0));
-
-#if false
-				var clientBounds = this.Client.Bounds;
-
-				double scale = this.ContinuousScale;
-				double offsetX = 0;
-				double offsetY = this.continuousVerticalOffset - Printers.AbstractDocumentPrinter.continuousHeight*scale + clientBounds.Height;
-
-				//	Dessine le fond d'une page blanche.
-				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.documentPrinter.RequiredPageSize.Width*scale), System.Math.Floor (this.documentPrinter.RequiredPageSize.Height*scale));
-
-				graphics.AddFilledRectangle (bounds);
-				graphics.RenderSolid (Color.FromBrightness (1));  // fond blanc
-
-				//	Dessine l'entité dans la page.
-				Transform initial = graphics.Transform;
-				graphics.TranslateTransform (offsetX, offsetY);
-				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
-
-				this.documentPrinter.CurrentPage = 0;
-				this.documentPrinter.PrintBackgroundCurrentPage (graphics);
-				this.documentPrinter.PrintForegroundCurrentPage (graphics);
-
-				graphics.Transform = initial;
-
-				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
-				bounds.Deflate (0.5);
-
-				graphics.LineWidth = 1;
-				graphics.AddRectangle (bounds);
-				graphics.RenderSolid (Color.FromBrightness (0));
-#endif
 			}
 		}
 
@@ -177,6 +186,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private double								zoom;
 		private double								lastBitmapWidth;
 		private Bitmap								bitmap;
-		private double								continuousVerticalOffset;
+		private double								verticalOffset;
+		private double								horizontalOffset;
 	}
 }
