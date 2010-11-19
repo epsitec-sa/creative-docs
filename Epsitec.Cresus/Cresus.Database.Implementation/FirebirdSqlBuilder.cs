@@ -689,6 +689,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					}
 
 					this.Append (field.Alias);
+					this.MakeCommandParam (SqlField.CreateParameterOut ());
 				}
 
 				System.Diagnostics.Debug.Assert (isFirstField == false);
@@ -939,22 +940,39 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				foreach (SqlField field in this.commandParams)
 				{
-					FbDbType    fbType  = this.GetFbType (field.RawType);
-					string      fbName  = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", fieldIndex++);
-					FbParameter fbParam = new FbParameter (fbName, fbType);
+					FbParameter fbParam = new FbParameter ()
+					{
+						ParameterName = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", fieldIndex++)
+					};
+
+					switch (field.FieldType)
+					{
+						case SqlFieldType.ParameterIn:
 					
-					//	Pour l'instant, on ne supporte que des valeurs constantes dans la définition des
-					//	paramètres de la commande (on aurait pu imaginer accepter ici les résultats d'une
-					//	sous-requête ou encore d'une procédure SQL) :
-					
-					System.Diagnostics.Debug.Assert (field.FieldType == SqlFieldType.Constant);
-					
-					fbParam.Value = field.AsConstant;
-					fbParam.SourceColumn = field.Alias;
+							// SqlFieldType.ParameterIn is the same as SqlFieldType.Constant.
+							// Marc
+
+							fbParam.Value = field.AsConstant;
+							fbParam.FbDbType = this.GetFbType (field.RawType);
+							fbParam.SourceColumn = field.Alias;
+							fbParam.Direction = System.Data.ParameterDirection.Input;
+
+							break;
+
+						case SqlFieldType.ParameterOut:
+
+							fbParam.Direction = System.Data.ParameterDirection.Output;
+
+							break;
+
+						default:
+
+							throw new System.NotImplementedException ();
+					}
 					
 					this.commandCache.Parameters.Add (fbParam);
 				}
-				
+
 				//	Pour l'instant, la commande est toujours de type texte et construite par les
 				//	diverses méthodes publiques.
 				
