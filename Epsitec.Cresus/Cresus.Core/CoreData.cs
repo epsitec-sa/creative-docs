@@ -478,6 +478,8 @@ namespace Epsitec.Cresus.Core
 
 		private void VerifyDatabaseSchemas()
 		{
+			this.connectionManager.Validate ();
+
 			foreach (var entityId in this.GetManagedEntityIds ())
 			{
 				this.VerifyDatabaseSchema (entityId);
