@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public ContinuousPagePreviewer()
 		{
+			this.zoom = 1;
 		}
 
 
@@ -39,7 +40,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return (Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax) * this.ContinuousScale;
+				this.UpdateBitmap ();
+				return this.bitmap.Height;
 			}
 		}
 
@@ -66,6 +68,20 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.documentPrinter != null)
 			{
+				this.UpdateBitmap ();
+
+				var bounds = this.Client.Bounds;
+				Point origin = new Point (0, this.continuousVerticalOffset);
+				graphics.PaintImage (this.bitmap, this.Client.Bounds, origin);
+
+				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
+				bounds.Deflate (0.5);
+
+				graphics.LineWidth = 1;
+				graphics.AddRectangle (bounds);
+				graphics.RenderSolid (Color.FromBrightness (0));
+
+#if false
 				var clientBounds = this.Client.Bounds;
 
 				double scale = this.ContinuousScale;
@@ -95,19 +111,72 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.LineWidth = 1;
 				graphics.AddRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (0));
+#endif
 			}
 		}
 
-		private double ContinuousScale
+		private void UpdateBitmap()
+		{
+			this.UpdateBitmap (this.Client.Bounds.Width * this.zoom);
+		}
+
+		private void UpdateBitmap(double width)
+		{
+			if (this.bitmap == null || this.lastBitmapWidth != width)
+			{
+				this.DisposeBitmap ();
+
+				this.lastBitmapWidth = width;
+				this.bitmap = this.CreateBitmap (width);
+			}
+		}
+
+		private void DisposeBitmap()
+		{
+			if (this.bitmap != null)
+			{
+				this.bitmap.Dispose ();
+				this.bitmap = null;
+			}
+		}
+
+		private Bitmap CreateBitmap(double width)
+		{
+			double scale = width / this.documentPrinter.RequiredPageSize.Width;
+
+			int w = (int) width;
+			int h = (int) (this.DocumentHeight * scale);
+
+			double offsetY = h - Printers.AbstractDocumentPrinter.continuousHeight*scale;
+
+			Graphics graphics = new Graphics ();
+			graphics.SetPixmapSize (w, h);
+			graphics.TranslateTransform (0, offsetY);
+			graphics.ScaleTransform (scale, scale, 0, 0);
+
+			this.documentPrinter.CurrentPage = 0;
+			this.documentPrinter.PrintBackgroundCurrentPage (graphics);
+			this.documentPrinter.PrintForegroundCurrentPage (graphics);
+
+			var bitmap = Bitmap.FromPixmap (graphics.Pixmap) as Bitmap;
+			bitmap.FlipY ();
+
+			return bitmap;
+		}
+
+		private double DocumentHeight
 		{
 			get
 			{
-				return this.Client.Bounds.Width / this.documentPrinter.RequiredPageSize.Width;
+				return Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
 			}
 		}
 
 
 		private Printers.AbstractDocumentPrinter	documentPrinter;
+		private double								zoom;
+		private double								lastBitmapWidth;
+		private Bitmap								bitmap;
 		private double								continuousVerticalOffset;
 	}
 }

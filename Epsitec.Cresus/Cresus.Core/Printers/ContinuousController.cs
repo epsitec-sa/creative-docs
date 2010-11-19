@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				Parent     = this.parent,
 				Dock       = DockStyle.Right,
-				IsInverted = true,
+				//IsInverted = true,
 			};
 
 			this.scroller.ValueChanged += delegate
@@ -62,11 +62,23 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateScroller()
 		{
-			double heightUsed = this.previewer.ContinuousHeight;
-			double max = System.Math.Max (heightUsed-this.previewer.Client.Size.Height, 0);
+			double totalHeight   = this.previewer.ContinuousHeight;
+			double visibleHeight = this.previewer.Client.Size.Height;
+			double max = System.Math.Max (totalHeight-visibleHeight, 0);
 
-			this.scroller.MaxValue = (decimal) max;
-			//?this.scroller.VisibleRangeRatio = 0;
+			if (max == 0)
+			{
+				this.scroller.MaxValue = 0;
+				this.scroller.Value    = 0;
+			}
+			else
+			{
+				this.scroller.MaxValue          = (decimal) max;
+				this.scroller.Value             = (decimal) max;
+				this.scroller.VisibleRangeRatio = (decimal) (visibleHeight/totalHeight);
+				this.scroller.SmallChange       = (decimal) 10;
+				this.scroller.LargeChange       = (decimal) (visibleHeight*0.5);
+			}
 		}
 
 		private void UpdatePagePreview()
