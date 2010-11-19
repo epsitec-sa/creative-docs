@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The appropriate <see cref="EntityCollection"/> object.</returns>
 		protected object CreateEntityCollection(Druid fieldId, IEnumerable<AbstractEntity> targets)
 		{
-			var entityCollection = new EntityCollection<AbstractEntity> (fieldId.ToResourceId (), this.Entity, false);
+			var entityCollection = new EntityCollection<AbstractEntity> (fieldId.ToResourceId (), this.Entity, copyOnWrite: false);
 
 			using (this.Entity.UseSilentUpdates ())
 			{
