@@ -20,6 +20,10 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public ContinuousPagePreviewer()
 		{
+			this.timer = new Timer ();
+			this.timer.Delay = 1.0;
+			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
+
 			this.zoom = 1;
 		}
 
@@ -33,7 +37,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			set
 			{
 				this.documentPrinter = value;
+
+				double w = this.documentPrinter.RequiredPageSize.Width;
+				double h = Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
+
+				this.documentSize = new Size (w, h);
 			}
+		}
+
+		public void CloseUI()
+		{
+			this.timer.Stop ();
+			this.timer.Dispose ();
 		}
 
 		public double Zoom
@@ -47,7 +62,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				if (this.zoom != value)
 				{
 					this.zoom = value;
-					this.UpdateBitmap ();
+					this.UpdateBitmap (true);
 				}
 			}
 		}
@@ -56,8 +71,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				this.UpdateBitmap ();
-				return this.bitmap.Width;
+				return this.documentSize.Width * this.DocumentToScreenScale;
 			}
 		}
 
@@ -65,8 +79,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				this.UpdateBitmap ();
-				return this.bitmap.Height;
+				return this.documentSize.Height * this.DocumentToScreenScale;
 			}
 		}
 
@@ -109,11 +122,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.documentPrinter != null)
 			{
-				this.UpdateBitmap ();
+				this.UpdateBitmap (false);
 
 				var bounds = this.Client.Bounds;
-				Point origin = new Point (this.horizontalOffset, this.verticalOffset);
-				graphics.PaintImage (this.bitmap, this.Client.Bounds, origin);
+				var imageRect = new Rectangle (this.horizontalOffset, this.verticalOffset, bounds.Width, bounds.Height);
+				imageRect.Scale(1.0/this.BitmapToScreenScale);
+				graphics.PaintImage (this.bitmap, bounds, imageRect);
 
 				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
 				bounds.Deflate (0.5);
@@ -124,20 +138,48 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void UpdateBitmap()
+
+		private void HandleTimerElapsed(object sender)
 		{
-			this.UpdateBitmap (this.Client.Bounds.Width * this.zoom);
+			//?System.Diagnostics.Debug.WriteLine ("Timber !!!");
+			if (this.UpdateBitmap (true))
+			{
+				this.Invalidate ();
+			}
 		}
 
-		private void UpdateBitmap(double width)
+		private bool UpdateBitmap(bool force)
 		{
-			if (this.bitmap == null || this.lastBitmapWidth != width)
+			return this.UpdateBitmap (force, this.Client.Bounds.Width * this.zoom);
+		}
+
+		private bool UpdateBitmap(bool force, double width)
+		{
+			long now = System.DateTime.Now.Ticks;
+			bool isLongTime = force || (now-this.bitmapTicks)/10000000 >= 1;  // écoulé plus d'une seconde ?
+			bool dirty = false;
+
+			if (this.bitmap == null || (this.lastBitmapWidth != width && isLongTime))
 			{
+				this.timer.Stop ();
 				this.DisposeBitmap ();
 
-				this.lastBitmapWidth = width;
 				this.bitmap = this.CreateBitmap (width);
+				this.lastBitmapWidth = width;
+				dirty = true;
 			}
+			else
+			{
+				this.timer.Stop ();
+
+				if (this.lastBitmapWidth != width)
+				{
+					this.timer.Start ();
+				}
+			}
+
+			this.bitmapTicks = System.DateTime.Now.Ticks;
+			return dirty;
 		}
 
 		private void DisposeBitmap()
@@ -151,10 +193,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Bitmap CreateBitmap(double width)
 		{
-			double scale = width / this.documentPrinter.RequiredPageSize.Width;
+			double scale = width / this.documentSize.Width;
 
 			int w = (int) width;
-			int h = (int) (this.DocumentHeight * scale);
+			int h = (int) (this.documentSize.Height * scale);
 
 			double offsetY = h - Printers.AbstractDocumentPrinter.continuousHeight*scale;
 
@@ -173,18 +215,31 @@ namespace Epsitec.Cresus.Core.Widgets
 			return bitmap;
 		}
 
-		private double DocumentHeight
+
+		private double BitmapToScreenScale
 		{
 			get
 			{
-				return Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
+				return (this.Client.Bounds.Width / this.bitmap.Width) * this.zoom;
+			}
+		}
+
+		private double DocumentToScreenScale
+		{
+			get
+			{
+				return (this.Client.Bounds.Width / this.documentSize.Width) * this.zoom;
 			}
 		}
 
 
+		private readonly Timer						timer;
+
 		private Printers.AbstractDocumentPrinter	documentPrinter;
-		private double								zoom;
+		private Size								documentSize;		// taille du document en mm
+		private double								zoom;				// zoom souhaité (1 ou 2)
 		private double								lastBitmapWidth;
+		private long								bitmapTicks;
 		private Bitmap								bitmap;
 		private double								verticalOffset;
 		private double								horizontalOffset;

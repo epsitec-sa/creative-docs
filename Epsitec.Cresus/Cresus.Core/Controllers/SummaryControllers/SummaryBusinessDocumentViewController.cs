@@ -83,8 +83,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
 
-			var controller = new Printers.ContinuousController (entityPrinter);
-			controller.CreateUI (previewFrame);
+			this.previewController = new Printers.ContinuousController (entityPrinter);
+			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
@@ -114,9 +114,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var previewController  = mainViewController.PreviewViewController;
 
 			mainViewController.SetPreviewPanelVisibility (false);
-			
-			previewController.Clear ();
-			previewController.Updating -= this.HandlePreviewPanelUpdating;
+
+			if (this.previewController != null)
+			{
+				this.previewController.CloseUI ();
+				previewController.Clear ();
+				previewController.Updating -= this.HandlePreviewPanelUpdating;
+			}
 		}
 
 		private void HandlePreviewPanelUpdating(object sender)
@@ -346,5 +350,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			return TextFormatter.FormatText ("HT~", ht, "~,", "TVA~", vat, "\n", "TTC~", ttc, "arrêté à~", fix);
 		}
+
+
+		private Printers.ContinuousController		 previewController;
 	}
 }
