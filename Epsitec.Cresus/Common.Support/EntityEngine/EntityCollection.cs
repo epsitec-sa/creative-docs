@@ -110,6 +110,20 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		protected override void OnAboutToDisableNotifications()
+		{
+			//	Make sure the collection is writable, so that we don't attach the re-enabler on
+			//	the wrong collection.
+			((IEntityCollection) this).CopyOnWrite ();
+		}
+
+		protected override void OnAboutToSuspendNotifications()
+		{
+			//	Make sure the collection is writable, so that we don't attach the re-enabler on
+			//	the wrong collection.
+			((IEntityCollection) this).CopyOnWrite ();
+		}
+
 		/// <summary>
 		/// Called when the collection is changing.
 		/// </summary>
