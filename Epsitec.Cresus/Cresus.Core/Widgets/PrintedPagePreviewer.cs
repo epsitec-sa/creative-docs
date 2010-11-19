@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return (Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.CurrentVerticalPosition) * this.ContinuousScale;
+				return (Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax) * this.ContinuousScale;
 			}
 		}
 

@@ -64,9 +64,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public void DefaultPrepare(DocumentType type)
+		public void ContinuousPrepare(DocumentType type, PreviewMode previewMode)
 		{
-			this.EntityPrintingSettings.DocumentTypeSelected = type;
+			this.PreviewMode = previewMode;
+
+			this.EntityPrintingSettings.DocumentTypeSelected = this.AdjustContinuousDocumentType (type);
 
 			var documentType = this.SelectedDocumentTypeDefinition;
 			if (documentType != null)
@@ -81,6 +83,10 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		protected virtual DocumentType AdjustContinuousDocumentType(DocumentType type)
+		{
+			return type;
+		}
 
 		public PreviewMode PreviewMode
 		{

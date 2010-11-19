@@ -59,29 +59,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			DocumentMetadataEntity metadoc = this.GetMetadoc ();
 
-			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
+			//	Crée le conteneur.
+			var previewFrame = new FrameBox
+			{
+				Dock      = DockStyle.Fill,
+				Padding   = new Margins (5),
+				BackColor = adorner.ColorWindow,
+			};
 
+			var mainViewController = this.Orchestrator.MainViewController;
+			var previewController  = mainViewController.PreviewViewController;
+
+			mainViewController.SetPreviewPanelVisibility (true);
+
+			//	Crée l'EntityPrinter et son contrôleur.
+			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
 			if (entityPrinter == null)
 			{
 				return;
 			}
 
-			var mainViewController = this.Orchestrator.MainViewController;
-			var previewController  = mainViewController.PreviewViewController;
-
-			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithoutESR);
-			entityPrinter.PreviewMode = Printers.PreviewMode.ContinuousPreview;
+			entityPrinter.ContinuousPrepare (Printers.DocumentType.InvoiceWithInsideESR, Printers.PreviewMode.ContinuousPreview);
 			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
-
-			mainViewController.SetPreviewPanelVisibility (true);
-
-			var previewFrame = new FrameBox
-			{
-				Dock = DockStyle.Fill,
-				Padding = new Margins (5),
-				BackColor = adorner.ColorWindow,
-			};
 
 			var controller = new Printers.ContinuousController (entityPrinter);
 			controller.CreateUI (previewFrame);

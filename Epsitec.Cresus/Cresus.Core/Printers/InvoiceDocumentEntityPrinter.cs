@@ -149,6 +149,18 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		protected override DocumentType AdjustContinuousDocumentType(DocumentType type)
+		{
+			if (type == DocumentType.InvoiceWithInsideESR ||
+				type == DocumentType.InvoiceWithOutsideESR)
+			{
+				type = DocumentType.InvoiceWithoutESR;
+			}
+
+			return type;
+		}
+
+
 		internal static bool CheckCompatibleEntity(DocumentMetadataEntity metadata)
 		{
 			return metadata.BusinessDocument.IsNotNull ();
