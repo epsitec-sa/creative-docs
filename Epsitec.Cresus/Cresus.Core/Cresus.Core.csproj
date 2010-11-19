@@ -205,6 +205,7 @@
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
+    <Compile Include="Printers\ContinuousController.cs" />
     <Compile Include="Printers\PreviewMode.cs" />
     <Compile Include="Printers\XmlPreviewerController.cs" />
     <Compile Include="Printers\XmlJobPrintEngine.cs" />

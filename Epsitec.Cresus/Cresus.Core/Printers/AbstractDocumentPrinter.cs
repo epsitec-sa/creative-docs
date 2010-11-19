@@ -144,6 +144,14 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public double CurrentVerticalPosition
+		{
+			get
+			{
+				return this.documentContainer.CurrentVerticalPosition;
+			}
+		}
+
 		public bool HasDocumentOption(DocumentOption option)
 		{
 			//	Indique si une option est utilisée, en tenant compte des options forcées.

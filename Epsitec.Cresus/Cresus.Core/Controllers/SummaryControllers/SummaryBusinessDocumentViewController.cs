@@ -83,16 +83,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				BackColor = adorner.ColorWindow,
 			};
 
-			var documentPrinter = entityPrinter.GetDocumentPrinter (0);
-
-			new PrintedPagePreviewer
-			{
-				Parent = previewFrame,
-				DocumentPrinter = documentPrinter,
-				IsContinuousPreview = true,
-				CurrentPage = entityPrinter.GetPageRelative (0),
-				Dock = DockStyle.Fill,
-			};
+			var controller = new Printers.ContinuousController (entityPrinter);
+			controller.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;

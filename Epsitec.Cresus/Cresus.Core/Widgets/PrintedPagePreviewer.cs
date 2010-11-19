@@ -58,17 +58,25 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public double VerticalOffset
+		public double ContinuousHeight
 		{
 			get
 			{
-				return this.verticalOffset;
+				return (Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.CurrentVerticalPosition) * this.ContinuousScale;
+			}
+		}
+
+		public double ContinuousVerticalOffset
+		{
+			get
+			{
+				return this.continuousVerticalOffset;
 			}
 			set
 			{
-				if (this.verticalOffset != value)
+				if (this.continuousVerticalOffset != value)
 				{
-					this.verticalOffset = value;
+					this.continuousVerticalOffset = value;
 					this.Invalidate ();
 				}
 			}
@@ -129,9 +137,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (this.IsContinuousPreview)
 				{
-					scale = sx;
+					scale = this.ContinuousScale;
 					offsetX = 0;
-					offsetY = (this.verticalOffset-Printers.AbstractDocumentPrinter.continuousHeight)*scale + clientBounds.Height;
+					offsetY = this.continuousVerticalOffset - Printers.AbstractDocumentPrinter.continuousHeight*scale + clientBounds.Height;
 				}
 
 				//	Dessine le fond d'une page blanche.
@@ -180,6 +188,14 @@ namespace Epsitec.Cresus.Core.Widgets
 					graphics.AddRectangle (bounds);
 					graphics.RenderSolid (Color.FromBrightness (0));
 				}
+			}
+		}
+
+		private double ContinuousScale
+		{
+			get
+			{
+				return this.Client.Bounds.Width / this.documentPrinter.RequiredPageSize.Width;
 			}
 		}
 
@@ -233,6 +249,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Printers.AbstractDocumentPrinter	documentPrinter;
 		private int									currentPage;
 		private FormattedText						description;
-		private double								verticalOffset;
+
+		private double								continuousVerticalOffset;
 	}
 }
