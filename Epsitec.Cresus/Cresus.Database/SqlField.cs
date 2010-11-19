@@ -499,6 +499,11 @@ namespace Epsitec.Cresus.Database
 			return new SqlField (SqlFieldType.ParameterInOut, value, type);
 		}
 
+		public static SqlField CreateParameterOut()
+		{
+			return new SqlField (SqlFieldType.ParameterOut);
+		}
+
 		public static SqlField CreateParameterOut(DbRawType type)
 		{
 			return new SqlField (SqlFieldType.ParameterOut, null, type);
