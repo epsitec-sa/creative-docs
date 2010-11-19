@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
-			var dataContext = this.DataContext;
+			this.connectionManager.Validate ();
 
 			foreach (var entityId in this.GetManagedEntityIds ())
 			{
