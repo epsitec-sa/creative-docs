@@ -22,10 +22,10 @@ rem -- the correct Visual Studio folder
 
 IF "%ProgramFiles(x86)%"=="" (
   echo Running on a 32-bit System
-  set DEVENV="%ProgramFiles%\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe"
+  set DEVENV="%ProgramFiles%\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"
 ) ELSE (
   echo Running on a 64-bit System
-  set DEVENV="%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe"
+  set DEVENV="%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"
 )
 
 
