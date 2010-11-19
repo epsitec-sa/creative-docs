@@ -861,6 +861,7 @@ namespace Epsitec.Cresus.Database
 			column.IsAutoIncremented = this.IsAutoIncremented;
 			column.AutoIncrementStartIndex = this.AutoIncrementStartIndex;
 			column.IsAutoTimeStampOnInsert = this.IsAutoTimeStampOnInsert;
+			column.IsAutoTimeStampOnUpdate = this.IsAutoTimeStampOnUpdate;
 	
 			return column;
 		}
