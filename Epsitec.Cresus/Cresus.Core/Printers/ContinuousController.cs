@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Printers
 			System.Diagnostics.Debug.Assert (parent != null);
 			this.parent = parent;
 
-			double scrollBreadth = 18;
+			double scrollBreadth = AbstractScroller.DefaultBreadth;
 
 			var main = new FrameBox ()
 			{
