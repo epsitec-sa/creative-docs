@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.Append ("AS ");
 				this.Append ("BEGIN ");
-				this.Append ("IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);");
+				this.Append ("NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);");
 				this.Append ("END;\n");
 			}
 		}
