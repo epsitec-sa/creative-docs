@@ -17,6 +17,7 @@ using Epsitec.Cresus.WorkflowDesigner.Objects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml;
 
 namespace Epsitec.Cresus.WorkflowDesigner
 {
@@ -69,6 +70,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			this.timer.HigherAccuracy = true;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
 			this.timer.Start ();
+
+			this.CreateCommandController ();
 		}
 
 		public Editor(Widget embedder) : this()
@@ -194,13 +197,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				return false;
 			}
 
-			XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
-			XElement store = doc.Element ("Store");
+			XElement store = XElement.Parse (xmlSource, LoadOptions.None);
 
-			foreach (var element in store.Elements ("Object"))
+			foreach (var element in store.Elements ("obj"))
 			{
-				string key  = (string) element.Attribute ("Entity");
-				string type = (string) element.Attribute ("Type");
+				string key  = (string) element.Attribute ("key");
+				string type = (string) element.Attribute ("type");
 
 				AbstractEntity entity = this.ResolveEntity (key);
 				AbstractObject obj = null;
@@ -292,31 +294,31 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
-			XDocument doc = new XDocument
-			(
-				new XDeclaration ("1.0", "utf-8", "yes"),
-				new XComment ("Saved on " + timeStamp),
-				new XElement ("Store", this.GetSaveObjectsElements ())
-			);
+			var xmlDoc   = new XElement ("design", new XAttribute ("date", timeStamp), this.GetSaveObjectsElements ());
+			var buffer   = new System.Text.StringBuilder();
+			var settings = new XmlWriterSettings { OmitXmlDeclaration = true };
 
-			string xmlSource = doc.ToString (SaveOptions.DisableFormatting);
-
-			Editor.SaveData (this.workflowDefinitionEntity, xmlSource);
+			using (var writer = XmlWriter.Create (buffer, settings))
+			{
+				xmlDoc.Save (writer);
+			}
+			
+			Editor.SaveData (this.workflowDefinitionEntity, buffer.ToString ());
 		}
 
 		private IEnumerable<XElement> GetSaveObjectsElements()
 		{
 			foreach (var obj in this.ObjectsToSave)
 			{
-				var xml = new XElement ("Object");
+				var xml = new XElement ("obj");
 
 				System.Type type = obj.GetType ();
-				xml.Add (new XAttribute ("Type", type.Name));
+				xml.Add (new XAttribute ("type", type.Name));
 
 				if (obj.AbstractEntity.IsNotNull ())
 				{
 					string entityKey = this.GetEntityKey (obj.AbstractEntity);
-					xml.Add (new XAttribute ("Entity", entityKey));
+					xml.Add (new XAttribute ("key", entityKey));
 				}
 
 				obj.Serialize (xml);
@@ -1286,7 +1288,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 
 			this.contextMenu.AdjustSize ();
-			this.contextMenu.Host = this.Window;
+			this.contextMenu.Host = this;
 			this.contextMenu.ShowAsContextMenu (this, this.MapClientToScreen (this.brutPos));
 		}
 
@@ -1297,9 +1299,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		public void CreateMenuItem(string icon, string text, string name)
 		{
-			var item = new MenuItem ("cmd", Misc.Icon (icon), text, null, name);
-			item.Clicked += new EventHandler<MessageEventArgs> (this.HandleItemPressed);
-
+			var item = new MenuItem ("WorkflowDesignerContextMenuAction", Misc.Icon (icon), text, null, name);
 			this.contextMenu.Items.Add (item);
 		}
 
@@ -1312,15 +1312,24 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
-		private void HandleItemPressed(object sender, MessageEventArgs e)
+		private void CreateCommandController()
 		{
-			var item = sender as MenuItem;
+			var dispatcher = new CommandDispatcher ("WorkflowDesigner.Editor", CommandDispatcherLevel.Secondary);
+			var context    = new CommandContext (fence: false);
 
-			//?this.contextMenu.Hide ();
-			//Window.PumpEvents ();
-			// TODO: Comment fermer le menu et rafraîchir la boucle des événements ?
+			CommandDispatcher.SetDispatcher (this, dispatcher);
+			CommandContext.SetContext (this, context);
 
-			switch (item.Name)
+			dispatcher.AutoForwardCommands = true;
+			dispatcher.Register (Command.Get ("WorkflowDesignerContextMenuAction"), this.ProcessContextMenuAction);
+		}
+		
+		private void ProcessContextMenuAction(CommandDispatcher sender, CommandEventArgs e)
+		{
+			var item = e.Source as MenuItem;
+			var name = item.Name;
+			
+			switch (name)
 			{
 				case "Editor.CreatePrivateNode":
 					this.CreateNode (this.lastMessagePos, isPublic: false);
@@ -1333,7 +1342,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 			if (this.menuObject != null)
 			{
-				this.menuObject.MenuAction (item.Name);
+				this.menuObject.MenuAction (name);
 			}
 		}
 

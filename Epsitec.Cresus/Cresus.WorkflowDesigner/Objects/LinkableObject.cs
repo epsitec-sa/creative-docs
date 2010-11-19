@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		#endregion
 
 
-		protected List<ObjectLink>				objectLinks;
+		protected readonly List<ObjectLink>		objectLinks;
 		protected ObjectComment					comment;
 		protected ObjectInfo					info;
 		protected bool							isExtended;
