@@ -196,6 +196,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call,    "Call",   "Edge.Call");
 			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork,    "Fork",   "Edge.Fork");
 
+			this.editor.CreateMenuSeparator ();
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Yellow, "Jaune",  "Edge.ColorYellow");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Orange, "Orange", "Edge.ColorOrange");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Red,    "Rouge",  "Edge.ColorRed");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Lilac,  "Lilas",  "Edge.ColorLilac");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Purple, "Violet", "Edge.ColorPurple");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Blue,   "Bleu",   "Edge.ColorBlue");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Green,  "Vert",   "Edge.ColorGreen");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Grey,   "Gris",   "Edge.ColorGrey");
+
 			if (this.IsButtonEnable (ActiveElement.EdgeComment))
 			{
 				this.editor.CreateMenuSeparator ();
@@ -205,7 +215,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.IsButtonEnable (ActiveElement.EdgeClose))
 			{
 				this.editor.CreateMenuSeparator ();
-				this.editor.CreateMenuItem (null, "Supprime la transition", "Edge.Delete");
+				this.editor.CreateMenuItem (null, "Supprime la transition...", "Edge.Delete");
 			}
 		}
 
@@ -230,6 +240,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
+
+
+				case "Edge.ColorYellow":
+					this.BackgroundColorItem = ColorItem.Yellow;
+					break;
+
+				case "Edge.ColorOrange":
+					this.BackgroundColorItem = ColorItem.Orange;
+					break;
+
+				case "Edge.ColorRed":
+					this.BackgroundColorItem = ColorItem.Red;
+					break;
+
+				case "Edge.ColorLilac":
+					this.BackgroundColorItem = ColorItem.Lilac;
+					break;
+
+				case "Edge.ColorPurple":
+					this.BackgroundColorItem = ColorItem.Purple;
+					break;
+
+				case "Edge.ColorBlue":
+					this.BackgroundColorItem = ColorItem.Blue;
+					break;
+
+				case "Edge.ColorGreen":
+					this.BackgroundColorItem = ColorItem.Green;
+					break;
+
+				case "Edge.ColorGrey":
+					this.BackgroundColorItem = ColorItem.Grey;
+					break;
+
 
 				case "Edge.Comment":
 					this.SwapComment ();
@@ -877,7 +921,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 
 		private void DeleteEdge()
 		{
-			var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer la transition ?", this.editor.Window);
+			string message = string.Format ("Voulez-vous supprimer la transition \"{0}\" ?", this.Entity.Name);
+			var result = Common.Dialogs.MessageDialog.ShowQuestion (message, this.editor.Window);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

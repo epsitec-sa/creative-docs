@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				else
 				{
 					this.editor.CreateMenuItem (null, "Crée un nouveau nœud privé", "Link.CreatePrivateNode");
-					this.editor.CreateMenuItem (null, "Choisi un nœud public",      "Link.CreatePublicNode");
+					this.editor.CreateMenuItem (null, "Choisi un nœud public...",   "Link.CreatePublicNode");
 				}
 			}
 

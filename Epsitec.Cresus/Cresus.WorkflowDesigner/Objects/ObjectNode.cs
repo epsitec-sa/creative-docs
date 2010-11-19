@@ -131,6 +131,16 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 				this.editor.CreateMenuItem (this.Entity.IsAuto,  "Nœud automatique", "Node.Auto");
 			}
 
+			this.editor.CreateMenuSeparator ();
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Yellow, "Jaune",  "Node.ColorYellow");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Orange, "Orange", "Node.ColorOrange");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Red,    "Rouge",  "Node.ColorRed");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Lilac,  "Lilas",  "Node.ColorLilac");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Purple, "Violet", "Node.ColorPurple");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Blue,   "Bleu",   "Node.ColorBlue");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Green,  "Vert",   "Node.ColorGreen");
+			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Grey,   "Gris",   "Node.ColorGrey");
+
 			if (this.IsButtonEnable (ActiveElement.NodeOpenLink))
 			{
 				this.editor.CreateMenuSeparator ();
@@ -155,7 +165,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			if (this.IsButtonEnable (ActiveElement.NodeClose))
 			{
 				this.editor.CreateMenuSeparator ();
-				this.editor.CreateMenuItem (null, "Supprime le nœud", "Node.Delete");
+				this.editor.CreateMenuItem (null, "Supprime le nœud...", "Node.Delete");
 			}
 		}
 
@@ -173,6 +183,7 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.editor.SetLocalDirty ();
 					break;
 
+
 				case "Node.Manuel":
 					this.Entity.IsAuto = false;
 					this.editor.SetLocalDirty ();
@@ -182,6 +193,40 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 					this.Entity.IsAuto = true;
 					this.editor.SetLocalDirty ();
 					break;
+
+
+				case "Node.ColorYellow":
+					this.BackgroundColorItem = ColorItem.Yellow;
+					break;
+
+				case "Node.ColorOrange":
+					this.BackgroundColorItem = ColorItem.Orange;
+					break;
+
+				case "Node.ColorRed":
+					this.BackgroundColorItem = ColorItem.Red;
+					break;
+
+				case "Node.ColorLilac":
+					this.BackgroundColorItem = ColorItem.Lilac;
+					break;
+
+				case "Node.ColorPurple":
+					this.BackgroundColorItem = ColorItem.Purple;
+					break;
+
+				case "Node.ColorBlue":
+					this.BackgroundColorItem = ColorItem.Blue;
+					break;
+
+				case "Node.ColorGreen":
+					this.BackgroundColorItem = ColorItem.Green;
+					break;
+
+				case "Node.ColorGrey":
+					this.BackgroundColorItem = ColorItem.Grey;
+					break;
+
 
 				case "Node.OpenLink":
 					this.OpenLink ();
@@ -652,7 +697,8 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 			{
 				if (!this.Entity.IsPublic || this.editor.IsUnusedPublicNode (this.Entity))
 				{
-					var result = Common.Dialogs.MessageDialog.ShowQuestion ("Voulez-vous supprimer le nœud ?", this.editor.Window);
+					string message = string.Format ("Voulez-vous supprimer le nœud \"{0}\" ?", this.Entity.Name);
+					var result = Common.Dialogs.MessageDialog.ShowQuestion (message, this.editor.Window);
 					if (result != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
