@@ -1301,37 +1301,38 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.Serialize (xml);
 
-			xml.Add (new XAttribute ("SrcObject", (this.srcObject == null) ? 0 : this.srcObject.UniqueId));
-			xml.Add (new XAttribute ("DstObject", (this.dstObject == null) ? 0 : this.dstObject.UniqueId));
+			xml.Add (new XAttribute ("src", (this.srcObject == null) ? 0 : this.srcObject.UniqueId));
+			xml.Add (new XAttribute ("dst", (this.dstObject == null) ? 0 : this.dstObject.UniqueId));
 
-			xml.Add (new XAttribute ("StartAngle",     Misc.Truncate (this.startAngle)));
-			xml.Add (new XAttribute ("EndAngle",       Misc.Truncate (this.endAngle)));
-			xml.Add (new XAttribute ("StartDistance",  Misc.Truncate (this.startDistance)));
-			xml.Add (new XAttribute ("EndDistance",    Misc.Truncate (this.endDistance)));
-			xml.Add (new XAttribute ("StartManual",    this.startManual));
-			xml.Add (new XAttribute ("EndManual",      this.endManual));
-			xml.Add (new XAttribute ("CommentAttach",  Misc.Truncate (this.commentAttach)));
-			xml.Add (new XAttribute ("IsContinuation", this.IsContinuation));
+			xml.Add (new XAttribute ("a1", Misc.Truncate (this.startAngle)));
+			xml.Add (new XAttribute ("a2", Misc.Truncate (this.endAngle)));
+			xml.Add (new XAttribute ("d1", Misc.Truncate (this.startDistance)));
+			xml.Add (new XAttribute ("d2", Misc.Truncate (this.endDistance)));
+			xml.Add (new XAttribute ("m1", this.startManual));
+			xml.Add (new XAttribute ("m2", this.endManual));
+			
+			xml.Add (new XAttribute ("comment",  Misc.Truncate (this.commentAttach)));
+			xml.Add (new XAttribute ("isCont",   this.IsContinuation));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
 
-			this.srcObject = this.editor.Search ((int) xml.Attribute ("SrcObject")) as LinkableObject;
-			this.dstObject = this.editor.Search ((int) xml.Attribute ("DstObject")) as LinkableObject;
+			this.srcObject = this.editor.Search ((int) xml.Attribute ("src")) as LinkableObject;
+			this.dstObject = this.editor.Search ((int) xml.Attribute ("dst")) as LinkableObject;
 
-			this.startAngle    = (double) xml.Attribute ("StartAngle");
-			this.endAngle      = (double) xml.Attribute ("EndAngle");
-			this.startDistance = (double) xml.Attribute ("StartDistance");
-			this.endDistance   = (double) xml.Attribute ("EndDistance");
-			this.startManual   = (bool)   xml.Attribute ("StartManual");
-			this.endManual     = (bool)   xml.Attribute ("EndManual");
-			this.commentAttach = (double) xml.Attribute ("CommentAttach");
+			this.startAngle    = (double) xml.Attribute ("a1");
+			this.endAngle      = (double) xml.Attribute ("a2");
+			this.startDistance = (double) xml.Attribute ("d1");
+			this.endDistance   = (double) xml.Attribute ("d2");
+			this.startManual   = (bool)   xml.Attribute ("m1");
+			this.endManual     = (bool)   xml.Attribute ("m2");
+			this.commentAttach = (double) xml.Attribute ("comment");
 
-			if (xml.Attribute ("IsContinuation") != null)
+			if (xml.Attribute ("isCont") != null)
 			{
-				this.IsContinuation = (bool) xml.Attribute ("IsContinuation");
+				this.IsContinuation = (bool) xml.Attribute ("isCont");
 			}
 		}
 		#endregion

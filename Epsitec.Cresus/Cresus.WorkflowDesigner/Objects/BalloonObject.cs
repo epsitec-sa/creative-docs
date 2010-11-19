@@ -765,14 +765,14 @@ namespace Epsitec.Cresus.WorkflowDesigner.Objects
 		{
 			base.Serialize (xml);
 
-			xml.Add (new XAttribute ("AttachObject", (this.attachObject == null) ? 0 : this.attachObject.UniqueId));
+			xml.Add (new XAttribute ("obj", (this.attachObject == null) ? 0 : this.attachObject.UniqueId));
 		}
 
 		public override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
 
-			this.attachObject = this.editor.Search ((int) xml.Attribute ("AttachObject"));
+			this.attachObject = this.editor.Search ((int) xml.Attribute ("obj"));
 		}
 		#endregion
 
