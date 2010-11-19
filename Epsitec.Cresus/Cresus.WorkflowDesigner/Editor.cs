@@ -1268,6 +1268,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private void EditorMouseMenu()
 		{
+			this.menuPos = this.lastMessagePos;
+
 			this.contextMenu = new VMenu ();
 
 			if (this.hilitedObject != null)
@@ -1332,11 +1334,11 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			switch (name)
 			{
 				case "Editor.CreatePrivateNode":
-					this.CreateNode (this.lastMessagePos, isPublic: false);
+					this.CreateNode (this.menuPos, isPublic: false);
 					break;
 
 				case "Editor.CreatePublicNode":
-					this.CreateNode (this.lastMessagePos, isPublic: true);
+					this.CreateNode (this.menuPos, isPublic: true);
 					break;
 			}
 
@@ -2016,6 +2018,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		private Point							brutPos;
 		private MessageType						lastMessageType;
 		private Point							lastMessagePos;
+		private Point							menuPos;
 		private bool							isAreaMoving;
 		private Point							areaMovingInitialPos;
 		private Point							areaMovingInitialOffset;
