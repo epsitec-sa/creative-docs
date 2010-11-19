@@ -251,9 +251,6 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			//	TODO: handle clientId
-			this.clientId = 1;
-			
 			//	Fill the tables with the initial metadata.
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
@@ -3406,8 +3403,6 @@ namespace Epsitec.Cresus.Database
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();
 
-		private int								clientId;
-		
 		private string							localizations;
 
 		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
