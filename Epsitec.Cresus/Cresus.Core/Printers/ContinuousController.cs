@@ -130,6 +130,14 @@ namespace Epsitec.Cresus.Core.Printers
 			this.UpdateButtons ();
 		}
 
+		public void CloseUI()
+		{
+			if (this.previewer != null)
+			{
+				this.previewer.CloseUI ();
+			}
+		}
+
 
 		private void ChangeZoom(double zoom)
 		{
