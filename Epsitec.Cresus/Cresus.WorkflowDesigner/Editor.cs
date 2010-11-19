@@ -144,6 +144,12 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				//	Désérialisation échouée. On suppose être en présence d'un nouveau
 				//	workflow fraichement créé, dont il faut juste reprendre le noeud initial.
+
+				if (this.workflowDefinitionEntity.Name.IsNullOrWhiteSpace)
+				{
+					this.workflowDefinitionEntity.Name = "e";
+				}
+
 				var node = new ObjectNode (this, this.workflowDefinitionEntity);
 				node.IsRoot = true;
 				node.Bounds = new Rectangle (new Point (0, 150), node.Bounds.Size);
@@ -225,7 +231,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
 		{
-			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects." + typeName;
+			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects.Object" + typeName;
 			System.Type type = System.Type.GetType (fullTypeName);
 
 			if (type == null)
@@ -312,8 +318,8 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			{
 				var xml = new XElement ("obj");
 
-				System.Type type = obj.GetType ();
-				xml.Add (new XAttribute ("type", type.Name));
+				string typeName = this.GetTypeName (obj.GetType ());
+				xml.Add (new XAttribute ("type", typeName));
 
 				if (obj.AbstractEntity.IsNotNull ())
 				{
@@ -327,6 +333,18 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 		}
 
+		private string GetTypeName(System.Type type)
+		{
+			string name = type.Name;
+			if (name.StartsWith (Editor.objectClassPrefix))
+			{
+				return name.Substring (Editor.objectClassPrefix.Length);
+			}
+
+			throw new System.NotSupportedException (string.Format ("The type {0} is not supported", name));
+		}
+
+		private const string objectClassPrefix = "Object";
 		private const string workflowClassPrefix = "Workflow";
 		private const string workflowClassSuffix = "Entity";
 
@@ -994,7 +1012,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 				case MessageType.KeyUp:
 					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
 					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
-					if (!message.IsControlPressed && !this.IsEditing && this.editableObject != null)
+					if (message.MessageType == MessageType.KeyDown && message.KeyCodeOnly != KeyCode.None && !message.IsAltPressed && !message.IsControlPressed && !this.IsEditing && this.editableObject != null)
 					{
 						this.editableObject.StartEdition ();
 					}
@@ -1005,11 +1023,13 @@ namespace Epsitec.Cresus.WorkflowDesigner
 						{
 							this.editingObject.AcceptEdition ();
 							message.Consumer = this;
+							message.Swallowed = true;
 						}
 						if (message.KeyCode == KeyCode.Escape)
 						{
 							this.editingObject.CancelEdition ();
 							message.Consumer = this;
+							message.Swallowed = true;
 						}
 					}
 					break;
