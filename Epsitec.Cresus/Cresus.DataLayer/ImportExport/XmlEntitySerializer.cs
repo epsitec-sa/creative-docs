@@ -297,6 +297,35 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			xField.SetAttributeValue (XName.Get (XmlConstants.NameTag), name);
 			xField.SetAttributeValue (XmlConstants.DefinitionIdTag, definitionId);
+
+			//	Detect the special case of an XML BLOB, encoded as a "U"-prefixed string by the
+			//	automatic type converter; since we cannot be sure that the data is indeed valid
+			//	XML, we have no other choice than to try to parse it:
+			
+			if ((value != null) &&
+				(value.StartsWith ("U<")) &&
+				(value.EndsWith (">")))
+			{
+				try
+				{
+					var xml = XElement.Parse (value.Substring (1));
+
+					//	Don't store the 'value' attribute, but instead store the prefix in an 'xml'
+					//	attribute and the data itself as a sub-tree:
+
+					xField.SetAttributeValue (XmlConstants.XmlTag, "U");
+					xField.Add (xml);
+
+					return xField;
+				}
+				catch
+				{
+					//	If the value is not valid XML, never mind, simply store the data as a
+					//	text in the 'value' attribute.
+				}
+			}
+			
+				
 			xField.SetAttributeValue (XmlConstants.ValueTag, value);
 
 			return xField;
@@ -490,7 +519,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			int fieldDefinitionId = InvariantConverter.ConvertFromString<int> (fDefintionId);
 			StructuredTypeField fieldDefinition = idsToFieldDefinitions[fieldDefinitionId];
 
-			string fValue = xField.Attribute (XName.Get (XmlConstants.ValueTag)).Value;
+			//	The value is either stored as an attribute (value="x") or as an XML sub-tree:
+
+			string fValue = (string) xField.Attribute (XName.Get (XmlConstants.ValueTag));
+			string fXml   = fValue == null ? (string) xField.Attribute (XName.Get (XmlConstants.XmlTag)) : null;
+
+			if (fXml != null)
+			{
+				fValue = fXml + xField.FirstNode.ToString ();
+			}
 
 			switch (fieldDefinition.Relation)
 			{
@@ -574,6 +611,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			public static readonly string DruidTag = "druid";
 
 			public static readonly string ValueTag = "value";
+
+			public static readonly string XmlTag = "xml";
 
 			public static readonly string KeyTag = "key";
 
