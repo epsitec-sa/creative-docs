@@ -30,14 +30,12 @@ namespace Epsitec.Cresus.Core.Printers
 			System.Diagnostics.Debug.Assert (parent != null);
 			this.parent = parent;
 
-			//	Crée le visualisateur de page PrintedPagePreviewer.
-			this.previewer = new Widgets.PrintedPagePreviewer ()
+			//	Crée le visualisateur de page ContinuousPagePreviewer.
+			this.previewer = new Widgets.ContinuousPagePreviewer ()
 			{
-				Parent              = this.parent,
-				IsContinuousPreview = true,
-				DocumentPrinter     = this.entityPrinter.GetDocumentPrinter (0),
-				CurrentPage         = this.entityPrinter.GetPageRelative (0),
-				Dock                = DockStyle.Fill,
+				Parent          = this.parent,
+				DocumentPrinter = this.entityPrinter.GetDocumentPrinter (0),
+				Dock            = DockStyle.Fill,
 			};
 
 			this.previewer.SizeChanged += delegate
@@ -80,7 +78,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly AbstractEntityPrinter			entityPrinter;
 
 		private Widget									parent;
-		private Widgets.PrintedPagePreviewer			previewer;
+		private Widgets.ContinuousPagePreviewer			previewer;
 		private VScroller								scroller;
 	}
 }

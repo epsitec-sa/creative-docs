@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				return;
 			}
 
-			entityPrinter.ContinuousPrepare (Printers.DocumentType.InvoiceWithInsideESR, Printers.PreviewMode.ContinuousPreview);
+			entityPrinter.ContinuousPrepare (Printers.DocumentType.InvoiceWithInsideESR);
 			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
 

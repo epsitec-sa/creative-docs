@@ -502,6 +502,7 @@
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
+    <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
     <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
