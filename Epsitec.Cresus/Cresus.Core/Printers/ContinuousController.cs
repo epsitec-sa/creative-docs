@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Printers
 			System.Diagnostics.Debug.Assert (parent != null);
 			this.parent = parent;
 
-			double scrollBreadth = 20;
+			double scrollBreadth = 18;
 
 			var main = new FrameBox ()
 			{
@@ -42,9 +42,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 			var footer = new FrameBox ()
 			{
-				Parent  = this.parent,
-				Dock    = DockStyle.Bottom,
-				Padding = new Margins (0, scrollBreadth, 0, 0),
+				Parent          = this.parent,
+				Dock            = DockStyle.Bottom,
+				PreferredHeight = scrollBreadth,
+				Padding         = new Margins (0, scrollBreadth, 0, 0),
 			};
 
 			//	Crée le visualisateur de page ContinuousPagePreviewer.
@@ -65,31 +66,25 @@ namespace Epsitec.Cresus.Core.Printers
 			};
 
 			//	Crée les boutons dans le pied de page.
-			var toolbar = UIBuilder.CreateMiniToolbar (footer);
-			toolbar.PreferredWidth = 10;  // sera étendu
-			toolbar.PreferredHeight = scrollBreadth;
-			toolbar.Margins = new Margins (0, 2, 0, 0);
-			toolbar.Dock = DockStyle.Left;
-
 			this.zoom1Button = new Button
 			{
-				Parent          = toolbar,
+				Parent          = footer,
 				ButtonStyle     = ButtonStyle.ToolItem,
 				AutoFocus       = false,
 				Text            = "×1",
 				PreferredWidth  = 20,
-				PreferredHeight = scrollBreadth-4,
+				PreferredHeight = scrollBreadth,
 				Dock            = DockStyle.Left,
 			};
 
 			this.zoom2Button = new Button
 			{
-				Parent          = toolbar,
+				Parent          = footer,
 				ButtonStyle     = ButtonStyle.ToolItem,
 				AutoFocus       = false,
 				Text            = "×2",
 				PreferredWidth  = 20,
-				PreferredHeight = scrollBreadth-4,
+				PreferredHeight = scrollBreadth,
 				Dock            = DockStyle.Left,
 			};
 
@@ -102,6 +97,7 @@ namespace Epsitec.Cresus.Core.Printers
 				Parent          = footer,
 				PreferredHeight = scrollBreadth,
 				Dock            = DockStyle.Fill,
+				Margins         = new Margins (2, 0, 0, 0),
 			};
 
 			//	Connecte les événements.
