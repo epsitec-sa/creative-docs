@@ -124,6 +124,7 @@ namespace Epsitec.Common.Types.Collections
 		/// the notifications.</returns>
 		public System.IDisposable DisableNotifications()
 		{
+			this.OnAboutToDisableNotifications ();
 			return new ReEnabler (this);
 		}
 
@@ -136,6 +137,7 @@ namespace Epsitec.Common.Types.Collections
 		/// the notifications.</returns>
 		public System.IDisposable SuspendNotifications()
 		{
+			this.OnAboutToSuspendNotifications ();
 			return new DeferredNotifier (this);
 		}
 
@@ -588,6 +590,14 @@ namespace Epsitec.Common.Types.Collections
 					}
 				}
 			}
+		}
+
+		protected virtual void OnAboutToDisableNotifications()
+		{
+		}
+
+		protected virtual void OnAboutToSuspendNotifications()
+		{
 		}
 
 		#region INotifyCollectionChanged Members
