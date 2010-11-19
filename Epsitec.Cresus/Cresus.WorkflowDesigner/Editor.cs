@@ -1298,7 +1298,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		public void CreateMenuItem(string icon, string text, string name)
 		{
 			var item = new MenuItem ("cmd", Misc.Icon (icon), text, null, name);
-			item.Pressed += new EventHandler<MessageEventArgs> (this.HandleItemPressed);
+			item.Clicked += new EventHandler<MessageEventArgs> (this.HandleItemPressed);
 
 			this.contextMenu.Items.Add (item);
 		}
@@ -1317,7 +1317,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			var item = sender as MenuItem;
 
 			//?this.contextMenu.Hide ();
-			Window.PumpEvents ();
+			//Window.PumpEvents ();
 			// TODO: Comment fermer le menu et rafraîchir la boucle des événements ?
 
 			switch (item.Name)
