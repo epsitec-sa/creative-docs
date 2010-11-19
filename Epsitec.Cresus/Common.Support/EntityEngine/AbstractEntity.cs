@@ -540,7 +540,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					using (this.DefineOriginalValues ())
 					{
-						list = new EntityCollection<T> (id, this, true);
+						list = new EntityCollection<T> (id, this, copyOnWrite: true);
 						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
 					}
 
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 						//list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
 
-						list = new EntityCollection<AbstractEntity> (id, this, true);
+						list = new EntityCollection<AbstractEntity> (id, this, copyOnWrite: true);
 						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
 					}
 				}
@@ -836,7 +836,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);
 
-			EntityCollection<T> copy = new EntityCollection<T> (id, this, false);
+			EntityCollection<T> copy = new EntityCollection<T> (id, this, copyOnWrite: false);
 			
 			using (copy.DisableNotifications ())
 			{

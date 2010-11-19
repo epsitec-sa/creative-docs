@@ -15,18 +15,16 @@ namespace Epsitec.Common.Types.Collections
 	/// <typeparam name="T">The manipulated data type.</typeparam>
 	public class ObservableList<T> :
 		AbstractObservableList,
-		IList<T>,
+		IList<T>, System.Collections.ICollection, System.Collections.IList,
 		INotifyCollectionChanged,
-		System.Collections.ICollection,
-		System.Collections.IList,
-		IReadOnly,
-		IReadOnlyLock
+		IReadOnly, IReadOnlyLock
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ObservableList&lt;T&gt;"/> class.
 		/// </summary>
 		public ObservableList()
 		{
+			this.list = new List<T> ();
 		}
 
 		/// <summary>
@@ -630,7 +628,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Occurs before the collection changes. There is no way to prevent
 		/// the change; the event is only informative.
 		/// </summary>
-		public event EventHandler CollectionChanging
+		public event EventHandler				CollectionChanging
 		{
 			add
 			{
@@ -650,7 +648,7 @@ namespace Epsitec.Common.Types.Collections
 
 		#region ReEnabler Class
 
-		private class ReEnabler : System.IDisposable
+		private sealed class ReEnabler : System.IDisposable
 		{
 			public ReEnabler(ObservableList<T> list)
 			{
@@ -672,8 +670,9 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		#region DeferredNotifier Class
 
-		private class DeferredNotifier : System.IDisposable
+		private sealed class DeferredNotifier : System.IDisposable
 		{
 			public DeferredNotifier(ObservableList<T> list)
 			{
@@ -763,13 +762,15 @@ namespace Epsitec.Common.Types.Collections
 			private readonly List<Event> events;
 		}
 
-		private EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
-		private EventHandler collectionChangingEvent;
+		#endregion
 
-		protected readonly List<T> list = new List<T> ();
-		private int silent;
-		private DeferredNotifier deferredNotifier;
-		private ReadOnlyObservableList<T> readOnlyList;
-		private bool isReadOnly;
+		private EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private EventHandler							 collectionChangingEvent;
+
+		protected readonly List<T>				list;
+		private int								silent;
+		private DeferredNotifier				deferredNotifier;
+		private ReadOnlyObservableList<T>		readOnlyList;
+		private bool							isReadOnly;
 	}
 }
