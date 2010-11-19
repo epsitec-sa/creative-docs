@@ -1,11 +1,12 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
@@ -13,7 +14,6 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.Cresus.WorkflowDesigner.Objects;
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -158,11 +158,27 @@ namespace Epsitec.Cresus.WorkflowDesigner
 		{
 			//	Reconstruit complètement la liste WorkflowDefinitionEntity.WorkflowNodes en fonction des
 			//	objets graphiques.
-			this.workflowDefinitionEntity.WorkflowNodes.Clear ();
 
-			foreach (var node in this.nodes)
+			var oldList = this.workflowDefinitionEntity.WorkflowNodes;
+			var newList = new List<WorkflowNodeEntity> (this.nodes.Select (x => x.Entity));
+
+			if (Comparer.EqualObjects (oldList, newList))
 			{
-				this.workflowDefinitionEntity.WorkflowNodes.Add (node.Entity);
+				//	La liste est actuellement déjà à jour; il n'y a donc pas besoin de la
+				//	mettre à jour. Cela évite qu'on ne rende 'dirty' le workflow et qu'on
+				//	réactive l'état "document prêt à être sauvé".
+				return;
+			}
+
+			//	Copie la liste des noeuds, sans générer d'événement à chaque insertion et en
+			//	prenant garde au préalable de vérifier que la collection est déjà "writable".
+
+			var collection = this.workflowDefinitionEntity.WorkflowNodes as ISuspendCollectionChanged;
+			
+			using (collection.SuspendNotifications ())
+			{
+				this.workflowDefinitionEntity.WorkflowNodes.Clear ();
+				this.workflowDefinitionEntity.WorkflowNodes.AddRange (newList);
 			}
 		}
 
