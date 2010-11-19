@@ -2,6 +2,10 @@ using Epsitec.Cresus.Database.Collections;
 
 using System.Collections.Generic;
 
+using System.Data;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database.Services
 {
@@ -20,16 +24,14 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			DbColumn columnConnectionId = this.DbTable.Columns[Tags.ColumnConnectionId];
-						
-			SqlFieldList fieldsToInsert = new SqlFieldList ()
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
-				this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnectionId, connectionId.Value)
+				{ Tags.ColumnConnectionId, connectionId.Value },
 			};
 
-			long entryId = this.AddRow (fieldsToInsert);
+			IList<object> data = this.AddRow (columnNamesToValues);
 
-			return this.GetLogEntry (new DbId (entryId));
+			return this.CreateLogEntry (data);
 		}
 
 
@@ -39,32 +41,16 @@ namespace Epsitec.Cresus.Database.Services
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				if (!this.LogEntryExists (entryId))
-				{
-					throw new System.InvalidOperationException ("The log entry does not exist.");
-				}
-
-				List<DbColumn> dbColumnsToRetrieve = new List<DbColumn> ()
-				{
-					this.DbTable.Columns[Tags.ColumnConnectionId],
-					this.DbTable.Columns[Tags.ColumnDateTime],
-					this.DbTable.Columns[Tags.ColumnSequenceNumber],
-				};
-
 				SqlFieldList conditions = new SqlFieldList ()
 				{
 					this.CreateConditionForEntryId (entryId),
 				};
 
-				List<object> data = this.GetRowValues (dbColumnsToRetrieve, conditions);
+				var data = this.GetRowValues (conditions);
 
 				transaction.Commit ();
 
-				DbId connectionId = new DbId ((long) data[0]);
-				System.DateTime dateTime = (System.DateTime) data[1];
-				long sequenceNumber = (long) data[2];
-
-				return new DbLogEntry (entryId, connectionId, dateTime, sequenceNumber);
+				return data.Any () ? this.CreateLogEntry (data.First ()) : null;
 			}
 		}
 
@@ -105,6 +91,88 @@ namespace Epsitec.Cresus.Database.Services
 			);
 		}
 
+
+		private DbLogEntry CreateLogEntry(IList<object> data)
+		{
+			DbId entryId = new DbId ((long) data[0]);
+			DbId connectionId = new DbId ((long) data[1]);
+			System.DateTime dateTime = (System.DateTime) data[2];
+			long sequenceNumber = (long) data[3];
+
+			return new DbLogEntry (entryId, connectionId, dateTime, sequenceNumber);
+		}
+
+
+		// TODO Move these two functions in DbAbstractAttachable (and merge them with other)?
+		// Marc
+		
+		private IList<object> AddRow(IDictionary<string, object> columnNamesToValues)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				SqlFieldList fieldsToInsert = new SqlFieldList ();
+				SqlFieldList fieldsToReturn = new SqlFieldList ();
+
+				foreach (var item in columnNamesToValues)
+				{
+					DbColumn dbColumn = this.DbTable.Columns[item.Key];
+					SqlField sqlField = this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, item.Value);
+
+					fieldsToInsert.Add (sqlField);
+				}
+
+				foreach (DbColumn dbColumn in this.DbTable.Columns)
+				{
+					SqlField sqlField = new SqlField ()
+					{
+						Alias = dbColumn.GetSqlName ()
+					};
+
+					fieldsToReturn.Add (sqlField);
+				}
+
+				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+
+				IList<object> outputParameters = this.DbInfrastructure.ExecuteOutputParameters (transaction);
+
+				transaction.Commit ();
+
+				return outputParameters;
+			}
+		}
+
+
+		private IList<IList<object>> GetRowValues(SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+
+				query.Tables.Add (SqlField.CreateName (this.DbTable.GetSqlName ()));
+
+				foreach (DbColumn dbColumn in this.DbTable.Columns)
+				{
+					query.Fields.Add (SqlField.CreateName (dbColumn.GetSqlName ()));
+				}
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+				List<IList<object>> data = new List<IList<object>> ();
+
+				transaction.Commit ();
+
+				foreach (DataRow row in table.Rows)
+				{
+					data.Add (row.ItemArray.ToList ());
+				}
+
+				return data;
+			}
+		}
+                
 		
 	}
 
