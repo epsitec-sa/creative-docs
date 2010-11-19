@@ -21,34 +21,35 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public ContinuousController(AbstractEntityPrinter entityPrinter)
 		{
+			System.Diagnostics.Debug.Assert (entityPrinter != null);
 			this.entityPrinter = entityPrinter;
 		}
 
-
-		public void CreateUI(FrameBox parent)
+		public void CreateUI(Widget parent)
 		{
+			System.Diagnostics.Debug.Assert (parent != null);
 			this.parent = parent;
 
-			this.parent.SizeChanged += delegate
+			//	Crée le visualisateur de page PrintedPagePreviewer.
+			this.previewer = new Widgets.PrintedPagePreviewer ()
+			{
+				Parent              = this.parent,
+				IsContinuousPreview = true,
+				DocumentPrinter     = this.entityPrinter.GetDocumentPrinter (0),
+				CurrentPage         = this.entityPrinter.GetPageRelative (0),
+				Dock                = DockStyle.Fill,
+			};
+
+			this.previewer.SizeChanged += delegate
 			{
 				this.UpdateScroller ();
 			};
 
-			var documentPrinter = this.entityPrinter.GetDocumentPrinter (0);
-
-			this.pagePreviewer = new Widgets.PrintedPagePreviewer ()
-			{
-				Parent = this.parent,
-				DocumentPrinter = documentPrinter,
-				IsContinuousPreview = true,
-				CurrentPage = entityPrinter.GetPageRelative (0),
-				Dock = DockStyle.Fill,
-			};
-
+			//	Crée l'ascenseur.
 			this.scroller = new VScroller ()
 			{
-				Parent = this.parent,
-				Dock = DockStyle.Right,
+				Parent     = this.parent,
+				Dock       = DockStyle.Right,
 				IsInverted = true,
 			};
 
@@ -63,8 +64,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateScroller()
 		{
-			double heightUsed = this.pagePreviewer.ContinuousHeight;
-			double max = System.Math.Max (heightUsed-this.parent.Client.Size.Height, 0);
+			double heightUsed = this.previewer.ContinuousHeight;
+			double max = System.Math.Max (heightUsed-this.previewer.Client.Size.Height, 0);
 
 			this.scroller.MaxValue = (decimal) max;
 			//?this.scroller.VisibleRangeRatio = 0;
@@ -72,14 +73,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdatePagePreview()
 		{
-			this.pagePreviewer.ContinuousVerticalOffset = (double) this.scroller.Value;
+			this.previewer.ContinuousVerticalOffset = (double) this.scroller.Value;
 		}
 
 
 		private readonly AbstractEntityPrinter			entityPrinter;
 
-		private FrameBox								parent;
-		private Widgets.PrintedPagePreviewer			pagePreviewer;
+		private Widget									parent;
+		private Widgets.PrintedPagePreviewer			previewer;
 		private VScroller								scroller;
 	}
 }

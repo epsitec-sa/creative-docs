@@ -144,11 +144,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public double CurrentVerticalPosition
+		public double ContinuousVerticalMax
 		{
 			get
 			{
-				return this.documentContainer.CurrentVerticalPosition;
+				return this.documentContainer.CurrentVerticalPosition - this.PageMargins.Bottom;
 			}
 		}
 
