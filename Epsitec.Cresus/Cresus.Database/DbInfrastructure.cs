@@ -1889,6 +1889,45 @@ namespace Epsitec.Cresus.Database
 		/// Executes the command attached to the transaction.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
+		/// <returns>The values of the output parameters of the command.</returns>
+		public IList<object> ExecuteOutputParameters(DbTransaction transaction)
+		{
+			return this.ExecuteOutputParameters (transaction, transaction.SqlBuilder);
+		}
+
+		/// <summary>
+		/// Executes the command defined by the SQL command builder.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <returns>The values of the output parameters of the command.</returns>
+		public IList<object> ExecuteOutputParameters(DbTransaction transaction, ISqlBuilder builder)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
+
+			int count = builder.CommandCount;
+
+			if (count < 1)
+			{
+				return null;
+			}
+
+			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
+			{
+				IList<object> data;
+
+				this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
+
+				return data;
+			}
+		}
+
+
+		/// <summary>
+		/// Executes the command attached to the transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		/// <returns>The data set or <c>null</c> if no command was executed.</returns>
 		public System.Data.DataSet ExecuteRetData(DbTransaction transaction)
 		{
