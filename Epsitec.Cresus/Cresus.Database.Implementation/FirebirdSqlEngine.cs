@@ -3,6 +3,11 @@
 
 using FirebirdSql.Data.FirebirdClient;
 
+using System.Collections.Generic;
+
+using System.Data;
+
+
 namespace Epsitec.Cresus.Database.Implementation
 {
 	/// <summary>
@@ -18,7 +23,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		#region ISqlEngine Members
 
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out int result)
+		public void Execute(IDbCommand command, DbCommandType type, int commandCount, out int result)
 		{
 			result = 0;
 
@@ -53,7 +58,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		}
 
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out object simpleData)
+		public void Execute(IDbCommand command, DbCommandType type, int commandCount, out object simpleData)
 		{
 			if (commandCount > 1)
 			{
@@ -81,7 +86,53 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out System.Data.DataSet dataSet)
+		public void Execute(IDbCommand command, DbCommandType type, int commandCount, out IList<object> outputValues)
+		{
+			outputValues = new List<object> ();
+
+			if (commandCount > 1)
+			{
+				throw new Exceptions.GenericException (this.fb.DbAccess, "Multiple command not supported");
+			}
+			if (commandCount < 1)
+			{
+				return;
+			}
+
+			switch (type)
+			{
+				case DbCommandType.Silent:
+				case DbCommandType.NonQuery:
+					this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteNonQuery ());
+					break;
+
+				case DbCommandType.ReturningData:
+					this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteScalar ());
+					break;
+
+				default:
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
+			}
+
+			foreach (object item in command.Parameters)
+			{
+				IDataParameter parameter = item as IDataParameter;
+
+				if (parameter != null)
+				{
+					switch (parameter.Direction)
+					{
+						case ParameterDirection.InputOutput:
+						case ParameterDirection.Output:
+						case ParameterDirection.ReturnValue:
+							outputValues.Add (parameter.Value);
+							break;
+					}
+				}
+			}
+		}
+
+		public void Execute(IDbCommand command, DbCommandType type, int commandCount, out DataSet dataSet)
 		{
 			if (commandCount < 1)
 			{
@@ -102,8 +153,8 @@ namespace Epsitec.Cresus.Database.Implementation
 				case DbCommandType.ReturningData:
 					dataSet = this.ExecuteQueryAndConvertFbExceptions (() =>
 					{
-						System.Data.IDataAdapter adapter = this.fb.NewDataAdapter (command);
-						System.Data.DataSet ds = new System.Data.DataSet ();
+						IDataAdapter adapter = this.fb.NewDataAdapter (command);
+						DataSet ds = new DataSet ();
 						adapter.Fill (ds);
 						return ds;
 					});
