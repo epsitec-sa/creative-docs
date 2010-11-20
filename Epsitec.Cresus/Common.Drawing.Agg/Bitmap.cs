@@ -14,6 +14,12 @@ namespace Epsitec.Common.Drawing
 	/// </summary>
 	public class Bitmap : Image
 	{
+		static Bitmap()
+		{
+			Epsitec.Common.Drawing.Platform.NativeBitmap.SetOutOfMemoryHandler (Bitmap.NotifyMemoryExhauted);
+		}
+
+
 		public Bitmap()
 		{
 		}
@@ -767,15 +773,20 @@ namespace Epsitec.Common.Drawing
 					}
 					catch
 					{
-						Bitmap.OnOutOfMemoryEncountered ();
 						System.Diagnostics.Debug.WriteLine ("Out of memory in GDI - attempt " + attempt);
-						System.GC.Collect ();
-						System.Threading.Thread.Sleep (1);
+						Bitmap.NotifyMemoryExhauted ();
 					}
 				}
 
 				return null;
 			}
+		}
+
+		private static void NotifyMemoryExhauted()
+		{
+			Bitmap.OnOutOfMemoryEncountered ();
+			System.GC.Collect ();
+			System.Threading.Thread.Sleep (1);
 		}
 
 		private static void OnOutOfMemoryEncountered()

@@ -4269,7 +4269,7 @@ namespace Epsitec.Common.Widgets
 				this.HypertextHot (this);
 			}
 		}
-		
+
 		protected virtual void OnHypertextClicked(MessageEventArgs e)
 		{
 			if (this.HypertextClicked != null)
@@ -4277,12 +4277,32 @@ namespace Epsitec.Common.Widgets
 				e.Message.Consumer = this;
 				this.HypertextClicked (this, e);
 			}
-			else if (!string.IsNullOrEmpty (this.Hypertext))
+			else
 			{
-				if (this.Hypertext.StartsWith ("http:"))
+				string hypertext = this.Hypertext;
+
+				if (!string.IsNullOrEmpty (hypertext))
 				{
-					e.Message.Consumer = this;
-					System.Diagnostics.Process.Start (this.Hypertext);
+					if (hypertext.StartsWith ("http:"))
+					{
+						e.Message.Consumer = this;
+						System.Diagnostics.Process.Start (hypertext);
+					}
+					if (hypertext.StartsWith ("file:///"))
+					{
+						string path = hypertext.Substring (8);
+
+						if (hypertext.EndsWith (".txt") || hypertext.EndsWith (".log"))
+                        {
+							System.Diagnostics.Process.Start ("notepad.exe", path);
+							e.Message.Consumer = this;
+						}
+						else if (hypertext.EndsWith (@"\"))
+						{
+							System.Diagnostics.Process.Start ("explorer.exe", "/n," + path);
+							e.Message.Consumer = this;
+						}
+					}
 				}
 			}
 		}

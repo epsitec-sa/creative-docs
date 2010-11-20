@@ -16,7 +16,40 @@ namespace Epsitec.Common.Drawing.Platform
 			//	CachedBitmap, but really a WriteableBitmap, or else WPF will keep
 			//	alive the full bitmap chain, which rapidly leads to memory errors.
 
-			this.bitmapSource = new WriteableBitmap (bitmapSource);
+			BitmapSource bitmapCopy = null;
+
+
+			for (int attempt = 0; ; attempt++)
+			{
+				try
+				{
+					bitmapCopy = new WriteableBitmap (bitmapSource);
+					break;
+				}
+				catch (System.OutOfMemoryException)
+				{
+					//	There is no memory available for System.Windows.Media.Imaging to operate
+					//	properly.
+
+					if (attempt >= 5)
+					{
+						//	No need to try more; the situation is really catastrophic and nothing
+						//	we can do will help.
+						throw;
+					}
+					
+					var handler = NativeBitmap.outOfMemoryHandler;
+
+					if (handler == null)
+					{
+						break;
+					}
+					
+					handler ();
+				}
+			}
+
+			this.bitmapSource = bitmapCopy;
 			this.fileFormat   = fileFormat;
 			this.colorType    = colorType;
 
@@ -174,6 +207,10 @@ namespace Epsitec.Common.Drawing.Platform
 
 		#endregion
 
+		public static void SetOutOfMemoryHandler(System.Action callback)
+		{
+			NativeBitmap.outOfMemoryHandler = callback;
+		}
 
 		public NativeBitmap ConvertToPremultipliedArgb32()
 		{
@@ -730,6 +767,7 @@ namespace Epsitec.Common.Drawing.Platform
 		}
 
 
+		private static System.Action			outOfMemoryHandler;
 
 		private BitmapSource					bitmapSource;
 		private BitmapFileFormat				fileFormat;
