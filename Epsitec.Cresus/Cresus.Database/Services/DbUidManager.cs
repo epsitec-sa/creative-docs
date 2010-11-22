@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="slot">The slot number of the counter.</param>
 		private void RemoveUidCounter(string name, int slot)
 		{
-			SqlFieldList conditions = new SqlFieldList ()
+			SqlFunction[] conditions = new SqlFunction[]
             {
                 this.CreateConditionForName (name),
                 this.CreateConditionForSlot (slot),
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Database.Services
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			SqlFieldList conditions = new SqlFieldList ()
+			SqlFunction[] conditions = new SqlFunction[]
 			{
 				this.CreateConditionForName (name),
 				this.CreateConditionForSlot (slot),

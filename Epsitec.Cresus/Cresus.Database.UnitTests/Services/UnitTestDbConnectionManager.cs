@@ -374,9 +374,14 @@ namespace Cresus.Database.UnitTests.Services
 		{
 			Assert.AreEqual (expected.Count, actual.Count);
 
-			foreach (long l in expected)
+			foreach (DbId id in expected)
 			{
-				CollectionAssert.Contains (actual, l);
+				CollectionAssert.Contains (actual, id);
+			}
+
+			foreach (DbId id in actual)
+			{
+				CollectionAssert.Contains (expected, id);
 			}
 		}
 
