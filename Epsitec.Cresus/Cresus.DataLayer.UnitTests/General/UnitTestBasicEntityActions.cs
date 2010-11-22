@@ -996,6 +996,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
+		[TestMethod]
+		public void DeleteAndModifiyEntity()
+		{
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			{
+				dataInfrastructure.OpenConnection ("id");
+
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+					alfred.Firstname = "new first name";
+
+					dataContext.DeleteEntity (alfred);
+
+					dataContext.SaveChanges ();
+				}
+
+				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+					Assert.IsNull (alfred);
+				}
+			}
+		}
+
+
 	}
 
 
