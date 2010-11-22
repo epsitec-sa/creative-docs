@@ -128,7 +128,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
 
-			// TODO Bug here? What happens if an entity has been deleted and modified?
+			// Here we don't remove the deleted entities from the entities to save, because they will
+			// be removed afterwards in the GetPersistenceJobs(...) method.
 			// Marc
 
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
