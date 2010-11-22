@@ -72,30 +72,23 @@ namespace Epsitec.Cresus.Database.Services
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
-				int status = (int) DbConnectionStatus.Closed;
+				{ Tags.ColumnConnectionStatus, (int) DbConnectionStatus.Closed },
+			};
+			
+			
+			SqlFunction[] conditions = new SqlFunction[]
+			{
+				this.CreateConditionForConnectionId (id),
+				this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
+			};
 
-				SqlFieldList fields = new SqlFieldList ()
-				{
-					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, status)
-				};
+			int nbRowsAffected = this.SetRowValues (columnNamesToValues, conditions);
 
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (id),
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
-				};
-
-				int nbRowsAffected = this.SetRowValue (fields, conditions);
-
-				transaction.Commit ();
-
-				if (nbRowsAffected == 0)
-				{
-					throw new System.InvalidOperationException ("Could not close connection because it not open or it does not exist.");
-				}
+			if (nbRowsAffected == 0)
+			{
+				throw new System.InvalidOperationException ("Could not close connection because it not open or it does not exist.");
 			}
 		}
 
@@ -113,12 +106,9 @@ namespace Epsitec.Cresus.Database.Services
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForConnectionId (id),
-			};
+			SqlFunction condition = this.CreateConditionForConnectionId (id);
 
-			return this.RowExists (conditions);
+			return this.RowExists (condition);
 		}
 
 
@@ -131,19 +121,11 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (id),
-				};
+			SqlFunction condition = this.CreateConditionForConnectionId (id);
 
-				var data = this.GetRows (conditions);
+			var data = this.GetRowValues (condition);
 
-				transaction.Commit ();
-
-				return data.Any () ? this.CreateDbConnection (data.First ()) : null;
-			}
+			return data.Any () ? this.CreateDbConnection (data[0]) : null;
 		}
 
 
@@ -162,29 +144,22 @@ namespace Epsitec.Cresus.Database.Services
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
+				{Tags.ColumnConnectionStatus, (int) DbConnectionStatus.Open}
+			};
+			
+			SqlFunction[] conditions = new SqlFunction []
+			{
+				this.CreateConditionForConnectionId (id),
+				this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
+			};
 
-				SqlFieldList fields = new SqlFieldList ()
-				{
-					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, (int) DbConnectionStatus.Open)
-				};
+			int nbRowsAffected = this.SetRowValues (columnNamesToValues, conditions);
 
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (id),
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
-				};
-
-				int nbRowsAffected = this.SetRowValue (fields, conditions);
-
-				transaction.Commit ();
-
-				if (nbRowsAffected == 0)
-				{
-					throw new System.InvalidOperationException ("Could not keep connection alive because it is not open or it does not exist.");
-				}
+			if (nbRowsAffected == 0)
+			{
+				throw new System.InvalidOperationException ("Could not keep connection alive because it is not open or it does not exist.");
 			}
 		}
 
@@ -200,21 +175,18 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
-			int status = (int) DbConnectionStatus.Interrupted;
-			
-			SqlFieldList fields = new SqlFieldList ()
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
-				this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, status)
+				{Tags.ColumnConnectionStatus, (int) DbConnectionStatus.Interrupted}
 			};
-
-			SqlFieldList conditions = new SqlFieldList ()
+			
+			SqlFunction[] conditions = new SqlFunction []
 			{
 				this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				this.CreateConditionForTimeOut (timeOutValue),
 			};
 
-			int nbRowsAffected = this.SetRowValue (fields, conditions);
+			int nbRowsAffected = this.SetRowValues (columnNamesToValues, conditions);
 
 			return nbRowsAffected > 0;
 		}
@@ -229,19 +201,11 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open)
-				};
+			SqlFunction condition = this.CreateConditionForConnectionStatus (DbConnectionStatus.Open);
 
-				var data = this.GetRows (conditions);
+			var data = this.GetRowValues (condition);
 
-				transaction.Commit ();
-
-				return data.Select (d => this.CreateDbConnection (d));
-			}
+			return data.Select (d => this.CreateDbConnection (d));
 		}
 
 

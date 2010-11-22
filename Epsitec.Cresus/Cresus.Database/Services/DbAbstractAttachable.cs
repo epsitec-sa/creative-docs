@@ -111,6 +111,8 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The id of the inserted row.</returns>
 		protected long AddRow(SqlFieldList fieldsToInsert)
 		{
+			// TODO REMOVE
+			
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				DbColumn columnId = this.DbTable.Columns[Tags.ColumnId];
@@ -177,11 +179,14 @@ namespace Epsitec.Cresus.Database.Services
 		/// Removes the rows from the table in the database that match the given conditions.
 		/// </summary>
 		/// <param name="conditions">The conditions defining which rows will be deleted.</param>
-		protected void RemoveRows(SqlFieldList conditions)
+		protected void RemoveRows(params SqlFunction[] conditions)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), conditions);
+				SqlFieldList c = new SqlFieldList ();
+				c.AddRange (conditions.Select (f => SqlField.CreateFunction (f)));
+
+				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), c);
 
 				this.DbInfrastructure.ExecuteSilent (transaction);
 
@@ -195,7 +200,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// </summary>
 		/// <param name="conditions">The condition that the rows must satisfy.</param>
 		/// <returns><c>true</c> if there is at least one row that satisfies the conditions, <c>false</c> if there is none.</returns>
-		protected bool RowExists(SqlFieldList conditions)
+		protected bool RowExists(params SqlFunction[] conditions)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -210,7 +215,7 @@ namespace Epsitec.Cresus.Database.Services
 						SqlField.CreateName (Tags.ColumnId)
 					)
 				);
-				query.Conditions.AddRange (conditions);
+				query.Conditions.AddRange (conditions.Select (f => SqlField.CreateFunction (f)));
 
 				transaction.SqlBuilder.SelectData (query);
 
@@ -232,6 +237,8 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.Exception">If there is zero or more that one rows that satisfies the conditions.</exception>
 		protected object GetRowValue(DbColumn dbColumn, SqlFieldList conditions)
 		{
+			// TODO REMOVE
+			
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = new SqlSelect ();
@@ -256,43 +263,6 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Gets a sequence of values out of a single row in the table which satisfies some conditions.
-		/// </summary>
-		/// <param name="dbColumns">The sequence of <see cref="DbColumn"/> defining which values of the row to return.</param>
-		/// <param name="conditions">The conditions defining which row to return.</param>
-		/// <returns>The given values of the given row.</returns>
-		/// <exception cref="System.Exception">If there is zero or more that one rows that satisfies the conditions.</exception>
-		protected List<object> GetRowValues(IEnumerable<DbColumn> dbColumns, SqlFieldList conditions)
-		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlSelect query = new SqlSelect ();
-				query.Tables.Add ("t", SqlField.CreateName (this.DbTable.GetSqlName ()));
-				
-				foreach (DbColumn dbColumn in dbColumns)
-				{
-					query.Fields.Add (SqlField.CreateName ("t", dbColumn.GetSqlName ()));
-				}
-				
-				query.Conditions.AddRange (conditions);
-
-				transaction.SqlBuilder.SelectData (query);
-
-				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
-
-				transaction.Commit ();
-
-				if (table.Rows.Count != 1)
-				{
-					throw new System.Exception ("There should be a single row of results.");
-				}
-
-				return table.Rows[0].ItemArray.ToList ();
-			}
-		}
-
-
-		/// <summary>
 		/// Gets a given value out of the rows of the table that satisfies some conditions.
 		/// </summary>
 		/// <param name="dbColumn">The <see cref="DbColumn"/> defining which value of the rows to return.</param>
@@ -300,6 +270,8 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The given value of the rows that satisfies the conditions.</returns>
 		protected IEnumerable<object> GetRowsValue(DbColumn dbColumn, SqlFieldList conditions)
 		{
+			// TODO REMOVE
+			
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = new SqlSelect ();
@@ -332,7 +304,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// </summary>
 		/// <param name="conditions">The conditions that the rows must satisfy.</param>
 		/// <returns>The value of each column of each row that satisfies the conditions.</returns>
-		protected IList<IList<object>> GetRows(SqlFieldList conditions)
+		protected IList<IList<object>> GetRowValues(params SqlFunction[] conditions)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -344,7 +316,8 @@ namespace Epsitec.Cresus.Database.Services
 				{
 					query.Fields.Add (SqlField.CreateName (dbColumn.GetSqlName ()));
 				}
-				query.Conditions.AddRange (conditions);
+
+				query.Conditions.AddRange (conditions.Select (f => SqlField.CreateFunction (f)));
 
 				transaction.SqlBuilder.SelectData (query);
 
@@ -372,9 +345,46 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The number of rows affected.</returns>
 		protected int SetRowValue(SqlFieldList fields, SqlFieldList conditions)
 		{
+			// TODO REMOVE
+
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
+
+				object nbRowsAffected = this.DbInfrastructure.ExecuteNonQuery (transaction);
+
+				transaction.Commit ();
+
+				return (int) nbRowsAffected;
+			}
+		}
+
+
+		/// <summary>
+		/// Sets some values in the rows of the table that satisfy some conditions.
+		/// </summary>
+		/// <param name="columnNamesToValues">The mapping between colum names and the values to assign to them.</param>
+		/// <param name="conditions">The conditions defining the rows in which the values must be set.</param>
+		/// <returns>The number of rows affected.</returns>
+		protected int SetRowValues(IDictionary<string, object> columnNamesToValues, params SqlFunction[] conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				SqlFieldList fields = new SqlFieldList ();
+
+				foreach (var item in columnNamesToValues)
+				{
+					DbColumn dbColumn = this.DbTable.Columns[item.Key];
+					SqlField sqlField = this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, item.Value);
+
+					fields.Add (sqlField);
+				}
+
+				SqlFieldList c = new SqlFieldList ();
+
+				c.AddRange (conditions.Select (f => SqlField.CreateFunction (f)));
+
+				transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, c);
 
 				object nbRowsAffected = this.DbInfrastructure.ExecuteNonQuery (transaction);
 

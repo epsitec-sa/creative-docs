@@ -135,12 +135,9 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="lockName">The name of the lock.</param>
 		private void RemoveLock(string lockName)
 		{
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForLockName (lockName),
-			};
+			SqlFunction condition = this.CreateConditionForLockName (lockName);
 
-			this.RemoveRows (conditions);
+			this.RemoveRows (condition);
 		}
 
 
@@ -213,12 +210,9 @@ namespace Epsitec.Cresus.Database.Services
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForLockName (lockName),
-			};
+			SqlFunction condition = this.CreateConditionForLockName (lockName);
 
-			return this.RowExists (conditions);
+			return this.RowExists (condition);
 		}
 
 
@@ -262,12 +256,9 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForInactiveLocks (),
-			};
+			SqlFunction condition = this.CreateConditionForInactiveLocks ();
 
-			this.RemoveRows (conditions);
+			this.RemoveRows (condition);
 		}
 
 

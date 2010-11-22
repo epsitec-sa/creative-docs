@@ -2,6 +2,10 @@
 
 using Epsitec.Cresus.Database.Collections;
 
+using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database.Services
 {
@@ -58,18 +62,13 @@ namespace Epsitec.Cresus.Database.Services
 			{
 				if (value == null)
 				{
-					if (this.ExistsInfo (key))
-					{
-						this.RemoveValue (key);
-					}
+					this.RemoveValue (key);
 				}
 				else
 				{
-					if (this.ExistsInfo (key))
-					{
-						this.SetValue (key, value);
-					}
-					else
+					int nbRowsAffected = this.SetValue (key, value);
+
+					if (nbRowsAffected == 0)
 					{
 						this.InsertValue (key, value);
 					}
@@ -93,19 +92,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			key.ThrowIfNullOrEmpty ("key");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				string value = null;
-				
-				if (this.ExistsInfo (key))
-				{
-					value = this.GetValue (key);
-				}
-				
-				transaction.Commit ();
-
-				return value;
-			}
+			return this.GetValue (key);
 		}
 
 
@@ -116,15 +103,13 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="value">The value of the information.</param>
 		private void InsertValue(string key, string value)
 		{
-			SqlFieldList fields = new SqlFieldList ();
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
+			{
+				 {Tags.ColumnKey, key},
+				 {Tags.ColumnValue, value},
+			};
 
-			DbColumn columnKey = this.DbTable.Columns[Tags.ColumnKey];
-			DbColumn columnValue = this.DbTable.Columns[Tags.ColumnValue];
-
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnKey, key));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnValue, value));
-
-			this.AddRow (fields);
+			this.AddRow (columnNamesToValues);
 		}
 
 
@@ -134,12 +119,9 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="key">The key of the information.</param>
 		private void RemoveValue(string key)
 		{
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForValueKey (key),
-			};
+			SqlFunction condition = this.CreateConditionForValueKey (key);
 
-			this.RemoveRows (conditions);
+			this.RemoveRows (condition);
 		}
 
 
@@ -150,12 +132,9 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns><c>true</c> if the information exists, <c>false</c> if it does not.</returns>
 		private bool ExistsValue(string key)
 		{
-			SqlFieldList conditions = new SqlFieldList ()
-            {
-            	this.CreateConditionForValueKey (key),
-            };
+			SqlFunction condition = this.CreateConditionForValueKey (key);
 
-			return this.RowExists (conditions);
+			return this.RowExists (condition);
 		}
 
 
@@ -166,14 +145,11 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The value of the information.</returns>
 		private string GetValue(string key)
 		{
-			DbColumn column = this.DbTable.Columns[Tags.ColumnValue];
+			SqlFunction condition = this.CreateConditionForValueKey (key);
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForValueKey (key),
-			};
+			var data = this.GetRowValues (condition);
 
-			return (string) this.GetRowValue (column, conditions);
+			return data.Any () ? (string) data[0][2] : null;
 		}
 
 
@@ -182,21 +158,16 @@ namespace Epsitec.Cresus.Database.Services
 		/// </summary>
 		/// <param name="key">The key of the information.</param>
 		/// <param name="value">The new value of the information.</param>
-		private void SetValue(string key, string value)
+		private int SetValue(string key, string value)
 		{
-			DbColumn column = this.DbTable.Columns[Tags.ColumnValue];
-
-			SqlFieldList fields = new SqlFieldList ()
-		    {
-		        this.DbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
-		    };
-
-			SqlFieldList conditions = new SqlFieldList ()
+			IDictionary<string, object> columNamesToValues = new Dictionary<string, object> ()
 			{
-				this.CreateConditionForValueKey (key),
+				 {Tags.ColumnValue, value},
 			};
+			
+			SqlFunction condition = this.CreateConditionForValueKey (key);
 
-			this.SetRowValue (fields, conditions);
+			return this.SetRowValues (columNamesToValues, condition);
 		}
 
 

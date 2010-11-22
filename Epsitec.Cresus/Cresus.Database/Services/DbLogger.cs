@@ -54,19 +54,11 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForEntryId (entryId),
-				};
+			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
-				var data = this.GetRows (conditions);
+			var data = this.GetRowValues (condition);
 
-				transaction.Commit ();
-
-				return data.Any () ? this.CreateDbLogEntry (data.First ()) : null;
-			}
+			return data.Any () ? this.CreateDbLogEntry (data.First ()) : null;
 		}
 
 
@@ -78,12 +70,9 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForEntryId (entryId),
-			};
+			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
-			this.RemoveRows (conditions);
+			this.RemoveRows (condition);
 		}
 
 
@@ -96,12 +85,9 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			this.CheckIsAttached ();
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForEntryId (entryId),
-			};
+			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
-			return this.RowExists (conditions);
+			return this.RowExists (condition);
 		}
 
 
