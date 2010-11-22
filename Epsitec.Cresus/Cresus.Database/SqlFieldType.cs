@@ -92,5 +92,11 @@ namespace Epsitec.Cresus.Database
 		/// A join (used by a SELECT command).
 		/// </summary>
 		Join,
+
+		/// <summary>
+		/// A raw sql query snippet.
+		/// </summary>
+		RawSql,
+
 	}									
 }

@@ -380,6 +380,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the field value as a string that represents a raw sql query snippet.
+		/// </summary>
+		public string AsRawSql
+		{
+			get
+			{
+				if (this.fieldType == SqlFieldType.RawSql)
+				{
+					return (string) this.value;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Validates the field contents.
@@ -611,6 +628,12 @@ namespace Epsitec.Cresus.Database
 		{
 			return new SqlField (SqlFieldType.SubQuery, subQuery, DbRawType.Unknown);
 		}
+
+		public static SqlField CreateRawSql(string rawSql)
+		{
+			return new SqlField (SqlFieldType.RawSql, rawSql, DbRawType.Unknown);
+		}
+
 
 
 		private SqlFieldType					fieldType;
