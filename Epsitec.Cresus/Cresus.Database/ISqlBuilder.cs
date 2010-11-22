@@ -167,6 +167,13 @@ namespace Epsitec.Cresus.Database
 		void GetCurrentTimeStamp();
 
 		/// <summary>
+		/// Gets the <see cref="SqlField"/> for the SQL expression that represents the current time
+		/// in the database.
+		/// </summary>
+		/// <returns></returns>
+		SqlField GetSqlFieldForCurrentTimeStamp();
+
+		/// <summary>
 		/// Sets the SQL parameters for a stored procedure.
 		/// </summary>
 		/// <param name="command">The command.</param>
@@ -202,5 +209,6 @@ namespace Epsitec.Cresus.Database
 		/// <returns>An array of characters which are recognized by the <c>LIKE</c>
 		/// predicator as wildcard specifiers.</returns>
 		char[] GetSupportedCompareLikeWildcards();
+
 	}
 }

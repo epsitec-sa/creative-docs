@@ -838,8 +838,16 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.commandType = DbCommandType.ReturningData;
 			this.commandCount++;
 
-			this.Append ("SELECT CAST('NOW' AS TIMESTAMP) FROM RDB$DATABASE");
+			this.Append ("SELECT (" + this.GetSqlFieldForCurrentTimeStamp().AsRawSql + ") FROM RDB$DATABASE");
 		}
+
+		public SqlField GetSqlFieldForCurrentTimeStamp()
+		{
+			string rawSql = "CAST('NOW' AS TIMESTAMP)";
+
+			return SqlField.CreateRawSql (rawSql);
+		}
+
 				
 		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields)
 		{
@@ -1068,6 +1076,12 @@ namespace Epsitec.Cresus.Database.Implementation
 				case SqlFieldType.SubQuery:
 					this.Append ('(');
 					this.Append (field.AsSubQuery);
+					this.Append (')');
+					break;
+
+				case SqlFieldType.RawSql:
+					this.Append ('(');
+					this.Append (field.AsRawSql);
 					this.Append (')');
 					break;
 				
