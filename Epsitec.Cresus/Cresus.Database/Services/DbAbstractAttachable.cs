@@ -132,6 +132,48 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
+		/// Adds a new row to the table in the database with the given values and returns the value
+		/// of each column of the new row.
+		/// </summary>
+		/// <param name="columnNamesToValues">The mapping between the column names and their values.</param>
+		/// <returns>The list of values of the columns in the new row, sorted by column order in the table.</returns>
+		protected IList<object> AddRow(IDictionary<string, object> columnNamesToValues)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				SqlFieldList fieldsToInsert = new SqlFieldList ();
+				SqlFieldList fieldsToReturn = new SqlFieldList ();
+
+				foreach (var item in columnNamesToValues)
+				{
+					DbColumn dbColumn = this.DbTable.Columns[item.Key];
+					SqlField sqlField = this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, item.Value);
+
+					fieldsToInsert.Add (sqlField);
+				}
+
+				foreach (DbColumn dbColumn in this.DbTable.Columns)
+				{
+					SqlField sqlField = new SqlField ()
+					{
+						Alias = dbColumn.GetSqlName ()
+					};
+
+					fieldsToReturn.Add (sqlField);
+				}
+
+				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+
+				IList<object> outputParameters = this.DbInfrastructure.ExecuteOutputParameters (transaction);
+
+				transaction.Commit ();
+
+				return outputParameters;
+			}
+		}
+
+
+		/// <summary>
 		/// Removes the rows from the table in the database that match the given conditions.
 		/// </summary>
 		/// <param name="conditions">The conditions defining which rows will be deleted.</param>
@@ -280,6 +322,44 @@ namespace Epsitec.Cresus.Database.Services
 				transaction.Commit ();
 
 				return values;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the column values of each row in the table in the database that satisfies the given
+		/// conditions.
+		/// </summary>
+		/// <param name="conditions">The conditions that the rows must satisfy.</param>
+		/// <returns>The value of each column of each row that satisfies the conditions.</returns>
+		protected IList<IList<object>> GetRows(SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+
+				query.Tables.Add (SqlField.CreateName (this.DbTable.GetSqlName ()));
+
+				foreach (DbColumn dbColumn in this.DbTable.Columns)
+				{
+					query.Fields.Add (SqlField.CreateName (dbColumn.GetSqlName ()));
+				}
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+				List<IList<object>> data = new List<IList<object>> ();
+
+				transaction.Commit ();
+
+				foreach (DataRow row in table.Rows)
+				{
+					data.Add (row.ItemArray.ToList ());
+				}
+
+				return data;
 			}
 		}
 
