@@ -16,10 +16,12 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// <summary>
 	/// Ce widget montre le contenu d'une page imprimée dans une zone rectangulaire.
 	/// </summary>
-	public class ContinuousPagePreviewer : Widget
+	public class ContinuousPagePreviewer : Widget, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
 		public ContinuousPagePreviewer()
 		{
+			this.dragBehavior = this.CreateDragBehavior ();
+
 			this.timer = new Timer ();
 			this.timer.Delay = 1.0;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerElapsed);
@@ -37,11 +39,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			set
 			{
 				this.documentPrinter = value;
-
-				double w = this.documentPrinter.RequiredPageSize.Width;
-				double h = Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
-
-				this.documentSize = new Size (w, h);
+				this.Update ();
 			}
 		}
 
@@ -51,8 +49,33 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.timer.Dispose ();
 		}
 
+		public void Update()
+		{
+			//	Met à jour le contenu de la page.
+			double w = this.documentPrinter.RequiredPageSize.Width;
+			double h = Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
+			var documentSize = new Size (w, h);
+			var changed = false;
+
+			if (this.documentSize != documentSize)
+			{
+				this.documentSize = documentSize;
+				changed = true;
+			}
+
+			this.lastBitmapWidth = 0;
+			this.UpdateBitmap (force: true);
+			this.Invalidate ();
+
+			if (changed)
+			{
+				this.OnCurrentValueChanged ();
+			}
+		}
+
 		public double Zoom
 		{
+			//	Zoom servant à l'affichage de la page (1..n, 1 ou 2 en pratique).
 			get
 			{
 				return this.zoom;
@@ -63,59 +86,145 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					this.zoom = value;
 					this.UpdateBitmap (true);
-				}
-			}
-		}
-
-		public double TotalWidth
-		{
-			get
-			{
-				return this.documentSize.Width * this.DocumentToScreenScale;
-			}
-		}
-
-		public double TotalHeight
-		{
-			get
-			{
-				return this.documentSize.Height * this.DocumentToScreenScale;
-			}
-		}
-
-		public double HorizontalOffset
-		{
-			get
-			{
-				return this.horizontalOffset;
-			}
-			set
-			{
-				if (this.horizontalOffset != value)
-				{
-					this.horizontalOffset = value;
 					this.Invalidate ();
 				}
 			}
 		}
 
-		public double VerticalOffset
+		public Point MinValue
 		{
+			//	Valeur minimale en millimètres.
 			get
 			{
-				return this.verticalOffset;
+				var bounds = this.BoundsRectangle;
+
+				return new Point (bounds.Width/2, bounds.Height/2);
+			}
+		}
+
+		public Point MaxValue
+		{
+			//	Valeur maximale en millimètres.
+			get
+			{
+				var bounds = this.BoundsRectangle;
+
+				return new Point (this.documentSize.Width-bounds.Width/2, this.documentSize.Height-bounds.Height/2);
+			}
+		}
+
+		public Size VisibleRangeRatio
+		{
+			//	Ratios pour les ascenseurs (0..1).
+			get
+			{
+				var bounds = this.BoundsRectangle;
+
+				double rx = System.Math.Min (bounds.Width  / this.documentSize.Width,  1);
+				double ry = System.Math.Min (bounds.Height / this.documentSize.Height, 1);
+
+				return new Size (rx, ry);
+			}
+		}
+
+		public Point CurrentValue
+		{
+			//	Valeur courante en millimètres.
+			get
+			{
+				return this.currentValue;
 			}
 			set
 			{
-				if (this.verticalOffset != value)
+				var min = this.MinValue;
+				value.X = System.Math.Max (value.X, min.X);
+				value.Y = System.Math.Max (value.Y, min.Y);
+
+				var max = this.MaxValue;
+				value.X = System.Math.Min (value.X, max.X);
+				value.Y = System.Math.Min (value.Y, max.Y);
+
+				if (this.currentValue != value)
 				{
-					this.verticalOffset = value;
+					this.currentValue = value;
 					this.Invalidate ();
+					this.OnCurrentValueChanged ();
 				}
 			}
 		}
 
+		public double ScreenToDocumentScale
+		{
+			//	Echelle pour convertir des valeurs de l'interface en millimètres.
+			get
+			{
+				return 1.0 / this.DocumentToScreenScale;
+			}
+		}
 
+
+		protected virtual Common.Widgets.Behaviors.DragBehavior CreateDragBehavior()
+		{
+			return new Common.Widgets.Behaviors.DragBehavior (this, true, true);
+		}
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (this.IsEnabled == false)
+			{
+				return;
+			}
+
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == MessageType.MouseMove)
+				{
+					var ratio = this.VisibleRangeRatio;
+					this.UseCursorHand (System.Math.Abs (ratio.Width -1) > 0.00001 ||
+										System.Math.Abs (ratio.Height-1) > 0.00001);
+				}
+			}
+
+			if (!this.dragBehavior.ProcessMessage (message, pos))
+			{
+				base.ProcessMessage (message, pos);
+			}
+		}
+
+		#region IDragBehaviorHost Members
+
+		public Point DragLocation
+		{
+			get
+			{
+				return Point.Zero;
+			}
+		}
+
+		public bool OnDragBegin(Point cursor)
+		{
+			this.draggingPos = cursor;
+			return true;
+		}
+
+		public void OnDragging(DragEventArgs e)
+		{
+			Point cursor = e.ToPoint;
+
+			var scale = this.ScreenToDocumentScale;
+			var offset = new Point ((this.draggingPos.X-cursor.X)*scale, (this.draggingPos.Y-cursor.Y)*scale);
+			this.CurrentValue += offset;
+
+			this.draggingPos = cursor;
+		}
+
+		public void OnDragEnd()
+		{
+		}
+
+		#endregion
+
+	
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
@@ -124,9 +233,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				this.UpdateBitmap (false);
 
-				var bounds = this.Client.Bounds;
-				var imageRect = new Rectangle (this.horizontalOffset, this.verticalOffset, bounds.Width, bounds.Height);
-				imageRect.Scale(1.0/this.BitmapToScreenScale);
+				var bounds = this.BoundsRectangle;
+				bounds.Scale (this.DocumentToScreenScale);
+				var imageRect = this.ImageRectangle;
 				graphics.PaintImage (this.bitmap, bounds, imageRect);
 
 				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
@@ -139,10 +248,41 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		private Rectangle ImageRectangle
+		{
+			//	Retourne le rectangle de l'image, en points dans l'image.
+			get
+			{
+				var min = this.MinValue;
+				var imageRect = new Rectangle (this.currentValue.X-min.X, this.currentValue.Y-min.Y, min.X*2, min.Y*2);
+
+				imageRect.Scale (this.DocumentToScreenScale);    // document -> screen
+				imageRect.Scale (1.0/this.BitmapToScreenScale);  // screen -> bitmap
+
+				return imageRect;
+			}
+		}
+
+		private Rectangle BoundsRectangle
+		{
+			//	Retourne le rectangle de l'image, en millimètres.
+			get
+			{
+				var bounds = this.Client.Bounds;
+				bounds.Scale (this.ScreenToDocumentScale);
+
+				double h = bounds.Width * this.documentSize.Height / this.documentSize.Width;
+				bounds.Height = System.Math.Min (bounds.Height, h);
+
+				return bounds;
+			}
+		}
+
+
 		private void HandleTimerElapsed(object sender)
 		{
 			//?System.Diagnostics.Debug.WriteLine ("Timber !!!");
-			if (this.UpdateBitmap (true))
+			if (this.UpdateBitmap (force: true))
 			{
 				this.Invalidate ();
 			}
@@ -218,6 +358,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private double BitmapToScreenScale
 		{
+			//	Echelle pour convertir des points dans le btmap en valeurs pour l'interface.
 			get
 			{
 				return (this.Client.Bounds.Width / this.bitmap.Width) * this.zoom;
@@ -226,6 +367,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private double DocumentToScreenScale
 		{
+			//	Echelle pour convertir des millimètres en valeurs pour l'interface.
 			get
 			{
 				return (this.Client.Bounds.Width / this.documentSize.Width) * this.zoom;
@@ -233,6 +375,53 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		private void UseCursorHand(bool hand)
+		{
+			//	Utilise la main comme cursour souris dans ce widget.
+			if (hand)
+			{
+				if (this.mouseCursorHand == null)
+				{
+					this.mouseCursorHand = MouseCursor.FromImage (Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Common.Support.Resources.DefaultManager));
+				}
+
+				this.MouseCursor = this.mouseCursorHand;
+			}
+			else
+			{
+				this.MouseCursor = MouseCursor.AsArrow;
+			}
+		}
+
+
+		#region Events handler
+		protected void OnCurrentValueChanged()
+		{
+			var handler = (EventHandler) this.GetUserEventHandler (ContinuousPagePreviewer.CurrentValueChangedEvent);
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler CurrentValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (ContinuousPagePreviewer.CurrentValueChangedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ContinuousPagePreviewer.CurrentValueChangedEvent, value);
+			}
+		}
+
+		private const string CurrentValueChangedEvent = "CurrentValueChanged";
+		#endregion
+
+
+		private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		private readonly Timer						timer;
 
 		private Printers.AbstractDocumentPrinter	documentPrinter;
@@ -241,7 +430,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		private double								lastBitmapWidth;
 		private long								bitmapTicks;
 		private Bitmap								bitmap;
-		private double								verticalOffset;
-		private double								horizontalOffset;
+		private Point								currentValue;
+		private MouseCursor							mouseCursorHand;
+		private Point								draggingPos;
 	}
 }

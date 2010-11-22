@@ -19,10 +19,13 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class ContinuousController
 	{
-		public ContinuousController(AbstractEntityPrinter entityPrinter)
+		public ContinuousController(DocumentMetadataEntity metadoc, Printers.DocumentType documentType)
 		{
-			System.Diagnostics.Debug.Assert (entityPrinter != null);
-			this.entityPrinter = entityPrinter;
+			this.entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
+			System.Diagnostics.Debug.Assert (this.entityPrinter != null);
+			this.entityPrinter.ContinuousPrepare (documentType);
+			this.entityPrinter.SetPrinterUnit ();
+			this.entityPrinter.BuildSections ();
 
 			this.zoom = 1;
 		}
@@ -106,6 +109,11 @@ namespace Epsitec.Cresus.Core.Printers
 				this.UpdateScroller ();
 			};
 
+			this.previewer.CurrentValueChanged += delegate
+			{
+				this.UpdateScroller ();
+			};
+
 			this.vScroller.ValueChanged += delegate
 			{
 				this.UpdatePagePreview ();
@@ -126,6 +134,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.ChangeZoom (2);
 			};
 
+			this.previewer.CurrentValue = new Point (0, 1000000);  // montre la partie supérieure
+
 			this.UpdateScroller ();
 			this.UpdateButtons ();
 		}
@@ -136,6 +146,13 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.previewer.CloseUI ();
 			}
+		}
+
+		public void Update()
+		{
+			//	Met à jour le contenu de la page.
+			this.entityPrinter.BuildSections ();
+			this.previewer.Update ();
 		}
 
 
@@ -153,47 +170,59 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateScroller()
 		{
-			double totalHeight   = this.previewer.TotalHeight;
-			double visibleHeight = this.previewer.Client.Size.Height;
-			double maxHeight     = System.Math.Max (totalHeight-visibleHeight, 0);
+			var min = this.previewer.MinValue;
+			var max = this.previewer.MaxValue;
+			var vrt = this.previewer.VisibleRangeRatio;
+			var val = this.previewer.CurrentValue;
+			var std = this.previewer.ScreenToDocumentScale;
 
-			if (maxHeight == 0)
+			//	Met à jour l'ascenseur horizontal.
+			if (System.Math.Abs (vrt.Width-1) < 0.00001)
 			{
-				this.vScroller.MaxValue = 0;
-				this.vScroller.Value    = 0;
-			}
-			else
-			{
-				this.vScroller.MaxValue          = (decimal) maxHeight;
-				this.vScroller.Value             = (decimal) maxHeight;
-				this.vScroller.VisibleRangeRatio = (decimal) (visibleHeight/totalHeight);
-				this.vScroller.SmallChange       = (decimal) 10;
-				this.vScroller.LargeChange       = (decimal) (visibleHeight*0.5);
-			}
+				this.hScroller.Enable = false;
 
-			double totalWidth   = this.previewer.TotalWidth;
-			double visibleWidth = this.previewer.Client.Size.Width;
-			double maxWidth     = System.Math.Max (totalWidth-visibleWidth, 0);
-
-			if (zoom == 1)
-			{
+				this.hScroller.MinValue = 0;
 				this.hScroller.MaxValue = 0;
 				this.hScroller.Value    = 0;
 			}
 			else
 			{
-				this.hScroller.MaxValue          = (decimal) maxWidth;
-				this.hScroller.Value             = (decimal) 0;
-				this.hScroller.VisibleRangeRatio = (decimal) (visibleWidth/totalWidth);
-				this.hScroller.SmallChange       = (decimal) 10;
-				this.hScroller.LargeChange       = (decimal) (visibleWidth*0.5);
+				this.hScroller.Enable = true;
+
+				this.hScroller.MinValue          = (decimal) min.X;
+				this.hScroller.MaxValue          = (decimal) max.X;
+				this.hScroller.Value             = (decimal) val.X;
+				this.hScroller.VisibleRangeRatio = (decimal) vrt.Width;
+				this.hScroller.SmallChange       = (decimal) (10.0*std);
+				this.hScroller.LargeChange       = (decimal) (this.previewer.Client.Bounds.Width*0.5*std);
+			}
+
+			//	Met à jour l'ascenseur vertical.
+			if (System.Math.Abs (vrt.Height-1) < 0.00001)
+			{
+				this.vScroller.Enable = false;
+
+				this.vScroller.MinValue = 0;
+				this.vScroller.MaxValue = 0;
+				this.vScroller.Value    = 0;
+			}
+			else
+			{
+				this.vScroller.Enable = true;
+
+				this.vScroller.MinValue          = (decimal) min.Y;
+				this.vScroller.MaxValue          = (decimal) max.Y;
+				this.vScroller.Value             = (decimal) val.Y;
+				this.vScroller.VisibleRangeRatio = (decimal) vrt.Height;
+				this.vScroller.SmallChange       = (decimal) (10.0*std);
+				this.vScroller.LargeChange       = (decimal) (this.previewer.Client.Bounds.Height*0.5*std);
 			}
 		}
 
 		private void UpdatePagePreview()
 		{
-			this.previewer.VerticalOffset   = (double) this.vScroller.Value;
-			this.previewer.HorizontalOffset = (double) this.hScroller.Value;
+			this.previewer.CurrentValue = new Point((double) this.hScroller.Value,
+													(double) this.vScroller.Value);
 		}
 
 		private void UpdateButtons()

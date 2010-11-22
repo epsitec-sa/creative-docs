@@ -56,10 +56,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		
 		private void CreateUIPreviewPanel()
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			DocumentMetadataEntity metadoc = this.GetMetadoc ();
-
 			//	Crée le conteneur.
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
 			var previewFrame = new FrameBox
 			{
 				Dock      = DockStyle.Fill,
@@ -72,18 +71,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			mainViewController.SetPreviewPanelVisibility (true);
 
-			//	Crée l'EntityPrinter et son contrôleur.
-			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (metadoc);
-			if (entityPrinter == null)
-			{
-				return;
-			}
+			//	Crée le contrôleur.
+			DocumentMetadataEntity metadoc = this.GetMetadoc ();
 
-			entityPrinter.ContinuousPrepare (Printers.DocumentType.InvoiceWithInsideESR);
-			entityPrinter.SetPrinterUnit ();
-			entityPrinter.BuildSections ();
-
-			this.previewController = new Printers.ContinuousController (entityPrinter);
+			this.previewController = new Printers.ContinuousController (metadoc, Printers.DocumentType.InvoiceWithInsideESR);
 			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
@@ -125,6 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void HandlePreviewPanelUpdating(object sender)
 		{
+			previewController.Update ();
 		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
