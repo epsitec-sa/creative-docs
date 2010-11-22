@@ -295,9 +295,9 @@ namespace Cresus.Database.UnitTests.Services
 				DbLockManager lockManager = dbInfrastructure.LockManager;
 				DbConnectionManager connectionManager = dbInfrastructure.ConnectionManager;
 
-				long connectionId1 = connectionManager.OpenConnection ("myId1");
-				long connectionId2 = connectionManager.OpenConnection ("myId2");
-				long connectionId3 = connectionManager.OpenConnection ("myId3");
+				DbId connectionId1 = connectionManager.OpenConnection ("myId1").Id;
+				DbId connectionId2 = connectionManager.OpenConnection ("myId2").Id;
+				DbId connectionId3 = connectionManager.OpenConnection ("myId3").Id;
 				
 				Assert.IsFalse (lockManager.IsLockOwned ("myLock1"));
 				Assert.IsFalse (lockManager.IsLockOwned ("myLock2"));
@@ -328,9 +328,9 @@ namespace Cresus.Database.UnitTests.Services
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock2"));
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock3"));
 
-				Assert.AreEqual (DbConnectionStatus.Open, connectionManager.GetConnectionStatus (connectionId1));
-				Assert.AreEqual (DbConnectionStatus.Closed, connectionManager.GetConnectionStatus (connectionId2));
-				Assert.AreEqual (DbConnectionStatus.Interrupted, connectionManager.GetConnectionStatus (connectionId3));
+				Assert.AreEqual (DbConnectionStatus.Open, connectionManager.GetConnection (connectionId1).Status);
+				Assert.AreEqual (DbConnectionStatus.Closed, connectionManager.GetConnection (connectionId2).Status);
+				Assert.AreEqual (DbConnectionStatus.Interrupted, connectionManager.GetConnection (connectionId3).Status);
 
 				lockManager.RemoveInactiveLocks ();
 

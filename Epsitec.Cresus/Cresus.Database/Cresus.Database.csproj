@@ -127,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\DbConnection.cs" />
     <Compile Include="Services\DbInfoManager.cs" />
     <Compile Include="Services\DbAbstractAttachable.cs" />
     <Compile Include="AssemblyInfo.cs">
