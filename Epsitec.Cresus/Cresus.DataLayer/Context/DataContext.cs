@@ -817,12 +817,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		public void ReloadEntities()
 		{
-			// TODO Improve this method by reloading only the entities that have been modified. This
-			// might be done in the future by checking which entities have been modified since they
-			// have been loaded. This requires to implement correctly the logging stuff in the database
-			// and to keep data somewhere in order to know when was loaded which entity.
-			// Marc
-
 			foreach (AbstractEntity entity in this.GetEntities ().Where (e => this.IsPersistent (e)).ToList ())
 			{
 				this.ReloadEntity (entity);
