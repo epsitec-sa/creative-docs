@@ -106,7 +106,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
-				long connectionId1 = manager.OpenConnection ("connection1");
+				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
 				manager.CloseConnection (connectionId1);
 
@@ -120,7 +120,7 @@ namespace Cresus.Database.UnitTests.Services
 					() => manager.CloseConnection (1)
 				);
 
-				long connectionId2 = manager.OpenConnection ("connection2");
+				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
 
 				System.Threading.Thread.Sleep (3000);
 
@@ -137,81 +137,21 @@ namespace Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void GetConnectionIdentityArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetConnectionIdentity (-1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionIdentityInvalidBehavior()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetConnectionIdentity (1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionStatusArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetConnectionStatus (-1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionStatusInvalidBehavior()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetConnectionStatus (1)
-				);
-			}
-		}
-
-
-		[TestMethod]
 		public void OpenAndCloseConnection()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
 
-				long connectionId = manager.OpenConnection ("connection");
+				DbId connectionId = manager.OpenConnection ("connection").Id;
 
-				Assert.AreEqual ("connection", manager.GetConnectionIdentity (connectionId));
-				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId));
+				Assert.AreEqual ("connection", manager.GetConnection (connectionId).Identity);
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnection (connectionId).Status);
 
 				manager.CloseConnection (connectionId);
 
-				Assert.AreEqual ("connection", manager.GetConnectionIdentity (connectionId));
-				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId));
+				Assert.AreEqual ("connection", manager.GetConnection (connectionId).Identity);
+				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnection (connectionId).Status);
 			}
 		}
 
@@ -240,7 +180,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				Assert.IsFalse (manager.ConnectionExists (0));
 
-				long connectionId = manager.OpenConnection ("connection");
+				DbId connectionId = manager.OpenConnection ("connection").Id;
 
 				Assert.IsTrue (manager.ConnectionExists (connectionId));
 
@@ -275,7 +215,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
-				long connectionId1 = manager.OpenConnection ("connection1");
+				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
 				manager.CloseConnection (connectionId1);
 
@@ -288,7 +228,7 @@ namespace Cresus.Database.UnitTests.Services
 				(
 					() => manager.KeepConnectionAlive (1)
 				);
-				long connectionId2 = manager.OpenConnection ("connection2");
+				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
 
 				System.Threading.Thread.Sleep (3000);
 
@@ -311,11 +251,11 @@ namespace Cresus.Database.UnitTests.Services
 			{
 				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
 
-				long connectionId = manager.OpenConnection ("connection");
+				DbId connectionId = manager.OpenConnection ("connection").Id;
 
-				List<System.DateTime> lastSeenValues = new List<System.DateTime> ();
-				
-				lastSeenValues.Add (manager.GetConnectionLastSeen (connectionId));
+				List<System.DateTime> refreshTimes = new List<System.DateTime> ();
+
+				refreshTimes.Add (manager.GetConnection (connectionId).RefreshTime);
 
 				for (int i = 0; i < 10; i++)
 				{
@@ -323,77 +263,17 @@ namespace Cresus.Database.UnitTests.Services
 
 					manager.KeepConnectionAlive (connectionId);
 
-					lastSeenValues.Add (manager.GetConnectionLastSeen (connectionId));
+					refreshTimes.Add (manager.GetConnection (connectionId).RefreshTime);
 				}
 
-				Assert.IsTrue (lastSeenValues.First () == manager.GetConnectionSince (connectionId));
+				Assert.IsTrue (refreshTimes.First () == manager.GetConnection (connectionId).EstablishmentTime);
 
-				for (int i = 0; i < lastSeenValues.Count - 1; i++)
+				for (int i = 0; i < refreshTimes.Count - 1; i++)
 				{
-					Assert.IsTrue (lastSeenValues[i] < lastSeenValues[i + 1]);
+					Assert.IsTrue (refreshTimes[i] < refreshTimes[i + 1]);
 				}
 				
 				manager.CloseConnection (connectionId);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionSinceArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetConnectionSince (-1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionSinceInvalidBehavior()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetConnectionSince (1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionLastSeenArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetConnectionLastSeen (-1)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetConnectionLastSeenInvalidBehavior()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetConnectionLastSeen (1)
-				);
 			}
 		}
 
@@ -407,9 +287,9 @@ namespace Cresus.Database.UnitTests.Services
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
-				long connectionId1 = manager.OpenConnection ("connection1");
-				long connectionId2 = manager.OpenConnection ("connection2");
-				long connectionId3 = manager.OpenConnection ("connection3");
+				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
+				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
+				DbId connectionId3 = manager.OpenConnection ("connection3").Id;
 
 				manager.CloseConnection (connectionId1);
 
@@ -424,9 +304,9 @@ namespace Cresus.Database.UnitTests.Services
 
 				Assert.AreEqual (true, manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5)));
 
-				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
-				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId2));
-				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnectionStatus (connectionId3));
+				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnection (connectionId1).Status);
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnection (connectionId2).Status);
+				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnection (connectionId3).Status);
 
 				manager.CloseConnection (connectionId2);
 
@@ -444,25 +324,25 @@ namespace Cresus.Database.UnitTests.Services
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
-				List<long> connectionIds = new List<long> ();
+				List<DbId> connectionIds = new List<DbId> ();
 
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
-				long connectionId1 = manager.OpenConnection ("connection1");
+				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 				connectionIds.Add (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
-				long connectionId2 = manager.OpenConnection ("connection2");
+				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
 				connectionIds.Add (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
-				long connectionId3 = manager.OpenConnection ("connection3");
+				DbId connectionId3 = manager.OpenConnection ("connection3").Id;
 				connectionIds.Add (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
 				manager.CloseConnection (connectionId1);
 				connectionIds.Remove (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
 				for (int i = 0; i < 5; i++)
 				{
@@ -475,22 +355,22 @@ namespace Cresus.Database.UnitTests.Services
 
 				Assert.AreEqual (true, manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5)));
 				connectionIds.Remove (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
-				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
-				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId2));
-				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnectionStatus (connectionId3));
+				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnection (connectionId1).Status);
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnection (connectionId2).Status);
+				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnection (connectionId3).Status);
 
 				manager.CloseConnection (connectionId2);
 				connectionIds.Remove (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
 
 				manager.Detach ();
 			}
 		}
 
 
-		private void CheckSetAreSame(List<long> expected, List<long> actual)
+		private void CheckSetAreSame(List<DbId> expected, List<DbId> actual)
 		{
 			Assert.AreEqual (expected.Count, actual.Count);
 

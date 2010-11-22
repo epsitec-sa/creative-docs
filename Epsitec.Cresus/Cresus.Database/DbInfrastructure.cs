@@ -3075,8 +3075,15 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnEstablismentTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsAutoTimeStampOnInsert = true,
+					},
+					new DbColumn (Tags.ColumnRefreshTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsAutoTimeStampOnInsert = true,
+						IsAutoTimeStampOnUpdate = true,
+					},
 					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 				};
 

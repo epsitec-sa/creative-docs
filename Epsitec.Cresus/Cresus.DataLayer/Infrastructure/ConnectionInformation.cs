@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// The id that uniquely identifies the connection.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">If the connection has never been opened.</exception>
-		public long ConnectionId
+		public DbId ConnectionId
 		{
 			get
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = this.CreateWriteTransaction ())
 			{
-				this.connectionId = this.ConnectionManager.OpenConnection (this.ConnectionIdentity);
+				this.connectionId = this.ConnectionManager.OpenConnection (this.ConnectionIdentity).Id;
 
 				this.RefreshStatus ();
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			if (this.connectionId.HasValue)
 			{
-				DbConnectionStatus status = this.ConnectionManager.GetConnectionStatus (this.ConnectionId);
+				DbConnectionStatus status = this.ConnectionManager.GetConnection (this.ConnectionId).Status;
 
 				this.Status = this.ConvertStatus (status);
 			}
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// The id of the connection with the database.
 		/// </summary>
-		private long? connectionId;
+		private DbId? connectionId;
 
 
 		/// <summary>

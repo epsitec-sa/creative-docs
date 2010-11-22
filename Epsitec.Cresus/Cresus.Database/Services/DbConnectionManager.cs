@@ -37,55 +37,43 @@ namespace Epsitec.Cresus.Database.Services
 		/// Opens a new connection with the given identity.
 		/// </summary>
 		/// <param name="connectionIdentity">The identity that describes the connection.</param>
-		/// <returns>The id allocated to the new connection.</returns>
+		/// <returns>The data of the new <see cref="DbConnection"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="connectionIdentity"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public long OpenConnection(string connectionIdentity)
+		public DbConnection OpenConnection(string connectionIdentity)
 		{
 			this.CheckIsAttached ();
 
 			connectionIdentity.ThrowIfNullOrEmpty ("connectionIdentity");
 
-			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			int status = (int) DbConnectionStatus.Open;
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
+			{
+				{ Tags.ColumnConnectionIdentity, connectionIdentity },
+				{ Tags.ColumnConnectionStatus, (int) DbConnectionStatus.Open },
+			};
 
-			SqlFieldList fieldsToInsert = new SqlFieldList ();
+			IList<object> data = this.AddRow (columnNamesToValues);
 
-			DbColumn columnConnectionIdentity = this.DbTable.Columns[Tags.ColumnConnectionIdentity];
-			DbColumn columnConnectionSince = this.DbTable.Columns[Tags.ColumnConnectionSince];
-			DbColumn columnCounexionLastSeen = this.DbTable.Columns[Tags.ColumnConnectionLastSeen];
-			DbColumn columnCounexionStatus = this.DbTable.Columns[Tags.ColumnConnectionStatus];
-
-			fieldsToInsert.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnectionIdentity, connectionIdentity));
-			fieldsToInsert.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnectionSince, databaseTime));
-			fieldsToInsert.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounexionLastSeen, databaseTime));
-			fieldsToInsert.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounexionStatus, status));
-
-			return this.AddRow (fieldsToInsert);
+			return this.CreateDbConnection (data);
 		}
 
 
 		/// <summary>
 		/// Closes a given connection.
 		/// </summary>
-		/// <param name="connectionId">The id of the connection that must be closed.</param>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <param name="id">The id of the connection that must be closed.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="id"/> is lower than zero.</exception>
 		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
 		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public void CloseConnection(long connectionId)
+		public void CloseConnection(DbId id)
 		{
 			this.CheckIsAttached ();
 
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
+			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
 			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
 				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
 				int status = (int) DbConnectionStatus.Closed;
 
@@ -96,7 +84,7 @@ namespace Epsitec.Cresus.Database.Services
 
 				SqlFieldList conditions = new SqlFieldList ()
 				{
-					this.CreateConditionForConnectionId (connectionId),
+					this.CreateConditionForConnectionId (id),
 					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				};
 
@@ -106,7 +94,7 @@ namespace Epsitec.Cresus.Database.Services
 
 				if (nbRowsAffected == 0)
 				{
-					throw new System.InvalidOperationException ("Could not close connection because it not open.");
+					throw new System.InvalidOperationException ("Could not close connection because it not open or it does not exist.");
 				}
 			}
 		}
@@ -115,19 +103,19 @@ namespace Epsitec.Cresus.Database.Services
 		/// <summary>
 		/// Checks if the given connection exists.
 		/// </summary>
-		/// <param name="connectionId">The id of the connection.</param>
+		/// <param name="id">The id of the connection.</param>
 		/// <returns><c>true</c> if the connection exists, <c>false</c> if it does not.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="id"/> is lower than zero.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public bool ConnectionExists(long connectionId)
+		public bool ConnectionExists(DbId id)
 		{
 			this.CheckIsAttached ();
 
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
+			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
 			SqlFieldList conditions = new SqlFieldList ()
 			{
-				this.CreateConditionForConnectionId (connectionId),
+				this.CreateConditionForConnectionId (id),
 			};
 
 			return this.RowExists (conditions);
@@ -135,38 +123,57 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Ensures that the given connection stays alive.
+		/// Gets the data of the connection that have the given <see cref="DbId"/>.
 		/// </summary>
-		/// <param name="connectionId">The id of the connection.</param>
-		/// <returns><c>true</c> if the connection exists, <c>false</c> if it does not.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public void KeepConnectionAlive(long connectionId)
+		/// <param name="id">The <see cref="DbId"/> of the connection to get.</param>
+		/// <returns>The data of the connection.</returns>
+		public DbConnection GetConnection(DbId id)
 		{
 			this.CheckIsAttached ();
 
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnectionId (id),
+				};
+
+				var data = this.GetRows (conditions);
+
+				transaction.Commit ();
+
+				return data.Any () ? this.CreateDbConnection (data.First ()) : null;
+			}
+		}
+
+
+		/// <summary>
+		/// Ensures that the given connection stays alive.
+		/// </summary>
+		/// <param name="id">The id of the connection.</param>
+		/// <returns><c>true</c> if the connection exists, <c>false</c> if it does not.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="id"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
+		public void KeepConnectionAlive(DbId id)
+		{
+			this.CheckIsAttached ();
+
+			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
 			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionLastSeen];
-				System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
 
 				SqlFieldList fields = new SqlFieldList ()
 				{
-					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, databaseTime)
+					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, (int) DbConnectionStatus.Open)
 				};
 
 				SqlFieldList conditions = new SqlFieldList ()
 				{
-					this.CreateConditionForConnectionId (connectionId),
+					this.CreateConditionForConnectionId (id),
 					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				};
 
@@ -176,7 +183,7 @@ namespace Epsitec.Cresus.Database.Services
 
 				if (nbRowsAffected == 0)
 				{
-					throw new System.InvalidOperationException ("Could not keep connection alive because it is not open anymore.");
+					throw new System.InvalidOperationException ("Could not keep connection alive because it is not open or it does not exist.");
 				}
 			}
 		}
@@ -214,176 +221,26 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Gets the identity of a given connection.
-		/// </summary>
-		/// <param name="connectionId">The id of the connection</param>
-		/// <returns>The identity of the connection.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public string GetConnectionIdentity(long connectionId)
-		{
-			this.CheckIsAttached ();
-
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
-
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionIdentity];
-
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (connectionId),
-				};
-
-				object connectionIdentity = this.GetRowValue (dbColumn, conditions);
-
-				transaction.Commit ();
-
-				return (string) connectionIdentity;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the status of a given connection.
-		/// </summary>
-		/// <param name="connectionId">The id of the connection</param>
-		/// <returns>The status of the connection.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public DbConnectionStatus GetConnectionStatus(long connectionId)
-		{
-			this.CheckIsAttached ();
-
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
-
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
-
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (connectionId),
-				};
-
-				object connectionStatus = this.GetRowValue (dbColumn, conditions);
-
-				transaction.Commit ();
-
-				return (DbConnectionStatus) connectionStatus;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the time at which a given connection was opened.
-		/// </summary>
-		/// <param name="connectionId">The id of the connection</param>
-		/// <returns>The time at which the connection has been opened.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public System.DateTime GetConnectionSince(long connectionId)
-		{
-			this.CheckIsAttached ();
-
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
-
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionSince];
-
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (connectionId),
-				};
-
-				object connectionSince = this.GetRowValue (dbColumn, conditions);
-
-				transaction.Commit ();
-
-				return (System.DateTime) connectionSince;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the last time at which a given connection has given some sign of life.
-		/// </summary>
-		/// <param name="connectionId">The id of the connection</param>
-		/// <returns>The last time at which the connection has given sign of life.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public System.DateTime GetConnectionLastSeen(long connectionId)
-		{
-			this.CheckIsAttached ();
-
-			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
-
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				if (!this.ConnectionExists (connectionId))
-				{
-					throw new System.InvalidOperationException ("The connection does not exist.");
-				}
-
-				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionLastSeen];
-
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForConnectionId (connectionId),
-				};
-
-				object connectionLastSeen = this.GetRowValue (dbColumn, conditions);
-
-				transaction.Commit ();
-
-				return (System.DateTime) connectionLastSeen;
-			}
-		}
-
-
-		/// <summary>
 		/// Gets the sequence of the ids of the connection that are open.
 		/// </summary>
 		/// <returns>The sequence of id of the open connections.</returns>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public IEnumerable<long> GetOpenConnectionIds()
+		public IEnumerable<DbConnection> GetOpenConnections()
 		{
 			this.CheckIsAttached ();
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbColumn column = this.DbTable.Columns[Tags.ColumnId];
-
 				SqlFieldList conditions = new SqlFieldList ()
 				{
 					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open)
 				};
 
-				List<long> ids = this.GetRowsValue (column, conditions).Cast<long> ().ToList ();
+				var data = this.GetRows (conditions);
 
 				transaction.Commit ();
 
-				return ids;
+				return data.Select (d => this.CreateDbConnection (d));
 			}
 		}
 
@@ -406,15 +263,15 @@ namespace Epsitec.Cresus.Database.Services
 		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
 		/// true only for a given connection id.
 		/// </summary>
-		/// <param name="connectionId">The id of the connection.</param>
+		/// <param name="id">The id of the connection.</param>
 		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
-		private SqlFunction CreateConditionForConnectionId(long connectionId)
+		private SqlFunction CreateConditionForConnectionId(DbId id)
 		{
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnId].GetSqlName ()),
-				SqlField.CreateConstant (connectionId, DbRawType.Int64)
+				SqlField.CreateConstant (id.Value, DbRawType.Int64)
 			);
 		}
 
@@ -423,15 +280,15 @@ namespace Epsitec.Cresus.Database.Services
 		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
 		/// true only for a given connection status.
 		/// </summary>
-		/// <param name="connectionStatus">The status of the connection.</param>
+		/// <param name="status">The status of the connection.</param>
 		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
-		private SqlFunction CreateConditionForConnectionStatus(DbConnectionStatus connectionStatus)
+		private SqlFunction CreateConditionForConnectionStatus(DbConnectionStatus status)
 		{
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnConnectionStatus].GetSqlName ()),
-				SqlField.CreateConstant ((int) connectionStatus, DbRawType.Int32)
+				SqlField.CreateConstant ((int) status, DbRawType.Int32)
 			);
 		}
 
@@ -444,15 +301,37 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
 		private SqlFunction CreateConditionForTimeOut(System.TimeSpan timeOutValue)
 		{
-			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			System.DateTime timeOutTime = databaseTime - timeOutValue;
-			
 			return new SqlFunction
 			(
-				SqlFunctionCode.CompareLessThan,
-				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnConnectionLastSeen].GetSqlName ()),
-				SqlField.CreateConstant (timeOutTime, DbRawType.DateTime)
+				SqlFunctionCode.CompareGreaterThan,
+				SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.MathSubstract,
+						this.DbInfrastructure.DefaultSqlBuilder.GetSqlFieldForCurrentTimeStamp (),
+						SqlField.CreateName (this.DbTable.Columns[Tags.ColumnRefreshTime].GetSqlName ())		
+					)
+				),
+				SqlField.CreateConstant (timeOutValue.TotalDays, DbRawType.SmallDecimal)
 			);
+		}
+
+
+		/// <summary>
+		/// Builds a new instance of <see cref="DbConnection"/> given the data of a connection.
+		/// </summary>
+		/// <param name="data">The data of the connection.</param>
+		/// <returns>The new instance of <see cref="DbConnection"/>.</returns>
+		private DbConnection CreateDbConnection(IList<object> data)
+		{
+			DbId id = new DbId ((long) data[0]);
+			string identity = (string) data[1];
+			System.DateTime establishementTime = (System.DateTime) data[2];
+			System.DateTime refreshTime = (System.DateTime) data[3];
+			DbConnectionStatus status = (DbConnectionStatus) data[4];
+
+			return new DbConnection (id, identity, status, establishementTime, refreshTime);
 		}
 		
 
