@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// Sets the value of the counter of a single lock.
 		/// </summary>
 		/// <param name="lockName">The name of the lock whose counter value to set.</param>
-		/// <param name="value">The new value for the counter value.</param>
+		/// <param name="counterValue">The new value for the counter value.</param>
 		private void SetLockCounterValue(string lockName, int counterValue)
 		{
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()

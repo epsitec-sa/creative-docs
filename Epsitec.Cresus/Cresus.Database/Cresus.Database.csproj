@@ -160,6 +160,7 @@
     <Compile Include="Services\DbLock.cs" />
     <Compile Include="Services\DbLockManager.cs" />
     <Compile Include="DbSchemaChecker.cs" />
+    <Compile Include="Services\DbUidSlot.cs" />
     <Compile Include="Services\DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
     <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />

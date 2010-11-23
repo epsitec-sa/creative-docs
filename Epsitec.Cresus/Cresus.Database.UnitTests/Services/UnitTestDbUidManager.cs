@@ -6,8 +6,6 @@ using Epsitec.Cresus.Database.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Collections.Generic;
-
 using System.Linq;
 
 
@@ -144,30 +142,6 @@ namespace Cresus.Database.UnitTests.Services
 				(
 					() => manager.DeleteUidCounter ("test", -1)
 				);
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.DeleteUidCounter ("myCounter", 0)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void DeleteAndExistsUidCounter()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbUidManager manager = dbInfrastructure.UidManager;
-
-				for (int i = 0; i < 10; i++)
-				{
-					manager.CreateUidCounter ("myCounter", i, 0, 10);
-					Assert.IsTrue (manager.ExistsUidCounter ("myCounter", i));
-
-					manager.DeleteUidCounter ("myCounter", i);
-					Assert.IsFalse (manager.ExistsUidCounter ("myCounter", i));	
-				}
 			}
 		}
 
@@ -198,6 +172,25 @@ namespace Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
+		public void DeleteAndExistsUidCounter()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbUidManager manager = dbInfrastructure.UidManager;
+
+				for (int i = 0; i < 10; i++)
+				{
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.IsTrue (manager.ExistsUidCounter ("myCounter", i));
+
+					manager.DeleteUidCounter ("myCounter", i);
+					Assert.IsFalse (manager.ExistsUidCounter ("myCounter", i));
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void GetUidCounterSlots()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -213,7 +206,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
 				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
 				Assert.IsTrue (slots.Count == 0);
 
@@ -221,35 +214,35 @@ namespace Cresus.Database.UnitTests.Services
 
 				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
 				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
 
 				manager.CreateUidCounter ("myCounter1", 1, 0, 10);
 
 				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 2);
-				Assert.IsTrue (slots.Any (s => s == 0));
-				Assert.IsTrue (slots.Any (s => s == 1));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 1));
 				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
 
 				manager.DeleteUidCounter ("myCounter1", 0);
 
 				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 1));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 1));
 				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 0));
 
 				manager.DeleteUidCounter ("myCounter2", 0);
 
 				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 1);
-				Assert.IsTrue (slots.Any (s => s == 1));
+				Assert.IsTrue (slots.Any (s => s.SlotNumber == 1));
 				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
 				Assert.IsTrue (slots.Count == 0);
 
@@ -264,7 +257,7 @@ namespace Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void GetUidCounterMinArgumentCheck()
+		public void GetUidCounterArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -272,22 +265,17 @@ namespace Cresus.Database.UnitTests.Services
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMin (null, 0)
+					() => manager.GetUidCounter (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMin ("", 0)
+					() => manager.GetUidCounter ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMin ("test", -1)
-				);
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetUidCounterMin ("myCounter2", 0)
+					() => manager.GetUidCounter ("test", -1)
 				);
 			}
 		}
@@ -303,15 +291,16 @@ namespace Cresus.Database.UnitTests.Services
 				for (int i = 0; i < 10; i++)
 				{
 					manager.CreateUidCounter ("myCounter", i, i, i + 10);
-					
-					Assert.AreEqual (i, manager.GetUidCounterMin ("myCounter", i));
+
+					Assert.AreEqual (i, manager.GetUidCounter ("myCounter", i).MinValue);
+					Assert.AreEqual (i + 10, manager.GetUidCounter ("myCounter", i).MaxValue);
 				}
 			}
 		}
 
 
 		[TestMethod]
-		public void GetUidCounterMaxArgumentCheck()
+		public void GetUidCounterNextValueArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -319,76 +308,29 @@ namespace Cresus.Database.UnitTests.Services
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMax (null, 0)
+					() => manager.GetUidCounterNextValue (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMax ("", 0)
+					() => manager.GetUidCounterNextValue ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMax ("test", -1)
+					() => manager.GetUidCounterNextValue ("test", -1)
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => manager.GetUidCounterMax ("myCounter2", 0)
+					() => manager.GetUidCounterNextValue ("myCounter2", 0)
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void GetUidCounterMax()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbUidManager manager = dbInfrastructure.UidManager;
-
-				for (int i = 0; i < 10; i++)
-				{
-					manager.CreateUidCounter ("myCounter", i, 0, i + 1);
-
-					Assert.AreEqual (i + 1, manager.GetUidCounterMax ("myCounter", i));
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void GetUidCounterNextArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbUidManager manager = dbInfrastructure.UidManager;
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetUidCounterNext (null, 0)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetUidCounterNext ("", 0)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.GetUidCounterNext ("test", -1)
-				);
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => manager.GetUidCounterNext ("myCounter2", 0)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetSetUidCounterNext()
+		public void GetUidCounterNextValue()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -400,10 +342,10 @@ namespace Cresus.Database.UnitTests.Services
 					
 					for (int j = 0; j <= 10; j++)
 					{
-						Assert.AreEqual (j, manager.GetUidCounterNext ("myCounter", i));
+						Assert.AreEqual (j, manager.GetUidCounterNextValue ("myCounter", i));
 					}
 
-					Assert.AreEqual (null, manager.GetUidCounterNext ("myCounter", i));
+					Assert.AreEqual (null, manager.GetUidCounterNextValue ("myCounter", i));
 				}
 			}
 		}
