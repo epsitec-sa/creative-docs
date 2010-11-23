@@ -559,8 +559,8 @@
     <EmbeddedResource Include="Images\Data.DocumentItems.icon" />
     <EmbeddedResource Include="Images\Data.UnitOfMeasure.icon" />
     <EmbeddedResource Include="Images\Data.TaxDocumentItem.icon" />
-    <EmbeddedResource Include="Images\Data.ArticleCategory.icon" />
-    <EmbeddedResource Include="Images\Data.ArticleGroup.icon" />
+    <EmbeddedResource Include="Images\Data.Category.icon" />
+    <EmbeddedResource Include="Images\Data.Group.icon" />
     <EmbeddedResource Include="Images\Data.ArticleParameter.icon" />
     <EmbeddedResource Include="Images\Button.CheckNo.icon" />
     <EmbeddedResource Include="Images\Button.CheckYes.icon" />

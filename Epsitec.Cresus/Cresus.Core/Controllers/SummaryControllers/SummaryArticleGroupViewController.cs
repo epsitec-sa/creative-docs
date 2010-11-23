@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					new SummaryData
 					{
 						Name				= "ArticleGroup",
-						IconUri				= "Data.ArticleGroup",
+						IconUri				= "Data.Group",
 						Title				= TextFormatter.FormatText ("Groupe d'articles"),
 						CompactTitle		= TextFormatter.FormatText ("Groupe"),
 						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
