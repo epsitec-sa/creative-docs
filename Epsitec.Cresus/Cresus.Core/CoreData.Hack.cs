@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Core
 			imageCategory1.Description = "Logo pour l'impression de documents";
 
 			var imageCategory2 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
-			imageCategory2.Name = "Person";
+			imageCategory2.Name = "Personne";
 			imageCategory2.Description = "Photo d'une personne";
 
 			var imageCategory3 = this.DataContext.CreateEntity<ImageCategoryEntity> ();

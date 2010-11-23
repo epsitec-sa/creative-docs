@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.ImageGroups.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.ImageCategory.GetEntityStatus ());
 
 				return a.EntityStatus;
 			}
