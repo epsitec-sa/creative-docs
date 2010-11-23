@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					AutoGroup    = true,
 					Name		 = "ImageGroups",
-					IconUri		 = "Data.ArticleGroup",
+					IconUri		 = "Data.Group",
 					Title		 = TextFormatter.FormatText ("Tous les groupes d'image connus"),
 					CompactTitle = TextFormatter.FormatText ("Tous les groupes d'image connus"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
