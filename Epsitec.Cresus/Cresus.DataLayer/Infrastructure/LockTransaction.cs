@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return lockNames.All (lockName =>
 			{
 				return !lockManager.IsLockOwned (lockName)
-                	|| lockManager.GetLockConnectionId (lockName) == connectionId;
+                	|| lockManager.GetLock (lockName).ConnectionId == connectionId;
 			});
 		}
 
