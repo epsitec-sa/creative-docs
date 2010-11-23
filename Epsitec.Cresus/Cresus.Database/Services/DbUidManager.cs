@@ -1,10 +1,6 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Database.Collections;
-
 using System.Collections.Generic;
-
-using System.Data;
 
 using System.Linq;
 
@@ -42,6 +38,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.ArgumentException">If <paramref name="min"/> is lower than zero.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="max"/> is lower than zero.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
+		/// <exception cref="System.InvalidOperationException">If the counter already exists.</exception>
 		public void CreateUidCounter(string name, int slot, long min, long max)
 		{
 			this.CheckIsAttached ();
@@ -74,21 +71,16 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="max">The maximum value of the counter.</param>
 		private void InsertUidCounter(string name, int slot, long min, long max)
 		{
-			SqlFieldList fields = new SqlFieldList ();
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
+			{
+				{Tags.ColumnName, name},
+				{Tags.ColumnUidSlot, slot},
+				{Tags.ColumnUidMin, min},
+				{Tags.ColumnUidMax, max},
+				{Tags.ColumnUidNext, min},
+			};
 
-			DbColumn columnName = this.DbTable.Columns[Tags.ColumnName];
-			DbColumn columnSlot = this.DbTable.Columns[Tags.ColumnUidSlot];
-			DbColumn columnMin = this.DbTable.Columns[Tags.ColumnUidMin];
-			DbColumn columnMax = this.DbTable.Columns[Tags.ColumnUidMax];
-			DbColumn columnNext = this.DbTable.Columns[Tags.ColumnUidNext];
-
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
-
-			this.AddRow (fields);
+			this.AddRow (columnNamesToValues);
 		}
 
 
@@ -107,27 +99,6 @@ namespace Epsitec.Cresus.Database.Services
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				if (!this.ExistsUidCounter (name, slot))
-				{
-					throw new System.InvalidOperationException ("The counter does not exists.");
-				}
-
-				this.RemoveUidCounter (name, slot);
-
-				transaction.Commit ();
-			}
-		}
-		
-
-		/// <summary>
-		/// Builds and executes the request used to remove an uid counter.
-		/// </summary>
-		/// <param name="name">The name of the counter.</param>
-		/// <param name="slot">The slot number of the counter.</param>
-		private void RemoveUidCounter(string name, int slot)
-		{
 			SqlFunction[] conditions = new SqlFunction[]
             {
                 this.CreateConditionForName (name),
@@ -165,110 +136,65 @@ namespace Epsitec.Cresus.Database.Services
 
 		
 		/// <summary>
-		/// Gets the list of all slots for a given name.
+		/// Gets the list of all slots for a given uid name.
 		/// </summary>
 		/// <param name="name">The name of the slots to get.</param>
-		/// <returns>The list of slots.</returns>
+		/// <returns>The list with the data of the slots.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public IEnumerable<int> GetUidCounterSlots(string name)
+		public IEnumerable<DbUidSlot> GetUidCounterSlots(string name)
 		{
 			this.CheckIsAttached ();
 
 			name.ThrowIfNullOrEmpty ("name");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				DbColumn column = this.DbTable.Columns[Tags.ColumnUidSlot];
+			SqlFunction condition = this.CreateConditionForName (name);
 
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForName (name)
-				};
+			var data = this.GetRowValues (condition);
 
-				List<int> slots = this.GetRowsValue (column, conditions).Cast<int> ().ToList ();
-
-				transaction.Commit ();
-
-				return slots;
-			}
+			return data.Select (d => this.CreateDbUid (d));
 		}
 
 
 		/// <summary>
-		/// Gets the minimal value of a counter for uids in the database.
+		/// Gets the data of a uid counter in the database.
 		/// </summary>
 		/// <param name="name">The name of the counter.</param>
 		/// <param name="slot">The slot number of the counter.</param>
-		/// <returns>The minimum value of the counter.</returns>
+		/// <returns>The data of the uid counter.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public long GetUidCounterMin(string name, int slot)
+		public DbUidSlot GetUidCounter(string name, int slot)
 		{
 			this.CheckIsAttached ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			SqlFunction[] conditions = new SqlFunction[]
 			{
-				if (!this.ExistsUidCounter (name, slot))
-				{
-					throw new System.InvalidOperationException ("The counter does not exists.");
-				}
+				this.CreateConditionForName (name),
+				this.CreateConditionForSlot (slot),
+			};
 
-				long min = this.GetValue (name, slot, Tags.ColumnUidMin);
+			var data = this.GetRowValues (conditions);
 
-				transaction.Commit ();
-
-				return min;
-			}
+			return data.Any () ? this.CreateDbUid (data[0]) : null;
 		}
 
 
 		/// <summary>
-		/// Gets the maximum value of a counter for uids in the database.
-		/// </summary>
-		/// <param name="name">The name of the counter.</param>
-		/// <param name="slot">The slot number of the counter.</param>
-		/// <returns>The maximum value of the counter.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public long GetUidCounterMax(string name, int slot)
-		{
-			this.CheckIsAttached ();
-
-			name.ThrowIfNullOrEmpty ("name");
-			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
-
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				if (!this.ExistsUidCounter (name, slot))
-				{
-					throw new System.InvalidOperationException ("The counter does not exists.");
-				}
-
-				long max = this.GetValue (name, slot, Tags.ColumnUidMax);
-
-				transaction.Commit ();
-
-				return max;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the next value of a counter for uids in the database and increments it automatically,
+		/// Gets the next value of an uid counter in the database and increments it automatically,
 		/// so that two consecutive calls won't return the same value.
 		/// </summary>
 		/// <param name="name">The name of the counter.</param>
 		/// <param name="slot">The slot number of the counter.</param>
+		/// <returns>The next value for the uid counter, or <c>null</c> if there is no valid next value.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public long? GetUidCounterNext(string name, int slot)
+		public long? GetUidCounterNextValue(string name, int slot)
 		{
 			this.CheckIsAttached ();
 
@@ -277,73 +203,47 @@ namespace Epsitec.Cresus.Database.Services
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction(DbTransactionMode.ReadWrite))
             {
-				if (!this.ExistsUidCounter (name, slot))
+				DbUidSlot dbUid = this.GetUidCounter (name, slot);
+				
+				if (dbUid == null)
 				{
 					throw new System.InvalidOperationException ("The counter does not exists.");
 				}
 
-				long max = this.GetValue (name, slot, Tags.ColumnUidMax);
-				long next = this.GetValue (name, slot, Tags.ColumnUidNext);
-
-				bool isNextValidUid = (next <= max);
+				bool isNextValidUid = (dbUid.NextValue <= dbUid.MaxValue);
 
 				if (isNextValidUid)
 				{
-					this.SetValue (name, slot, Tags.ColumnUidNext, next + 1);
+					this.SetUidCounterNextValue (name, slot, dbUid.NextValue + 1);
 				}
 				
 				transaction.Commit();
 
-				return isNextValidUid ? (long?) next : null;
+				return isNextValidUid ? (long?) dbUid.NextValue : null;
 			}
 		}
-
-
-		/// <summary>
-		/// Gets a given value of a counter for uids in the database.
-		/// </summary>
-		/// <param name="counterName">The name of the counter.</param>
-		/// <param name="slot">The slot number of the counter.</param>
-		/// <param name="valueName">The name of the value to get.</param>
-		/// <returns>The requested value.</returns>
-		/// <exception cref="System.Exception">If the counter is invalid.</exception>
-		private long GetValue(string counterName, int slot, string valueName)
-		{
-			DbColumn column = this.DbTable.Columns[valueName];
-			
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForName (counterName),
-				this.CreateConditionForSlot (slot),
-			};
-
-			return (long) this.GetRowValue (column, conditions);
-		}
-
+		
 
 		/// <summary>
-		/// Sets a given value of a counter for uids in the database.
+		/// Executes the request that sets the next value of an uid counter to a given value.
 		/// </summary>
-		/// <param name="counterName">The name of the counter.</param>
+		/// <param name="name">The name of the counter.</param>
 		/// <param name="slot">The slot number of the counter.</param>
-		/// <param name="valueName">The name of the value to get.</param>
-		/// <param name="value">The value to use.</param>
-		private void SetValue(string counterName, int slot, string valueName, long value)
+		/// <param name="nextValue">The next next value of the uid counter.</param>
+		private void SetUidCounterNextValue(string name, int slot, long nextValue)
 		{
-			DbColumn column = this.DbTable.Columns[valueName];
+			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
+            {
+                {Tags.ColumnUidNext, nextValue},
+            };
 
-			SqlFieldList fields = new SqlFieldList ()
-			{
-				this.DbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
-			};
+			SqlFunction[] conditions = new SqlFunction[]
+            {
+                this.CreateConditionForName (name),
+                this.CreateConditionForSlot (slot),
+            };
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForName (counterName),
-				this.CreateConditionForSlot (slot),
-			};
-
-			this.SetRowValue (fields, conditions);
+			this.SetRowValues (columnNamesToValues, conditions);
 		}
 
 
@@ -378,6 +278,24 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnUidSlot].GetSqlName ()),
 				SqlField.CreateConstant (slot, DbRawType.Int32)
 			);
+		}
+
+
+		/// <summary>
+		/// Creates a new instance of <see cref="DbUid"/> based on the raw data of an uid counter.
+		/// </summary>
+		/// <param name="data">The data of the uid counter.</param>
+		/// <returns>The new instance of <see cref="DbUid"/>.</returns>
+		private DbUidSlot CreateDbUid(IList<object> data)
+		{
+			DbId id = new DbId ((long) data[0]);
+			string name = (string) data[1];
+			int slotNumber = (int) data[2];
+			long minValue = (long) data[3];
+			long maxValue = (long) data[4];
+			long nextValue = (long) data[5];
+
+			return new DbUidSlot (id, name, slotNumber, minValue, maxValue, nextValue);
 		}
 
 
