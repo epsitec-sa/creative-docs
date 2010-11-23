@@ -36,6 +36,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "BusinessSettings":
 					return context => data.GetAllEntities<BusinessSettingsEntity> (dataContext: context);
 
+				case "Images":
+					return context => data.GetAllEntities<ImageEntity> (dataContext: context);
+
 				case "WorkflowDefinitions":
 					return context => data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context);
 
@@ -60,9 +63,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "InvoiceDocuments":
 					return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
 
+				case "Images":
+					return EntityInfo<ImageEntity>.GetTypeId ();
+
 				case "WorkflowDefinitions":
 					return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();
-				
+
 				default:
 					return Druid.Empty;
 			}
