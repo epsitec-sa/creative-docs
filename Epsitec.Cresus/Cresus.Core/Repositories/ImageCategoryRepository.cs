@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class ImageGroupRepository : Repository<ImageGroupEntity>
+	public class ImageCategoryRepository : Repository<ImageCategoryEntity>
 	{
-		public ImageGroupRepository(CoreData data, DataContext context = null)
+		public ImageCategoryRepository(CoreData data, DataContext context = null)
 			: base (data, context)
 		{
 		}
