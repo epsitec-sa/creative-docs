@@ -124,8 +124,13 @@
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionImageCategoryViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionImageGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryImageGroupListViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryImageGroupViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryImageCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentMetadataViewController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
