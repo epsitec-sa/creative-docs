@@ -124,7 +124,9 @@
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionImageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryImageViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentMetadataViewController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\ImageEntity.cs" />
     <Compile Include="Entities\IDataHashExtension.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
@@ -720,6 +723,7 @@
     <EmbeddedResource Include="Images\Data.PaymentReminderDefinition.icon" />
     <EmbeddedResource Include="Resources\OCR_BB.tff" />
     <EmbeddedResource Include="Images\Base.Images.icon" />
+    <EmbeddedResource Include="Images\Data.Image.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
