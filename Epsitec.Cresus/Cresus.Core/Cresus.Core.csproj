@@ -124,10 +124,12 @@
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
     <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionImageBlobViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryImageBlobViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageGroupListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageCategoryViewController.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\ImageBlobEntity.cs" />
     <Compile Include="Entities\ImageCategoryEntity.cs" />
     <Compile Include="Entities\ImageGroupEntity.cs" />
     <Compile Include="Entities\ImageEntity.cs" />
@@ -734,6 +737,7 @@
     <EmbeddedResource Include="Images\Base.Images.icon" />
     <EmbeddedResource Include="Images\Data.Image.icon" />
     <EmbeddedResource Include="Images\Base.WorkflowDefinitions.icon" />
+    <EmbeddedResource Include="Images\Data.ImageBlob.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
