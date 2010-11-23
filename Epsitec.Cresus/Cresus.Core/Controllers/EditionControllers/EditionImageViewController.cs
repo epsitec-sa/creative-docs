@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.Image", "Image");
 
 				this.CreateUIMain     (builder);
+				this.CreateUIGroup    (builder);
 				this.CreateUICategory (builder);
 
 				builder.CreateFooterEditorTile ();
@@ -50,6 +51,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+		}
+
+		private void CreateUIGroup(UIBuilder builder)
+		{
+			var controller = new SelectionController<ImageGroupEntity> (this.BusinessContext)
+			{
+				CollectionValueGetter    = () => this.Entity.ImageGroups,
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
+			};
+
+			builder.CreateEditionDetailedItemPicker ("ImageGroups", this.Entity, "Groupes auxquels l'image appartient", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
 		}
 
 		private void CreateUICategory(UIBuilder builder)
