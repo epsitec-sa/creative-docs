@@ -731,7 +731,7 @@
     <EmbeddedResource Include="Resources\OCR_BB.tff" />
     <EmbeddedResource Include="Images\Base.Images.icon" />
     <EmbeddedResource Include="Images\Data.Image.icon" />
-    <EmbeddedResource Include="Images\Base.Workflows.icon" />
+    <EmbeddedResource Include="Images\Base.WorkflowDefinitions.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
