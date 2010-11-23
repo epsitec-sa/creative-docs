@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.Image", "Image");
 
 				this.CreateUIMain     (builder);
+				this.CreateUIBlob     (builder);
 				this.CreateUIGroup    (builder);
 				this.CreateUICategory (builder);
 
@@ -51,6 +52,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+		}
+
+		private void CreateUIBlob(UIBuilder builder)
+		{
+			var controller = new SelectionController<ImageBlobEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.ImageBlob,
+				ValueSetter         = x => this.Entity.ImageBlob = x,
+				ReferenceController = new ReferenceController (() => this.Entity.ImageBlob, creator: this.CreateNewBlob),
+			};
+
+			builder.CreateAutoCompleteTextField ("Image bitmap", controller);
 		}
 
 		private void CreateUIGroup(UIBuilder builder)
@@ -76,6 +89,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField ("Catégorie", controller);
 		}
 
+
+		private NewEntityReference CreateNewBlob(DataContext context)
+		{
+			return context.CreateEntityAndRegisterAsEmpty<ImageBlobEntity> ();
+		}
 
 		private NewEntityReference CreateNewCategory(DataContext context)
 		{

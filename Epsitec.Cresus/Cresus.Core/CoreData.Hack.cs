@@ -625,6 +625,8 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<ImageEntity> InsertImagesInDatabase()
 		{
+			var store = new Data.ImageDataStore (this);
+
 			var imageGroup1 = this.DataContext.CreateEntity<ImageGroupEntity> ();
 			imageGroup1.Rank = 0;
 			imageGroup1.Code = "LOGO";
@@ -657,18 +659,21 @@ namespace Epsitec.Cresus.Core
 			imageDef1.Description = "Logo principal de l'entreprise";
 			imageDef1.ImageGroups.Add (imageGroup1);
 			imageDef1.ImageCategory = imageCategory1;
+			store.UpdateImage(this.DataContext, imageDef1, new System.IO.FileInfo ("Images/logo-cresus.png"));
 
 			var imageDef2 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef2.Name = "PA";
 			imageDef2.Description = "Pierre Arnaud, directeur";
 			imageDef2.ImageGroups.Add (imageGroup2);
 			imageDef2.ImageCategory = imageCategory2;
+			store.UpdateImage (this.DataContext, imageDef2, new System.IO.FileInfo ("Images/pa.tif"));
 
 			var imageDef3 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef3.Name = "DR";
 			imageDef3.Description = "Daniel Roux, ouvrier";
 			imageDef3.ImageGroups.Add (imageGroup2);
 			imageDef3.ImageCategory = imageCategory2;
+			store.UpdateImage (this.DataContext, imageDef3, new System.IO.FileInfo ("Images/dr.tif"));
 
 			yield return imageDef1;
 			yield return imageDef2;
