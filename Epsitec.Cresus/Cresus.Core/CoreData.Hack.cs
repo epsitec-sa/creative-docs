@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
 			UnitOfMeasureEntity[] units = this.InsertUnitsOfMeasureInDatabase ().ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
+			ImageEntity[] images = this.InsertImagesInDatabase ().ToArray ();
 			PaymentModeEntity[] paymentDefs = this.InsertPaymentModesInDatabase ().ToArray ();
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
@@ -620,6 +621,58 @@ namespace Epsitec.Cresus.Core
 			yield return articleDef4;
 			yield return articleDef5;
 			yield return articleDef6;
+		}
+
+		private IEnumerable<ImageEntity> InsertImagesInDatabase()
+		{
+			var imageGroup1 = this.DataContext.CreateEntity<ImageGroupEntity> ();
+			imageGroup1.Rank = 0;
+			imageGroup1.Code = "LOGO";
+			imageGroup1.Name = "Logo";
+
+			var imageGroup2 = this.DataContext.CreateEntity<ImageGroupEntity> ();
+			imageGroup2.Rank = 1;
+			imageGroup2.Code = "EMPLOYEE";
+			imageGroup2.Name = "Employé";
+
+			var imageGroup3 = this.DataContext.CreateEntity<ImageGroupEntity> ();
+			imageGroup3.Rank = 2;
+			imageGroup3.Code = "CUSTOMER";
+			imageGroup3.Name = "Client";
+
+			var imageCategory1 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
+			imageCategory1.Name = "Logo";
+			imageCategory1.Description = "Logo pour l'impression de documents";
+
+			var imageCategory2 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
+			imageCategory2.Name = "Person";
+			imageCategory2.Description = "Photo d'une personne";
+
+			var imageCategory3 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
+			imageCategory3.Name = "Article";
+			imageCategory3.Description = "Photo d'un article";
+
+			var imageDef1 = this.DataContext.CreateEntity<ImageEntity> ();
+			imageDef1.Name = "Logo";
+			imageDef1.Description = "Logo principal de l'entreprise";
+			imageDef1.ImageGroups.Add (imageGroup1);
+			imageDef1.ImageCategory = imageCategory1;
+
+			var imageDef2 = this.DataContext.CreateEntity<ImageEntity> ();
+			imageDef2.Name = "PA";
+			imageDef2.Description = "Pierre Arnaud, directeur";
+			imageDef2.ImageGroups.Add (imageGroup2);
+			imageDef2.ImageCategory = imageCategory2;
+
+			var imageDef3 = this.DataContext.CreateEntity<ImageEntity> ();
+			imageDef3.Name = "DR";
+			imageDef3.Description = "Daniel Roux, ouvrier";
+			imageDef3.ImageGroups.Add (imageGroup2);
+			imageDef3.ImageCategory = imageCategory2;
+
+			yield return imageDef1;
+			yield return imageDef2;
+			yield return imageDef3;
 		}
 
 		private IEnumerable<PaymentModeEntity> InsertPaymentModesInDatabase()
