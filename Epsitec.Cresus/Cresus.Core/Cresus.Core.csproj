@@ -169,6 +169,8 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\ImageCategoryEntity.cs" />
+    <Compile Include="Entities\ImageGroupEntity.cs" />
     <Compile Include="Entities\ImageEntity.cs" />
     <Compile Include="Entities\IDataHashExtension.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
