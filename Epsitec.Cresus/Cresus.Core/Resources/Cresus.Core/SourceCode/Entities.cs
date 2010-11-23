@@ -82,6 +82,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ABN]", typeof (Epsitec.Cresus.Core.Entities.ImageEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGN]", typeof (Epsitec.Cresus.Core.Entities.ImageCategoryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHN]", typeof (Epsitec.Cresus.Core.Entities.ImageGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A6O]", typeof (Epsitec.Cresus.Core.Entities.PriceCalculatorEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -3516,31 +3517,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		///	<summary>
-		///	The <c>PriceCalculatorArg</c> field.
-		///	designer:fld/L0AF3/L0A0M
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A0M]")]
-		public string PriceCalculatorArg
-		{
-			get
-			{
-				return this.GetField<string> ("[L0A0M]");
-			}
-			set
-			{
-				string oldValue = this.PriceCalculatorArg;
-				if (oldValue != value)
-				{
-					this.OnPriceCalculatorArgChanging (oldValue, value);
-					this.SetField<string> ("[L0A0M]", oldValue, value);
-					this.OnPriceCalculatorArgChanged (oldValue, value);
-				}
-			}
-		}
 		
-		partial void OnPriceCalculatorArgChanging(string oldValue, string newValue);
-		partial void OnPriceCalculatorArgChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4243,47 +4220,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PriceCalculator</c> field.
+		///	The <c>PriceCalculators</c> field.
 		///	designer:fld/L0AJ4/L0AO4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AO4]")]
-		public string PriceCalculator
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity> PriceCalculators
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AO4]");
-			}
-			set
-			{
-				string oldValue = this.PriceCalculator;
-				if (oldValue != value)
-				{
-					this.OnPriceCalculatorChanging (oldValue, value);
-					this.SetField<string> ("[L0AO4]", oldValue, value);
-					this.OnPriceCalculatorChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PriceCalculatorArg</c> field.
-		///	designer:fld/L0AJ4/L0A1M
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A1M]")]
-		public string PriceCalculatorArg
-		{
-			get
-			{
-				return this.GetField<string> ("[L0A1M]");
-			}
-			set
-			{
-				string oldValue = this.PriceCalculatorArg;
-				if (oldValue != value)
-				{
-					this.OnPriceCalculatorArgChanging (oldValue, value);
-					this.SetField<string> ("[L0A1M]", oldValue, value);
-					this.OnPriceCalculatorArgChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity> ("[L0AO4]");
 			}
 		}
 		
@@ -4299,10 +4244,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnValueIncludesTaxesChanged(bool oldValue, bool newValue);
 		partial void OnValueOverridesPriceGroupChanging(bool oldValue, bool newValue);
 		partial void OnValueOverridesPriceGroupChanged(bool oldValue, bool newValue);
-		partial void OnPriceCalculatorChanging(string oldValue, string newValue);
-		partial void OnPriceCalculatorChanged(string oldValue, string newValue);
-		partial void OnPriceCalculatorArgChanging(string oldValue, string newValue);
-		partial void OnPriceCalculatorArgChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -12658,6 +12599,125 @@ namespace Epsitec.Cresus.Core.Entities
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0A4O]");
 		}
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PriceCalculator Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PriceCalculator</c> entity.
+	///	designer:cap/L0A6O
+	///	</summary>
+	public partial class PriceCalculatorEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0A6O/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0A6O/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0A6O/L0AUN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUN]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0A6O/L0AVN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVN]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>SerializedData</c> field.
+		///	designer:fld/L0A6O/L0A7O
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7O]")]
+		public global::System.Byte[] SerializedData
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[L0A7O]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.SerializedData;
+				if (oldValue != value)
+				{
+					this.OnSerializedDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0A7O]", oldValue, value);
+					this.OnSerializedDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 774);	// [L0A6O]
+		public static readonly new string EntityStructuredTypeKey = "[L0A6O]";
 	}
 }
 #endregion
