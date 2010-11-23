@@ -157,6 +157,7 @@
     </Compile>
     <Compile Include="Services\DbConnectionManager.cs" />
     <Compile Include="Services\DbConnectionStatus.cs" />
+    <Compile Include="Services\DbLock.cs" />
     <Compile Include="Services\DbLockManager.cs" />
     <Compile Include="DbSchemaChecker.cs" />
     <Compile Include="Services\DbUidManager.cs" />
