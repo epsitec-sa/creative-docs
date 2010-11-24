@@ -9,6 +9,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
@@ -34,12 +36,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public static void Print(AbstractEntity entity)
+		public static void Print(CoreData coreData, AbstractEntity entity)
 		{
-			PrintEngine.Print (new AbstractEntity[] { entity });
+			PrintEngine.Print (coreData, new AbstractEntity[] { entity });
 		}
 
-		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
+		public static void Print(CoreData coreData, IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
 			//	Imprime plusieurs entités sur les unités d'impression correspondantes.
 			//	Par exemple:
@@ -74,7 +76,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	pour choisir comment imprimer l'entité (choix du type de document et des options).
 			if (entityPrinter == null)
 			{
-				entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
+				entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (coreData, entities.FirstOrDefault ());
 
 				var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: false);
 				typeDialog.OpenDialog ();
@@ -109,7 +111,7 @@ namespace Epsitec.Cresus.Core.Printers
 					//	reprenant les réglages du précédent.
 					EntityPrintingSettings settings = entityPrinter.EntityPrintingSettings;
 
-					entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entity);
+					entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (coreData, entity);
 					entityPrinter.EntityPrintingSettings = settings;
 				}
 
@@ -251,17 +253,17 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (jobDialog.Result == DialogResult.Answer1)  // enregistrer ?
 			{
-				PrintEngine.SaveJobs (jobs);
+				PrintEngine.SaveJobs (coreData, jobs);
 			}
 		}
 
 
-		public static void Preview(AbstractEntity entity)
+		public static void Preview(CoreData coreData, AbstractEntity entity)
 		{
-			PrintEngine.Preview (new AbstractEntity[] { entity });
+			PrintEngine.Preview (coreData, new AbstractEntity[] { entity });
 		}
 
-		public static void Preview(IEnumerable<AbstractEntity> collection)
+		public static void Preview(CoreData coreData, IEnumerable<AbstractEntity> collection)
 		{
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Preview);
 
@@ -270,14 +272,14 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
+			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (coreData, entities.FirstOrDefault ());
 
 			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: true);
 			typeDialog.OpenDialog ();
 
 			if (typeDialog.Result == DialogResult.Accept)
 			{
-				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
+				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, coreData, entityPrinter, entities);
 				printDialog.IsModal = false;
 				printDialog.OpenDialog ();
 			}
@@ -346,21 +348,21 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void SaveJobs(List<JobToPrint> jobs)
+		private static void SaveJobs(CoreData coreData, List<JobToPrint> jobs)
 		{
 			//	Sérialise et enregistre tous les jobs d'impression.
 			string xmlSource = PrintEngine.SerializeJobs (jobs);
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
 
-			var deserializeJobs = Printers.PrintEngine.DeserializeJobs (xmlSource);
+			var deserializeJobs = Printers.PrintEngine.DeserializeJobs (coreData, xmlSource);
 
-			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, deserializeJobs);
+			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, coreData, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
 			if (dialog.Result == DialogResult.Accept)  // imprimer ?
 			{
-				PrintEngine.PrintJobs (deserializeJobs);
+				PrintEngine.PrintJobs (coreData, deserializeJobs);
 			}
 		}
 
@@ -425,7 +427,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return xDocument.ToString (SaveOptions.None);
 		}
 
-		private static void PrintJobs(List<DeserializedJob> jobs)
+		private static void PrintJobs(CoreData coreData, List<DeserializedJob> jobs)
 		{
 			foreach (var job in jobs)
 			{
@@ -436,12 +438,12 @@ namespace Epsitec.Cresus.Core.Printers
 				printDocument.PrinterSettings.Copies = 1;
 				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-				var engine = new XmlJobPrintEngine (printDocument, job.Sections);
+				var engine = new XmlJobPrintEngine (coreData, printDocument, job.Sections);
 				printDocument.Print (engine);
 			}
 		}
 
-		private static List<DeserializedJob> DeserializeJobs(string xmlSource, double zoom=0)
+		private static List<DeserializedJob> DeserializeJobs(CoreData coreData, string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
 			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
@@ -477,7 +479,7 @@ namespace Epsitec.Cresus.Core.Printers
 							if (zoom > 0)  // génère une miniature de la page ?
 							{
 								var port = new XmlPort (xPage);
-								page.Miniature = port.Deserialize (new Size (width, height), zoom);
+								page.Miniature = port.Deserialize (coreData, PrintEngine.GetImage, new Size (width, height), zoom);
 							}
 
 							section.Pages.Add (page);
@@ -491,6 +493,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			return jobs;
+		}
+
+		public static Image GetImage(object objectCoreData, string id)
+		{
+			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
+			CoreData coreData = objectCoreData as CoreData;
+
+			var store = coreData.ImageDataStore;
+			var data = store.GetImageData (id);
+			return data.GetImage ();
 		}
 
 

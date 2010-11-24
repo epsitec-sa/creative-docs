@@ -653,7 +653,7 @@ namespace Epsitec.Cresus.Core
 			imageCategory3.Description = "Photo d'un article";
 
 			var imageDef1 = this.DataContext.CreateEntity<ImageEntity> ();
-			imageDef1.Name = "Logo";
+			imageDef1.Name = "CompanyLogo";
 			imageDef1.Description = "Logo principal de l'entreprise";
 			imageDef1.ImageGroups.Add (imageGroup1);
 			imageDef1.ImageCategory = imageCategory1;

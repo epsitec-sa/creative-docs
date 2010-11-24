@@ -17,8 +17,10 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public class XmlPrintedPagePreviewer : Widget
 	{
-		public XmlPrintedPagePreviewer()
+		public XmlPrintedPagePreviewer(CoreData coreData)
 		{
+			this.coreData = coreData;
+
 			this.titleLayout = new TextLayout
 			{
 				DefaultFontSize = 11,
@@ -114,12 +116,14 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.lastZoom = zoom;
 
 				var port = new XmlPort (page.XRoot);
-				this.bitmap = port.Deserialize (new Size (pageWidth, pageHeight), zoom);
+				this.bitmap = port.Deserialize (this.coreData, Printers.PrintEngine.GetImage, new Size (pageWidth, pageHeight), zoom);
 			}
 		}
 
 
 		public static readonly double		titleHeight = 18;
+
+		private readonly CoreData			coreData;
 
 		private Printers.DeserializedPage	page;
 		private Bitmap						bitmap;

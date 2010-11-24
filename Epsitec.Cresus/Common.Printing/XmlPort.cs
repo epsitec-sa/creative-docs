@@ -33,7 +33,7 @@ namespace Epsitec.Common.Printing
 
 
 		#region Deserialisation
-		public Bitmap Deserialize(Size size, double zoom=1)
+		public Bitmap Deserialize(object coreData, System.Func<object, string, Image> getImage, Size size, double zoom=1)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un bitmap.
 			System.Diagnostics.Debug.Assert (zoom > 0);
@@ -46,13 +46,13 @@ namespace Epsitec.Common.Printing
 			graphics.TranslateTransform (0, height);
 			graphics.ScaleTransform (zoom, -zoom, 0, 0);
 
-			this.Deserialize (graphics);
+			this.Deserialize (coreData, getImage, graphics);
 
 			Bitmap bitmap = Bitmap.FromPixmap (graphics.Pixmap) as Bitmap;
 			return bitmap;
 		}
 
-		public void Deserialize(IPaintPort dstPort)
+		public void Deserialize(object coreData, System.Func<object, string, Image> getImage, IPaintPort dstPort)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un port graphique.
 			this.baseTransform = dstPort.Transform;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Printing
 					double imageWidth   = (double) element.Attribute ("imageWidth");
 					double imageHeight  = (double) element.Attribute ("imageHeight");
 
-					Image bitmap = this.GetImage (id);
+					Image bitmap = getImage (coreData, id);
 
 					if (bitmap != null)
 					{
@@ -108,24 +108,6 @@ namespace Epsitec.Common.Printing
 					throw new System.ArgumentException ("Invalid serialized data");
 				}
 			}
-		}
-
-		private Image GetImage(string id)
-		{
-			//	Retrouve une image d'après son id. Ceci est nécessaire, car les données sérialisées
-			//	ne contiennent pas le bitmap, pour éviter de générer des chaînes gigantesques.
-			if (id.StartsWith ("file:"))
-			{
-				string name = string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}", id.Substring (5));
-				return ImageProvider.Default.GetImage (name, Resources.DefaultManager);
-			}
-
-			if (id.StartsWith ("db:"))
-			{
-				// TODO:
-			}
-
-			return null;
 		}
 
 		private void DeserializeGraphicState(XElement element)

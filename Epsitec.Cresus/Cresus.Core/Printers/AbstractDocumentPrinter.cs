@@ -21,8 +21,9 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public abstract class AbstractDocumentPrinter
 	{
-		public AbstractDocumentPrinter(AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		public AbstractDocumentPrinter(CoreData coreData, AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
+			this.coreData = coreData;
 			this.entityPrinter = entityPrinter;
 			this.entity = entity;
 
@@ -327,11 +328,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
-		public static readonly double						continuousHeight = 100000;  // 100m
+		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
 
 		protected readonly AbstractEntityPrinter			entityPrinter;
 		protected readonly AbstractEntity					entity;
 		protected readonly DocumentContainer				documentContainer;
+		protected readonly CoreData							coreData;
+
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;
 		private List<DocumentOption>						forcingOptionsToClear;

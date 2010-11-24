@@ -30,8 +30,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public XmlPreviewerController(List<DeserializedJob> jobs)
+		public XmlPreviewerController(CoreData coreData, List<DeserializedJob> jobs)
 		{
+			this.coreData = coreData;
 			this.jobs = jobs;
 			this.pages = Printers.Common.GetDeserializedPages (this.jobs).ToList ();
 
@@ -211,7 +212,7 @@ namespace Epsitec.Cresus.Core.Printers
 					break;
 				}
 
-				var preview = new Widgets.XmlPrintedPagePreviewer
+				var preview = new Widgets.XmlPrintedPagePreviewer (this.coreData)
 				{
 					Parent = this.previewFrame.Viewport,
 					Page = this.pages[pageRank],
@@ -379,6 +380,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private readonly CoreData								coreData;
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<Widgets.XmlPrintedPagePreviewer>	pagePreviewers;
 

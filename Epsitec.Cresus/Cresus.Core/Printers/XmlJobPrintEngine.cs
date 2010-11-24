@@ -19,8 +19,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="printDocument"></param>
 		/// <param name="sections"></param>
-		public XmlJobPrintEngine(PrintDocument printDocument, List<DeserializedSection> sections)
+		public XmlJobPrintEngine(CoreData coreData, PrintDocument printDocument, List<DeserializedSection> sections)
 		{
+			this.coreData      = coreData;
 			this.printDocument = printDocument;
 			this.sections      = sections;
 
@@ -91,7 +92,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Dessine la page à imprimer.
 			var xmlPort = new XmlPort (page.XRoot);
-			xmlPort.Deserialize (port);
+			xmlPort.Deserialize (this.coreData, PrintEngine.GetImage, port);
 
 			//	Cherche la page suivante.
 			this.pageIndex++;
@@ -113,6 +114,7 @@ namespace Epsitec.Cresus.Core.Printers
 		#endregion
 
 
+		private readonly CoreData					coreData;
 		private readonly PrintDocument				printDocument;
 		private readonly List<DeserializedSection>	sections;
 

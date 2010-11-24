@@ -28,14 +28,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class XmlPreviewerDialog : AbstractDialog
 	{
-		public XmlPreviewerDialog(CoreApplication application, List<DeserializedJob> jobs)
+		public XmlPreviewerDialog(CoreApplication application, CoreData coreData, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			this.application = application;
+			this.coreData = coreData;
 			this.jobs = jobs;
 			this.pages = Printers.Common.GetDeserializedPages (this.jobs).ToList ();
-			this.previewerController = new XmlPreviewerController (this.jobs);
+			this.previewerController = new XmlPreviewerController (this.coreData, this.jobs);
 		}
 
 
@@ -160,6 +161,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private readonly CoreApplication						application;
+		private readonly CoreData								coreData;
 		private readonly List<Printers.DeserializedJob>			jobs;
 		private readonly List<Printers.DeserializedPage>		pages;
 		private readonly Printers.XmlPreviewerController		previewerController;

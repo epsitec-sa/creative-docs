@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class RelationDocumentPrinter : AbstractDocumentPrinter
 	{
-		public RelationDocumentPrinter(AbstractEntityPrinter entityPrinter, RelationEntity entity)
-			: base (entityPrinter, entity)
+		public RelationDocumentPrinter(CoreData coreData, AbstractEntityPrinter entityPrinter, RelationEntity entity)
+			: base (coreData, entityPrinter, entity)
 		{
 		}
 
