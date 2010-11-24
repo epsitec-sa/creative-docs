@@ -16,11 +16,13 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
+			string name = this.Name.IsNullOrWhiteSpace ? "<i>Inconnu</i>" : this.Name.ToString ();
+
 			if (this.ImageBlob.IsNull ())
 			{
 				return TextFormatter.FormatText
 					(
-						"Nom :  ", this.Name
+						"Nom :  ", name
 					);
 			}
 			else
@@ -29,7 +31,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				return TextFormatter.FormatText
 					(
-						"Nom :  ",        this.Name, "\n",
+						"Nom :  ",        name, "\n",
 						"Fichier :  ",    this.ImageBlob.FileName, "\n",
 						"Dimensions :  ", this.ImageBlob.PixelWidth.ToString (), "×", this.ImageBlob.PixelHeight.ToString (), " pixels\n",
 						"Résolution :  ", dpi.ToString (), " dpi\n",

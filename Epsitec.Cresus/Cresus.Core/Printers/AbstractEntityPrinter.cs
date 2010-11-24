@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -239,7 +240,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 
-		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
+		public static AbstractEntityPrinter CreateEntityPrinter(CoreData coreData, AbstractEntity entity)
 		{
 			var type = AbstractEntityPrinter.FindEntityPrinterType (entity);
 
@@ -248,7 +249,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return null;
 			}
 
-			return System.Activator.CreateInstance (type, new object[] { entity }) as AbstractEntityPrinter;
+			return System.Activator.CreateInstance (type, new object[] { coreData, entity }) as AbstractEntityPrinter;
 		}
 
 		internal static System.Type FindEntityPrinterType(AbstractEntity entity)

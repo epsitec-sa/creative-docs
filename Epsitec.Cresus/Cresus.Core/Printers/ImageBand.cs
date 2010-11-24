@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public void Load(string filename)
+		public void Load(CoreData coreData, ImageEntity imageEntity)
 		{
-			string name = Misc.GetResourceImage (filename);
-
-			this.image = ImageProvider.Default.GetImage (name, Resources.DefaultManager);
-			this.image.Id = string.Concat ("file:", filename);  // (*)
+			var store = coreData.ImageDataStore;
+			var data = store.GetImageData (imageEntity.ImageBlob.Code);
+			this.image = data.GetImage ();
+			this.image.Id = imageEntity.ImageBlob.Code;  // (*)
 		}
 
 		// (*)	Il est très important de donner l'identificateur à l'image, pour permettre la

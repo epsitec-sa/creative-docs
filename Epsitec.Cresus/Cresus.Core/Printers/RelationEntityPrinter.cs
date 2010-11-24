@@ -22,10 +22,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class RelationEntityPrinter : AbstractEntityPrinter<RelationEntity>
 	{
-		public RelationEntityPrinter(RelationEntity entity)
+		public RelationEntityPrinter(CoreData coreData, RelationEntity entity)
 			: base (entity)
 		{
-			this.documentPrinters.Add (new RelationDocumentPrinter (this, this.entity));
+			this.documentPrinters.Add (new RelationDocumentPrinter (coreData, this, this.entity));
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");

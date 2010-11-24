@@ -26,10 +26,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PreviewDialog : AbstractDialog, IAttachedDialog
 	{
-		public PreviewDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
+		public PreviewDialog(CoreApplication application, CoreData coreData, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
+			this.coreData      = coreData;
 			this.application   = application;
 			this.entityPrinter = entityPrinter;
 			this.entities      = entities;
@@ -150,7 +151,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.CloseDialog ();
 
-				PrintEngine.Print (this.entities, this.entityPrinter);
+				PrintEngine.Print (this.coreData, this.entities, this.entityPrinter);
 			};
 
 			this.closeButton.Clicked += delegate
@@ -192,6 +193,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private readonly CoreApplication				application;
+		private readonly CoreData						coreData;
 		private readonly IEnumerable<AbstractEntity>	entities;
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
 		private readonly Printers.PreviewerController	previewerController;

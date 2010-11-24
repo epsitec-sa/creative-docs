@@ -23,16 +23,16 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class InvoiceDocumentEntityPrinter : AbstractEntityPrinter<DocumentMetadataEntity>
 	{
-		public InvoiceDocumentEntityPrinter(DocumentMetadataEntity metadata)
+		public InvoiceDocumentEntityPrinter(CoreData coreData, DocumentMetadataEntity metadata)
 			: base (metadata)
 		{
 			BusinessDocumentEntity doc = metadata.BusinessDocument;
 
-			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, metadata, doc));
+			this.documentPrinters.Add (new InvoiceDocumentPrinter (coreData, this, metadata, doc));
 
 			if (doc.BillToMailContact != null)
 			{
-				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, doc.BillToMailContact));
+				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (coreData, this, doc.BillToMailContact));
 			}
 
 			{

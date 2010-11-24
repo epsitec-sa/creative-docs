@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 	public class MailContactLabelDocumentPrinter : AbstractDocumentPrinter
 	{
-		public MailContactLabelDocumentPrinter(AbstractEntityPrinter entityPrinter, MailContactEntity entity)
-			: base (entityPrinter, entity)
+		public MailContactLabelDocumentPrinter(CoreData coreData, AbstractEntityPrinter entityPrinter, MailContactEntity entity)
+			: base (coreData, entityPrinter, entity)
 		{
 		}
 
