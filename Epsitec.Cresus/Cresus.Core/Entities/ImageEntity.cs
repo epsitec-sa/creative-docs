@@ -18,7 +18,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.ImageBlob == null)
 			{
-				return TextFormatter.FormatText (this.Name);
+				return TextFormatter.FormatText
+					(
+						"Nom :  ", this.Name
+					);
 			}
 			else
 			{

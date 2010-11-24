@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIImage (data);
 			}
 
-			this.CreateUIPreviewPanel ();
+			this.CreateUIPreview (this.TileContainer);
 		}
 
 		private void CreateUIImage(SummaryDataItems data)
@@ -49,9 +49,32 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIPreviewPanel()
+		private void CreateUIPreview(Widget parent)
 		{
-			//	Crée le conteneur.
+			//	Crée l'aperçu de l'image.
+			if (this.Entity.ImageBlob != null)
+			{
+				var store = this.Data.ImageDataStore;
+				var data = store.GetImageData (this.Entity.ImageBlob.Code, 300);
+				Image image = data.GetImage ();
+
+				var box = new FrameBox
+				{
+					Parent = parent,
+					PreferredHeight = 300,
+					Padding = new Margins (10),
+					DrawFrameState = FrameState.Bottom,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, Widgets.TileArrow.Breadth, 0, 0),
+				};
+
+				var miniature = new Widgets.Miniature ()
+				{
+					Parent = box,
+					Image = image,
+					Dock = DockStyle.Fill,
+				};
+			}
 		}
 	}
 }
