@@ -1,7 +1,5 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 
 using System.Xml;
@@ -46,60 +44,77 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public abstract object GetNearestValue(object value);
 
 
-		//public void WriteDimension(XmlWriter xmlWriter)
-		//{
-		//    this.WriteDimensionStart (xmlWriter);
-		//    this.WriteName (xmlWriter);
-		//    this.WriteType (xmlWriter);
+		public abstract string ConvertToString(object value);
+
+
+		public void WriteDimension(XmlWriter xmlWriter)
+		{
+		    this.WriteDimensionStart (xmlWriter);
+		    this.WriteName (xmlWriter);
+		    this.WriteType (xmlWriter);
+			this.WriteAdditionalInfo (xmlWriter);
+			this.WriteValues (xmlWriter);
+		    this.WriteDimensionEnd (xmlWriter);
+		}
+
+		private void WriteDimensionStart(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("dimension");
+		}
+
+
+		private void WriteName(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteAttributeString ("name", this.Name);
+		}
+
+
+		private void WriteType(XmlWriter xmlWriter)
+		{
+			string type;
+
+			if (this is CodeDimension)
+			{
+				type = "code";
+			}
+			else if (this is NumericDimension)
+			{
+				type = "numeric";
+			}
+			else
+			{
+				throw new System.NotImplementedException ();
+			}
 			
-		//    //xmlWriter.WriteStartElement ("type");
-		//    //// TODO
-		//    //xmlWriter.WriteEndElement ();
-
-		//    //if (true) // TODO
-		//    //{
-		//    //    xmlWriter.WriteStartElement ("mode");
-		//    //    // TODO
-		//    //    xmlWriter.WriteEndElement ();
-		//    //}
-
-		//    //foreach (object value in Values)
-		//    //{
-		//    //    xmlWriter.WriteStartElement ("point");
-		//    //    xmlWriter.WriteValue (InvariantConverter.ConvertToString (value));
-		//    //    xmlWriter.WriteEndElement ();
-		//    //}
-
-		//    this.WriteDimensionEnd (xmlWriter);
-		//}
-
-		//private void WriteDimensionStart(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("dimension");
-		//}
+			xmlWriter.WriteAttributeString ("type", type);
+		}
 
 
-		//private void WriteName(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("name");
-		//    xmlWriter.WriteValue (Name);
-		//    xmlWriter.WriteEndElement ();
-		//}
+		private void WriteAdditionalInfo(XmlWriter xmlWriter)
+		{
+			if (this is NumericDimension)
+			{
+				NumericDimension thisAsNumericDimension = (NumericDimension) this;
+
+				string mode = System.Enum.GetName (typeof (RoundingMode), thisAsNumericDimension.RoundingMode);
+
+				xmlWriter.WriteAttributeString ("mode", mode);
+			}
+		}
 
 
-		//protected abstract void WriteType(XmlWriter xmlWriter);
+		private void WriteValues(XmlWriter xmlWriter)
+		{
+			string values = string.Join (";", this.Values);
+
+			xmlWriter.WriteAttributeString ("values", values);
+		}
 
 
-		//protected abstract void WriteAdditionalInfo(XmlWriter xmlWriter);
-
-
-		//protected abstract void WriteValue
-
-
-		//private void WriteDimensionEnd(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteEndElement ();
-		//}
+		private void WriteDimensionEnd(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteEndElement ();
+		}
                         
 
 	}

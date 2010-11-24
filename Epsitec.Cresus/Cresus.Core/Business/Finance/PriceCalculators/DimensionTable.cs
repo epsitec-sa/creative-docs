@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Text;
+
 using System.Xml;
 
 
@@ -51,31 +53,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				this.CheckNearestKey (key);
 
-				decimal value;
-
-				bool found = this.data.TryGetValue (this.GetNearestKey (key), out value);
-
-				if (found)
-				{
-					return value;
-				}
-				else
-				{
-					return null;
-				}
+				return this.GetValue (this.GetNearestKey (key));
 			}
 			set
 			{
 				this.CheckKey (key);
 
-				if (value.HasValue)
-				{
-					this.data[key.ToArray()] = value.Value;
-				}
-				else
-				{
-					this.data.Remove (key.ToArray ()); 
-				}
+				this.SetValue (key.ToArray (), value);
 			}
 		}
 
@@ -160,119 +144,134 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		//public void Export(XmlWriter xmlWriter)
-		//{
-		//    this.WritePriceCalculatorStart (xmlWriter);
-		//    this.WriteHeader (xmlWriter);
-		//    this.WriteDefinition (xmlWriter);
-		//    this.WriteData (xmlWriter);
-		//    this.WritePriceCalculatorEnd (xmlWriter);
-		//}
+		private decimal? GetValue(object[] key)
+		{
+			decimal value;
+
+			bool found = this.data.TryGetValue (key, out value);
+
+			if (found)
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 
-		//private void WritePriceCalculatorStart(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("priceCalculatorTable");
-		//}
-
-		
-		//private void WriteHeader(XmlWriter xmlWriter)
-		//{
-		//    this.WriteHeaderStart (xmlWriter);
-		//    this.WriteHeaderVersion(xmlWriter, "1.0.0");
-		//    this.WriteHeaderEnd (xmlWriter);
-		//}
-
-
-		//private void WriteHeaderStart(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("header");
-		//}
+		private void SetValue(object[] key, decimal? value)
+		{
+			if (value.HasValue)
+			{
+				this.data[key] = value.Value;
+			}
+			else
+			{
+				this.data.Remove (key);
+			}
+		}
 
 
-		//private void WriteHeaderVersion(XmlWriter xmlWriter, string version)
-		//{
-		//    xmlWriter.WriteStartElement ("version");
-		//    xmlWriter.WriteValue (version);
-		//    xmlWriter.WriteEndElement ();
-		//}
-
-		//private void WriteHeaderEnd(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteEndElement ();
-		//}
+		public void Export(XmlWriter xmlWriter)
+		{
+			this.WriteDimensionStart (xmlWriter);
+			this.WriteHeader (xmlWriter);
+			this.WriteDimensions (xmlWriter);
+			this.WriteData (xmlWriter);
+			this.WriteDimensionTableEnd (xmlWriter);
+		}
 
 
-		//private void WriteDefinition(XmlWriter xmlWriter)
-		//{
-		//    this.WriteDefinitionStart(xmlWriter);
-
-		//    foreach (PriceCalculatorDimension dimension in this.dimensions)
-		//    {
-		//        dimension.WriteDimension (xmlWriter);
-		//    }
-
-		//    this.WriteDefinitionEnd(xmlWriter);
-		//}
+		private void WriteDimensionStart(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("dimensionTable");
+		}
 
 
-		//private void WriteDefinitionStart(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("dimensions");
-		//}
+		private void WriteHeader(XmlWriter xmlWriter)
+		{
+			this.WriteHeaderStart (xmlWriter);
+			this.WriteHeaderVersion (xmlWriter, "1.0.0");
+			this.WriteHeaderEnd (xmlWriter);
+		}
 
 
-		//private void WriteDefinitionEnd(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteEndElement ();
-		//}
+		private void WriteHeaderStart(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("header");
+		}
 
 
-		//private void WriteData(XmlWriter xmlWriter)
-		//{
-		//    this.WriteDataStart (xmlWriter);
+		private void WriteHeaderVersion(XmlWriter xmlWriter, string version)
+		{
+			xmlWriter.WriteStartElement ("version");
+			xmlWriter.WriteValue (version);
+			xmlWriter.WriteEndElement ();
+		}
 
-		//    foreach (object[] key in this.ExactKeys)
-		//    {
-		//        this.WritePoint (xmlWriter, key);
-		//    }
-
-		//    this.WriteDataEnd (xmlWriter);
-		//}
-
-
-		//private void WriteDataStart(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteStartElement ("data");
-		//}
+		private void WriteHeaderEnd(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteEndElement ();
+		}
 
 
-		//private void WritePoint(XmlWriter xmlWriter, object[] key)
-		//{
-		//    decimal value = this[key];
+		private void WriteDimensions(XmlWriter xmlWriter)
+		{
+			this.WriteDimensionsStart (xmlWriter);
 
-		//    xmlWriter.WriteStartElement ("point");
-		//    xmlWriter.WriteValue (InvariantConverter.ConvertToString (value));
-		//    xmlWriter.WriteEndElement ();
-		//}
+			foreach (AbstractDimension dimension in this.dimensions)
+			{
+				dimension.WriteDimension (xmlWriter);
+			}
 
-
-		//private void WriteDataEnd(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteEndElement ();
-		//}
+			this.WriteDimensionsEnd (xmlWriter);
+		}
 
 
-		//private void WritePriceCalculatorEnd(XmlWriter xmlWriter)
-		//{
-		//    xmlWriter.WriteEndElement ();
-		//}
+		private void WriteDimensionsStart(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("dimensions");
+		}
 
 
-		//public static PriceCalculatorTable Import(XmlWriter xmlReader)
-		//{
-		//    throw new System.NotImplementedException ();
-		//}
+		private void WriteDimensionsEnd(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		private void WriteData(XmlWriter xmlWriter)
+		{
+			string values = this.JoinValues ();
+
+			xmlWriter.WriteStartElement ("data");
+			xmlWriter.WriteAttributeString ("values", values);
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		private string JoinValues()
+		{
+			var values = this.PossibleKeys
+				.Select (k => this.GetValue (k))
+				.Select (v => (v.HasValue) ? InvariantConverter.ConvertToString (v) : "");
+
+			return string.Join(";", values);
+		}
+
+
+		private void WriteDimensionTableEnd(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		public static DimensionTable Import(XmlWriter xmlReader)
+		{
+			throw new System.NotImplementedException ();
+		}
 
 
 		private List<AbstractDimension> dimensions;

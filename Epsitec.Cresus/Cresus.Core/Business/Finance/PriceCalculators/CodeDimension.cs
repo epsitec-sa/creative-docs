@@ -46,17 +46,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public override bool IsNearestValueDefined(object value)
 		{
-			value.ThrowIfNull ("value");
-
 			return this.IsValueDefined (value);
 		}
 
 
 		public override object GetNearestValue(object value)
 		{
-			value.ThrowIfNull ("value");
-
-			if (!this.IsNearestValueDefined (value))
+			if (!this.IsValueDefined (value))
 			{
 				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
 			}
@@ -65,8 +61,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private SortedSet<string> values;
+		public override string ConvertToString(object value)
+		{
+			if (!this.IsValueDefined (value))
+			{
+				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
+			}
 
+			return (string) value;
+		}
+
+
+		private SortedSet<string> values;
+		
 
 	}
 

@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -155,7 +157,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				return nearestLower;
 			}
-		}                                              
+		}
+
+
+		public override string ConvertToString(object value)
+		{
+			if (!this.IsNearestValueDefined (value))
+			{
+				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
+			}
+
+			return InvariantConverter.ConvertToString ((decimal) value);
+		}                                        
 
 
 		private SortedSet<decimal> values;

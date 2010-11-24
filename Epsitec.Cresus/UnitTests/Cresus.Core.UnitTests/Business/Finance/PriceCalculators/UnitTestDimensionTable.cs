@@ -205,45 +205,45 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		//[TestMethod]
-		//public void ImportExportTest()
-		//{
-		//    List<PriceCalculatorNumericDimension> dimensions = new List<PriceCalculatorNumericDimension> ()
-		//    {
-		//        new PriceCalculatorNumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-		//        new PriceCalculatorNumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-		//        new PriceCalculatorNumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-		//    };
+		[TestMethod]
+		public void ImportExportTest()
+		{
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+		    {
+		        new NumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Down),
+		        new NumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+		        new NumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.None),
+		    };
 
-		//    PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
-		//    for (decimal i = 0; i < 3; i++)
-		//    {
-		//        for (decimal j = 0; j < 3; j++)
-		//        {
-		//            for (decimal k = 0; k < 3; k++)
-		//            {
-		//                object[] key = new object[] { i, j, k };
+			for (decimal i = 0; i < 3; i++)
+			{
+				for (decimal j = 0; j < 3; j++)
+				{
+					for (decimal k = 0; k < 3; k++)
+					{
+						object[] key = new object[] { i, j, k };
 
-		//                table[key] = (100 * i) + (10 * j) + (1 * k);
-		//            }
-		//        }
-		//    }
+						table[key] = (100 * i) + (10 * j) + (1 * k);
+					}
+				}
+			}
 
-		//    StringBuilder data = new StringBuilder ();
+			StringBuilder data = new StringBuilder ();
 
-		//    XmlWriterSettings settings = new XmlWriterSettings ()
-		//    {
-		//        Indent = true,
-		//    };
+			XmlWriterSettings settings = new XmlWriterSettings ()
+			{
+				Indent = true,
+			};
 
-		//    using (XmlWriter xmlWriter = XmlWriter.Create (data, settings))
-		//    {
-		//        table.Export (xmlWriter);
-		//    }
+			using (XmlWriter xmlWriter = XmlWriter.Create (data, settings))
+			{
+				table.Export (xmlWriter);
+			}
 
-		//    System.Console.WriteLine (data.ToString ());
-		//}
+			System.Console.WriteLine (data.ToString ());
+		}
 
 
 		[TestMethod]
