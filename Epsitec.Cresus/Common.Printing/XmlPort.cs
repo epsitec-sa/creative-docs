@@ -36,6 +36,7 @@ namespace Epsitec.Common.Printing
 		public Bitmap Deserialize(object coreData, System.Func<object, string, Image> getImage, Size size, double zoom=1)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un bitmap.
+			//	coreData et getImage permettent de retrouver les images à partir d'identificateurs sérialisés.
 			System.Diagnostics.Debug.Assert (zoom > 0);
 
 			int width =  (int) (size.Width  * zoom);
@@ -55,6 +56,8 @@ namespace Epsitec.Common.Printing
 		public void Deserialize(object coreData, System.Func<object, string, Image> getImage, IPaintPort dstPort)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un port graphique.
+			System.Diagnostics.Debug.Assert (getImage != null && coreData != null);
+
 			this.baseTransform = dstPort.Transform;
 
 			this.UpdateGraphicState (dstPort, updateAll: true);
@@ -96,11 +99,15 @@ namespace Epsitec.Common.Printing
 					double imageWidth   = (double) element.Attribute ("imageWidth");
 					double imageHeight  = (double) element.Attribute ("imageHeight");
 
-					Image bitmap = getImage (coreData, id);
-
-					if (bitmap != null)
+					if (getImage != null && coreData != null)
 					{
-						dstPort.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, imageWidth, imageHeight);
+						//	Retrouve l'image à partir de l'identificateur sérialisé.
+						Image bitmap = getImage (coreData, id);
+
+						if (bitmap != null)
+						{
+							dstPort.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, imageWidth, imageHeight);
+						}
 					}
 				}
 				else
@@ -597,6 +604,8 @@ namespace Epsitec.Common.Printing
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty(bitmap.Id));
+
 			var xml = new XElement ("image");
 
 			//	L'image doit avoir un identificateur, pour permettre la désérialisation !

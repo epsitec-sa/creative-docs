@@ -242,12 +242,8 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasDocumentOption (DocumentOption.HeaderLogo))
 			{
-				var example = new ImageEntity ();
-				example.Name = TextFormatter.FormatText ("CompanyLogo");
-				var imageEntity = this.coreData.DataContext.GetByExample<ImageEntity> (example).FirstOrDefault ();
-
 				var imageBand = new ImageBand ();
-				imageBand.Load (this.coreData, imageEntity);
+				imageBand.Load (this.coreData, "CompanyLogo");
 				imageBand.BuildSections (60, 50, 50, 50);
 				this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.RequiredPageSize.Height-10-50, 60, 50));
 
