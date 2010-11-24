@@ -771,24 +771,21 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			switch (fieldType.TypeCode)
 			{
 				case TypeCode.String:
-					// TODO: Correction bricolée par DR, pour permettre les recherches par l'exemple sur des FormattedText, à finaliser !
-					string s;
-					if (fieldValue is FormattedText)
-					{
-						var ft = (FormattedText) fieldValue;
-						s = ft.ToString ();
-					}
-					else
-					{
-						s = fieldValue as string;
-					}
+					
+					// TODO The call to FormattedText is not very nice, but it must be done in order
+					// to allow research on regular text as well as on formatted text. This might
+					// indicate some kind of design flow in how the text in entities are implemented.
+					// So we can't much right here to improve the situation. The correction must be
+					// done elsewhere first.
+					// Marc
+
+					string value = FormattedText.CastToString (fieldValue);
 
 					sqlCondition = new SqlFunction
 					(
 						SqlFunctionCode.CompareLike,
 						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						//?SqlField.CreateConstant ((string) fieldValue, DbRawType.String)
-						SqlField.CreateConstant (s, DbRawType.String)
+						SqlField.CreateConstant (value, DbRawType.String)
 					);
 					break;
 
