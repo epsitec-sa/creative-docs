@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			if (this.ImageBlob == null)
+			if (this.ImageBlob.IsNull ())
 			{
 				return TextFormatter.FormatText
 					(

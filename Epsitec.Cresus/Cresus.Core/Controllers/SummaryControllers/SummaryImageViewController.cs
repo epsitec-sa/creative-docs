@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIPreview(Widget parent)
 		{
 			//	Crée l'aperçu de l'image.
-			if (this.Entity.ImageBlob != null)
+			if (this.Entity.ImageBlob.IsNotNull ())
 			{
 				var store = this.Data.ImageDataStore;
 				var data = store.GetImageData (this.Entity.ImageBlob.Code, 300);
