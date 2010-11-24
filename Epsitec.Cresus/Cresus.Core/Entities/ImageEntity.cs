@@ -16,7 +16,23 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			if (this.ImageBlob == null)
+			{
+				return TextFormatter.FormatText (this.Name);
+			}
+			else
+			{
+				var dpi = System.Math.Ceiling (this.ImageBlob.Dpi);
+
+				return TextFormatter.FormatText
+					(
+						"Nom :  ",        this.Name, "\n",
+						"Fichier :  ",    this.ImageBlob.FileName, "\n",
+						"Dimensions :  ", this.ImageBlob.PixelWidth.ToString (), "×", this.ImageBlob.PixelHeight.ToString (), " pixels\n",
+						"Résolution :  ", dpi.ToString (), " dpi\n",
+						"Profondeur :  ", this.ImageBlob.BitsPerPixel.ToString (), "bits"
+					);
+			}
 		}
 
 		public override FormattedText GetCompactSummary()

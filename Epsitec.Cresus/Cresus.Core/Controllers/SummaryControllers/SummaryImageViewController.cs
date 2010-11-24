@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				this.CreateUIImage (data);
 			}
+
+			this.CreateUIPreviewPanel ();
 		}
 
 		private void CreateUIImage(SummaryDataItems data)
@@ -45,6 +47,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
+		}
+
+		private void CreateUIPreviewPanel()
+		{
+			//	Crée le conteneur.
 		}
 	}
 }
