@@ -771,11 +771,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			switch (fieldType.TypeCode)
 			{
 				case TypeCode.String:
+					// TODO: Correction bricolée par DR, pour permettre les recherches par l'exemple sur des FormattedText, à finaliser !
+					string s;
+					if (fieldValue is FormattedText)
+					{
+						var ft = (FormattedText) fieldValue;
+						s = ft.ToString ();
+					}
+					else
+					{
+						s = fieldValue as string;
+					}
+
 					sqlCondition = new SqlFunction
 					(
 						SqlFunctionCode.CompareLike,
 						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((string) fieldValue, DbRawType.String)
+						//?SqlField.CreateConstant ((string) fieldValue, DbRawType.String)
+						SqlField.CreateConstant (s, DbRawType.String)
 					);
 					break;
 
