@@ -282,10 +282,10 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Creates a new instance of <see cref="DbUid"/> based on the raw data of an uid counter.
+		/// Creates a new instance of <see cref="DbUidSlot"/> based on the raw data of an uid counter.
 		/// </summary>
 		/// <param name="data">The data of the uid counter.</param>
-		/// <returns>The new instance of <see cref="DbUid"/>.</returns>
+		/// <returns>The new instance of <see cref="DbUidSlot"/>.</returns>
 		private DbUidSlot CreateDbUid(IList<object> data)
 		{
 			DbId id = new DbId ((long) data[0]);
