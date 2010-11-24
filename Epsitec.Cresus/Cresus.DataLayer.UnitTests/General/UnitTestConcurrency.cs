@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -819,7 +821,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				person.PreferredLanguage.Name = dice.Next ().ToString ();
 
 				IList<AbstractContactEntity> contacts1 = person.Contacts;
-				IList<AbstractContactEntity> contacts2 = this.Shuffle (contacts1);
+				IList<AbstractContactEntity> contacts2 = contacts1.Shuffle ().ToList ();
 
 				person.Contacts.Clear ();
 
@@ -969,25 +971,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		private string GetExceptionString(System.Exception e)
 		{
 			return e.Message + "\n\n" + e.StackTrace;
-		}
-
-
-		private List<T> Shuffle<T>(IList<T> list)
-		{
-			List<T> copy = new List<T> (list);
-			List<T> shuffled = new List<T> ();
-
-			System.Random dice = new System.Random ();
-
-			while (copy.Any ())
-			{
-				int index = dice.Next (0, copy.Count);
-
-				shuffled.Add (copy[index]);
-				copy.RemoveAt (index);
-			}
-
-			return shuffled;
 		}
 
 
