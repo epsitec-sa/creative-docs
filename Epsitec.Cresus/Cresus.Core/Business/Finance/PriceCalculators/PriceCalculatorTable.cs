@@ -37,6 +37,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public IEnumerable<object[]> ExactKeys
+		{
+			get
+			{
+				return this.GeneratePossibleExactKeys (this.dimensions);
+			}
+		}
+
+
 		public decimal this[params object[] keys]
 		{
 			get
@@ -101,6 +110,33 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				if (!this.dimensions[i].IsDefinedForExactValue (keys[i]))
 				{
 					throw new System.ArgumentException ("Invalid value for key " + i);
+				}
+			}
+		}
+
+
+		private IEnumerable<object[]> GeneratePossibleExactKeys(IList<PriceCalculatorDimension> dimensions)
+		{
+			if (dimensions.Count == 0)
+			{
+				yield return new object[0];
+			}
+			else
+			{
+				var head = dimensions.First ();
+				var tail = dimensions.Skip (1).ToList ();
+
+				foreach (object[] tailKey in this.GeneratePossibleExactKeys (tail))
+				{
+					foreach (object headKey in head.Values)
+					{
+						object[] key = new object[dimensions.Count];
+
+						key[0] = headKey;
+						tailKey.CopyTo (key, 1);
+
+						yield return key;
+					}
 				}
 			}
 		}
