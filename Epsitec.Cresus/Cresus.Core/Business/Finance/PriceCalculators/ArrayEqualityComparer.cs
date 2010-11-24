@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	internal sealed class PriceCalculatorEqualityComparer : EqualityComparer<object[]>
+	internal sealed class ArrayEqualityComparer : EqualityComparer<object[]>
 	{
 
 		public override int GetHashCode(object[] obj)

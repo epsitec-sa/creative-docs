@@ -4,6 +4,10 @@
 	internal enum RoundingMode
 	{
 
+
+		None,
+
+
 		Down,
 
 
@@ -11,7 +15,6 @@
 	
 		
 		Up,
-
 
 
 	}

@@ -61,10 +61,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Finance\PriceCalculators\UnitTestPriceCalculatorDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\UnitTestPriceCalculatorEqualityComparer.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\UnitTestPriceCalculatorNumericDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\UnitTestPriceCalculatorTable.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\UnitTestCodeDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\UnitTestArrayEqualityComparer.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\UnitTestNumericDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\UnitTestDimensionTable.cs" />
     <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
