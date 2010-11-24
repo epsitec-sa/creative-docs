@@ -5,6 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Dialogs;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -36,8 +37,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Image", "Image");
 
+				this.CreateUIImport   (builder);
 				this.CreateUIMain     (builder);
-				this.CreateUIBlob     (builder);
+				//?this.CreateUIBlob     (builder);
 				this.CreateUIGroup    (builder);
 				this.CreateUICategory (builder);
 
@@ -45,6 +47,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+
+		private void CreateUIImport(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			var button = builder.CreateButton (tile, 0, null, "Importer une image...");
+
+			button.Clicked += delegate
+			{
+				this.Import ();
+			};
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{
@@ -98,6 +115,62 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private NewEntityReference CreateNewCategory(DataContext context)
 		{
 			return context.CreateEntityAndRegisterAsEmpty<ImageCategoryEntity> ();
+		}
+
+
+		private void Import()
+		{
+			var filename = this.OpenFileDialog (CoreProgram.Application, this.Entity.ImageBlob.FileUri);
+
+			if (!string.IsNullOrWhiteSpace (filename))
+			{
+				this.Import (filename);
+			}
+		}
+
+		private string OpenFileDialog(CoreApplication application, string uri)
+		{
+			//	Exemple de contenu pour uri:
+			//	"file://daniel@daniel-pc/C:/Users/Daniel/Documents/t.jpg"
+
+			var dialog = new FileOpenDialog ();
+
+			//?if (!string.IsNullOrEmpty (uri) && uri.StartsWith ("file://"))
+			if (false)  // TODO: ne marche pas !
+			{
+				uri = uri.Substring (7);
+
+				dialog.InitialDirectory = System.IO.Path.GetDirectoryName (uri);
+				dialog.FileName = System.IO.Path.GetFileName (uri);
+			}
+
+			dialog.Title = "Importation d'une image bitmap";
+
+			dialog.Filters.Add ("image", "Image", "*.bmp;*.tif;*.png;*.jpg");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+
+			dialog.AcceptMultipleSelection = false;
+			dialog.Owner = application.Window;
+			dialog.OpenDialog ();
+			if (dialog.Result != DialogResult.Accept)
+			{
+				return null;
+			}
+
+			return dialog.FileName;
+		}
+
+		private void Import(string filename)
+		{
+			var file = new System.IO.FileInfo (filename);
+			var store = this.Data.ImageDataStore;
+
+			store.UpdateImage (this.DataContext, this.Entity, file);
+
+			if (this.Entity.Name.IsNullOrEmpty)
+			{
+				this.Entity.Name = System.IO.Path.GetFileNameWithoutExtension (this.Entity.ImageBlob.FileName);
+			}
 		}
 	}
 }
