@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 	[TestClass]
-	public class UnitTestPriceCalculatorEqualityComparer
+	public class UnitTestArrayEqualityComparer
 	{
 
 
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
-			PriceCalculatorEqualityComparer pcec = new PriceCalculatorEqualityComparer ();
+			ArrayEqualityComparer pcec = new ArrayEqualityComparer ();
 					
 			foreach (object[] array1 in arrays)
 			{
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
-			PriceCalculatorEqualityComparer pcec = new PriceCalculatorEqualityComparer ();
+			ArrayEqualityComparer pcec = new ArrayEqualityComparer ();
 
 			foreach (object[] array1 in arrays)
 			{

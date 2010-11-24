@@ -7,40 +7,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 
+using System.Xml;
+using System.Text;
+
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
 	[TestClass]
-	public class UnitTestPriceCalculatorTable
+	public class UnitTestDimensionTable
 	{
 
 
 		[TestMethod]
 		public void DimensionsTest()
 		{
-			List<PriceCalculatorNumericDimension> dimensions = new List<PriceCalculatorNumericDimension> ()
+			List<NumericDimension> dimensions = new List<NumericDimension> ()
 			{
-				new PriceCalculatorNumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-				new PriceCalculatorNumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-				new PriceCalculatorNumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
 			};
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
 			CollectionAssert.AreEqual (dimensions, table.Dimensions.ToList ());
 		}
 
 
 		[TestMethod]
-		public void ExactKeysTest()
+		public void PossibleKeysTest()
 		{
-			List<PriceCalculatorNumericDimension> dimensions = new List<PriceCalculatorNumericDimension> ()
+			List<NumericDimension> dimensions = new List<NumericDimension> ()
 			{
-				new PriceCalculatorNumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-				new PriceCalculatorNumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-				new PriceCalculatorNumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+				new NumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
 			};
 
 			List<object[]> expectedExactKeys = new List<object[]> ();
@@ -58,9 +61,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
-			List<object[]> actualExactKeys = table.ExactKeys.ToList ();
+			List<object[]> actualExactKeys = table.PossibleKeys.ToList ();
 
 			for (int i = 0; i <expectedExactKeys.Count; i++)
 			{
@@ -71,24 +74,24 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (object[] expectedExactKey in expectedExactKeys)
 			{
-				Assert.IsTrue (actualExactKeys.Contains (expectedExactKey, new PriceCalculatorEqualityComparer ()));
+				Assert.IsTrue (actualExactKeys.Contains (expectedExactKey, new ArrayEqualityComparer ()));
 			}
 		}
 
 
 		[TestMethod]
-		public void IsExactDefinedTest()
+		public void IsValueDefinedTest()
 		{
-			PriceCalculatorNumericDimension d1 = new PriceCalculatorNumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			PriceCalculatorNumericDimension d2 = new PriceCalculatorNumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.12345m, d1, d2);
+			DimensionTable table = new DimensionTable (d1, d2);
 
 			for (decimal i = 1; i < 4; i++)
 			{
 				for (decimal j = 1; j < 4; j++)
 				{
-					Assert.IsFalse (table.IsExactValueDefined (i, j));
+					Assert.IsFalse (table.IsValueDefined (i, j));
 				}
 			}
 
@@ -104,17 +107,23 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				for (decimal j = 1; j < 4; j++)
 				{
-					Assert.IsTrue (table.IsExactValueDefined (i, j));
+					Assert.IsTrue (table.IsValueDefined (i, j));
 				}
 			}
-
-			table.Clear ();
 
 			for (decimal i = 1; i < 4; i++)
 			{
 				for (decimal j = 1; j < 4; j++)
 				{
-					Assert.IsFalse (table.IsExactValueDefined (i, j));
+					table[i, j] = null;
+				}
+			}
+
+			for (decimal i = 1; i < 4; i++)
+			{
+				for (decimal j = 1; j < 4; j++)
+				{
+					Assert.IsFalse (table.IsValueDefined (i, j));
 				}
 			}
 		}
@@ -123,10 +132,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsNearestValueDefinedTest()
 		{
-			PriceCalculatorNumericDimension d1 = new PriceCalculatorNumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			PriceCalculatorNumericDimension d2 = new PriceCalculatorNumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.12345m, d1, d2);
+			DimensionTable table = new DimensionTable (d1, d2);
 
 			for (decimal i = 1.5m; i < 3; i++)
 			{
@@ -152,7 +161,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
-			table.Clear ();
+			for (decimal i = 1; i < 4; i++)
+			{
+				for (decimal j = 1; j < 4; j++)
+				{
+					table[i, j] = null;
+				}
+			}
 
 			for (decimal i = 1.5m; i < 3; i++)
 			{
@@ -165,40 +180,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
-		public void DefaultValueTest()
-		{
-			PriceCalculatorNumericDimension d1 = new PriceCalculatorNumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			PriceCalculatorNumericDimension d2 = new PriceCalculatorNumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
-
-			PriceCalculatorTable table = new PriceCalculatorTable (1.12345m, d1, d2);
-
-			Assert.AreEqual (1.12345m, table.DefaultValue);
-
-			for (decimal i = 1; i < 4; i++)
-			{
-				for (decimal j = 1; j < 4; j++)
-				{
-					Assert.AreEqual (table.DefaultValue, table[i, j]);
-				}
-			}
-		}
-
-
-		[TestMethod]
 		public void GetAndSetValueTest()
 		{
-			PriceCalculatorNumericDimension d1 = new PriceCalculatorNumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			PriceCalculatorNumericDimension d2 = new PriceCalculatorNumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.12345m, d1, d2);
-
-			for (decimal i = 1; i < 4; i++)
-			{
-				for (decimal j = 1; j < 4; j++)
-				{
-					Assert.AreEqual (table.DefaultValue, table[i, j]);
-				}
-			}
+			DimensionTable table = new DimensionTable (d1, d2);
 
 			for (decimal i = 1; i < 4; i++)
 			{
@@ -218,10 +205,51 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		//[TestMethod]
+		//public void ImportExportTest()
+		//{
+		//    List<PriceCalculatorNumericDimension> dimensions = new List<PriceCalculatorNumericDimension> ()
+		//    {
+		//        new PriceCalculatorNumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+		//        new PriceCalculatorNumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+		//        new PriceCalculatorNumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+		//    };
+
+		//    PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+
+		//    for (decimal i = 0; i < 3; i++)
+		//    {
+		//        for (decimal j = 0; j < 3; j++)
+		//        {
+		//            for (decimal k = 0; k < 3; k++)
+		//            {
+		//                object[] key = new object[] { i, j, k };
+
+		//                table[key] = (100 * i) + (10 * j) + (1 * k);
+		//            }
+		//        }
+		//    }
+
+		//    StringBuilder data = new StringBuilder ();
+
+		//    XmlWriterSettings settings = new XmlWriterSettings ()
+		//    {
+		//        Indent = true,
+		//    };
+
+		//    using (XmlWriter xmlWriter = XmlWriter.Create (data, settings))
+		//    {
+		//        table.Export (xmlWriter);
+		//    }
+
+		//    System.Console.WriteLine (data.ToString ());
+		//}
+
+
 		[TestMethod]
 		public void StressTest1()
 		{
-			List<PriceCalculatorNumericDimension> dimensions = new List<PriceCalculatorNumericDimension> ();
+			List<NumericDimension> dimensions = new List<NumericDimension> ();
 
 			foreach (int i in Enumerable.Range (0, 10))
 			{
@@ -229,12 +257,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				decimal[] values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToArray ();
 				RoundingMode mode = RoundingMode.Down;
 
-				PriceCalculatorNumericDimension dimension = new PriceCalculatorNumericDimension (name, values, mode);
+				NumericDimension dimension = new NumericDimension (name, values, mode);
 
 				dimensions.Add (dimension);
 			}
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
 			System.Random dice = new System.Random ();
 
@@ -243,7 +271,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			IDictionary<object[], decimal> data1 =
 				 Enumerable.Range (0, nbTestValues)
 				.Select (d => Enumerable.Range (0, 10).Select (i => (object) System.Convert.ToDecimal (dice.Next (0, 10))).Shuffle ().ToArray ())
-				.Distinct (new PriceCalculatorEqualityComparer ())
+				.Distinct (new ArrayEqualityComparer ())
 				.ToDictionary (e => e, e => (decimal) dice.NextDouble ());
 
 			List<object[]> data2 =
@@ -257,11 +285,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			watch.Start ();
 			foreach (var item in data1)
 			{
-				Assert.IsFalse (table.IsExactValueDefined (item.Key));
+				Assert.IsFalse (table.IsValueDefined (item.Key));
 			}
 
 			watch.Stop ();
-			System.Console.WriteLine ("IsExactValueDefined time: " + watch.ElapsedMilliseconds);
+			System.Console.WriteLine ("IsValueDefined time: " + watch.ElapsedMilliseconds);
 			watch.Restart ();
 
 			foreach (var item in data1)
@@ -275,11 +303,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (var item in data1)
 			{
-				Assert.IsTrue (table.IsExactValueDefined (item.Key));
+				Assert.IsTrue (table.IsNearestValueDefined (item.Key));
 			}
 
 			watch.Stop ();
-			System.Console.WriteLine ("IsExactValueDefined time: " + watch.ElapsedMilliseconds);
+			System.Console.WriteLine ("IsNearestValueDefined time: " + watch.ElapsedMilliseconds);
 			watch.Restart ();
 
 			foreach (var item in data1)
@@ -293,7 +321,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (var item in data2)
 			{
-				Assert.IsNotNull (table[item]);
+				if (table.IsNearestValueDefined (item))
+				{
+					Assert.IsNotNull (table[item]);
+				}
+				else
+				{
+					Assert.IsNull (table[item]);
+				}
 			}
 
 			watch.Stop ();
@@ -305,9 +340,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public void StressTest2()
 		{
 
-			List<PriceCalculatorDimension> dimensions = new List<PriceCalculatorDimension> ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ();
 
-			int nbDimensions = 8;
+			int nbDimensions = 7;
 			int nbValues = 10;
 				
 			foreach (int i in Enumerable.Range (0, nbDimensions))
@@ -316,12 +351,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				decimal[] values = Enumerable.Range (0, nbValues).Select (v => System.Convert.ToDecimal (v)).ToArray ();
 				RoundingMode mode = RoundingMode.Down;
 
-				PriceCalculatorNumericDimension dimension = new PriceCalculatorNumericDimension (name, values, mode);
+				NumericDimension dimension = new NumericDimension (name, values, mode);
 
 				dimensions.Add (dimension);
 			}
 
-			PriceCalculatorTable table = new PriceCalculatorTable (1.2345m, dimensions.ToArray ());
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
 			System.Console.WriteLine ("Generated table with " + nbDimensions + " dimensions with " + nbValues + " values.");
 
@@ -329,13 +364,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			watch.Start ();
 
-			foreach (var item in table.ExactKeys)
+			foreach (var item in table.PossibleKeys)
 			{
 				Assert.IsNotNull (item);
 			}
 
 			watch.Stop ();
-			System.Console.WriteLine ("ExactKeys time: " + watch.ElapsedMilliseconds);
+			System.Console.WriteLine ("PossibleKeys time: " + watch.ElapsedMilliseconds);
 		}
 
 
