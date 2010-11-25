@@ -173,6 +173,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public static NumericDimension BuildNumericDimension(string name, string stringData)
 		{
+			name.ThrowIfNullOrEmpty ("name");
+			stringData.ThrowIfNullOrEmpty ("stringData");
+
 			var splittedData = stringData.Split (NumericDimension.valueSeparator).ToList ();
 
 			var values = splittedData.Skip (1).Select (v => InvariantConverter.ConvertFromString<decimal> (v));

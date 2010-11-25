@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.UnitTesting;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
@@ -11,13 +13,34 @@ using System.Diagnostics;
 using System.Xml.Linq;
 
 
+
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
 	[TestClass]
-	public class UnitTestDimensionTable
+	public sealed class UnitTestDimensionTable
 	{
+
+
+		[TestMethod]
+		public void ConstructorArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DimensionTable (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new DimensionTable (new AbstractDimension[0])
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new DimensionTable (new AbstractDimension[] { null })
+			);
+		}
 
 
 		[TestMethod]
@@ -80,6 +103,46 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
+		public void IsValueDefinedArgumentCheck()
+		{
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+
+			DimensionTable table = new DimensionTable (d1, d2);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => table.IsValueDefined (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsValueDefined (1m)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsValueDefined (1m, 0m)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsValueDefined (1m, null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsValueDefined (1m, 1.5m)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsValueDefined (1m, 1f)
+			);
+		}
+
+
+		[TestMethod]
 		public void IsValueDefinedTest()
 		{
 			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
@@ -126,6 +189,41 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					Assert.IsFalse (table.IsValueDefined (i, j));
 				}
 			}
+		}
+
+
+		[TestMethod]
+		public void IsNearestValueDefinedArgumentCheck()
+		{
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+
+			DimensionTable table = new DimensionTable (d1, d2);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => table.IsNearestValueDefined (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsNearestValueDefined (1m)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsNearestValueDefined (1m, 0m)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsNearestValueDefined (1m, null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => table.IsNearestValueDefined (1m, 1f)
+			);
 		}
 
 
@@ -180,6 +278,81 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
+		public void GetValueTestArgumentCheck()
+		{
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+
+			DimensionTable table = new DimensionTable (d1, d2);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => { var v = table[null]; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { var v = table[1m]; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { var v = table[1m, null]; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { var v = table[1m, 0m]; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { var v = table[1m, 1f]; }
+			);
+		}
+		
+
+		[TestMethod]
+		public void SetValueTestArgumentCheck()
+		{
+			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
+			NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+
+			DimensionTable table = new DimensionTable (d1, d2);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => { table[null] = 0; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => {table[1m] = 0; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { table[1m, null] = 0; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { table[1m, 0m] = 0; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { table[1m, 1f] = 0; }
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => { table[1m, 11.5m] = 0; }
+			);
+		}
+
+
+		[TestMethod]
 		public void GetAndSetValueTest()
 		{
 			NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
@@ -202,6 +375,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					Assert.AreEqual (i + j, table[i, j]);
 				}
 			}
+		}
+
+
+		[TestMethod]
+		public void ImportArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => DimensionTable.XmlImport (null)
+			);
 		}
 
 

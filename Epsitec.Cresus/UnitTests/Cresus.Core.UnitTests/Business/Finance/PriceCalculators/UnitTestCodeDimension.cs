@@ -197,6 +197,62 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		[TestMethod]
+		public void BuildCodeDimensionArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => CodeDimension.BuildCodeDimension (null, "a;b")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+			  () => CodeDimension.BuildCodeDimension ("", "a;b")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => CodeDimension.BuildCodeDimension ("name", null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => CodeDimension.BuildCodeDimension ("name", "")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => CodeDimension.BuildCodeDimension ("name", "fdafda&;fdsafdas)")
+			);
+		}
+
+
+		[TestMethod]
+		public void GetStringDataAndBuildCodeDimensionTest()
+		{
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension1 = new CodeDimension ("name", values);
+			CodeDimension dimension2 = CodeDimension.BuildCodeDimension (dimension1.Name, dimension1.GetStringData ());
+
+			Assert.AreEqual (dimension1.Name, dimension2.Name);
+			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
+		}
+
+
+		[TestMethod]
+		public void XmlImportExportTest()
+		{
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension1 = new CodeDimension ("name", values);
+			CodeDimension dimension2 = (CodeDimension) AbstractDimension.XmlImport (dimension1.XmlExport ());
+
+			Assert.AreEqual (dimension1.Name, dimension2.Name);
+			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
+		}
+
+
 	}
 
 

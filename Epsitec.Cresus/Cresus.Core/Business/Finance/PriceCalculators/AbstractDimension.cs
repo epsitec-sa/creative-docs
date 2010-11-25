@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public static AbstractDimension XmlImport(XElement xDimension)
 		{
+			xDimension.ThrowIfNull ("xDimension");
+
 			AbstractDimension.CheckXmlDimension (xDimension);
 
 			string name = AbstractDimension.ExtractXmlName (xDimension);

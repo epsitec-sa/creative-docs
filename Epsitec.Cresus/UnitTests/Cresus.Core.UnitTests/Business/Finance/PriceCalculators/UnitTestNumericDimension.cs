@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
@@ -287,6 +288,79 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				Assert.AreEqual (item.Value, dimension.GetNearestValue (item.Key));
 			}
+		}
+
+
+		[TestMethod]
+		public void BuildNumericDimensionArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => NumericDimension.BuildNumericDimension (null, "a;b")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+			  () => NumericDimension.BuildNumericDimension ("", "a;b")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", "")
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", "gfsgsd:1")
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", "ggfdgfd;")
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", "Up;")
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => NumericDimension.BuildNumericDimension ("name", "Up;1;fdfds")
+			);
+		}
+
+
+		[TestMethod]
+		public void GetStringDataAndNumericNumericDimensionTest()
+		{
+			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension1 = new NumericDimension ("name", values, RoundingMode.Nearest);
+			NumericDimension dimension2 = NumericDimension.BuildNumericDimension (dimension1.Name, dimension1.GetStringData ());
+
+			Assert.AreEqual (dimension1.Name, dimension2.Name);
+			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
+			Assert.AreEqual (dimension1.RoundingMode, dimension2.RoundingMode);
+		}
+
+
+		[TestMethod]
+		public void XmlImportExportTest()
+		{
+			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension1 = new NumericDimension ("name", values, RoundingMode.Nearest);
+			NumericDimension dimension2 = (NumericDimension) AbstractDimension.XmlImport (dimension1.XmlExport ());
+
+			Assert.AreEqual (dimension1.Name, dimension2.Name);
+			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
+			Assert.AreEqual (dimension1.RoundingMode, dimension2.RoundingMode);
 		}
 
 

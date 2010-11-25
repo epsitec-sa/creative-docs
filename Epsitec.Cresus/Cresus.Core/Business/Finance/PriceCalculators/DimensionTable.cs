@@ -13,7 +13,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	// TODO Add argument check and test argument check behavior.
+	// TODO Add function to create a new "similar" table from a given one, plus or minus a
+	// dimension?
 	// Marc
 
 
@@ -23,6 +24,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		
 		public DimensionTable(params AbstractDimension[] dimensions)
 		{
+			dimensions.ThrowIfNull ("dimensions");
+			dimensions.ThrowIf (d => d.Length < 1, "dimensions must contain at least one element.");
+			dimensions.ThrowIf (dims => dims.Any (dim => dim == null), "dimensions cannot contain null elements.");
+
 			this.dimensions = dimensions.OrderBy (d => d.Name).ToList ();
 
 			this.data = new Dictionary<object[], decimal> (new ArrayEqualityComparer ());
@@ -121,6 +126,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private void CheckKey(System.Func<AbstractDimension, object, bool> check, params object[] key)
 		{
+			key.ThrowIfNull ("key");
+			key.ThrowIf (k => k.Any (e => e == null), "Null element in key");
+
 			if (key.Length != this.dimensions.Count)
 			{
 				throw new System.ArgumentException ("Invalid number of element in key");
@@ -248,6 +256,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public static DimensionTable XmlImport(XElement xDimensionTable)
 		{
+			xDimensionTable.ThrowIfNull ("xDimensionTable");
+
 			DimensionTable.CheckXmlDimensionTable (xDimensionTable);
 
 			XElement xHeader = xDimensionTable.Element (XmlConstants.HeaderTag);
