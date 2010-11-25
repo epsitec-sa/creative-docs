@@ -179,6 +179,7 @@
     <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IExceptionManager.cs" />
     <Compile Include="IIsDisposed.cs" />
     <Compile Include="InterfaceImplementationTester.cs" />
