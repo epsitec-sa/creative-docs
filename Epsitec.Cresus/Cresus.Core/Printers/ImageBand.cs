@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
 		public override bool PaintBackground(IPaintPort port, PreviewMode previewMode, int section, Point topLeft)
 		{
-			if (section != 0)
+			if (section != 0 || this.image == null)
 			{
 				return true;
 			}

@@ -11,6 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Ce widget montre une miniature (ou pas !) d'une image dans la boîte du widget, en respectant les
+	/// proportions de l'image. Si l'image utilise la transparence, elle est affichée par dessus le
+	/// traditionnel damier blanc et gris, cher aux logiciels graphiques.
+	/// </summary>
 	public class Miniature : Widget
 	{
 		public Miniature()
