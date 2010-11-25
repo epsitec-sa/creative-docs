@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			ToolTip.Default.SetToolTip (menuButton, "Montre une autre base de données...");
 
-			this.databaseButton = RibbonViewController.CreateButton (RibbonViewController.MenuBaseCommands.First ());
+			this.databaseButton = RibbonViewController.CreateButton (RibbonViewController.MenuDatabaseCommands.First ());
 			this.databaseButton.Parent = group;
 			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
 			this.databaseButton.Dock = DockStyle.Fill;
@@ -411,10 +411,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		#region Databases menu
 		private void ShowDatabasesMenu(Widget parentButton)
 		{
-			//	Construit puis affiche le menu des bases de données supplémentaires.
+			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
 
-			foreach (var command in RibbonViewController.MenuBaseCommands)
+			foreach (var command in RibbonViewController.MenuDatabaseCommands)
 			{
 				RibbonViewController.AddDatabaseToMenu (menu, command);
 			}
@@ -437,9 +437,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateDatabaseButton(CommandHandlers.DatabaseCommandHandler databaseCommandHandler)
 		{
-			//	Met à jour le bouton qui surpombe le bouton du menu, en fonction de la base sélectionnée.
-			var name = databaseCommandHandler.SelectedBaseCommandName;
-			var cmd = RibbonViewController.MenuBaseCommands.Where (x => x.Name == name).FirstOrDefault ();
+			//	Met à jour le bouton qui surplombe le bouton du menu, en fonction de la base sélectionnée.
+			var name = databaseCommandHandler.SelectedDatabaseCommandName;
+			var cmd = RibbonViewController.MenuDatabaseCommands.Where (x => x.Name == name).FirstOrDefault ();
 
 			if (cmd != null)
 			{
@@ -457,7 +457,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static IEnumerable<Command> MenuBaseCommands
+		private static IEnumerable<Command> MenuDatabaseCommands
 		{
 			//	Liste des commandes des bases de données d'usage peu fréquent accessibles via le menu.
 			get

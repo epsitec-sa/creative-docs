@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			}
         }
 
-		public string SelectedBaseCommandName
+		public string SelectedDatabaseCommandName
 		{
 			get
 			{
