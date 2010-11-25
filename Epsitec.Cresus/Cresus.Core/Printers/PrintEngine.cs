@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core.Printers
 							if (zoom > 0)  // génère une miniature de la page ?
 							{
 								var port = new XmlPort (xPage);
-								page.Miniature = port.Deserialize (code => PrintEngine.GetImage (coreData, code), new Size (width, height), zoom);
+								page.Miniature = port.Deserialize (id => PrintEngine.GetImage (coreData, id), new Size (width, height), zoom);
 							}
 
 							section.Pages.Add (page);

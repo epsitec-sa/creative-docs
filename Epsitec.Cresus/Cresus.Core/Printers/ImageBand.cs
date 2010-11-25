@@ -34,6 +34,12 @@ namespace Epsitec.Cresus.Core.Printers
 			example.Name = TextFormatter.FormatText (name);
 			var imageEntity = coreData.DataContext.GetByExample<ImageEntity> (example).FirstOrDefault ();
 
+			this.Load (coreData, imageEntity);
+		}
+
+		public void Load(CoreData coreData, ImageEntity imageEntity)
+		{
+			//	Associe à l'objet une image de la base de données.
 			if (imageEntity.IsNotNull ())
 			{
 				var store = coreData.ImageDataStore;
