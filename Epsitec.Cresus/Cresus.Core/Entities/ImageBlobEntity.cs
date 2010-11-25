@@ -16,7 +16,36 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.FileUri);
+			var builder = new Epsitec.Common.IO.UriBuilder (this.FileUri);
+			// builder.Scheme     == "file"
+			// builder.UserName   == "daniel"
+			// builder.Host       == "daniel-pc"
+			// builder.Path       == "C:/Users/Daniel/Documents/t.jpg"
+			// builder.Fragment   == null
+			// builder.Password   == null
+			// builder.Query      == null
+			// builder.PortNumber == 0
+
+			string directory = System.IO.Path.GetDirectoryName (builder.Path);
+			string filename  = System.IO.Path.GetFileName      (builder.Path);
+
+			var dpi = System.Math.Ceiling (this.Dpi);
+
+			return TextFormatter.FormatText
+				(
+					"Creation :  ",     this.CreationDate.ToString (), "\n",
+					"Modification :  ", this.LastModificationDate.ToString (), "\n",
+					"---\n",
+					"Utilisateur :  ",  builder.UserName, "\n",
+					"Ordinateur :  ",   builder.Host, "\n",
+					"Dossier :  ",      directory, "\n",
+					"Fichier :  ",      filename, "\n",
+					"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.Code), "\n",
+					"---\n",
+					"Dimensions :  ", this.PixelWidth.ToString (), "×", this.PixelHeight.ToString (), " pixels\n",
+					"Résolution :  ",   dpi.ToString (), " dpi\n",
+					"Profondeur :  ",   this.BitsPerPixel.ToString (), "bits"
+				);
 		}
 
 		public override FormattedText GetCompactSummary()

@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Core.Res.CommandIds.Base.ShowInvoiceDocuments)]
 		[Command (Core.Res.CommandIds.Base.ShowBusinessSettings)]
 		[Command (Core.Res.CommandIds.Base.ShowImages)]
+		[Command (Core.Res.CommandIds.Base.ShowImageBlobs)]
 		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
 		public void ProcessBaseGenericShow(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
