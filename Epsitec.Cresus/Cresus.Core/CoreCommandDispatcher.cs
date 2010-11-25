@@ -33,6 +33,15 @@ namespace Epsitec.Cresus.Core
 			this.SetupDefaultCommandStates ();
 		}
 
+		public List<ICommandHandler> CommandHandlers
+		{
+			get
+			{
+				return this.commandHandlers;
+			}
+		}
+
+
 		private void SetupDefaultCommandStates()
 		{
 			this.application.SetEnable (ApplicationCommands.Cut, false);

@@ -34,7 +34,17 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				this.UpdateActiveCommandState (commandState);
 			}
         }
-        
+
+		public string SelectedBaseCommandName
+		{
+			get
+			{
+				return this.databaseCommandStates
+						.Where (x => x.ActiveState == ActiveState.Yes)
+						.Select (x => x.Command.Name)
+						.FirstOrDefault () as string;
+			}
+		}
 
 
 		[Command (Core.Res.CommandIds.Base.ShowCustomers)]
@@ -83,6 +93,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var controller   = CoreApplication.GetController<BrowserViewController> (context);
 
 			controller.SelectDataSet (databaseName);
+			this.OnChanged ();
 		}
 
 		private void UpdateActiveCommandState(CommandState activeState)
@@ -99,6 +110,19 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				}
 			}
 		}
+
+
+		private void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+
+		public event EventHandler Changed;
+
+
 		private static readonly string databaseSelectionGroup = "DatabaseSelection";
 		private static readonly string showDatabaseCommandPrefix = "Base.Show";
 
