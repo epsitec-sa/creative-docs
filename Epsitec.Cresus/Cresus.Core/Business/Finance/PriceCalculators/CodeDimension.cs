@@ -1,5 +1,4 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -10,21 +9,21 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	 internal sealed class CodeDimension : AbstractDimension
+	internal sealed class CodeDimension : AbstractDimension
 	{
+		
+		
+		public CodeDimension(string name, IEnumerable<string> values)
+			: base (name)
+		{
+			values.ThrowIfNull ("values");
+			values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
+			values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
 
+			this.values = new SortedSet<string> (values);
 
-		 public CodeDimension(string name, IEnumerable<string> values)
-			 : base (name)
-		 {
-			 values.ThrowIfNull ("values");
-			 values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
-			 values.ThrowIf (e => e.Any (v => !RegexFactory.AlphaNumName.IsMatch (v)), "values in values must be alpha numeric.");
-
-			 this.values = new SortedSet<string> (values);
-
-			 this.values.ThrowIf (v => !v.Any (), "values is empty.");
-		 }
+			this.values.ThrowIf (v => !v.Any (), "values is empty.");
+		}
 
 
 		public override IEnumerable<object> Values
@@ -61,19 +60,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public override string ConvertToString(object value)
+		public override string GetStringData()
 		{
-			if (!this.IsValueDefined (value))
-			{
-				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
-			}
+			return string.Join (CodeDimension.valueSeparator, this.values);
+		}
 
-			return (string) value;
+
+		public static CodeDimension BuildCodeDimension(string name, string stringData)
+		{
+			var values = stringData.Split (CodeDimension.valueSeparator);
+
+			return new CodeDimension (name, values);
 		}
 
 
 		private SortedSet<string> values;
-		
+
+
+		private static readonly string valueSeparator = ";";
+
 
 	}
 

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-using System.Xml;
+using System.Xml.Linq;
 
 
 
@@ -44,76 +44,108 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public abstract object GetNearestValue(object value);
 
 
-		public abstract string ConvertToString(object value);
+		public abstract string GetStringData();
 
 
-		public void WriteDimension(XmlWriter xmlWriter)
+		public XElement XmlExport()
 		{
-		    this.WriteDimensionStart (xmlWriter);
-		    this.WriteName (xmlWriter);
-		    this.WriteType (xmlWriter);
-			this.WriteAdditionalInfo (xmlWriter);
-			this.WriteValues (xmlWriter);
-		    this.WriteDimensionEnd (xmlWriter);
-		}
+			XElement xDimension = new XElement (XmlConstants.DimensionTag);
 
-		private void WriteDimensionStart(XmlWriter xmlWriter)
-		{
-			xmlWriter.WriteStartElement ("dimension");
+			xDimension.SetAttributeValue (XmlConstants.NameTag, this.GetXmlName ());
+			xDimension.SetAttributeValue (XmlConstants.TypeTag, this.GetXmlTypeName ());
+			xDimension.SetAttributeValue (XmlConstants.DataTag, this.GetStringData ());
+
+			return xDimension;
 		}
 
 
-		private void WriteName(XmlWriter xmlWriter)
+		private string GetXmlName()
 		{
-			xmlWriter.WriteAttributeString ("name", this.Name);
+			return this.Name;
 		}
 
 
-		private void WriteType(XmlWriter xmlWriter)
+		private string GetXmlTypeName()
 		{
-			string type;
-
 			if (this is CodeDimension)
 			{
-				type = "code";
+				return XmlConstants.CodeTypeName;
 			}
 			else if (this is NumericDimension)
 			{
-				type = "numeric";
+				return XmlConstants.NumericTypeName;
 			}
 			else
 			{
 				throw new System.NotImplementedException ();
 			}
-			
-			xmlWriter.WriteAttributeString ("type", type);
 		}
 
 
-		private void WriteAdditionalInfo(XmlWriter xmlWriter)
+		public static AbstractDimension XmlImport(XElement xDimension)
 		{
-			if (this is NumericDimension)
+			AbstractDimension.CheckXmlDimension (xDimension);
+
+			string name = AbstractDimension.ExtractXmlName (xDimension);
+			string typeName = AbstractDimension.ExtractXmlTypeName (xDimension);
+			string data = AbstractDimension.ExtractXmlData (xDimension);
+
+			return AbstractDimension.BuildDimension (name, typeName, data);
+		}
+
+
+		private static void CheckXmlDimension(XElement XDimension)
+		{
+			if (XDimension.Name != XmlConstants.DimensionTag)
 			{
-				NumericDimension thisAsNumericDimension = (NumericDimension) this;
-
-				string mode = System.Enum.GetName (typeof (RoundingMode), thisAsNumericDimension.RoundingMode);
-
-				xmlWriter.WriteAttributeString ("mode", mode);
+				throw new System.ArgumentException ("Invalid xml data");
 			}
 		}
 
 
-		private void WriteValues(XmlWriter xmlWriter)
+		private static string ExtractXmlName(XElement xDimension)
 		{
-			string values = string.Join (";", this.Values);
-
-			xmlWriter.WriteAttributeString ("values", values);
+			return xDimension.Attribute (XmlConstants.NameTag).Value;
 		}
 
 
-		private void WriteDimensionEnd(XmlWriter xmlWriter)
+		private static string ExtractXmlTypeName(XElement xDimension)
 		{
-			xmlWriter.WriteEndElement ();
+			return xDimension.Attribute (XmlConstants.TypeTag).Value;
+		}
+
+
+		private static string ExtractXmlData(XElement xDimension)
+		{
+			return xDimension.Attribute (XmlConstants.DataTag).Value;
+		}
+
+
+		private static AbstractDimension BuildDimension(string name, string type, string data)
+		{
+			if (type == XmlConstants.CodeTypeName)
+			{
+				return CodeDimension.BuildCodeDimension (name, data);
+			}
+			else if (type == XmlConstants.NumericTypeName)
+			{
+				return NumericDimension.BuildNumericDimension (name, data);
+			}
+			else
+			{
+				throw new System.ArgumentException ("Invalid xml data");
+			}
+		}
+
+
+		private static class XmlConstants
+		{
+			public static readonly string DimensionTag = "dimension";
+			public static readonly string NameTag = "name";
+			public static readonly string TypeTag = "type";
+			public static readonly string DataTag = "data";
+			public static readonly string CodeTypeName = "code";
+			public static readonly string NumericTypeName = "numeric";
 		}
                         
 

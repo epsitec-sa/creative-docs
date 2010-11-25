@@ -5,10 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 using System.Linq;
+
 using System.Diagnostics;
 
-using System.Xml;
-using System.Text;
+using System.Xml.Linq;
 
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
@@ -210,39 +210,72 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 		    {
-		        new NumericDimension ("d1", new decimal[] { 0, 1, 2 }, RoundingMode.Down),
-		        new NumericDimension ("d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-		        new NumericDimension ("d3", new decimal[] { 0, 1, 2 }, RoundingMode.None),
+		        new NumericDimension ("d1", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Down),
+		        new NumericDimension ("d2", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Up),
+				new CodeDimension ("d3", new string[] {"0", "1", "2", "3"}),
+				new CodeDimension ("d4", new string[] {"0", "1", "2", "3"}),
 		    };
 
-			DimensionTable table = new DimensionTable (dimensions.ToArray ());
+			DimensionTable table1 = new DimensionTable (dimensions.ToArray ());
 
-			for (decimal i = 0; i < 3; i++)
+			foreach (decimal i in dimensions[0].Values.Cast<decimal> ().Where (v => v != 0))
 			{
-				for (decimal j = 0; j < 3; j++)
+				foreach (decimal j in dimensions[1].Values.Take (2).Cast<decimal> ().Where (v => v != 1))
 				{
-					for (decimal k = 0; k < 3; k++)
+					foreach (string k in dimensions[2].Values.Cast<string> ().Where (v => v != "2"))
 					{
-						object[] key = new object[] { i, j, k };
+						foreach (string l in dimensions[3].Values.Cast<string> ().Where (v => v != "3"))
+						{
+							object[] key = new object[] { i, j, k, l };
 
-						table[key] = (100 * i) + (10 * j) + (1 * k);
+							table1[key] = (1000 * i) + (100 * j) + (10 * System.Int32.Parse (k)) + (1 * System.Int32.Parse (l));
+						}
 					}
 				}
 			}
 
-			StringBuilder data = new StringBuilder ();
+			XElement xDimensionTable1 = table1.XmlExport ();
 
-			XmlWriterSettings settings = new XmlWriterSettings ()
-			{
-				Indent = true,
-			};
+			DimensionTable table2 = DimensionTable.XmlImport (xDimensionTable1);
 
-			using (XmlWriter xmlWriter = XmlWriter.Create (data, settings))
+			XElement xDimensionTable2 = table2.XmlExport ();
+
+			var dimensions1 = table1.Dimensions.ToList();
+			var dimensions2 = table2.Dimensions.ToList();
+          
+			Assert.AreEqual(dimensions1.Count, dimensions2.Count);
+
+			for (int i = 0; i < dimensions1.Count; i++)
 			{
-				table.Export (xmlWriter);
+				Assert.AreEqual (dimensions1[i].Name, dimensions2[i].Name);
+				CollectionAssert.AreEqual (dimensions1[i].Values.ToList (), dimensions2[i].Values.ToList ());
+
+				Assert.AreEqual (dimensions1.GetType (), dimensions2.GetType ());
+
+				if (dimensions1[i] is NumericDimension)
+				{
+					Assert.AreEqual (((NumericDimension) dimensions1[i]).RoundingMode, ((NumericDimension) dimensions2[i]).RoundingMode);
+				}
+			}
+			
+			var possibleKeys1 = table1.PossibleKeys.ToList();
+			var possibleKeys2 = table1.PossibleKeys.ToList();
+
+			Assert.AreEqual(possibleKeys1.Count, possibleKeys2.Count);
+
+			for (int i = 0; i < possibleKeys1.Count; i++)
+			{
+				Assert.IsTrue (new ArrayEqualityComparer ().Equals (possibleKeys1[i], possibleKeys2[i]));
 			}
 
-			System.Console.WriteLine (data.ToString ());
+			foreach (object[] key in possibleKeys1)
+			{
+				Assert.AreEqual (table1[key], table2[key]);
+				Assert.AreEqual (table1.IsNearestValueDefined (key), table2.IsNearestValueDefined (key));
+				Assert.AreEqual (table1.IsValueDefined (key), table2.IsValueDefined (key));
+			}
+
+			Assert.AreEqual (xDimensionTable1.ToString (), xDimensionTable2.ToString ());
 		}
 
 

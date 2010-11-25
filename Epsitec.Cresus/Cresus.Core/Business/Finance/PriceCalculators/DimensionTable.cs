@@ -1,12 +1,12 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
 using System.Linq;
 
-using System.Text;
-
-using System.Xml;
+using System.Xml.Linq;
 
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
@@ -80,18 +80,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private void CheckKey(params object[] keys)
-		{
-			for (int i = 0; i < keys.Length; i++)
-			{
-				if (!this.dimensions[i].IsValueDefined (keys[i]))
-				{
-					throw new System.ArgumentException ("Invalid value for key " + i);
-				}
-			}
-		}
-
-
 		private IEnumerable<object[]> GeneratePossibleKeys(IList<AbstractDimension> dimensions)
 		{
 			if (dimensions.Count == 0)
@@ -119,13 +107,30 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private void CheckNearestKey(params object[] keys)
+		private void CheckKey(params object[] key)
 		{
-			for (int i = 0; i < keys.Length; i++)
+			this.CheckKey ((d, o) => d.IsValueDefined (o), key);
+		}
+
+
+		private void CheckNearestKey(params object[] key)
+		{
+			this.CheckKey ((d, o) => d.IsNearestValueDefined (o), key);
+		}
+
+
+		private void CheckKey(System.Func<AbstractDimension, object, bool> check, params object[] key)
+		{
+			if (key.Length != this.dimensions.Count)
 			{
-				if (!this.dimensions[i].IsNearestValueDefined (keys[i]))
+				throw new System.ArgumentException ("Invalid number of element in key");
+			}
+
+			for (int i = 0; i < key.Length; i++)
+			{
+				if (!check (this.dimensions[i], key[i]))
 				{
-					throw new System.ArgumentException ("Invalid value for key " + i);
+					throw new System.ArgumentException ("Invalid element in key at position " + i);
 				}
 			}
 		}
@@ -133,14 +138,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private object[] GetNearestKey(params object[] key)
 		{
-			object[] nearestKeys = new object[key.Length];
+			object[] nearestKey = new object[key.Length];
 
 			for (int i = 0; i < key.Length; i++)
 			{
-				nearestKeys[i] = this.dimensions[i].GetNearestValue (key[i]);
+				nearestKey[i] = this.dimensions[i].GetNearestValue (key[i]);
 			}
 
-			return nearestKeys;
+			return nearestKey;
 		}
 
 
@@ -174,81 +179,60 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public void Export(XmlWriter xmlWriter)
+		public XElement XmlExport()
 		{
-			this.WriteDimensionStart (xmlWriter);
-			this.WriteHeader (xmlWriter);
-			this.WriteDimensions (xmlWriter);
-			this.WriteData (xmlWriter);
-			this.WriteDimensionTableEnd (xmlWriter);
+			XElement xDimensionTable = new XElement (XmlConstants.DimensionTableTag);
+
+			xDimensionTable.Add (this.GetXmlHeader ());
+			xDimensionTable.Add (this.GetXmlDimensions ());
+			xDimensionTable.Add (this.GetXmlData ());
+
+			return xDimensionTable;
 		}
 
 
-		private void WriteDimensionStart(XmlWriter xmlWriter)
+		private XElement GetXmlHeader()
 		{
-			xmlWriter.WriteStartElement ("dimensionTable");
+			XElement xHeader = new XElement (XmlConstants.HeaderTag);
+
+			xHeader.Add (this.GetXmlVersion (XmlConstants.VersionValue));
+
+			return xHeader;
 		}
 
 
-		private void WriteHeader(XmlWriter xmlWriter)
+		private XElement GetXmlVersion(string version)
 		{
-			this.WriteHeaderStart (xmlWriter);
-			this.WriteHeaderVersion (xmlWriter, "1.0.0");
-			this.WriteHeaderEnd (xmlWriter);
+			XElement xVersion = new XElement (XmlConstants.VersionTag);
+
+			xVersion.SetValue (version);
+
+			return xVersion;
 		}
 
 
-		private void WriteHeaderStart(XmlWriter xmlWriter)
+		private XElement GetXmlDimensions()
 		{
-			xmlWriter.WriteStartElement ("header");
-		}
-
-
-		private void WriteHeaderVersion(XmlWriter xmlWriter, string version)
-		{
-			xmlWriter.WriteStartElement ("version");
-			xmlWriter.WriteValue (version);
-			xmlWriter.WriteEndElement ();
-		}
-
-		private void WriteHeaderEnd(XmlWriter xmlWriter)
-		{
-			xmlWriter.WriteEndElement ();
-		}
-
-
-		private void WriteDimensions(XmlWriter xmlWriter)
-		{
-			this.WriteDimensionsStart (xmlWriter);
+			XElement xDimensions = new XElement (XmlConstants.DimensionsTag);
 
 			foreach (AbstractDimension dimension in this.dimensions)
 			{
-				dimension.WriteDimension (xmlWriter);
+				xDimensions.Add (dimension.XmlExport ());
 			}
 
-			this.WriteDimensionsEnd (xmlWriter);
+			return xDimensions;
 		}
 
 
-		private void WriteDimensionsStart(XmlWriter xmlWriter)
-		{
-			xmlWriter.WriteStartElement ("dimensions");
-		}
-
-
-		private void WriteDimensionsEnd(XmlWriter xmlWriter)
-		{
-			xmlWriter.WriteEndElement ();
-		}
-
-
-		private void WriteData(XmlWriter xmlWriter)
+		private XElement GetXmlData()
 		{
 			string values = this.JoinValues ();
 
-			xmlWriter.WriteStartElement ("data");
-			xmlWriter.WriteAttributeString ("values", values);
-			xmlWriter.WriteEndElement ();
+			XElement xData = new XElement (XmlConstants.DataTag);
+			
+			xData.SetAttributeValue (XmlConstants.ValuesTag, values);
+
+			return xData;
 		}
 
 
@@ -258,19 +242,90 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				.Select (k => this.GetValue (k))
 				.Select (v => (v.HasValue) ? InvariantConverter.ConvertToString (v) : "");
 
-			return string.Join(";", values);
+			return string.Join(XmlConstants.ValueSeparator, values);
 		}
 
 
-		private void WriteDimensionTableEnd(XmlWriter xmlWriter)
+		public static DimensionTable XmlImport(XElement xDimensionTable)
 		{
-			xmlWriter.WriteEndElement ();
+			DimensionTable.CheckXmlDimensionTable (xDimensionTable);
+
+			XElement xHeader = xDimensionTable.Element (XmlConstants.HeaderTag);
+			DimensionTable.CheckXmlHeader (xHeader);
+
+			XElement xDimensions = xDimensionTable.Element (XmlConstants.DimensionsTag);
+			var dimensions = DimensionTable.ExtractXmlDimensions (xDimensions);
+
+			XElement xData = xDimensionTable.Element (XmlConstants.DataTag);
+			List<decimal?> values = DimensionTable.ExtractXmlData (xData).ToList();
+
+			DimensionTable table = new DimensionTable (dimensions.ToArray ());
+
+			List<object[]> keys = table.PossibleKeys.ToList ();
+
+			if (values.Count != keys.Count)
+			{
+				throw new System.ArgumentException ("Invalid xml data");
+			}
+
+			for (int i = 0; i < keys.Count; i++)
+			{
+				table.SetValue (keys[i], values[i]);
+			}
+
+			return table;
 		}
 
 
-		public static DimensionTable Import(XmlWriter xmlReader)
+		private static void CheckXmlDimensionTable(XElement XDimensionTable)
 		{
-			throw new System.NotImplementedException ();
+			if (XDimensionTable.Name != XmlConstants.DimensionTableTag)
+			{
+				throw new System.ArgumentException ("Invalid xml data");
+			}
+		}
+
+
+		private static void CheckXmlHeader(XElement xHeader)
+		{
+			XElement xVersion = xHeader.Element (XmlConstants.VersionTag);
+
+			string version = xVersion.Value;
+
+			if (version != XmlConstants.VersionValue)
+			{
+				throw new System.ArgumentException ("Invalid xml data");
+			}
+		}
+
+
+		private static IEnumerable<AbstractDimension> ExtractXmlDimensions(XElement xDimensions)
+		{
+			foreach (XElement xDimension in xDimensions.Elements ())
+			{
+				yield return AbstractDimension.XmlImport (xDimension);
+			}
+		}
+
+
+		private static IEnumerable<decimal?> ExtractXmlData(XElement xData)
+		{
+			return xData.Attribute (XmlConstants.ValuesTag).Value
+				.Split (XmlConstants.ValueSeparator)
+				.Select (v => (v.Length > 0) ? InvariantConverter.ConvertFromString<decimal> (v) : (decimal?) null);
+		}
+
+
+		private static class XmlConstants
+		{
+			public static readonly string DimensionTableTag = "dimensionTable";
+			public static readonly string HeaderTag = "header";
+			public static readonly string DimensionsTag = "dimensions";
+			public static readonly string DataTag = "data";
+			public static readonly string VersionTag = "dimensionTable";
+			public static readonly string ValuesTag = "values";
+			public static readonly string VersionValue = "1.0.0";
+			public static readonly string ValueSeparator = ";";
 		}
 
 
