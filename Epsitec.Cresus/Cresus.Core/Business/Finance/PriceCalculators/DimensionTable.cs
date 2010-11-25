@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	// Marc
 
 
-	internal sealed class DimensionTable
+	public sealed class DimensionTable
 	{
 		
 		

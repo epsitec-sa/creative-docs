@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	internal sealed class CodeDimension : AbstractDimension
+	public sealed class CodeDimension : AbstractDimension
 	{
 		
 		
