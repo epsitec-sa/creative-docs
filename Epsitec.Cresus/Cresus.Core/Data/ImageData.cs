@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Data
 		internal ImageData(ImageBlobEntity image)
 		{
 			this.imageBytes = image.Data;
+			this.imageId    = image.Code;
 			this.mimeType   = MimeTypeDictionary.ParseMimeType (image.FileMimeType);
 			this.name       = image.FileName;
 			this.uri        = new UriBuilder (image.FileUri);
@@ -45,6 +46,14 @@ namespace Epsitec.Cresus.Core.Data
 			get
 			{
 				return this.imageBytes;
+			}
+		}
+
+		public string							ImageId
+		{
+			get
+			{
+				return this.imageId;
 			}
 		}
 
@@ -123,6 +132,7 @@ namespace Epsitec.Cresus.Core.Data
 
 				if (cache != null)
 				{
+					cache.Id = this.imageId;
 					this.cache = new Weak<Image> (cache);
 				}
 			}
@@ -132,6 +142,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		
 		private readonly byte[]					imageBytes;
+		private readonly string					imageId;
 		private readonly MimeType				mimeType;
 		private readonly string					name;
 		private readonly UriBuilder				uri;
