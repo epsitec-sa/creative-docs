@@ -38,11 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateWarning   (tile);
-			builder.CreateTextField (tile, 0, "Code",           Marshaler.Create (() => this.Entity.Code,         x => this.Entity.Code = x));
-			builder.CreateTextField (tile, 0, "Nom de fichier", Marshaler.Create (() => this.Entity.FileName,     x => this.Entity.FileName = x));
-			builder.CreateTextField (tile, 0, "URI",            Marshaler.Create (() => this.Entity.FileUri,      x => this.Entity.FileUri = x));
-			builder.CreateTextField (tile, 0, "Type MIME",      Marshaler.Create (() => this.Entity.FileMimeType, x => this.Entity.FileMimeType = x));
+			builder.CreateStaticText (tile, 60, "<i>Aucune donnée ne peut être modifiée.</i>");
 		}
 	}
 }

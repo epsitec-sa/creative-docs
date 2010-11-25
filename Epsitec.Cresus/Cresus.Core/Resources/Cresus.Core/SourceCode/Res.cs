@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/L0KE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
+				//	designer:cap/L0KJ
+				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlobs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/L0KI
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
 				//	designer:cap/L0K4
@@ -132,6 +134,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowCustomers = 0x150000A000062L;
 				//	designer:cap/L0KE
 				public const long ShowDocuments = 0x150001400000EL;
+				//	designer:cap/L0KJ
+				public const long ShowImageBlobs = 0x1500014000013L;
 				//	designer:cap/L0KI
 				public const long ShowImages = 0x1500014000012L;
 				//	designer:cap/L0K4
