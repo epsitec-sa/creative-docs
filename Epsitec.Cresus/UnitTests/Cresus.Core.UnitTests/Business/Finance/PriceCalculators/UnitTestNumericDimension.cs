@@ -112,14 +112,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsValueDefinedTest()
 		{
-			string name = "name";
-
 			List<decimal> values1 = Enumerable.Range (0, 11).Where (v => v % 2 == 0).Select (v => System.Convert.ToDecimal (v)).ToList ();
 			List<decimal> values2 = Enumerable.Range (0, 10).Where (v => v % 2 == 1).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
 			RoundingMode mode = RoundingMode.None;
 
-			NumericDimension dimension = new NumericDimension (name, values1, mode);
+			NumericDimension dimension = new NumericDimension ("name", values1, mode);
 
 			foreach (decimal value in values1)
 			{
