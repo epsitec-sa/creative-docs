@@ -242,16 +242,34 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasDocumentOption (DocumentOption.HeaderLogo))
 			{
-				var imageBand = new ImageBand ();
-				imageBand.Load (this.coreData, "CompanyLogo");
-				imageBand.BuildSections (60, 50, 50, 50);
-				this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.RequiredPageSize.Height-10-50, 60, 50));
+				var settings = CoreProgram.Application.BusinessSettings;
 
-				var textBand = new TextBand ();
-				textBand.Text = FormattedText.Concat ("<b>", "Les logiciels de gestion", "</b>");
-				textBand.Font = font;
-				textBand.FontSize = 5.0;
-				this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+				if (settings.CompanyLogo.IsNotNull ())
+				{
+					//	Affiche l'image du logo de l'entreprise.
+					var imageBand = new ImageBand ();
+					imageBand.Load (this.coreData, settings.CompanyLogo);
+					imageBand.BuildSections (80, 40, 40, 40);
+					this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.RequiredPageSize.Height-10-40, 80, 40));
+
+					if (settings.Company.IsNotNull ())
+					{
+						if (settings.Company.Person is LegalPersonEntity)
+						{
+							var legalPerson = settings.Company.Person as LegalPersonEntity;
+
+							if (!legalPerson.Complement.IsNullOrWhiteSpace)
+							{
+								//	Affiche le texte sous le logo de l'entreprise.
+								var textBand = new TextBand ();
+								textBand.Text = FormattedText.Concat ("<b>", legalPerson.Complement, "</b>");
+								textBand.Font = font;
+								textBand.FontSize = 5.0;
+								this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+							}
+						}
+					}
+				}
 			}
 
 			var mailContactBand = new TextBand ();
@@ -300,7 +318,7 @@ namespace Epsitec.Cresus.Core.Printers
 					band.SetText (0, 0, title);
 					band.SetText (1, 0, text);
 					band.SetBackground (1, 0, color);
-					this.documentContainer.AddAbsolute (band, new Rectangle (20, this.RequiredPageSize.Height-67, 100-5, 15));
+					this.documentContainer.AddAbsolute (band, new Rectangle (20, this.RequiredPageSize.Height-70, 100-5, 12));
 				}
 			}
 
@@ -315,7 +333,7 @@ namespace Epsitec.Cresus.Core.Printers
 			dateBand.Text = FormattedText.Concat (InvoiceDocumentPrinter.GetDefaultLocation (), ", le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10));
+			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10-2));
 		}
 
 		private void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
