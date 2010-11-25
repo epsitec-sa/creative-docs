@@ -766,6 +766,12 @@ namespace Epsitec.Common.OpenType
 		
 		private bool Add(string fullName, string fuidName, FontIdentity fid)
 		{
+			if ((string.IsNullOrWhiteSpace (fullName)) ||
+				(string.IsNullOrWhiteSpace (fuidName)))
+			{
+				return false;
+			}
+
 			if (this.fullDict.ContainsKey (fullName) == false)
 			{
 				string fontName = fid.InternalFontName;
