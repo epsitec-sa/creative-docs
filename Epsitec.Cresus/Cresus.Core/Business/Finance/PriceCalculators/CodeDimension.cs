@@ -68,6 +68,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public static CodeDimension BuildCodeDimension(string name, string stringData)
 		{
+			name.ThrowIfNullOrEmpty ("name");
+			stringData.ThrowIfNullOrEmpty ("stringData");
+			
 			var values = stringData.Split (CodeDimension.valueSeparator);
 
 			return new CodeDimension (name, values);
