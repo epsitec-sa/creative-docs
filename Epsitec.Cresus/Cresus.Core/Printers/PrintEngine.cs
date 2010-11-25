@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core.Printers
 							if (zoom > 0)  // génère une miniature de la page ?
 							{
 								var port = new XmlPort (xPage);
-								page.Miniature = port.Deserialize (coreData, PrintEngine.GetImage, new Size (width, height), zoom);
+								page.Miniature = port.Deserialize (code => PrintEngine.GetImage (coreData, code), new Size (width, height), zoom);
 							}
 
 							section.Pages.Add (page);
@@ -495,11 +495,9 @@ namespace Epsitec.Cresus.Core.Printers
 			return jobs;
 		}
 
-		public static Image GetImage(object objectCoreData, string id)
+		public static Image GetImage(CoreData coreData, string id)
 		{
 			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
-			CoreData coreData = objectCoreData as CoreData;
-
 			var store = coreData.ImageDataStore;
 			var data = store.GetImageData (id);
 			return data.GetImage ();
