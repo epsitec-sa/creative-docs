@@ -290,6 +290,15 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private bool UpdateBitmap(bool force)
 		{
+			//	Met à jour le bitmap. Retourne true s'il l'a été.
+			if (this.Client.Bounds.Height <= 20)
+			{
+				//	Une hauteur <= 20 correspond à un widget non encore positionné par le système
+				//	de layout. Il ne sert à rien de générer un bitmap si petit, qui s'afficherait
+				//	complètement flou avant que le timer ne le régénère à la taille définitive !
+				return false;
+			}
+
 			return this.UpdateBitmap (force, this.Client.Bounds.Width * this.zoom);
 		}
 
