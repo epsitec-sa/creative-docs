@@ -1,7 +1,7 @@
 ﻿namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
-	internal enum RoundingMode
+	public enum RoundingMode
 	{
 
 

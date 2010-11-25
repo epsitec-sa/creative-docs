@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	internal sealed class NumericDimension : AbstractDimension
+	public sealed class NumericDimension : AbstractDimension
 	{
 
 
