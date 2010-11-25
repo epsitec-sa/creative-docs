@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Dessine la page à imprimer.
 			var xmlPort = new XmlPort (page.XRoot);
-			xmlPort.Deserialize (code => PrintEngine.GetImage (this.coreData, code), port);
+			xmlPort.Deserialize (id => PrintEngine.GetImage (this.coreData, id), port);
 
 			//	Cherche la page suivante.
 			this.pageIndex++;
