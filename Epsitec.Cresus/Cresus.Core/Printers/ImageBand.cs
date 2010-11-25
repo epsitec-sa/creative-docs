@@ -70,7 +70,19 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
 		public override bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
-			this.width = width;
+			if (this.image == null)
+			{
+				this.width = width;
+			}
+			else
+			{
+				double sx = width         / this.image.Width;
+				double sy = initialHeight / this.image.Height;
+				double scale = System.Math.Min (sx, sy);
+
+				this.width = this.image.Width * scale;
+			}
+
 			return true;
 		}
 

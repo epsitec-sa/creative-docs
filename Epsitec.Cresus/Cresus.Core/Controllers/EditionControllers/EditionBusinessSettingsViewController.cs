@@ -31,8 +31,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.BusinessSettings", "Réglages de l'entreprise");
 
-				this.CreateUIRelation (builder);
-				this.CreateUITax (builder);
+				this.CreateUIRelation  (builder);
+				this.CreateUITax       (builder);
+				this.CreateUISeparator (builder);
+				this.CreateUILogo      (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -45,6 +47,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                   Marshaler.Create (() => this.Entity.Tax.VatNumber, x => this.Entity.Tax.VatNumber = x));
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.Tax.TaxMode, x => this.Entity.Tax.TaxMode = x), Business.Enumerations.GetAllPossibleTaxModes (), x => TextFormatter.FormatText (x.Values[0]));
+		}
+
+		private void CreateUISeparator(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUIRelation(UIBuilder builder)
@@ -62,11 +71,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField ("Entreprise", controller);
 		}
 
-		private NewEntityReference CreateNewLegalPerson(DataContext context)
+		private void CreateUILogo(UIBuilder builder)
 		{
-			var person = context.CreateEntityAndRegisterAsEmpty<RelationEntity> ();
+			var controller = new SelectionController<ImageEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.CompanyLogo,
+				ValueSetter         = x => this.Entity.CompanyLogo = x,
+				ReferenceController = new ReferenceController (() => this.Entity.CompanyLogo),
 
-			return person;
+				ToTextArrayConverter     = x => x.GetEntityKeywords (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
+			};
+
+			builder.CreateAutoCompleteTextField ("Logo pour les documents imprimés", controller);
 		}
 	}
 }
