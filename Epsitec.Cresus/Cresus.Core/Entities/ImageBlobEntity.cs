@@ -35,13 +35,13 @@ namespace Epsitec.Cresus.Core.Entities
 				(
 					"Creation :  ",     this.CreationDate.ToString (), "\n",
 					"Modification :  ", this.LastModificationDate.ToString (), "\n",
-					"---\n",
+					"—\n",
 					"Utilisateur :  ",  builder.UserName, "\n",
 					"Ordinateur :  ",   builder.Host, "\n",
 					"Dossier :  ",      directory, "\n",
 					"Fichier :  ",      filename, "\n",
 					"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.Code), "\n",
-					"---\n",
+					"—\n",
 					"Dimensions :  ", this.PixelWidth.ToString (), "×", this.PixelHeight.ToString (), " pixels\n",
 					"Résolution :  ",   dpi.ToString (), " dpi\n",
 					"Profondeur :  ",   this.BitsPerPixel.ToString (), "bits"

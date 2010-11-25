@@ -831,6 +831,12 @@ namespace Epsitec.Cresus.Core
 			
 			finance.IsrDefs.Add (isrDef1);
 
+			var logo = this.DataContext.GetEntitiesOfType<ImageEntity> (x => x.Name == "CompanyLogo").FirstOrDefault ();
+			if (logo.IsNotNull ())
+			{
+				business.CompanyLogo = logo;
+			}
+
 			yield return business;
 		}
 
