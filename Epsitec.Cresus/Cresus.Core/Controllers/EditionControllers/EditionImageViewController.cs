@@ -144,17 +144,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			// builder.Query      == null
 			// builder.PortNumber == 0
 
-			string userName = System.Environment.UserName.ToLowerInvariant ();
-			string host     = System.Environment.MachineName.ToLowerInvariant ();
-
-			if (builder.Scheme   == "file"   &&
-				builder.UserName == userName &&
-				builder.Host     == host     )
+			if (builder.Scheme == "file")
 			{
 				string directory = System.IO.Path.GetDirectoryName (builder.Path);
 				string filename  = System.IO.Path.GetFileName      (builder.Path);
 
-				if (System.IO.Directory.Exists (directory))
+				string userName = System.Environment.UserName.ToLowerInvariant ();
+				string host     = System.Environment.MachineName.ToLowerInvariant ();
+
+				if (builder.UserName == userName &&
+					builder.Host     == host &&
+					System.IO.Directory.Exists (directory))
 				{
 					dialog.InitialDirectory = directory;
 				}
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			dialog.Title = "Importation d'une image bitmap";
 
-			dialog.Filters.Add ("image", "Image", "*.bmp;*.tif;*.png;*.jpg");
+			dialog.Filters.Add ("image", "Image", "*.bmp;*.tif;*.png;*.jpg;*.gif");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = false;
