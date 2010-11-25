@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.lastZoom = zoom;
 
 				var port = new XmlPort (page.XRoot);
-				this.bitmap = port.Deserialize (this.coreData, Printers.PrintEngine.GetImage, new Size (pageWidth, pageHeight), zoom);
+				this.bitmap = port.Deserialize (code => Printers.PrintEngine.GetImage (this.coreData, code), new Size (pageWidth, pageHeight), zoom);
 			}
 		}
 

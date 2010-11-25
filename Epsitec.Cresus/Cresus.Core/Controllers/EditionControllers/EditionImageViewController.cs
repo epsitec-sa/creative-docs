@@ -132,16 +132,34 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			//	Exemple de contenu pour uri:
 			//	"file://daniel@daniel-pc/C:/Users/Daniel/Documents/t.jpg"
-
 			var dialog = new FileOpenDialog ();
 
-			//?if (!string.IsNullOrEmpty (uri) && uri.StartsWith ("file://"))
-			if (false)  // TODO: ne marche pas !
-			{
-				uri = uri.Substring (7);
+			var builder = new Epsitec.Common.IO.UriBuilder (uri);
+			// builder.Scheme     == "file"
+			// builder.UserName   == "daniel"
+			// builder.Host       == "daniel-pc"
+			// builder.Path       == "C:/Users/Daniel/Documents/t.jpg"
+			// builder.Fragment   == null
+			// builder.Password   == null
+			// builder.Query      == null
+			// builder.PortNumber == 0
 
-				dialog.InitialDirectory = System.IO.Path.GetDirectoryName (uri);
-				dialog.FileName = System.IO.Path.GetFileName (uri);
+			string userName = System.Environment.UserName.ToLowerInvariant ();
+			string host     = System.Environment.MachineName.ToLowerInvariant ();
+
+			if (builder.Scheme   == "file"   &&
+				builder.UserName == userName &&
+				builder.Host     == host     )
+			{
+				string directory = System.IO.Path.GetDirectoryName (builder.Path);
+				string filename  = System.IO.Path.GetFileName      (builder.Path);
+
+				if (System.IO.Directory.Exists (directory))
+				{
+					dialog.InitialDirectory = directory;
+				}
+
+				dialog.FileName = filename;
 			}
 
 			dialog.Title = "Importation d'une image bitmap";

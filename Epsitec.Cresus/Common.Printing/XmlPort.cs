@@ -33,7 +33,7 @@ namespace Epsitec.Common.Printing
 
 
 		#region Deserialisation
-		public Bitmap Deserialize(object coreData, System.Func<object, string, Image> getImage, Size size, double zoom=1)
+		public Bitmap Deserialize(System.Func<string, Image> getImage, Size size, double zoom=1)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un bitmap.
 			//	coreData et getImage permettent de retrouver les images à partir d'identificateurs sérialisés.
@@ -47,16 +47,16 @@ namespace Epsitec.Common.Printing
 			graphics.TranslateTransform (0, height);
 			graphics.ScaleTransform (zoom, -zoom, 0, 0);
 
-			this.Deserialize (coreData, getImage, graphics);
+			this.Deserialize (getImage, graphics);
 
 			Bitmap bitmap = Bitmap.FromPixmap (graphics.Pixmap) as Bitmap;
 			return bitmap;
 		}
 
-		public void Deserialize(object coreData, System.Func<object, string, Image> getImage, IPaintPort dstPort)
+		public void Deserialize(System.Func<string, Image> getImage, IPaintPort dstPort)
 		{
 			//	Le résultat de la désérialisation est dessiné dans un port graphique.
-			System.Diagnostics.Debug.Assert (getImage != null && coreData != null);
+			System.Diagnostics.Debug.Assert (getImage != null);
 
 			this.baseTransform = dstPort.Transform;
 
@@ -99,10 +99,10 @@ namespace Epsitec.Common.Printing
 					double imageWidth   = (double) element.Attribute ("imageWidth");
 					double imageHeight  = (double) element.Attribute ("imageHeight");
 
-					if (getImage != null && coreData != null)
+					if (getImage != null)
 					{
 						//	Retrouve l'image à partir de l'identificateur sérialisé.
-						Image bitmap = getImage (coreData, id);
+						Image bitmap = getImage (id);
 
 						if (bitmap != null)
 						{
