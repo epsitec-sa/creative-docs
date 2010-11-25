@@ -160,18 +160,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public override string ConvertToString(object value)
+		public override string GetStringData()
 		{
-			if (!this.IsNearestValueDefined (value))
-			{
-				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
-			}
+			string mode = System.Enum.GetName (typeof (RoundingMode), this.RoundingMode);
 
-			return InvariantConverter.ConvertToString ((decimal) value);
-		}                                        
+			var values = this.values
+				.Select (v => InvariantConverter.ConvertToString (v));
+
+			return mode + NumericDimension.valueSeparator + string.Join (NumericDimension.valueSeparator, values);
+		}
 
 
+		public static NumericDimension BuildNumericDimension(string name, string stringData)
+		{
+			var splittedData = stringData.Split (NumericDimension.valueSeparator).ToList ();
+
+			var values = splittedData.Skip (1).Select (v => InvariantConverter.ConvertFromString<decimal> (v));
+			var mode = (RoundingMode) System.Enum.Parse (typeof (RoundingMode), splittedData.First ());
+
+			return new NumericDimension (name, values, mode);
+		}
+		
+		
 		private SortedSet<decimal> values;
+
+
+		private static readonly string valueSeparator = ";";
 
 
 	}
