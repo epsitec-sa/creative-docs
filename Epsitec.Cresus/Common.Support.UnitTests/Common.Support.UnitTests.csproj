@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\UnitTestEnumerableExtensions.cs" />
+    <Compile Include="Extensions\UnitTestStringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\UnitTestExceptionThrower.cs" />
     <Compile Include="Extensions\UnitTestEntityModifications.cs" />
