@@ -23,44 +23,18 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return TextFormatter.FormatText
 					(
-						"Nom :  ",          name, "\n",
-						"Description :  ",  desc
+						"Nom :  ",         name, "\n",
+						"Description :  ", desc
 					);
 			}
 			else
 			{
-				var builder = new Epsitec.Common.IO.UriBuilder (this.ImageBlob.FileUri);
-				// builder.Scheme     == "file"
-				// builder.UserName   == "daniel"
-				// builder.Host       == "daniel-pc"
-				// builder.Path       == "C:/Users/Daniel/Documents/t.jpg"
-				// builder.Fragment   == null
-				// builder.Password   == null
-				// builder.Query      == null
-				// builder.PortNumber == 0
-
-				string directory = System.IO.Path.GetDirectoryName (builder.Path);
-				string filename  = System.IO.Path.GetFileName      (builder.Path);
-
-				var dpi = System.Math.Ceiling (this.ImageBlob.Dpi);
-
 				return TextFormatter.FormatText
 					(
-						"Nom :  ",          name, "\n",
-						"Description :  ",  desc, "\n",
+						"Nom :  ",         name, "\n",
+						"Description :  ", desc, "\n",
 						"—\n",
-						"Creation :  ", this.ImageBlob.CreationDate.ToString (), "\n",
-						"Modification :  ", this.ImageBlob.LastModificationDate.ToString (), "\n",
-						"—\n",
-						"Utilisateur :  ",  builder.UserName, "\n",
-						"Ordinateur :  ",   builder.Host, "\n",
-						"Dossier :  ",      directory, "\n",
-						"Fichier :  ",      filename, "\n",
-						"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.ImageBlob.Code), "\n",
-						"—\n",
-						"Dimensions :  ",   this.ImageBlob.PixelWidth.ToString (), "×", this.ImageBlob.PixelHeight.ToString (), " pixels\n",
-						"Résolution :  ",   dpi.ToString (), " dpi\n",
-						"Profondeur :  ",   this.ImageBlob.BitsPerPixel.ToString (), "bits"
+						this.ImageBlob.GetSummary()
 					);
 			}
 		}
