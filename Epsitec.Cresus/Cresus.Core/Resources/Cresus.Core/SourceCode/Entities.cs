@@ -9608,6 +9608,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>CompanyLogo</c> field.
+		///	designer:fld/L0A6H/L0KK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0KK]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageEntity CompanyLogo
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KK]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.CompanyLogo;
+				if (oldValue != value)
+				{
+					this.OnCompanyLogoChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KK]", oldValue, value);
+					this.OnCompanyLogoChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnCompanyChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnCompanyChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
@@ -9615,6 +9637,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnFinanceChanged(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
 		partial void OnTaxChanging(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
 		partial void OnTaxChanged(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
+		partial void OnCompanyLogoChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
+		partial void OnCompanyLogoChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
