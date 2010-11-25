@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 	// TODO Add function to create a new "similar" table from a given one, plus or minus a
-	// dimension?
+	// dimension? And to clone it.
 	// Marc
 
 
