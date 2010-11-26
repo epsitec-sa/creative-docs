@@ -8,6 +8,8 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,9 +39,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateAuthenticatedUser()
 		{
 			//	Met à jour le nom de l'utilisateur dans le ruban.
-			Entities.SoftwareUserEntity user = CoreProgram.Application.UserManager.AuthenticatedUser;
+			var user = User.CurrentUser;
 
-			if (user == null)
+			if (user.IsNull ())
 			{
 				this.authenticateUserWidget.Text = null;
 
@@ -51,6 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
 			}
+
+			this.UdpateDatabaseButtonsForUser ();
 		}
 
 		
@@ -209,7 +213,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				HorizontalAlignment = HorizontalAlignment.Center,
 			};
 
-			var menuButton = new GlyphButton()
+			this.databaseMenuButton = new GlyphButton()
 			{
 				Parent = group,
 				ButtonStyle = ButtonStyle.ComboItem,
@@ -220,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (0, 0, -1, 0),
 			};
 
-			ToolTip.Default.SetToolTip (menuButton, "Montre une autre base de données...");
+			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
 
 			this.databaseButton = RibbonViewController.CreateButton (RibbonViewController.MenuDatabaseCommands.First ());
 			this.databaseButton.Parent = group;
@@ -229,17 +233,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (group);
 
-			menuButton.Clicked += delegate
+			this.databaseMenuButton.Clicked += delegate
 			{
-				this.ShowDatabasesMenu (menuButton);
+				this.ShowDatabasesMenu (this.databaseMenuButton);
 			};
 
-			menuButton.Entered += delegate
+			this.databaseMenuButton.Entered += delegate
 			{
 				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
 			};
 
-			menuButton.Exited += delegate
+			this.databaseMenuButton.Exited += delegate
 			{
 				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
 			};
@@ -247,8 +251,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			var databaseCommandHandler = RibbonViewController.DatabaseCommandHandler;
 			databaseCommandHandler.Changed += delegate
 			{
-				this.UpdateDatabaseButton (databaseCommandHandler);
+				this.UpdateDatabaseButton ();
 			};
+
+			this.UdpateDatabaseButtonsForUser ();
 		}
 
 		private void CreateRibbonStateSection()
@@ -399,16 +405,32 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					Parent = frame,
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredHeight = 6+6,
+					PreferredHeight = 12,
 					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, 0, -6, 0),
+					Margins = new Margins (0, 0, -2, 0),
 				};
 			}
 		}
 
 
-		#region Databases menu
+		#region Databases manager
+		private void UdpateDatabaseButtonsForUser()
+		{
+			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
+			var list = RibbonViewController.MenuDatabaseCommands;
+			int count = list.Count ();
+
+			this.databaseButton.Visibility = (count > 0);
+			this.databaseMenuButton.Visibility = (count > 1);
+
+			if (count > 0)
+			{
+				this.databaseButton.CommandObject = list.First ();
+				this.UpdateDatabaseButton ();
+			}
+		}
+
 		private void ShowDatabasesMenu(Widget parentButton)
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
@@ -435,15 +457,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			menu.Items.Add (item);
 		}
 
-		private void UpdateDatabaseButton(CommandHandlers.DatabaseCommandHandler databaseCommandHandler)
+		private void UpdateDatabaseButton()
 		{
 			//	Met à jour le bouton qui surplombe le bouton du menu, en fonction de la base sélectionnée.
-			var name = databaseCommandHandler.SelectedDatabaseCommandName;
-			var cmd = RibbonViewController.MenuDatabaseCommands.Where (x => x.Name == name).FirstOrDefault ();
+			var selectedCommand = RibbonViewController.SelectedDatabaseCommand;
 
-			if (cmd != null)
+			if (selectedCommand != null)
 			{
-				this.databaseButton.CommandObject = cmd;
+				this.databaseButton.CommandObject = selectedCommand;
+			}
+		}
+
+		private static Command SelectedDatabaseCommand
+		{
+			//	Retourne la commande correspondant à la base sélectionnée.
+			get
+			{
+				var name = RibbonViewController.SelectedDatabaseCommandName;
+				return RibbonViewController.MenuDatabaseCommands.Where (x => x.Name == name).FirstOrDefault ();
+			}
+		}
+
+		private static string SelectedDatabaseCommandName
+		{
+			//	Retourne le nom de la commande correspondant à la base sélectionnée.
+			get
+			{
+				var databaseCommandHandler = RibbonViewController.DatabaseCommandHandler;
+				return databaseCommandHandler.SelectedDatabaseCommandName;
 			}
 		}
 
@@ -460,12 +501,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		private static IEnumerable<Command> MenuDatabaseCommands
 		{
 			//	Liste des commandes des bases de données d'usage peu fréquent accessibles via le menu.
+			//	Cette liste dépend de l'utilisateur identifié.
 			get
 			{
-				yield return Res.Commands.Base.ShowBusinessSettings;
-				yield return Res.Commands.Base.ShowImages;
-				yield return Res.Commands.Base.ShowImageBlobs;
-				yield return Res.Commands.Base.ShowWorkflowDefinitions;
+				if (User.IsAdministratorUser () ||
+					User.IsDeveloperUser())
+				{
+					yield return Res.Commands.Base.ShowBusinessSettings;
+					yield return Res.Commands.Base.ShowImages;
+					yield return Res.Commands.Base.ShowImageBlobs;
+					yield return Res.Commands.Base.ShowWorkflowDefinitions;
+				}
+				else
+				{
+					yield return Res.Commands.Base.ShowImages;
+				}
 			}
 		}
 		#endregion
@@ -535,5 +585,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private RibbonPage						ribbonPageHome;
 		private StaticText						authenticateUserWidget;
 		private IconButton						databaseButton;
+		private GlyphButton						databaseMenuButton;
 	}
 }
