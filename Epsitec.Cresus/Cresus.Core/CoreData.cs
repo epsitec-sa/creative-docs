@@ -616,9 +616,30 @@ namespace Epsitec.Cresus.Core
 			user.LoginName = userLogin;
 			user.UserGroups.Add (group);
 			user.SetPassword (userPassword);
+
+			FormattedText[] p = displayName.Split (" ");
+			if (p.Length == 2)
+			{
+				var person = this.SearchNaturalPerson (p[0].ToString (), p[1].ToString ());
+				if (person.IsNotNull ())
+				{
+					user.Person = person;
+				}
+			}
 			
 			return user;
 		}
+
+		private NaturalPersonEntity SearchNaturalPerson(string firstName, string lastName)
+		{
+			var example = new NaturalPersonEntity ();
+			example.Firstname = firstName;
+			example.Lastname = lastName;
+
+			return this.DataContext.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
+		}
+
+
 
 		private void ReloadDatabase()
 		{

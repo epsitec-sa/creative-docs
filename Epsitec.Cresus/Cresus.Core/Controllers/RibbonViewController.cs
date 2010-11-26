@@ -44,12 +44,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (user.IsNull ())
 			{
+				this.authenticateUserButton.ImageEntity = null;
 				this.authenticateUserWidget.Text = null;
 
 				ToolTip.Default.HideToolTipForWidget (this.authenticateUserWidget);
 			}
 			else
 			{
+				this.authenticateUserButton.ImageEntity = user.Person.Photo;
 				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
 
 				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
@@ -398,7 +400,12 @@ namespace Epsitec.Cresus.Core.Controllers
 					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
 				};
 
-				frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowUserManager));
+				this.authenticateUserButton = RibbonViewController.CreateUserButton (Res.Commands.Global.ShowUserManager);
+				this.authenticateUserButton.CoreData = this.Orchestrator.Data;
+				this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+				this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
+
+				frame.Children.Add (this.authenticateUserButton);
 
 				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
 				//	pour permettre d'afficher un nom d'utilisateur lisible.
@@ -582,6 +589,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 			}
 		}
+
+		private static UserButton CreateUserButton(Command command)
+		{
+			double buttonWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth);
+
+			var button = new UserButton
+			{
+				CommandObject = command,
+				PreferredSize = new Size (buttonWidth, buttonWidth),
+				Dock = DockStyle.StackBegin,
+				Name = (command == null) ? null : command.Name,
+				VerticalAlignment = VerticalAlignment.Top,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				AutoFocus = false,
+			};
+
+			return button;
+		}
 		
 		private static double GetButtonWidth(int dx)
 		{
@@ -595,8 +620,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
-		private StaticText						authenticateUserWidget;
+
 		private IconButton						databaseButton;
 		private GlyphButton						databaseMenuButton;
+
+		private UserButton						authenticateUserButton;
+		private StaticText						authenticateUserWidget;
 	}
 }
