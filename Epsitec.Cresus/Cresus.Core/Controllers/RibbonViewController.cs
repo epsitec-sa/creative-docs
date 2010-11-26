@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.authenticateUserButton.ImageEntity = null;
 				this.authenticateUserWidget.Text = null;
 
+				ToolTip.Default.HideToolTipForWidget (this.authenticateUserButton);
 				ToolTip.Default.HideToolTipForWidget (this.authenticateUserWidget);
 			}
 			else
@@ -54,6 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.authenticateUserButton.ImageEntity = user.Person.Photo;
 				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
 
+				ToolTip.Default.SetToolTip (this.authenticateUserButton, user.ShortDescription);
 				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
 			}
 

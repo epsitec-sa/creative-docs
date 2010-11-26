@@ -61,18 +61,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public string IconUri
-		{
-			get
-			{
-				return this.iconUri;
-			}
-			set
-			{
-				this.iconUri = value;
-			}
-		}
-
 		public Size IconPreferredSize
 		{
 			get
@@ -93,7 +81,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.imageEntity.IsNull ())
 			{
-				this.iconLayout.Text = IconButton.GetSourceForIconText (this.iconUri, this.iconPreferredSize, null, null);
+				this.iconLayout.Text = IconButton.GetSourceForIconText (this.IconUri, this.iconPreferredSize, null, null);
 				this.iconLayout.LayoutSize = this.Client.Bounds.Size;
 				this.iconLayout.Paint (Point.Zero, graphics);
 			}
@@ -136,7 +124,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private CoreData			coreData;
 		private ImageEntity			imageEntity;
 		private Image				image;
-		private string				iconUri;
 		private Size				iconPreferredSize;
 		private TextLayout			iconLayout;
 	}
