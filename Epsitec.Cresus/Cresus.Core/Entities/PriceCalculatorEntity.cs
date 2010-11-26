@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 
 using Epsitec.Cresus.Core.Helpers;
@@ -25,9 +26,8 @@ namespace Epsitec.Cresus.Core.Entities
 		// Marc
 
 
-		// TODO What to do in the case where an enum parameter can have no value and when an enum
-		// parameter can have multiple values? These case are not implemented and the application
-		// will horribly die in that case.
+		// TODO What to do in the case where an enum parameter can have multiple values? For now, the
+		// application will horribly die in that case.
 		// Marc
 
 
@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 			// of parameter that will actually be used in the computation of the price.
 
 			var parameterDefinitions = articleItem.ArticleDefinition.ArticleParameterDefinitions;
+
 			var parameterStringValues = ArticleParameterHelper.GetArticleParametersValues (articleItem);
 
 			var parameterCodesToValues = new Dictionary<string, object> ();
@@ -68,7 +69,18 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 				else if (parameterDefinition is EnumValueArticleParameterDefinitionEntity)
 				{
-					parameterObjectValue = parameterStringValue;
+					switch (((EnumValueArticleParameterDefinitionEntity) parameterDefinition).Cardinality)
+					{
+						case EnumValueCardinality.ExactlyOne:
+							parameterObjectValue = parameterStringValue;
+							break;
+
+						case EnumValueCardinality.ZeroOrOne:
+						case EnumValueCardinality.Any:
+						case EnumValueCardinality.AtLeastOne:
+						default:
+							throw new System.NotImplementedException ();
+					}
 				}
 				else
 				{
@@ -133,7 +145,20 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			string name = parameter.Code;
 
-			string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
+			string[] values;
+			
+			switch (parameter.Cardinality)
+            {
+            	case EnumValueCardinality.ExactlyOne:
+					values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
+            		break;
+
+				case EnumValueCardinality.ZeroOrOne:
+				case EnumValueCardinality.Any:
+				case EnumValueCardinality.AtLeastOne:
+				default:
+					throw new System.NotImplementedException ();
+            }
 
 			return new CodeDimension (name, values);
 		}

@@ -1,13 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Epsitec.Cresus.Database;
+﻿using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
+using Epsitec.Cresus.Core.Controllers.ArticleParameterControllers;
+
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System.Collections.Generic;
+
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Common.Types;
-using Epsitec.Cresus.Core.Controllers.ArticleParameterControllers;
 
 
 namespace Epsitec.Cresus.Core.Entities
@@ -67,9 +71,9 @@ namespace Epsitec.Cresus.Core.Entities
 						var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
 						NumericDimension dimension1 = PriceCalculatorEntity.CreateDimension (articleParameter1, RoundingMode.Up);
 						DimensionTable priceTable1 = new DimensionTable (dimension1);
-						foreach (decimal d in dimension1.Values.Cast<decimal> ())
+						foreach (object o in dimension1.Values)
 						{
-							priceTable1[d] = value;
+							priceTable1[o] = value;
 							value++;
 						}
 						priceCalculator1.SetPriceTable (priceTable1);
@@ -78,9 +82,9 @@ namespace Epsitec.Cresus.Core.Entities
 						var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
 						CodeDimension dimension2 = PriceCalculatorEntity.CreateDimension (articleParameter2);
 						DimensionTable priceTable2 = new DimensionTable (dimension2);
-						foreach (string s in dimension2.Values.Cast<string> ())
+						foreach (object o in dimension2.Values)
 						{
-							priceTable2[s] = value;
+							priceTable2[o] = value;
 							value++;
 						}
 						priceCalculator2.SetPriceTable (priceTable2);
@@ -90,28 +94,27 @@ namespace Epsitec.Cresus.Core.Entities
 						NumericDimension dimension3a = PriceCalculatorEntity.CreateDimension (articleParameter1, RoundingMode.Down);
 						CodeDimension dimension3b = PriceCalculatorEntity.CreateDimension (articleParameter2);
 						DimensionTable priceTable3 = new DimensionTable (dimension3a, dimension3b);
-						foreach (decimal d in dimension3a.Values.Cast<decimal> ())
+						foreach (object o1 in dimension3a.Values)
 						{
-							foreach (string s in dimension3b.Values.Cast<string> ())
+							foreach (object o2 in dimension3b.Values)
 							{
-								priceTable3[d, s] = value;
+								priceTable3[o1, o2] = value;
 								value++;
 							}
 						}
 						priceCalculator3.SetPriceTable (priceTable3);
 						articlePrice.PriceCalculators.Add (priceCalculator3);
 
-						var articleItem = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
-
-						var parameterValues = new string[] { "p1", "1.5", "p2", "2" };
-						articleItem.ArticleDefinition = articleDefinition;
-
-						// TODO Find a better was to obtain this string. This might mean that the
-						// parameter join logic must be rewritten in a central location, because it
-						// seems it isn't yet. Seems like a code smell to me.
+						// TODO Find a better was to obtain the string for the parameter values. This
+						// might mean that the parameter join logic must be rewritten in a central
+						// location, because it seems it isn't yet. Seems like a code smell to me.
 						// Marc
 
-						articleItem.ArticleParameters = string.Join (AbstractArticleParameterController.Separator, parameterValues);
+						var articleItem1 = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
+						articleItem1.ArticleDefinition = articleDefinition;
+
+						var parameterValues1 = new string[] { "p1", "1.5", "p2", "2" };
+						articleItem1.ArticleParameters = string.Join (AbstractArticleParameterController.Separator, parameterValues1);
 
 						dataContext.SaveChanges ();
 					}
