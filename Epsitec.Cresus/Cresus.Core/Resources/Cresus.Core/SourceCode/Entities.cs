@@ -815,6 +815,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Photo</c> field.
+		///	designer:fld/L0AN/L0KL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0KL]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageEntity Photo
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KL]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.Photo;
+				if (oldValue != value)
+				{
+					this.OnPhotoChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KL]", oldValue, value);
+					this.OnPhotoChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnTitleChanging(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
 		partial void OnTitleChanged(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
@@ -826,6 +848,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnGenderChanged(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPhotoChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
+		partial void OnPhotoChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
