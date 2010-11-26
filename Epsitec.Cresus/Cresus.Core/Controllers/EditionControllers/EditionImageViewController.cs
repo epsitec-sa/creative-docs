@@ -39,7 +39,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIImport   (builder);
 				this.CreateUIMain     (builder);
-				//?this.CreateUIBlob     (builder);
 				this.CreateUIGroup    (builder);
 				this.CreateUICategory (builder);
 
@@ -55,12 +54,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
-			var button = builder.CreateButton (tile, 0, null, "Importer une image...");
+			var importButton = builder.CreateButton (tile, 0, null, "Importer une image...");
+			ToolTip.Default.SetToolTip (importButton, "Importe l'image à partir d'un fichier BMP, TIF, PNG, JPG ou GIF");
 
-			button.Clicked += delegate
+			importButton.Clicked += delegate
 			{
-				this.Import ();
+				this.ImportImage ();
 			};
+
+			if (this.HasUpdateImageButton)
+			{
+				var updateButton = builder.CreateButton (tile, 0, null, "Mettre à jour l'image");
+				ToolTip.Default.SetToolTip (updateButton, "Met à jour l'image si le fichier a changé");
+
+				updateButton.Clicked += delegate
+				{
+					this.UpdateImage ();
+				};
+			}
 		}
 
 		private void CreateUIMain(UIBuilder builder)
@@ -69,18 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
-		}
-
-		private void CreateUIBlob(UIBuilder builder)
-		{
-			var controller = new SelectionController<ImageBlobEntity> (this.BusinessContext)
-			{
-				ValueGetter         = () => this.Entity.ImageBlob,
-				ValueSetter         = x => this.Entity.ImageBlob = x,
-				ReferenceController = new ReferenceController (() => this.Entity.ImageBlob, creator: this.CreateNewBlob),
-			};
-
-			builder.CreateAutoCompleteTextField ("Image bitmap", controller);
 		}
 
 		private void CreateUIGroup(UIBuilder builder)
@@ -118,13 +117,40 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private void Import()
+		private bool HasUpdateImageButton
+		{
+			get
+			{
+				if (this.Entity.ImageBlob.IsNull ())
+				{
+					return false;
+				}
+
+				var builder = new Epsitec.Common.IO.UriBuilder (this.Entity.ImageBlob.FileUri);
+
+				string userName = System.Environment.UserName.ToLowerInvariant ();
+				string host     = System.Environment.MachineName.ToLowerInvariant ();
+
+				return (builder.UserName == userName &&
+						builder.Host     == host &&
+						System.IO.File.Exists (builder.Path));
+			}
+		}
+
+		private void UpdateImage()
+		{
+			var builder = new Epsitec.Common.IO.UriBuilder (this.Entity.ImageBlob.FileUri);
+
+			this.ImportImage (builder.Path);
+		}
+
+		private void ImportImage()
 		{
 			var filename = this.OpenFileDialog (CoreProgram.Application, this.Entity.ImageBlob.FileUri);
 
 			if (!string.IsNullOrWhiteSpace (filename))
 			{
-				this.Import (filename);
+				this.ImportImage (filename);
 			}
 		}
 
@@ -178,7 +204,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return dialog.FileName;
 		}
 
-		private void Import(string filename)
+		private void ImportImage(string filename)
 		{
 			var file = new System.IO.FileInfo (filename);
 			var store = this.Data.ImageDataStore;
