@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = footer,
 					Text = "Gérer les comptes",
 					PreferredWidth = 100,
-					Visibility = !this.softwareStartup && LoginDialog.IsAdministratorUser (this.initialUser),
+					Visibility = !this.softwareStartup && User.IsAdministratorUser (this.initialUser),
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 10, 0, 0),
 					TabIndex = tabIndex++,
@@ -419,17 +419,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private static bool IsAdministratorUser(SoftwareUserEntity user)
-		{
-			if (user == null)
-			{
-				return false;
-			}
-			else
-			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.Administrator).Count () > 0;
-			}
-		}
 
 
 		private static FrameBox CreateContainer(Widget parent, FormattedText number, FormattedText text)
