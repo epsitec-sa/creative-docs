@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateDatabaseHack()
 		{
+			ImageEntity[] images = this.InsertImagesInDatabase ().ToArray ();
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
 			ContactGroupEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
@@ -37,11 +38,10 @@ namespace Epsitec.Cresus.Core
 			TelecomTypeEntity[] telecomTypes = this.InsertTelecomTypesInDatabase ().ToArray ();
 			PersonTitleEntity[] personTitles = this.InsertPersonTitlesInDatabase ().ToArray ();
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
-			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
+			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders, images).ToArray ();
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
 			UnitOfMeasureEntity[] units = this.InsertUnitsOfMeasureInDatabase ().ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
-			ImageEntity[] images = this.InsertImagesInDatabase ().ToArray ();
 			PaymentModeEntity[] paymentDefs = this.InsertPaymentModesInDatabase ().ToArray ();
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactGroupEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
+		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactGroupEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders, IEnumerable<ImageEntity> images)
 		{
 			LegalPersonEntity companyEpsitec = this.DataContext.CreateEntity<LegalPersonEntity> ();
 			LegalPersonEntity companyMigros  = this.DataContext.CreateEntity<LegalPersonEntity> ();
@@ -336,12 +336,14 @@ namespace Epsitec.Cresus.Core
 			personPA.Contacts.Add (telecomPA3);
 			personPA.Contacts.Add (uriPA1);
 			personPA.Contacts.Add (uriPA2);
+			personPA.Photo = images.Where (x => x.Name == "PA").FirstOrDefault ();
 			
 			// personDR
 
 			personDR.Firstname = "Daniel";
 			personDR.Lastname  = "Roux";
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
+			personDR.Photo = images.Where (x => x.Name == "DR").FirstOrDefault ();
 
 			yield return personPA;
 			yield return personDR;
