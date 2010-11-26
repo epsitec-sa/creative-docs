@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -13,12 +15,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	{
 		
 		
-		public CodeDimension(string name, IEnumerable<string> values)
+		public CodeDimension(string name, bool isNullable, IEnumerable<string> values)
 			: base (name)
 		{
 			values.ThrowIfNull ("values");
 			values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
 			values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
+
+			this.IsNullable = isNullable;
 
 			this.values = new SortedSet<string> (values);
 
@@ -26,11 +30,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public bool IsNullable
+		{
+			get;
+			private set;
+		}
+
+
 		public override IEnumerable<object> Values
 		{
 			get
 			{
-				return this.values.Cast<object> ();
+				var values = this.values.Cast<object> ();
+
+				if (this.IsNullable)
+				{
+					values = values.Append (CodeDimension.NullValue);
+				}
+
+				return values;
 			}
 		}
 
@@ -39,7 +57,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			value.ThrowIfNull ("value");
 
-			return (value is string) && this.values.Contains ((string) value);
+			return (this.IsNullable && value == CodeDimension.NullValue)
+				|| ((value is string) && this.values.Contains ((string) value));
 		}
 
 
@@ -62,18 +81,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public override string GetStringData()
 		{
-			return string.Join (CodeDimension.valueSeparator, this.values);
+			string isNullable = InvariantConverter.ConvertToString (this.IsNullable);
+
+			return isNullable + CodeDimension.valueSeparator + string.Join (CodeDimension.valueSeparator, this.values);
 		}
 
 
+		public static object NullValue
+		{
+			get
+			{
+				return CodeDimension.nullValue;
+			}
+		}
+		
+		
 		public static CodeDimension BuildCodeDimension(string name, string stringData)
 		{
 			name.ThrowIfNullOrEmpty ("name");
 			stringData.ThrowIfNullOrEmpty ("stringData");
-			
-			var values = stringData.Split (CodeDimension.valueSeparator);
 
-			return new CodeDimension (name, values);
+			var splittedData = stringData.Split (CodeDimension.valueSeparator).ToList ();
+
+			bool isNullable = InvariantConverter.ConvertFromString<bool> (splittedData.First ());
+			var values = splittedData.Skip (1);
+
+			return new CodeDimension (name, isNullable, values);
 		}
 
 
@@ -81,6 +114,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		private static readonly string valueSeparator = ";";
+
+
+		private static readonly object nullValue = new object ();
 
 
 	}
