@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
 
-			this.databaseButton = RibbonViewController.CreateButton (RibbonViewController.MenuDatabaseCommands.First ());
+			this.databaseButton = RibbonViewController.CreateButton (null);
 			this.databaseButton.Parent = group;
 			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
 			this.databaseButton.Dock = DockStyle.Fill;
@@ -501,18 +501,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		private static IEnumerable<Command> MenuDatabaseCommands
 		{
 			//	Liste des commandes des bases de données d'usage peu fréquent accessibles via le menu.
-			//	Cette liste dépend de l'utilisateur identifié.
+			//	Cette liste dépend de l'utilisateur identifié. Elle peut très bien être vide.
 			get
 			{
 				if (User.IsAdministratorUser () ||
-					User.IsDeveloperUser())
+					User.IsDeveloperUser ())
 				{
 					yield return Res.Commands.Base.ShowBusinessSettings;
 					yield return Res.Commands.Base.ShowImages;
 					yield return Res.Commands.Base.ShowImageBlobs;
 					yield return Res.Commands.Base.ShowWorkflowDefinitions;
 				}
-				else
+				else if (User.IsPowerUserUser ())
 				{
 					yield return Res.Commands.Base.ShowImages;
 				}
@@ -549,7 +549,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					PreferredIconSize = new Size (dx.Value, dx.Value),
 					PreferredSize = new Size (buttonWidth, buttonWidth),
 					Dock = dockStyle,
-					Name = command.Name,
+					Name = (command == null) ? null : command.Name,
 					VerticalAlignment = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
 					AutoFocus = false,
@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					PreferredIconSize = new Size (dx.Value, dx.Value),
 					PreferredSize = new Size (buttonWidth, buttonWidth),
 					Dock = dockStyle,
-					Name = command.Name,
+					Name = (command == null) ? null : command.Name,
 					VerticalAlignment = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
 					AutoFocus = false,
