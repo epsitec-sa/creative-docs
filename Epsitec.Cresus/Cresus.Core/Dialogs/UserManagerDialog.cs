@@ -233,6 +233,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 				ToolTip.Default.SetToolTip (this.displayNameField, "Prénom et nom du possesseur du compte.<br/>Exemples: \"Jean-Paul van Decker\" ou \"Sophie Duval\"");
 
 
+				new StaticText
+				{
+					Parent = this.userBox,
+					Text = "Personne physique correspondante :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.personField = new TextFieldCombo
+				{
+					Parent = this.userBox,
+					IsReadOnly = true,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 10),
+					TabIndex = tabIndex++,
+				};
+
+				ToolTip.Default.SetToolTip (this.personField, "Personne physique correspondant à cet utilisateur");
+
+
 				this.authenticationMethodCheckButton = new CheckButton
 				{
 					Parent = this.userBox,
@@ -498,6 +518,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
+			this.personField.ComboOpening += delegate
+			{
+				this.NaturalPersonUpdateMenu ();
+			};
+
+			this.personField.ComboClosed += delegate
+			{
+				this.NaturalPersonChanged ();
+			};
+
+
 			this.newPasswordField1.EditionAccepted += delegate
 			{
 				this.ActionPasswordChanged ();
@@ -692,6 +723,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.loginNameField.Text = null;
 				this.displayNameField.Text = null;
+				this.personField.Text = null;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 				this.beginDateField.Text = null;
@@ -711,6 +743,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.loginNameField.Text = user.LoginName;
 				this.displayNameField.FormattedText = user.DisplayName;
+				this.personField.FormattedText = this.NaturalPersonDescription (user);
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 				this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
@@ -758,6 +791,55 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.acceptButton.Enable = message == null && this.editionStarted == false;
 		}
+
+
+		#region Natural person manager
+		private void NaturalPersonUpdateMenu()
+		{
+			this.personField.Items.Clear ();
+
+			this.personField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
+
+			var example = new NaturalPersonEntity ();
+			//	L'exemple reste vide; on obtient donc toutes les personnes physiques.
+			//	TODO: Par la suite, il faudra se limiter aux employés, mais cette notion n'existe pas pour l'instant.
+			this.naturalPersonEntities = this.manager.CoreData.DataContext.GetByExample<NaturalPersonEntity> (example).ToList ();
+
+			foreach (var person in this.naturalPersonEntities)
+			{
+				this.personField.Items.Add (person.GetCompactSummary ());
+			}
+		}
+
+		private void NaturalPersonChanged()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			int sel = this.personField.SelectedItemIndex - 1;
+
+			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
+			{
+				user.Person = this.naturalPersonEntities[sel];
+			}
+			else
+			{
+				user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
+			}
+
+			this.naturalPersonEntities = null;
+		}
+
+		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
+		{
+			if (user.Person.IsNotNull ())
+			{
+				return user.Person.GetCompactSummary ();
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		private void AddAction()
@@ -1133,6 +1215,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private FrameBox									userBox;
 		private TextFieldEx									loginNameField;
 		private TextFieldEx									displayNameField;
+		private TextFieldCombo								personField;
 		private CheckButton									disableUserCheckButton;
 		private CheckButton									authenticationMethodCheckButton;
 		private TextFieldEx									beginDateField;
@@ -1144,5 +1227,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										acceptButton;
 		private Button										cancelButton;
 		private bool										editionStarted;
+		private List<NaturalPersonEntity>					naturalPersonEntities;
 	}
 }

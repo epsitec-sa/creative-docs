@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Ce widget affiche une icône, selon IconUri et IconPreferredSize, ou une image selon ImageEntity.
+	/// </summary>
 	public class UserButton : Button
 	{
 		public UserButton()

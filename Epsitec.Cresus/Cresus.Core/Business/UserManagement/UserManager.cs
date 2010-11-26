@@ -24,6 +24,15 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		public CoreData CoreData
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+
 		/// <summary>
 		/// Gets the authenticated user.
 		/// </summary>

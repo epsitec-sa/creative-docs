@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var section = new RibbonSection (this.ribbonPageHome)
 			{
 				Name = "User",
-				Title = "Login",
+				Title = "Identité",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
 			};
