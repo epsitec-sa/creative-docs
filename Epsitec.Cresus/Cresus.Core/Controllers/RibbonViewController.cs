@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.ribbonPageHome = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
 
+			this.CreateRibbonUserSection ();
 			this.CreateRibbonEditSection ();
 			this.CreateRibbonClipboardSection ();
 			this.CreateRibbonFontSection ();
@@ -94,6 +95,46 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonStateSection ();
 			this.CreateRibbonSettingsSection ();
 			this.CreateRibbonNavigationSection ();
+		}
+
+		private void CreateRibbonUserSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "User",
+				Title = "Login",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
+			};
+
+			{
+				var frame = new FrameBox
+				{
+					Parent = section,
+					Dock = DockStyle.StackBegin,
+					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+				};
+
+				this.authenticateUserButton = RibbonViewController.CreateUserButton (Res.Commands.Global.ShowUserManager);
+				this.authenticateUserButton.CoreData = this.Orchestrator.Data;
+				this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+				this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
+
+				frame.Children.Add (this.authenticateUserButton);
+
+				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
+				//	pour permettre d'afficher un nom d'utilisateur lisible.
+				this.authenticateUserWidget = new StaticText
+				{
+					Parent = frame,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					PreferredHeight = 12,
+					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+					Dock = DockStyle.Stacked,
+					Margins = new Margins (0, 0, -2, 0),
+				};
+			}
 		}
 
 		private void CreateRibbonEditSection()
@@ -390,35 +431,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.MultilingualEdition));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowSettings));
-
-			{
-				var frame = new FrameBox
-				{
-					Parent = section,
-					Dock = DockStyle.StackBegin,
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
-				};
-
-				this.authenticateUserButton = RibbonViewController.CreateUserButton (Res.Commands.Global.ShowUserManager);
-				this.authenticateUserButton.CoreData = this.Orchestrator.Data;
-				this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
-				this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
-
-				frame.Children.Add (this.authenticateUserButton);
-
-				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
-				//	pour permettre d'afficher un nom d'utilisateur lisible.
-				this.authenticateUserWidget = new StaticText
-				{
-					Parent = frame,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredHeight = 12,
-					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
-					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, 0, -2, 0),
-				};
-			}
 		}
 
 
