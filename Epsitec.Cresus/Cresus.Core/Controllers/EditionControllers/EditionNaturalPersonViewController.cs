@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIFirstnameAndLastname (builder);
 				this.CreateUIGender (builder);
 				this.CreateUIBirthDate (builder);
+				this.CreateUIPhoto (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -78,6 +79,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
 		}
+
+		private void CreateUIPhoto(UIBuilder builder)
+		{
+			var controller = new SelectionController<ImageEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Photo,
+				ValueSetter         = x => this.Entity.Photo = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Photo),
+
+				ToTextArrayConverter     = x => x.GetEntityKeywords (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
+			};
+
+			builder.CreateAutoCompleteTextField ("Photo d'identité", controller);
+		}
+
 
 		private NewEntityReference CreateNewTitle(DataContext context)
 		{

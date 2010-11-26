@@ -509,11 +509,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				bool devel = User.HasLevelUser (UserPowerLevel.Developer);
 				bool power = User.HasLevelUser (UserPowerLevel.PowerUser);
 
-				if (admin || devel)
-				{
-					yield return Res.Commands.Base.ShowBusinessSettings;
-				}
-
 				if (admin || devel || power)
 				{
 					yield return Res.Commands.Base.ShowImages;
@@ -522,6 +517,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (admin || devel)
 				{
 					yield return Res.Commands.Base.ShowImageBlobs;
+				}
+
+				if (admin || devel)
+				{
+					yield return Res.Commands.Base.ShowBusinessSettings;
 				}
 
 				if (devel)
