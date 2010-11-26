@@ -52,6 +52,24 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static bool IsPowerUserUser()
+		{
+			return User.IsPowerUserUser (User.CurrentUser);
+		}
+
+		public static bool IsPowerUserUser(SoftwareUserEntity user)
+		{
+			if (user.IsNull ())
+			{
+				return false;
+			}
+			else
+			{
+				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.PowerUser).Count () > 0;
+			}
+		}
+
+
 		public static SoftwareUserEntity CurrentUser
 		{
 			get
