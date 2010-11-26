@@ -270,6 +270,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				return 0;
 			}
 
+			decimal unitPrice = this.ComputeTotalUnitPriceBeforeTax (articlePrice);
+
 			if (articlePrice.ValueIncludesTaxes)
 			{
 				//	Use a dummy amount to compute the taxes, just so that we can have the
@@ -277,13 +279,26 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				//	the same code :
 
 				Tax tax = this.ComputeTax (1000);
-				return tax.ComputeAmountBeforeTax (articlePrice.Value);
+				return tax.ComputeAmountBeforeTax (unitPrice);
 			}
 			else
 			{
-				return articlePrice.Value;
+				return unitPrice;
 			}
 		}
+
+		private decimal ComputeTotalUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
+		{
+			decimal totalPrice = articlePrice.Value;
+
+			foreach (PriceCalculatorEntity pce in articlePrice.PriceCalculators)
+			{
+				totalPrice += pce.Compute (this.articleItem);
+			}
+
+			return totalPrice;
+		}
+
 
 		private Tax ComputeTax(decimal articleValue)
 		{

@@ -182,6 +182,7 @@
     <Compile Include="Entities\ImageGroupEntity.cs" />
     <Compile Include="Entities\ImageEntity.cs" />
     <Compile Include="Entities\IDataHashExtension.cs" />
+    <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
