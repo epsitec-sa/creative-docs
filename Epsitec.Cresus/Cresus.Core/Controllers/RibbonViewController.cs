@@ -7,8 +7,9 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
-
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -504,17 +505,28 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Cette liste dépend de l'utilisateur identifié. Elle peut très bien être vide.
 			get
 			{
-				if (User.IsAdministratorUser () ||
-					User.IsDeveloperUser ())
+				bool admin = User.HasLevelUser (UserPowerLevel.Administrator);
+				bool devel = User.HasLevelUser (UserPowerLevel.Developer);
+				bool power = User.HasLevelUser (UserPowerLevel.PowerUser);
+
+				if (admin || devel)
 				{
 					yield return Res.Commands.Base.ShowBusinessSettings;
-					yield return Res.Commands.Base.ShowImages;
-					yield return Res.Commands.Base.ShowImageBlobs;
-					yield return Res.Commands.Base.ShowWorkflowDefinitions;
 				}
-				else if (User.IsPowerUserUser ())
+
+				if (admin || devel || power)
 				{
 					yield return Res.Commands.Base.ShowImages;
+				}
+
+				if (admin || devel)
+				{
+					yield return Res.Commands.Base.ShowImageBlobs;
+				}
+
+				if (devel)
+				{
+					yield return Res.Commands.Base.ShowWorkflowDefinitions;
 				}
 			}
 		}

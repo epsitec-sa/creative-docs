@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Core
 {
 	public static class User
 	{
-		public static bool IsAdministratorUser()
+		public static bool HasLevelUser(UserPowerLevel level)
 		{
-			return User.IsAdministratorUser (User.CurrentUser);
+			return User.HasLevelUser (User.CurrentUser, level);
 		}
 
-		public static bool IsAdministratorUser(SoftwareUserEntity user)
+		public static bool HasLevelUser(SoftwareUserEntity user, UserPowerLevel level)
 		{
 			if (user.IsNull ())
 			{
@@ -29,43 +29,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.Administrator).Count () > 0;
-			}
-		}
-
-
-		public static bool IsDeveloperUser()
-		{
-			return User.IsDeveloperUser (User.CurrentUser);
-		}
-
-		public static bool IsDeveloperUser(SoftwareUserEntity user)
-		{
-			if (user.IsNull ())
-			{
-				return false;
-			}
-			else
-			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.Developer).Count () > 0;
-			}
-		}
-
-
-		public static bool IsPowerUserUser()
-		{
-			return User.IsPowerUserUser (User.CurrentUser);
-		}
-
-		public static bool IsPowerUserUser(SoftwareUserEntity user)
-		{
-			if (user.IsNull ())
-			{
-				return false;
-			}
-			else
-			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.PowerUser).Count () > 0;
+				return user.UserGroups.Where (group => group.UserPowerLevel == level).Count () > 0;
 			}
 		}
 

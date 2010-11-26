@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = footer,
 					Text = "Gérer les comptes",
 					PreferredWidth = 100,
-					Visibility = !this.softwareStartup && User.IsAdministratorUser (this.initialUser),
+					Visibility = !this.softwareStartup && User.HasLevelUser (this.initialUser, UserPowerLevel.Administrator),
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 10, 0, 0),
 					TabIndex = tabIndex++,
