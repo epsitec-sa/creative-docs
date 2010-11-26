@@ -15,14 +15,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	{
 		
 		
-		public CodeDimension(string name, bool isNullable, IEnumerable<string> values)
+		public CodeDimension(string name, IEnumerable<string> values)
 			: base (name)
 		{
 			values.ThrowIfNull ("values");
 			values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
 			values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
-
-			this.IsNullable = isNullable;
 
 			this.values = new SortedSet<string> (values);
 
@@ -30,25 +28,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public bool IsNullable
-		{
-			get;
-			private set;
-		}
-
-
 		public override IEnumerable<object> Values
 		{
 			get
 			{
-				var values = this.values.Cast<object> ();
-
-				if (this.IsNullable)
-				{
-					values = values.Append (CodeDimension.NullValue);
-				}
-
-				return values;
+				return this.values.Cast<object> ();
 			}
 		}
 
@@ -57,8 +41,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			value.ThrowIfNull ("value");
 
-			return (this.IsNullable && value == CodeDimension.NullValue)
-				|| ((value is string) && this.values.Contains ((string) value));
+			return (value is string) && this.values.Contains ((string) value);
 		}
 
 
@@ -81,18 +64,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public override string GetStringData()
 		{
-			string isNullable = InvariantConverter.ConvertToString (this.IsNullable);
-
-			return isNullable + CodeDimension.valueSeparator + string.Join (CodeDimension.valueSeparator, this.values);
-		}
-
-
-		public static object NullValue
-		{
-			get
-			{
-				return CodeDimension.nullValue;
-			}
+			return string.Join (CodeDimension.valueSeparator, this.values);
 		}
 		
 		
@@ -101,12 +73,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			name.ThrowIfNullOrEmpty ("name");
 			stringData.ThrowIfNullOrEmpty ("stringData");
 
-			var splittedData = stringData.Split (CodeDimension.valueSeparator).ToList ();
+			var values = stringData.Split (CodeDimension.valueSeparator);
 
-			bool isNullable = InvariantConverter.ConvertFromString<bool> (splittedData.First ());
-			var values = splittedData.Skip (1);
-
-			return new CodeDimension (name, isNullable, values);
+			return new CodeDimension (name, values);
 		}
 
 
@@ -114,9 +83,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		private static readonly string valueSeparator = ";";
-
-
-		private static readonly object nullValue = new object ();
 
 
 	}

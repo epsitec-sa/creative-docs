@@ -395,8 +395,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		    {
 		        new NumericDimension ("d1", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Down),
 		        new NumericDimension ("d2", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Up),
-				new CodeDimension ("d3", false, new string[] {"0", "1", "2", "3"}),
-				new CodeDimension ("d4", false, new string[] {"0", "1", "2", "3"}),
+				new CodeDimension ("d3", new string[] {"0", "1", "2", "3"}),
+				new CodeDimension ("d4", new string[] {"0", "1", "2", "3"}),
 		    };
 
 			DimensionTable table1 = new DimensionTable (dimensions.ToArray ());
