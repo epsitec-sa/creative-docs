@@ -19,12 +19,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			: base (name)
 		{
 			values.ThrowIfNull ("values");
-			values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
-			values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
-
+			
 			this.values = new SortedSet<string> (values);
 
 			this.values.ThrowIf (v => !v.Any (), "values is empty.");
+			this.values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
+			this.values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
 		}
 
 
