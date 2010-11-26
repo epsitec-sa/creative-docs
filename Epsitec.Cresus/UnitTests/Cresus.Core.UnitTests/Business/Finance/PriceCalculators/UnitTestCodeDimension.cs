@@ -27,37 +27,37 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (null, false, values)
+				() => new CodeDimension (null, values)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension ("", false, values)
+				() => new CodeDimension ("", values)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (name, false, null)
+				() => new CodeDimension (name, null)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (name, false, new List<string> ())
+				() => new CodeDimension (name, new List<string> ())
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (name, false, new List<string> () { null })
+				() => new CodeDimension (name, new List<string> () { null })
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (name, false, new List<string> () { "" })
+				() => new CodeDimension (name, new List<string> () { "" })
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new CodeDimension (name, false, new List<string> () { "." })
+				() => new CodeDimension (name, new List<string> () { "." })
 			);
 		}
 
@@ -71,20 +71,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (string name in names)
 			{
-				CodeDimension dimension = new CodeDimension (name, false, values);
+				CodeDimension dimension = new CodeDimension (name, values);
 
 				Assert.AreEqual (name, dimension.Name);
 			}
-		}
-
-
-		[TestMethod]
-		public void IsNullableTest()
-		{
-			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
-
-			Assert.AreEqual (false, new CodeDimension ("name", false, values).IsNullable);
-			Assert.AreEqual (true, new CodeDimension ("name", true, values).IsNullable);
 		}
 
 
@@ -95,16 +85,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			for (int i = 0; i < 10; i++)
 			{
-				CodeDimension dimension = new CodeDimension ("name", false, values.Shuffle ());
+				CodeDimension dimension = new CodeDimension ("name", values.Shuffle ());
 
 				CollectionAssert.AreEqual (values, dimension.Values.Cast<string> ().ToList ());
-			}
-
-			for (int i = 0; i < 10; i++)
-			{
-				CodeDimension dimension = new CodeDimension ("name", true, values.Shuffle ());
-
-				CollectionAssert.AreEqual (values.Append (CodeDimension.NullValue).ToList (), dimension.Values.ToList ());
 			}
 		}
 
@@ -114,7 +97,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values);
+			CodeDimension dimension = new CodeDimension ("name", values);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -129,7 +112,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
 			List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values1);
+			CodeDimension dimension = new CodeDimension ("name", values1);
 
 			foreach (string value in values1)
 			{
@@ -140,9 +123,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				Assert.IsFalse (dimension.IsValueDefined (value));
 			}
-
-			Assert.IsFalse (dimension.IsValueDefined (CodeDimension.NullValue));
-			Assert.IsTrue (new CodeDimension ("name", true, values1).IsValueDefined (CodeDimension.NullValue));
 		}
 
 
@@ -151,7 +131,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values);
+			CodeDimension dimension = new CodeDimension ("name", values);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -166,7 +146,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
 			List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values1);
+			CodeDimension dimension = new CodeDimension ("name", values1);
 
 			foreach (string value in values1)
 			{
@@ -177,9 +157,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				Assert.IsFalse (dimension.IsNearestValueDefined (value));
 			}
-
-			Assert.IsFalse (dimension.IsNearestValueDefined (CodeDimension.NullValue));
-			Assert.IsTrue (new CodeDimension ("name", true, values1).IsNearestValueDefined (CodeDimension.NullValue));
 		}
 
 
@@ -189,7 +166,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
 			List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values1);
+			CodeDimension dimension = new CodeDimension ("name", values1);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -203,11 +180,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					() => dimension.GetNearestValue (value)
 				);
 			}
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-			   () => dimension.GetNearestValue (CodeDimension.NullValue)
-			);
 		}
 
 
@@ -216,14 +188,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("name", false, values);
+			CodeDimension dimension = new CodeDimension ("name", values);
 
 			foreach (string value in values)
 			{
 				Assert.AreEqual (value, dimension.GetNearestValue (value));
 			}
-
-			Assert.AreEqual (CodeDimension.NullValue, new CodeDimension ("name", true, values).GetNearestValue (CodeDimension.NullValue));
 		}
 
 
@@ -267,7 +237,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension1 = new CodeDimension ("name", false, values);
+			CodeDimension dimension1 = new CodeDimension ("name", values);
 			CodeDimension dimension2 = CodeDimension.BuildCodeDimension (dimension1.Name, dimension1.GetStringData ());
 
 			Assert.AreEqual (dimension1.Name, dimension2.Name);
@@ -280,7 +250,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension1 = new CodeDimension ("name", false, values);
+			CodeDimension dimension1 = new CodeDimension ("name", values);
 			CodeDimension dimension2 = (CodeDimension) AbstractDimension.XmlImport (dimension1.XmlExport ());
 
 			Assert.AreEqual (dimension1.Name, dimension2.Name);
