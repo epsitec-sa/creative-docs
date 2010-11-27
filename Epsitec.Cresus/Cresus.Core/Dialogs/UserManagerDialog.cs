@@ -450,12 +450,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.list.SelectedItemChanging += delegate
 			{
-				this.loginNameField.DefocusAndAcceptOrReject ();
-				this.displayNameField.DefocusAndAcceptOrReject ();
-				this.newPasswordField1.DefocusAndAcceptOrReject ();
-				this.newPasswordField2.DefocusAndAcceptOrReject ();
-				this.beginDateField.DefocusAndAcceptOrReject ();
-				this.endDateField.DefocusAndAcceptOrReject ();
+				if (!this.ignoreChange)
+				{
+					this.loginNameField.DefocusAndAcceptOrReject ();
+					this.displayNameField.DefocusAndAcceptOrReject ();
+					this.newPasswordField1.DefocusAndAcceptOrReject ();
+					this.newPasswordField2.DefocusAndAcceptOrReject ();
+					this.beginDateField.DefocusAndAcceptOrReject ();
+					this.endDateField.DefocusAndAcceptOrReject ();
+				}
 			};
 
 			this.list.SelectionActivated += delegate
@@ -683,6 +686,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateList(int? sel = null)
 		{
+			this.ignoreChange = true;
+
 			if (sel == null)
 			{
 				sel = this.list.SelectedItemIndex;
@@ -711,6 +716,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.list.SelectedItemIndex = sel.Value;
 
 			this.initialUser = null;  // ne sert que la 1ère fois !
+			this.ignoreChange = false;
 		}
 
 		private void UpdateUser()
@@ -796,6 +802,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		#region Natural person manager
 		private void NaturalPersonUpdateMenu()
 		{
+			//	Prépare le menu des personnes physiques, juste avant son ouverture.
 			this.personField.Items.Clear ();
 
 			this.personField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
@@ -821,6 +828,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
 			{
 				user.Person = this.naturalPersonEntities[sel];
+				user.Person = this.naturalPersonEntities[sel];  // TODO : POURQUOI ???
 			}
 			else
 			{
@@ -875,6 +883,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			System.Diagnostics.Debug.Assert (user != null);
 
 			user.LoginName = this.loginNameField.Text.Trim ();
+			user.LoginName = this.loginNameField.Text.Trim ();  // TODO : POURQUOI ???
 
 			this.UpdateList ();
 			this.UpdateWidgets ();
@@ -1228,5 +1237,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										cancelButton;
 		private bool										editionStarted;
 		private List<NaturalPersonEntity>					naturalPersonEntities;
+		private bool										ignoreChange;
 	}
 }
