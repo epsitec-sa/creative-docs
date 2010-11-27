@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
 				};
 
-				this.authenticateUserButton = RibbonViewController.CreateUserButton (Res.Commands.Global.ShowUserManager);
+				this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
 				this.authenticateUserButton.CoreData = this.Orchestrator.Data;
 				this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
 				this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
@@ -604,11 +604,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static UserButton CreateUserButton(Command command)
+		private static IconOrImageButton CreateIconOrImageButton(Command command)
 		{
 			double buttonWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth);
 
-			var button = new UserButton
+			var button = new IconOrImageButton
 			{
 				CommandObject = command,
 				PreferredSize = new Size (buttonWidth, buttonWidth),
@@ -638,7 +638,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private IconButton						databaseButton;
 		private GlyphButton						databaseMenuButton;
 
-		private UserButton						authenticateUserButton;
+		private IconOrImageButton				authenticateUserButton;
 		private StaticText						authenticateUserWidget;
 	}
 }
