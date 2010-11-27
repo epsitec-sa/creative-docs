@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// <summary>
 	/// Ce widget affiche une icône, selon IconUri et IconPreferredSize, ou une image selon ImageEntity.
 	/// </summary>
-	public class UserButton : Button
+	public class IconOrImageButton : Button
 	{
-		public UserButton()
+		public IconOrImageButton()
 		{
 			this.ButtonStyle = ButtonStyle.ToolItem;
 
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.iconLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 		}
 
-		public UserButton(Widget embedder)
+		public IconOrImageButton(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
