@@ -98,10 +98,21 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					Rectangle rect = this.Client.Bounds;
-					rect.Deflate (1);  // laisse une place pour le cadre du hilite
+					Rectangle bounds = this.Client.Bounds;
+					bounds.Deflate (1);  // laisse une place pour le cadre du hilite
 
-					graphics.PaintImage (this.image, rect);
+					double sx = bounds.Width  / this.image.Width;
+					double sy = bounds.Height / this.image.Height;
+					double scale = System.Math.Min (sx, sy);
+
+					double dx = System.Math.Floor (scale * this.image.Width);
+					double dy = System.Math.Floor (scale * this.image.Height);
+
+					double ox = System.Math.Floor ((bounds.Width  - dx) / 2);
+					double oy = System.Math.Floor ((bounds.Height - dy) / 2);
+
+					Rectangle fill = new Rectangle (1+ox, 1+oy, dx, dy);
+					graphics.PaintImage (this.image, fill);
 				}
 			}
 		}
