@@ -33,6 +33,24 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		public bool HasLevelUser(UserPowerLevel level)
+		{
+			return this.HasLevelUser (this.AuthenticatedUser, level);
+		}
+
+		public bool HasLevelUser(SoftwareUserEntity user, UserPowerLevel level)
+		{
+			if (user.IsNull ())
+			{
+				return false;
+			}
+			else
+			{
+				return user.UserGroups.Where (group => group.UserPowerLevel == level).Count () > 0;
+			}
+		}
+
+	
 		/// <summary>
 		/// Gets the authenticated user.
 		/// </summary>

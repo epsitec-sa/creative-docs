@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateAuthenticatedUser()
 		{
 			//	Met à jour le nom de l'utilisateur dans le ruban.
-			var user = User.CurrentUser;
+			var user = CoreProgram.Application.UserManager.AuthenticatedUser;
 
 			if (user.IsNull ())
 			{
@@ -526,9 +526,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Cette liste dépend de l'utilisateur identifié. Elle peut très bien être vide.
 			get
 			{
-				bool admin = User.HasLevelUser (UserPowerLevel.Administrator);
-				bool devel = User.HasLevelUser (UserPowerLevel.Developer);
-				bool power = User.HasLevelUser (UserPowerLevel.PowerUser);
+				bool admin = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.Administrator);
+				bool devel = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.Developer);
+				bool power = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.PowerUser);
 
 				if (admin || devel || power)
 				{

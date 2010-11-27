@@ -156,7 +156,6 @@
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
-    <Compile Include="User.cs" />
     <Compile Include="Data\ImageData.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
