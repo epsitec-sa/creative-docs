@@ -526,9 +526,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Cette liste dépend de l'utilisateur identifié. Elle peut très bien être vide.
 			get
 			{
-				bool admin = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.Administrator);
-				bool devel = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.Developer);
-				bool power = CoreProgram.Application.UserManager.HasLevelUser (UserPowerLevel.PowerUser);
+				bool admin = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
+				bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
+				bool power = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);
 
 				if (admin || devel || power)
 				{

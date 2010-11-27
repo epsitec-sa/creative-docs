@@ -23,22 +23,23 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.data = data;
 		}
 
-
-		public CoreData CoreData
+		/// <summary>
+		/// Indicates whether the authenticated user has a power level of use or not.
+		/// </summary>
+		/// <param name="level">power level required</param>
+		/// <returns><c>true</c> if the user has power level; otherwise, <c>false</c>.</returns>
+		public bool IsAuthenticatedUserAtPowerLevel(UserPowerLevel level)
 		{
-			get
-			{
-				return this.data;
-			}
+			return this.IsUserAtPowerLevel (this.AuthenticatedUser, level);
 		}
 
-
-		public bool HasLevelUser(UserPowerLevel level)
-		{
-			return this.HasLevelUser (this.AuthenticatedUser, level);
-		}
-
-		public bool HasLevelUser(SoftwareUserEntity user, UserPowerLevel level)
+		/// <summary>
+		/// Indicates whether a user has a power level of use or not.
+		/// </summary>
+		/// <param name="user">entity of user</param>
+		/// <param name="level">power level required</param>
+		/// <returns><c>true</c> if the user has power level; otherwise, <c>false</c>.</returns>
+		public bool IsUserAtPowerLevel(SoftwareUserEntity user, UserPowerLevel level)
 		{
 			if (user.IsNull ())
 			{

@@ -803,7 +803,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var example = new NaturalPersonEntity ();
 			//	L'exemple reste vide; on obtient donc toutes les personnes physiques.
 			//	TODO: Par la suite, il faudra se limiter aux employés, mais cette notion n'existe pas pour l'instant.
-			this.naturalPersonEntities = this.manager.CoreData.DataContext.GetByExample<NaturalPersonEntity> (example).ToList ();
+			this.naturalPersonEntities = this.manager.BusinessContext.DataContext.GetByExample<NaturalPersonEntity> (example).ToList ();
 
 			foreach (var person in this.naturalPersonEntities)
 			{
