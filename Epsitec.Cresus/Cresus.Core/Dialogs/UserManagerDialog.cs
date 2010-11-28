@@ -155,17 +155,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = leftPane,
 					ArrowDirection = Direction.Right,
 					Dock = DockStyle.Fill,
-					Padding = new Margins (1, TileArrow.Breadth+1, 1, 1),
+					Padding = new Margins (0, TileArrow.Breadth+2, 0, 0),
 					TabIndex = tabIndex++,
 				};
 
-				this.list = new ScrollList
+				this.table = new CellTable
 				{
 					Parent = tile,
-					ScrollListStyle = Common.Widgets.ScrollListStyle.FrameLess,
+					DefHeight = IconOrImageButton.imageSize+3,
+					StyleH = CellArrayStyles.Separator,
+					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
+
+				this.table.SetArraySize (2, 0);
+				this.table.SetWidthColumn (0, IconOrImageButton.imageSize+3);
+				this.table.SetWidthColumn (1, 400);
 			}
 
 			//	Crée le panneau de droite.
@@ -431,7 +437,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 			}
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateUser ();
 			this.UpdateWidgets ();
 		}
@@ -448,6 +454,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.RemoveAction ();
 			};
 
+#if false
 			this.list.SelectedItemChanging += delegate
 			{
 				if (!this.ignoreChange)
@@ -460,8 +467,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.endDateField.DefocusAndAcceptOrReject ();
 				}
 			};
+#endif
 
-			this.list.SelectionActivated += delegate
+			this.table.SelectionChanged += delegate
 			{
 				this.UpdateUser ();
 				this.UpdateWidgets ();
@@ -684,40 +692,96 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private void UpdateList(int? sel = null)
+		private void UpdateTable(int? sel = null)
 		{
+			//	Met à jour le contenu de la table.
 			this.ignoreChange = true;
+
+			int rows = this.users.Count;
+			this.table.SetArraySize (2, rows);
 
 			if (sel == null)
 			{
-				sel = this.list.SelectedItemIndex;
+				sel = this.table.SelectedRow;
 			}
 
-			this.list.Items.Clear ();
-
-			foreach (var user in this.users)
+			for (int row=0; row<rows; row++)
 			{
+				var user = this.users[row];
+
 				if (this.initialUser != null && user.LoginName == this.initialUser.LoginName)
 				{
-					sel = this.list.Items.Count;
+					sel = row;
 				}
 
-				FormattedText description = user.ShortDescription;
-
-				if (this.authenticatedUser != null && this.authenticatedUser.Code == user.Code)
-				{
-					description = TextFormatter.FormatText ("<b>", description, "</b>");
-				}
-
-				this.list.Items.Add (description);
+				this.TableFillRow (row);
+				this.TableUpdateRow (row);
 			}
 
-			sel = System.Math.Min (sel.Value, this.list.Items.Count-1);
-			this.list.SelectedItemIndex = sel.Value;
+			sel = System.Math.Min (sel.Value, rows-1);
+			if (sel != -1)
+			{
+				this.table.SelectRow (sel.Value, true);
+			}
 
 			this.initialUser = null;  // ne sert que la 1ère fois !
 			this.ignoreChange = false;
 		}
+
+		private void TableFillRow(int row)
+		{
+			//	Peuple une ligne de la table, si nécessaire.
+			if (this.table[0, row].IsEmpty)
+			{
+				var button = new IconOrImageButton
+				{
+					CoreData = this.manager.CoreData,
+					PreferredSize = new Size (IconOrImageButton.imageSize+2, IconOrImageButton.imageSize+2),
+					IconUri = Misc.GetResourceIconUri ("UserManager"),
+					IconPreferredSize = new Size (31, 31),
+					Enable = false,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 0, 0, 0),
+				};
+
+				this.table[0, row].Insert (button);
+			}
+
+			if (this.table[1, row].IsEmpty)
+			{
+				var text = new StaticText
+				{
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (4, 4, 0, 0),
+				};
+
+				this.table[1, row].Insert (text);
+			}
+		}
+
+		private void TableUpdateRow(int row)
+		{
+			//	Met à jour le contenu d'une ligne de la table.
+			var user = this.users[row];
+
+			var button = this.table[0, row].Children[0] as IconOrImageButton;
+			button.ImageEntity = user.Person.Photo;
+
+			FormattedText description = user.ShortDescription;
+
+			if (this.authenticatedUser != null && this.authenticatedUser.Code == user.Code)
+			{
+				description = TextFormatter.FormatText ("<b>", description, "</b>");
+			}
+
+			var text = this.table[1, row].Children[0] as StaticText;
+			text.FormattedText = description;
+
+			this.table.SelectRow (row, false);
+		}
+
+
 
 		private void UpdateUser()
 		{
@@ -836,6 +900,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.naturalPersonEntities = null;
+
+			this.UpdateTable ();
+			this.UpdateWidgets ();
 		}
 
 		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
@@ -857,7 +924,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.users.Add (newUser);
 
-			this.UpdateList (this.users.Count-1);
+			this.UpdateTable (this.users.Count-1);
 			this.UpdateUser ();
 			this.UpdateWidgets ();
 
@@ -870,9 +937,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			System.Diagnostics.Debug.Assert (user != null);
 
 			user.IsArchive = true;
-			this.users.RemoveAt (this.list.SelectedItemIndex);
+			this.users.RemoveAt (this.table.SelectedRow);
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateUser ();
 			this.UpdateWidgets ();
 		}
@@ -885,7 +952,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			user.LoginName = this.loginNameField.Text.Trim ();
 			user.LoginName = this.loginNameField.Text.Trim ();  // TODO : POURQUOI ???
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -896,7 +963,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			user.DisplayName = this.displayNameField.FormattedText;
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -913,7 +980,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					user.SetPassword (this.newPasswordField1.Text);
 
-					this.UpdateList ();
+					this.UpdateTable ();
 					this.UpdateWidgets ();
 
 					//	Affiche un message sur fond vert, qui sera effacé au prochain UpdateWidgets.
@@ -925,7 +992,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -947,7 +1014,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -969,7 +1036,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.endDateField.Text = Misc.GetDateTimeShortDescription (user.EndDate);
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -980,7 +1047,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			user.AuthenticationMethod = this.authenticationMethodCheckButton.ActiveState == ActiveState.Yes ? Business.UserManagement.UserAuthenticationMethod.System : Business.UserManagement.UserAuthenticationMethod.Password;
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -991,7 +1058,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			user.Disabled = this.disableUserCheckButton.ActiveState == ActiveState.Yes;
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -1015,7 +1082,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
@@ -1141,7 +1208,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				var sel = this.list.SelectedItemIndex;
+				var sel = this.table.SelectedRow;
 				var loginName = this.loginNameField.Text.Trim ();
 				var displayName = this.displayNameField.FormattedText;
 
@@ -1190,7 +1257,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				int sel = this.list.SelectedItemIndex;
+				int sel = this.table.SelectedRow;
 
 				if (sel == -1)
 				{
@@ -1220,7 +1287,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private FrameBox									toolbar;
 		private GlyphButton									addButton;
 		private GlyphButton									removeButton;
-		private ScrollList									list;
+		private CellTable									table;
 		private FrameBox									userBox;
 		private TextFieldEx									loginNameField;
 		private TextFieldEx									displayNameField;

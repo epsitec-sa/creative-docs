@@ -23,6 +23,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.data = data;
 		}
 
+		public CoreData CoreData
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
 		/// <summary>
 		/// Indicates whether the authenticated user has a power level of use or not.
 		/// </summary>
@@ -312,8 +320,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
         public event EventHandler AuthenticatedUserChanged;
 
 
-		private readonly CoreData data;
-		private SoftwareUserEntity authenticatedUser;
-		private BusinessContext businessContext;
+		private readonly CoreData			data;
+
+		private SoftwareUserEntity			authenticatedUser;
+		private BusinessContext				businessContext;
 	}
 }

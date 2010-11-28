@@ -129,11 +129,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.coreData != null && this.imageEntity.IsNotNull ())
 			{
 				var store = this.coreData.ImageDataStore;
-				var data = store.GetImageData (this.imageEntity.ImageBlob.Code, 40);
+				var data = store.GetImageData (this.imageEntity.ImageBlob.Code, (int) IconOrImageButton.imageSize);
 				this.image = data.GetImage ();
 			}
 		}
 
+
+		public static readonly double imageSize = 40;
 
 		private CoreData			coreData;
 		private ImageEntity			imageEntity;
