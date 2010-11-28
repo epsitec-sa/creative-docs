@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Identification de l'utilisateur";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (450, 400);
+			window.ClientSize = new Size (450, 420);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -104,12 +104,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				var container = LoginDialog.CreateContainer (part, "1", "Identifiez-vous");
 
-				this.list = new ScrollList
+				this.table = new CellTable
 				{
 					Parent = container,
+					DefHeight = IconOrImageButton.imageSize+3,
+					StyleH = CellArrayStyles.Separator,
+					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
+
+				this.table.SetArraySize (2, 0);
+				this.table.SetWidthColumn (0, IconOrImageButton.imageSize+3);
+				this.table.SetWidthColumn (1, 400);
 			}
 
 			//	Crée le groupe pour le mot de passe éditable.
@@ -210,13 +217,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 			}
 
-			this.UpdateList ();
+			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
 		protected void SetupEvents(Window window)
 		{
-			this.list.SelectionActivated += delegate
+			this.table.SelectionChanged += delegate
 			{
 				this.loginErrorCounter = 0;
 				this.loginErrorMessage = null;
@@ -228,7 +235,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.passField.Focus ();
 			};
 
-			this.list.DoubleClicked += delegate
+			this.table.DoubleClicked += delegate
 			{
 				var result = this.DoubleClickedAction ();
 
@@ -302,23 +309,66 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private void UpdateList()
+		private void UpdateTable()
 		{
-			int sel = -1;
-			this.list.Items.Clear ();
+			//	Met à jour le contenu de la table.
+			int rows = this.users.Count;
+			this.table.SetArraySize (2, rows);
 
-			foreach (var user in this.users)
+			for (int row=0; row<rows; row++)
 			{
-				if (user == this.initialUser)
-				{
-					sel = this.list.Items.Count;
-				}
+				this.TableFillRow (row);
+				this.TableUpdateRow (row);
+			}
+		}
 
-				this.list.Items.Add (user.ShortDescription);
+		private void TableFillRow(int row)
+		{
+			//	Peuple une ligne de la table, si nécessaire.
+			if (this.table[0, row].IsEmpty)
+			{
+				var button = new IconOrImageButton
+				{
+					CoreData = this.manager.CoreData,
+					PreferredSize = new Size (IconOrImageButton.imageSize+2, IconOrImageButton.imageSize+2),
+					IconUri = Misc.GetResourceIconUri ("UserManager"),
+					IconPreferredSize = new Size (31, 31),
+					Enable = false,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 0, 0, 0),
+				};
+
+				this.table[0, row].Insert (button);
 			}
 
-			this.list.SelectedItemIndex = sel;
+			if (this.table[1, row].IsEmpty)
+			{
+				var text = new StaticText
+				{
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (4, 4, 0, 0),
+				};
+
+				this.table[1, row].Insert (text);
+			}
 		}
+
+		private void TableUpdateRow(int row)
+		{
+			//	Met à jour le contenu d'une ligne de la table.
+			var user = this.users[row];
+
+			var button = this.table[0, row].Children[0] as IconOrImageButton;
+			button.ImageEntity = user.Person.Photo;
+
+			var text = this.table[1, row].Children[0] as StaticText;
+			text.FormattedText = user.ShortDescription;
+
+			bool sel = (user == this.initialUser);
+			this.table.SelectRow (row, sel);
+		}
+
 
 		private void UpdateWidgets()
 		{
@@ -408,7 +458,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				int sel = this.list.SelectedItemIndex;
+				int sel = this.table.SelectedRow;
 
 				if (sel == -1)
 				{
@@ -481,7 +531,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly bool									softwareStartup;
 		private readonly List<SoftwareUserEntity>				users;
 
-		private ScrollList										list;
+		private CellTable										table;
 		private FrameBox										passBoxInfo;
 		private FrameBox										passBoxEdit;
 		private TextField										passField;
