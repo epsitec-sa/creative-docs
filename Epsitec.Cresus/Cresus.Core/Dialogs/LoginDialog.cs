@@ -184,24 +184,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			//	Crée le pied de page.
 			{
+				this.manageButton = new Button ()
+				{
+					Parent = footer,
+					ButtonStyle = ButtonStyle.ToolItem,
+					Text = "Gérer les comptes...",
+					PreferredWidth = 120,
+					Visibility = !this.softwareStartup && this.manager.IsUserAtPowerLevel (this.initialUser, UserPowerLevel.Administrator),
+					Dock = DockStyle.Left,
+					TabIndex = tabIndex++,
+				};
+
 				this.cancelButton = new Button ()
 				{
 					Parent = footer,
 					Text = this.softwareStartup ? "Quitter" : "Annuler",
-					PreferredWidth = 60,
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 					Dock = DockStyle.Right,
-					TabIndex = tabIndex++,
-				};
-
-				this.manageButton = new Button ()
-				{
-					Parent = footer,
-					Text = "Gérer les comptes",
-					PreferredWidth = 100,
-					Visibility = !this.softwareStartup && this.manager.IsUserAtPowerLevel (this.initialUser, UserPowerLevel.Administrator),
-					Dock = DockStyle.Right,
-					Margins = new Margins (0, 10, 0, 0),
 					TabIndex = tabIndex++,
 				};
 
@@ -209,7 +208,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					Parent = footer,
 					Text = "S'identifier",
-					PreferredWidth = 100,
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 10, 0, 0),
