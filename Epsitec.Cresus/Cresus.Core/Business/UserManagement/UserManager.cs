@@ -83,6 +83,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				if (this.businessContext == null)
                 {
 					this.businessContext = this.data.CreateBusinessContext ();
+					this.businessContext.GlobalLock = Data.GlobalLocks.UserManagement;
                 }
 
 				return this.businessContext;
@@ -197,11 +198,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Saves changes done to the users and user groups stored in the associated
 		/// business context.
 		/// </summary>
-		public void SaveChanges()
+		public void SaveChangesAndDisposeBusinessContext()
 		{
 			if (this.businessContext != null)
 			{
 				this.businessContext.SaveChanges ();
+				this.businessContext.Dispose ();
+				this.businessContext = null;
 			}
 		}
 
@@ -209,7 +212,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Discards all changes done to the users and user groups stored in the associated
 		/// business context.
 		/// </summary>
-		public void DiscardChanges()
+		public void DiscardChangesAndDisposeBusinessContext()
 		{
 			if (this.businessContext != null)
 			{

@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
 			this.connectionManager = new CoreDataConnectionManager (this);
-			this.locker = new CoreDataLocker (this.dataInfrastructure);
+			this.locker = new DataLocker (this.dataInfrastructure);
 			this.businessContextPool =  new BusinessContextPool (this);
 			this.imageDataStore = new ImageDataStore (this);
 		}
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public CoreDataLocker					DataLocker
+		public DataLocker					DataLocker
 		{
 			get
 			{
@@ -685,7 +685,7 @@ namespace Epsitec.Cresus.Core
 		private readonly RefIdGeneratorPool refIdGeneratorPool;
 		private readonly CoreDataConnectionManager connectionManager;
 		private readonly BusinessContextPool businessContextPool;
-		private readonly CoreDataLocker locker;
+		private readonly DataLocker locker;
 		private readonly ImageDataStore imageDataStore;
 
 		private DataContext immutableDataContext;

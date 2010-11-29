@@ -5,6 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -87,6 +88,23 @@ namespace Epsitec.Cresus.Core.Business
 			get
 			{
 				return this.activeEntity;
+			}
+		}
+
+		public GlobalLock						GlobalLock
+		{
+			get
+			{
+				return this.globalLock;
+			}
+			set
+			{
+				if (this.IsLocked)
+				{
+					throw new System.InvalidOperationException ();
+				}
+
+				this.globalLock = value;
 			}
 		}
 
@@ -603,13 +621,18 @@ namespace Epsitec.Cresus.Core.Business
 
 		private IEnumerable<string> GetLockNames()
 		{
+			if (this.globalLock !=  null)
+			{
+				yield return this.globalLock.LockId;
+			}
+
 			if (this.activeEntity != null)
 			{
-				yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
+				yield return DataLocker.GetLockName (this.dataContext, this.activeEntity);
 			}
 			if (this.lockEntity != null)
 			{
-				yield return CoreDataLocker.GetLockName (this.dataContext, this.lockEntity);
+				yield return DataLocker.GetLockName (this.dataContext, this.lockEntity);
 			}
 		}
 
@@ -654,7 +677,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly DataContext			dataContext;
 		private readonly List<EntityRecord>		entityRecords;
 		private readonly List<AbstractEntity>	masterEntities;
-		private readonly CoreDataLocker			locker;
+		private readonly DataLocker				locker;
 
 		private int								dataChangedCounter;
 		private bool							dataContextDirty;
@@ -663,6 +686,7 @@ namespace Epsitec.Cresus.Core.Business
 		private bool							hasExternalChanges;
 		private CoreDataLockTransaction			lockTransaction;
 
+		private GlobalLock						globalLock;
 		private AbstractEntity					activeEntity;
 		private AbstractEntity					lockEntity;
 		private NavigationPathElement			activeNavigationPathElement;

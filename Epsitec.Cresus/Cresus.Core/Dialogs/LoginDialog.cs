@@ -283,13 +283,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (cancel)
 			{
-				this.manager.DiscardChanges ();
+				this.manager.DiscardChangesAndDisposeBusinessContext ();
 
 				this.Result = DialogResult.Cancel;
 			}
 			else
 			{
-				this.manager.SaveChanges ();
+				this.manager.SaveChangesAndDisposeBusinessContext ();
 
 				this.Result = DialogResult.Accept;
 			}
