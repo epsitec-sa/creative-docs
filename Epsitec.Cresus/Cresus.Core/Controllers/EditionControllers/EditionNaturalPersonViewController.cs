@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIFirstnameAndLastname (builder);
 				this.CreateUIGender (builder);
 				this.CreateUIBirthDate (builder);
-				this.CreateUIPhoto (builder);
+				this.CreateUIPictures (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
 		}
 
-		private void CreateUIPhoto(UIBuilder builder)
+		private void CreateUIPictures(UIBuilder builder)
 		{
 			var controller = new SelectionController<ImageEntity> (this.BusinessContext)
 			{
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
+			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
 		}
 
 
