@@ -3053,6 +3053,10 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+					{
+						IsAutoTimeStampOnInsert = true,
+					},
 				};
 
 				table.DefineCategory (DbElementCat.Internal);

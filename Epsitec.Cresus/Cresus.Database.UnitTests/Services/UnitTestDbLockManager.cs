@@ -235,16 +235,21 @@ namespace Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void GetLockConnectionId()
+		public void GetLockConnection()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
+				Assert.IsNull (manager.GetLock ("myLock1"));
+				Assert.IsNull (manager.GetLock ("myLock2"));
+				Assert.IsNull (manager.GetLock ("myLock3"));
+
 				manager.RequestLock ("myLock2", 0);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.AreEqual (0, manager.GetLock ("myLock2").ConnectionId.Value);
+				Assert.AreEqual ("myLock2", manager.GetLock ("myLock2").Name);
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
 				manager.RequestLock ("myLock1", 0);
@@ -252,8 +257,15 @@ namespace Cresus.Database.UnitTests.Services
 				manager.RequestLock ("myLock3", 1);
 
 				Assert.AreEqual (0, manager.GetLock ("myLock1").ConnectionId.Value);
+				Assert.AreEqual ("myLock1", manager.GetLock ("myLock1").Name);
 				Assert.AreEqual (0, manager.GetLock ("myLock2").ConnectionId.Value);
+				Assert.AreEqual ("myLock2", manager.GetLock ("myLock2").Name);
 				Assert.AreEqual (1, manager.GetLock ("myLock3").ConnectionId.Value);
+				Assert.AreEqual ("myLock3", manager.GetLock ("myLock3").Name);
+
+				Assert.IsTrue (manager.GetLock ("myLock1").CreationTime > manager.GetLock ("myLock2").CreationTime);
+				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime > manager.GetLock ("myLock2").CreationTime);
+				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime > manager.GetLock ("myLock1").CreationTime);
 
 				manager.ReleaseLock ("myLock1", 0);
 				manager.ReleaseLock ("myLock2", 0);
@@ -261,6 +273,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.AreEqual (0, manager.GetLock ("myLock2").ConnectionId.Value);
+				Assert.AreEqual ("myLock2", manager.GetLock ("myLock2").Name);
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
 				manager.ReleaseLock ("myLock2", 0);
@@ -268,6 +281,10 @@ namespace Cresus.Database.UnitTests.Services
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
+
+				Assert.IsNull (manager.GetLock ("myLock1"));
+				Assert.IsNull (manager.GetLock ("myLock2"));
+				Assert.IsNull (manager.GetLock ("myLock3"));
 			}
 		}
 

@@ -270,8 +270,9 @@ namespace Epsitec.Cresus.Database.Services
 			string name = (string) data[1];
 			DbId connectionId = new DbId ((long) data[2]);
 			int counter = (int) data[3];
+			System.DateTime creationTime = (System.DateTime) data[4];
 
-			return new DbLock (id, connectionId, name, counter);
+			return new DbLock (id, connectionId, name, counter, creationTime);
 		}
 		
 
