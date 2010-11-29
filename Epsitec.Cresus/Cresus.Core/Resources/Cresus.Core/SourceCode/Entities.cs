@@ -816,25 +816,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Photo</c> field.
+		///	The <c>Pictures</c> field.
 		///	designer:fld/L0AN/L0KL
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0KL]")]
-		public global::Epsitec.Cresus.Core.Entities.ImageEntity Photo
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ImageEntity> Pictures
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KL]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.Photo;
-				if (oldValue != value)
-				{
-					this.OnPhotoChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KL]", oldValue, value);
-					this.OnPhotoChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KL]");
 			}
 		}
 		
@@ -848,8 +838,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnGenderChanged(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnPhotoChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
-		partial void OnPhotoChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3097,6 +3085,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>Pictures</c> field.
+		///	designer:fld/L0A63/L0A9O
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9O]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ImageEntity> Pictures
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0A9O]");
+			}
+		}
 		///	<summary>
 		///	The <c>InputVatCode</c> field.
 		///	designer:fld/L0A63/L0ACF
@@ -6116,6 +6116,18 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>DefaultPictures</c> field.
+		///	designer:fld/L0AC7/L0AAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAO]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ImageEntity> DefaultPictures
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0AAO]");
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultInputVatCode</c> field.
 		///	designer:fld/L0AC7/L0ADF
 		///	</summary>
@@ -8893,6 +8905,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>LoginPicture</c> field.
+		///	designer:fld/L0AGF/L0A8O
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A8O]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageEntity LoginPicture
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0A8O]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.LoginPicture;
+				if (oldValue != value)
+				{
+					this.OnLoginPictureChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0A8O]", oldValue, value);
+					this.OnLoginPictureChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>LoginName</c> field.
 		///	designer:fld/L0AGF/L0AIF
 		///	</summary>
@@ -8997,6 +9031,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnDisplayNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDisplayNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLoginPictureChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
+		partial void OnLoginPictureChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		partial void OnLoginNameChanging(string oldValue, string newValue);
 		partial void OnLoginNameChanged(string oldValue, string newValue);
 		partial void OnLoginPasswordHashChanging(string oldValue, string newValue);
