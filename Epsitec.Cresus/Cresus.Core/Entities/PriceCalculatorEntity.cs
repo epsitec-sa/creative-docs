@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
@@ -12,7 +14,6 @@ using System.Linq;
 using System.Text;
 
 using System.Xml.Linq;
-using System.Collections;
 
 
 namespace Epsitec.Cresus.Core.Entities
@@ -29,6 +30,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public decimal? Compute(ArticleDocumentItemEntity articleItem)
 		{
+			articleItem.ThrowIfNull ("articleItem");
+			
 			// TODO Add tons of checks in this method and the two methods that it calls to ensure
 			// that the table match what we expect (i.e. that its dimensions are correct and that
 			// its values are defined) and that the values for the parameters are properly defined
@@ -40,7 +43,7 @@ namespace Epsitec.Cresus.Core.Entities
 			try
 			{
 				DimensionTable priceTable = this.GetPriceTable ();
-				IDictionary<string, IList<object>> parameterCodesToValues = GetParameterCodesToValues (articleItem);
+				IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
 
 				price = this.ComputePriceForDimensionTable (articleItem, priceTable, parameterCodesToValues);
 			}
@@ -54,102 +57,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return price;
-		}
-
-
-		private IDictionary<string, IList<object>> GetParameterCodesToValues(ArticleDocumentItemEntity articleItem)
-		{
-			// TODO Move this method elsewhere, because it is more generic than just here. It simply
-			// gets the values of the parameters of an article document item.
-			// Marc
-
-			var parameterDefinitions = articleItem.ArticleDefinition.ArticleParameterDefinitions;
-			var parameterStringValues = ArticleParameterHelper.GetArticleParametersValues (articleItem);
-			var parameterCodesToValues = new Dictionary<string, IList<object>> ();
-
-			foreach (var parameterDefinition in parameterDefinitions)
-			{
-				string parameterCode = parameterDefinition.Code;
-
-				if (!parameterStringValues.ContainsKey (parameterCode))
-				{
-					parameterStringValues[parameterCode] = "";
-				}
-
-				string parameterStringValue= parameterStringValues[parameterCode];
-
-				IList<object> parameterObjectValues = this.GetParameterObjectValues (parameterDefinition, parameterStringValue);
-
-				if (parameterObjectValues.Any ())
-				{
-					parameterCodesToValues[parameterCode] = parameterObjectValues;
-				}
-			}
-
-			return parameterCodesToValues;
-		}
-
-
-		private IList<object> GetParameterObjectValues(AbstractArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
-		{
-			var numericParameterDefinition = parameterDefinition as NumericValueArticleParameterDefinitionEntity;
-			var enumParameterDefinition = parameterDefinition as EnumValueArticleParameterDefinitionEntity;
-
-			if (numericParameterDefinition != null)
-			{
-				return this.GetNumericParameterObjectValues (numericParameterDefinition, parameterStringValue);
-			}
-			else if (enumParameterDefinition != null)
-			{
-				return this.GetEnumParameterObjectValues (enumParameterDefinition, parameterStringValue);
-			}
-			else
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-
-		private IList<object> GetNumericParameterObjectValues(NumericValueArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
-		{
-			decimal value = InvariantConverter.ConvertFromString<decimal> (parameterStringValue);
-
-			return new List<object> { value };
-		}
-
-
-		private IList<object> GetEnumParameterObjectValues(EnumValueArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
-		{
-			List<object> parameterObjectValues = AbstractArticleParameterDefinitionEntity.Split (parameterStringValue).ToList<object> ();
-
-			if (!this.CheckNbValuesForCardinality (parameterDefinition.Cardinality, parameterObjectValues.Count))
-			{
-				throw new System.Exception ("Invalid number of values for parameter");
-			}
-
-			return parameterObjectValues;
-		}
-
-
-		private bool CheckNbValuesForCardinality(EnumValueCardinality cardinality, int nbValues)
-		{
-			switch (cardinality)
-			{
-				case EnumValueCardinality.ExactlyOne:
-					return (nbValues == 1);
-
-				case EnumValueCardinality.ZeroOrOne:
-					return (nbValues <= 1);
-
-				case EnumValueCardinality.Any:
-					return true;
-
-				case EnumValueCardinality.AtLeastOne:
-					return (nbValues >= 1);
-
-				default:
-					throw new System.NotImplementedException ();
-			}
 		}
 
 
@@ -192,19 +99,9 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private decimal ComputePriceForMultiDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
-			var parameterDefinitions = articleItem.ArticleDefinition.ArticleParameterDefinitions
-							.Where (p => priceTable.Dimensions.Any (d => d.Name == p.Code))
-							.ToList ();
-
-			foreach (var parameterDefinition in parameterDefinitions)
+			if (!this.CheckParametersForMultiDimensionTable (priceTable, articleItem))
 			{
-				var valueParameterDefinition = parameterDefinition as NumericValueArticleParameterDefinitionEntity;
-				var enumParameterDefinition = parameterDefinition as EnumValueArticleParameterDefinitionEntity;
-
-				if (valueParameterDefinition == null && (enumParameterDefinition == null || enumParameterDefinition.Cardinality != EnumValueCardinality.ExactlyOne))
-				{
-					throw new System.NotSupportedException ();
-				}
+				throw new System.NotSupportedException ();
 			}
 
 			object[] key = priceTable.Dimensions
@@ -215,8 +112,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		private bool CheckParametersForMultiDimensionTable(DimensionTable priceTable, ArticleDocumentItemEntity articleItem)
+		{
+			return articleItem.ArticleDefinition.ArticleParameterDefinitions
+				.Where (pd => priceTable.Dimensions.Any (d => d.Name == pd.Code))
+				.All (pd =>
+				{
+					var vpd = pd as NumericValueArticleParameterDefinitionEntity;
+					var epd = pd as EnumValueArticleParameterDefinitionEntity;
+
+					return (vpd != null) || (epd != null && epd.Cardinality == EnumValueCardinality.ExactlyOne);
+				});
+		}
+
+
 		public void SetPriceTable(DimensionTable priceTable)
 		{
+			priceTable.ThrowIfNull ("priceTable");
+			
 			// TODO Add a whole lot of checks on what we expect here? Like look for the article
 			// parameters and check that the dimensions are properly defined? That all the values are
 			// defined, and such...
@@ -228,7 +141,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public DimensionTable GetPriceTable()
 		{
-			return this.DeserializePriceTable (this.SerializedData);
+			DimensionTable priceTable = null;
+			
+			if (this.SerializedData != null)
+			{
+				priceTable = this.DeserializePriceTable (this.SerializedData);
+			}
+
+			return priceTable;
 		}
 
 
@@ -254,6 +174,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static NumericDimension CreateDimension(NumericValueArticleParameterDefinitionEntity parameter, RoundingMode roundingMode)
 		{
+			parameter.ThrowIfNull ("parameter");
+			
 			string name = parameter.Code;
 
 			var values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
@@ -265,10 +187,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static CodeDimension CreateDimension(EnumValueArticleParameterDefinitionEntity parameter)
 		{
-			if (parameter.Cardinality != EnumValueCardinality.ExactlyOne)
-			{
-				throw new System.ArgumentException ("This method must be called with an enum parameter with cardinality exactly one.");
-			}
+			parameter.ThrowIfNull ("parameter");
+			parameter.ThrowIf (p => p.Cardinality != EnumValueCardinality.ExactlyOne, "Unsupported cardinality for parameter.");
 
 			string name = parameter.Code;
 
@@ -280,10 +200,24 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static DimensionTable CreatePriceTable(NumericValueArticleParameterDefinitionEntity parameter, IDictionary<decimal, decimal> parameterCodesToValues, RoundingMode roundingMode)
 		{
-			// TODO Check that the given values match the parameter values.
+			parameter.ThrowIfNull ("parameter");
+			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
 			
 			string name = parameter.Code;
-			List<decimal> values = parameterCodesToValues.Keys.ToList ();
+			
+			List<decimal> values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
+				.Select (v => InvariantConverter.ConvertFromString<decimal> (v))
+				.ToList ();
+
+			if (values.Count != parameterCodesToValues.Count)
+			{
+				throw new System.ArgumentException ();
+			}
+
+			if (values.Any (v => !parameterCodesToValues.ContainsKey (v)))
+			{
+				throw new System.ArgumentException ();
+			}
 
 			NumericDimension dimension = new NumericDimension (name, values, roundingMode);
 			DimensionTable table = new DimensionTable (dimension);
@@ -294,16 +228,26 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return table;
-
 		}
 
 
 		public static DimensionTable CreatePriceTable(EnumValueArticleParameterDefinitionEntity parameter, IDictionary<string, decimal> parameterCodesToValues)
 		{
-			// TODO Check that the given values match the parameter values.
-			
+			parameter.ThrowIfNull ("parameter");
+			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
+
 			string name = parameter.Code;
-			List<string> values = parameterCodesToValues.Keys.ToList ();
+			string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
+
+			if (values.Length != parameterCodesToValues.Count)
+			{
+				throw new System.ArgumentException ();
+			}
+
+			if (values.Any (v => !parameterCodesToValues.ContainsKey (v)))
+			{
+				throw new System.ArgumentException ();
+			}
 
 			CodeDimension dimension = new CodeDimension (name, values);
 			DimensionTable table = new DimensionTable (dimension);

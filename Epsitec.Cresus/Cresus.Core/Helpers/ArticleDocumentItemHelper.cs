@@ -1,16 +1,16 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace Epsitec.Cresus.Core.Helpers
 {
@@ -236,5 +236,112 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ResultingLineTax1           = null;
 			}
 		}
+
+
+		public static IDictionary<string, IList<object>> GetParameterCodesToValues(ArticleDocumentItemEntity articleItem)
+		{
+			articleItem.ThrowIfNull ("articleItem");
+
+			var parameterDefinitions = articleItem.ArticleDefinition.ArticleParameterDefinitions;
+			var parameterStringValues = ArticleParameterHelper.GetArticleParametersValues (articleItem);
+			var parameterCodesToValues = new Dictionary<string, IList<object>> ();
+
+			foreach (var parameterDefinition in parameterDefinitions)
+			{
+				string parameterCode = parameterDefinition.Code;
+
+				if (!parameterStringValues.ContainsKey (parameterCode))
+				{
+					parameterStringValues[parameterCode] = "";
+				}
+
+				string parameterStringValue= parameterStringValues[parameterCode];
+
+				IList<object> parameterObjectValues = ArticleDocumentItemHelper.GetParameterObjectValues (parameterDefinition, parameterStringValue);
+
+				if (parameterObjectValues.Any ())
+				{
+					parameterCodesToValues[parameterCode] = parameterObjectValues;
+				}
+			}
+
+			return parameterCodesToValues;
+		}
+
+
+		private static IList<object> GetParameterObjectValues(AbstractArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
+		{
+			var numericParameterDefinition = parameterDefinition as NumericValueArticleParameterDefinitionEntity;
+			var enumParameterDefinition = parameterDefinition as EnumValueArticleParameterDefinitionEntity;
+			var freeTextParameterDefinition = parameterDefinition as FreeTextValueArticleParameterDefinitionEntity;
+
+			if (numericParameterDefinition != null)
+			{
+				return ArticleDocumentItemHelper.GetNumericParameterObjectValues (numericParameterDefinition, parameterStringValue);
+			}
+			else if (enumParameterDefinition != null)
+			{
+				return ArticleDocumentItemHelper.GetEnumParameterObjectValues (enumParameterDefinition, parameterStringValue);
+			}
+			else if (freeTextParameterDefinition != null)
+			{
+				return ArticleDocumentItemHelper.GetFreeTextParameterObjectValues (freeTextParameterDefinition, parameterStringValue);
+			}
+			else
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private static IList<object> GetNumericParameterObjectValues(NumericValueArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
+		{
+			decimal value = InvariantConverter.ConvertFromString<decimal> (parameterStringValue);
+
+			return new List<object> { value };
+		}
+
+
+		private static IList<object> GetEnumParameterObjectValues(EnumValueArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
+		{
+			List<object> parameterObjectValues = AbstractArticleParameterDefinitionEntity.Split (parameterStringValue).ToList<object> ();
+
+			if (!ArticleDocumentItemHelper.CheckNbValuesForCardinality (parameterDefinition.Cardinality, parameterObjectValues.Count))
+			{
+				throw new System.Exception ("Invalid number of values for parameter");
+			}
+
+			return parameterObjectValues;
+		}
+
+
+		private static bool CheckNbValuesForCardinality(EnumValueCardinality cardinality, int nbValues)
+		{
+			switch (cardinality)
+			{
+				case EnumValueCardinality.ExactlyOne:
+					return (nbValues == 1);
+
+				case EnumValueCardinality.ZeroOrOne:
+					return (nbValues <= 1);
+
+				case EnumValueCardinality.Any:
+					return true;
+
+				case EnumValueCardinality.AtLeastOne:
+					return (nbValues >= 1);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private static IList<object> GetFreeTextParameterObjectValues(FreeTextValueArticleParameterDefinitionEntity parameterDefinition, string parameterStringValue)
+		{
+			return new List<object> () { parameterStringValue };
+		}
+
+
 	}
 }
