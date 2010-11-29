@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.UnitTesting;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
@@ -478,6 +480,256 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+
+
+		[TestMethod]
+		public void ComputeArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new PriceCalculatorEntity ().Compute (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void SetPriceTableArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new PriceCalculatorEntity ().SetPriceTable (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void GetAndSetPriceTableTest()
+		{
+			CodeDimension dimension1 = new CodeDimension ("d1", new string[] { "1", "2", "3"});
+			CodeDimension dimension2 = new CodeDimension ("d2", new string[] { "4", "5", "6"});
+
+			DimensionTable table1 = new DimensionTable (dimension1);
+			DimensionTable table2 = new DimensionTable (dimension2);
+
+			PriceCalculatorEntity pce = new PriceCalculatorEntity ();
+
+			Assert.IsNull (pce.GetPriceTable ());
+
+			pce.SetPriceTable (table1);
+
+			Assert.AreEqual (1, pce.GetPriceTable ().Dimensions.Count ());
+			Assert.AreEqual (dimension1.Name, pce.GetPriceTable ().Dimensions.First ().Name);
+			CollectionAssert.AreEqual (dimension1.Values.ToList (), pce.GetPriceTable ().Dimensions.First ().Values.ToList ());
+
+			pce.SetPriceTable (table2);
+
+			Assert.AreEqual (1, pce.GetPriceTable ().Dimensions.Count ());
+			Assert.AreEqual (dimension2.Name, pce.GetPriceTable ().Dimensions.First ().Name);
+			CollectionAssert.AreEqual (dimension2.Values.ToList (), pce.GetPriceTable ().Dimensions.First ().Values.ToList ());
+		}
+
+
+		[TestMethod]
+		public void CreateNumericDimensionArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreateDimension ((NumericValueArticleParameterDefinitionEntity) null, RoundingMode.None)
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateNumericDimensionTest()
+		{
+			NumericValueArticleParameterDefinitionEntity parameter = new NumericValueArticleParameterDefinitionEntity ()
+			{
+				Code = "code",
+				PreferredValues = AbstractArticleParameterDefinitionEntity.Join("1", "2", "3"),
+			};
+
+			NumericDimension dimension = PriceCalculatorEntity.CreateDimension (parameter, RoundingMode.Nearest);
+
+			Assert.AreEqual (parameter.Code, dimension.Name);
+			CollectionAssert.AreEqual (new List<decimal> () { 1, 2, 3 }, dimension.Values.ToList ());
+			Assert.AreEqual (RoundingMode.Nearest, dimension.RoundingMode);
+		}
+
+
+		[TestMethod]
+		public void CreateCodeDimensionArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreateDimension ((EnumValueArticleParameterDefinitionEntity) null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => PriceCalculatorEntity.CreateDimension (new EnumValueArticleParameterDefinitionEntity ()
+				{
+					Cardinality = EnumValueCardinality.Any,
+				})
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => PriceCalculatorEntity.CreateDimension (new EnumValueArticleParameterDefinitionEntity ()
+				{
+					Cardinality = EnumValueCardinality.ZeroOrOne,
+				})
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => PriceCalculatorEntity.CreateDimension (new EnumValueArticleParameterDefinitionEntity ()
+				{
+					Cardinality = EnumValueCardinality.AtLeastOne,
+				})
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateCodeDimensionTest()
+		{
+			EnumValueArticleParameterDefinitionEntity parameter = new EnumValueArticleParameterDefinitionEntity ()
+			{
+				Code = "code",
+				Cardinality = EnumValueCardinality.ExactlyOne,
+				Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3"),
+			};
+
+			CodeDimension dimension = PriceCalculatorEntity.CreateDimension (parameter);
+
+			Assert.AreEqual (parameter.Code, dimension.Name);
+			CollectionAssert.AreEqual (new List<string> () { "1", "2", "3" }, dimension.Values.ToList ());
+		}
+
+
+		[TestMethod]
+		public void CreateNumericPriceTableArgumentCheck()
+		{
+			NumericValueArticleParameterDefinitionEntity parameter = new NumericValueArticleParameterDefinitionEntity ()
+			{
+				Code = "Name",
+				PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3"),
+			};
+
+			Dictionary<decimal, decimal> codeToValues = new Dictionary<decimal, decimal> ()
+			{
+				{1, 1},
+				{2, 2},
+				{3, 3},
+			};
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable ((NumericValueArticleParameterDefinitionEntity) null, codeToValues, RoundingMode.Nearest)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable (parameter, null, RoundingMode.Nearest)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable (parameter, new Dictionary<decimal, decimal> (), RoundingMode.Nearest)
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateNumericPriceTableTest()
+		{
+			NumericValueArticleParameterDefinitionEntity parameter = new NumericValueArticleParameterDefinitionEntity ()
+			{
+				Code = "Name",
+				PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3"),
+			};
+
+			Dictionary<decimal, decimal> codeToValues = new Dictionary<decimal, decimal> ()
+			{
+				{1, 1},
+				{2, 2},
+				{3, 3},
+			};
+
+			DimensionTable table = PriceCalculatorEntity.CreatePriceTable (parameter, codeToValues, RoundingMode.Down);
+
+			Assert.AreEqual (1, table.Dimensions.Count ());
+			Assert.AreEqual (parameter.Code, table.Dimensions.First ().Name);
+
+			foreach (var item in codeToValues)
+			{
+				Assert.AreEqual (item.Value, table[item.Key]);
+			}
+		}
+
+
+		[TestMethod]
+		public void CreateCodePriceTableArgumentCheck()
+		{
+			EnumValueArticleParameterDefinitionEntity parameter = new EnumValueArticleParameterDefinitionEntity ()
+			{
+				Code = "Name",
+				Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3"),
+			};
+
+			Dictionary<string, decimal> codeToValues = new Dictionary<string, decimal> ()
+			{
+				{"1", 1},
+				{"2", 2},
+				{"3", 3},
+			};
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable ((EnumValueArticleParameterDefinitionEntity) null, codeToValues)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable (parameter, null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => PriceCalculatorEntity.CreatePriceTable (parameter, new Dictionary<string, decimal> ())
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateCodePriceTableTest()
+		{
+			EnumValueArticleParameterDefinitionEntity parameter = new EnumValueArticleParameterDefinitionEntity ()
+			{
+				Code = "Name",
+				Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3"),
+			};
+
+			Dictionary<string, decimal> codeToValues = new Dictionary<string, decimal> ()
+			{
+				{"1", 1},
+				{"2", 2},
+				{"3", 3},
+			};
+
+			DimensionTable table = PriceCalculatorEntity.CreatePriceTable (parameter, codeToValues);
+
+			Assert.AreEqual (1, table.Dimensions.Count ());
+			Assert.AreEqual (parameter.Code, table.Dimensions.First ().Name);
+
+			foreach (var item in codeToValues)
+			{
+				Assert.AreEqual (item.Value, table[item.Key]);
+			}
+		}
+
+
+
 		
 
 	}
