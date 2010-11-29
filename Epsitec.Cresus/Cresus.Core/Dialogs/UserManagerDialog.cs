@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.groups = this.manager.GetAllUserGroups ().Where (x => x.UserPowerLevel != UserPowerLevel.System).OrderBy (x => x.UserPowerLevel).ToList ();
 
 			this.checkButtonGroups = new List<CheckButton> ();
+			this.isLockAcquired = this.manager.BusinessContext.AcquireLock ();
 		}
-
 
 		protected override Window CreateWindow()
 		{
@@ -676,14 +676,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (cancel)
 			{
-				this.manager.DiscardChanges ();
+				this.manager.DiscardChangesAndDisposeBusinessContext ();
 
 				this.Result = DialogResult.Cancel;
 			}
 			else
 			{
 				this.manager.UpdateAuthenticate ();
-				this.manager.SaveChanges ();
+				this.manager.SaveChangesAndDisposeBusinessContext ();
 
 				this.Result = DialogResult.Accept;
 			}
@@ -1305,5 +1305,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private bool										editionStarted;
 		private List<NaturalPersonEntity>					naturalPersonEntities;
 		private bool										ignoreChange;
+		private bool										isLockAcquired;
 	}
 }

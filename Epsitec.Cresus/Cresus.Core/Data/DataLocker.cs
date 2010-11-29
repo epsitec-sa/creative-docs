@@ -12,11 +12,11 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Data
 {
-	public sealed class CoreDataLocker : System.IDisposable
+	public sealed class DataLocker : System.IDisposable
 	{
-		public CoreDataLocker(DataInfrastructure dataInfrastructure)
+		public DataLocker(DataInfrastructure dataInfrastructure)
 		{
 			this.dataInfrastructure = dataInfrastructure;
 		}

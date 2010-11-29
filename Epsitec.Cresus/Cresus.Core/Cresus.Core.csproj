@@ -156,6 +156,8 @@
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\WorkflowTransition.cs" />
     <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
+    <Compile Include="Data\GlobalLock.cs" />
+    <Compile Include="Data\GlobalLocks.cs" />
     <Compile Include="Data\ImageData.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
@@ -292,7 +294,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="CoreDataConnectionManager.cs" />
-    <Compile Include="CoreDataLocker.cs" />
+    <Compile Include="Data\DataLocker.cs" />
     <Compile Include="CoreDataLockTransaction.cs" />
     <Compile Include="Printers\AbstractDocumentPrinter.cs" />
     <Compile Include="Printers\MailContactLabelDocumentPrinter.cs" />
