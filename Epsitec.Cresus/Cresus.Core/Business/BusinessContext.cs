@@ -628,11 +628,11 @@ namespace Epsitec.Cresus.Core.Business
 
 			if (this.activeEntity != null)
 			{
-				yield return DataLocker.GetLockName (this.dataContext, this.activeEntity);
+				yield return Locker.GetLockName (this.dataContext, this.activeEntity);
 			}
 			if (this.lockEntity != null)
 			{
-				yield return DataLocker.GetLockName (this.dataContext, this.lockEntity);
+				yield return Locker.GetLockName (this.dataContext, this.lockEntity);
 			}
 		}
 
@@ -677,14 +677,14 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly DataContext			dataContext;
 		private readonly List<EntityRecord>		entityRecords;
 		private readonly List<AbstractEntity>	masterEntities;
-		private readonly DataLocker				locker;
+		private readonly Locker				locker;
 
 		private int								dataChangedCounter;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
 		private bool							hasExternalChanges;
-		private CoreDataLockTransaction			lockTransaction;
+		private LockTransaction			lockTransaction;
 
 		private GlobalLock						globalLock;
 		private AbstractEntity					activeEntity;

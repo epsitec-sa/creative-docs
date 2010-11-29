@@ -9,30 +9,30 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Data
 {
 	/// <summary>
 	/// The <c>CoreDataConnectionManager</c> class maintains an active connection with
 	/// the underlying database. Typically, it updates the connection state periodically.
 	/// </summary>
-	public sealed class CoreDataConnectionManager : System.IDisposable
+	public sealed class ConnectionManager : System.IDisposable
 	{
-		public CoreDataConnectionManager(CoreData data)
+		public ConnectionManager(CoreData data)
 		{
 			this.data = data;
 			this.dataInfrastructure = data.DataInfrastructure;
 			
 			this.keepAliveTimer = new Timer ()
 			{
-				AutoRepeat = CoreDataConnectionManager.KeepAlivePeriodInSeconds,
-				Delay = CoreDataConnectionManager.KeepAlivePeriodInSeconds,
+				AutoRepeat = ConnectionManager.KeepAlivePeriodInSeconds,
+				Delay = ConnectionManager.KeepAlivePeriodInSeconds,
 			};
 
 			this.keepAliveTimer.TimeElapsed += this.HandleKeepAliveTimerTimeElapsed;
 		}
 
 
-		public bool IsActive
+		public bool								IsActive
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public bool IsReady
+		public bool								IsReady
 		{
 			get
 			{
@@ -79,8 +79,8 @@ namespace Epsitec.Cresus.Core
 
 		private void OpenConnection()
 		{
-			string identity = this.GetIdentity ();
-			this.dataInfrastructure.OpenConnection (identity);
+			var identity = this.GetIdentity ();
+			this.dataInfrastructure.OpenConnection (identity.ToString ());
 			this.isReady = true;
 		}
 
@@ -91,30 +91,23 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private string GetIdentity()
+		private ConnectionUserIdentity GetIdentity()
 		{
-			var userCode    = this.GetActiveUserCode ();
-			var userName    = System.Environment.UserName;
-			var machineName = System.Environment.MachineName;
-			var osVersion   = System.Environment.OSVersion.VersionString;
-			var clrVersion  = System.Environment.Version.ToString ();
-			var coreVersion = typeof (CoreData).Assembly.GetVersionString ();
-
-			return string.Concat (userCode, ":", userName, "@", machineName, "/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
+			return new ConnectionUserIdentity (this.GetActiveUserCode ());
 		}
 
-		private string GetActiveUserCode()
+		private ItemCode GetActiveUserCode()
 		{
 			var userManager = CoreProgram.Application.UserManager;
 			var activeUser  = userManager.AuthenticatedUser;
 
 			if (activeUser == null)
 			{
-				return "<none>";
+				return new ItemCode ("<none>");
 			}
 			else
 			{
-				return activeUser.Code;
+				return new ItemCode (activeUser.Code);
 			}
 		}
 

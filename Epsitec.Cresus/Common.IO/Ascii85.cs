@@ -46,6 +46,80 @@ namespace Epsitec.Common.IO
 		}
 
 
+		public static string MapEncodedStringToXmlTransparent(string data)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder (data.Length);
+
+			foreach (char c in data)
+			{
+				char output;
+				
+				switch (c)
+				{
+					case '\'':	output = 'v';	break;
+					case '\"':	output = 'w';	break;
+					case '<':	output = '{';	break;
+					case '>':	output = '}';	break;
+					case '&':	output = '|';	break;
+					
+					case 'v':
+					case 'w':
+					case 'x':
+					case 'y':
+					case '{':
+					case '|':
+					case '}':
+					case '~':
+						throw new System.FormatException ("Invalid ASCII 85 character found");
+
+					default:
+						output = c;
+						break;
+				}
+
+				buffer.Append (output);
+			}
+			
+			return buffer.ToString ();
+		}
+
+		public static string MapXmlTransparentToEncodedString(string data)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder (data.Length);
+
+			foreach (char c in data)
+			{
+				char output;
+				
+				switch (c)
+				{
+					case 'v':	output = '\'';	break;
+					case 'w':	output = '\"';	break;
+					case '{':	output = '<';	break;
+					case '}':	output = '>';	break;
+					case '|':	output = '&';	break;
+
+					case 'x':
+					case 'y':
+					case '\'':
+					case '\"':
+					case '<':
+					case '>':
+					case '&':
+					case '~':
+						throw new System.FormatException ("Invalid XML-transparent ASCII 85 character found");
+
+					default:
+						output = c;
+						break;
+				}
+
+				buffer.Append (output);
+			}
+			
+			return buffer.ToString ();
+		}
+
 		public static string EncodeGuid(System.Guid guid)
 		{
 			return Ascii85.Encode (guid.ToByteArray (), outputMarks: false);

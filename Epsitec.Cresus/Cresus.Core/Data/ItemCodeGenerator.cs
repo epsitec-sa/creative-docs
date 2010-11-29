@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Data
 {
 	/// <summary>
 	/// The <c>ItemCodeGenerator</c> produces unique codes, which are used by the entities
@@ -17,20 +17,20 @@ namespace Epsitec.Cresus.Core.Business
 		/// encoded GUID (whereas a GUID usually gets encoded as a 32-digit string).
 		/// </summary>
 		/// <returns>The unique code.</returns>
-		public static string NewCode()
+		public static ItemCode NewCode()
 		{
-			return ItemCodeGenerator.FromGuid (System.Guid.NewGuid ());
+			return new ItemCode (System.Guid.NewGuid ());
 		}
 
 
 		public static System.Guid ToGuid(string code)
 		{
-			return Epsitec.Common.IO.Ascii85.DecodeGuid (code);
+			return Epsitec.Common.IO.Ascii85.DecodeGuid (Epsitec.Common.IO.Ascii85.MapXmlTransparentToEncodedString (code));
 		}
 
 		public static string FromGuid(System.Guid guid)
 		{
-			return Epsitec.Common.IO.Ascii85.EncodeGuid (guid);
+			return Epsitec.Common.IO.Ascii85.MapEncodedStringToXmlTransparent (Epsitec.Common.IO.Ascii85.EncodeGuid (guid));
 		}
 	}
 }

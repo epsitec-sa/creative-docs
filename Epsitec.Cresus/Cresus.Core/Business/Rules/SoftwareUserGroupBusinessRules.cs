@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(SoftwareUserGroupEntity group)
 		{
-			group.Code = ItemCodeGenerator.NewCode ();
+			group.Code = (string) ItemCodeGenerator.NewCode ();
 			group.UserPowerLevel = Business.UserManagement.UserPowerLevel.None;
 		}
 	}

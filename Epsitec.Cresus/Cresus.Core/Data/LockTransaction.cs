@@ -12,17 +12,19 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Data
 {
-	public sealed class CoreDataLockTransaction : System.IDisposable
+	using LowLevelLockTransaction=Epsitec.Cresus.DataLayer.Infrastructure.LockTransaction;
+	
+	public sealed class LockTransaction : System.IDisposable
 	{
-		public CoreDataLockTransaction(IEnumerable<string> lockNames)
+		public LockTransaction(IEnumerable<string> lockNames)
 		{
 			this.lockNames = new List<string> (lockNames);
 		}
 
 
-		public LockState LockSate
+		public LockState						LockSate
 		{
 			get
 			{
@@ -52,7 +54,7 @@ namespace Epsitec.Cresus.Core
 			return this.lockTransaction != null;
 		}
 
-		private LockTransaction CreateLockTransaction(DataInfrastructure dataInfrastructure)
+		private LowLevelLockTransaction CreateLockTransaction(DataInfrastructure dataInfrastructure)
 		{
 			var lockTransaction = dataInfrastructure.CreateLockTransaction (this.lockNames);
 
@@ -83,7 +85,7 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 		private readonly List<string> lockNames;
-		private LockTransaction lockTransaction;
+		private LowLevelLockTransaction lockTransaction;
 
 		private bool isDisposed;
 	}
