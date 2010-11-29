@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public sealed class DataLocker : System.IDisposable
+	public sealed class Locker : System.IDisposable
 	{
-		public DataLocker(DataInfrastructure dataInfrastructure)
+		public Locker(DataInfrastructure dataInfrastructure)
 		{
 			this.dataInfrastructure = dataInfrastructure;
 		}
@@ -39,14 +39,14 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		public CoreDataLockTransaction RequestLock(params string[] lockNames)
+		public LockTransaction RequestLock(params string[] lockNames)
 		{
 			return this.RequestLock ((IEnumerable<string>) lockNames);
 		}
 
-		public CoreDataLockTransaction RequestLock(IEnumerable<string> lockNames)
+		public LockTransaction RequestLock(IEnumerable<string> lockNames)
 		{
-			var lockTransaction = new CoreDataLockTransaction (lockNames);
+			var lockTransaction = new LockTransaction (lockNames);
 
 			if (lockTransaction.Acquire (this.dataInfrastructure))
 			{

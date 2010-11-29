@@ -5,7 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
-
+using Epsitec.Cresus.Core.Data;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public void InitializeDefaultValues()
 		{
-			this.Code = ItemCodeGenerator.NewCode ();
+			this.Code = (string) ItemCodeGenerator.NewCode ();
 		}
 
 		public WorkflowNodeEntity GetContinuationOrDefault(WorkflowNodeEntity defaultNode)

@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(SoftwareUserEntity user)
 		{
-			user.Code = ItemCodeGenerator.NewCode ();
+			user.Code = (string) ItemCodeGenerator.NewCode ();
 			user.DisplayName = new FormattedText ("");
 			user.LoginName = "";
 			user.BeginDate = System.DateTime.Now;

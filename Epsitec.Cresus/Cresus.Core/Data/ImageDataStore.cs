@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
 
@@ -245,7 +246,7 @@ namespace Epsitec.Cresus.Core.Data
 			blob.FileName             = file.Name;
 			blob.FileUri              = uri.ToString ();
 			blob.FileMimeType         = MimeTypeDictionary.MimeTypeToString (MimeTypeDictionary.GetMimeTypeFromExtension (file.Extension));
-			blob.Code                 = Business.ItemCodeGenerator.NewCode ();
+			blob.Code                 = (string) ItemCodeGenerator.NewCode ();
 			blob.Data                 = data;
 
 			using (var bitmap = NativeBitmap.Load (data))
