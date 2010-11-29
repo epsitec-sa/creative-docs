@@ -17,12 +17,14 @@
 		/// <param name="connectionId">The <see cref="DbId"/> of the connection of the lock.</param>
 		/// <param name="name">The name of the lock.</param>
 		/// <param name="counter">The counter that counts the number of times the lock has been acquired.</param>
-		internal DbLock(DbId id, DbId connectionId, string name, int counter)
+		/// <param name="creationTime">The instant at which the lock has been acquired for the first time.</param>
+		internal DbLock(DbId id, DbId connectionId, string name, int counter, System.DateTime creationTime)
 		{
 			this.Id = id;
 			this.ConnectionId = connectionId;
 			this.Name = name;
 			this.Counter = counter;
+			this.CreationTime = creationTime;
 		}
 
 
@@ -61,6 +63,17 @@
 		/// has been acquired.
 		/// </summary>
 		internal int Counter
+		{
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// Gets the instant at which the lock represented by this instance has been acquired for
+		/// the first time.
+		/// </summary>
+		public System.DateTime CreationTime
 		{
 			get;
 			private set;
