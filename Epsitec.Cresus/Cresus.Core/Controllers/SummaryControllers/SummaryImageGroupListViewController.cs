@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	[ControllerSubType (2)]
+	[ControllerSubType (4)]
 	public class SummaryImageGroupListViewController : SummaryViewController<ImageEntity>
 	{
 		public SummaryImageGroupListViewController(string name, ImageEntity entity)

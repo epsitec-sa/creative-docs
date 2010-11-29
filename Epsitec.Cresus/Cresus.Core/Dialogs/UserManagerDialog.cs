@@ -72,6 +72,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupWidgets(Window window)
 		{
+			if (this.isLockAcquired)
+			{
+				this.SetupWidgetsLockAcquired (window);
+			}
+			else
+			{
+				this.SetupWidgetsLockNotAcquired (window);
+			}
+		}
+
+		protected void SetupWidgetsLockAcquired(Window window)
+		{
 			int tabIndex = 1;
 
 			var topPane = new FrameBox
@@ -442,7 +454,61 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateWidgets ();
 		}
 
+		protected void SetupWidgetsLockNotAcquired(Window window)
+		{
+			int tabIndex = 1;
+
+			var topPane = new FrameBox
+			{
+				Parent = window.Root,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 10, 10, 10),
+				TabIndex = tabIndex++,
+			};
+
+			var message = new StaticText
+			{
+				Parent = topPane,
+				Text = "L'accès est impossible, car un autre utilisateur est déjà en train de modifier ces données !",
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Fill,
+			};
+
+			var footer = new FrameBox
+			{
+				Parent = window.Root,
+				PreferredHeight = 20,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (10, 10, 0, 10),
+				TabIndex = tabIndex++,
+			};
+
+			//	Crée le pied de page.
+			{
+				this.cancelButton = new Button ()
+				{
+					Parent = footer,
+					Text = "Fermer",
+					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
+					Dock = DockStyle.Right,
+					TabIndex = tabIndex++,
+				};
+			}
+		}
+
 		protected void SetupEvents(Window window)
+		{
+			if (this.isLockAcquired)
+			{
+				this.SetupEventsLockAcquired (window);
+			}
+			else
+			{
+				this.SetupEventsLockNotAcquired (window);
+			}
+		}
+
+		protected void SetupEventsLockAcquired(Window window)
 		{
 			this.addButton.Clicked += delegate
 			{
@@ -665,6 +731,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.CloseAction (cancel: true);
 			};
 		}
+
+		protected void SetupEventsLockNotAcquired(Window window)
+		{
+			this.cancelButton.Clicked += delegate
+			{
+				this.CloseAction (cancel: true);
+			};
+		}
+
 
 		void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
