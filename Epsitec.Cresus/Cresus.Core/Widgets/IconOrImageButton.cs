@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public CoreData CoreData
 		{
+			//	Permet d'accéder aux données, pour trouver les bitmaps.
 			get
 			{
 				return this.coreData;
@@ -48,6 +49,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public ImageEntity ImageEntity
 		{
+			//	Identité de l'image à afficher. S'il n'y en a pas, c'est l'icône qui est affichée.
 			get
 			{
 				return this.imageEntity;
@@ -129,13 +131,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.coreData != null && this.imageEntity.IsNotNull ())
 			{
 				var store = this.coreData.ImageDataStore;
-				var data = store.GetImageData (this.imageEntity.ImageBlob.Code, (int) IconOrImageButton.imageSize);
+				var data = store.GetImageData (this.imageEntity.ImageBlob.Code, (int) (Misc.GetButtonWidth () - 2));
 				this.image = data.GetImage ();
 			}
 		}
 
-
-		public static readonly double imageSize = 40;
 
 		private CoreData			coreData;
 		private ImageEntity			imageEntity;

@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "User",
 				Title = "Identité",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 1,
 			};
 
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = section,
 					Dock = DockStyle.StackBegin,
 					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+					PreferredWidth = Misc.GetButtonWidth (large: true),
 				};
 
 				this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = frame,
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 					PreferredHeight = 12,
-					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+					PreferredWidth = Misc.GetButtonWidth (large: true),
 					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, 0, -2, 0),
 				};
@@ -146,8 +146,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Edit",
 				Title = "Édition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 4 +
-								 RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) * 1,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 4 +
+								 Misc.GetButtonWidth (large: false) * 1,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
@@ -160,10 +160,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
+				PreferredWidth = Misc.GetButtonWidth (large: false),
 			};
 
-			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.File.ImportV11, dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.File.ImportV11, large: false));
 		}
 
 		private void CreateRibbonClipboardSection()
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Clipboard",
 				Title = "Presse-papier",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) + RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+				PreferredWidth = Misc.GetButtonWidth (large: false) + Misc.GetButtonWidth (large: true),
 			};
 
 			var frame = new FrameBox
@@ -181,11 +181,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
+				PreferredWidth = Misc.GetButtonWidth (large: false),
 			};
 
-			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Cut,  dx: RibbonViewController.buttonSmallWidth));
-			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Copy, dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Cut,  large: false));
+			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Copy, large: false));
 
 			section.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Paste));
 		}
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Font",
 				Title = "Police",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) * 3,
+				PreferredWidth = Misc.GetButtonWidth (large: false) * 3,
 			};
 
 			var frame = new FrameBox
@@ -224,12 +224,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = section.PreferredWidth,
 			};
 
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       dx: RibbonViewController.buttonSmallWidth, isActivable: true));
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Italic,     dx: RibbonViewController.buttonSmallWidth, isActivable: true));
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Underlined, dx: RibbonViewController.buttonSmallWidth, isActivable: true));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       large: false, isActivable: true));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Italic,     large: false, isActivable: true));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
 
-			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Subscript,   dx: RibbonViewController.buttonSmallWidth, isActivable: true));
-			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Superscript, dx: RibbonViewController.buttonSmallWidth, isActivable: true));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Subscript,   large: false, isActivable: true));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Superscript, large: false, isActivable: true));
 		}
 
 		private void CreateRibbonDatabaseSection()
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Database",
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 3,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 3,
 				Dock = DockStyle.Fill,
 			};
 
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowDocuments));
 
 			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
-			double buttonWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth);
+			double buttonWidth = Misc.GetButtonWidth (large: true);
 
 			var group = new FrameBox ()
 			{
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Name = "Navigation",
 				Title = "Navigation",
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 2,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 2,
 				Dock = DockStyle.Right,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 3,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 3,
 			};
 
 			{
@@ -560,77 +560,64 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int? dx = null, bool isActivable = false)
+		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
 		{
 			if (handler != null)
 			{
 				CoreProgram.Application.CommandDispatcher.Register (command, handler);
 			}
 
-			if (!dx.HasValue)
-			{
-				dx = RibbonViewController.buttonLargeWidth;
-			}
-
-			double buttonWidth = RibbonViewController.GetButtonWidth (dx.Value);
+			double buttonWidth = Misc.GetButtonWidth (large);
+			int width = large ? Misc.buttonLargeWidth : Misc.buttonSmallWidth;
 
 			if (isActivable)
 			{
 				return new IconButton
 				{
-					CommandObject = command,
-					PreferredIconSize = new Size (dx.Value, dx.Value),
-					PreferredSize = new Size (buttonWidth, buttonWidth),
-					Dock = dockStyle,
-					Name = (command == null) ? null : command.Name,
-					VerticalAlignment = VerticalAlignment.Top,
+					CommandObject       = command,
+					PreferredIconSize   = new Size (width, width),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = dockStyle,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus = false,
+					AutoFocus           = false,
 				};
 			}
 			else
 			{
 				return new RibbonIconButton
 				{
-					CommandObject = command,
-					PreferredIconSize = new Size (dx.Value, dx.Value),
-					PreferredSize = new Size (buttonWidth, buttonWidth),
-					Dock = dockStyle,
-					Name = (command == null) ? null : command.Name,
-					VerticalAlignment = VerticalAlignment.Top,
+					CommandObject       = command,
+					PreferredIconSize   = new Size (width, width),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = dockStyle,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus = false,
+					AutoFocus           = false,
 				};
 			}
 		}
 
 		private static IconOrImageButton CreateIconOrImageButton(Command command)
 		{
-			double buttonWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth);
+			double buttonWidth = Misc.GetButtonWidth (large: true);
 
 			var button = new IconOrImageButton
 			{
-				CommandObject = command,
-				PreferredSize = new Size (buttonWidth, buttonWidth),
-				Dock = DockStyle.StackBegin,
-				Name = (command == null) ? null : command.Name,
-				VerticalAlignment = VerticalAlignment.Top,
+				CommandObject       = command,
+				PreferredSize       = new Size (buttonWidth, buttonWidth),
+				Dock                = DockStyle.StackBegin,
+				Name                = (command == null) ? null : command.Name,
+				VerticalAlignment   = VerticalAlignment.Top,
 				HorizontalAlignment = HorizontalAlignment.Center,
-				AutoFocus = false,
+				AutoFocus           = false,
 			};
 
 			return button;
 		}
 		
-		private static double GetButtonWidth(int dx)
-		{
-			return 2 * ((dx + 1) / 2 + 5);
-		}
-
-
-		private static readonly int buttonSmallWidth = 14;
-		private static readonly int buttonLargeWidth = 31;
-
 
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;

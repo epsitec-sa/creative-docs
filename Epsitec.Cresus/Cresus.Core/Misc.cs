@@ -465,6 +465,21 @@ namespace Epsitec.Cresus.Core
 
 
 		/// <summary>
+		/// Retourne les dimensions pour un bouton contenant une icône ou une image.
+		/// </summary>
+		/// <param name="large"></param>
+		/// <returns></returns>
+		public static double GetButtonWidth(bool large = true)
+		{
+			int dx = large ? Misc.buttonLargeWidth : Misc.buttonSmallWidth;
+			return 2 * ((dx + 1) / 2 + 5);
+		}
+
+		public static readonly int buttonSmallWidth = 14;
+		public static readonly int buttonLargeWidth = 31;
+
+
+		/// <summary>
 		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.
 		/// </summary>
 		/// <param name="icon">Nom brut de l'icône, sans extension.</param>

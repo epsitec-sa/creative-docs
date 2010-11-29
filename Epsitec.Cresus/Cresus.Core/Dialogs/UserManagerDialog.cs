@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.table = new CellTable
 				{
 					Parent = tile,
-					DefHeight = IconOrImageButton.imageSize+3,
+					DefHeight = Misc.GetButtonWidth () + 1,
 					StyleH = CellArrayStyles.Separator,
 					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 					Dock = DockStyle.Fill,
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 
 				this.table.SetArraySize (2, 0);
-				this.table.SetWidthColumn (0, IconOrImageButton.imageSize+3);
+				this.table.SetWidthColumn (0, Misc.GetButtonWidth () + 1);
 				this.table.SetWidthColumn (1, 400);
 			}
 
@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var button = new IconOrImageButton
 				{
 					CoreData = this.manager.CoreData,
-					PreferredSize = new Size (IconOrImageButton.imageSize+2, IconOrImageButton.imageSize+2),
+					PreferredSize = new Size (Misc.GetButtonWidth (), Misc.GetButtonWidth ()),
 					IconUri = Misc.GetResourceIconUri ("UserManager"),
 					IconPreferredSize = new Size (31, 31),
 					Enable = false,
