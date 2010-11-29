@@ -293,7 +293,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (PriceCalculatorEntity pce in articlePrice.PriceCalculators)
 			{
-				totalPrice += pce.Compute (this.articleItem);
+				decimal? price = pce.Compute (this.articleItem);
+
+				if (price.HasValue)
+				{
+					totalPrice += price.Value;
+				}
+
+				// TODO If the price is null, then either the price was not defined for the
+				// calculator, or some kind of error happened. Should we report an error to the
+				// user?
+				// Marc
+
 			}
 
 			return totalPrice;
