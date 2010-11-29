@@ -766,7 +766,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.users[row];
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
-			button.ImageEntity = user.Person.Photo;
+			button.ImageEntity = user.Person.Pictures.FirstOrDefault ();
 
 			FormattedText description = user.ShortDescription;
 
@@ -892,7 +892,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
 			{
 				user.Person = this.naturalPersonEntities[sel];
-				user.Person = this.naturalPersonEntities[sel];  // TODO : POURQUOI ???
 			}
 			else
 			{
@@ -950,7 +949,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			System.Diagnostics.Debug.Assert (user != null);
 
 			user.LoginName = this.loginNameField.Text.Trim ();
-			user.LoginName = this.loginNameField.Text.Trim ();  // TODO : POURQUOI ???
 
 			this.UpdateTable ();
 			this.UpdateWidgets ();
