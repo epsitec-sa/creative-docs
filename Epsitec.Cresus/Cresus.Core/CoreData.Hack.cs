@@ -336,14 +336,14 @@ namespace Epsitec.Cresus.Core
 			personPA.Contacts.Add (telecomPA3);
 			personPA.Contacts.Add (uriPA1);
 			personPA.Contacts.Add (uriPA2);
-			personPA.Photo = images.Where (x => x.Name == "PA").FirstOrDefault ();
+			personPA.Pictures.Add (images.Where (x => x.Name == "PA").FirstOrDefault ());
 			
 			// personDR
 
 			personDR.Firstname = "Daniel";
 			personDR.Lastname  = "Roux";
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
-			personDR.Photo = images.Where (x => x.Name == "DR").FirstOrDefault ();
+			personDR.Pictures.Add (images.Where (x => x.Name == "DR").FirstOrDefault ());
 
 			yield return personPA;
 			yield return personDR;

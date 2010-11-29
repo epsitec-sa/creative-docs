@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.users[row];
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
-			button.ImageEntity = user.Person.Photo;
+			button.ImageEntity = user.Person.Pictures.FirstOrDefault ();
 
 			var text = this.table[1, row].Children[0] as StaticText;
 			text.FormattedText = user.ShortDescription;

@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -84,15 +86,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var controller = new SelectionController<ImageEntity> (this.BusinessContext)
 			{
-				ValueGetter         = () => this.Entity.Photo,
-				ValueSetter         = x => this.Entity.Photo = x,
-				ReferenceController = new ReferenceController (() => this.Entity.Photo),
-
-				ToTextArrayConverter     = x => x.GetEntityKeywords (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
+				CollectionValueGetter    = () => this.Entity.Pictures,
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateAutoCompleteTextField ("Photo d'identité", controller);
+			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
 		}
 
 
