@@ -1409,6 +1409,7 @@ namespace Epsitec.Cresus.Core
 			};
 
 			this.ContentListAdd (widget);
+			this.AttachPreProcessingLockAcquisition (widget);
 
 			return widget;
 		}
