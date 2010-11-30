@@ -5,6 +5,8 @@ using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 namespace Epsitec.Cresus.Database.Implementation
 {
 	/// <summary>
@@ -1082,6 +1084,18 @@ namespace Epsitec.Cresus.Database.Implementation
 				case SqlFieldType.RawSql:
 					this.Append ('(');
 					this.Append (field.AsRawSql);
+					this.Append (')');
+					break;
+
+				case SqlFieldType.Set:
+					SqlSet set = field.AsSet;
+
+					var values = set.Values
+						.Select (v => SqlField.CreateConstant (v, set.Type))
+						.Select (c => this.MakeCommandParam (c));
+										
+					this.Append ('(');
+					this.Append (string.Join(", ", values));
 					this.Append (')');
 					break;
 				

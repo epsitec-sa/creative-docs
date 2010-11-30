@@ -98,5 +98,10 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		RawSql,
 
+		/// <summary>
+		/// A set of constants. 
+		/// </summary>
+		Set,
+
 	}									
 }

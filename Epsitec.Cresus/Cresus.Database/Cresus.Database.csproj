@@ -182,6 +182,7 @@
     <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
     <Compile Include="Res.cs" />
+    <Compile Include="SqlSet.cs" />
     <Compile Include="SqlSortOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
