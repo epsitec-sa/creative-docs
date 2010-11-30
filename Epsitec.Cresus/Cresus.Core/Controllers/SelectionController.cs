@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<System.Collections.Generic.IList<T>> CollectionValueGetter
+		public System.Func<IList<T>>			CollectionValueGetter
 		{
 			get;
 			set;
@@ -229,7 +230,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void AttachMultipleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.MultipleValue;
-			this.attachedPicker.MultiSelectionChanged += this.HandleMultiSelectionChanged;
+			this.attachedPicker.SelectedItemChanged += this.HandleMultiSelectionChanged;
 		}
 
 		private void AttachSingleValueSelector()
@@ -253,18 +254,25 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleMultiSelectionChanged(object sender)
 		{
 			var selectedItems = this.CollectionValueGetter ();
+			var newSelection  = new List<T> ();
 
 			var indexes = this.attachedPicker.GetSortedSelection ();
 
+			foreach (int selectedIndex in indexes)
+			{
+				var item = this.widgetItems.GetValue<T> (selectedIndex);
+				newSelection.Add (this.GetBusinessContextCompatibleEntity (item));
+			}
+
+			if (Comparer.EqualObjects (selectedItems, newSelection))
+			{
+				return;
+			}
+			
 			using (this.SuspendNotifications (selectedItems))
 			{
 				selectedItems.Clear ();
-
-				foreach (int selectedIndex in indexes)
-				{
-					var item = this.widgetItems.GetValue<T> (selectedIndex);
-					selectedItems.Add (this.GetBusinessContextCompatibleEntity (item));
-				}
+				selectedItems.AddRange (newSelection);
 			}
 		}
 
