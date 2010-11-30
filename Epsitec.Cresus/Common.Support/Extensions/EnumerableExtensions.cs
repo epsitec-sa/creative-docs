@@ -59,6 +59,10 @@ namespace Epsitec.Common.Support.Extensions
 			sequence.ThrowIfNull ("sequence");
 			elements.ThrowIfNull ("elements");
 
+			// Here we use an helper method so that the argument check is immediate but the body
+			// execution is deferred.
+			// Marc
+
 			return EnumerableExtensions.AppendInternal<T> (sequence, elements);
 		}
 
@@ -80,13 +84,17 @@ namespace Epsitec.Common.Support.Extensions
 		/// order.
 		/// </summary>
 		/// <remarks>This linq method use deferred execution but will buffer the input sequence and
-		/// has a complexity of O(n log n).
+		/// has a complexity of O(n log n) where n is the length of the sequence. 
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="sequence">The sequence to shuffle.</param>
 		/// <returns>The shuffled sequence.</returns>
 		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> sequence)
 		{
 			sequence.ThrowIfNull ("sequence");
+
+			// Here we use an helper method so that the argument check is immediate but the body
+			// execution is deferred.
+			// Marc
 
 			return EnumerableExtensions.ShuffleInternal<T> (sequence);
 		}
@@ -102,6 +110,29 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			return sequence.OrderBy (e => EnumerableExtensions.dice.NextDouble ());
 		}
+
+
+		/// <summary>
+		/// Checks that both <see cref="IEnumerable{T}"/> contain the same set of elements, ignoring
+		/// duplicates entries in both sequences.
+		/// </summary>
+		/// <remarks>This linq method will buffer both imput sequences and will execute immediately.
+		/// Its has a complexity of O(n) where n is the length of the longest input sequence.</remarks>
+		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
+		/// <param name="first">The first <see cref="IEnumerable{T}"/>.</param>
+		/// <param name="second">The second <see cref="IEnumerable{T}"/>.</param>
+		/// <returns><c>true</c> if both sequence contain the same set of elements, <c>false</c> if they don't.</returns>
+		public static bool SetEquals<T>(this IEnumerable<T> first, IEnumerable<T> second)
+		{
+			first.ThrowIfNull ("first");
+			second.ThrowIfNull ("second");
+
+			HashSet<T> set1 = new HashSet<T> (first);
+			HashSet<T> set2 = new HashSet<T> (second);
+
+			return set1.SetEquals (set2);
+		}
+
 
 		[System.ThreadStatic]
 		private static System.Random dice = new System.Random ();
