@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (Rectangle.Deflate (part, new Margins (0, 0, 0.5, 0)));
 					graphics.RenderSolid (Color.FromBrightness (1));
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 		}
 
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (bounds);
 					graphics.RenderSolid (Color.FromBrightness (1.0));
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 			
 			inputFrame.PaintForeground +=
@@ -540,7 +540,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddLine (0.0, y2, x2, y2);
 					graphics.RenderSolid (adorner.ColorBorder);
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 		}
 
@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddLine (0.0, y2, x2, y2);
 					graphics.RenderSolid (adorner.ColorBorder);
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 		}
 
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (bounds);
 					graphics.RenderSolid (Color.FromBrightness (1.0));
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 		}
 
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						e.Graphics.RotateTransformDeg (90, center.X, center.Y);
 						e.Graphics.Color = text.TextLayout.DefaultRichColor.Basic;
 						e.Graphics.PaintText (bounds.X, bounds.Y, bounds.Width, bounds.Height, text.Text, text.TextLayout.DefaultFont, text.TextLayout.DefaultFontSize, text.ContentAlignment);
-						e.Suppress = true;
+						e.Cancel = true;
 					};
 			}
 
@@ -1489,7 +1489,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.RenderGradient ();
 
 					graphics.Transform = transform;
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 
 			var button = new CheckButton ()
@@ -1546,7 +1546,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.RenderGradient ();
 
 					graphics.Transform = transform;
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 
 			var button = new RadioButton ()

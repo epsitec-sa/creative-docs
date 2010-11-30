@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 							}
 						});
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 		}
 		

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 							this.widget.MouseCursor = MouseCursor.AsHand;
 						});
 
-					e.Suppress = true;
+					e.Cancel = true;
 				};
 
 			this.widget.SetEngaged (true);

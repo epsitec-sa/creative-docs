@@ -653,9 +653,36 @@ namespace Epsitec.Cresus.Core
 				button.PreferredWidth = width;
 			}
 
+			this.AttachPreProcessingLockAcquisition (button);
+			
 			return button;
 		}
 
+
+		private void AttachPreProcessingLockAcquisition(Widget widget)
+		{
+			widget.PreProcessing += this.HandleWidgetPreProcessingLockAcquisition;
+		}
+
+		private void HandleWidgetPreProcessingLockAcquisition(object sender, MessageEventArgs e)
+		{
+			//	If the event might produce some action (click or key press), first make
+			//	sure that we may write to the entities stored in the business context
+			//	(i.e. acquire the lock). If not, cancel the user event.
+
+			if ((e.Message.MessageType == MessageType.MouseDown) ||
+				(e.Message.MessageType == MessageType.MouseUp) ||
+				(e.Message.MessageType == MessageType.KeyDown) ||
+				(e.Message.MessageType == MessageType.KeyUp))
+			{
+				if (this.businessContext.AcquireLock () == false)
+				{
+					//	TODO: make the whole UI read-only ...
+
+					e.Cancel = true;
+				}
+			}
+		}
 
 		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
 		{

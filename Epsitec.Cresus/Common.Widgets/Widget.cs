@@ -3710,7 +3710,7 @@ namespace Epsitec.Common.Widgets
 				MessageEventArgs e = new MessageEventArgs (message, pos);
 				this.PreProcessing (this, e);
 				
-				if (e.Suppress)
+				if (e.Cancel)
 				{
 					return false;
 				}
@@ -3774,7 +3774,7 @@ namespace Epsitec.Common.Widgets
 				MessageEventArgs e = new MessageEventArgs (message, pos);
 				this.PostProcessing (this, e);
 				
-				if (e.Suppress)
+				if (e.Cancel)
 				{
 					return false;
 				}
@@ -4040,11 +4040,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (handler != null)
 			{
-				e.Suppress = false;
+				e.Cancel = false;
 				
 				handler (this, e);
 				
-				if (e.Suppress)
+				if (e.Cancel)
 				{
 					return;
 				}
@@ -4059,11 +4059,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (handler != null)
 			{
-				e.Suppress = false;
+				e.Cancel = false;
 				
 				handler (this, e);
 				
-				if (e.Suppress)
+				if (e.Cancel)
 				{
 					return;
 				}

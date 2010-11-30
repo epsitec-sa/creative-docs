@@ -1679,7 +1679,7 @@ namespace Epsitec.Common.UI
 			//	If nobody ate the event, then we may handle it here and determine
 			//	what item has to be selected/deselected :
 
-			if (!e.Suppress)
+			if (!e.Cancel)
 			{
 				ItemPanel root = this.RootPanel;
 				
@@ -1991,7 +1991,7 @@ namespace Epsitec.Common.UI
 
 			base.OnPressed (e);
 
-			if (!e.Suppress)
+			if (!e.Cancel)
 			{
 				ItemPanel root = this.RootPanel;
 

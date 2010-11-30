@@ -186,10 +186,12 @@
     <Compile Include="AutoSplitter.cs" />
     <Compile Include="ClippingFrameBox.cs" />
     <Compile Include="AbstractTextField.CommandController.cs" />
+    <Compile Include="DragEventArgs.cs" />
     <Compile Include="GlyphShape.cs" />
     <Compile Include="Helpers\CommandWidgetFinder.cs" />
     <Compile Include="Helpers\HypertextInfo.cs" />
     <Compile Include="ICommandHandler.cs" />
+    <Compile Include="MessageEventArgs.cs" />
     <Compile Include="WidgetChildFindMode.cs" />
     <Compile Include="WidgetInternalState.cs" />
     <Compile Include="MessageHandler.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="FlatTextField.cs" />
     <Compile Include="Validators\MarshalerValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
+    <Compile Include="WindowDragEventArgs.cs" />
     <Compile Include="WindowPlacement.cs" />
     <Compile Include="FocusChangingEventArgs.cs" />
     <Compile Include="TextFieldDisplayMode.cs" />
@@ -453,7 +456,7 @@
     <Compile Include="EditArray.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Events.cs">
+    <Compile Include="PaintEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Feels\Default.cs">
