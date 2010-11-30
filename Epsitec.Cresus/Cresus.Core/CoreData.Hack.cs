@@ -628,20 +628,14 @@ namespace Epsitec.Cresus.Core
 		private IEnumerable<ImageEntity> InsertImagesInDatabase()
 		{
 			var imageGroup1 = this.DataContext.CreateEntity<ImageGroupEntity> ();
-			imageGroup1.Rank = 0;
 			imageGroup1.Code = "LOGO";
-			imageGroup1.Name = "Logo";
+			imageGroup1.Name = "Logos";
 
 			var imageGroup2 = this.DataContext.CreateEntity<ImageGroupEntity> ();
-			imageGroup2.Rank = 1;
-			imageGroup2.Code = "EMPLOYEE";
-			imageGroup2.Name = "Employé";
+			imageGroup2.Code = "PHOTO";
+			imageGroup2.Name = "Photo";
 
-			var imageGroup3 = this.DataContext.CreateEntity<ImageGroupEntity> ();
-			imageGroup3.Rank = 2;
-			imageGroup3.Code = "CUSTOMER";
-			imageGroup3.Name = "Client";
-
+		
 			var imageCategory1 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
 			imageCategory1.Name = "Logo";
 			imageCategory1.Description = "Logo pour l'impression de documents";
@@ -653,6 +647,11 @@ namespace Epsitec.Cresus.Core
 			var imageCategory3 = this.DataContext.CreateEntity<ImageCategoryEntity> ();
 			imageCategory3.Name = "Article";
 			imageCategory3.Description = "Photo d'un article";
+
+
+			imageCategory1.CompatibleGroups.Add (imageGroup1);
+			imageCategory2.CompatibleGroups.Add (imageGroup2);
+			imageCategory3.CompatibleGroups.Add (imageGroup2);
 
 			var imageDef1 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef1.Name = "CompanyLogo";

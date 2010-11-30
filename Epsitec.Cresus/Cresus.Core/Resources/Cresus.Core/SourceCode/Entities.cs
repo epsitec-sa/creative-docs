@@ -12402,7 +12402,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageCategory</c> entity.
 	///	designer:cap/L0AGN
 	///	</summary>
-	public partial class ImageCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ImageCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -12419,6 +12419,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AGN/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -12456,6 +12474,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>CompatibleGroups</c> field.
+		///	designer:fld/L0AGN/L0ADO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADO]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ImageGroupEntity> CompatibleGroups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ImageGroupEntity> ("[L0ADO]");
+			}
+		}
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -12479,26 +12509,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageGroup</c> entity.
 	///	designer:cap/L0AHN
 	///	</summary>
-	public partial class ImageGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ImageGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IGroup
 	{
-		#region IItemRank Members
-		///	<summary>
-		///	The <c>Rank</c> field.
-		///	designer:fld/L0AHN/L0A03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
-		public int? Rank
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
-			}
-		}
-		#endregion
 		#region ILifetime Members
 		///	<summary>
 		///	The <c>IsArchive</c> field.
@@ -12802,6 +12814,38 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 774);	// [L0A6O]
 		public static readonly new string EntityStructuredTypeKey = "[L0A6O]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IGroup Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IGroup</c> entity.
+	///	designer:cap/L0ABO
+	///	</summary>
+	public interface IGroup : global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+	}
+	public static partial class IGroupInterfaceImplementation
+	{
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ICategory Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ICategory</c> entity.
+	///	designer:cap/L0ACO
+	///	</summary>
+	public interface ICategory : global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+	}
+	public static partial class ICategoryInterfaceImplementation
+	{
 	}
 }
 #endregion
