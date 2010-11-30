@@ -1,6 +1,12 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using System.Collections.Generic;
+
+using System.Linq;
+
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -399,6 +405,24 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets the field value as an <see cref="SqlSet"/> that represent a set of constant values.
+		/// </summary>
+		public SqlSet AsSet
+		{
+			get
+			{
+				if (this.fieldType == SqlFieldType.Set)
+				{
+					return ((SqlSet) this.value);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Validates the field contents.
 		/// </summary>
 		/// <param name="validator">The validator.</param>
@@ -634,7 +658,10 @@ namespace Epsitec.Cresus.Database
 			return new SqlField (SqlFieldType.RawSql, rawSql, DbRawType.Unknown);
 		}
 
-
+		public static SqlField CreateSet(SqlSet sqlSet)
+		{
+			return new SqlField (SqlFieldType.Set, sqlSet, sqlSet.Type);
+		}
 
 		private SqlFieldType					fieldType;
 		private SqlSortOrder					sortOrder;
