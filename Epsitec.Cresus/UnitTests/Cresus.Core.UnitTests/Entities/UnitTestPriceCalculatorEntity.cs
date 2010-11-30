@@ -14,6 +14,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 using System.Linq;
+using System.Xml.Linq;
+using System.Text;
 
 
 namespace Epsitec.Cresus.Core.Entities
@@ -82,12 +84,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{ 3, 3 },
 			};
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable1 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues, RoundingMode.Up);
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable1);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
 
-			DimensionTable priceTable = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues, RoundingMode.Up);
-
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable2 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues, RoundingMode.Up);
+			priceTable2[2m] = null;
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable2);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem.ArticleDefinition = articleDefinition;
@@ -122,12 +128,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{ "3", 3 },
 			};
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable1 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable1);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
 
-			DimensionTable priceTable = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
-
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable2 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceTable2["2"] = null;
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable2);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem1 = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem1.ArticleDefinition = articleDefinition;
@@ -168,12 +178,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{ "3", 3 },
 			};
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable1 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable1);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
 
-			DimensionTable priceTable = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
-
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable2 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceTable2["2"] = null;
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable2);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem.ArticleDefinition = articleDefinition;
@@ -208,12 +222,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{ "3", 3 },
 			};
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable1 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable1);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
 
-			DimensionTable priceTable = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
-
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable2 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceTable2["2"] = null;
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable2);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem1 = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem1.ArticleDefinition = articleDefinition;
@@ -254,12 +272,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{ "3", 3 },
 			};
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable1 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable1);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
 
-			DimensionTable priceTable = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
-
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			DimensionTable priceTable2 = PriceCalculatorEntity.CreatePriceTable (articleParameter, parameterCodeToValues);
+			priceTable2["2"] = null;
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable2);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem1 = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem1.ArticleDefinition = articleDefinition;
@@ -307,14 +329,10 @@ namespace Epsitec.Cresus.Core.Entities
 			articleParameter2.DefaultValue = "1";
 			articleDefinition.ArticleParameterDefinitions.Add (articleParameter2);
 
-			var priceCalculator = dataContext.CreateEntity<PriceCalculatorEntity> ();
-			
 			NumericDimension dimension1 = PriceCalculatorEntity.CreateDimension (articleParameter1, RoundingMode.Down);
 			CodeDimension dimension2 = PriceCalculatorEntity.CreateDimension (articleParameter2);
 			DimensionTable priceTable = new DimensionTable (dimension1, dimension2);
-
 			int value = 1;
-
 			foreach (object o1 in dimension1.Values)
 			{
 				foreach (object o2 in dimension2.Values)
@@ -323,8 +341,16 @@ namespace Epsitec.Cresus.Core.Entities
 					value++;
 				}
 			}
-			priceCalculator.SetPriceTable (priceTable);
-			articlePrice.PriceCalculators.Add (priceCalculator);
+
+			var priceCalculator1 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			priceCalculator1.SetPriceTable (articleDefinition, priceTable);
+			articlePrice.PriceCalculators.Add (priceCalculator1);
+
+			priceTable[1m, "3"] = null;
+
+			var priceCalculator2 = dataContext.CreateEntity<PriceCalculatorEntity> ();
+			priceCalculator2.SetPriceTable (articleDefinition, priceTable);
+			articlePrice.PriceCalculators.Add (priceCalculator2);
 
 			var articleItem = dataContext.CreateEntity<ArticleDocumentItemEntity> ();
 			articleItem.ArticleDefinition = articleDefinition;
@@ -333,152 +359,6 @@ namespace Epsitec.Cresus.Core.Entities
 			articleItem.ArticleParameters = string.Join (AbstractArticleParameterController.Separator, parameterValues);
 
 			dataContext.SaveChanges ();
-		}
-
-
-		[TestMethod]
-		public void NumericParameterTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000001)));
-						var priceCalculator = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (2m, priceCalculator.Compute (articleItem));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void EnumZeroOrOneParameterTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000002)));
-						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
-
-						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000003)));
-						var priceCalculator2 = articleItem2.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (0m, priceCalculator2.Compute (articleItem2));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void EnumExactlyOneParameterTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000004)));
-						var priceCalculator = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (2m, priceCalculator.Compute (articleItem));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void EnumAtLeastOneParameterTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000005)));
-						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
-
-						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000006)));
-						var priceCalculator2 = articleItem2.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (5m, priceCalculator2.Compute (articleItem2));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void EnumAnyParameterTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000007)));
-						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
-
-						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000008)));
-						var priceCalculator2 = articleItem2.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (5m, priceCalculator2.Compute (articleItem2));
-
-						var articleItem3 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000009)));
-						var priceCalculator3 = articleItem3.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (0m, priceCalculator3.Compute (articleItem3));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void MultipleParametersTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000010)));
-						var priceCalculator = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators.First ();
-
-						Assert.AreEqual (3m, priceCalculator.Compute (articleItem));
-					}
-				}
-			}
 		}
 
 
@@ -493,11 +373,278 @@ namespace Epsitec.Cresus.Core.Entities
 
 
 		[TestMethod]
+		public void ComputeWithDeserializationProblem()
+		{
+			var articleDefinition = new ArticleDefinitionEntity ();
+
+			var articlePrice = new ArticlePriceEntity
+			{
+				BeginDate = System.DateTime.MinValue,
+				EndDate = System.DateTime.MaxValue
+			};
+			articleDefinition.ArticlePrices.Add (articlePrice);
+
+			var articleParameter = new EnumValueArticleParameterDefinitionEntity
+			{
+				Code = "p",
+				DefaultValue = "1",
+				Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3")
+			};
+			articleDefinition.ArticleParameterDefinitions.Add (articleParameter);
+
+			var articleItem = new ArticleDocumentItemEntity
+			{
+				ArticleDefinition = articleDefinition,
+				ArticleParameters = string.Join (AbstractArticleParameterController.Separator, new string[] { "p", "2", }),
+			};
+
+			CodeDimension dimension1 = new CodeDimension ("p", new string[] { "1", "2", });
+			CodeDimension dimension2 = new CodeDimension ("p", new string[] { "1", "2", "4" });
+			CodeDimension dimension3 = new CodeDimension ("X", new string[] { "1", "2", "3" });
+
+			DimensionTable table1 = new DimensionTable (dimension1);
+			DimensionTable table2 = new DimensionTable (dimension2);
+			DimensionTable table3 = new DimensionTable (dimension3);
+
+			PriceCalculatorEntity pce = new PriceCalculatorEntity ();
+
+			pce.SerializedData = this.EmulateByteSerialization (table1);
+
+			ExceptionAssert.Throw
+			(
+				() => pce.Compute (articleItem)
+			);
+
+			pce.SerializedData = this.EmulateByteSerialization (table2);
+
+			ExceptionAssert.Throw
+			(
+				() => pce.Compute (articleItem)
+			);
+
+			pce.SerializedData = this.EmulateByteSerialization (table3);
+
+			ExceptionAssert.Throw
+			(
+				() => pce.Compute (articleItem)
+			);
+		}
+
+
+		private byte[] EmulateByteSerialization(DimensionTable table)
+		{
+			XElement xTable = table.XmlExport ();
+			string tableDataAsXmlString = xTable.ToString (SaveOptions.DisableFormatting);
+			byte[] tableDataAsByteArray = Encoding.UTF8.GetBytes (tableDataAsXmlString);
+
+			return tableDataAsByteArray;
+		}
+
+
+		[TestMethod]
+		public void ComputeForNumericParameterTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000001)));
+						var priceCalculator1 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+
+						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem));
+						Assert.IsNull (priceCalculator2.Compute (articleItem));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ComputeForEnumZeroOrOneParameterTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000002)));
+						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000003)));
+
+						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem2.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+
+						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
+						Assert.AreEqual (0m, priceCalculator1.Compute (articleItem2));
+						Assert.IsNull (priceCalculator2.Compute (articleItem1));
+						Assert.AreEqual (0m, priceCalculator2.Compute (articleItem2));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ComputeForEnumExactlyOneParameterTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000004)));
+						var priceCalculator1 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+
+						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem));
+						Assert.IsNull (priceCalculator2.Compute (articleItem));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ComputeForEnumAtLeastOneParameterTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000005)));
+						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000006)));
+
+						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem2.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+						
+						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
+						Assert.AreEqual (5m, priceCalculator1.Compute (articleItem2));
+						Assert.IsNull (priceCalculator2.Compute (articleItem1));
+						Assert.IsNull (priceCalculator2.Compute (articleItem2));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ComputeForEnumAnyParameterTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem1 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000007)));
+						var articleItem2 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000008)));
+						var articleItem3 = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000009)));
+						
+						var priceCalculator1 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem1.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+
+						Assert.AreEqual (2m, priceCalculator1.Compute (articleItem1));
+						Assert.AreEqual (5m, priceCalculator1.Compute (articleItem2));
+						Assert.AreEqual (0m, priceCalculator1.Compute (articleItem3));
+						Assert.IsNull (priceCalculator2.Compute (articleItem1));
+						Assert.IsNull (priceCalculator2.Compute (articleItem2));
+						Assert.AreEqual (0m, priceCalculator2.Compute (articleItem3));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ComputeForMultipleParametersTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+					{
+						var articleItem = dataContext.ResolveEntity<ArticleDocumentItemEntity> (new DbKey (new DbId (1000000010)));
+						var priceCalculator1 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[0];
+						var priceCalculator2 = articleItem.ArticleDefinition.ArticlePrices.First ().PriceCalculators[1];
+
+						Assert.AreEqual (3m, priceCalculator1.Compute (articleItem));
+						Assert.IsNull (priceCalculator2.Compute (articleItem));
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void SetPriceTableArgumentCheck()
 		{
+			var articleDefinition = new ArticleDefinitionEntity ();
+
+			var articlePrice = new ArticlePriceEntity
+			{
+				BeginDate = System.DateTime.MinValue,
+				EndDate = System.DateTime.MaxValue
+			};
+			articleDefinition.ArticlePrices.Add (articlePrice);
+
+			var articleParameter = new EnumValueArticleParameterDefinitionEntity
+			{
+				Code = "p",
+				DefaultValue = "1",
+				Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3")
+			};
+			articleDefinition.ArticleParameterDefinitions.Add (articleParameter);
+					
+			CodeDimension dimension1 = new CodeDimension ("p", new string[] { "1", "2", });
+			CodeDimension dimension2 = new CodeDimension ("p", new string[] { "1", "2", "4" });
+			CodeDimension dimension3 = new CodeDimension ("X", new string[] { "1", "2", "3" });
+
+			DimensionTable table1 = new DimensionTable (dimension1);
+			DimensionTable table2 = new DimensionTable (dimension2);
+			DimensionTable table3 = new DimensionTable (dimension3);
+
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new PriceCalculatorEntity ().SetPriceTable (null)
+				() => new PriceCalculatorEntity ().SetPriceTable (articleDefinition, null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new PriceCalculatorEntity ().SetPriceTable (null, new DimensionTable (new CodeDimension ("p", new string[] { "1", "2", "3" })))
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => new PriceCalculatorEntity ().SetPriceTable (articleDefinition, table1)
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => new PriceCalculatorEntity ().SetPriceTable (articleDefinition, table2)
+			);
+
+			ExceptionAssert.Throw<System.Exception>
+			(
+				() => new PriceCalculatorEntity ().SetPriceTable (articleDefinition, table3)
 			);
 		}
 
@@ -505,8 +652,27 @@ namespace Epsitec.Cresus.Core.Entities
 		[TestMethod]
 		public void GetAndSetPriceTableTest()
 		{
-			CodeDimension dimension1 = new CodeDimension ("d1", new string[] { "1", "2", "3"});
-			CodeDimension dimension2 = new CodeDimension ("d2", new string[] { "4", "5", "6"});
+			var articleDefinition = new ArticleDefinitionEntity ();
+
+			var articlePrice = new ArticlePriceEntity ();
+			articlePrice.BeginDate = System.DateTime.MinValue;
+			articlePrice.EndDate = System.DateTime.MaxValue;
+			articleDefinition.ArticlePrices.Add (articlePrice);
+
+			var articleParameter1 = new EnumValueArticleParameterDefinitionEntity ();
+			articleParameter1.Code = "p1";
+			articleParameter1.DefaultValue = "1";
+			articleParameter1.Values = AbstractArticleParameterDefinitionEntity.Join ("1", "2", "3");
+			articleDefinition.ArticleParameterDefinitions.Add (articleParameter1);
+
+			var articleParameter2 = new EnumValueArticleParameterDefinitionEntity ();
+			articleParameter2.Code = "p2";
+			articleParameter2.DefaultValue = "4";
+			articleParameter2.Values = AbstractArticleParameterDefinitionEntity.Join ("4", "5", "6");
+			articleDefinition.ArticleParameterDefinitions.Add (articleParameter2);
+			
+			CodeDimension dimension1 = new CodeDimension ("p1", new string[] { "1", "2", "3"});
+			CodeDimension dimension2 = new CodeDimension ("p2", new string[] { "4", "5", "6"});
 
 			DimensionTable table1 = new DimensionTable (dimension1);
 			DimensionTable table2 = new DimensionTable (dimension2);
@@ -515,13 +681,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 			Assert.IsNull (pce.GetPriceTable ());
 
-			pce.SetPriceTable (table1);
+			pce.SetPriceTable (articleDefinition, table1);
 
 			Assert.AreEqual (1, pce.GetPriceTable ().Dimensions.Count ());
 			Assert.AreEqual (dimension1.Name, pce.GetPriceTable ().Dimensions.First ().Name);
 			CollectionAssert.AreEqual (dimension1.Values.ToList (), pce.GetPriceTable ().Dimensions.First ().Values.ToList ());
 
-			pce.SetPriceTable (table2);
+			pce.SetPriceTable (articleDefinition, table2);
 
 			Assert.AreEqual (1, pce.GetPriceTable ().Dimensions.Count ());
 			Assert.AreEqual (dimension2.Name, pce.GetPriceTable ().Dimensions.First ().Name);
@@ -727,9 +893,6 @@ namespace Epsitec.Cresus.Core.Entities
 				Assert.AreEqual (item.Value, table[item.Key]);
 			}
 		}
-
-
-
 		
 
 	}

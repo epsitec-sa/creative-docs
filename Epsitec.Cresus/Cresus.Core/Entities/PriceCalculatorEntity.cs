@@ -31,36 +31,18 @@ namespace Epsitec.Cresus.Core.Entities
 		public decimal? Compute(ArticleDocumentItemEntity articleItem)
 		{
 			articleItem.ThrowIfNull ("articleItem");
-			
-			// TODO Add tons of checks in this method and the two methods that it calls to ensure
-			// that the table match what we expect (i.e. that its dimensions are correct and that
-			// its values are defined) and that the values for the parameters are properly defined
-			// and within their bounds?
-			// Marc
 
-			decimal? price;
+			DimensionTable priceTable = this.GetPriceTable ();
 
-			try
-			{
-				DimensionTable priceTable = this.GetPriceTable ();
-				IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
+			this.CheckPriceTable (articleItem.ArticleDefinition, priceTable);
 
-				price = this.ComputePriceForDimensionTable (articleItem, priceTable, parameterCodesToValues);
-			}
-			catch
-			{
-				// Something bad happened but we don't want to throw an exception. Instead, we simply
-				// return a null value.
-				// Marc
+			IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
 
-				price = null;
-			}
-
-			return price;
+			return this.ComputePriceForDimensionTable (articleItem, priceTable, parameterCodesToValues);
 		}
 
 
-		private decimal ComputePriceForDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		private decimal? ComputePriceForDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
 			int nbDimensions = priceTable.Dimensions.Count ();
 
@@ -79,9 +61,9 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		private decimal ComputePriceForUniDimensonTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		private decimal? ComputePriceForUniDimensonTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
-			decimal price = 0;
+			decimal? price = 0;
 
 			string code = priceTable.Dimensions.Single ().Name;
 
@@ -89,7 +71,14 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				foreach (object key in parameterCodesToValues[code])
 				{
-					price += priceTable[key].Value;
+					if (priceTable.IsNearestValueDefined (key))
+					{
+						price += priceTable[key];
+					}
+					else
+					{
+						price = null;
+					}
 				}
 			}
 
@@ -97,7 +86,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		private decimal ComputePriceForMultiDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		private decimal? ComputePriceForMultiDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
 			if (!this.CheckParametersForMultiDimensionTable (priceTable, articleItem))
 			{
@@ -108,7 +97,14 @@ namespace Epsitec.Cresus.Core.Entities
 			.Select (d => parameterCodesToValues[d.Name].First ())
 			.ToArray ();
 
-			return priceTable[key].Value;
+			decimal? price = null;
+
+			if (priceTable.IsNearestValueDefined (key))
+			{
+				price = priceTable[key];
+			}
+
+			return price;
 		}
 
 
@@ -126,19 +122,17 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public void SetPriceTable(DimensionTable priceTable)
+		public void SetPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
 		{
+			articleDefinition.ThrowIfNull ("articleDefinition");
 			priceTable.ThrowIfNull ("priceTable");
-			
-			// TODO Add a whole lot of checks on what we expect here? Like look for the article
-			// parameters and check that the dimensions are properly defined? That all the values are
-			// defined, and such...
-			// Marc
+
+			this.CheckPriceTable (articleDefinition, priceTable);
 
 			this.SerializedData = this.SerializePriceTable (priceTable);
 		}
 
-
+		
 		public DimensionTable GetPriceTable()
 		{
 			DimensionTable priceTable = null;
@@ -149,6 +143,45 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return priceTable;
+		}
+
+
+		private void CheckPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
+		{
+			var parameterDefinitions = articleDefinition.ArticleParameterDefinitions.ToDictionary (pd => pd.Code, pd => pd);
+
+			foreach (AbstractDimension dimension in priceTable.Dimensions)
+			{
+				if (!parameterDefinitions.ContainsKey (dimension.Name))
+				{
+					throw new System.Exception ();
+				}
+
+				var pd = parameterDefinitions[dimension.Name];
+				var npd = pd as NumericValueArticleParameterDefinitionEntity;
+				var epd = pd as EnumValueArticleParameterDefinitionEntity;
+				var nd = dimension as NumericDimension;
+				var cd = dimension as CodeDimension;
+
+				if (npd != null && nd != null)
+				{
+					if (!PriceCalculatorEntity.CheckValuesForNumericParameter (npd, nd.Values.Cast<decimal> ()))
+					{
+						throw new System.Exception ();
+					}
+				}
+				else if (epd != null && cd != null)
+				{
+					if (!PriceCalculatorEntity.CheckValuesForEnumParameter (epd, cd.Values.Cast<string> ()))
+					{
+						throw new System.Exception ();
+					}
+				}
+				else
+				{
+					throw new System.Exception ();
+				}
+			}
 		}
 
 
@@ -202,24 +235,13 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			parameter.ThrowIfNull ("parameter");
 			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
-			
-			string name = parameter.Code;
-			
-			List<decimal> values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
-				.Select (v => InvariantConverter.ConvertFromString<decimal> (v))
-				.ToList ();
 
-			if (values.Count != parameterCodesToValues.Count)
+			if (!PriceCalculatorEntity.CheckValuesForNumericParameter (parameter, parameterCodesToValues.Keys))
 			{
 				throw new System.ArgumentException ();
 			}
 
-			if (values.Any (v => !parameterCodesToValues.ContainsKey (v)))
-			{
-				throw new System.ArgumentException ();
-			}
-
-			NumericDimension dimension = new NumericDimension (name, values, roundingMode);
+			NumericDimension dimension = new NumericDimension (parameter.Code, parameterCodesToValues.Keys, roundingMode);
 			DimensionTable table = new DimensionTable (dimension);
 
 			foreach (var item in parameterCodesToValues)
@@ -236,20 +258,12 @@ namespace Epsitec.Cresus.Core.Entities
 			parameter.ThrowIfNull ("parameter");
 			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
 
-			string name = parameter.Code;
-			string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
-
-			if (values.Length != parameterCodesToValues.Count)
+			if (!PriceCalculatorEntity.CheckValuesForEnumParameter (parameter, parameterCodesToValues.Keys))
 			{
 				throw new System.ArgumentException ();
 			}
 
-			if (values.Any (v => !parameterCodesToValues.ContainsKey (v)))
-			{
-				throw new System.ArgumentException ();
-			}
-
-			CodeDimension dimension = new CodeDimension (name, values);
+			CodeDimension dimension = new CodeDimension (parameter.Code, parameterCodesToValues.Keys);
 			DimensionTable table = new DimensionTable (dimension);
 
 			foreach (var item in parameterCodesToValues)
@@ -258,6 +272,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return table;
+		}
+
+
+		private static bool CheckValuesForNumericParameter(NumericValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<decimal> values)
+		{
+			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.PreferredValues)
+				.Select (v => InvariantConverter.ConvertFromString<decimal> (v))
+				.SetEquals (values);
+		}
+
+
+		private static bool CheckValuesForEnumParameter(EnumValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<string> values)
+		{
+			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.Values)
+				.SetEquals (values);
 		}
 
 
