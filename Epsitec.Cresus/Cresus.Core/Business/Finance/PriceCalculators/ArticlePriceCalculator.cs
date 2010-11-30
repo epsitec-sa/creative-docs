@@ -293,16 +293,30 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			foreach (PriceCalculatorEntity pce in articlePrice.PriceCalculators)
 			{
-				decimal? price = pce.Compute (this.articleItem);
+				decimal? price = null;
 
+				try
+				{
+					price = pce.Compute (this.articleItem);
+				}
+				catch
+				{
+					// TODO If a exception is thrown, then an error occurred while computing the price,
+					// like the price table was not properly defined regarding the parameters of the
+					// object, or the instantiation of the parameters of the object is not valid, or
+					// etc. Should we do something about that?
+					// Marc
+
+					price = 0;
+				}
+				
 				if (price.HasValue)
 				{
 					totalPrice += price.Value;
 				}
 
-				// TODO If the price is null, then either the price was not defined for the
-				// calculator, or some kind of error happened. Should we report an error to the
-				// user?
+				// TODO If the price is null, then the price was not defined for the calculator. Should
+				// we do something about that?
 				// Marc
 
 			}
