@@ -1,6 +1,7 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database.Collections;
 
@@ -25,28 +26,17 @@ namespace Epsitec.Cresus.Database
 
 		public SqlJoin(SqlField leftColumn, SqlField rightColumn, SqlJoinCode code, SqlFieldList conditions)
 		{
-			if (leftColumn == null)
-			{
-				throw new System.ArgumentNullException ("leftColumn");
-			}
+			leftColumn.ThrowIfNull ("leftColumn");
+			rightColumn.ThrowIfNull ("rightColumn");
+			leftColumn.ThrowIf (c => c.FieldType != SqlFieldType.QualifiedName, "leftColumn must have a qualified name");
+			rightColumn.ThrowIf (c => c.FieldType != SqlFieldType.QualifiedName, "rightColumn must have a qualified name");
 
-			if (rightColumn == null)
-			{
-				throw new System.ArgumentNullException ("rightColumn");
-			}
-
-			if (conditions == null)
-			{
-				throw new System.ArgumentNullException ("conditions");
-			}
-
-			foreach (SqlField field in new SqlField[] { leftColumn, rightColumn }.Concat (conditions))
-			{
-				if (field.FieldType != SqlFieldType.QualifiedName)
-				{
-					throw new System.ArgumentException ("Fields must have qualified names");
-				}
-			}
+			// TODO Here we could also check that all the fields within conditions also are qualified
+			// names. This would need a recursive function exploring the conditions an telling
+			// whether all its names are qualified or not. I don't to it now, because there is so much
+			// things to do in order to get strong guarantees on all the SqlStuff classes that this
+			// would only be a drop in the ocean.
+			// Marc
 
 			this.LeftColumn = leftColumn;
 			this.RightColumn = rightColumn;
