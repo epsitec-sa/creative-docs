@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Cresus.Database.Services
+﻿using System.Collections.Generic;
+
+
+namespace Epsitec.Cresus.Database.Services
 {
 
 
@@ -77,6 +80,23 @@
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="DbLock"/> class given the data of a lock.
+		/// </summary>
+		/// <param name="data">The data of the lock.</param>
+		/// <returns>The new instance of <see cref="DbLock"/>.</returns>
+		internal static DbLock CreateLock(IList<object> data)
+		{
+			DbId id = new DbId ((long) data[0]);
+			string name = (string) data[1];
+			DbId connectionId = new DbId ((long) data[2]);
+			int counter = (int) data[3];
+			System.DateTime creationTime = (System.DateTime) data[4];
+
+			return new DbLock (id, connectionId, name, counter, creationTime);
 		}
 
 

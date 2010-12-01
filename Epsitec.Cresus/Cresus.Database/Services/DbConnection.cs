@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Cresus.Database.Services
+﻿using System.Collections.Generic;
+
+
+namespace Epsitec.Cresus.Database.Services
 {
 
 
@@ -76,6 +79,23 @@
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Builds a new instance of <see cref="DbConnection"/> given the data of a connection.
+		/// </summary>
+		/// <param name="data">The data of the connection.</param>
+		/// <returns>The new instance of <see cref="DbConnection"/>.</returns>
+		internal static DbConnection CreateDbConnection(IList<object> data)
+		{
+			DbId id = new DbId ((long) data[0]);
+			string identity = (string) data[1];
+			System.DateTime establishementTime = (System.DateTime) data[2];
+			System.DateTime refreshTime = (System.DateTime) data[3];
+			DbConnectionStatus status = (DbConnectionStatus) data[4];
+
+			return new DbConnection (id, identity, status, establishementTime, refreshTime);
 		}
 
 
