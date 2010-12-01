@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Services;
@@ -326,23 +328,23 @@ namespace Cresus.Database.UnitTests.Services
 
 				List<DbId> connectionIds = new List<DbId> ();
 
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 				connectionIds.Add (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
 				connectionIds.Add (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				DbId connectionId3 = manager.OpenConnection ("connection3").Id;
 				connectionIds.Add (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				manager.CloseConnection (connectionId1);
 				connectionIds.Remove (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				for (int i = 0; i < 5; i++)
 				{
@@ -355,7 +357,7 @@ namespace Cresus.Database.UnitTests.Services
 
 				Assert.AreEqual (true, manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5)));
 				connectionIds.Remove (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnection (connectionId1).Status);
 				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnection (connectionId2).Status);
@@ -363,25 +365,105 @@ namespace Cresus.Database.UnitTests.Services
 
 				manager.CloseConnection (connectionId2);
 				connectionIds.Remove (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenConnections ().Select (c => c.Id).ToList ());
+				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
 
 				manager.Detach ();
 			}
 		}
 
 
-		private void CheckSetAreSame(List<DbId> expected, List<DbId> actual)
+		[TestMethod]
+		public void GetLockOwnersArgumengCheck()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = new DbConnectionManager ();
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => manager.GetLockOwners (null)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetLockOwnersTest()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager connectionManager = new DbConnectionManager ();
+				DbLockManager lockManager = new DbLockManager ();
+
+				connectionManager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+				lockManager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableLock));
+
+				DbId connectionId1 = connectionManager.OpenConnection ("connection1").Id;
+				DbId connectionId2 = connectionManager.OpenConnection ("connection2").Id;
+				DbId connectionId3 = connectionManager.OpenConnection ("connection3").Id;
+				DbId connectionId4 = connectionManager.OpenConnection ("connection4").Id;
+
+				lockManager.RequestLock ("lock1", connectionId1);
+				lockManager.RequestLock ("lock2", connectionId1);
+				lockManager.RequestLock ("lock3", connectionId2);
+				lockManager.RequestLock ("lock3", connectionId2);
+				lockManager.RequestLock ("lock4", connectionId3);
+
+				var expectedResult1 = new Dictionary<DbId, List<string>> ()
+				{
+					{ connectionId1, new List<string>() { "lock1", "lock2", } },
+					{ connectionId2, new List<string>() { "lock3", } },
+					{ connectionId3, new List<string>() { "lock4", } },
+				};
+				var actualResult1 = connectionManager.GetLockOwners (new List<string> () { "lock1", "lock2", "lock3", "lock4", });
+				this.CheckResult (expectedResult1, actualResult1);
+
+				var expectedResult2 = new Dictionary<DbId, List<string>> ();
+				var actualResult2 = connectionManager.GetLockOwners (new List<string> ());
+				this.CheckResult (expectedResult2, actualResult2);
+
+				var expectedResult3 = new Dictionary<DbId, List<string>> ()
+				{
+					{ connectionId1, new List<string>() { "lock1", "lock2", } },
+				};
+				var actualResult3 = connectionManager.GetLockOwners (new List<string> () { "lock1", "lock2", });
+				this.CheckResult (expectedResult3, actualResult3);
+
+				var expectedResult4 = new Dictionary<DbId, List<string>> ()
+				{
+					{ connectionId2, new List<string>() { "lock3", } },
+				};
+				var actualResult4 = connectionManager.GetLockOwners (new List<string> () { "lock3", });
+				this.CheckResult (expectedResult4, actualResult4);
+
+				var expectedResult5 = new Dictionary<DbId, List<string>> ()
+				{
+					{ connectionId3, new List<string>() { "lock4", } },
+				};
+				var actualResult5 = connectionManager.GetLockOwners (new List<string> () { "lock4", });
+
+				this.CheckResult (expectedResult5, actualResult5);
+
+				var expectedResult6 = new Dictionary<DbId, List<string>> ();
+				var actualResult6 = connectionManager.GetLockOwners (new List<string> () { "coucou" });
+				this.CheckResult (expectedResult6, actualResult6);
+			}
+		}
+
+
+		private void CheckResult(Dictionary<DbId, List<string>> expected, Dictionary<DbConnection, List<DbLock>> actual)
 		{
 			Assert.AreEqual (expected.Count, actual.Count);
 
-			foreach (DbId id in expected)
+			foreach (var item in expected)
 			{
-				CollectionAssert.Contains (actual, id);
-			}
+				DbConnection connection = actual.Keys.FirstOrDefault (c => c.Id == item.Key);
 
-			foreach (DbId id in actual)
-			{
-				CollectionAssert.Contains (expected, id);
+				Assert.IsNotNull (connection);
+
+				List<string> locks = actual[connection].Select (l => l.Name).ToList ();
+				Assert.AreEqual (item.Value.Count, locks.Count);
+				Assert.IsTrue (item.Value.SetEquals (locks));
 			}
 		}
 
