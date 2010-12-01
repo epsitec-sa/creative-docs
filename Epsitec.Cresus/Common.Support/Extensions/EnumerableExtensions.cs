@@ -2,7 +2,10 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+
 using System.Linq;
+
+using System.Threading;
 
 namespace Epsitec.Common.Support.Extensions
 {
@@ -108,9 +111,8 @@ namespace Epsitec.Common.Support.Extensions
 		/// <returns>The shuffled sequence.</returns>
 		private static IEnumerable<T> ShuffleInternal<T>(IEnumerable<T> sequence)
 		{
-			return sequence.OrderBy (e => EnumerableExtensions.dice.NextDouble ());
+			return sequence.OrderBy (e => EnumerableExtensions.Dice.NextDouble ());
 		}
-
 
 		/// <summary>
 		/// Checks that both <see cref="IEnumerable{T}"/> contain the same set of elements, ignoring
@@ -133,10 +135,23 @@ namespace Epsitec.Common.Support.Extensions
 			return set1.SetEquals (set2);
 		}
 
+		/// <summary>
+		/// Gets an instance of <see cref="System.Random"/> local to the calling thread. That means
+		/// that no other thread will ever call the same instance and thus the obtained dice can be
+		/// used safely.
+		/// </summary>
+		private static System.Random Dice
+		{
+			get
+			{
+				return EnumerableExtensions.dice.Value;
+			}
+		}
 
-		[System.ThreadStatic]
-		private static System.Random dice = new System.Random ();
-
-            
+		/// <summary>
+		/// A field that stores one instance of <see cref="System.Random"/> for each calling thread.
+		/// </summary>
+		private static ThreadLocal<System.Random> dice = new ThreadLocal<System.Random> (() => new System.Random ());
+        
 	}
 }
