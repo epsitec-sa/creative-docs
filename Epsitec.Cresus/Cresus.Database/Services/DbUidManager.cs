@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (condition);
 
-			return data.Select (d => this.CreateDbUid (d));
+			return data.Select (d => DbUidSlot.CreateDbUidSlot (d));
 		}
 
 
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (conditions);
 
-			return data.Any () ? this.CreateDbUid (data[0]) : null;
+			return data.Any () ? DbUidSlot.CreateDbUidSlot (data[0]) : null;
 		}
 
 
@@ -278,24 +278,6 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnUidSlot].GetSqlName ()),
 				SqlField.CreateConstant (slot, DbRawType.Int32)
 			);
-		}
-
-
-		/// <summary>
-		/// Creates a new instance of <see cref="DbUidSlot"/> based on the raw data of an uid counter.
-		/// </summary>
-		/// <param name="data">The data of the uid counter.</param>
-		/// <returns>The new instance of <see cref="DbUidSlot"/>.</returns>
-		private DbUidSlot CreateDbUid(IList<object> data)
-		{
-			DbId id = new DbId ((long) data[0]);
-			string name = (string) data[1];
-			int slotNumber = (int) data[2];
-			long minValue = (long) data[3];
-			long maxValue = (long) data[4];
-			long nextValue = (long) data[5];
-
-			return new DbUidSlot (id, name, slotNumber, minValue, maxValue, nextValue);
 		}
 
 

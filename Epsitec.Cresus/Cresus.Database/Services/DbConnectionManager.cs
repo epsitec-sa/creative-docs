@@ -1,6 +1,10 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Database.Collections;
+
 using System.Collections.Generic;
+
+using System.Data;
 
 using System.Linq;
 
@@ -52,7 +56,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			IList<object> data = this.AddRow (columnNamesToValues);
 
-			return this.CreateDbConnection (data);
+			return DbConnection.CreateDbConnection (data);
 		}
 
 
@@ -123,7 +127,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (condition);
 
-			return data.Any () ? this.CreateDbConnection (data[0]) : null;
+			return data.Any () ? DbConnection.CreateDbConnection (data[0]) : null;
 		}
 
 
@@ -203,7 +207,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (condition);
 
-			return data.Select (d => this.CreateDbConnection (d));
+			return data.Select (d => DbConnection.CreateDbConnection (d));
 		}
 
 
@@ -277,23 +281,6 @@ namespace Epsitec.Cresus.Database.Services
 				),
 				SqlField.CreateConstant (timeOutValue.TotalDays, DbRawType.SmallDecimal)
 			);
-		}
-
-
-		/// <summary>
-		/// Builds a new instance of <see cref="DbConnection"/> given the data of a connection.
-		/// </summary>
-		/// <param name="data">The data of the connection.</param>
-		/// <returns>The new instance of <see cref="DbConnection"/>.</returns>
-		private DbConnection CreateDbConnection(IList<object> data)
-		{
-			DbId id = new DbId ((long) data[0]);
-			string identity = (string) data[1];
-			System.DateTime establishementTime = (System.DateTime) data[2];
-			System.DateTime refreshTime = (System.DateTime) data[3];
-			DbConnectionStatus status = (DbConnectionStatus) data[4];
-
-			return new DbConnection (id, identity, status, establishementTime, refreshTime);
 		}
 		
 

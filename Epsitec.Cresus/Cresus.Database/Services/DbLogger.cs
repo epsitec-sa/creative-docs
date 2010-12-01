@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			IList<object> data = this.AddRow (columnNamesToValues);
 
-			return this.CreateDbLogEntry (data);
+			return DbLogEntry.CreateDbLogEntry (data);
 		}
 
 
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (condition);
 
-			return data.Any () ? this.CreateDbLogEntry (data.First ()) : null;
+			return data.Any () ? DbLogEntry.CreateDbLogEntry (data.First ()) : null;
 		}
 
 
@@ -105,22 +105,6 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnId].GetSqlName ()),
 				SqlField.CreateConstant (entryId.Value, DbRawType.Int64)
 			);
-		}
-
-
-		/// <summary>
-		/// Creates a new instance of <see cref="DbLogEntry"/> based on the given data.
-		/// </summary>
-		/// <param name="data">The data of the log entry.</param>
-		/// <returns>The <see cref="DbLogEntry"/>.</returns>
-		private DbLogEntry CreateDbLogEntry(IList<object> data)
-		{
-			DbId entryId = new DbId ((long) data[0]);
-			DbId connectionId = new DbId ((long) data[1]);
-			System.DateTime dateTime = (System.DateTime) data[2];
-			long sequenceNumber = (long) data[3];
-
-			return new DbLogEntry (entryId, connectionId, dateTime, sequenceNumber);
 		}
                 
 		

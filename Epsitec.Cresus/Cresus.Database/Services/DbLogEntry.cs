@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+
+
 namespace Epsitec.Cresus.Database.Services
 {
 	
@@ -64,6 +67,22 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Creates a new instance of <see cref="DbLogEntry"/> based on the given data.
+		/// </summary>
+		/// <param name="data">The data of the log entry.</param>
+		/// <returns>The <see cref="DbLogEntry"/>.</returns>
+		internal static DbLogEntry CreateDbLogEntry(IList<object> data)
+		{
+			DbId entryId = new DbId ((long) data[0]);
+			DbId connectionId = new DbId ((long) data[1]);
+			System.DateTime dateTime = (System.DateTime) data[2];
+			long sequenceNumber = (long) data[3];
+
+			return new DbLogEntry (entryId, connectionId, dateTime, sequenceNumber);
 		}
 
 

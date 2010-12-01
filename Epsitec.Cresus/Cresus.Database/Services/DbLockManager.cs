@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			var data = this.GetRowValues (condition);
 
-			return data.Any () ? this.CreateLock (data[0]) : null;
+			return data.Any () ? DbLock.CreateLock (data[0]) : null;
 		}
 
 
@@ -256,23 +256,6 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnId].GetSqlName ()),
 				SqlField.CreateSubQuery (queryForOpenConnectionIds)
 			);
-		}
-
-
-		/// <summary>
-		/// Creates a new instance of the <see cref="DbLock"/> class given the data of a lock.
-		/// </summary>
-		/// <param name="data">The data of the lock.</param>
-		/// <returns>The new instance of <see cref="DbLock"/>.</returns>
-		private DbLock CreateLock(IList<object> data)
-		{
-			DbId id = new DbId ((long) data[0]);
-			string name = (string) data[1];
-			DbId connectionId = new DbId ((long) data[2]);
-			int counter = (int) data[3];
-			System.DateTime creationTime = (System.DateTime) data[4];
-
-			return new DbLock (id, connectionId, name, counter, creationTime);
 		}
 		
 
