@@ -64,6 +64,22 @@ namespace Epsitec.Cresus.Core.Data
 			return this.dataInfrastructure.AreAllLocksAvailable (lockNames);
 		}
 
+		public Dictionary<string, string> GetLockOwners(IEnumerable<string> lockNames)
+		{
+			// HACK Kind of hack method which might be removed if we find another way to access
+			// this information. The problem is that the RequestLock() method get rid of the Locker
+			// transaction is the lock cannot be acquired, so we cannot reuse it in order to get
+			// this information. That's why we need to recreate a similar lock transaction. It works
+			// but that's not very nice.
+			// Marc
+
+			using (LockTransaction lockTransaction = new LockTransaction (this.dataInfrastructure, lockNames))
+			{
+				lockTransaction.Poll ();
+
+				return lockTransaction.LockOwners;
+			}
+		}
 
 		public static string GetLockName(DataContext context, AbstractEntity entity)
 		{

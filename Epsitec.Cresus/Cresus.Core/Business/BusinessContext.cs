@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Business
 			return owners == null;
 		}
 
-		public Dictionary<string, string> AcquireLockOwners( )
+		public Dictionary<string, string> AcquireLockOwners()
 		{
 			//	Prend le verrou et retourne null si tout est ok.
 			//	S'il n'est pas possible de prendre le verrou, retourne la liste des utilisateurs.
@@ -169,22 +169,25 @@ namespace Epsitec.Cresus.Core.Business
 				return null;
 			}
 
-			var lockTransaction = this.locker.RequestLock (this.GetLockNames ());
+			var lockNames = this.GetLockNames ().ToList ();
+			var lockTransaction = this.locker.RequestLock (lockNames);
 
-			if (lockTransaction == null)
-			{
-				return lockTransaction.LockOwners;
-			}
-
-			if (lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
+			if (lockTransaction != null && lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
 			{
 				this.lockTransaction = lockTransaction;
 				this.OnLockAcquired ();
+
 				return null;
 			}
+			else
+			{
+				if (lockTransaction != null)
+				{
+					lockTransaction.Dispose ();
+				}
 
-			lockTransaction.Dispose ();
-			return lockTransaction.LockOwners;
+				return this.locker.GetLockOwners (lockNames);
+			}
 		}
 
 		public bool ReleaseLock()
