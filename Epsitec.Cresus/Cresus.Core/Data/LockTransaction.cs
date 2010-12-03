@@ -1,13 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,39 +12,39 @@ namespace Epsitec.Cresus.Core.Data
 	
 	public sealed class LockTransaction : System.IDisposable
 	{
-		public LockTransaction(IEnumerable<string> lockNames)
+		public LockTransaction(DataInfrastructure dataInfrastructure, IEnumerable<string> lockNames)
 		{
+			this.dataInfrastructure = dataInfrastructure;
 			this.lockNames = new List<string> (lockNames);
+			this.lockTransaction = this.dataInfrastructure.CreateLockTransaction (this.lockNames);
 		}
 
-
+		/// <summary>
+		/// Gets the current state of this instance.
+		/// </summary>
 		public LockState						LockSate
 		{
 			get
 			{
 				if (this.isDisposed)
-                {
-					return LockState.Disposed;
-                }
-
-				if (this.lockTransaction == null)
 				{
-					return LockState.Idle;
+					return LockState.Disposed;
 				}
 				else
 				{
-					return LockState.Locked;
+					return this.lockTransaction.State;
 				}
 			}
 		}
 
 		/// <summary>
 		/// Gets the identification of the connections who owned the locks of the current instance
-		/// when the last try was made to acquire them. The data is returned as a mapping from the
-		/// lock names to the connection identifications.
+		/// when the last call to <see cref="LockTransaction.Poll"/> was made. The data is returned
+		/// as a mapping from the lock names to the connection identifications.
 		/// </summary>
-		/// <remarks>This data is only available after at least one try has been made to acquire the
-		/// locks and if the last try has failed.</remarks>
+		/// <remarks>This data is only available after a call to <see cref="LockTransaction.Poll"/>
+		/// has been made, and the data might be outdated if the real state of the locks has been
+		/// changed in the database since that call.</remarks>
 		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
 		public Dictionary<string, string> LockOwners
 		{
@@ -68,12 +62,13 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 		/// <summary>
-		/// Gets the acquisition time of the locks of the current instance when the last try was
-		/// made to acquire them. The data is returned as a mapping from the lock names to their
-		/// creation time.
+		/// Gets the acquisition time of the locks of the current instance when the last call to
+		/// <see cref="LockTransaction.Poll"/> was made. The data is returned as a mapping from the
+		/// lock names to their creation time.
 		/// </summary>
-		/// <remarks>This data is only available after at least one try has been made to acquire the
-		/// locks and if the last try has failed.</remarks>
+		/// <remarks>This data is only available after a call to <see cref="LockTransaction.Poll"/>
+		/// has been made, and the data might be outdated if the real state of the locks has been
+		/// changed in the database since that call.</remarks>
 		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
 		public Dictionary<string, System.DateTime> LockCreationTimes
 		{
@@ -89,36 +84,42 @@ namespace Epsitec.Cresus.Core.Data
 						.ToDictionary (tuple => tuple.Item1, tuple => tuple.Item2);
 			}
 		}
-				
-		internal bool Acquire(DataInfrastructure dataInfrastructure)
+		
+		/// <summary>
+		/// Tries to acquire the locks of the current instance.
+		/// </summary>
+		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they don't.</returns>
+		/// <exception cref="System.InvalidOperationException">If the locks have already been acquired by this instance or if this instance has been disposed.</exception>
+		internal bool Acquire()
 		{
-			System.Diagnostics.Debug.Assert (this.lockTransaction == null);
-
-			var lockTransaction = this.CreateLockTransaction (dataInfrastructure);
-
-			if (lockTransaction.State == LockState.Locked)
+			if (this.LockSate != LockState.Idle)
 			{
-				this.locksData = null;
-				this.lockTransaction = lockTransaction;
+				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
 			}
-			else
-			{
-				this.locksData = lockTransaction.GetLockOwners ();
-				this.lockTransaction = null;
-
-				lockTransaction.Dispose ();
-			}
-
-			return this.lockTransaction != null;
+			
+			return this.lockTransaction.Lock ();
 		}
 
-		private LowLevelLockTransaction CreateLockTransaction(DataInfrastructure dataInfrastructure)
+		/// <summary>
+		/// Checks if the locks of the current instance can be acquired by the connection of the
+		/// current instance and populates the fields with the data about the lock owners and
+		/// creation time
+		/// </summary>
+		/// <returns><c>true</c> if the locks can be acquired (or have been acquired), <c>false</c> if they cannot.</returns>
+		/// <exception cref="System.InvalidOperationException">If this instance has been disposed.</exception>
+		internal bool Poll()
 		{
-			var lockTransaction = dataInfrastructure.CreateLockTransaction (this.lockNames);
+			if (this.LockSate == LockState.Disposed)
+			{
+				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
+			}
 
-			lockTransaction.Lock ();
+			this.locksData = this.lockTransaction.GetLockOwners ();
 
-			return lockTransaction;
+			string id = this.dataInfrastructure.ConnectionInformation.ConnectionIdentity;
+
+			return !this.locksData.Any ()
+				|| (this.locksData.Count == 1 && this.locksData.ContainsKey (id));
 		}
 
 		#region IDisposable Members
@@ -136,11 +137,11 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 
+		private readonly DataInfrastructure dataInfrastructure;
 		private readonly List<string> lockNames;
 		private LowLevelLockTransaction lockTransaction;
 		private Dictionary<string, List<System.Tuple<string, System.DateTime>>> locksData;
-
-
+		
 		private bool isDisposed;
 	}
 }

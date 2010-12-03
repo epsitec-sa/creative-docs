@@ -46,9 +46,9 @@ namespace Epsitec.Cresus.Core.Data
 
 		public LockTransaction RequestLock(IEnumerable<string> lockNames)
 		{
-			var lockTransaction = new LockTransaction (lockNames);
-
-			if (lockTransaction.Acquire (this.dataInfrastructure))
+			var lockTransaction = new LockTransaction (this.dataInfrastructure, lockNames);
+			
+			if (lockTransaction.Acquire ())
 			{
 				return lockTransaction;
 			}
