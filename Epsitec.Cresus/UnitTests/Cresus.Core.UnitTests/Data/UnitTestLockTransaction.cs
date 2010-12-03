@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Data
 
 
 		[TestMethod]
-		public void GetLockOwnersAndCreationTimeInvalidOperation()
+		public void InvalidBehaviorTest()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Data
 				{
 					dataInfrastructure.OpenConnection ("id");
 
-					LockTransaction lt = new LockTransaction (new List<string> () { "lock1", "lock2" });
+					LockTransaction lt = new LockTransaction (dataInfrastructure, new List<string> () { "lock1", "lock2" });
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Data
 						() => { var x = lt.LockCreationTimes; }
 					);
 					
-					Assert.IsTrue (lt.Acquire (dataInfrastructure));
+					Assert.IsTrue (lt.Acquire ());
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
@@ -72,19 +72,101 @@ namespace Epsitec.Cresus.Core.Data
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-						() =>
-						{
-							var x = lt.LockOwners;
-						}
+						() => lt.Acquire ()
 					);
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-						() =>
-						{
-							var x = lt.LockCreationTimes;
-						}
+						() => lt.Poll ()
 					);
+
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => { var x = lt.LockOwners; }
+					);
+
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => { var x = lt.LockCreationTimes; }
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void SimpleTest1()
+		{
+			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			{
+				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (LockTransaction lt = new LockTransaction (dataInfrastructure, new List<string> { "lock", }))
+					{
+						Assert.IsTrue (lt.Poll ());
+						Assert.IsTrue (lt.Acquire ());
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void SimpleTest2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			{
+				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
+
+				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
+				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
+				{
+					dataInfrastructure1.OpenConnection ("id1");
+					dataInfrastructure2.OpenConnection ("id2");
+
+					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
+					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure1, new List<string> { "lock2" }))
+					using (LockTransaction lt3 = new LockTransaction (dataInfrastructure2, new List<string> { "lock2", "lock3" }))
+					{
+						Assert.IsTrue (lt1.Poll ());
+						Assert.IsTrue (lt2.Poll ());
+						Assert.IsTrue (lt3.Poll ());
+
+						Assert.IsTrue (lt1.Acquire ());
+
+						Assert.IsTrue (lt1.Poll ());
+						Assert.IsTrue (lt2.Poll ());
+						Assert.IsFalse (lt3.Poll ());
+
+						Assert.IsTrue (lt2.Acquire ());
+						Assert.IsFalse (lt3.Acquire ());
+
+						Assert.IsTrue (lt1.Poll ());
+						Assert.IsTrue (lt2.Poll ());
+						Assert.IsFalse (lt3.Poll ());
+
+						lt1.Dispose ();
+
+						Assert.IsFalse (lt3.Acquire ());
+
+						Assert.IsTrue (lt2.Poll ());
+						Assert.IsFalse (lt3.Poll ());
+
+						lt2.Dispose ();
+
+						Assert.IsTrue (lt3.Poll ());
+						Assert.IsTrue (lt3.Acquire ());
+
+						Assert.IsTrue (lt3.Poll ());
+
+						lt3.Dispose ();
+					}
 				}
 			}
 		}
@@ -93,10 +175,10 @@ namespace Epsitec.Cresus.Core.Data
 		[TestMethod]
 		public void GetLockOwnersAndCreationTimeTest()
 		{
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure())
-			using (DbInfrastructure dbInfrastructure3 = new DbInfrastructure())
-			using (DbInfrastructure dbInfrastructure4 = new DbInfrastructure())
+			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure3 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure4 = new DbInfrastructure ())
 			{
 				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
 				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
@@ -115,40 +197,77 @@ namespace Epsitec.Cresus.Core.Data
 
 					System.DateTime t1 = dbInfrastructure1.GetDatabaseTime ();
 
-					using (LockTransaction lt1 = new LockTransaction (new List<string> { "lock1", "lock2" }))
-					using (LockTransaction lt2 = new LockTransaction (new List<string> { "lock3" }))
-					using (LockTransaction lt3 = new LockTransaction (new List<string> { "lock4" }))
-					using (LockTransaction lt4 = new LockTransaction (new List<string> { "lock1", "lock2", "lock3" }))
+					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
+					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure2, new List<string> { "lock3" }))
+					using (LockTransaction lt3 = new LockTransaction (dataInfrastructure3, new List<string> { "lock4" }))
+					using (LockTransaction lt4 = new LockTransaction (dataInfrastructure4, new List<string> { "lock1", "lock2", "lock3" }))
 					{
-						Assert.IsTrue (lt1.Acquire (dataInfrastructure1));
-						Assert.IsTrue (lt2.Acquire (dataInfrastructure2));
-						Assert.IsTrue (lt3.Acquire (dataInfrastructure3));
-						Assert.IsFalse (lt4.Acquire (dataInfrastructure4));
+						Assert.IsTrue (lt1.Acquire ());
+						Assert.IsTrue (lt2.Acquire ());
+						Assert.IsTrue (lt3.Acquire ());
+						Assert.IsFalse (lt4.Acquire ());
+
+						lt1.Poll ();
+						lt2.Poll ();
+						lt3.Poll ();
+						lt4.Poll ();
 
 						System.DateTime t2 = dbInfrastructure1.GetDatabaseTime ();
 
-						var expectedLockOwners = new Dictionary<string, string>
-						{
-							{ "lock1", "id1" },
-							{ "lock2", "id1" },
-							{ "lock3", "id2" },
-						};
+						var expectedLockOwners1 = new Dictionary<string, string>
+		                {
+		                    { "lock1", "id1" },
+		                    { "lock2", "id1" },
+		                };
 
-						var actualLockOwners = lt4.LockOwners;
-						var actualLockCreationTimes = lt4.LockCreationTimes;
-						
-						Assert.IsTrue (expectedLockOwners.SetEquals (actualLockOwners));
+						var expectedLockOwners2 = new Dictionary<string, string>
+		                {
+		                    { "lock3", "id2" },
+		                };
 
-						Assert.AreEqual (3, actualLockCreationTimes.Count);
-						Assert.IsTrue (actualLockCreationTimes.ContainsKey ("lock1"));
-						Assert.IsTrue (actualLockCreationTimes.ContainsKey ("lock2"));
-						Assert.IsTrue (actualLockCreationTimes.ContainsKey ("lock3"));
+						var expectedLockOwners3 = new Dictionary<string, string>
+		                {
+		                    { "lock4", "id3" },
+		                };
 
-						Assert.IsTrue (t1 <= actualLockCreationTimes["lock1"]);
-						Assert.IsTrue (t1 <= actualLockCreationTimes["lock2"]);
-						Assert.IsTrue (actualLockCreationTimes["lock1"] <= actualLockCreationTimes["lock3"]);
-						Assert.IsTrue (actualLockCreationTimes["lock2"] <= actualLockCreationTimes["lock3"]);
-						Assert.IsTrue (actualLockCreationTimes["lock3"] <= t2);
+						var expectedLockOwners4 = new Dictionary<string, string>
+		                {
+		                    { "lock1", "id1" },
+		                    { "lock2", "id1" },
+		                    { "lock3", "id2" },
+		                };
+
+						Assert.IsTrue (expectedLockOwners1.SetEquals (lt1.LockOwners));
+						Assert.IsTrue (expectedLockOwners2.SetEquals (lt2.LockOwners));
+						Assert.IsTrue (expectedLockOwners3.SetEquals (lt3.LockOwners));
+						Assert.IsTrue (expectedLockOwners4.SetEquals (lt4.LockOwners));
+
+						Assert.AreEqual (2, lt1.LockCreationTimes.Count);
+						Assert.IsTrue (lt1.LockCreationTimes.ContainsKey ("lock1"));
+						Assert.IsTrue (lt1.LockCreationTimes.ContainsKey ("lock2"));
+
+						Assert.AreEqual (1, lt2.LockCreationTimes.Count);
+						Assert.IsTrue (lt2.LockCreationTimes.ContainsKey ("lock3"));
+
+						Assert.AreEqual (1, lt3.LockCreationTimes.Count);
+						Assert.IsTrue (lt3.LockCreationTimes.ContainsKey ("lock4"));
+
+						Assert.AreEqual (3, lt4.LockCreationTimes.Count);
+						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock1"));
+						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock2"));
+						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock3"));
+
+						Assert.AreEqual (lt1.LockCreationTimes["lock1"], lt4.LockCreationTimes["lock1"]);
+						Assert.AreEqual (lt1.LockCreationTimes["lock2"], lt4.LockCreationTimes["lock2"]);
+
+						Assert.AreEqual (lt2.LockCreationTimes["lock3"], lt4.LockCreationTimes["lock3"]);
+
+						Assert.IsTrue (t1 <= lt4.LockCreationTimes["lock1"]);
+						Assert.IsTrue (t1 <= lt4.LockCreationTimes["lock2"]);
+						Assert.IsTrue (lt4.LockCreationTimes["lock1"] <= lt4.LockCreationTimes["lock3"]);
+						Assert.IsTrue (lt4.LockCreationTimes["lock2"] <= lt4.LockCreationTimes["lock3"]);
+						Assert.IsTrue (lt4.LockCreationTimes["lock3"] <= lt3.LockCreationTimes["lock4"]);
+						Assert.IsTrue (lt3.LockCreationTimes["lock4"] <= t2);
 					}
 				}
 			}
