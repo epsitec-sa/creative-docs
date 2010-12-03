@@ -44,12 +44,70 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		
+		/// <summary>
+		/// Gets the identification of the connections who owned the locks of the current instance
+		/// when the last try was made to acquire them. The data is returned as a mapping from the
+		/// lock names to the connection identifications.
+		/// </summary>
+		/// <remarks>This data is only available after at least one try has been made to acquire the
+		/// locks and if the last try has failed.</remarks>
+		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
+		public Dictionary<string, string> LockOwners
+		{
+			get
+			{
+				if (this.locksData == null)
+				{
+					throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
+				}
+				
+				return this.locksData
+						.SelectMany (item => item.Value.Select (l => System.Tuple.Create (l.Item1, item.Key)))
+						.ToDictionary (tuple => tuple.Item1, tuple => tuple.Item2);
+			}
+		}
+
+		/// <summary>
+		/// Gets the acquisition time of the locks of the current instance when the last try was
+		/// made to acquire them. The data is returned as a mapping from the lock names to their
+		/// creation time.
+		/// </summary>
+		/// <remarks>This data is only available after at least one try has been made to acquire the
+		/// locks and if the last try has failed.</remarks>
+		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
+		public Dictionary<string, System.DateTime> LockCreationTimes
+		{
+			get
+			{
+				if (this.locksData == null)
+				{
+					throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
+				}
+				
+				return this.locksData
+						.SelectMany (item => item.Value)
+						.ToDictionary (tuple => tuple.Item1, tuple => tuple.Item2);
+			}
+		}
+				
 		internal bool Acquire(DataInfrastructure dataInfrastructure)
 		{
 			System.Diagnostics.Debug.Assert (this.lockTransaction == null);
 
-			this.lockTransaction = this.CreateLockTransaction (dataInfrastructure);
+			var lockTransaction = this.CreateLockTransaction (dataInfrastructure);
+
+			if (lockTransaction.State == LockState.Locked)
+			{
+				this.locksData = null;
+				this.lockTransaction = lockTransaction;
+			}
+			else
+			{
+				this.locksData = lockTransaction.GetLockOwners ();
+				this.lockTransaction = null;
+
+				lockTransaction.Dispose ();
+			}
 
 			return this.lockTransaction != null;
 		}
@@ -60,13 +118,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			lockTransaction.Lock ();
 
-			if (lockTransaction.State == LockState.Locked)
-			{
-				return lockTransaction;
-			}
-
-			lockTransaction.Dispose ();
-			return null;
+			return lockTransaction;
 		}
 
 		#region IDisposable Members
@@ -86,6 +138,8 @@ namespace Epsitec.Cresus.Core.Data
 
 		private readonly List<string> lockNames;
 		private LowLevelLockTransaction lockTransaction;
+		private Dictionary<string, List<System.Tuple<string, System.DateTime>>> locksData;
+
 
 		private bool isDisposed;
 	}
