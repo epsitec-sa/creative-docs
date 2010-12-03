@@ -39,7 +39,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.groups = this.manager.GetAllUserGroups ().Where (x => x.UserPowerLevel != UserPowerLevel.System).OrderBy (x => x.UserPowerLevel).ToList ();
 
 			this.checkButtonGroups = new List<CheckButton> ();
-			this.isLockAcquired = this.manager.BusinessContext.AcquireLock ();
+
+			this.lockOwners = this.manager.BusinessContext.AcquireLockOwners ();
+			this.isLockAcquired = (this.lockOwners == null);
 		}
 
 		protected override Window CreateWindow()
@@ -456,6 +458,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupWidgetsLockNotAcquired(Window window)
 		{
+			System.Diagnostics.Debug.Assert (this.lockOwners != null);
+
+			var users = new System.Text.StringBuilder ();
+
+			foreach (var owner in this.lockOwners)
+			{
+				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.Key, owner.Value);
+				users.Append (desc);
+			}
+
 			int tabIndex = 1;
 
 			var topPane = new FrameBox
@@ -469,7 +481,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var message = new StaticText
 			{
 				Parent = topPane,
-				Text = "L'accès est impossible, car un autre utilisateur est déjà en train de modifier ces données !",
+				Text = string.Concat ("L'accès est impossible, car un autre utilisateur est déjà en train de modifier ces données !<br/><br/>", users.ToString ()),
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Fill,
 			};
@@ -1378,6 +1390,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private bool										editionStarted;
 		private List<NaturalPersonEntity>					naturalPersonEntities;
 		private bool										ignoreChange;
+		private Dictionary<string, string>					lockOwners;
 		private bool										isLockAcquired;
+
 	}
 }
