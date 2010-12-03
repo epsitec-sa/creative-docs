@@ -149,6 +149,34 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 		/// <summary>
+		/// For each lock defined in this instance, finds its name, the time at which it has been
+		/// acquired and by who it has been acquired. The results are organized as a mapping from 
+		/// the lock owners to the lock name and acquisition time.
+		/// </summary>
+		/// <returns>The identity of the locks owner and the locks name and creation time for this instance.</returns>
+		public Dictionary<string, List<System.Tuple<string, System.DateTime>>> GetLockOwners()
+		{
+			if (this.State == LockState.Disposed)
+			{
+				throw new System.InvalidOperationException ("This operation cannot be performed while in disposed state");
+			}
+			
+			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
+			{
+				var data = this.dbInfrastructure.ConnectionManager.GetLockOwners (this.lockNames);
+
+				transaction.Commit ();
+
+				return data.ToDictionary
+				(
+					item => item.Key.Identity,
+					item => item.Value.Select (l => System.Tuple.Create (l.Name, l.CreationTime)).ToList ()
+				);
+			}
+		}
+
+
+		/// <summary>
 		/// Requests all the locks.
 		/// </summary>
 		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they have not.</returns>
@@ -188,6 +216,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				transaction.Commit ();
 			}
 		}
+
 		
 		/// <summary>
 		/// Disposes the transaction, which release the locks if they haven't been released before.

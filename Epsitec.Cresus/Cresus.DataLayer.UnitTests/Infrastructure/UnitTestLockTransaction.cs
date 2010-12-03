@@ -1,6 +1,9 @@
-﻿using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
@@ -312,6 +315,84 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 				Assert.IsTrue (l1.Lock ());
 				Assert.IsTrue (l2.Lock ());
 				Assert.IsTrue (l3.Lock ());
+			}
+		}
+
+
+		[TestMethod]
+		public void GetLockOwnersTest()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+
+			DbConnection connection1 = dbInfrastructure.ConnectionManager.OpenConnection ("1");
+			DbConnection connection2 = dbInfrastructure.ConnectionManager.OpenConnection ("2");
+			DbConnection connection3 = dbInfrastructure.ConnectionManager.OpenConnection ("3");
+
+			using (LockTransaction lt1 = new LockTransaction (dbInfrastructure, connection1.Id, new List<string> () { "lock1", "lock2" }))
+			using (LockTransaction lt2 = new LockTransaction (dbInfrastructure, connection2.Id, new List<string> () { "lock3", }))
+			using (LockTransaction lt3 = new LockTransaction (dbInfrastructure, connection3.Id, new List<string> () { "lock1", "lock2", "lock3", "lock4" }))
+			{
+				Assert.IsTrue (lt1.Lock ());
+				Assert.IsTrue (lt2.Lock ());
+
+				DbLock lock1 = dbInfrastructure.LockManager.GetLock ("lock1");
+				DbLock lock2 = dbInfrastructure.LockManager.GetLock ("lock2");
+				DbLock lock3 = dbInfrastructure.LockManager.GetLock ("lock3");
+
+				var result1 = lt1.GetLockOwners ();
+				var result2 = lt2.GetLockOwners ();
+				var result3 = lt3.GetLockOwners ();
+
+				var expected1 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				{
+					{ "1", new List<System.Tuple<string, System.DateTime>> ()
+						{
+							System.Tuple.Create(lock1.Name, lock1.CreationTime),
+							System.Tuple.Create(lock2.Name, lock2.CreationTime)
+						}
+					} 
+				};
+
+				var expected2 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				{
+					{ "2", new List<System.Tuple<string, System.DateTime>> ()
+						{
+							System.Tuple.Create(lock3.Name, lock3.CreationTime),
+						}
+					} 
+				};
+
+				var expected3 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				{
+					{ "1", new List<System.Tuple<string, System.DateTime>> ()
+						{
+							System.Tuple.Create(lock1.Name, lock1.CreationTime),
+							System.Tuple.Create(lock2.Name, lock2.CreationTime)
+						}
+					},
+					{ "2", new List<System.Tuple<string, System.DateTime>> ()
+						{
+							System.Tuple.Create(lock3.Name, lock3.CreationTime),
+						}
+					} 
+				};
+
+				this.CheckLockOwners (expected1, result1);
+				this.CheckLockOwners (expected2, result2);
+				this.CheckLockOwners (expected3, result3);
+			}
+		}
+
+
+		private void CheckLockOwners(Dictionary<string, List<System.Tuple<string, System.DateTime>>> expected, Dictionary<string, List<System.Tuple<string, System.DateTime>>> actual)
+		{
+			Assert.IsTrue (expected.Count == actual.Count);
+
+			foreach (var item in expected)
+			{
+				Assert.IsTrue (actual.ContainsKey (item.Key));
+
+				Assert.IsTrue (item.Value.SetEquals (actual[item.Key]));
 			}
 		}
 
