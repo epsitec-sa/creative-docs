@@ -153,30 +153,38 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		
+
 		public bool AcquireLock()
 		{
+			var owners = this.AcquireLockOwners ();
+			return owners == null;
+		}
+
+		public Dictionary<string, string> AcquireLockOwners( )
+		{
+			//	Prend le verrou et retourne null si tout est ok.
+			//	S'il n'est pas possible de prendre le verrou, retourne la liste des utilisateurs.
 			if (this.IsLocked)
 			{
-				return true;
+				return null;
 			}
 
 			var lockTransaction = this.locker.RequestLock (this.GetLockNames ());
 
 			if (lockTransaction == null)
 			{
-				return false;
+				return lockTransaction.LockOwners;
 			}
 
 			if (lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
 			{
 				this.lockTransaction = lockTransaction;
 				this.OnLockAcquired ();
-				return true;
+				return null;
 			}
 
 			lockTransaction.Dispose ();
-			return false;
+			return lockTransaction.LockOwners;
 		}
 
 		public bool ReleaseLock()
