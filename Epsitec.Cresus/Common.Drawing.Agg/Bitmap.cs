@@ -747,7 +747,7 @@ namespace Epsitec.Common.Drawing
 					{
 						using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 						{
-							System.Drawing.Bitmap srcBitmap = new System.Drawing.Bitmap (stream);
+							System.Drawing.Bitmap srcBitmap = Bitmap.DecompressBitmap (stream, data);
 							System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (srcBitmap.Width, srcBitmap.Height);
 
 							double dpiX = srcBitmap.HorizontalResolution;
@@ -779,6 +779,26 @@ namespace Epsitec.Common.Drawing
 				}
 
 				return null;
+			}
+		}
+
+		private static System.Drawing.Bitmap DecompressBitmap(System.IO.MemoryStream stream, byte[] data)
+		{
+			try
+			{
+				return new System.Drawing.Bitmap (stream);
+			}
+			catch (ExternalException)
+			{
+				using (var native = Platform.NativeBitmap.Load (data))
+				{
+					var bytes  = native.SaveToMemory (Platform.BitmapFileType.Bmp);
+
+					using (System.IO.MemoryStream stream2 = new System.IO.MemoryStream (bytes, false))
+					{
+						return new System.Drawing.Bitmap (stream2);
+					}
+				}
 			}
 		}
 
