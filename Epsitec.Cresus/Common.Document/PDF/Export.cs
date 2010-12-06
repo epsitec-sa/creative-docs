@@ -1846,8 +1846,18 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
 			{
-				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
-				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
+				dx = (int) System.Math.Ceiling ((dx+0.5)*finalDpiX/currentDpiX);
+				dy = (int) System.Math.Ceiling ((dy+0.5)*finalDpiY/currentDpiY);
+
+				if (dx < 1)
+				{
+					dx = 1;
+				}
+				if (dy < 1)
+				{
+					dy = 1;
+				}
+
 				resizeRequired = true;
 			}
 
