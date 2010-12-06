@@ -212,15 +212,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 
-			using (LockTransaction la = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock" }))
-			using (LockTransaction lb = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock" }))
+			DbConnection c1 = dbInfrastructure.ConnectionManager.OpenConnection ("1");
+			DbConnection c2 = dbInfrastructure.ConnectionManager.OpenConnection ("2");
+
+			using (LockTransaction la = new LockTransaction (dbInfrastructure, c1.Id, new List<string> () { "lock" }))
+			using (LockTransaction lb = new LockTransaction (dbInfrastructure, c2.Id, new List<string> () { "lock" }))
 			{
-				Assert.IsTrue (la.Lock ());
-				Assert.IsFalse (lb.Lock ());
+				List<LockOwner> owners = new List<LockOwner> ();
+
+				Assert.IsTrue (la.Lock (owners));
+				Assert.IsTrue (!owners.Any ());
+
+				Assert.IsFalse (lb.Lock (owners));
+				Assert.AreEqual (c1.Identity, owners.Single ().ConnectionIdentity);
+				Assert.AreEqual ("lock", owners.Single ().LockName);
+				Assert.AreEqual (dbInfrastructure.LockManager.GetLock ("lock").CreationTime, owners.Single ().LockDateTime);
 
 				la.Release ();
 
-				Assert.IsTrue (lb.Lock ());
+				Assert.IsTrue (lb.Lock (owners));
+				Assert.IsTrue (!owners.Any ());
 
 				lb.Release ();
 			}
@@ -332,18 +343,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			using (LockTransaction lt2 = new LockTransaction (dbInfrastructure, connection2.Id, new List<string> () { "lock3", }))
 			using (LockTransaction lt3 = new LockTransaction (dbInfrastructure, connection3.Id, new List<string> () { "lock1", "lock2", "lock3", "lock4" }))
 			{
-				Assert.IsTrue (lt1.Lock ());
-				Assert.IsTrue (lt2.Lock ());
+				List<LockOwner> lockOwners = new List<LockOwner> ();
+
+				Assert.IsTrue (lt1.Lock (lockOwners));
+				Assert.IsTrue (!lockOwners.Any ());
+				Assert.IsTrue (lt2.Lock (lockOwners));
+				Assert.IsTrue (!lockOwners.Any ());
+				Assert.IsFalse (lt3.Lock (lockOwners));
 
 				DbLock lock1 = dbInfrastructure.LockManager.GetLock ("lock1");
 				DbLock lock2 = dbInfrastructure.LockManager.GetLock ("lock2");
 				DbLock lock3 = dbInfrastructure.LockManager.GetLock ("lock3");
 
-				var result1 = lt1.GetLockOwners ();
-				var result2 = lt2.GetLockOwners ();
-				var result3 = lt3.GetLockOwners ();
-
-				var expected1 = new List<LockOwner>()
+				var expected1 = new List<LockOwner> ()
 				{
 					new LockOwner (connection1, lock1),
 					new LockOwner (connection1, lock2),
@@ -361,9 +373,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 					new LockOwner (connection2, lock3),
 				};
 
+				var result1 = lt1.GetLockOwners ();
+				var result2 = lt2.GetLockOwners ();
+				var result3 = lt3.GetLockOwners ();
+
 				this.CheckLockOwners (expected1, result1);
 				this.CheckLockOwners (expected2, result2);
 				this.CheckLockOwners (expected3, result3);
+				this.CheckLockOwners (expected3, lockOwners);
 			}
 		}
 
