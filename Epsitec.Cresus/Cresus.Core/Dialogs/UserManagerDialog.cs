@@ -463,7 +463,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var owner in this.lockOwners)
 			{
-				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.LockName, this.manager.FindActiveUser (owner.User.UserCode).DisplayName);
+				SoftwareUserEntity user = this.manager.FindActiveUser (owner.User.UserCode);
+				System.DateTime lockTime = owner.LockTime.ToLocalTime (this.manager.CoreData);
+				
+				string desc = string.Format ("verrou = {0}<br/>utilisateur = {1}<br/>date = {2} {3}<br/>", owner.LockName, user.DisplayName, lockTime.ToShortDateString (), lockTime.ToShortTimeString ());
 				users.Append (desc);
 			}
 

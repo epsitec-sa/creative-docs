@@ -92,7 +92,7 @@
     <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
-    <Compile Include="Data\DatabaseDateTime.cs" />
+    <Compile Include="Data\DatabaseTime.cs" />
     <Compile Include="Data\ItemCode.cs" />
     <Compile Include="Data\ItemCodeGenerator.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />

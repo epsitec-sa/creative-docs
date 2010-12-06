@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			this.User         = ConnectionUserIdentity.Parse (owner.ConnectionIdentity);
 			this.LockName     = owner.LockName;
-			this.LockDateTime = new DatabaseDateTime (owner.LockDateTime);
+			this.LockTime = new DatabaseTime (owner.LockDateTime);
 		}
 
 
@@ -46,11 +46,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 		/// <summary>
-		/// Gets the date when the lock was acquired, expressed as a database
+		/// Gets the time when the lock was acquired, expressed as a database
 		/// date and time.
 		/// </summary>
 		/// <value>The lock date.</value>
-		public DatabaseDateTime					LockDateTime
+		public DatabaseTime						LockTime
 		{
 			get;
 			set;
