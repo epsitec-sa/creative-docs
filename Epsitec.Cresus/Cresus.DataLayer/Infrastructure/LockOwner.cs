@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
+	/// <summary>
+	/// The <c>LockOwner</c> class provides information about who owns a given
+	/// lock in the database.
+	/// </summary>
 	public sealed class LockOwner
 	{
 		public LockOwner(System.Tuple<DbConnection, DbLock> dbConnectionAndLock)
@@ -22,19 +26,31 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.LockDateTime       = dbLock.CreationTime;
 		}
 
-		
+
+		/// <summary>
+		/// Gets the low level connection identity.
+		/// </summary>
+		/// <value>The connection identity.</value>
 		public string							ConnectionIdentity
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the low level name of the lock.
+		/// </summary>
+		/// <value>The name of the lock.</value>
 		public string							LockName
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the date and time when the lock was acquired in the database.
+		/// </summary>
+		/// <value>The lock date and time.</value>
 		public System.DateTime					LockDateTime
 		{
 			get;

@@ -10,7 +10,12 @@ namespace Epsitec.Cresus.Core.Data
 	using LowLevelLockTransaction=Epsitec.Cresus.DataLayer.Infrastructure.LockTransaction;
 	using LowLevelLockOwner=Epsitec.Cresus.DataLayer.Infrastructure.LockOwner;
 	using LockState=Epsitec.Cresus.DataLayer.Infrastructure.LockState;
-	
+
+	/// <summary>
+	/// The <c>LockTransaction</c> class is a wrapper for the lower level lock transaction
+	/// object. It implements both lock acquisition and lock state polling for a given set
+	/// of locks.
+	/// </summary>
 	public sealed class LockTransaction : System.IDisposable
 	{
 		public LockTransaction(DataInfrastructure dataInfrastructure, IEnumerable<string> lockNames)
@@ -39,9 +44,8 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 		/// <summary>
-		/// Gets the identification of the connections who owned the locks of the current instance
-		/// when the last call to <see cref="LockTransaction.Poll"/> or <see cref="LockTransaction.Lock"/>
-		/// was made. The data is returned as a mapping from the lock names to the connection identifications.
+		/// Gets the owners of the locks at the time <see cref="LockTransaction.Poll"/> or
+		/// <see cref="LockTransaction.Lock"/> were called.
 		/// </summary>
 		/// <value>The lock owners or <c>null</c> if this information is not available.</value>
 		/// <remarks>This data is only available after a call to <see cref="LockTransaction.Poll"/>
@@ -57,7 +61,7 @@ namespace Epsitec.Cresus.Core.Data
 				}
 				else
 				{
-					return this.foreignLockOwners.AsReadOnly ();
+					return this.foreignLockOwners;
 				}
 			}
 		}
@@ -76,8 +80,11 @@ namespace Epsitec.Cresus.Core.Data
 
 			var lockOwners = new List<LowLevelLockOwner> ();
 			var result     = this.lockTransaction.Lock (lockOwners);
-			
-			this.foreignLockOwners = lockOwners.Select (x => new LockOwner (x)).ToList ();
+
+			this.foreignLockOwners = lockOwners
+				.Select (x => new LockOwner (x))
+				.ToList ()
+				.AsReadOnly ();
 
 			return result;
 		}
@@ -102,7 +109,8 @@ namespace Epsitec.Cresus.Core.Data
 				.GetLockOwners ()
 				.Where (x => x.ConnectionIdentity != id)
 				.Select (x => new LockOwner (x))
-				.ToList ();
+				.ToList ()
+				.AsReadOnly ();
 
 			return this.foreignLockOwners.Count == 0;
 		}
@@ -125,7 +133,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly DataInfrastructure		dataInfrastructure;
 		private readonly List<string>			lockNames;
 		private LowLevelLockTransaction			lockTransaction;
-		private List<LockOwner>					foreignLockOwners;
+		private IList<LockOwner>				foreignLockOwners;
 		
 		private bool							isDisposed;
 	}
