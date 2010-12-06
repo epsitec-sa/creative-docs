@@ -42,6 +42,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "ImageBlobs":
 					return context => data.GetAllEntities<ImageBlobEntity> (dataContext: context);
 
+				case "PriceCalculators":
+					return context => data.GetAllEntities<PriceCalculatorEntity> (dataContext: context);
+
 				case "WorkflowDefinitions":
 					return context => data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context);
 
@@ -71,6 +74,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "ImageBlobs":
 					return EntityInfo<ImageBlobEntity>.GetTypeId ();
+
+				case "PriceCalculators":
+					return EntityInfo<PriceCalculatorEntity>.GetTypeId ();
 
 				case "WorkflowDefinitions":
 					return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();

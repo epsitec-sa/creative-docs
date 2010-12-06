@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="21" name="Cresus.Core" layer="s" namespace="Epsitec.Cresus.Core">
   <Versions>
-    <Version id="2" build="36" date="2010-11-26T13:05:05.8829275Z" />
     <Version id="1" build="583" date="2010-11-30T06:26:31.7326000Z" />
+    <Version id="2" build="38" date="2010-12-06T10:31:04.7502520Z" />
   </Versions>
 </ModuleInfo>
