@@ -756,6 +756,7 @@
     <EmbeddedResource Include="Images\Base.WorkflowDefinitions.icon" />
     <EmbeddedResource Include="Images\Data.ImageBlob.icon" />
     <EmbeddedResource Include="Images\Base.ImageBlobs.icon" />
+    <EmbeddedResource Include="Images\Base.PriceCalculator.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

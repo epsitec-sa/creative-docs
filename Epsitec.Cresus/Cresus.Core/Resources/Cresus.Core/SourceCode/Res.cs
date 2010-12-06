@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
 				//	designer:cap/L0K4
 				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+				//	designer:cap/L0KM
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculators = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
 				//	designer:cap/L0A9L
 				public static readonly global::Epsitec.Common.Widgets.Command ShowWorkflowDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 681));
 			}
@@ -140,6 +142,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowImages = 0x1500014000012L;
 				//	designer:cap/L0K4
 				public const long ShowInvoiceDocuments = 0x1500014000004L;
+				//	designer:cap/L0KM
+				public const long ShowPriceCalculators = 0x1500014000016L;
 				//	designer:cap/L0A9L
 				public const long ShowWorkflowDefinitions = 0x150000A0002A9L;
 			}
