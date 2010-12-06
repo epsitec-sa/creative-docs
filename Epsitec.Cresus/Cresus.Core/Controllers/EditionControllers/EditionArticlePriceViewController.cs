@@ -42,20 +42,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField (tile, 150, "Du", Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			builder.CreateTextField (tile, 150, "Au", Marshaler.Create (() => this.Entity.EndDate, x => this.Entity.EndDate = x));
-			
+			builder.CreateTextField (tile, 150, "Au", Marshaler.Create (() => this.Entity.EndDate,   x => this.Entity.EndDate   = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
+			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
+
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			
 			//	TODO: gérer le HT/TTC selon this.Entity.ValueIncludesTaxes
 			builder.CreateTextField (tile, 150, "Prix HT", Marshaler.Create (() => this.Entity.Value, x => this.Entity.Value = x));
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 			
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			
-			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
-			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateMargin (tile, horizontalSeparator: false);
 		}
 
 		private void CreateUIPriceCalculator(UIBuilder builder)
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("PriceCalculators", this.Entity, "Calculateurs de prix de l'article", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
+			builder.CreateEditionDetailedItemPicker ("PriceCalculators", this.Entity, "Calculateurs de prix", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
 		}
 	}
 }

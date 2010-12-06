@@ -1,6 +1,9 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
@@ -8,18 +11,13 @@ using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
-
 using System.Linq;
-
 using System.Text;
-
 using System.Xml.Linq;
 
 
 namespace Epsitec.Cresus.Core.Entities
 {
-
-
 	/// <summary>
 	/// The <see cref="PriceCalculatorEntity"/> provides tools to compute the price of an
 	/// <see cref="ArticleDocumentItemEntity"/> based on the values of its parameters. Basically an
@@ -43,6 +41,34 @@ namespace Epsitec.Cresus.Core.Entities
 	/// </remarks>
 	public partial class PriceCalculatorEntity
 	{
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText ("Code: ", this.Code, "\n", "Nom: ", this.Name, "\n", "Description: ", this.Description);
+		}
+
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.Code, this.Name);
+		}
+
+		public override string[] GetEntityKeywords()
+		{
+			return new string[] { this.Code, this.Name.ToSimpleText () };
+		}
+
+		public override EntityStatus GetEntityStatus()
+		{
+			//	We consider a location to be empty if it has neither postal code, nor
+			//	location name; a location with just a coutry or region is still empty.
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.Code.GetEntityStatus ());
+				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+
+				return a.EntityStatus;
+			}
+		}
 
 		
 		/// <summary>
