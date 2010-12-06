@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			NumericDimension dimension1 = PriceCalculatorEntity.CreateDimension (articleParameter1, RoundingMode.Down);
 			CodeDimension dimension2 = PriceCalculatorEntity.CreateDimension (articleParameter2);
-			DimensionTable priceTable = new DimensionTable (dimension1, dimension2);
+			DimensionTable priceTable = new DimensionTable (dimension2, dimension1);
 			int value = 1;
 			foreach (object o1 in dimension1.Values)
 			{
@@ -892,6 +892,40 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				Assert.AreEqual (item.Value, table[item.Key]);
 			}
+		}
+
+
+		[TestMethod]
+		public void CreateKeyArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => PriceCalculatorEntity.CreateKey (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateKeyTest()
+		{
+			int nbParameters = 10;
+			
+			var parametersToValues = new Dictionary<AbstractArticleParameterDefinitionEntity, object> ();
+			object[] expected = new object[nbParameters];
+			
+			for (int i = 0; i < nbParameters; i++)
+			{
+				var articleParameter = new EnumValueArticleParameterDefinitionEntity ();
+				articleParameter.Code = "1";
+				articleParameter.Cardinality = EnumValueCardinality.ZeroOrOne;
+				articleParameter.Values = AbstractArticleParameterDefinitionEntity.Join ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+				articleParameter.DefaultValue = "0";
+
+				parametersToValues[articleParameter] =  i;
+				expected[i] = i;
+			}
+
+			CollectionAssert.AreEqual (expected, PriceCalculatorEntity.CreateKey (parametersToValues));
 		}
 		
 
