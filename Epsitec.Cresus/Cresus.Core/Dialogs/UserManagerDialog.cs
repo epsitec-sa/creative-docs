@@ -40,8 +40,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.checkButtonGroups = new List<CheckButton> ();
 
-			this.lockOwners = this.manager.BusinessContext.AcquireLockOwners ();
-			this.isLockAcquired = (this.lockOwners == null);
+			this.isLockAcquired = this.manager.BusinessContext.AcquireLock (out this.lockOwners);
 		}
 
 		protected override Window CreateWindow()
@@ -464,7 +463,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var owner in this.lockOwners)
 			{
-				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.Key, owner.Value);
+				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.LockName, owner.User);
 				users.Append (desc);
 			}
 
@@ -1390,7 +1389,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private bool										editionStarted;
 		private List<NaturalPersonEntity>					naturalPersonEntities;
 		private bool										ignoreChange;
-		private Dictionary<string, string>					lockOwners;
+		private IList<Data.LockOwner>						lockOwners;
 		private bool										isLockAcquired;
 
 	}

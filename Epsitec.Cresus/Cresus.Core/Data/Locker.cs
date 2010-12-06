@@ -4,9 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -14,20 +13,18 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	using DataInfrastructure=Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure;
+	
+	/// <summary>
+	/// The <c>Locker</c> class is used to request a lock on one or several
+	/// items. It returns a <see cref="LockTransaction"/> to describe the
+	/// lock (which might or might not have been taken).
+	/// </summary>
 	public sealed class Locker : System.IDisposable
 	{
 		public Locker(DataInfrastructure dataInfrastructure)
 		{
 			this.dataInfrastructure = dataInfrastructure;
-		}
-
-		
-		public bool IsReady
-		{
-			get
-			{
-				return this.isReady;
-			}
 		}
 
 		
@@ -39,24 +36,34 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		
 		public LockTransaction RequestLock(params string[] lockNames)
 		{
-			return this.RequestLock ((IEnumerable<string>) lockNames);
+			IList<LockOwner> foreignLockOwners;
+			return this.RequestLock ((IEnumerable<string>) lockNames, out foreignLockOwners);
 		}
 
-		public LockTransaction RequestLock(IEnumerable<string> lockNames)
+		public LockTransaction RequestLock(IEnumerable<string> lockNames, out IList<LockOwner> foreignLockOwners)
 		{
 			var lockTransaction = new LockTransaction (this.dataInfrastructure, lockNames);
 			
 			if (lockTransaction.Acquire ())
 			{
+				foreignLockOwners = null;
 				return lockTransaction;
 			}
 			else
 			{
+				foreignLockOwners = lockTransaction.ForeignLockOwners;
 				lockTransaction.Dispose ();
+				
 				return null;
 			}
+		}
+		
+		public bool AreAllLocksAvailable(params string[] lockNames)
+		{
+			return this.AreAllLocksAvailable ((IEnumerable<string>) lockNames);
 		}
 
 		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
@@ -64,21 +71,15 @@ namespace Epsitec.Cresus.Core.Data
 			return this.dataInfrastructure.AreAllLocksAvailable (lockNames);
 		}
 
-		public Dictionary<string, string> GetLockOwners(IEnumerable<string> lockNames)
+
+		public LockMonitor CreateLockMonitor(params string[] lockNames)
 		{
-			// HACK Kind of hack method which might be removed if we find another way to access
-			// this information. The problem is that the RequestLock() method get rid of the Locker
-			// transaction is the lock cannot be acquired, so we cannot reuse it in order to get
-			// this information. That's why we need to recreate a similar lock transaction. It works
-			// but that's not very nice.
-			// Marc
+			return this.CreateLockMonitor ((IEnumerable<string>) lockNames);
+		}
 
-			using (LockTransaction lockTransaction = new LockTransaction (this.dataInfrastructure, lockNames))
-			{
-				lockTransaction.Poll ();
-
-				return lockTransaction.LockOwners;
-			}
+		public LockMonitor CreateLockMonitor(IEnumerable<string> lockNames)
+		{
+			return new LockMonitor (this.dataInfrastructure, lockNames);
 		}
 
 		public static string GetLockName(DataContext context, AbstractEntity entity)
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 		
-		private readonly DataInfrastructure dataInfrastructure;
+		private readonly DataInfrastructure		dataInfrastructure;
 
 		private bool isReady;
 	}
