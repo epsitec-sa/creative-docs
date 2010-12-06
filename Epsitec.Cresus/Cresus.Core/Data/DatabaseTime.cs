@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Core.Data
 	/// The <c>DatabaseDateTime</c> structure wraps a <see cref="System.DateTime"/> value
 	/// representing a date and time based on the database server clock.
 	/// </summary>
-	public struct DatabaseDateTime : System.IEquatable<DatabaseDateTime>, System.IComparable<DatabaseDateTime>
+	public struct DatabaseTime : System.IEquatable<DatabaseTime>, System.IComparable<DatabaseTime>
 	{
-		public DatabaseDateTime(System.DateTime value)
+		public DatabaseTime(System.DateTime value)
 		{
 			this.value = value;
 		}
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Data
 		/// Gets the value.
 		/// </summary>
 		/// <value>The value.</value>
-		public System.DateTime Value
+		public System.DateTime					Value
 		{
 			get
 			{
@@ -31,9 +31,20 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		/// <summary>
+		/// Get the database time as a local application date and time.
+		/// </summary>
+		/// <param name="data">The <see cref="CoreData"/> instance.</param>
+		/// <returns>The local application date and time.</returns>
+		public System.DateTime ToLocalTime(CoreData data)
+		{
+			return this.value + data.ConnectionManager.TimeOffset;
+		}
+
+
 		#region IEquatable<DatabaseDateTime> Members
 
-		public bool Equals(DatabaseDateTime other)
+		public bool Equals(DatabaseTime other)
 		{
 			return other.value == this.value;
 		}
@@ -42,7 +53,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		#region IComparable<DatabaseDateTime> Members
 
-		public int CompareTo(DatabaseDateTime other)
+		public int CompareTo(DatabaseTime other)
 		{
 			return this.value.CompareTo (other.Value);
 		}

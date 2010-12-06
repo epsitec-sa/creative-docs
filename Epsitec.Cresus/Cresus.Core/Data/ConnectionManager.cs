@@ -52,6 +52,13 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		public System.TimeSpan					TimeOffset
+		{
+			get
+			{
+				return this.timeOffset;
+			}
+		}
 
 		/// <summary>
 		/// Validates the connection once the database infrastructure is ready to be
@@ -81,6 +88,12 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			var identity = this.GetIdentity ();
 			this.dataInfrastructure.OpenConnection (identity.ToString ());
+			
+			var databaseTime = this.dataInfrastructure.DbInfrastructure.GetDatabaseTime ();
+			var localAppTime = System.DateTime.Now;
+
+			this.timeOffset = localAppTime - databaseTime;
+
 			this.isReady = true;
 		}
 
@@ -148,10 +161,11 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 
-		private readonly CoreData data;
-		private readonly DataInfrastructure dataInfrastructure;
-		private readonly Timer keepAliveTimer;
+		private readonly CoreData				data;
+		private readonly DataInfrastructure		dataInfrastructure;
+		private readonly Timer					keepAliveTimer;
 		
-		private bool isReady;
+		private bool							isReady;
+		private System.TimeSpan					timeOffset;
 	}
 }
