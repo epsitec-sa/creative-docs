@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					new SummaryData
 					{
 						Name				= "PriceCalculator",
-						IconUri				= "Data.Group",
+						IconUri				= "Data.PriceCalculator",
 						Title				= TextFormatter.FormatText ("Calculateur de prix"),
 						CompactTitle		= TextFormatter.FormatText ("Calculateur"),
 						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
