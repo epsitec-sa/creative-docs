@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.ArticlePrice", "Prix");
 
 				this.CreateUIMain (builder);
+				this.CreateUIPriceCalculator (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -53,6 +54,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			
 			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
 			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
+		}
+
+		private void CreateUIPriceCalculator(UIBuilder builder)
+		{
+			var controller = new SelectionController<PriceCalculatorEntity> (this.BusinessContext)
+			{
+				CollectionValueGetter    = () => this.Entity.PriceCalculators,
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
+			};
+
+			builder.CreateEditionDetailedItemPicker ("PriceCalculators", this.Entity, "Calculateurs de prix de l'article", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
 		}
 	}
 }

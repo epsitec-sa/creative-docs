@@ -91,6 +91,8 @@
     <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPriceCalculatorViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPriceCalculatorListViewController.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
     <Compile Include="Data\DatabaseTime.cs" />
     <Compile Include="Data\ItemCode.cs" />
