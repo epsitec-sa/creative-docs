@@ -20,14 +20,39 @@ namespace Epsitec.Cresus.Core.Entities
 {
 
 
+	/// <summary>
+	/// The <see cref="PriceCalculatorEntity"/> provides tools to compute the price of an
+	/// <see cref="ArticleDocumentItemEntity"/> based on the values of its parameters. Basically an
+	/// instance of this class contains <see cref="DimensionTable"/> which define prices for some
+	/// combinations of some of its parameter values.
+	/// </summary>
+	/// <remarks>
+	/// There are many remarks to do with respect to this class.
+	/// - Each dimension of the price table corresponds to a parameter of the article definition. For
+	///   numeric parameters, the dimension points must correspond to the parameter preferred values.
+	///   For enum parameters, the dimension points must correspond to the parameter values.
+	/// - The dimensions in the price table are ordered by their name, and their name is equal to the
+	///   code of the dimension they match.
+	/// - Enum parameters are considered as options. So if one has more than one value, then the
+	///   result of the price is the sum of the price for each of its values.
+	/// - The field <see cref="PriceCalculatorEntity.SerializedData"/> should never be accessed
+	///   directly. So don't touch it, otherwise you'll risk to mess everything up.
+	/// - The price tables can have one or more dimension. There are no restrictions on the dimensions
+	///   of single dimension tables. But for multi dimension tables, the dimensions must correspond
+	///   to a numeric parameter or to an enum parameter with cardinality "exactly one".
+	/// </remarks>
 	public partial class PriceCalculatorEntity
 	{
 
 		
-		// TODO Comment this class.
-		// Marc
-
-
+		/// <summary>
+		/// Computes the contribution made to the price of the given <see cref="ArticleDocumentItemEntity"/>
+		/// defined by this instance.
+		/// </summary>
+		/// <param name="articleItem">The article whose price to compute.</param>
+		/// <returns>The price, or <c>null</c> if it is not defined.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="articleItem"/> is <c>null</c>.</exception>
+		/// <exception cref="System.NotSupportedException">If the price table of this instance is invalid.</exception>
 		public decimal? Compute(ArticleDocumentItemEntity articleItem)
 		{
 			articleItem.ThrowIfNull ("articleItem");
@@ -38,11 +63,18 @@ namespace Epsitec.Cresus.Core.Entities
 
 			IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
 
-			return this.ComputePriceForDimensionTable (articleItem, priceTable, parameterCodesToValues);
+			return this.ComputePriceForDimensionTable (priceTable, parameterCodesToValues);
 		}
 
 
-		private decimal? ComputePriceForDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		/// <summary>
+		/// Use the given <see cref="DimensionTable"/>, the <see cref="ArticleDocumentItem"/> and
+		/// the values of the parameters to compute the price.
+		/// </summary>
+		/// <param name="priceTable">The table defining the prices for the different combinations of parameters.</param>
+		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		/// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
+		private decimal? ComputePriceForDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
 			int nbDimensions = priceTable.Dimensions.Count ();
 
@@ -52,7 +84,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else if (nbDimensions > 1)
 			{
-				return this.ComputePriceForMultiDimensionTable (articleItem, priceTable, parameterCodesToValues);
+				return this.ComputePriceForMultiDimensionTable (priceTable, parameterCodesToValues);
 			}
 			else
 			{
@@ -61,6 +93,12 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Computes the price when the price table contains a single dimension.
+		/// </summary>
+		/// <param name="priceTable">The price table used for the computation.</param>
+		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		/// <returns>The computed price or <c>null</c> if it is not defined.</returns>
 		private decimal? ComputePriceForUniDimensonTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
 			decimal? price = 0;
@@ -86,15 +124,16 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		private decimal? ComputePriceForMultiDimensionTable(ArticleDocumentItemEntity articleItem, DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		/// <summary>
+		/// Computes the price when the price table contains more than one dimension.
+		/// </summary>
+		/// <param name="priceTable">The price table used for the computation.</param>
+		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		/// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
+		private decimal? ComputePriceForMultiDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
 		{
-			if (!this.CheckParametersForMultiDimensionTable (priceTable, articleItem))
-			{
-				throw new System.NotSupportedException ();
-			}
-
 			object[] key = priceTable.Dimensions
-			.Select (d => parameterCodesToValues[d.Name].First ())
+			.Select (d => parameterCodesToValues[d.Name].Single ())
 			.ToArray ();
 
 			decimal? price = null;
@@ -108,20 +147,22 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		private bool CheckParametersForMultiDimensionTable(DimensionTable priceTable, ArticleDocumentItemEntity articleItem)
-		{
-			return articleItem.ArticleDefinition.ArticleParameterDefinitions
-				.Where (pd => priceTable.Dimensions.Any (d => d.Name == pd.Code))
-				.All (pd =>
-				{
-					var vpd = pd as NumericValueArticleParameterDefinitionEntity;
-					var epd = pd as EnumValueArticleParameterDefinitionEntity;
-
-					return (vpd != null) || (epd != null && epd.Cardinality == EnumValueCardinality.ExactlyOne);
-				});
-		}
-
-
+		/// <summary>
+		/// Sets the given <see cref="DimensionTable"/> as the price table used to compute the values
+		/// of this instance.
+		/// </summary>
+		/// <remarks>
+		/// There are two things to note. Firstly, you need to call the <see cref="DataContext.SaveChanges"/>
+		/// method in order to persist this modification to the database. Secondly, this method works
+		/// by value and does not keep a reference to <paramref name="priceTable"/>, therefore any
+		/// modification done to <paramref name="priceTable"/> after the call of this method will not
+		/// be reported in this instance, you'll need to call this method again in order to do that.
+		/// </remarks>
+		/// <param name="articleDefinition">The definition of the article targeted by this instance.</param>
+		/// <param name="priceTable">The new price table.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="articleDefinition"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="priceTable"/> is <c>null</c>.</exception>
+		/// <exception cref="System.NotSupportedException">If <paramref name="priceTable"/> is not valid with respect to <paramref name="articleDefinition"/>.</exception>
 		public void SetPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
 		{
 			articleDefinition.ThrowIfNull ("articleDefinition");
@@ -133,6 +174,15 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		
+		/// <summary>
+		/// Gets the <see cref="DimensionTable"/> associated with this instance.
+		/// </summary>
+		/// <remarks>
+		/// This method returns a copy of the price table, so feel free to do whatever you want with
+		/// it. But that means that you cannot use it directly to modify the price table associated
+		/// with this instance.
+		/// </remarks>
+		/// <returns>The <see cref="DimensionTable"/> used to compute the values of this instance.</returns>
 		public DimensionTable GetPriceTable()
 		{
 			DimensionTable priceTable = null;
@@ -146,9 +196,17 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Checks that the given <see cref="DimensionTable"/> is a valid price table for the given
+		/// <see cref="ArticleDefinitionEntity"/>.
+		/// </summary>
+		/// <param name="articleDefinition">The definition of the article.</param>
+		/// <param name="priceTable">The price table to check.</param>
 		private void CheckPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
 		{
 			var parameterDefinitions = articleDefinition.ArticleParameterDefinitions.ToDictionary (pd => pd.Code, pd => pd);
+
+			int nbDimensions = priceTable.Dimensions.Count ();
 
 			foreach (AbstractDimension dimension in priceTable.Dimensions)
 			{
@@ -167,24 +225,34 @@ namespace Epsitec.Cresus.Core.Entities
 				{
 					if (!PriceCalculatorEntity.CheckValuesForNumericParameter (npd, nd.Values.Cast<decimal> ()))
 					{
-						throw new System.Exception ();
+						throw new System.NotSupportedException ();
 					}
 				}
 				else if (epd != null && cd != null)
 				{
 					if (!PriceCalculatorEntity.CheckValuesForEnumParameter (epd, cd.Values.Cast<string> ()))
 					{
-						throw new System.Exception ();
+						throw new System.NotSupportedException ();
+					}
+
+					if (nbDimensions > 1 && epd.Cardinality != EnumValueCardinality.ExactlyOne)
+					{
+						throw new System.NotSupportedException ();
 					}
 				}
 				else
 				{
-					throw new System.Exception ();
+					throw new System.NotSupportedException ();
 				}
 			}
 		}
 
 
+		/// <summary>
+		/// Deserializes a <see cref="DimensionTable"/> out of a byte array.
+		/// </summary>
+		/// <param name="tableDataAsByteArray">The data of the <see cref="DimensionTable"/>.</param>
+		/// <returns>The <see cref="DimensionTable"/>.</returns>
 		private DimensionTable DeserializePriceTable(byte[] tableDataAsByteArray)
 		{
 			string tableDataAsXmlString = Encoding.UTF8.GetString (tableDataAsByteArray);
@@ -195,6 +263,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Serializes a <see cref="DimensionTable"/> to a byte array.
+		/// </summary>
+		/// <param name="table">The <see cref="DimensionTable"/> to serialize.</param>
+		/// <returns>The byte data.</returns>
 		private byte[] SerializePriceTable(DimensionTable table)
 		{
 			XElement xTable = table.XmlExport ();
@@ -205,6 +278,14 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Creates a <see cref="NumericDimension"/> based on the given parameter. This method uses
+		/// the preferred values as points on the dimension.
+		/// </summary>
+		/// <param name="parameter">The parameter on which to base the new dimension.</param>
+		/// <param name="roundingMode">The rounding strategy for the dimension.</param>
+		/// <returns>The new <see cref="NumericDimension"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
 		public static NumericDimension CreateDimension(NumericValueArticleParameterDefinitionEntity parameter, RoundingMode roundingMode)
 		{
 			parameter.ThrowIfNull ("parameter");
@@ -218,6 +299,15 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Creates a <see cref="CodeDimension"/> based on the given parameter. This method uses the
+		/// defined values as points on the dimension. Only parameters with the cardinality
+		/// <see cref="EnumValueCardinality.ExactlyOne"/> can be used with this method.
+		/// </summary>
+		/// <param name="parameter">The parameter on which to base the new dimension.</param>
+		/// <returns>The new <see cref="CodeDimension"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="parameter"/> is not of the appropriate cardinality.</exception>
 		public static CodeDimension CreateDimension(EnumValueArticleParameterDefinitionEntity parameter)
 		{
 			parameter.ThrowIfNull ("parameter");
@@ -231,6 +321,17 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
+		/// based on the given parameter and with the given strategy for rounding and the given values.
+		/// </summary>
+		/// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
+		/// <param name="parameterCodesToValues">The mapping between the parameter values to the values in the table.</param>
+		/// <param name="roundingMode">The rounding strategy.</param>
+		/// <returns>The new <see cref="DimensionTable"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
 		public static DimensionTable CreatePriceTable(NumericValueArticleParameterDefinitionEntity parameter, IDictionary<decimal, decimal> parameterCodesToValues, RoundingMode roundingMode)
 		{
 			parameter.ThrowIfNull ("parameter");
@@ -253,6 +354,16 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
+		/// base on the given parameter.
+		/// </summary>
+		/// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
+		/// <param name="parameterCodesToValues">The mapping between the parameter codes to the values in the table.</param>
+		/// <returns>The new <see cref="DimensionTable"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
 		public static DimensionTable CreatePriceTable(EnumValueArticleParameterDefinitionEntity parameter, IDictionary<string, decimal> parameterCodesToValues)
 		{
 			parameter.ThrowIfNull ("parameter");
@@ -275,6 +386,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Builds the key used to access elements in a price table.
+		/// </summary>
+		/// <param name="parametersToValues">The mapping from the parameter definitions to their actual value.</param>
+		/// <returns>The key corresponding to the given mapping.</returns>
+		public static object[] CreateKey(IDictionary<AbstractArticleParameterDefinitionEntity, object> parametersToValues)
+		{
+			parametersToValues.ThrowIfNull ("parametersToValues");
+
+			return parametersToValues
+				.OrderBy (kvp => kvp.Key.Code)
+				.Select (kvp => kvp.Value)
+				.ToArray ();
+		}
+
+
+		/// <summary>
+		/// Checks that the given values correspond to the preferred values of the given parameter.
+		/// </summary>
+		/// <param name="parameterDefinition">The parameter to check.</param>
+		/// <param name="values">The set of values to check.</param>
+		/// <returns><c>true</c> if the given values correspond to the preferred values of the given parameter, <c>false</c> if they don't.</returns>
 		private static bool CheckValuesForNumericParameter(NumericValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<decimal> values)
 		{
 			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.PreferredValues)
@@ -283,6 +416,12 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		/// <summary>
+		/// Checks that the given values correspond to the values of the given parameter.
+		/// </summary>
+		/// <param name="parameterDefinition">The parameter to check.</param>
+		/// <param name="values">The set of values to check.</param>
+		/// <returns><c>true</c> if the given values correspond to the values of the given parameter, <c>false</c> if they don't.</returns>
 		private static bool CheckValuesForEnumParameter(EnumValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<string> values)
 		{
 			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.Values)
