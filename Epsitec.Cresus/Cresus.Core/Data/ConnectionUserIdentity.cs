@@ -11,8 +11,17 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	/// <summary>
+	/// The <c>ConnectionUserIdentity</c> class represents the user identity attached to a
+	/// database connection.
+	/// </summary>
 	public class ConnectionUserIdentity : System.IEquatable<ConnectionUserIdentity>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConnectionUserIdentity"/> class
+		/// based on the user's <see cref="SoftwareUserEntity.Code"/>.
+		/// </summary>
+		/// <param name="code">The user's <see cref="SoftwareUserEntity.Code"/>.</param>
 		public ConnectionUserIdentity(ItemCode code)
 		{
 			var userCode    = (string) code;
@@ -57,6 +66,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		/// <summary>
+		/// Parses the serialized value of the connection user identity.
+		/// </summary>
+		/// <param name="value">The serialized value.</param>
+		/// <returns>The connection user identity.</returns>
 		public static ConnectionUserIdentity Parse(string value)
 		{
 			if ((string.IsNullOrEmpty (value)) ||
@@ -70,6 +84,10 @@ namespace Epsitec.Cresus.Core.Data
 			return new ConnectionUserIdentity (value);
 		}
 
+		/// <summary>
+		/// Gets the low level informations associated with the connection (such as <c>OS</c>, <c>CLR</c>, <c>Core</c>).
+		/// </summary>
+		/// <returns>The collection of low level informations.</returns>
 		public IEnumerable<System.Tuple<string, string>> GetInfos()
 		{
 			string args1 = this.data.Substring (this.data.IndexOf (' ') + 1);
@@ -100,6 +118,11 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				return false;
 			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.data.GetHashCode ();
 		}
 
 		#region IEquatable<DataConnectionUserIdentity> Members

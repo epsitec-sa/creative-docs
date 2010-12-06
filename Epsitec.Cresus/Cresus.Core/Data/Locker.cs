@@ -82,7 +82,8 @@ namespace Epsitec.Cresus.Core.Data
 			return new LockMonitor (this.dataInfrastructure, lockNames);
 		}
 
-		public static string GetLockName(DataContext context, AbstractEntity entity)
+		
+		internal static string GetEntityLockName(DataContext context, AbstractEntity entity)
 		{
 			var key = context.GetNormalizedEntityKey (entity);
 
