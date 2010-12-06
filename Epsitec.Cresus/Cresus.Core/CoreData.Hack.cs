@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Repositories;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
@@ -616,6 +617,32 @@ namespace Epsitec.Cresus.Core
 			articleDef6.BillingUnit = uomUnit4;
 			articleDef6.Units = uomGroup2;
 			articleDef6.ArticlePrices.Add (this.CreateArticlePrice (1.50M, articlePriceGroup1));
+
+
+			//	Crée un calculateur de prix.
+			var pc1 = this.DataContext.CreateEntity<PriceCalculatorEntity> ();
+
+			pc1.Code = "PC1";
+			pc1.Name = "Essai";
+			pc1.Description = "Essai d'un calculateur de prix à 2 dimensions";
+
+			NumericDimension nd1 = PriceCalculatorEntity.CreateDimension (param5_1, RoundingMode.Nearest);
+			NumericDimension nd2 = PriceCalculatorEntity.CreateDimension (param5_2, RoundingMode.Nearest);
+			DimensionTable priceTable = new DimensionTable (nd1, nd2);
+
+			int value = 1;
+			foreach (object o1 in nd1.Values)
+			{
+				foreach (object o2 in nd2.Values)
+				{
+					priceTable[o1, o2] = value;
+					value++;
+				}
+			}
+
+			pc1.SetPriceTable (articleDef5, priceTable);
+			articleDef5.ArticlePrices[0].PriceCalculators.Add (pc1);
+
 
 			yield return articleDef1;
 			yield return articleDef2;

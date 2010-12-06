@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			
 			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
 			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUIPriceCalculator(UIBuilder builder)
