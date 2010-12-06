@@ -1,14 +1,15 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.DataLayer.Infrastructure;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	using DataInfrastructure=Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure;
 	using LowLevelLockTransaction=Epsitec.Cresus.DataLayer.Infrastructure.LockTransaction;
+	using LowLevelLockOwner=Epsitec.Cresus.DataLayer.Infrastructure.LockOwner;
+	using LockState=Epsitec.Cresus.DataLayer.Infrastructure.LockState;
 	
 	public sealed class LockTransaction : System.IDisposable
 	{
@@ -39,52 +40,28 @@ namespace Epsitec.Cresus.Core.Data
 
 		/// <summary>
 		/// Gets the identification of the connections who owned the locks of the current instance
-		/// when the last call to <see cref="LockTransaction.Poll"/> was made. The data is returned
-		/// as a mapping from the lock names to the connection identifications.
+		/// when the last call to <see cref="LockTransaction.Poll"/> or <see cref="LockTransaction.Lock"/>
+		/// was made. The data is returned as a mapping from the lock names to the connection identifications.
 		/// </summary>
+		/// <value>The lock owners or <c>null</c> if this information is not available.</value>
 		/// <remarks>This data is only available after a call to <see cref="LockTransaction.Poll"/>
-		/// has been made, and the data might be outdated if the real state of the locks has been
-		/// changed in the database since that call.</remarks>
-		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
-		public Dictionary<string, string> LockOwners
+		/// or <see cref="LockTransaction.Lock"/> has been made, and the data might be outdated if
+		/// the real state of the locks has changed in the database since that call.</remarks>
+		public IList<LockOwner>					ForeignLockOwners
 		{
 			get
 			{
-				if (this.locksData == null)
+				if (this.foreignLockOwners == null)
 				{
-					throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
+					return null;
 				}
-				
-				return this.locksData
-						.SelectMany (item => item.Value.Select (l => System.Tuple.Create (l.Item1, item.Key)))
-						.ToDictionary (tuple => tuple.Item1, tuple => tuple.Item2);
+				else
+				{
+					return this.foreignLockOwners.AsReadOnly ();
+				}
 			}
 		}
 
-		/// <summary>
-		/// Gets the acquisition time of the locks of the current instance when the last call to
-		/// <see cref="LockTransaction.Poll"/> was made. The data is returned as a mapping from the
-		/// lock names to their creation time.
-		/// </summary>
-		/// <remarks>This data is only available after a call to <see cref="LockTransaction.Poll"/>
-		/// has been made, and the data might be outdated if the real state of the locks has been
-		/// changed in the database since that call.</remarks>
-		/// <exception cref="System.InvalidOperationException">If the data is not available in the current state of this instance.</exception>
-		public Dictionary<string, System.DateTime> LockCreationTimes
-		{
-			get
-			{
-				if (this.locksData == null)
-				{
-					throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
-				}
-				
-				return this.locksData
-						.SelectMany (item => item.Value)
-						.ToDictionary (tuple => tuple.Item1, tuple => tuple.Item2);
-			}
-		}
-		
 		/// <summary>
 		/// Tries to acquire the locks of the current instance.
 		/// </summary>
@@ -96,8 +73,13 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
 			}
+
+			var lockOwners = new List<LowLevelLockOwner> ();
+			var result     = this.lockTransaction.Lock (lockOwners);
 			
-			return this.lockTransaction.Lock ();
+			this.foreignLockOwners = lockOwners.Select (x => new LockOwner (x)).ToList ();
+
+			return result;
 		}
 
 		/// <summary>
@@ -113,13 +95,16 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
 			}
-
-			this.locksData = this.lockTransaction.GetLockOwners ();
-
+			
 			string id = this.dataInfrastructure.ConnectionInformation.ConnectionIdentity;
 
-			return !this.locksData.Any ()
-				|| (this.locksData.Count == 1 && this.locksData.ContainsKey (id));
+			this.foreignLockOwners = this.lockTransaction
+				.GetLockOwners ()
+				.Where (x => x.ConnectionIdentity != id)
+				.Select (x => new LockOwner (x))
+				.ToList ();
+
+			return this.foreignLockOwners.Count == 0;
 		}
 
 		#region IDisposable Members
@@ -137,11 +122,11 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 
-		private readonly DataInfrastructure dataInfrastructure;
-		private readonly List<string> lockNames;
-		private LowLevelLockTransaction lockTransaction;
-		private Dictionary<string, List<System.Tuple<string, System.DateTime>>> locksData;
+		private readonly DataInfrastructure		dataInfrastructure;
+		private readonly List<string>			lockNames;
+		private LowLevelLockTransaction			lockTransaction;
+		private List<LockOwner>					foreignLockOwners;
 		
-		private bool isDisposed;
+		private bool							isDisposed;
 	}
 }

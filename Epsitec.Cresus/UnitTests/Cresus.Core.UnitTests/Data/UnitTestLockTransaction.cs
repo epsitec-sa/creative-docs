@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Data
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-						() => { var x = lt.LockOwners; }
+						() => { var x = lt.ForeignLockOwners; }
 					);
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Data
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-						() => { var x = lt.LockOwners; }
+						() => { var x = lt.ForeignLockOwners; }
 					);
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Data
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-						() => { var x = lt.LockOwners; }
+						() => { var x = lt.ForeignLockOwners; }
 					);
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
@@ -237,10 +237,10 @@ namespace Epsitec.Cresus.Core.Data
 		                    { "lock3", "id2" },
 		                };
 
-						Assert.IsTrue (expectedLockOwners1.SetEquals (lt1.LockOwners));
-						Assert.IsTrue (expectedLockOwners2.SetEquals (lt2.LockOwners));
-						Assert.IsTrue (expectedLockOwners3.SetEquals (lt3.LockOwners));
-						Assert.IsTrue (expectedLockOwners4.SetEquals (lt4.LockOwners));
+						Assert.IsTrue (expectedLockOwners1.SetEquals (lt1.ForeignLockOwners));
+						Assert.IsTrue (expectedLockOwners2.SetEquals (lt2.ForeignLockOwners));
+						Assert.IsTrue (expectedLockOwners3.SetEquals (lt3.ForeignLockOwners));
+						Assert.IsTrue (expectedLockOwners4.SetEquals (lt4.ForeignLockOwners));
 
 						Assert.AreEqual (2, lt1.LockCreationTimes.Count);
 						Assert.IsTrue (lt1.LockCreationTimes.ContainsKey ("lock1"));

@@ -104,19 +104,27 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			
 		
 		#endregion
-		
+
 
 		/// <summary>
 		/// Requests all the locks within the transaction. The success or failure is indicated by
 		/// the return value.
 		/// </summary>
-		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they have not.</returns>
+		/// <param name="lockOwners">An optional list which will be filled with the foreign lock owners, if any.</param>
+		/// <returns>
+		/// 	<c>true</c> if the locks have been acquired, <c>false</c> if they have not.
+		/// </returns>
 		/// <exception cref="System.InvalidOperationException">If the state of the transaction is not <see cref="LockState.Idle"/>.</exception>
-		public bool Lock()
+		public bool Lock(IList<LockOwner> lockOwners = null)
 		{
 			if (this.State != LockState.Idle)
 			{
 				throw new System.InvalidOperationException ("Lock operation cannot be performed while in " + this.State + " state");
+			}
+
+			if (lockOwners != null)
+			{
+				lockOwners.Clear ();
 			}
 
 			bool isLocked = this.InternalLock ();
@@ -124,6 +132,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			if (isLocked)
 			{
 				this.State = LockState.Locked;
+			}
+			else
+			{
+				//	TODO: make the call to GetLockOwners in the InternalLock function and in the
+				//	very same transaction, so that we execute the request as an atomic operation.
+
+				if (lockOwners != null)
+				{
+					lockOwners.AddRange (this.GetLockOwners ());
+				}
 			}
 
 			return isLocked;
@@ -150,28 +168,23 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		/// <summary>
 		/// For each lock defined in this instance, finds its name, the time at which it has been
-		/// acquired and by who it has been acquired. The results are organized as a mapping from 
-		/// the lock owners to the lock name and acquisition time.
+		/// acquired and by whom it has been acquired.
 		/// </summary>
 		/// <returns>The identity of the locks owner and the locks name and creation time for this instance.</returns>
-		public Dictionary<string, List<System.Tuple<string, System.DateTime>>> GetLockOwners()
+		public IEnumerable<LockOwner> GetLockOwners()
 		{
 			if (this.State == LockState.Disposed)
 			{
 				throw new System.InvalidOperationException ("This operation cannot be performed while in disposed state");
 			}
-			
+
 			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
 			{
 				var data = this.dbInfrastructure.ConnectionManager.GetLockOwners (this.lockNames);
 
 				transaction.Commit ();
 
-				return data.ToDictionary
-				(
-					item => item.Key.Identity,
-					item => item.Value.Select (l => System.Tuple.Create (l.Name, l.CreationTime)).ToList ()
-				);
+				return data.Select (x => new LockOwner (x)).ToList ();
 			}
 		}
 
@@ -352,6 +365,5 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 	}
-
 
 }

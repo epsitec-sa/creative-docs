@@ -1,11 +1,10 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database.Collections;
 
 using System.Collections.Generic;
-
 using System.Data;
-
 using System.Linq;
 
 
@@ -212,36 +211,37 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Finds all the locks given by <paramref name="lockNames"/> and returns them, grouped by
+		/// Finds all the locks given by <paramref name="lockNames"/> and returns them as pairs of
+		/// connection and lock.
 		/// the connections that owns them.
 		/// </summary>
 		/// <param name="lockNames">The sequence of lock names.</param>
 		/// <returns>The mapping between the connection and the lock they own.</returns>
-		public Dictionary<DbConnection, List<DbLock>> GetLockOwners(IEnumerable<string> lockNames)
+		public IEnumerable<System.Tuple<DbConnection, DbLock>> GetLockOwners(IEnumerable<string> lockNames)
 		{
 			lockNames.ThrowIfNull ("lockNames");
 
-			List<string> lockNamesAsList = lockNames.ToList ();
+			string[] arrayOfLockNames = lockNames.ToArray ();
 
-			Dictionary<DbConnection, List<DbLock>> result = new Dictionary<DbConnection, List<DbLock>> ();
-
-			if (lockNamesAsList.Count > 0)
+			if (arrayOfLockNames.Length > 0)
 			{
-				SqlSelect query = this.CreateQueryForLockOwners (lockNamesAsList);
+				SqlSelect query = this.CreateQueryForLockOwners (arrayOfLockNames);
 
-				result = this.ExecuteQueryForLockOwners (query);
+				return this.ExecuteQueryForLockOwners (query);
 			}
-
-			return result;
+			else
+			{
+				return EmptyEnumerable<System.Tuple<DbConnection, DbLock>>.Instance;
+			}
 		}
 
 
 		/// <summary>
-		/// Builds the sql query used to retrieve some locks with their connections.
+		/// Builds the SQL query used to retrieve some locks with their connections.
 		/// </summary>
 		/// <param name="lockNamesAsList">The sequence of lock names.</param>
-		/// <returns>The sql query.</returns>
-		private SqlSelect CreateQueryForLockOwners(List<string> lockNames)
+		/// <returns>The SQL query.</returns>
+		private SqlSelect CreateQueryForLockOwners(string[] lockNames)
 		{
 			DbTable connectionTable = this.DbTable;
 			DbColumn cIdColumn = connectionTable.Columns[Tags.ColumnId];
@@ -318,12 +318,11 @@ namespace Epsitec.Cresus.Database.Services
 
 
 		/// <summary>
-		/// Executes the request that fetches some locks with their connection, and processes the data
-		/// to put it into a nice dictionary.
+		/// Executes the request that fetches some locks with their connection.
 		/// </summary>
 		/// <param name="query">The query to execute.</param>
 		/// <returns>The mapping from the connection to the locks they own.</returns>
-		private Dictionary<DbConnection, List<DbLock>> ExecuteQueryForLockOwners(SqlSelect query)
+		private IEnumerable<System.Tuple<DbConnection, DbLock>> ExecuteQueryForLockOwners(SqlSelect query)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -333,24 +332,30 @@ namespace Epsitec.Cresus.Database.Services
 
 				transaction.Commit ();
 
-				Dictionary<DbId, DbConnection> connections = new Dictionary<DbId, DbConnection> ();
-				List<DbLock> locks = new List<DbLock> ();
+				var connections = new Dictionary<DbId, DbConnection> ();
 
 				if (data.Tables.Count > 0)
 				{
 					foreach (DataRow row in data.Tables[0].Rows)
 					{
-						DbConnection dbConnection = DbConnection.CreateDbConnection (row.ItemArray.Take (5).ToList ());
-						DbLock dbLock = DbLock.CreateLock (row.ItemArray.Skip (5).ToList ());
+						DbConnection dbConnection;
 
-						connections[dbConnection.Id] = dbConnection;
-						locks.Add (dbLock);
+						DbLock dbLock         = DbLock.CreateLock (row.ItemArray.Skip (5).ToList ());
+						DbId   dbConnectionId = dbLock.ConnectionId;
+
+						if (connections.TryGetValue (dbConnectionId, out dbConnection))
+                        {
+							//	Reuse same connection object.
+                        }
+						else
+						{
+							dbConnection = DbConnection.CreateDbConnection (row.ItemArray.Take (5).ToList ());
+							connections[dbConnectionId] = dbConnection;
+						}
+
+						yield return new System.Tuple<DbConnection, DbLock> (dbConnection, dbLock);
 					}
 				}
-
-				return locks
-					.GroupBy (l => l.ConnectionId)
-					.ToDictionary (g => connections[g.Key], g => g.ToList ());
 			}
 		}
 

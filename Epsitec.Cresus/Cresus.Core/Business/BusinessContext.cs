@@ -1,20 +1,21 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Orchestrators.Navigation;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Business
 {
@@ -156,37 +157,39 @@ namespace Epsitec.Cresus.Core.Business
 
 		public bool AcquireLock()
 		{
-			var owners = this.AcquireLockOwners ();
-			return owners == null;
+			IList<LockOwner> foreignLockOwners;
+			return this.AcquireLock (out foreignLockOwners);
 		}
 
-		public Dictionary<string, string> AcquireLockOwners()
+		public bool AcquireLock(out IList<LockOwner> foreignLockOwners)
 		{
-			//	Prend le verrou et retourne null si tout est ok.
+			//	Prend le verrou et retourne true si tout est ok.
 			//	S'il n'est pas possible de prendre le verrou, retourne la liste des utilisateurs.
 			if (this.IsLocked)
 			{
-				return null;
+				foreignLockOwners = EmptyList<LockOwner>.Instance;
+				return true;
 			}
 
-			var lockNames = this.GetLockNames ().ToList ();
-			var lockTransaction = this.locker.RequestLock (lockNames);
+			var lockNames       = this.GetLockNames ();
+			var lockTransaction = this.locker.RequestLock (lockNames, out foreignLockOwners);
 
-			if (lockTransaction != null && lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
+			if (lockTransaction == null)
+			{
+				return false;
+			}
+
+			if (lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
 			{
 				this.lockTransaction = lockTransaction;
 				this.OnLockAcquired ();
 
-				return null;
+				return true;
 			}
 			else
 			{
-				if (lockTransaction != null)
-				{
-					lockTransaction.Dispose ();
-				}
-
-				return this.locker.GetLockOwners (lockNames);
+				lockTransaction.Dispose ();
+				return false;
 			}
 		}
 
@@ -688,14 +691,14 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly DataContext			dataContext;
 		private readonly List<EntityRecord>		entityRecords;
 		private readonly List<AbstractEntity>	masterEntities;
-		private readonly Locker				locker;
+		private readonly Locker					locker;
 
 		private int								dataChangedCounter;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
 		private bool							hasExternalChanges;
-		private LockTransaction			lockTransaction;
+		private Data.LockTransaction			lockTransaction;
 
 		private GlobalLock						globalLock;
 		private AbstractEntity					activeEntity;

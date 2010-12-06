@@ -151,6 +151,7 @@
     <Compile Include="Infrastructure\ConnectionInformation.cs" />
     <Compile Include="Infrastructure\ConnectionStatus.cs" />
     <Compile Include="Infrastructure\DataInfrastructure.cs" />
+    <Compile Include="Infrastructure\LockOwner.cs" />
     <Compile Include="Infrastructure\LockTransaction.cs" />
     <Compile Include="Infrastructure\LockState.cs" />
     <Compile Include="Infrastructure\UidGenerator.cs" />

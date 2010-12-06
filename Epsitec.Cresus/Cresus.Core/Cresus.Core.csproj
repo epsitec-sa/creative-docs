@@ -162,6 +162,8 @@
     <Compile Include="Data\GlobalLocks.cs" />
     <Compile Include="Data\ImageData.cs" />
     <Compile Include="Data\ItemCodes.cs" />
+    <Compile Include="Data\LockMonitor.cs" />
+    <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
