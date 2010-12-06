@@ -451,19 +451,18 @@ namespace Cresus.Database.UnitTests.Services
 		}
 
 
-		private void CheckResult(Dictionary<DbId, List<string>> expected, Dictionary<DbConnection, List<DbLock>> actual)
+		private void CheckResult(Dictionary<DbId, List<string>> expected, IEnumerable<System.Tuple<DbConnection, DbLock>> actual)
 		{
-			Assert.AreEqual (expected.Count, actual.Count);
+			var actualAsList = actual.Select (t => System.Tuple.Create (t.Item1.Id, t.Item2.Name)).ToList ();
+
+			Assert.AreEqual (expected.Values.Aggregate (0, (a, l) => a + l.Count), actualAsList.Count);
 
 			foreach (var item in expected)
 			{
-				DbConnection connection = actual.Keys.FirstOrDefault (c => c.Id == item.Key);
-
-				Assert.IsNotNull (connection);
-
-				List<string> locks = actual[connection].Select (l => l.Name).ToList ();
-				Assert.AreEqual (item.Value.Count, locks.Count);
-				Assert.IsTrue (item.Value.SetEquals (locks));
+				foreach (var name in item.Value)
+				{
+					Assert.IsNotNull (actualAsList.Single (t => t.Item1 == item.Key && t.Item2 == name));
+				}
 			}
 		}
 

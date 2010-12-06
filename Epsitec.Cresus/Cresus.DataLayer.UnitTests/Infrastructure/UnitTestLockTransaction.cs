@@ -343,38 +343,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 				var result2 = lt2.GetLockOwners ();
 				var result3 = lt3.GetLockOwners ();
 
-				var expected1 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				var expected1 = new List<LockOwner>()
 				{
-					{ "1", new List<System.Tuple<string, System.DateTime>> ()
-						{
-							System.Tuple.Create(lock1.Name, lock1.CreationTime),
-							System.Tuple.Create(lock2.Name, lock2.CreationTime)
-						}
-					} 
+					new LockOwner (connection1, lock1),
+					new LockOwner (connection1, lock2),
 				};
 
-				var expected2 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				var expected2 = new List<LockOwner> ()
 				{
-					{ "2", new List<System.Tuple<string, System.DateTime>> ()
-						{
-							System.Tuple.Create(lock3.Name, lock3.CreationTime),
-						}
-					} 
+					new LockOwner (connection2, lock3),
 				};
 
-				var expected3 = new Dictionary<string, List<System.Tuple<string, System.DateTime>>> ()
+				var expected3 =  new List<LockOwner> ()
 				{
-					{ "1", new List<System.Tuple<string, System.DateTime>> ()
-						{
-							System.Tuple.Create(lock1.Name, lock1.CreationTime),
-							System.Tuple.Create(lock2.Name, lock2.CreationTime)
-						}
-					},
-					{ "2", new List<System.Tuple<string, System.DateTime>> ()
-						{
-							System.Tuple.Create(lock3.Name, lock3.CreationTime),
-						}
-					} 
+					new LockOwner (connection1, lock1),
+					new LockOwner (connection1, lock2),
+					new LockOwner (connection2, lock3),
 				};
 
 				this.CheckLockOwners (expected1, result1);
@@ -384,15 +368,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		}
 
 
-		private void CheckLockOwners(Dictionary<string, List<System.Tuple<string, System.DateTime>>> expected, Dictionary<string, List<System.Tuple<string, System.DateTime>>> actual)
+		private void CheckLockOwners(IEnumerable<LockOwner> expected, IEnumerable<LockOwner> actual)
 		{
-			Assert.IsTrue (expected.Count == actual.Count);
+			var expectedAsList = expected.ToList ();
+			var actualAsList = actual.ToList ();
 
-			foreach (var item in expected)
+			Assert.IsTrue (expectedAsList.Count == actualAsList.Count);
+
+			foreach (var item in expectedAsList)
 			{
-				Assert.IsTrue (actual.ContainsKey (item.Key));
-
-				Assert.IsTrue (item.Value.SetEquals (actual[item.Key]));
+				Assert.IsNotNull (actualAsList.Single (i => i.ConnectionIdentity == item.ConnectionIdentity && i.LockName == item.LockName && i.LockDateTime == item.LockDateTime));
 			}
 		}
 
