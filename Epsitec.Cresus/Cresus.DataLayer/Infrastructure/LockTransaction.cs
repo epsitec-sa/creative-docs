@@ -127,24 +127,26 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				lockOwners.Clear ();
 			}
 
-			bool isLocked = this.InternalLock ();
-
-			if (isLocked)
+			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
 			{
-				this.State = LockState.Locked;
-			}
-			else
-			{
-				//	TODO: make the call to GetLockOwners in the InternalLock function and in the
-				//	very same transaction, so that we execute the request as an atomic operation.
+				bool isLocked = this.InternalLock ();
 
-				if (lockOwners != null)
+				if (isLocked)
 				{
-					lockOwners.AddRange (this.GetLockOwners ());
+					this.State = LockState.Locked;
 				}
-			}
+				else
+				{
+					if (lockOwners != null)
+					{
+						lockOwners.AddRange (this.GetLockOwners ());
+					}
+				}
 
-			return isLocked;
+				transaction.Commit ();
+
+				return isLocked;
+			}
 		}
 
 
@@ -160,7 +162,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.InvalidOperationException ("Release operation cannot be performed while in " + this.State + " state");
 			}
 
-			this.InternalRelease();
+			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
+			{
+				this.InternalRelease ();
+
+				transaction.Commit ();
+			}
 
 			this.State = LockState.Disposed;
 		}
@@ -180,54 +187,59 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
 			{
-				var data = this.dbInfrastructure.ConnectionManager.GetLockOwners (this.lockNames);
+				var data = this.InternalGetLockOwners ();
 
 				transaction.Commit ();
 
-				return data.Select (x => new LockOwner (x)).ToList ();
+				return data;
 			}
 		}
 
 
 		/// <summary>
-		/// Requests all the locks.
+		/// Requests all the locks. This method does not uses any transaction, so its call must be
+		/// included in one to ensure atomicity.
 		/// </summary>
 		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they have not.</returns>
 		private bool InternalLock()
 		{
-			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
+			bool canLock = LockTransaction.AreAllLocksAvailable (this.DbLockManager, this.connectionId, this.lockNames);
+
+			if (canLock)
 			{
-				bool canLock = LockTransaction.AreAllLocksAvailable (this.DbLockManager, this.connectionId, this.lockNames);
-
-				if (canLock)
+				foreach (string lockName in lockNames)
 				{
-					foreach (string lockName in lockNames)
-					{
-						this.DbLockManager.RequestLock (lockName, this.connectionId);
-					}
+					this.DbLockManager.RequestLock (lockName, this.connectionId);
 				}
+			}
 
-				transaction.Commit ();
+			return canLock;
+		}
 
-				return canLock;
+
+		/// <summary>
+		/// Releases all the locks. This method does not uses any transaction, so its call must be
+		/// included in one to ensure atomicity.
+		/// </summary>
+		private void InternalRelease()
+		{
+			foreach (string lockName in this.lockNames)
+			{
+				this.DbLockManager.ReleaseLock (lockName, this.connectionId);
 			}
 		}
 
 
 		/// <summary>
-		/// Releases all the locks.
+		/// Gets the data about who owns the locks of this instance. This method does not uses any
+		/// transaction, so its call must be included in one to ensure atomicity.
 		/// </summary>
-		private void InternalRelease()
+		/// <returns>The identity of the locks owner and the locks name and creation time for this instance.</returns>
+		private IEnumerable<LockOwner> InternalGetLockOwners()
 		{
-			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
-			{
-				foreach (string lockName in this.lockNames)
-				{
-					this.DbLockManager.ReleaseLock (lockName, this.connectionId);
-				}
+			var data = this.dbInfrastructure.ConnectionManager.GetLockOwners (this.lockNames);
 
-				transaction.Commit ();
-			}
+			return data.Select (x => new LockOwner (x)).ToList ();
 		}
 
 		
@@ -326,7 +338,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The <see cref="DbTransaction"/> object</returns>
 		private static DbTransaction CreateReadTransaction(DbInfrastructure dbInfrastructure)
 		{
-			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+			return dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
 		}
 
 
