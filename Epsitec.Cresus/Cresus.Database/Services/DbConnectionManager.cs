@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <summary>
 		/// Builds the SQL query used to retrieve some locks with their connections.
 		/// </summary>
-		/// <param name="lockNamesAsList">The sequence of lock names.</param>
+		/// <param name="lockNames">The sequence of lock names.</param>
 		/// <returns>The SQL query.</returns>
 		private SqlSelect CreateQueryForLockOwners(string[] lockNames)
 		{

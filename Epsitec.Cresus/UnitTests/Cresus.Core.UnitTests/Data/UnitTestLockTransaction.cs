@@ -1,7 +1,5 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.UnitTesting;
-
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -9,6 +7,8 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.Core.Data
@@ -32,65 +32,6 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			TestHelper.DeleteDatabase ();
 			TestHelper.CreateDatabase ();
-		}
-
-
-		[TestMethod]
-		public void InvalidBehaviorTest()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					LockTransaction lt = new LockTransaction (dataInfrastructure, new List<string> () { "lock1", "lock2" });
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.ForeignLockOwners; }
-					);
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.LockCreationTimes; }
-					);
-					
-					Assert.IsTrue (lt.Acquire ());
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.ForeignLockOwners; }
-					);
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.LockCreationTimes; }
-					);
-
-					lt.Dispose ();
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => lt.Acquire ()
-					);
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => lt.Poll ()
-					);
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.ForeignLockOwners; }
-					);
-
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => { var x = lt.LockCreationTimes; }
-					);
-				}
-			}
 		}
 
 
@@ -127,8 +68,11 @@ namespace Epsitec.Cresus.Core.Data
 				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
 				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
 				{
-					dataInfrastructure1.OpenConnection ("id1");
-					dataInfrastructure2.OpenConnection ("id2");
+					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
+					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
+
+					dataInfrastructure1.OpenConnection (cId1);
+					dataInfrastructure2.OpenConnection (cId2);
 
 					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
 					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure1, new List<string> { "lock2" }))
@@ -190,12 +134,15 @@ namespace Epsitec.Cresus.Core.Data
 				using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (dbInfrastructure3))
 				using (DataInfrastructure dataInfrastructure4 = new DataInfrastructure (dbInfrastructure4))
 				{
-					dataInfrastructure1.OpenConnection ("id1");
-					dataInfrastructure2.OpenConnection ("id2");
-					dataInfrastructure3.OpenConnection ("id3");
-					dataInfrastructure4.OpenConnection ("id4");
-
-					System.DateTime t1 = dbInfrastructure1.GetDatabaseTime ();
+					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
+					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
+					string cId3 = new ConnectionUserIdentity (new ItemCode ("id3")).ToString ();
+					string cId4 = new ConnectionUserIdentity (new ItemCode ("id4")).ToString ();
+					
+					dataInfrastructure1.OpenConnection (cId1);
+					dataInfrastructure2.OpenConnection (cId2);
+					dataInfrastructure3.OpenConnection (cId3);
+					dataInfrastructure4.OpenConnection (cId4);
 
 					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
 					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure2, new List<string> { "lock3" }))
@@ -207,71 +154,33 @@ namespace Epsitec.Cresus.Core.Data
 						Assert.IsTrue (lt3.Acquire ());
 						Assert.IsFalse (lt4.Acquire ());
 
-						lt1.Poll ();
-						lt2.Poll ();
-						lt3.Poll ();
-						lt4.Poll ();
-
-						System.DateTime t2 = dbInfrastructure1.GetDatabaseTime ();
-
-						var expectedLockOwners1 = new Dictionary<string, string>
-		                {
-		                    { "lock1", "id1" },
-		                    { "lock2", "id1" },
-		                };
-
-						var expectedLockOwners2 = new Dictionary<string, string>
-		                {
-		                    { "lock3", "id2" },
-		                };
-
-						var expectedLockOwners3 = new Dictionary<string, string>
-		                {
-		                    { "lock4", "id3" },
-		                };
+						Assert.IsFalse (lt1.ForeignLockOwners.Any ());
+						Assert.IsFalse (lt2.ForeignLockOwners.Any ());
+						Assert.IsFalse (lt3.ForeignLockOwners.Any ());
 
 						var expectedLockOwners4 = new Dictionary<string, string>
 		                {
-		                    { "lock1", "id1" },
-		                    { "lock2", "id1" },
-		                    { "lock3", "id2" },
+		                    { "lock1", cId1 },
+		                    { "lock2", cId1 },
+		                    { "lock3", cId2 },
 		                };
 
-						Assert.IsTrue (expectedLockOwners1.SetEquals (lt1.ForeignLockOwners));
-						Assert.IsTrue (expectedLockOwners2.SetEquals (lt2.ForeignLockOwners));
-						Assert.IsTrue (expectedLockOwners3.SetEquals (lt3.ForeignLockOwners));
-						Assert.IsTrue (expectedLockOwners4.SetEquals (lt4.ForeignLockOwners));
-
-						Assert.AreEqual (2, lt1.LockCreationTimes.Count);
-						Assert.IsTrue (lt1.LockCreationTimes.ContainsKey ("lock1"));
-						Assert.IsTrue (lt1.LockCreationTimes.ContainsKey ("lock2"));
-
-						Assert.AreEqual (1, lt2.LockCreationTimes.Count);
-						Assert.IsTrue (lt2.LockCreationTimes.ContainsKey ("lock3"));
-
-						Assert.AreEqual (1, lt3.LockCreationTimes.Count);
-						Assert.IsTrue (lt3.LockCreationTimes.ContainsKey ("lock4"));
-
-						Assert.AreEqual (3, lt4.LockCreationTimes.Count);
-						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock1"));
-						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock2"));
-						Assert.IsTrue (lt4.LockCreationTimes.ContainsKey ("lock3"));
-
-						Assert.AreEqual (lt1.LockCreationTimes["lock1"], lt4.LockCreationTimes["lock1"]);
-						Assert.AreEqual (lt1.LockCreationTimes["lock2"], lt4.LockCreationTimes["lock2"]);
-
-						Assert.AreEqual (lt2.LockCreationTimes["lock3"], lt4.LockCreationTimes["lock3"]);
-
-						Assert.IsTrue (t1 <= lt4.LockCreationTimes["lock1"]);
-						Assert.IsTrue (t1 <= lt4.LockCreationTimes["lock2"]);
-						Assert.IsTrue (lt4.LockCreationTimes["lock1"] <= lt4.LockCreationTimes["lock3"]);
-						Assert.IsTrue (lt4.LockCreationTimes["lock2"] <= lt4.LockCreationTimes["lock3"]);
-						Assert.IsTrue (lt4.LockCreationTimes["lock3"] <= lt3.LockCreationTimes["lock4"]);
-						Assert.IsTrue (lt3.LockCreationTimes["lock4"] <= t2);
+						this.CheckLockOwner (expectedLockOwners4, lt4.ForeignLockOwners);					
 					}
 				}
 			}
 		}
+
+
+		private void CheckLockOwner(Dictionary<string, string> expected, IEnumerable<LockOwner> actual)
+		{
+			var set1 = expected.Select (i => System.Tuple.Create (i.Key, i.Value)).ToList ();
+			var set2 = actual.Select (i => System.Tuple.Create (i.LockName, i.User.ToString ())).ToList ();
+
+			Assert.IsTrue (set1.SetEquals(set2));
+		}
+
+
 
 
 	}
