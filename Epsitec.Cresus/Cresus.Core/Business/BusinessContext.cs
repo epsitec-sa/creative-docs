@@ -155,16 +155,25 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
+		/// <summary>
+		/// Acquires the lock (as defined by the <see cref="BusinessContext.GlobalLock"/> and
+		/// <see cref="BusinessContext.ActiveEntity"/> properties).
+		/// </summary>
+		/// <returns><c>true</c> if the lock could be acquired; otherwise, <c>false</c>.</returns>
 		public bool AcquireLock()
 		{
 			IList<LockOwner> foreignLockOwners;
 			return this.AcquireLock (out foreignLockOwners);
 		}
 
+		/// <summary>
+		/// Acquires the lock (as defined by the <see cref="BusinessContext.GlobalLock"/> and
+		/// <see cref="BusinessContext.ActiveEntity"/> properties).
+		/// </summary>
+		/// <param name="foreignLockOwners">The foreign lock owners, if the lock acquisition failed.</param>
+		/// <returns><c>true</c> if the lock could be acquired; otherwise, <c>false</c>.</returns>
 		public bool AcquireLock(out IList<LockOwner> foreignLockOwners)
 		{
-			//	Prend le verrou et retourne true si tout est ok.
-			//	S'il n'est pas possible de prendre le verrou, retourne la liste des utilisateurs.
 			if (this.IsLocked)
 			{
 				foreignLockOwners = EmptyList<LockOwner>.Instance;
@@ -193,6 +202,10 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		/// <summary>
+		/// Releases the lock acquired by <see cref="BusinessContext.AcquireLock"/>.
+		/// </summary>
+		/// <returns></returns>
 		public bool ReleaseLock()
 		{
 			if (this.IsLocked == false)
@@ -642,11 +655,11 @@ namespace Epsitec.Cresus.Core.Business
 
 			if (this.activeEntity != null)
 			{
-				yield return Locker.GetLockName (this.dataContext, this.activeEntity);
+				yield return Locker.GetEntityLockName (this.dataContext, this.activeEntity);
 			}
 			if (this.lockEntity != null)
 			{
-				yield return Locker.GetLockName (this.dataContext, this.lockEntity);
+				yield return Locker.GetEntityLockName (this.dataContext, this.lockEntity);
 			}
 		}
 

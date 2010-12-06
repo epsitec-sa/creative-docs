@@ -1,14 +1,15 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -23,39 +24,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.data = data;
 		}
 
-		public CoreData CoreData
+		public CoreData							CoreData
 		{
 			get
 			{
 				return this.data;
-			}
-		}
-
-		/// <summary>
-		/// Indicates whether the authenticated user has a power level of use or not.
-		/// </summary>
-		/// <param name="level">power level required</param>
-		/// <returns><c>true</c> if the user has power level; otherwise, <c>false</c>.</returns>
-		public bool IsAuthenticatedUserAtPowerLevel(UserPowerLevel level)
-		{
-			return this.IsUserAtPowerLevel (this.AuthenticatedUser, level);
-		}
-
-		/// <summary>
-		/// Indicates whether a user has a power level of use or not.
-		/// </summary>
-		/// <param name="user">entity of user</param>
-		/// <param name="level">power level required</param>
-		/// <returns><c>true</c> if the user has power level; otherwise, <c>false</c>.</returns>
-		public bool IsUserAtPowerLevel(SoftwareUserEntity user, UserPowerLevel level)
-		{
-			if (user.IsNull ())
-			{
-				return false;
-			}
-			else
-			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == level).Count () > 0;
 			}
 		}
 
@@ -87,24 +60,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
                 }
 
 				return this.businessContext;
-			}
-		}
-
-
-		/// <summary>
-		/// Met à jour l'utilisateur authentifié après une modification des paramètres de son compte.
-		/// </summary>
-		public void UpdateAuthenticate()
-		{
-			var user = this.authenticatedUser;
-
-			if (user != null)
-			{
-				user = this.FindActiveUser (user.Code);
-
-				this.OnAuthenticatedUserChanging ();
-				this.authenticatedUser = user;
-				this.OnAuthenticatedUserChanged ();
 			}
 		}
 
@@ -152,6 +107,51 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return true;
 		}
 
+		/// <summary>
+		/// Updates the authenticated user after some change in its settings.
+		/// </summary>
+		public void UpdateAuthenticatedUser()
+		{
+			var user = this.authenticatedUser;
+
+			if (user != null)
+			{
+				user = this.FindActiveUser (user.Code);
+
+				this.OnAuthenticatedUserChanging ();
+				this.authenticatedUser = user;
+				this.OnAuthenticatedUserChanged ();
+			}
+		}
+
+
+		/// <summary>
+		/// Indicates whether the authenticated user has the required power level.
+		/// </summary>
+		/// <param name="level">The required power level</param>
+		/// <returns><c>true</c> if the user has the required power level; otherwise, <c>false</c>.</returns>
+		public bool IsAuthenticatedUserAtPowerLevel(UserPowerLevel level)
+		{
+			return this.IsUserAtPowerLevel (this.AuthenticatedUser, level);
+		}
+
+		/// <summary>
+		/// Indicates whether a user has the required power level.
+		/// </summary>
+		/// <param name="user">The user entitry.</param>
+		/// <param name="level">The required power level.</param>
+		/// <returns><c>true</c> if the user has the required power level; otherwise, <c>false</c>.</returns>
+		public bool IsUserAtPowerLevel(SoftwareUserEntity user, UserPowerLevel level)
+		{
+			if (user.IsNull ())
+			{
+				return false;
+			}
+			else
+			{
+				return user.UserGroups.Where (group => group.UserPowerLevel == level).Count () > 0;
+			}
+		}
 
 		/// <summary>
 		/// Gets all users.
@@ -233,6 +233,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			var login = System.Environment.UserName;
 
 			return users.FirstOrDefault (user => user.LoginName == login && user.AuthenticationMethod == UserAuthenticationMethod.System && user.Disabled == false);
+		}
+
+		/// <summary>
+		/// Finds the active user matching the specified <see cref="ItemCode"/>.
+		/// </summary>
+		/// <param name="userCode">The user code.</param>
+		/// <returns>The matching user or <c>null</c>.</returns>
+		public SoftwareUserEntity FindActiveUser(ItemCode userCode)
+		{
+			return this.FindActiveUser (userCode.Code);
 		}
 
 		private SoftwareUserEntity FindActiveUser(string userCode)

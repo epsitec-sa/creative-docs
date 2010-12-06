@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var owner in this.lockOwners)
 			{
-				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.LockName, owner.User);
+				string desc = string.Format ("verrou = {0}, utilisateur = {1}<br/>", owner.LockName, this.manager.FindActiveUser (owner.User.UserCode).DisplayName);
 				users.Append (desc);
 			}
 
@@ -768,7 +768,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				this.manager.UpdateAuthenticate ();
+				this.manager.UpdateAuthenticatedUser ();
 				this.manager.SaveChangesAndDisposeBusinessContext ();
 
 				this.Result = DialogResult.Accept;
