@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			foreach (var parameter in articleDefinition.ArticleParameterDefinitions)
 			{
-				if (string.IsNullOrEmpty (parameter.Code) || parameter.Name.IsNullOrEmpty)
+				if (parameter.Name.IsNullOrEmpty)
 				{
 					continue;
 				}
@@ -79,15 +79,15 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Parent = this.toolbar,
 					ButtonStyle = Common.Widgets.ButtonStyle.Icon,
 					AutoFocus = false,
-					Text = parameter.Code,
 					Name = parameter.Code,
+					Text = parameter.Name.ToString (),
 					PreferredHeight = UIBuilder.TinyButtonSize,
 					Margins = new Margins (0, 1, 0, 0),
 					Dock = DockStyle.Left,
 				};
 
 				button.PreferredWidth = ArticleParameterToolbarController.GetButtonRequiredWidth (button);
-				ToolTip.Default.SetToolTip (button, TextFormatter.ConvertToText (parameter.Name));
+				ToolTip.Default.SetToolTip (button, TextFormatter.ConvertToText (parameter.Description));
 
 				button.Clicked += delegate
 				{
@@ -134,10 +134,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			return System.Math.Max (button.PreferredHeight, (int) (width+10));
 		}
 
-		private static FormattedText GetTag(string code)
+		private static FormattedText GetTag(string name)
 		{
 			//	Retourne le tag à insérer dans le texte pour un paramètre.
-			return FormattedText.Concat (ArticleParameterHelper.startParameterTag, code, ArticleParameterHelper.endParameterTag);
+			return FormattedText.Concat (ArticleParameterHelper.startParameterTag, name, ArticleParameterHelper.endParameterTag);
 		}
 
 		private static void InsertText(AbstractTextField textField, FormattedText text)
