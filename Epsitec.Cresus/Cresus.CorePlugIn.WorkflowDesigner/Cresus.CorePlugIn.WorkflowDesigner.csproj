@@ -8,8 +8,8 @@
     <ProjectGuid>{527D3555-0B76-4E86-9EE0-443CC97061F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.WorkflowDesigner</RootNamespace>
-    <AssemblyName>Cresus.WorkflowDesigner</AssemblyName>
+    <RootNamespace>Epsitec.Cresus.CorePlugIn.WorkflowDesigner</RootNamespace>
+    <AssemblyName>Cresus.CorePlugIn.WorkflowDesigner</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Widgets
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 {
 	/// <summary>
 	/// Le widget ResetBox contient un groupe quelconque de widgets avec un bouton 'reset' à droite.

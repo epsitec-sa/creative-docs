@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Objects
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
 	/// <summary>
 	/// La classe AbstractObject est la classe de base des objets graphiques.

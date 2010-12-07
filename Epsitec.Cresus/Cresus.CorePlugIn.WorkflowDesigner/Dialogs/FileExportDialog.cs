@@ -12,7 +12,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 {
 	public class FileExportDialog : AbstractFileDialog
 	{

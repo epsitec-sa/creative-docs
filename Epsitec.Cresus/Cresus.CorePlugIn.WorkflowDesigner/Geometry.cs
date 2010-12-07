@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
 	/// La classe Geometry contient quelques routines générales.
