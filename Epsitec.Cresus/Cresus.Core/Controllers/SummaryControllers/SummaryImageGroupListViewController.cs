@@ -15,10 +15,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	[ControllerSubType (4)]
-	public class SummaryImageGroupListViewController : SummaryViewController<ImageEntity>
+	[ControllerSubType (6)]
+	public class SummaryImageGroupListViewController : SummaryViewController<NaturalPersonEntity>
 	{
-		public SummaryImageGroupListViewController(string name, ImageEntity entity)
+		public SummaryImageGroupListViewController(string name, NaturalPersonEntity entity)
 			: base (name, entity)
 		{
 		}

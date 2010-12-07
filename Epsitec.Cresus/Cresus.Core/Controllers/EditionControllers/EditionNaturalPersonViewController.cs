@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
+			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 6);
 		}
 
 
