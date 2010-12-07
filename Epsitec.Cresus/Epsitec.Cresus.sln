@@ -157,7 +157,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{48CFC75E-EAA8-46CE-860F-871511583AE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.WorkflowDesigner", "Cresus.WorkflowDesigner\Cresus.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.CorePlugIn.WorkflowDesigner", "Cresus.CorePlugIn.WorkflowDesigner\Cresus.CorePlugIn.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleRepository Projects", "ModuleRepository Projects", "{6A7B11D1-01AA-4A74-B944-480A6A60A34D}"
 	ProjectSection(SolutionItems) = preProject
