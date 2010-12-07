@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 
-namespace Cresus.Database.UnitTests.Services
+namespace Epsitec.Cresus.Database.UnitTests.Services
 {
 
 

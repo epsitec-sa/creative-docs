@@ -9,7 +9,7 @@
     <ProjectGuid>{48CFC75E-EAA8-46CE-860F-871511583AE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cresus.Database.UnitTests</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.Database.UnitTests</RootNamespace>
     <AssemblyName>Cresus.Database.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

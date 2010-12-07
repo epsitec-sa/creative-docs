@@ -7,7 +7,7 @@ using Epsitec.Cresus.Database.UnitTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Cresus.Database.UnitTests.Services
+namespace Epsitec.Cresus.Database.UnitTests.Services
 {
 
 
