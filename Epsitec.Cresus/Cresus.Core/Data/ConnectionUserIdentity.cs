@@ -30,8 +30,9 @@ namespace Epsitec.Cresus.Core.Data
 			var osVersion   = System.Environment.OSVersion.VersionString;
 			var clrVersion  = System.Environment.Version.ToString ();
 			var coreVersion = typeof (CoreData).Assembly.GetVersionString ();
+			var processId   = System.Diagnostics.Process.GetCurrentProcess ().Id.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-			this.data = string.Concat (userCode, " ", userName, "@", machineName, "/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
+			this.data = string.Concat (userCode, " ", userName, "@", machineName, "/pid={", processId, "}/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
 		}
 
 		private ConnectionUserIdentity(string data)
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				return this.data.Split ('/')[0].Split (' ')[1].Split ('@')[0];
+				return this.data.Split (' ')[1].Split ('/')[0].Split ('@')[0];
 			}
 		}
 
@@ -61,7 +62,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				return this.data.Split ('/')[0].Split (' ')[1].Split ('@')[1];
+				return this.data.Split (' ')[1].Split ('/')[0].Split ('@')[1];
 			}
 		}
 

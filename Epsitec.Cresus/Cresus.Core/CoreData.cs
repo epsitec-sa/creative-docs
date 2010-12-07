@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
 			this.connectionManager = new ConnectionManager (this);
-			this.locker = new Locker (this.dataInfrastructure);
+			this.locker = new Locker (this);
 			this.businessContextPool =  new BusinessContextPool (this);
 			this.imageDataStore = new ImageDataStore (this);
 		}
