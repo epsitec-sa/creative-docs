@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
@@ -14,6 +15,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Data
 {
 	using DataInfrastructure=Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure;
+	using Timer=Epsitec.Common.Widgets.Timer;
 	
 	/// <summary>
 	/// The <c>Locker</c> class is used to request a lock on one or several
@@ -22,9 +24,15 @@ namespace Epsitec.Cresus.Core.Data
 	/// </summary>
 	public sealed class Locker : System.IDisposable
 	{
-		public Locker(DataInfrastructure dataInfrastructure)
+		public Locker(CoreData data)
 		{
-			this.dataInfrastructure = dataInfrastructure;
+			this.data = data;
+			this.dataInfrastructure = this.data.DataInfrastructure;
+			this.lockMonitors = new WeakList<LockMonitor> ();
+			this.lockMonitorTimer = new Timer ();
+			this.lockMonitorTimer.TimeElapsed += this.HandleLockMonitorTimerTimeElapsed;
+			this.lockMonitorTimer.Delay      = 0.5;
+			this.lockMonitorTimer.AutoRepeat = 2.5;
 		}
 
 		
@@ -79,7 +87,27 @@ namespace Epsitec.Cresus.Core.Data
 
 		public LockMonitor CreateLockMonitor(IEnumerable<string> lockNames)
 		{
-			return new LockMonitor (this.dataInfrastructure, lockNames);
+			return new LockMonitor (this.data, lockNames);
+		}
+
+
+		internal void RegisterLockMonitor(LockMonitor lockMonitor)
+		{
+			lock (this.lockMonitors)
+			{
+				this.lockMonitors.Add (lockMonitor);
+				this.ClearLockMonitorNames ();
+				this.lockMonitorTimer.Start ();
+			}
+		}
+
+		internal void UnregisterLockMonitor(LockMonitor lockMonitor)
+		{
+			lock (this.lockMonitors)
+			{
+				this.lockMonitors.Remove (lockMonitor);
+				this.ClearLockMonitorNames ();
+			}
 		}
 
 		
@@ -104,9 +132,61 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 		#endregion
-		
-		private readonly DataInfrastructure		dataInfrastructure;
 
-		private bool isReady;
+		private void ClearLockMonitorNames()
+		{
+			this.lockMonitorNames = null;
+		}
+
+		private string[] GetLockMonitorNames()
+		{
+			if (this.lockMonitorNames == null)
+			{
+				this.lockMonitorNames = this.lockMonitors
+					.SelectMany (x => x.LockNames)
+					.Distinct ()
+					.ToArray ();
+			}
+
+			return this.lockMonitorNames;
+		}
+
+		private void HandleLockMonitorTimerTimeElapsed(object sender)
+		{
+			string[]      names;
+			LockMonitor[] monitors;
+
+			lock (this.lockMonitors)
+			{
+				names = this.GetLockMonitorNames ();
+				
+				if (names.Length == 0)
+				{
+					this.lockMonitorTimer.Stop ();
+					return;
+				}
+
+				monitors = this.lockMonitors.ToArray ();
+			}
+
+			var owners = new List<LockOwner> ();
+			
+			using (var lockTransaction = new LockTransaction (this.dataInfrastructure, names))
+			{
+				lockTransaction.Poll ();
+				owners.AddRange (lockTransaction.ForeignLockOwners);
+			}
+
+			monitors.ForEach (x => x.UpdateLockState (owners));
+		}
+
+
+		private readonly CoreData				data;
+		private readonly DataInfrastructure		dataInfrastructure;
+		private readonly WeakList<LockMonitor>	lockMonitors;
+		private readonly Timer					lockMonitorTimer;
+
+		private bool							isReady;
+		private string[]						lockMonitorNames;
 	}
 }

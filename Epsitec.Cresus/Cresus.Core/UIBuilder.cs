@@ -442,10 +442,7 @@ namespace Epsitec.Cresus.Core
 				UIBuilder.CreateColumnTileCloseButton (this.container);
 			}
 
-			if (this.ReadOnly)
-			{
-				UIBuilder.CreateColumnTileLockButton (this.container);
-			}
+			this.CreateColumnTileLockButton (this.container);
 
 			this.CreateDataContextDebugInfo ();
 		}
@@ -528,7 +525,7 @@ namespace Epsitec.Cresus.Core
 			return closeButton;
 		}
 		
-		public static Widget CreateColumnTileLockButton(TileContainer container)
+		public Widget CreateColumnTileLockButton(TileContainer container)
 		{
 			var offset = UIBuilder.ContainsWidget (container, "ColumnTileCloseButton") ? 18 : 0;
 			var controller   = container.Controller;
@@ -543,6 +540,7 @@ namespace Epsitec.Cresus.Core
 				PreferredSize = new Size (20, 20),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2 + offset, 2, 0),
 				Name = "ColumnTileLockButton",
+				Visibility = this.ReadOnly
 			};
 
 			//	TODO: faire en sorte que lorsque la fiche est verrouillée par un tiers, cela soit
@@ -550,10 +548,25 @@ namespace Epsitec.Cresus.Core
 
 			//	TODO: rendre tous les champs read-only du moment que le verrou est actif...
 
+			this.AttachLockMonitor (lockButton);
 
 			return lockButton;
 		}
 
+		private void AttachLockMonitor(StaticGlyph lockButton)
+		{
+			var lockMonitor = this.businessContext.CreateLockMonitor ();
+
+			//	Make sure the lock monitor will not be garbage collected by tying it to the
+			//	button itself in the UI :
+			
+			lockButton.SetValue (Data.LockMonitor.LockMonitorProperty, lockMonitor);
+			lockMonitor.LockStateChanged +=
+				delegate
+				{
+					lockButton.Visibility = lockMonitor.LockState == DataLayer.Infrastructure.LockState.Locked;
+				};
+		}
 
 		private static bool ContainsWidget(TileContainer container, string columnTileCloseButton)
 		{

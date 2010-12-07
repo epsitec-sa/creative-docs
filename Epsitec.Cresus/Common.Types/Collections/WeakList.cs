@@ -1,7 +1,8 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2007-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types.Collections
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Common.Types.Collections
 	/// access to the contents almost like <c>List&lt;T&gt;</c>.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class WeakList<T> : ICollection<T>, System.Collections.ICollection, System.Collections.IList where T : class
+	public sealed class WeakList<T> : ICollection<T>, System.Collections.ICollection, System.Collections.IList where T : class
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WeakList&lt;T&gt;"/> class
@@ -37,6 +38,14 @@ namespace Epsitec.Common.Types.Collections
 		public List<T> ToList()
 		{
 			return this.GetList ();
+		}
+
+		/// <summary>
+		/// Trims the list by removing any weak references which are now dead.
+		/// </summary>
+		public void TrimList()
+		{
+			this.GetList ();
 		}
 
 		/// <summary>
@@ -276,17 +285,7 @@ namespace Epsitec.Common.Types.Collections
 
 		private List<T> GetList()
 		{
-			List<T> real = new List<T> ();
-
-			foreach (Weak<T> item in this.list)
-			{
-				T target = item.Target;
-
-				if (target != null)
-				{
-					real.Add (target);
-				}
-			}
+			List<T> real = this.list.Select (x => x.Target).Where (x => x != null).ToList ();
 
 			if (this.list.Count != real.Count)
 			{
@@ -299,18 +298,9 @@ namespace Epsitec.Common.Types.Collections
 		private void UpdateWeakList(List<T> list)
 		{
 			this.list.Clear ();
-
-			foreach (T target in list)
-			{
-				this.list.Add (new Weak<T> (target));
-			}
+			this.list.AddRange (list.Select (x => new Weak<T> (x)));
 		}
 
-		private void TrimList()
-		{
-			this.GetList ();
-		}
-
-		private List<Weak<T>> list;
+		private readonly List<Weak<T>>			list;
 	}
 }

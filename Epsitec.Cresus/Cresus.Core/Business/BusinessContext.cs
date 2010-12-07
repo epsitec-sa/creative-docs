@@ -220,6 +220,11 @@ namespace Epsitec.Cresus.Core.Business
 			return true;
 		}
 
+		public LockMonitor CreateLockMonitor()
+		{
+			return this.Data.DataLocker.CreateLockMonitor (this.GetLockNames ());
+		}
+		
 		public System.IDisposable AutoLock<T>(T entity)
 			where T : AbstractEntity
 		{
