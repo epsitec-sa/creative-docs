@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core
 {
@@ -567,8 +568,9 @@ namespace Epsitec.Cresus.Core
 			var param5_2 = this.DataContext.CreateEntity<NumericValueArticleParameterDefinitionEntity> ();
 			var param5_3 = this.DataContext.CreateEntity<EnumValueArticleParameterDefinitionEntity> ();
 
-			param5_1.Code = "H";
-			param5_1.Name = "Hauteur";
+			param5_1.Code = (string) ItemCodeGenerator.NewCode ();
+			param5_1.Name = "H";
+			param5_1.Description = "Hauteur";
 			param5_1.Rank = 0;
 			param5_1.Modulo = 5;
 			param5_1.UnitOfMeasure = uomUnitMm;
@@ -577,8 +579,9 @@ namespace Epsitec.Cresus.Core
 			param5_1.MaxValue = 3000;
 			param5_1.PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("800", "900", "1000", "1200", "1600", "1800", "2000");
 
-			param5_2.Code = "L";
-			param5_2.Name = "Largeur";
+			param5_2.Code = (string) ItemCodeGenerator.NewCode ();
+			param5_2.Name = "L";
+			param5_2.Description = "Largeur";
 			param5_2.Rank = 1;
 			param5_2.Modulo = 5;
 			param5_2.UnitOfMeasure = uomUnitMm;
@@ -587,8 +590,9 @@ namespace Epsitec.Cresus.Core
 			param5_2.MaxValue = 1000;
 			param5_2.PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("400", "500", "800");
 
-			param5_3.Code = "TYPVER";
-			param5_3.Name = "Type de verre";
+			param5_3.Code = (string) ItemCodeGenerator.NewCode ();
+			param5_3.Name = "TYPVER";
+			param5_3.Description = "Type de verre";
 			param5_3.Rank = 2;
 			param5_3.DefaultValue = "STD";
 			param5_3.Cardinality = Business.EnumValueCardinality.ExactlyOne;
@@ -635,7 +639,7 @@ namespace Epsitec.Cresus.Core
 			{
 				foreach (object o2 in nd2.Values)
 				{
-					priceTable[o1, o2] = value;
+//-					priceTable[o1, o2] = value;
 					value++;
 				}
 			}
