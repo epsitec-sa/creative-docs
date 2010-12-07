@@ -16,9 +16,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	[ControllerSubType (5)]
-	public class SummaryPriceCalculatorListViewController : SummaryViewController<ArticleDefinitionEntity>
+	public class SummaryPriceCalculatorListViewController : SummaryViewController<ArticlePriceEntity>
 	{
-		public SummaryPriceCalculatorListViewController(string name, ArticleDefinitionEntity entity)
+		public SummaryPriceCalculatorListViewController(string name, ArticlePriceEntity entity)
 			: base (name, entity)
 		{
 		}
