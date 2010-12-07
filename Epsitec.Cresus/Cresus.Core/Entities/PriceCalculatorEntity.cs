@@ -21,22 +21,20 @@ namespace Epsitec.Cresus.Core.Entities
 	/// <summary>
 	/// The <see cref="PriceCalculatorEntity"/> provides tools to compute the price of an
 	/// <see cref="ArticleDocumentItemEntity"/> based on the values of its parameters. Basically an
-	/// instance of this class contains <see cref="DimensionTable"/> which define prices for some
-	/// combinations of some of its parameter values.
+	/// instance of this class contains a <see cref="DimensionTable"/> which defines prices for some
+	/// combinations of its parameter values.
 	/// </summary>
 	/// <remarks>
-	/// There are many remarks to do with respect to this class.
-	/// - Each dimension of the price table corresponds to a parameter of the article definition. For
-	///   numeric parameters, the dimension points must correspond to the parameter preferred values.
-	///   For enum parameters, the dimension points must correspond to the parameter values.
-	/// - The dimensions in the price table are ordered by their name, and their name is equal to the
-	///   code of the dimension they match.
+	/// - Each dimension of the price table corresponds to a parameter of the article definition.
+	/// - For numeric parameters, the dimension points should match the parameter preferred values.
+	/// - For enum parameters, the dimension points must match the parameter values.
+	/// - The dimensions in the price table are ordered by their name (dimension name = parameter code).
 	/// - Enum parameters are considered as options. So if one has more than one value, then the
 	///   result of the price is the sum of the price for each of its values.
 	/// - The field <see cref="PriceCalculatorEntity.SerializedData"/> should never be accessed
 	///   directly. So don't touch it, otherwise you'll risk to mess everything up.
 	/// - The price tables can have one or more dimension. There are no restrictions on the dimensions
-	///   of single dimension tables. But for multi dimension tables, the dimensions must correspond
+	///   of single dimension tables. But for multidimensional tables, the dimensions must correspond
 	///   to a numeric parameter or to an enum parameter with cardinality "exactly one".
 	/// </remarks>
 	public partial class PriceCalculatorEntity
@@ -58,8 +56,6 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override EntityStatus GetEntityStatus()
 		{
-			//	We consider a location to be empty if it has neither postal code, nor
-			//	location name; a location with just a coutry or region is still empty.
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Code.GetEntityStatus ());

@@ -70,9 +70,26 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		internal void UpdateLockState(IEnumerable<LockOwner> lockedItems)
+		protected override void Dispose(bool disposing)
 		{
-			LockOwner[] conflicts = lockedItems
+			if (disposing)
+			{
+				if (this.isDisposed == false)
+				{
+					this.isDisposed = true;
+					this.dataLocker.UnregisterLockMonitor (this);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Updates the state of the lock based on a collection of lock owners.
+		/// </summary>
+		/// <param name="lockOwners">The lock owners.</param>
+		internal void UpdateLockState(IEnumerable<LockOwner> lockOwners)
+		{
+			LockOwner[] conflicts = lockOwners
 				.Where (x => this.lockNames.Contains (x.LockName))
 				.ToArray ();
 
@@ -88,6 +105,7 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		
 		private void SetLockState(LockState lockState)
 		{
 			if (this.lockState != lockState)
@@ -104,15 +122,6 @@ namespace Epsitec.Cresus.Core.Data
 			if (handler != null)
 			{
 				handler (this);
-			}
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.isDisposed = true;
-				this.dataLocker.UnregisterLockMonitor (this);
 			}
 		}
 

@@ -10,12 +10,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule]
-	internal class SoftwareUserGroupBusinessRules : GenericBusinessRule<SoftwareUserGroupEntity>
+	internal class FreeTextValueArticleParameterDefinitionBusinessRules : GenericBusinessRule<FreeTextValueArticleParameterDefinitionEntity>
 	{
-		public override void ApplySetupRule(SoftwareUserGroupEntity group)
+		public override void ApplySetupRule(FreeTextValueArticleParameterDefinitionEntity entity)
 		{
-			group.Code = (string) ItemCodeGenerator.NewCode ();
-			group.UserPowerLevel = Business.UserManagement.UserPowerLevel.None;
+			entity.Code = (string) ItemCodeGenerator.NewCode ();
 		}
 	}
 }
