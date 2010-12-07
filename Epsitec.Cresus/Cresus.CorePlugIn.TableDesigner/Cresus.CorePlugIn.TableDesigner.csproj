@@ -47,6 +47,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="TableController.cs" />
     <Compile Include="DummyTableController.cs" />
     <Compile Include="MainController.cs" />
     <Compile Include="TableDesigner.cs" />
