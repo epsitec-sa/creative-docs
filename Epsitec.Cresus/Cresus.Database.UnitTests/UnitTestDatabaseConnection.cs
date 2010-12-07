@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 
-namespace Cresus.Database.UnitTests
+namespace Epsitec.Cresus.Database.UnitTests
 {
 
 
