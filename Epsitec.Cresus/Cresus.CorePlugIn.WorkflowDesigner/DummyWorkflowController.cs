@@ -7,7 +7,7 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
 	/// The <c>DummyWorkflowController</c> is required in order to store the navigation

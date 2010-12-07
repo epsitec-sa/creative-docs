@@ -13,7 +13,7 @@ using Epsitec.Cresus.Core.PlugIns;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
 	/// The <c>WorkflowDesignerPlugIn</c> class implements the plug-in interface to

@@ -14,7 +14,7 @@ using Epsitec.Cresus.Core.PlugIns;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	public sealed class WorkflowDesigner : System.IDisposable
 	{

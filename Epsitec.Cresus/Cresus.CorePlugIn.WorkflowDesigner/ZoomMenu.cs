@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	public class ZoomMenu : System.IComparable
 	{

@@ -12,14 +12,14 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
-using Epsitec.Cresus.WorkflowDesigner.Objects;
+using Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
 	/// Widget permettant d'éditer graphiquement des entités.
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 
 		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
 		{
-			string fullTypeName = "Epsitec.Cresus.WorkflowDesigner.Objects.Object" + typeName;
+			string fullTypeName = "Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects.Object" + typeName;
 			System.Type type = System.Type.GetType (fullTypeName);
 
 			if (type == null)

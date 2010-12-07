@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Objects
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
 	public class ActiveButton
 	{

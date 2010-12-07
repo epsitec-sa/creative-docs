@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Dialogs
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 {
 	public class SelectPublicNodeDialog : AbstractDialog
 	{

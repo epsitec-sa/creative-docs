@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner.Widgets
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Widgets
 {
 	/// <summary>
 	/// La classe EntitySubView est un bouton pour choisir une sous-vue, avec possibilité

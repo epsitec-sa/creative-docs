@@ -8,7 +8,7 @@ using Epsitec.Common.Support;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.WorkflowDesigner
+namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
 	/// <summary>
 	/// La classe Misc contient quelques routines générales.
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.WorkflowDesigner
 			}
 			else
 			{
-				return string.Format ("manifest:Epsitec.Cresus.WorkflowDesigner.Images.{0}.icon", icon);
+				return string.Format ("manifest:Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Images.{0}.icon", icon);
 			}
 		}
 
