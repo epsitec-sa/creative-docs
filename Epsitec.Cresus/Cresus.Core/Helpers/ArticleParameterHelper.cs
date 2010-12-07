@@ -126,9 +126,27 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
+#if false
+		public static string GetName(ArticleDocumentItemEntity articleDocumentItem, string code)
+		{
+			if (articleDocumentItem != null)
+			{
+				foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
+				{
+					if (parameter.Code == code)
+					{
+						return parameter.Name.ToString ();
+					}
+				}
+			}
+
+			return code;
+		}
+#endif
+
 		public static Dictionary<string, string> GetArticleParametersValues(ArticleDocumentItemEntity articleDocumentItem)
 		{
-			//	Retourne le dictionnaire des code/valeur d'un article.
+			//	Retourne le dictionnaire des name/valeur d'un article.
 			var dico = new Dictionary<string, string> ();
 
 			if (articleDocumentItem != null)
