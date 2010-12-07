@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("Code: ", this.Code, "\n", "Nom: ", this.Name, "\n", "Description: ", this.Description);
+			return TextFormatter.FormatText (this.Code, this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()

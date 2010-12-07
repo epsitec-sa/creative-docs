@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					AutoGroup    = true,
 					Name		 = "PriceCalculators",
-					IconUri		 = "Data.Group",
+					IconUri		 = "Data.PriceCalculator",
 					Title		 = TextFormatter.FormatText ("Tous les calculateurs de prix connus"),
 					CompactTitle = TextFormatter.FormatText ("Tous les calculateurs de prix connus"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
