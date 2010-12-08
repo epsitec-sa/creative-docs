@@ -3,20 +3,23 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.TableDesigner;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionImageBlobViewController : EditionViewController<Entities.ImageBlobEntity>
+	public class EditionPriceCalculatorViewController : EditionViewController<Entities.PriceCalculatorEntity>
 	{
-		public EditionImageBlobViewController(string name, Entities.ImageBlobEntity entity)
+		public EditionPriceCalculatorViewController(string name, Entities.PriceCalculatorEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -26,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.ImageBlob", "Image bitmap");
+				builder.CreateEditionTitleTile ("Data.PriceCalculator", "Calculateur de prix");
 
 				this.CreateUIMain (builder);
 
@@ -38,7 +41,48 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateStaticText (tile, 60, "<i>Aucune donnée ne peut être modifiée.</i>");
+			builder.CreateMargin (tile);
+			builder.CreateMargin (tile);
+
+			var button = builder.CreateButton (tile, 0, null, "Editer la tabelle de prix...");
+
+			button.Clicked += delegate
+			{
+				this.Edition ();
+			};
+		}
+
+
+		private void Edition()
+		{
+			var window = this.CreateWindow ();
+
+			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity);
+
+			var box = tableDesigner.CreateUI ();
+			box.Parent = window.Root;
+
+			window.ShowDialog ();
+		}
+
+		private Window CreateWindow()
+		{
+			var window = new Window ();
+
+			window.Owner = CoreProgram.Application.Window;
+			window.Icon = CoreProgram.Application.Window.Icon;
+			window.Text = "Edition de la tabelle de prix";
+			window.ClientSize = new Size (800, 600);
+			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
+			window.AdjustWindowSize ();
+
+			window.WindowCloseClicked += delegate
+			{
+				window.Hide ();
+				window.Close ();
+			};
+
+			return window;
 		}
 	}
 }

@@ -623,6 +623,7 @@ namespace Epsitec.Cresus.Core
 			articleDef6.ArticlePrices.Add (this.CreateArticlePrice (1.50M, articlePriceGroup1));
 
 
+#if false
 			//	Crée un calculateur de prix.
 			var pc1 = this.DataContext.CreateEntity<PriceCalculatorEntity> ();
 
@@ -646,6 +647,7 @@ namespace Epsitec.Cresus.Core
 
 			pc1.SetPriceTable (articleDef5, priceTable);
 			articleDef5.ArticlePrices[0].PriceCalculators.Add (pc1);
+#endif
 
 
 			yield return articleDef1;

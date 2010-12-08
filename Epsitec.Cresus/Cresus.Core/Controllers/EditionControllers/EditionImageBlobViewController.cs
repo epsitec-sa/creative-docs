@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionPriceCalculatorViewController : EditionViewController<Entities.PriceCalculatorEntity>
+	public class EditionImageBlobViewController : EditionViewController<Entities.ImageBlobEntity>
 	{
-		public EditionPriceCalculatorViewController(string name, Entities.PriceCalculatorEntity entity)
+		public EditionImageBlobViewController(string name, Entities.ImageBlobEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.PriceCalculator", "Calculateur de prix");
+				builder.CreateEditionTitleTile ("Data.ImageBlob", "Image bitmap");
 
 				this.CreateUIMain (builder);
 
