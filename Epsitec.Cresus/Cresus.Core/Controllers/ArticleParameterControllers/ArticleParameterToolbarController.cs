@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Parent = this.toolbar,
 					ButtonStyle = Common.Widgets.ButtonStyle.Icon,
 					AutoFocus = false,
-					Name = parameter.Code,
+					Name = parameter.Name.ToString (),
 					Text = parameter.Name.ToString (),
 					PreferredHeight = UIBuilder.TinyButtonSize,
 					Margins = new Margins (0, 1, 0, 0),
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			//	Met à jour les paramètres dans le widget qui contient la désignation de l'article.
 			//	Ainsi, les valeurs affichées pour les paramètres sont mises à jour.
-			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem);
+			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, returnName: true);
 
 			foreach (var pair in dico)
 			{

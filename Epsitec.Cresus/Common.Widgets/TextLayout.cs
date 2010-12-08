@@ -607,7 +607,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Gets the parameters as a read-only dictionary of code/value pairs. See method
+		/// Gets the parameters as a read-only dictionary of name/value pairs. See method
 		/// <see cref="SetParameter"/> if you need to define or clear some parameters.
 		/// </summary>
 		/// <value>The parameters.</value>
@@ -622,18 +622,18 @@ namespace Epsitec.Common.Widgets
 
 
 		/// <summary>
-		/// Sets a default parameter for the <c>&lt;param code="..."/&gt;</c> element, which will
+		/// Sets a default parameter for the <c>&lt;param name="..."/&gt;</c> element, which will
 		/// be used if no <c>value</c> attribute was specified in the XML <c>param</c> element.
 		/// </summary>
-		/// <param name="code">The code.</param>
+		/// <param name="name">The name.</param>
 		/// <param name="value">The value (or <c>null</c> to clear the value).</param>
-		public void SetParameter(string code, string value)
+		public void SetParameter(string name, string value)
 		{
 			if (value == null)
             {
-				if (this.parameters != null && this.parameters.ContainsKey (code))
+				if (this.parameters != null && this.parameters.ContainsKey (name))
                 {
-					this.parameters.Remove (code);
+					this.parameters.Remove (name);
 					
 					if (this.parameters.Count == 0)
 					{
@@ -651,12 +651,12 @@ namespace Epsitec.Common.Widgets
 
 			string oldValue;
 
-			if (this.parameters.TryGetValue (code, out oldValue) && oldValue == value)
+			if (this.parameters.TryGetValue (name, out oldValue) && oldValue == value)
 			{
 				return;
 			}
 
-			this.parameters[code] = value;
+			this.parameters[name] = value;
 			
 			this.MarkContentsAsDirty ();
 			this.UpdateEmbedderGeometry ();
@@ -4327,26 +4327,26 @@ namespace Epsitec.Common.Widgets
 
 		private string GenerateReplacement(IDictionary<string, string> parameters)
 		{
-			string code;
+			string name;
 			string value;
 
-			parameters.TryGetValue ("code", out code);
+			parameters.TryGetValue ("name", out name);
 			parameters.TryGetValue ("value", out value);
 
-			if ((!string.IsNullOrEmpty (code)) &&
+			if ((!string.IsNullOrEmpty (name)) &&
 				(value == null) &&
 				(this.HasParameters))
 			{
-				this.parameters.TryGetValue (code, out value);
+				this.parameters.TryGetValue (name, out value);
 			}
 
-			if ((value == null) || (code == null))
+			if ((value == null) || (name == null))
 			{
-				return string.Concat (" ", code ?? value ?? "—", " ");
+				return string.Concat (" ", name ?? value ?? "—", " ");
 			}
 			else
 			{
-				return string.Concat (" ", code, "≡", value, " ");
+				return string.Concat (" ", name, "≡", value, " ");
 			}
 		}
 		
@@ -5204,7 +5204,7 @@ noText:
 			Font,		FontEnd,			// <font ...>...</font>
 			Anchor,		AnchorEnd,			// <a href="x">...</a>
 			Image,							// <img src="x"/>
-			Param,							// <param code="H" value="120cm"/>
+			Param,							// <param name="H" value="120cm"/>
 
 			Put,		PutEnd,				// <put ...>...</put>
 		}

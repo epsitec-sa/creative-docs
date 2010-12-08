@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			string value = description.ToString ();
-			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem);
+			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, returnName: true);
 
 			int index = 0;
 			while (index < value.Length-ArticleParameterHelper.startParameterTag.Length)
@@ -36,31 +36,31 @@ namespace Epsitec.Cresus.Core.Helpers
 					break;
 				}
 
-				int codeIndex = index + ArticleParameterHelper.startParameterTag.Length;
+				int nameIndex = index + ArticleParameterHelper.startParameterTag.Length;
 
-				int end = value.IndexOf (ArticleParameterHelper.endParameterTag, codeIndex);
+				int end = value.IndexOf (ArticleParameterHelper.endParameterTag, nameIndex);
 				if (end == -1)  // garde-fou: ne devrait jamais survenir !
 				{
 					break;
 				}
 
-				string code = value.Substring (codeIndex, end - codeIndex);
+				string name = value.Substring (nameIndex, end - nameIndex);
 				string subst = "";
 
-				if (dico.ContainsKey (code))
+				if (dico.ContainsKey (name))
 				{
-					var parameter = ArticleParameterHelper.GetParameter (articleDocumentItem, code);
+					var parameter = ArticleParameterHelper.GetParameterFromName (articleDocumentItem, name);
 
 					if (parameter == null)
 					{
-						subst = dico[code];
+						subst = dico[name];
 					}
 					else
 					{
 						//	Un paramètre est remplacé par sa seule valeur, sans unité si elle est numérique, ou par les descriptions
 						//	séparées par des virgules s'il s'agit d'une énumération.
 						//	TODO: Il faudra faire mieux un jour...
-						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]));
+						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[name]));
 					}
 				}
 
@@ -112,11 +112,11 @@ namespace Epsitec.Cresus.Core.Helpers
 			return value;
 		}
 
-		private static AbstractArticleParameterDefinitionEntity GetParameter(ArticleDocumentItemEntity articleDocumentItem, string code)
+		private static AbstractArticleParameterDefinitionEntity GetParameterFromName(ArticleDocumentItemEntity articleDocumentItem, string name)
 		{
 			foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
 			{
-				if (parameter.Code == code)
+				if (parameter.Name == name)
 				{
 					return parameter;
 				}
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 
 #if false
-		public static string GetName(ArticleDocumentItemEntity articleDocumentItem, string code)
+		public static string GetArticleParameterName(ArticleDocumentItemEntity articleDocumentItem, string code)
 		{
 			if (articleDocumentItem != null)
 			{
@@ -144,9 +144,9 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 #endif
 
-		public static Dictionary<string, string> GetArticleParametersValues(ArticleDocumentItemEntity articleDocumentItem)
+		public static Dictionary<string, string> GetArticleParametersValues(ArticleDocumentItemEntity articleDocumentItem, bool returnName)
 		{
-			//	Retourne le dictionnaire des name/valeur d'un article.
+			//	Retourne le dictionnaire des code/valeur (returnName = false) ou name/valeur (returnName = true) d'un article.
 			var dico = new Dictionary<string, string> ();
 
 			if (articleDocumentItem != null)
@@ -172,29 +172,8 @@ namespace Epsitec.Cresus.Core.Helpers
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							dico.Add (key, value);
+							dico.Add (returnName ? parameter.Name.ToString () : parameter.Code, value);
 						}
-					}
-				}
-			}
-
-			return dico;
-		}
-
-		private static Dictionary<string, string> GetArticleParametersDefaultValues(ArticleDocumentItemEntity articleDocumentItem)
-		{
-			//	Retourne le dictionnaire des code/valeur par défaut d'un article.
-			var dico = new Dictionary<string, string> ();
-
-			if (articleDocumentItem != null)
-			{
-				foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
-				{
-					string value = ArticleParameterHelper.GetParameterDefaultValue (parameter);
-
-					if (!string.IsNullOrEmpty (value))
-					{
-						dico.Add (parameter.Code, value);
 					}
 				}
 			}
@@ -217,6 +196,27 @@ namespace Epsitec.Cresus.Core.Helpers
 					string data = values[i+1];
 
 					dico.Add (key, data);
+				}
+			}
+
+			return dico;
+		}
+
+		private static Dictionary<string, string> GetArticleParametersDefaultValues(ArticleDocumentItemEntity articleDocumentItem)
+		{
+			//	Retourne le dictionnaire des code/valeur par défaut d'un article.
+			var dico = new Dictionary<string, string> ();
+
+			if (articleDocumentItem != null)
+			{
+				foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
+				{
+					string value = ArticleParameterHelper.GetParameterDefaultValue (parameter);
+
+					if (!string.IsNullOrEmpty (value))
+					{
+						dico.Add (parameter.Code, value);
+					}
 				}
 			}
 
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static readonly string startParameterTag = "<param code=\"";  // <param code="X"/>
+		public static readonly string startParameterTag = "<param name=\"";  // <param name="X"/>
 		public static readonly string endParameterTag   = "\"/>";
 
 	}
