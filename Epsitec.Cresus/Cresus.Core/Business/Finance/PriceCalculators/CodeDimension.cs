@@ -9,100 +9,107 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	/// <summary>
-	/// A <see cref="CodeDimension"/> is an <see cref="AbstractDimension"/> whose points are codes,
-	/// i.e. simple strings such as "a", "b", "c", etc. That mean that only the defined points are
-	/// defined on the dimention, and that there is no concept of nearest value for this kind of
-	/// dimension.
-	/// </summary>
 	public sealed class CodeDimension : AbstractDimension
 	{
 		
 		
-		/// <summary>
-		/// Builds a new <see cref="CodeDimension"/>.
-		/// </summary>
-		/// <remarks>
-		/// The codes that are the points of the dimension must be alpha numeric strings.
-		/// </remarks>
-		/// <param name="name">The name of the dimension.</param>
-		/// <param name="values">The codes that are the points of the dimension.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="values"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="values"/> is empty, contains <c>null</c> or empty or invalid elements.</exception>
-		public CodeDimension(string name, IEnumerable<string> values)
-			: base (name)
+		public CodeDimension(string code, string name, IEnumerable<string> values)
+			: base (code, name)
 		{
-			values.ThrowIfNull ("values");
-			
-			this.values = new SortedSet<string> (values);
-
-			this.values.ThrowIf (v => !v.Any (), "values is empty.");
-			this.values.ThrowIf (e => e.Any (v => string.IsNullOrEmpty (v)), "values in values cannot be null or empty.");
-			this.values.ThrowIf (e => e.Any (v => !v.IsAlphaNumeric ()), "values in values must be alpha numeric.");
+			this.values = new List<string> (values);
 		}
 
 
-		/// <summary>
-		/// Gets the codes that are the points of this instance.
-		/// </summary>
-		public override IEnumerable<object> Values
+		public override IEnumerable<string> Values
 		{
 			get
 			{
-				return this.values.Cast<object> ();
+				return this.values;
 			}
 		}
 
 
-		/// <summary>
-		/// Tells whether the given value is a code that defines the points of this instance.
-		/// </summary>
-		/// <param name="value">The value to check.</param>
-		/// <returns><c>true</c> if the given value is a code, <c>false</c> if it isn't.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
-		public override bool IsValueDefined(object value)
+		public override int Count
 		{
-			value.ThrowIfNull ("value");
-
-			return (value is string) && this.values.Contains ((string) value);
-		}
-
-
-		/// <summary>
-		/// Tells whether there is a nearest code for the given value.
-		/// </summary>
-		/// <remarks>
-		/// As there is no concept of nearest value for the codes, this method is strictly
-		/// equivalent to <see cref="CodeDimension.IsValueDefined"/>.
-		/// </remarks>
-		/// <param name="value">The value to check.</param>
-		/// <returns><c>true</c> if there is a nearest code for the given value is a code, <c>false</c> if there isn't.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
-		public override bool IsNearestValueDefined(object value)
-		{
-			return this.IsValueDefined (value);
-		}
-
-
-		/// <summary>
-		/// Gets the nearest code for the given value.
-		/// </summary>
-		/// <remarks>
-		/// As there is no concept of nearest value for the codes, this method will fail if
-		/// it is called with anything that is not a defined code for the current instance.
-		/// </remarks>
-		/// <param name="value">The value whose nearest code to get.</param>
-		/// <returns>The nearest code.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If there is no nearest code for <paramref name="value"/>.</exception>
-		public override object GetNearestValue(object value)
-		{
-			if (!this.IsValueDefined (value))
+			get
 			{
-				throw new System.ArgumentException ("The given value is not defined on the current dimension.");
+				return this.values.Count;
 			}
+		}
+		
 
+		public override void Add(string value)
+		{
+			this.Insert (this.values.Count, value);
+		}
+
+
+		public void Insert(int index, string value)
+		{
+			this.values.Insert (index, value);
+
+			this.DimensionTable.NotifyDimensionValueAdded (this, value);
+		}
+
+
+		public override void Remove(string value)
+		{
+			int index = this.GetIndexOf (value);
+
+			this.values.RemoveAt (index);
+		}
+
+
+		public void RemoveAt(int index)
+		{
+			string value = this.values[index];
+
+			this.values.RemoveAt (index);
+
+			this.DimensionTable.NotifyDimensionValueRemoved (this, value);
+		}
+
+
+		public void Swap(string value1, string value2)
+		{
+			int index1 = this.GetIndexOf (value1);
+			int index2 = this.GetIndexOf (value2);
+
+			this.SwapAt (index1, index2);
+		}
+
+
+		public void SwapAt(int index1, int index2)
+		{
+			string value1 = this.values[index1];
+			string value2 = this.values[index2];
+
+			this.values[index1] = value2;
+			this.values[index2] = value1;
+		}
+
+
+		public override bool Contains(string value)
+		{
+			return this.values.Contains (value);
+		}
+
+
+		public override string GetRoundedValue(string value)
+		{
 			return value;
+		}
+		
+
+		public override int GetIndexOf(string value)
+		{
+			return this.values.IndexOf (value);
+		}
+
+
+		public override string GetValueAt(int index)
+		{
+			return this.values[index];
 		}
 
 		
@@ -123,26 +130,29 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// Builds a new instance of <see cref="CodeDimension"/> given a name and the serialized data
 		/// obtained by the <see cref="CodeDimension.GetStringData"/> method.
 		/// </summary>
+		/// <param name="code">The code of the dimension.</param>
 		/// <param name="name">The name of the dimension.</param>
 		/// <param name="stringData">The serialized string data.</param>
 		/// <returns>The new <see cref="CodeDimension"/>.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="code"> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="stringData"> is <c>null</c>, empty or invalid.</exception>
-		public static CodeDimension BuildCodeDimension(string name, string stringData)
+		public static CodeDimension BuildCodeDimension(string code, string name, string stringData)
 		{
+			code.ThrowIfNullOrEmpty ("code");
 			name.ThrowIfNullOrEmpty ("name");
 			stringData.ThrowIfNullOrEmpty ("stringData");
 
 			var values = stringData.Split (CodeDimension.valueSeparator);
 
-			return new CodeDimension (name, values);
+			return new CodeDimension (code, name, values);
 		}
 
 
 		/// <summary>
 		/// The codes that are the points of the current instance.
 		/// </summary>
-		private SortedSet<string> values;
+		private List<string> values;
 
 
 		/// <summary>

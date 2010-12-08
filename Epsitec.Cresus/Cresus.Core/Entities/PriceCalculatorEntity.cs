@@ -125,22 +125,22 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			decimal? price = 0;
 
-			string code = priceTable.Dimensions.Single ().Name;
+			//string code = priceTable.Dimensions.Single ().Name;
 
-			if (parameterCodesToValues.ContainsKey (code))
-			{
-				foreach (object key in parameterCodesToValues[code])
-				{
-					if (priceTable.IsNearestValueDefined (key))
-					{
-						price += priceTable[key];
-					}
-					else
-					{
-						price = null;
-					}
-				}
-			}
+			//if (parameterCodesToValues.ContainsKey (code))
+			//{
+			//    foreach (object key in parameterCodesToValues[code])
+			//    {
+			//        if (priceTable.IsNearestValueDefined (key))
+			//        {
+			//            price += priceTable[key];
+			//        }
+			//        else
+			//        {
+			//            price = null;
+			//        }
+			//    }
+			//}
 
 			return price;
 		}
@@ -160,10 +160,10 @@ namespace Epsitec.Cresus.Core.Entities
 
 			decimal? price = null;
 
-			if (priceTable.IsNearestValueDefined (key))
-			{
-				price = priceTable[key];
-			}
+			//if (priceTable.IsNearestValueDefined (key))
+			//{
+			//    price = priceTable[key];
+			//}
 
 			return price;
 		}
@@ -316,8 +316,9 @@ namespace Epsitec.Cresus.Core.Entities
 
 			var values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
 				.Select (v => InvariantConverter.ConvertFromString<decimal> (v));
-
-			return new NumericDimension (name, values, roundingMode);
+			
+			//return new NumericDimension (name, values, roundingMode);
+			return null;
 		}
 
 
@@ -338,8 +339,9 @@ namespace Epsitec.Cresus.Core.Entities
 			string name = parameter.Code;
 
 			string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
-
-			return new CodeDimension (name, values);
+			
+			//return new CodeDimension (name, values);
+			return null;
 		}
 
 
@@ -364,15 +366,17 @@ namespace Epsitec.Cresus.Core.Entities
 				throw new System.ArgumentException ();
 			}
 
-			NumericDimension dimension = new NumericDimension (parameter.Code, parameterCodesToValues.Keys, roundingMode);
-			DimensionTable table = new DimensionTable (dimension);
+			//NumericDimension dimension = new NumericDimension (parameter.Code, parameterCodesToValues.Keys, roundingMode);
+			//DimensionTable table = new DimensionTable (dimension);
 
-			foreach (var item in parameterCodesToValues)
-			{
-				table[item.Key] = item.Value;
-			}
+			//foreach (var item in parameterCodesToValues)
+			//{
+			//    table[item.Key] = item.Value;
+			//}
 
-			return table;
+			//return table;
+
+			return null;
 		}
 
 
@@ -396,15 +400,17 @@ namespace Epsitec.Cresus.Core.Entities
 				throw new System.ArgumentException ();
 			}
 
-			CodeDimension dimension = new CodeDimension (parameter.Code, parameterCodesToValues.Keys);
-			DimensionTable table = new DimensionTable (dimension);
+			//CodeDimension dimension = new CodeDimension (parameter.Code, parameterCodesToValues.Keys);
+			//DimensionTable table = new DimensionTable (dimension);
 
-			foreach (var item in parameterCodesToValues)
-			{
-				table[item.Key] = item.Value;
-			}
+			//foreach (var item in parameterCodesToValues)
+			//{
+			//    table[item.Key] = item.Value;
+			//}
 
-			return table;
+			//return table;
+
+			return null;
 		}
 
 

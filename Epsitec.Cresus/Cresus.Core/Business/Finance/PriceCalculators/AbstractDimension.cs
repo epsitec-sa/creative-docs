@@ -9,80 +9,100 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	/// <summary>
-	/// The <c>AbstractDimension</c> class represents a dimension for a <see cref="DimensionTable"/>.
-	/// It has a name and defines a set of points that represents the points of the dimension. In
-	/// addition, it defines mechanisms that can be used to obtain the nearest point defined on the
-	/// dimension, given a value which is not a defined point.
-	/// </summary>
 	public abstract class AbstractDimension
 	{
 
 
-		/// <summary>
-		/// Creates a new <c>AbstractDimension</c>.
-		/// </summary>
-		/// <param name="name">The name of the dimension.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
-		public AbstractDimension(string name)
+		public AbstractDimension(string code, string name)
 		{
-			name.ThrowIfNullOrEmpty ("name");
-
+			this.Code = code;
 			this.Name = name;
+			this.DimensionTable = null;
 		}
 
 
-		/// <summary>
-		/// Gets the name of the current instance.
-		/// </summary>
+		public string Code
+		{
+			get
+			{
+				return this.code;
+			}
+			set
+			{
+				this.code = value;
+			}
+		}
+
+
 		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
+			}
+		}
+
+
+		public abstract IEnumerable<string> Values
+		{
+			get;
+		}
+
+
+		public abstract int Count
+		{
+			get;
+		}
+
+
+		protected DimensionTable DimensionTable
 		{
 			get;
 			private set;
 		}
 
 
-		/// <summary>
-		/// Gets the set of points that defined the current instance.
-		/// </summary>
-		public abstract IEnumerable<object> Values
+		public void AddToDimensionTable(DimensionTable dimensionTable)
 		{
-			get;
+			this.DimensionTable = dimensionTable;
 		}
 
 
-		/// <summary>
-		/// Tells whether the given value is a point which is exactly defined in the current instance.
-		/// </summary>
-		/// <param name="value">The value to check.</param>
-		/// <returns><c>true</c> if the point is exactly defined, <c>false</c> if it is not.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="value"/> is <c>null</c> or invalid.</exception>
-		public abstract bool IsValueDefined(object value);
+		public void RemoveFromDimensionTable(DimensionTable dimensionTable)
+		{
+			this.DimensionTable = null;
+		}
 
 
-		/// <summary>
-		/// Tells whether there exist a nearest point in the current instance of the given value.
-		/// </summary>
-		/// <param name="value">The value to check.</param>
-		/// <returns><c>true</c> if there is a nearest point defined, <c>false</c> if there is not.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="value"/> is <c>null</c> or invalid.</exception>
-		public abstract bool IsNearestValueDefined(object value);
+		public abstract void Add(string value);
 
 
-		/// <summary>
-		/// Gets the nearest point defined in this current instance for the given value.
-		/// </summary>
-		/// <param name="value">The value whose nearest point to get.</param>
-		/// <returns>The nearest point defined, if there is any.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="value"/> is <c>null</c> or invalid.</exception>
-		public abstract object GetNearestValue(object value);
+		public abstract void Remove(string value);
+
+
+		public abstract bool Contains(string value);
+
+
+		public abstract string GetRoundedValue(string value);
+
+
+		public abstract int GetIndexOf(string value);
+
+
+		public abstract string GetValueAt(int index);
 
 
 		/// <summary>
 		/// Gets a <see cref="System.String"/> that contains the data that is necessary to serialize
 		/// the current instance and deserialize it later.
 		/// </summary>
-		/// <returns>A <see cref="System.String"/> that can be used to build a clone of the current instance.</returns>
+		/// <returns>
+		/// A <see cref="System.String"/> that can be used to build a clone of the current instance.
+		/// </returns>
 		public abstract string GetStringData();
 
 
@@ -94,21 +114,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			XElement xDimension = new XElement (XmlConstants.DimensionTag);
 
-			xDimension.SetAttributeValue (XmlConstants.NameTag, this.GetXmlName ());
+			xDimension.SetAttributeValue (XmlConstants.CodeTag, this.Code);
+			xDimension.SetAttributeValue (XmlConstants.NameTag, this.Name);
 			xDimension.SetAttributeValue (XmlConstants.TypeTag, this.GetXmlTypeName ());
 			xDimension.SetAttributeValue (XmlConstants.DataTag, this.GetStringData ());
 
 			return xDimension;
-		}
-
-
-		/// <summary>
-		/// Gets the value for the name of this instance.
-		/// </summary>
-		/// <returns>The name of this instance.</returns>
-		private string GetXmlName()
-		{
-			return this.Name;
 		}
 
 
@@ -146,11 +157,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			AbstractDimension.CheckXmlDimension (xDimension);
 
+			string code = AbstractDimension.ExtractXmlCode (xDimension);
 			string name = AbstractDimension.ExtractXmlName (xDimension);
 			string typeName = AbstractDimension.ExtractXmlTypeName (xDimension);
 			string data = AbstractDimension.ExtractXmlData (xDimension);
 
-			return AbstractDimension.BuildDimension (name, typeName, data);
+			return AbstractDimension.BuildDimension (code, name, typeName, data);
 		}
 
 
@@ -164,6 +176,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				throw new System.ArgumentException ("Invalid xml data");
 			}
+		}
+
+
+		/// <summary>
+		/// Extracts the code of the serialized <c>AbstractDimension</c>.
+		/// </summary>
+		/// <param name="xDimension">The <see cref="XElement"/> that contains the data.</param>
+		/// <returns>The code.</returns>
+		private static string ExtractXmlCode(XElement xDimension)
+		{
+			return xDimension.Attribute (XmlConstants.CodeTag).Value;
 		}
 
 
@@ -208,15 +231,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="type">The concrete type of the dimension.</param>
 		/// <param name="data">The serialized data of the dimension.</param>
 		/// <returns>The new instance of the dimension.</returns>
-		private static AbstractDimension BuildDimension(string name, string type, string data)
+		private static AbstractDimension BuildDimension(string code, string name, string type, string data)
 		{
 			if (type == XmlConstants.CodeTypeName)
 			{
-				return CodeDimension.BuildCodeDimension (name, data);
+				return CodeDimension.BuildCodeDimension (code, name, data);
 			}
 			else if (type == XmlConstants.NumericTypeName)
 			{
-				return NumericDimension.BuildNumericDimension (name, data);
+				return NumericDimension.BuildNumericDimension (code, name, data);
 			}
 			else
 			{
@@ -232,14 +255,21 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private static class XmlConstants
 		{
 			public static readonly string DimensionTag = "dimension";
+			public static readonly string CodeTag = "code";
 			public static readonly string NameTag = "name";
 			public static readonly string TypeTag = "type";
 			public static readonly string DataTag = "data";
 			public static readonly string CodeTypeName = "code";
 			public static readonly string NumericTypeName = "numeric";
 		}
-                        
 
+
+		private string code;
+
+
+		private string name;
+
+       
 	}
 
 

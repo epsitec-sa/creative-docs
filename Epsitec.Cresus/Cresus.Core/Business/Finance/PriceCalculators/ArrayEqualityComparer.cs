@@ -5,10 +5,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	internal sealed class ArrayEqualityComparer : EqualityComparer<object[]>
+	internal sealed class ArrayEqualityComparer : EqualityComparer<string[]>
 	{
 
-		public override int GetHashCode(object[] obj)
+		public override int GetHashCode(string[] obj)
 		{
 			int result = 0;
 
@@ -30,13 +30,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public override bool Equals(object[] x, object[] y)
+		public override bool Equals(string[] x, string[] y)
 		{
 			bool different = x == null || y == null || x.Length != y.Length;
 
 			for (int i = 0; !different && i < x.Length; i++)
 			{
-				different = !object.Equals (x[i], y[i]);
+				different = !string.Equals (x[i], y[i]);
 			}
 
 			return !different;

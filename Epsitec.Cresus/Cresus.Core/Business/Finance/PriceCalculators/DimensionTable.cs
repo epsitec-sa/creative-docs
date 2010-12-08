@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	/// </summary>
 	public sealed class DimensionTable
 	{
-		
-		
+
+
 		/// <summary>
 		/// Builds a new <see cref="DimensionTable"/> with the given <see cref="AbstractDimension"/>
 		/// as dimensions.
@@ -43,9 +43,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			dimensions.ThrowIf (d => d.Length < 1, "dimensions must contain at least one element.");
 			dimensions.ThrowIf (dims => dims.Any (dim => dim == null), "dimensions cannot contain null elements.");
 
-			this.dimensions = dimensions.OrderBy (d => d.Name).ToList ();
-
-			this.data = new Dictionary<object[], decimal> (new ArrayEqualityComparer ());
+			this.dimensions = dimensions.ToList ();
+			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToList ();
+		
+			this.data = new Dictionary<string[], decimal> (new ArrayEqualityComparer ());
 		}
 
 
@@ -62,12 +63,98 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public int DimensionCount
+		{
+			get
+			{
+				return this.dimensions.Count;
+			}
+		}
+
+
+		public void AddDimension(AbstractDimension dimension)
+		{
+			this.InsertDimension (this.dimensions.Count, dimension);
+		}
+
+
+		public void InsertDimension(int index, AbstractDimension dimension)
+		{
+			this.dimensions.Insert (index, dimension);
+
+			Enumerable.Range (0, this.dimensions.Count).ToList ();
+			this.data.Clear ();
+		}
+
+
+		public void RemoveDimension(AbstractDimension dimension)
+		{
+			int index = this.GetIndexOfDimension (dimension);
+
+			this.RemoveDimensionAt (index);
+		}
+
+
+		public void RemoveDimensionAt(int index)
+		{
+			this.dimensions.RemoveAt (index);
+			
+			Enumerable.Range (0, this.dimensions.Count).ToList ();
+			this.data.Clear ();
+		}
+
+
+		public int GetIndexOfDimension(AbstractDimension dimension)
+		{
+			return this.dimensions.IndexOf (dimension);
+		}
+
+
+		public void SwapDimensions(AbstractDimension dimension1, AbstractDimension dimension2)
+		{
+			int index1 = this.GetIndexOfDimension (dimension1);
+			int index2 = this.GetIndexOfDimension (dimension2);
+
+			this.SwapDimensionsAt (index1, index2);
+		}
+
+
+		public void SwapDimensionsAt(int index1, int index2)
+		{
+			AbstractDimension dimension1 = this.dimensions[index1];
+			AbstractDimension dimension2 = this.dimensions[index2];
+
+			int internalIndex1 = this.internalIndexes[index1];
+			int internalIndex2 = this.internalIndexes[index2];
+
+			this.dimensions[index1] = dimension2;
+			this.dimensions[index2] = dimension1;
+
+			this.internalIndexes[index1] = internalIndex2;
+			this.internalIndexes[index2] = internalIndex1;
+		}
+
+
+		internal void NotifyDimensionValueAdded(AbstractDimension dimension, string value)
+		{
+			// Nothing to do here.
+		}
+
+
+		internal void NotifyDimensionValueRemoved(AbstractDimension dimension, string value)
+		{
+			int indexOfDimension = this.GetIndexOfDimension (dimension);
+
+			
+		}
+		
+
 		/// <summary>
 		/// Gets the sequence of all the possible keys that might be used to set a value to this
 		/// instance. This is basically the Carthesian Product of the values of the dimensions of this
 		/// instance.
 		/// </summary>
-		public IEnumerable<object[]> PossibleKeys
+		public IEnumerable<string[]> PossibleKeys
 		{
 			get
 			{
@@ -87,13 +174,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="key">The object used to address elements.</param>
 		/// <returns>The value for the given key.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is invalid.</exception>
-		public decimal? this[params object[] key]
+		public decimal? this[params string[] key]
 		{
 			get
 			{
-				this.CheckNearestKey (key);
+				this.CheckKey (key);
 
-				return this.GetValue (this.GetNearestKey (key));
+				return this.GetValue (key);
 			}
 			set
 			{
@@ -105,26 +192,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		/// <summary>
-		/// Tells whether the value defined by the given key (possibly after rounding) is defined.
-		/// </summary>
-		/// <param name="key">The key whose value definition to check.</param>
-		/// <returns><c>true</c> if there is a value defined for the given key after rounding.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is invalid.</exception>
-		public bool IsNearestValueDefined(params object[] key)
-		{
-			this.CheckNearestKey (key);
-
-			return this.data.ContainsKey (this.GetNearestKey (key));
-		}
-
-
-		/// <summary>
 		/// Tells whether the value defined by the given key (without rounding) is defined.
 		/// </summary>
 		/// <param name="key">The key whose value definition to check.</param>
 		/// <returns><c>true</c> if there is a value defined for the given key without rounding.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is invalid.</exception>
-		public bool IsValueDefined(params object[] key)
+		public bool IsValueDefined(params string[] key)
 		{
 			this.CheckKey (key);
 
@@ -137,22 +210,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="dimensions">The sequence of <see cref="AbstractDimension"/> whose Carthesian Product to compute.</param>
 		/// <returns>The Carthesian Product of the given <see cref="AbstractDimension"/>.</returns>
-		private IEnumerable<object[]> GenerateCarthesianProduct(IList<AbstractDimension> dimensions)
+		private IEnumerable<string[]> GenerateCarthesianProduct(IList<AbstractDimension> dimensions)
 		{
 			if (dimensions.Count == 0)
 			{
-				yield return new object[0];
+				yield return new string[0];
 			}
 			else
 			{
 				var head = dimensions.First ();
 				var tail = dimensions.Skip (1).ToList ();
 
-				foreach (object[] tailKey in this.GenerateCarthesianProduct (tail))
+				foreach (string[] tailKey in this.GenerateCarthesianProduct (tail))
 				{
-					foreach (object headKey in head.Values)
+					foreach (string headKey in head.Values)
 					{
-						object[] key = new object[dimensions.Count];
+						string[] key = new string[dimensions.Count];
 
 						key[0] = headKey;
 						tailKey.CopyTo (key, 1);
@@ -168,36 +241,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// Checks if the given key corresponds to an exact key for the current instance.
 		/// </summary>
 		/// <param name="key">The key to check.</param>
-		private void CheckKey(params object[] key)
+		private void CheckKey(params string[] key)
 		{
-			this.CheckKey ((d, o) => d.IsValueDefined (o), key);
-		}
-
-
-		/// <summary>
-		/// Checks if the given key corresponds to an key for the current instance, after rounding.
-		/// </summary>
-		/// <param name="key">The key to check.</param>
-		private void CheckNearestKey(params object[] key)
-		{
-			this.CheckKey ((d, o) => d.IsNearestValueDefined (o), key);
-		}
-
-
-		/// <summary>
-		/// Checks if the given key is valid, given a function that checks it for a given dimension.
-		/// </summary>
-		/// <param name="check">The function that given part of the key and a dimension, checks if it is valid or not.</param>
-		/// <param name="key">The key to check.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="key"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="key"/> contains <c>null</c> elements.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="key"/> does not contains the required number of elements.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="key"/> contains an invalid element.</exception>
-		private void CheckKey(System.Func<AbstractDimension, object, bool> check, params object[] key)
-		{
-			key.ThrowIfNull ("key");
-			key.ThrowIf (k => k.Any (e => e == null), "Null element in key");
-
 			if (key.Length != this.dimensions.Count)
 			{
 				throw new System.ArgumentException ("Invalid number of element in key");
@@ -205,7 +250,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			for (int i = 0; i < key.Length; i++)
 			{
-				if (!check (this.dimensions[i], key[i]))
+				if (!this.dimensions[i].Contains (key[i]))
 				{
 					throw new System.ArgumentException ("Invalid element in key at position " + i);
 				}
@@ -218,16 +263,44 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="key">The key to round.</param>
 		/// <returns>The rounded key.</returns>
-		private object[] GetNearestKey(params object[] key)
+		public string[] GetRoundedKey(params string[] key)
 		{
-			object[] nearestKey = new object[key.Length];
+			string[] nearestKey = new string[key.Length];
 
 			for (int i = 0; i < key.Length; i++)
 			{
-				nearestKey[i] = this.dimensions[i].GetNearestValue (key[i]);
+				nearestKey[i] = this.dimensions[i].GetRoundedValue (key[i]);
 			}
 
 			return nearestKey;
+		}
+
+
+		public string[] GetKey(params int[] indexes)
+		{
+			string[] key = new string[indexes.Length];
+
+			for (int i = 0; i < indexes.Length; i++)
+            {
+				key[i] = this.dimensions[i].GetValueAt (indexes[i]);
+            }
+
+			return key;
+		}
+
+
+		public string[] GetInternalKey(params string[] key)
+		{
+			string[] internalKey = new string[key.Length];
+
+			for (int i = 0; i < key.Length; i++)
+			{
+				int internalIndex = this.internalIndexes[i];
+
+				internalKey[internalIndex] = key[i];
+			}
+
+			return internalKey;
 		}
 
 
@@ -236,11 +309,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="key">The key whose value to get.</param>
 		/// <returns>The value for the given key.</returns>
-		private decimal? GetValue(object[] key)
+		private decimal? GetValue(string[] key)
 		{
 			decimal value;
 
-			bool found = this.data.TryGetValue (key, out value);
+			string[] internalKey = this.GetInternalKey (key);
+
+			bool found = this.data.TryGetValue (internalKey, out value);
 
 			if (found)
 			{
@@ -258,18 +333,20 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="key">The key whose value to set.</param>
 		/// <param name="value">The value to set.</param>
-		private void SetValue(object[] key, decimal? value)
+		private void SetValue(string[] key, decimal? value)
 		{
+			string[] internalKey = this.GetInternalKey (key);
+			
 			if (value.HasValue)
 			{
-				this.data[key] = value.Value;
+				this.data[internalKey] = value.Value;
 			}
 			else
 			{
-				this.data.Remove (key);
+				this.data.Remove (internalKey);
 			}
 		}
-
+		
 
 		/// <summary>
 		/// Builds an <see cref="XElement"/> that describes the current instance and might be used
@@ -344,7 +421,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			string values = this.JoinValues ();
 
 			XElement xData = new XElement (XmlConstants.DataTag);
-			
+
 			xData.SetAttributeValue (XmlConstants.ValuesTag, values);
 
 			return xData;
@@ -361,7 +438,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				.Select (k => this.GetValue (k))
 				.Select (v => (v.HasValue) ? InvariantConverter.ConvertToString (v) : "");
 
-			return string.Join(XmlConstants.ValueSeparator, values);
+			return string.Join (XmlConstants.ValueSeparator, values);
 		}
 
 
@@ -385,11 +462,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var dimensions = DimensionTable.ExtractXmlDimensions (xDimensions);
 
 			XElement xData = xDimensionTable.Element (XmlConstants.DataTag);
-			List<decimal?> values = DimensionTable.ExtractXmlData (xData).ToList();
+			List<decimal?> values = DimensionTable.ExtractXmlData (xData).ToList ();
 
 			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
-			List<object[]> keys = table.PossibleKeys.ToList ();
+			List<string[]> keys = table.PossibleKeys.ToList ();
 
 			if (values.Count != keys.Count)
 			{
@@ -491,7 +568,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <summary>
 		/// The values of the current instance.
 		/// </summary>
-		private IDictionary<object[], decimal> data;
+		private IDictionary<string[], decimal> data;
+
+
+		private List<int> internalIndexes;
 
 
 	}
