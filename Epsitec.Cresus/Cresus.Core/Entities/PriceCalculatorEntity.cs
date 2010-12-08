@@ -79,94 +79,96 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			articleItem.ThrowIfNull ("articleItem");
 
-			DimensionTable priceTable = this.GetPriceTable ();
+			throw new System.NotImplementedException ();
 
-			this.CheckPriceTable (articleItem.ArticleDefinition, priceTable);
+			//DimensionTable priceTable = this.GetPriceTable ();
 
-			IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
+			//this.CheckPriceTable (articleItem.ArticleDefinition, priceTable);
 
-			return this.ComputePriceForDimensionTable (priceTable, parameterCodesToValues);
+			//IDictionary<string, IList<object>> parameterCodesToValues = ArticleDocumentItemHelper.GetParameterCodesToValues (articleItem);
+
+			//return this.ComputePriceForDimensionTable (priceTable, parameterCodesToValues);
 		}
 
 
-		/// <summary>
-		/// Use the given <see cref="DimensionTable"/>, the <see cref="ArticleDocumentItem"/> and
-		/// the values of the parameters to compute the price.
-		/// </summary>
-		/// <param name="priceTable">The table defining the prices for the different combinations of parameters.</param>
-		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
-		/// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
-		private decimal? ComputePriceForDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
-		{
-			int nbDimensions = priceTable.Dimensions.Count ();
+		///// <summary>
+		///// Use the given <see cref="DimensionTable"/>, the <see cref="ArticleDocumentItem"/> and
+		///// the values of the parameters to compute the price.
+		///// </summary>
+		///// <param name="priceTable">The table defining the prices for the different combinations of parameters.</param>
+		///// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		///// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
+		//private decimal? ComputePriceForDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		//{
+		//    int nbDimensions = priceTable.Dimensions.Count ();
 
-			if (nbDimensions == 1)
-			{
-				return this.ComputePriceForUniDimensonTable (priceTable, parameterCodesToValues);
-			}
-			else if (nbDimensions > 1)
-			{
-				return this.ComputePriceForMultiDimensionTable (priceTable, parameterCodesToValues);
-			}
-			else
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-
-		/// <summary>
-		/// Computes the price when the price table contains a single dimension.
-		/// </summary>
-		/// <param name="priceTable">The price table used for the computation.</param>
-		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
-		/// <returns>The computed price or <c>null</c> if it is not defined.</returns>
-		private decimal? ComputePriceForUniDimensonTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
-		{
-			decimal? price = 0;
-
-			//string code = priceTable.Dimensions.Single ().Name;
-
-			//if (parameterCodesToValues.ContainsKey (code))
-			//{
-			//    foreach (object key in parameterCodesToValues[code])
-			//    {
-			//        if (priceTable.IsNearestValueDefined (key))
-			//        {
-			//            price += priceTable[key];
-			//        }
-			//        else
-			//        {
-			//            price = null;
-			//        }
-			//    }
-			//}
-
-			return price;
-		}
+		//    if (nbDimensions == 1)
+		//    {
+		//        return this.ComputePriceForUniDimensonTable (priceTable, parameterCodesToValues);
+		//    }
+		//    else if (nbDimensions > 1)
+		//    {
+		//        return this.ComputePriceForMultiDimensionTable (priceTable, parameterCodesToValues);
+		//    }
+		//    else
+		//    {
+		//        throw new System.NotImplementedException ();
+		//    }
+		//}
 
 
-		/// <summary>
-		/// Computes the price when the price table contains more than one dimension.
-		/// </summary>
-		/// <param name="priceTable">The price table used for the computation.</param>
-		/// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
-		/// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
-		private decimal? ComputePriceForMultiDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
-		{
-			object[] key = priceTable.Dimensions
-			.Select (d => parameterCodesToValues[d.Name].Single ())
-			.ToArray ();
+		///// <summary>
+		///// Computes the price when the price table contains a single dimension.
+		///// </summary>
+		///// <param name="priceTable">The price table used for the computation.</param>
+		///// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		///// <returns>The computed price or <c>null</c> if it is not defined.</returns>
+		//private decimal? ComputePriceForUniDimensonTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		//{
+		//    decimal? price = 0;
 
-			decimal? price = null;
+		//    string code = priceTable.Dimensions.Single ().Name;
 
-			//if (priceTable.IsNearestValueDefined (key))
-			//{
-			//    price = priceTable[key];
-			//}
+		//    if (parameterCodesToValues.ContainsKey (code))
+		//    {
+		//        foreach (object key in parameterCodesToValues[code])
+		//        {
+		//            if (priceTable.IsNearestValueDefined (key))
+		//            {
+		//                price += priceTable[key];
+		//            }
+		//            else
+		//            {
+		//                price = null;
+		//            }
+		//        }
+		//    }
 
-			return price;
-		}
+		//    return price;
+		//}
+
+
+		///// <summary>
+		///// Computes the price when the price table contains more than one dimension.
+		///// </summary>
+		///// <param name="priceTable">The price table used for the computation.</param>
+		///// <param name="parameterCodesToValues">The mapping between parameter codes and values.</param>
+		///// <returns>The computed price, or <c>null</c> if it is not defined.</returns>
+		//private decimal? ComputePriceForMultiDimensionTable(DimensionTable priceTable, IDictionary<string, IList<object>> parameterCodesToValues)
+		//{
+		//    object[] key = priceTable.Dimensions
+		//    .Select (d => parameterCodesToValues[d.Name].Single ())
+		//    .ToArray ();
+
+		//    decimal? price = null;
+
+		//    if (priceTable.IsNearestValueDefined (key))
+		//    {
+		//        price = priceTable[key];
+		//    }
+
+		//    return price;
+		//}
 
 
 		/// <summary>
@@ -190,7 +192,7 @@ namespace Epsitec.Cresus.Core.Entities
 			articleDefinition.ThrowIfNull ("articleDefinition");
 			priceTable.ThrowIfNull ("priceTable");
 
-			this.CheckPriceTable (articleDefinition, priceTable);
+			//this.CheckPriceTable (articleDefinition, priceTable);
 
 			this.SerializedData = this.SerializePriceTable (priceTable);
 		}
@@ -218,56 +220,56 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		/// <summary>
-		/// Checks that the given <see cref="DimensionTable"/> is a valid price table for the given
-		/// <see cref="ArticleDefinitionEntity"/>.
-		/// </summary>
-		/// <param name="articleDefinition">The definition of the article.</param>
-		/// <param name="priceTable">The price table to check.</param>
-		private void CheckPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
-		{
-			var parameterDefinitions = articleDefinition.ArticleParameterDefinitions.ToDictionary (pd => pd.Code, pd => pd);
+		///// <summary>
+		///// Checks that the given <see cref="DimensionTable"/> is a valid price table for the given
+		///// <see cref="ArticleDefinitionEntity"/>.
+		///// </summary>
+		///// <param name="articleDefinition">The definition of the article.</param>
+		///// <param name="priceTable">The price table to check.</param>
+		//private void CheckPriceTable(ArticleDefinitionEntity articleDefinition, DimensionTable priceTable)
+		//{
+		//    var parameterDefinitions = articleDefinition.ArticleParameterDefinitions.ToDictionary (pd => pd.Code, pd => pd);
 
-			int nbDimensions = priceTable.Dimensions.Count ();
+		//    int nbDimensions = priceTable.Dimensions.Count ();
 
-			foreach (AbstractDimension dimension in priceTable.Dimensions)
-			{
-				if (!parameterDefinitions.ContainsKey (dimension.Name))
-				{
-					throw new System.Exception ();
-				}
+		//    foreach (AbstractDimension dimension in priceTable.Dimensions)
+		//    {
+		//        if (!parameterDefinitions.ContainsKey (dimension.Name))
+		//        {
+		//            throw new System.Exception ();
+		//        }
 
-				var pd = parameterDefinitions[dimension.Name];
-				var npd = pd as NumericValueArticleParameterDefinitionEntity;
-				var epd = pd as EnumValueArticleParameterDefinitionEntity;
-				var nd = dimension as NumericDimension;
-				var cd = dimension as CodeDimension;
+		//        var pd = parameterDefinitions[dimension.Name];
+		//        var npd = pd as NumericValueArticleParameterDefinitionEntity;
+		//        var epd = pd as EnumValueArticleParameterDefinitionEntity;
+		//        var nd = dimension as NumericDimension;
+		//        var cd = dimension as CodeDimension;
 
-				if (npd != null && nd != null)
-				{
-					if (!PriceCalculatorEntity.CheckValuesForNumericParameter (npd, nd.Values.Cast<decimal> ()))
-					{
-						throw new System.NotSupportedException ();
-					}
-				}
-				else if (epd != null && cd != null)
-				{
-					if (!PriceCalculatorEntity.CheckValuesForEnumParameter (epd, cd.Values.Cast<string> ()))
-					{
-						throw new System.NotSupportedException ();
-					}
+		//        if (npd != null && nd != null)
+		//        {
+		//            if (!PriceCalculatorEntity.CheckValuesForNumericParameter (npd, nd.Values.Cast<decimal> ()))
+		//            {
+		//                throw new System.NotSupportedException ();
+		//            }
+		//        }
+		//        else if (epd != null && cd != null)
+		//        {
+		//            if (!PriceCalculatorEntity.CheckValuesForEnumParameter (epd, cd.Values.Cast<string> ()))
+		//            {
+		//                throw new System.NotSupportedException ();
+		//            }
 
-					if (nbDimensions > 1 && epd.Cardinality != EnumValueCardinality.ExactlyOne)
-					{
-						throw new System.NotSupportedException ();
-					}
-				}
-				else
-				{
-					throw new System.NotSupportedException ();
-				}
-			}
-		}
+		//            if (nbDimensions > 1 && epd.Cardinality != EnumValueCardinality.ExactlyOne)
+		//            {
+		//                throw new System.NotSupportedException ();
+		//            }
+		//        }
+		//        else
+		//        {
+		//            throw new System.NotSupportedException ();
+		//        }
+		//    }
+		//}
 
 
 		/// <summary>
@@ -300,161 +302,161 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		/// <summary>
-		/// Creates a <see cref="NumericDimension"/> based on the given parameter. This method uses
-		/// the preferred values as points on the dimension.
-		/// </summary>
-		/// <param name="parameter">The parameter on which to base the new dimension.</param>
-		/// <param name="roundingMode">The rounding strategy for the dimension.</param>
-		/// <returns>The new <see cref="NumericDimension"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
-		public static NumericDimension CreateDimension(NumericValueArticleParameterDefinitionEntity parameter, RoundingMode roundingMode)
-		{
-			parameter.ThrowIfNull ("parameter");
+		///// <summary>
+		///// Creates a <see cref="NumericDimension"/> based on the given parameter. This method uses
+		///// the preferred values as points on the dimension.
+		///// </summary>
+		///// <param name="parameter">The parameter on which to base the new dimension.</param>
+		///// <param name="roundingMode">The rounding strategy for the dimension.</param>
+		///// <returns>The new <see cref="NumericDimension"/>.</returns>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		//public static NumericDimension CreateDimension(NumericValueArticleParameterDefinitionEntity parameter, RoundingMode roundingMode)
+		//{
+		//    parameter.ThrowIfNull ("parameter");
 			
-			string name = parameter.Code;
+		//    string name = parameter.Code;
 
-			var values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
-				.Select (v => InvariantConverter.ConvertFromString<decimal> (v));
+		//    var values = AbstractArticleParameterDefinitionEntity.Split (parameter.PreferredValues)
+		//        .Select (v => InvariantConverter.ConvertFromString<decimal> (v));
 			
-			//return new NumericDimension (name, values, roundingMode);
-			return null;
-		}
+		//    //return new NumericDimension (name, values, roundingMode);
+		//    return null;
+		//}
 
 
-		/// <summary>
-		/// Creates a <see cref="CodeDimension"/> based on the given parameter. This method uses the
-		/// defined values as points on the dimension. Only parameters with the cardinality
-		/// <see cref="EnumValueCardinality.ExactlyOne"/> can be used with this method.
-		/// </summary>
-		/// <param name="parameter">The parameter on which to base the new dimension.</param>
-		/// <returns>The new <see cref="CodeDimension"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="parameter"/> is not of the appropriate cardinality.</exception>
-		public static CodeDimension CreateDimension(EnumValueArticleParameterDefinitionEntity parameter)
-		{
-			parameter.ThrowIfNull ("parameter");
-			parameter.ThrowIf (p => p.Cardinality != EnumValueCardinality.ExactlyOne, "Unsupported cardinality for parameter.");
+		///// <summary>
+		///// Creates a <see cref="CodeDimension"/> based on the given parameter. This method uses the
+		///// defined values as points on the dimension. Only parameters with the cardinality
+		///// <see cref="EnumValueCardinality.ExactlyOne"/> can be used with this method.
+		///// </summary>
+		///// <param name="parameter">The parameter on which to base the new dimension.</param>
+		///// <returns>The new <see cref="CodeDimension"/>.</returns>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		///// <exception cref="System.ArgumentException">If <paramref name="parameter"/> is not of the appropriate cardinality.</exception>
+		//public static CodeDimension CreateDimension(EnumValueArticleParameterDefinitionEntity parameter)
+		//{
+		//    parameter.ThrowIfNull ("parameter");
+		//    parameter.ThrowIf (p => p.Cardinality != EnumValueCardinality.ExactlyOne, "Unsupported cardinality for parameter.");
 
-			string name = parameter.Code;
+		//    string name = parameter.Code;
 
-			string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
+		//    string[] values = AbstractArticleParameterDefinitionEntity.Split (parameter.Values);
 			
-			//return new CodeDimension (name, values);
-			return null;
-		}
+		//    //return new CodeDimension (name, values);
+		//    return null;
+		//}
 
 
-		/// <summary>
-		/// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
-		/// based on the given parameter and with the given strategy for rounding and the given values.
-		/// </summary>
-		/// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
-		/// <param name="parameterCodesToValues">The mapping between the parameter values to the values in the table.</param>
-		/// <param name="roundingMode">The rounding strategy.</param>
-		/// <returns>The new <see cref="DimensionTable"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
-		public static DimensionTable CreatePriceTable(NumericValueArticleParameterDefinitionEntity parameter, IDictionary<decimal, decimal> parameterCodesToValues, RoundingMode roundingMode)
-		{
-			parameter.ThrowIfNull ("parameter");
-			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
+		///// <summary>
+		///// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
+		///// based on the given parameter and with the given strategy for rounding and the given values.
+		///// </summary>
+		///// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
+		///// <param name="parameterCodesToValues">The mapping between the parameter values to the values in the table.</param>
+		///// <param name="roundingMode">The rounding strategy.</param>
+		///// <returns>The new <see cref="DimensionTable"/>.</returns>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
+		///// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
+		//public static DimensionTable CreatePriceTable(NumericValueArticleParameterDefinitionEntity parameter, IDictionary<decimal, decimal> parameterCodesToValues, RoundingMode roundingMode)
+		//{
+		//    parameter.ThrowIfNull ("parameter");
+		//    parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
 
-			if (!PriceCalculatorEntity.CheckValuesForNumericParameter (parameter, parameterCodesToValues.Keys))
-			{
-				throw new System.ArgumentException ();
-			}
+		//    if (!PriceCalculatorEntity.CheckValuesForNumericParameter (parameter, parameterCodesToValues.Keys))
+		//    {
+		//        throw new System.ArgumentException ();
+		//    }
 
-			//NumericDimension dimension = new NumericDimension (parameter.Code, parameterCodesToValues.Keys, roundingMode);
-			//DimensionTable table = new DimensionTable (dimension);
+		//    NumericDimension dimension = new NumericDimension (parameter.Code, parameterCodesToValues.Keys, roundingMode);
+		//    DimensionTable table = new DimensionTable (dimension);
 
-			//foreach (var item in parameterCodesToValues)
-			//{
-			//    table[item.Key] = item.Value;
-			//}
+		//    foreach (var item in parameterCodesToValues)
+		//    {
+		//        table[item.Key] = item.Value;
+		//    }
 
-			//return table;
+		//    return table;
 
-			return null;
-		}
-
-
-		/// <summary>
-		/// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
-		/// base on the given parameter.
-		/// </summary>
-		/// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
-		/// <param name="parameterCodesToValues">The mapping between the parameter codes to the values in the table.</param>
-		/// <returns>The new <see cref="DimensionTable"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
-		public static DimensionTable CreatePriceTable(EnumValueArticleParameterDefinitionEntity parameter, IDictionary<string, decimal> parameterCodesToValues)
-		{
-			parameter.ThrowIfNull ("parameter");
-			parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
-
-			if (!PriceCalculatorEntity.CheckValuesForEnumParameter (parameter, parameterCodesToValues.Keys))
-			{
-				throw new System.ArgumentException ();
-			}
-
-			//CodeDimension dimension = new CodeDimension (parameter.Code, parameterCodesToValues.Keys);
-			//DimensionTable table = new DimensionTable (dimension);
-
-			//foreach (var item in parameterCodesToValues)
-			//{
-			//    table[item.Key] = item.Value;
-			//}
-
-			//return table;
-
-			return null;
-		}
+		//    return null;
+		//}
 
 
-		/// <summary>
-		/// Builds the key used to access elements in a price table.
-		/// </summary>
-		/// <param name="parametersToValues">The mapping from the parameter definitions to their actual value.</param>
-		/// <returns>The key corresponding to the given mapping.</returns>
-		public static object[] CreateKey(IDictionary<AbstractArticleParameterDefinitionEntity, object> parametersToValues)
-		{
-			parametersToValues.ThrowIfNull ("parametersToValues");
+		///// <summary>
+		///// Creates a new single dimension <see cref="DimensionTable"/> which will be the price table,
+		///// base on the given parameter.
+		///// </summary>
+		///// <param name="parameter">The parameter on which to base the single dimension of the new table.</param>
+		///// <param name="parameterCodesToValues">The mapping between the parameter codes to the values in the table.</param>
+		///// <returns>The new <see cref="DimensionTable"/>.</returns>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameter"/> is <c>null</c>.</exception>
+		///// <exception cref="System.ArgumentNullException">If <paramref name="parameterCodesToValues"/> is <c>null</c>.</exception>
+		///// <exception cref="System.ArgumentException">If <paramref name="parameterCodesToValues"/> does not contains the proper values.</exception>
+		//public static DimensionTable CreatePriceTable(EnumValueArticleParameterDefinitionEntity parameter, IDictionary<string, decimal> parameterCodesToValues)
+		//{
+		//    parameter.ThrowIfNull ("parameter");
+		//    parameterCodesToValues.ThrowIfNull ("parameterCodesToValues");
 
-			return parametersToValues
-				.OrderBy (kvp => kvp.Key.Code)
-				.Select (kvp => kvp.Value)
-				.ToArray ();
-		}
+		//    if (!PriceCalculatorEntity.CheckValuesForEnumParameter (parameter, parameterCodesToValues.Keys))
+		//    {
+		//        throw new System.ArgumentException ();
+		//    }
+
+		//    CodeDimension dimension = new CodeDimension (parameter.Code, parameterCodesToValues.Keys);
+		//    DimensionTable table = new DimensionTable (dimension);
+
+		//    foreach (var item in parameterCodesToValues)
+		//    {
+		//        table[item.Key] = item.Value;
+		//    }
+
+		//    return table;
+
+		//    return null;
+		//}
 
 
-		/// <summary>
-		/// Checks that the given values correspond to the preferred values of the given parameter.
-		/// </summary>
-		/// <param name="parameterDefinition">The parameter to check.</param>
-		/// <param name="values">The set of values to check.</param>
-		/// <returns><c>true</c> if the given values correspond to the preferred values of the given parameter, <c>false</c> if they don't.</returns>
-		private static bool CheckValuesForNumericParameter(NumericValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<decimal> values)
-		{
-			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.PreferredValues)
-				.Select (v => InvariantConverter.ConvertFromString<decimal> (v))
-				.SetEquals (values);
-		}
+		///// <summary>
+		///// Builds the key used to access elements in a price table.
+		///// </summary>
+		///// <param name="parametersToValues">The mapping from the parameter definitions to their actual value.</param>
+		///// <returns>The key corresponding to the given mapping.</returns>
+		//public static object[] CreateKey(IDictionary<AbstractArticleParameterDefinitionEntity, object> parametersToValues)
+		//{
+		//    parametersToValues.ThrowIfNull ("parametersToValues");
+
+		//    return parametersToValues
+		//        .OrderBy (kvp => kvp.Key.Code)
+		//        .Select (kvp => kvp.Value)
+		//        .ToArray ();
+		//}
 
 
-		/// <summary>
-		/// Checks that the given values correspond to the values of the given parameter.
-		/// </summary>
-		/// <param name="parameterDefinition">The parameter to check.</param>
-		/// <param name="values">The set of values to check.</param>
-		/// <returns><c>true</c> if the given values correspond to the values of the given parameter, <c>false</c> if they don't.</returns>
-		private static bool CheckValuesForEnumParameter(EnumValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<string> values)
-		{
-			return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.Values)
-				.SetEquals (values);
-		}
+		///// <summary>
+		///// Checks that the given values correspond to the preferred values of the given parameter.
+		///// </summary>
+		///// <param name="parameterDefinition">The parameter to check.</param>
+		///// <param name="values">The set of values to check.</param>
+		///// <returns><c>true</c> if the given values correspond to the preferred values of the given parameter, <c>false</c> if they don't.</returns>
+		//private static bool CheckValuesForNumericParameter(NumericValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<decimal> values)
+		//{
+		//    return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.PreferredValues)
+		//        .Select (v => InvariantConverter.ConvertFromString<decimal> (v))
+		//        .SetEquals (values);
+		//}
+
+
+		///// <summary>
+		///// Checks that the given values correspond to the values of the given parameter.
+		///// </summary>
+		///// <param name="parameterDefinition">The parameter to check.</param>
+		///// <param name="values">The set of values to check.</param>
+		///// <returns><c>true</c> if the given values correspond to the values of the given parameter, <c>false</c> if they don't.</returns>
+		//private static bool CheckValuesForEnumParameter(EnumValueArticleParameterDefinitionEntity parameterDefinition, IEnumerable<string> values)
+		//{
+		//    return AbstractArticleParameterDefinitionEntity.Split (parameterDefinition.Values)
+		//        .SetEquals (values);
+		//}
 
 
 	}
