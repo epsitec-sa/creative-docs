@@ -3,13 +3,14 @@
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers.ArticleParameterControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Core.Helpers
+namespace Epsitec.Cresus.Core.UnitTests.Helpers
 {
 
 

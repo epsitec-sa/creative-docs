@@ -1,8 +1,8 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Core.Data;
 
-using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.Database;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Core.Data
+namespace Epsitec.Cresus.Core.UnitTests.Data
 {
 
 
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Data
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
 				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
-				
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure))
 				{
 					dataInfrastructure.OpenConnection ("id");
 
@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Core.Data
 				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
 				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
 
-				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
-				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
 				{
 					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
@@ -129,10 +129,10 @@ namespace Epsitec.Cresus.Core.Data
 				dbInfrastructure3.AttachToDatabase (TestHelper.CreateDbAccess ());
 				dbInfrastructure4.AttachToDatabase (TestHelper.CreateDbAccess ());
 
-				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
-				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
-				using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (dbInfrastructure3))
-				using (DataInfrastructure dataInfrastructure4 = new DataInfrastructure (dbInfrastructure4))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure3 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure3))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure4 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure4))
 				{
 					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();

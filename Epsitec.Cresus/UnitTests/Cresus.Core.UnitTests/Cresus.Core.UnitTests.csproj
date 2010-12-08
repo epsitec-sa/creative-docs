@@ -9,7 +9,7 @@
     <ProjectGuid>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.Core.UnitTests</RootNamespace>
     <AssemblyName>Cresus.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
