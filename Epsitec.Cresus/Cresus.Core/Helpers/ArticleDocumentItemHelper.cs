@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			articleItem.ThrowIfNull ("articleItem");
 
 			var parameterDefinitions = articleItem.ArticleDefinition.ArticleParameterDefinitions;
-			var parameterStringValues = ArticleParameterHelper.GetArticleParametersValues (articleItem);
+			var parameterStringValues = ArticleParameterHelper.GetArticleParametersValues (articleItem, returnName: false);
 			var parameterCodesToValues = new Dictionary<string, IList<object>> ();
 
 			foreach (var parameterDefinition in parameterDefinitions)
