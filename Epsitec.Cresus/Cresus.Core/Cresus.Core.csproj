@@ -91,6 +91,7 @@
     <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
+    <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />

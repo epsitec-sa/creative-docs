@@ -10,9 +10,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule]
-	internal class NumericValueArticleParameterDefinitionBusinessRules : GenericBusinessRule<NumericValueArticleParameterDefinitionEntity>
+	internal class OptionValueArticleParameterDefinitionBusinessRules : GenericBusinessRule<OptionValueArticleParameterDefinitionEntity>
 	{
-		public override void ApplySetupRule(NumericValueArticleParameterDefinitionEntity entity)
+		public override void ApplySetupRule(OptionValueArticleParameterDefinitionEntity entity)
 		{
 			entity.Code = (string) ItemCodeGenerator.NewCode ();
 		}
