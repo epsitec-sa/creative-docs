@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle unité d'impression");
 			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'unité d'impression");
-			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'unité d'impression dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Monte l'unité d'impression dans la liste");
 			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'unité d'impression dans la liste");
 
 			//	Rempli le panneau central.

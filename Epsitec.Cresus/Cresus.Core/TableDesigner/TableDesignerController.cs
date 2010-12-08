@@ -18,11 +18,17 @@ namespace Epsitec.Cresus.Core.TableDesigner
 {
 	public sealed class TableDesignerController : System.IDisposable
 	{
-		public TableDesignerController(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, PriceCalculatorEntity entity)
+		public TableDesignerController(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, PriceCalculatorEntity priceCalculatorEntity, ArticleDefinitionEntity articleDefinitionEntity)
 		{
-			this.orchestrator    = orchestrator;
-			this.businessContext = businessContext;
-			this.entity          = entity;
+			System.Diagnostics.Debug.Assert (orchestrator != null);
+			System.Diagnostics.Debug.Assert (businessContext != null);
+			System.Diagnostics.Debug.Assert (priceCalculatorEntity.IsNotNull ());
+			System.Diagnostics.Debug.Assert (articleDefinitionEntity.IsNotNull ());
+
+			this.orchestrator            = orchestrator;
+			this.businessContext         = businessContext;
+			this.priceCalculatorEntity   = priceCalculatorEntity;
+			this.articleDefinitionEntity = articleDefinitionEntity;
 			
 			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
@@ -31,7 +37,7 @@ namespace Epsitec.Cresus.Core.TableDesigner
 
 		public Widget CreateUI()
 		{
-			this.editorUI = this.CreateTableEditorUI (this.entity);
+			this.editorUI = this.CreateTableEditorUI ();
 			
 			return this.editorUI;
 		}
@@ -44,7 +50,7 @@ namespace Epsitec.Cresus.Core.TableDesigner
 			browserViewController.Select (entity);
 		}
 
-		private Widget CreateTableEditorUI(PriceCalculatorEntity entity)
+		private Widget CreateTableEditorUI()
 		{
 			var box = new FrameBox
 			{
@@ -52,7 +58,7 @@ namespace Epsitec.Cresus.Core.TableDesigner
 				Padding = new Margins (5),
 			};
 
-			this.mainController = new MainController (this.businessContext, entity);
+			this.mainController = new MainController (this.businessContext, this.priceCalculatorEntity, this.articleDefinitionEntity);
 			this.mainController.CreateUI (box);
 
 			return box;
@@ -87,11 +93,12 @@ namespace Epsitec.Cresus.Core.TableDesigner
 		#endregion
 
 
-		private readonly BusinessContext		businessContext;
-		private readonly PriceCalculatorEntity	entity;
-		private readonly DataViewOrchestrator	orchestrator;
+		private readonly DataViewOrchestrator		orchestrator;
+		private readonly BusinessContext			businessContext;
+		private readonly PriceCalculatorEntity		priceCalculatorEntity;
+		private readonly ArticleDefinitionEntity	articleDefinitionEntity;
 
-		private Widget							editorUI;
-		private MainController					mainController;
+		private Widget								editorUI;
+		private MainController						mainController;
 	}
 }

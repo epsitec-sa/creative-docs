@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var window = this.CreateWindow ();
 
-			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity);
+			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, null);  // TODO: retrouver l'ArticleDefinition !
 
 			var box = tableDesigner.CreateUI ();
 			box.Parent = window.Root;
