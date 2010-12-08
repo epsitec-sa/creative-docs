@@ -623,7 +623,6 @@ namespace Epsitec.Cresus.Core
 			articleDef6.ArticlePrices.Add (this.CreateArticlePrice (1.50M, articlePriceGroup1));
 
 
-#if false
 			//	Crée un calculateur de prix.
 			var pc1 = this.DataContext.CreateEntity<PriceCalculatorEntity> ();
 
@@ -631,23 +630,22 @@ namespace Epsitec.Cresus.Core
 			pc1.Name = "Essai";
 			pc1.Description = "Essai d'un calculateur de prix à 2 dimensions";
 
-			NumericDimension nd1 = PriceCalculatorEntity.CreateDimension (param5_1, RoundingMode.Nearest);
-			NumericDimension nd2 = PriceCalculatorEntity.CreateDimension (param5_2, RoundingMode.Nearest);
-			DimensionTable priceTable = new DimensionTable (nd1, nd2);
+			NumericDimension d1 = new NumericDimension (param5_1.Code, "Hauteur", new decimal[] { 800, 1000, 1500, 2000 }, RoundingMode.Nearest);
+			NumericDimension d2 = new NumericDimension (param5_2.Code, "Largeur", new decimal[] { 400, 500, 600, 700, 800 }, RoundingMode.Nearest);
+			DimensionTable priceTable = new DimensionTable (d1, d2);
 
 			int value = 1;
-			foreach (object o1 in nd1.Values)
+			foreach (string o1 in d1.Values)
 			{
-				foreach (object o2 in nd2.Values)
+				foreach (string o2 in d2.Values)
 				{
-//-					priceTable[o1, o2] = value;
+					priceTable[o1, o2] = value;
 					value++;
 				}
 			}
 
-			pc1.SetPriceTable (articleDef5, priceTable);
+			//?pc1.SetPriceTable (articleDef5, priceTable);
 			articleDef5.ArticlePrices[0].PriceCalculators.Add (pc1);
-#endif
 
 
 			yield return articleDef1;
