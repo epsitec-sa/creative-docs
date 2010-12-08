@@ -545,6 +545,7 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
+    <Compile Include="Widgets\VStaticText.cs" />
     <Compile Include="Widgets\IconOrImageButton.cs" />
     <Compile Include="Widgets\Miniature.cs" />
     <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />

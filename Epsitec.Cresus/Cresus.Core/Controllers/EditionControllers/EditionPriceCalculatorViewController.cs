@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			window.Owner = CoreProgram.Application.Window;
 			window.Icon = CoreProgram.Application.Window.Icon;
-			window.Text = "Edition de la tabelle de prix";
+			window.Text = "Calculateur de prix";
 			window.ClientSize = new Size (800, 600);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 			window.AdjustWindowSize ();

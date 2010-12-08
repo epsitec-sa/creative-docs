@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				arrow.SetOutlineColors (Tile.BorderColors);
 				arrow.SetThicknessColors (null);
-				arrow.SetSurfaceColors (ArrowedFrame.SurfaceColors);
+				arrow.SetSurfaceColors (this.InternalSurfaceColors);
 				arrow.MouseHilite = false;
 
 				return arrow;
@@ -69,6 +69,21 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
+		private IEnumerable<Color> InternalSurfaceColors
+		{
+			get
+			{
+				if (this.IsSelected)
+				{
+					return Tile.SurfaceSelectedContainerColors;
+				}
+				else
+				{
+					return ArrowedFrame.SurfaceColors;
+				}
+			}
+		}
 
 		public static IEnumerable<Color> SurfaceColors
 		{
