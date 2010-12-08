@@ -644,7 +644,7 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-			//?pc1.SetPriceTable (articleDef5, priceTable);
+			pc1.SetPriceTable (articleDef5, priceTable);
 			articleDef5.ArticlePrices[0].PriceCalculators.Add (pc1);
 
 
