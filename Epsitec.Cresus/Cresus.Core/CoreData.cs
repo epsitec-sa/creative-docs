@@ -524,6 +524,7 @@ namespace Epsitec.Cresus.Core
 			yield return EntityInfo<EnumValueArticleParameterDefinitionEntity>.GetTypeId ();
 			yield return EntityInfo<NumericValueArticleParameterDefinitionEntity>.GetTypeId ();
 			yield return EntityInfo<FreeTextValueArticleParameterDefinitionEntity>.GetTypeId ();
+			yield return EntityInfo<OptionValueArticleParameterDefinitionEntity>.GetTypeId ();
 			
 			yield return EntityInfo<AffairEntity>.GetTypeId ();
 			yield return EntityInfo<WorkflowEntity>.GetTypeId ();
