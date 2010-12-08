@@ -113,6 +113,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return this.values.Contains (value);
 		}
 
+		
+		public override bool IsValueRoundable(string value)
+		{
+			decimal d = NumericDimension.Convert (value);
+
+			return this.IsDecimalValueRoundable (d);
+		}
+
+
+		public bool IsDecimalValueRoundable(decimal value)
+		{
+			switch (this.roundingMode)
+			{
+				case RoundingMode.None:
+					return this.ContainsDecimal (value);
+
+				case RoundingMode.Down:
+				case RoundingMode.Nearest:
+				case RoundingMode.Up:
+					return (value >= this.values.Min) && (value <= this.values.Max);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+		
 
 		public override string GetRoundedValue(string value)
 		{
@@ -127,17 +153,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public decimal GetDecimalRoundedValue(decimal value)
 		{
+			if (!this.IsDecimalValueRoundable (value))
+			{
+				throw new System.ArgumentException ();
+			}
+
 			if (this.values.Contains (value))
 			{
 				return value;
-			}
-			else if (value < this.values.Min)
-			{
-				return this.values.Min;
-			}
-			else if (value > this.values.Max)
-			{
-				return this.values.Max;
 			}
 			else
 			{

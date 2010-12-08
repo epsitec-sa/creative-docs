@@ -95,6 +95,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public override bool IsValueRoundable(string value)
+		{
+			return this.Contains (value);
+		}
+
+
 		public override string GetRoundedValue(string value)
 		{
 			return value;

@@ -81,9 +81,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public void InsertDimension(int index, AbstractDimension dimension)
 		{
 			this.dimensions.Insert (index, dimension);
-
+			
 			Enumerable.Range (0, this.dimensions.Count).ToList ();
 			this.data.Clear ();
+
+			dimension.AddToDimensionTable (this);
 		}
 
 
@@ -97,10 +99,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void RemoveDimensionAt(int index)
 		{
+			AbstractDimension dimension = this.dimensions[index];
+			
 			this.dimensions.RemoveAt (index);
 			
 			Enumerable.Range (0, this.dimensions.Count).ToList ();
 			this.data.Clear ();
+
+			dimension.RemoveFromDimensionTable (this);
 		}
 
 
@@ -144,8 +150,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		internal void NotifyDimensionValueRemoved(AbstractDimension dimension, string value)
 		{
 			int indexOfDimension = this.GetIndexOfDimension (dimension);
+			int internalIndexOfDimension = this.internalIndexes[indexOfDimension];
 
-			
+			List<string[]> keysToRemove = this.data.Keys
+				.Where (k => k[internalIndexOfDimension] == value)
+				.ToList ();
+
+			foreach (string[] key in keysToRemove)
+			{
+				this.data.Remove (key);
+			}
 		}
 		
 
@@ -255,6 +269,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					throw new System.ArgumentException ("Invalid element in key at position " + i);
 				}
 			}
+		}
+
+
+		public bool IsKeyRoundable(params string[] key)
+		{
+			bool roundable = true;
+
+			for (int i = 0; i < key.Length && roundable; i++)
+			{
+				roundable = this.dimensions[i].IsValueRoundable (key[i]);
+			}
+
+			return roundable;
 		}
 
 
