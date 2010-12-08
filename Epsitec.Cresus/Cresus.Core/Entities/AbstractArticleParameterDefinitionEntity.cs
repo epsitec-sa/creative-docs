@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-	
+
 		/// <summary>
 		/// Some article parameter definitions store several values in a single
 		/// text field; the values are separated by the special '∙' character.

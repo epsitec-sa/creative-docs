@@ -57,7 +57,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var window = this.CreateWindow ();
 
-			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, null);  // TODO: retrouver l'ArticleDefinition !
+			// TODO: Comment retrouver l'ArticleDefinitionEntity auquel est rattaché la tabelle PriceCalculatorEntity !
+			// Ici, pour avancer, je cherche l'article 'fenêtre' !!!
+			var example = new ArticleDefinitionEntity();
+			example.IdA = "WDO-DESIGN";
+			var articleDefinition = this.DataContext.GetByExample (example).FirstOrDefault ();
+
+			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
 
 			var box = tableDesigner.CreateUI ();
 			box.Parent = window.Root;
