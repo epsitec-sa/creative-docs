@@ -93,7 +93,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-
 		public CellArrayStyles StyleH
 		{
 			//	Sytle pour l'en-tête supérieur et l'ascenseur horizontal.
@@ -191,7 +190,24 @@ namespace Epsitec.Common.Widgets
 				this.headerHeight = value;
 			}
 		}
-		
+
+		public double HeaderWidth
+		{
+			//	Choix de la largeur de l'en-tête.
+			get
+			{
+				return this.headerWidth;
+			}
+			set
+			{
+				if (this.headerWidth != value)
+				{
+					this.headerWidth = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public double HeaderHeight
 		{
 			//	Choix de la hauteur de l'en-tête.
@@ -199,13 +215,17 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.headerHeight;
 			}
-
 			set
 			{
-				this.headerHeight = value;
+				if (this.headerHeight != value)
+				{
+					this.headerHeight = value;
+					this.Invalidate ();
+				}
 			}
 		}
-		
+
+
 		public int Columns
 		{
 			//	Donne le nombre total de colonnes.
