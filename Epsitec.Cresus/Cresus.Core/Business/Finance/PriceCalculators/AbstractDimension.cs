@@ -66,13 +66,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public void AddToDimensionTable(DimensionTable dimensionTable)
+		internal void AddToDimensionTable(DimensionTable dimensionTable)
 		{
 			this.DimensionTable = dimensionTable;
 		}
 
 
-		public void RemoveFromDimensionTable(DimensionTable dimensionTable)
+		internal void RemoveFromDimensionTable(DimensionTable dimensionTable)
 		{
 			this.DimensionTable = null;
 		}
@@ -85,6 +85,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		public abstract bool Contains(string value);
+
+
+		public abstract bool IsValueRoundable(string value);
 
 
 		public abstract string GetRoundedValue(string value);
