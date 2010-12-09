@@ -50,6 +50,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public IDictionary<string[], decimal> Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+
 		/// <summary>
 		/// Gets the sequence of <see cref="AbstractDimension"/> which are the dimensions that defines
 		/// this instance, sorted in the same order as the order required by the getter/setter.
@@ -302,6 +311,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return nearestKey;
 		}
 
+
+		public int[] GetIndexesKey(params string[] indexes)
+		{
+			int[] list = new int[indexes.Length];
+
+			for (int i = 0; i < list.Length; i++)
+			{
+				list[i] = this.dimensions[i].Values.IndexOf (indexes[i]);
+			}
+
+			return list;
+		}
 
 		public string[] GetKey(params int[] indexes)
 		{

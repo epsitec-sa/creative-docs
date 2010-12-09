@@ -57,12 +57,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var window = this.CreateWindow ();
 
-			// TODO: Comment retrouver l'ArticleDefinitionEntity auquel est rattaché la tabelle PriceCalculatorEntity !
-			// Ici, pour avancer, je cherche l'article 'fenêtre' !!!
-			var example = new ArticleDefinitionEntity();
-			example.IdA = "WDO-DESIGN";
-			var articleDefinition = this.DataContext.GetByExample (example).FirstOrDefault ();
-
+			var articleDefinition = this.BusinessContext.GetMasterEntity<ArticleDefinitionEntity> ();
+			System.Diagnostics.Debug.Assert (articleDefinition != null);
 			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
 
 			var box = tableDesigner.CreateUI ();
