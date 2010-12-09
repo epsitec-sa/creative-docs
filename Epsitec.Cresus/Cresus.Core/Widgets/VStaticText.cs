@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.RotateTransformDeg (90, this.Client.Bounds.Width/2, this.Client.Bounds.Width/2);
 
 				this.TextLayout.LayoutSize = new Size (rect.Height, rect.Width);
-				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paintTextStyle, TextFieldDisplayMode.Default, this.BackColor);
+				adorner.PaintGeneralTextLayout (graphics, Rectangle.MaxValue, pos, this.TextLayout, state, this.paintTextStyle, TextFieldDisplayMode.Default, this.BackColor);
 
 				graphics.Transform = iTransform;
 			}

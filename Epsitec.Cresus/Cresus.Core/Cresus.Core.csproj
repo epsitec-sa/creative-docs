@@ -320,6 +320,9 @@
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
+    <Compile Include="TableDesigner\BaseController.cs" />
+    <Compile Include="TableDesigner\DesignerValues.cs" />
+    <Compile Include="TableDesigner\DesignerDimension.cs" />
     <Compile Include="TableDesigner\DimensionsController.cs" />
     <Compile Include="TableDesigner\MainController.cs" />
     <Compile Include="TableDesigner\TableController.cs" />
