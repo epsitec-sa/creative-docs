@@ -183,6 +183,36 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
+		public void CountTest()
+		{
+			int initialLength = 5;
+			int totalLentgh = 10;
+
+			List<decimal> values = Enumerable.Range (0, totalLentgh).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
+
+			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values.Take (initialLength));
+
+			Assert.AreEqual (initialLength, dimension.Count);
+
+			for (int i = initialLength; i < totalLentgh; i++)
+			{
+				dimension.AddDecimal (values[i]);
+
+				Assert.AreEqual (i + 1, dimension.Count);
+			}
+
+			Assert.AreEqual (totalLentgh, dimension.Count);
+
+			for (int i = 0; i < initialLength; i++)
+			{
+				dimension.RemoveDecimal (values[i]);
+
+				Assert.AreEqual (totalLentgh - i - 1, dimension.Count);
+			}
+		}
+
+
+		[TestMethod]
 		public void AddArgumentCheck()
 		{
 			Assert.Inconclusive ();
@@ -531,6 +561,20 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
+		public void GetIndexOfArgumentCheck()
+		{
+			Assert.Inconclusive ();
+		}
+
+
+		[TestMethod]
+		public void GetIndexOfDecimalArgumentCheck()
+		{
+			Assert.Inconclusive ();
+		}
+
+
+		[TestMethod]
 		public void GetIndexOfAndGetIndexOfDecimalTest()
 		{
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
@@ -542,6 +586,20 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 				Assert.AreEqual ((int) value, dimension.GetIndexOf (InvariantConverter.ConvertToString (value)));
 				Assert.AreEqual ((int) value, dimension.GetIndexOfDecimal (value));
 			}
+		}
+
+
+		[TestMethod]
+		public void GetValueAtArgumentCheck()
+		{
+			Assert.Inconclusive ();
+		}
+
+
+		[TestMethod]
+		public void GetDecimalValueAtArgumentCheck()
+		{
+			Assert.Inconclusive ();
 		}
 
 
