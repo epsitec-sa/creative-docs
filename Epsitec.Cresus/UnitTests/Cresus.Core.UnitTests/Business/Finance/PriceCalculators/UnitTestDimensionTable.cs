@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 

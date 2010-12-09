@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -45,11 +46,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public DimensionTable(params AbstractDimension[] dimensions)
 		{
 			dimensions.ThrowIfNull ("dimensions");
-			
-			this.dimensions = dimensions.ToList ();
-			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
-		
+
+			this.dimensions = new List<AbstractDimension> ();
 			this.data = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
+
+			foreach (AbstractDimension dimension in dimensions)
+			{
+				this.AddDimension (dimension);
+			}
 		}
 
 

@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Finance\PriceCalculators\UnitTestCodeDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\UnitTestArrayEqualityComparer.cs" />
     <Compile Include="Business\Finance\PriceCalculators\UnitTestNumericDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\UnitTestDimensionTable.cs" />
     <Compile Include="Data\UnitTestLockTransaction.cs" />
