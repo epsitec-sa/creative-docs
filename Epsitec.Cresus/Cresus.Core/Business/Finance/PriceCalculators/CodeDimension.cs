@@ -11,8 +11,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 	public sealed class CodeDimension : AbstractDimension
 	{
-		
-		
+
+
+		public CodeDimension(string code, string name)
+			: this (code, name, new List<string> ())
+		{
+		}
+
+
 		public CodeDimension(string code, string name, IEnumerable<string> values)
 			: base (code, name)
 		{
@@ -48,7 +54,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			this.values.Insert (index, value);
 
-			this.DimensionTable.NotifyDimensionValueAdded (this, value);
+			if (this.DimensionTable != null)
+			{
+				this.DimensionTable.NotifyDimensionValueAdded (this, value);
+			}
 		}
 
 
@@ -66,7 +75,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			this.values.RemoveAt (index);
 
-			this.DimensionTable.NotifyDimensionValueRemoved (this, value);
+			if (this.DimensionTable != null)
+			{
+				this.DimensionTable.NotifyDimensionValueRemoved (this, value);
+			}
 		}
 
 

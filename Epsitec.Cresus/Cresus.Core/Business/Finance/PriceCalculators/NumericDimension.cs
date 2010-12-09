@@ -14,8 +14,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	public sealed class NumericDimension : AbstractDimension
 	{
 
+		
+		public NumericDimension(string code, string name, RoundingMode roundingMode)
+			: this (code, name, roundingMode, new List<decimal> ())
+		{
+		}
 
-		public NumericDimension(string code, string name, IEnumerable<decimal> values, RoundingMode roundingMode)
+
+		public NumericDimension(string code, string name, RoundingMode roundingMode, IEnumerable<decimal> values)
 			: base (code, name)
 		{
 			this.values = new SortedSet<decimal> (values);
@@ -78,7 +84,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			string s = NumericDimension.Convert (value);
 
-			this.DimensionTable.NotifyDimensionValueAdded (this, s);
+			if (this.DimensionTable != null)
+			{
+				this.DimensionTable.NotifyDimensionValueAdded (this, s);
+			}
 		}
 
 
@@ -96,7 +105,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			string s = NumericDimension.Convert (value);
 
-			this.DimensionTable.NotifyDimensionValueRemoved (this, s);
+			if (this.DimensionTable != null)
+			{
+				this.DimensionTable.NotifyDimensionValueRemoved (this, s);
+			}
 		}
 
 
@@ -143,7 +155,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		public override string GetRoundedValue(string value)
 		{
 			decimal d1 = NumericDimension.Convert (value);
-			decimal d2 = this.GetDecimalRoundedValue (d1);
+			decimal d2 = this.GetRoundedDecimalValue (d1);
 
 			string s = NumericDimension.Convert (d2);
 
@@ -151,7 +163,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public decimal GetDecimalRoundedValue(decimal value)
+		public decimal GetRoundedDecimalValue(decimal value)
 		{
 			if (!this.IsDecimalValueRoundable (value))
 			{
@@ -177,7 +189,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public int GetDecimalIndexOf(decimal value)
+		public int GetIndexOfDecimal(decimal value)
 		{
 			return this.values.IndexOf (value);
 		}
@@ -308,7 +320,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var values = splittedData.Skip (1).Select (v => InvariantConverter.ConvertFromString<decimal> (v));
 			var mode = (RoundingMode) System.Enum.Parse (typeof (RoundingMode), splittedData.First ());
 
-			return new NumericDimension (code, name, values, mode);
+			return new NumericDimension (code, name, mode, values);
 		}
 
 
