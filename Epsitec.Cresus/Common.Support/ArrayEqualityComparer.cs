@@ -37,7 +37,7 @@ namespace Epsitec.Common.Support
 
 			for (int i = 0; !different && i < x.Length; i++)
 			{
-				different = x[i].Equals (y[i]);
+				different = !x[i].Equals (y[i]);
 			}
 
 			return !different;

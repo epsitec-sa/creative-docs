@@ -87,7 +87,6 @@
     <Compile Include="Business\ActionAttribute.cs" />
     <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\ArrayEqualityComparer.cs" />
     <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
