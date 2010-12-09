@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-                new NumericDimension ("2", "d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-                new NumericDimension ("3", "d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable table = new DimensionTable (dimensions.ToArray ());
@@ -67,9 +67,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-                new NumericDimension ("2", "d2", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
-                new NumericDimension ("3", "d3", new decimal[] { 0, 1, 2 }, RoundingMode.Up),
+                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			List<string[]> expectedExactKeys = new List<string[]> ();
@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsValueDefinedTest()
 		{
-			NumericDimension d1 = new NumericDimension ("1", "d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			NumericDimension d2 = new NumericDimension ("2", "d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			NumericDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			NumericDimension d2 = new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
 
 			DimensionTable table = new DimensionTable (d1, d2);
 
@@ -405,8 +405,8 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetAndSetValueTest()
 		{
-			NumericDimension d1 = new NumericDimension ("1", "d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			NumericDimension d2 = new NumericDimension ("2", "d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			NumericDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			NumericDimension d2 = new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
 
 			DimensionTable table = new DimensionTable (d1, d2);
 
@@ -449,8 +449,8 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
             {
-                new NumericDimension ("1", "d1", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Down),
-                new NumericDimension ("2", "d2", new decimal[] { 0, 1, 2, 3 }, RoundingMode.Up),
+                new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 0, 1, 2, 3 }),
+                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2, 3 }),
                 new CodeDimension ("3", "d3", new string[] {"0", "1", "2", "3"}),
                 new CodeDimension ("4", "d4", new string[] {"0", "1", "2", "3"}),
             };

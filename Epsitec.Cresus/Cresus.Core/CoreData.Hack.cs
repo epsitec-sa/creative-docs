@@ -630,8 +630,8 @@ namespace Epsitec.Cresus.Core
 			pc1.Name = "Essai";
 			pc1.Description = "Essai d'un calculateur de prix à 2 dimensions";
 
-			NumericDimension d1 = new NumericDimension (param5_1.Code, "Hauteur", new decimal[] { 800, 1000, 1500, 2000 }, RoundingMode.Nearest);
-			NumericDimension d2 = new NumericDimension (param5_2.Code, "Largeur", new decimal[] { 400, 500, 600, 700, 800 }, RoundingMode.Nearest);
+			NumericDimension d1 = new NumericDimension (param5_1.Code, "Hauteur", RoundingMode.Nearest, new decimal[] { 800, 1000, 1500, 2000 });
+			NumericDimension d2 = new NumericDimension (param5_2.Code, "Largeur", RoundingMode.Nearest, new decimal[] { 400, 500, 600, 700, 800 });
 			DimensionTable priceTable = new DimensionTable (d1, d2);
 
 			int value = 1;
