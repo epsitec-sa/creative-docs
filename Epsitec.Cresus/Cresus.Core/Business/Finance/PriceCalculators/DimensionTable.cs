@@ -27,6 +27,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	{
 
 
+		public DimensionTable()
+			: this (new AbstractDimension[0])
+		{
+		}
+
+
 		/// <summary>
 		/// Builds a new <see cref="DimensionTable"/> with the given <see cref="AbstractDimension"/>
 		/// as dimensions.
@@ -36,26 +42,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </remarks>
 		/// <param name="dimensions">The <see cref="AbstractDimension"/> of the new instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dimensions"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="dimensions"/> is empty or contains <c>null</c> elements.</exception>
 		public DimensionTable(params AbstractDimension[] dimensions)
 		{
 			dimensions.ThrowIfNull ("dimensions");
-			dimensions.ThrowIf (d => d.Length < 1, "dimensions must contain at least one element.");
-			dimensions.ThrowIf (dims => dims.Any (dim => dim == null), "dimensions cannot contain null elements.");
-
+			
 			this.dimensions = dimensions.ToList ();
-			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToList ();
+			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
 		
-			this.data = new Dictionary<string[], decimal> (new ArrayEqualityComparer ());
-		}
-
-
-		public IDictionary<string[], decimal> Data
-		{
-			get
-			{
-				return this.data;
-			}
+			this.data = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
 		}
 
 
@@ -81,107 +75,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public void AddDimension(AbstractDimension dimension)
-		{
-			this.InsertDimension (this.dimensions.Count, dimension);
-		}
-
-
-		public void InsertDimension(int index, AbstractDimension dimension)
-		{
-			this.dimensions.Insert (index, dimension);
-			
-			Enumerable.Range (0, this.dimensions.Count).ToList ();
-			this.data.Clear ();
-
-			dimension.AddToDimensionTable (this);
-		}
-
-
-		public void RemoveDimension(AbstractDimension dimension)
-		{
-			int index = this.GetIndexOfDimension (dimension);
-
-			this.RemoveDimensionAt (index);
-		}
-
-
-		public void RemoveDimensionAt(int index)
-		{
-			AbstractDimension dimension = this.dimensions[index];
-			
-			this.dimensions.RemoveAt (index);
-			
-			Enumerable.Range (0, this.dimensions.Count).ToList ();
-			this.data.Clear ();
-
-			dimension.RemoveFromDimensionTable (this);
-		}
-
-
-		public int GetIndexOfDimension(AbstractDimension dimension)
-		{
-			return this.dimensions.IndexOf (dimension);
-		}
-
-
-		public void SwapDimensions(AbstractDimension dimension1, AbstractDimension dimension2)
-		{
-			int index1 = this.GetIndexOfDimension (dimension1);
-			int index2 = this.GetIndexOfDimension (dimension2);
-
-			this.SwapDimensionsAt (index1, index2);
-		}
-
-
-		public void SwapDimensionsAt(int index1, int index2)
-		{
-			AbstractDimension dimension1 = this.dimensions[index1];
-			AbstractDimension dimension2 = this.dimensions[index2];
-
-			int internalIndex1 = this.internalIndexes[index1];
-			int internalIndex2 = this.internalIndexes[index2];
-
-			this.dimensions[index1] = dimension2;
-			this.dimensions[index2] = dimension1;
-
-			this.internalIndexes[index1] = internalIndex2;
-			this.internalIndexes[index2] = internalIndex1;
-		}
-
-
-		internal void NotifyDimensionValueAdded(AbstractDimension dimension, string value)
-		{
-			// Nothing to do here.
-		}
-
-
-		internal void NotifyDimensionValueRemoved(AbstractDimension dimension, string value)
-		{
-			int indexOfDimension = this.GetIndexOfDimension (dimension);
-			int internalIndexOfDimension = this.internalIndexes[indexOfDimension];
-
-			List<string[]> keysToRemove = this.data.Keys
-				.Where (k => k[internalIndexOfDimension] == value)
-				.ToList ();
-
-			foreach (string[] key in keysToRemove)
-			{
-				this.data.Remove (key);
-			}
-		}
-		
-
 		/// <summary>
 		/// Gets the sequence of all the possible keys that might be used to set a value to this
 		/// instance. This is basically the Carthesian Product of the values of the dimensions of this
 		/// instance.
 		/// </summary>
-		public IEnumerable<string[]> PossibleKeys
+		public IEnumerable<string[]> Keys
 		{
 			get
 			{
 				return this.GenerateCarthesianProduct (this.dimensions);
+			}
+		}
+
+
+		public IEnumerable<KeyValuePair<string[], decimal>> DefinedEntries
+		{
+			get
+			{
+				return this.data.Select (kvp => new KeyValuePair<string[], decimal> (this.GetExternalKey (kvp.Key), kvp.Value));
 			}
 		}
 
@@ -214,6 +126,81 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+		public void AddDimension(AbstractDimension dimension)
+		{
+			this.InsertDimension (this.dimensions.Count, dimension);
+		}
+
+
+		public void InsertDimension(int index, AbstractDimension dimension)
+		{
+			this.dimensions.Insert (index, dimension);
+
+			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
+			this.data.Clear ();
+
+			dimension.AddToDimensionTable (this);
+		}
+
+
+		public void RemoveDimension(AbstractDimension dimension)
+		{
+			int index = this.GetIndexOfDimension (dimension);
+
+			this.RemoveDimensionAt (index);
+		}
+
+
+		public void RemoveDimensionAt(int index)
+		{
+			AbstractDimension dimension = this.dimensions[index];
+			
+			this.dimensions.RemoveAt (index);
+
+			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
+			this.data.Clear ();
+
+			dimension.RemoveFromDimensionTable (this);
+		}
+
+
+		public void SwapDimensions(AbstractDimension dimension1, AbstractDimension dimension2)
+		{
+			int index1 = this.GetIndexOfDimension (dimension1);
+			int index2 = this.GetIndexOfDimension (dimension2);
+
+			this.SwapDimensionsAt (index1, index2);
+		}
+
+
+		public void SwapDimensionsAt(int index1, int index2)
+		{
+			AbstractDimension dimension1 = this.dimensions[index1];
+			AbstractDimension dimension2 = this.dimensions[index2];
+
+			this.dimensions[index1] = dimension2;
+			this.dimensions[index2] = dimension1;
+		}
+
+
+		public bool ContainsDimension(AbstractDimension dimension)
+		{
+			return this.dimensions.Contains (dimension);
+		}
+
+
+		public int GetIndexOfDimension(AbstractDimension dimension)
+		{
+			return this.dimensions.IndexOf (dimension);
+		}
+
+
+		public AbstractDimension GetDimensionAt(int index)
+		{
+			return this.dimensions[index];
+		}
+
+
 		/// <summary>
 		/// Tells whether the value defined by the given key (without rounding) is defined.
 		/// </summary>
@@ -225,6 +212,97 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.CheckKey (key);
 
 			return this.data.ContainsKey (key);
+		}
+
+
+		public bool IsKeyValid(params string[] key)
+		{
+			bool valid = (key.Length == this.dimensions.Count);
+
+			for (int i = 0; i < key.Length && valid; i++)
+			{
+				valid = this.dimensions[i].Contains (key[i]);
+			}
+
+			return valid;
+		}
+
+
+		public bool IsKeyRoundable(params string[] key)
+		{
+			bool roundable = true;
+
+			for (int i = 0; i < key.Length && roundable; i++)
+			{
+				roundable = this.dimensions[i].IsValueRoundable (key[i]);
+			}
+
+			return roundable;
+		}
+
+
+		/// <summary>
+		/// Rounds the given key for each of its dimensions.
+		/// </summary>
+		/// <param name="key">The key to round.</param>
+		/// <returns>The rounded key.</returns>
+		public string[] GetRoundedKey(params string[] key)
+		{
+			string[] nearestKey = new string[key.Length];
+
+			for (int i = 0; i < key.Length; i++)
+			{
+				nearestKey[i] = this.dimensions[i].GetRoundedValue (key[i]);
+			}
+
+			return nearestKey;
+		}
+
+
+		public string[] GetKeyFromIndexes(params int[] indexes)
+		{
+			string[] key = new string[indexes.Length];
+
+			for (int i = 0; i < indexes.Length; i++)
+			{
+				key[i] = this.dimensions[i].GetValueAt (indexes[i]);
+			}
+
+			return key;
+		}
+
+
+		public int[] GetIndexesFromKey(params string[] key)
+		{
+			int[] indexes = new int[key.Length];
+
+			for (int i = 0; i < key.Length; i++)
+			{
+				indexes[i] = this.dimensions[i].GetIndexOf (key[i]);
+			}
+
+			return indexes;
+		}
+
+
+		internal void NotifyDimensionValueAdded(AbstractDimension dimension, string value)
+		{
+			// Nothing to do here.
+		}
+
+
+		internal void NotifyDimensionValueRemoved(AbstractDimension dimension, string value)
+		{
+			int internalIndexOfDimension = this.internalIndexes[dimension];
+
+			List<string[]> keysToRemove = this.data.Keys
+				.Where (k => k[internalIndexOfDimension] == value)
+				.ToList ();
+
+			foreach (string[] key in keysToRemove)
+			{
+				this.data.Remove (key);
+			}
 		}
 
 
@@ -281,74 +359,37 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public bool IsKeyRoundable(params string[] key)
+		private string[] GetInternalKey(params string[] externalKey)
 		{
-			bool roundable = true;
+			string[] internalKey = new string[externalKey.Length];
 
-			for (int i = 0; i < key.Length && roundable; i++)
+			for (int externalIndex = 0; externalIndex < externalKey.Length; externalIndex++)
 			{
-				roundable = this.dimensions[i].IsValueRoundable (key[i]);
-			}
+				AbstractDimension dimension = this.dimensions[externalIndex];
 
-			return roundable;
-		}
+				int internalIndex = this.internalIndexes[dimension];
 
-
-		/// <summary>
-		/// Rounds the given key for each of its dimensions.
-		/// </summary>
-		/// <param name="key">The key to round.</param>
-		/// <returns>The rounded key.</returns>
-		public string[] GetRoundedKey(params string[] key)
-		{
-			string[] nearestKey = new string[key.Length];
-
-			for (int i = 0; i < key.Length; i++)
-			{
-				nearestKey[i] = this.dimensions[i].GetRoundedValue (key[i]);
-			}
-
-			return nearestKey;
-		}
-
-
-		public int[] GetIndexesKey(params string[] indexes)
-		{
-			int[] list = new int[indexes.Length];
-
-			for (int i = 0; i < list.Length; i++)
-			{
-				list[i] = this.dimensions[i].Values.IndexOf (indexes[i]);
-			}
-
-			return list;
-		}
-
-		public string[] GetKey(params int[] indexes)
-		{
-			string[] key = new string[indexes.Length];
-
-			for (int i = 0; i < indexes.Length; i++)
-            {
-				key[i] = this.dimensions[i].GetValueAt (indexes[i]);
-            }
-
-			return key;
-		}
-
-
-		public string[] GetInternalKey(params string[] key)
-		{
-			string[] internalKey = new string[key.Length];
-
-			for (int i = 0; i < key.Length; i++)
-			{
-				int internalIndex = this.internalIndexes[i];
-
-				internalKey[internalIndex] = key[i];
+				internalKey[internalIndex] = externalKey[externalIndex];
 			}
 
 			return internalKey;
+		}
+
+
+		private string[] GetExternalKey(params string[] internalKey)
+		{
+			string[] externalKey = new string[internalKey.Length];
+
+			for (int internalIndex = 0; internalIndex < internalKey.Length; internalIndex++)
+			{
+				AbstractDimension dimension = this.internalIndexes.Single (kvp => kvp.Value == internalIndex).Key;
+
+				int externalIndexindex = this.dimensions.IndexOf (dimension);
+
+				externalKey[externalIndexindex] = internalKey[internalIndex];
+			}
+
+			return externalKey;
 		}
 
 
@@ -482,7 +523,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <returns>A <see cref="System.String"/> that represents the values of this instance.</returns>
 		private string JoinValues()
 		{
-			var values = this.PossibleKeys
+			var values = this.Keys
 				.Select (k => this.GetValue (k))
 				.Select (v => (v.HasValue) ? InvariantConverter.ConvertToString (v) : "");
 
@@ -514,7 +555,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			DimensionTable table = new DimensionTable (dimensions.ToArray ());
 
-			List<string[]> keys = table.PossibleKeys.ToList ();
+			List<string[]> keys = table.Keys.ToList ();
 
 			if (values.Count != keys.Count)
 			{
@@ -619,7 +660,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private IDictionary<string[], decimal> data;
 
 
-		private List<int> internalIndexes;
+		private IDictionary<AbstractDimension, int> internalIndexes;
 
 
 	}

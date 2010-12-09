@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void TestEquals()
 		{
-			List<string[]> arrays = new List<string[]> ();
+			List<double[]> arrays = new List<double[]> ();
 
 			System.Random dice = new System.Random ();
 
@@ -29,15 +29,15 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			{
 				for (int j = 0; j < 100; j++)
 				{
-					arrays.Add (Enumerable.Range (0, i).Select (v => dice.NextDouble ().ToString ()).Shuffle ().ToArray ());
+					arrays.Add (Enumerable.Range (0, i).Select (v => dice.NextDouble ()).Shuffle ().ToArray ());
 				}
 			}
 
-			ArrayEqualityComparer pcec = new ArrayEqualityComparer ();
+			ArrayEqualityComparer<double> pcec = new ArrayEqualityComparer<double> ();
 
-			foreach (string[] array1 in arrays)
+			foreach (double[] array1 in arrays)
 			{
-				foreach (string[]array2 in arrays)
+				foreach (double[]array2 in arrays)
 				{
 					// Actually, this test is too restrictive, since it could happen that two random
 					// arrays could have the same value, even if the probability is low. We assume in
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void TestHashCode()
 		{
-			List<string[]> arrays = new List<string[]> ();
+			List<double[]> arrays = new List<double[]> ();
 
 			System.Random dice = new System.Random ();
 
@@ -65,15 +65,15 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			{
 				for (int j = 0; j < 10; j++)
 				{
-					arrays.Add (Enumerable.Range (0, i).Select (v => dice.NextDouble ().ToString ()).ToArray ());
+					arrays.Add (Enumerable.Range (0, i).Select (v => dice.NextDouble ()).ToArray ());
 				}
 			}
 
-			ArrayEqualityComparer pcec = new ArrayEqualityComparer ();
+			ArrayEqualityComparer<double> pcec = new ArrayEqualityComparer<double> ();
 
-			foreach (string[] array1 in arrays)
+			foreach (double[] array1 in arrays)
 			{
-				foreach (string[]array2 in arrays)
+				foreach (double[]array2 in arrays)
 				{
 					// Actually, this test is too restrictive, as two different arrays could have
 					// the same hash code. We assume in this test that we are lucky.
