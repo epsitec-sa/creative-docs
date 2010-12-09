@@ -152,6 +152,7 @@
     <Compile Include="AbstractOplet.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ArrayEqualityComparer.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
     <Compile Include="ClipboardWriteData.cs" />
     <Compile Include="ClipboardReadData.cs" />
