@@ -65,6 +65,7 @@
     <Compile Include="Resources\Common.Support.UnitTests\SourceCode\Res.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="UnitTestArrayEqualityComparer.cs" />
+    <Compile Include="UnitTestStringPacker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">

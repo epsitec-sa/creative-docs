@@ -173,6 +173,7 @@
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
+    <Compile Include="StringPacker.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\EntityModifications.cs" />
