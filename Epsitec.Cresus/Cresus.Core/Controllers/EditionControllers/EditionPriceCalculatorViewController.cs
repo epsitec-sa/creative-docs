@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var articleDefinition = this.BusinessContext.GetMasterEntity<ArticleDefinitionEntity> ();
 			System.Diagnostics.Debug.Assert (articleDefinition != null);
-			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
+			var tableDesigner = new TableDesignerController (window, this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
 
 			var box = tableDesigner.CreateUI ();
 			box.Parent = window.Root;
