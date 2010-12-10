@@ -30,7 +30,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.ArticlePrice", "Prix");
 
 				this.CreateUIMain (builder);
-				this.CreateUIPriceCalculator (builder);
+
+				using (var data = TileContainerController.Setup (this))
+				{
+					this.CreateUIPriceCalculators (data);
+				}
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -54,19 +58,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	TODO: gérer le HT/TTC selon this.Entity.ValueIncludesTaxes
 			builder.CreateTextField (tile, 150, "Prix HT", Marshaler.Create (() => this.Entity.Value, x => this.Entity.Value = x));
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
-			
-			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
-		private void CreateUIPriceCalculator(UIBuilder builder)
+		private void CreateUIPriceCalculators(SummaryDataItems data)
 		{
-			var controller = new SelectionController<PriceCalculatorEntity> (this.BusinessContext)
-			{
-				CollectionValueGetter    = () => this.Entity.PriceCalculators,
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
-			};
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "PriceCalculator",
+					IconUri		 = "Data.PriceCalculator",
+					Title		 = TextFormatter.FormatText ("Calculateurs de prix"),
+					CompactTitle = TextFormatter.FormatText ("Calculateurs de prix"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
 
-			builder.CreateEditionDetailedItemPicker ("PriceCalculators", this.Entity, "Calculateurs de prix", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 5);
+			var template = new CollectionTemplate<PriceCalculatorEntity> ("PriceCalculator", this.BusinessContext);
+
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.PriceCalculators));
 		}
 	}
 }
