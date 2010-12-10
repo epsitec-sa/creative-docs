@@ -9,14 +9,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
+	// TODO Comment this class.
+	// Marc
+
+
 	public abstract class AbstractDimension
 	{
 
 
-		public AbstractDimension(string code, string name)
+		public AbstractDimension(string code)
 		{
 			this.Code = code;
-			this.Name = name;
 			this.DimensionTable = null;
 		}
 
@@ -29,20 +32,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 			set
 			{
+				value.ThrowIfNullOrEmpty ("value");
+
 				this.code = value;
-			}
-		}
-
-
-		public string Name
-		{
-			get
-			{
-				return this.name;
-			}
-			set
-			{
-				this.name = value;
 			}
 		}
 
@@ -68,12 +60,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		internal void AddToDimensionTable(DimensionTable dimensionTable)
 		{
+			if (this.DimensionTable != null)
+			{
+				throw new System.InvalidOperationException ("This instance is already associated with a DimensionTable");
+			}
+
 			this.DimensionTable = dimensionTable;
 		}
 
 
 		internal void RemoveFromDimensionTable(DimensionTable dimensionTable)
 		{
+			if (this.DimensionTable == null)
+			{
+				throw new System.InvalidOperationException("This instance is not associated with a DimensionTable");
+			}
+
 			this.DimensionTable = null;
 		}
 
@@ -118,7 +120,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			XElement xDimension = new XElement (XmlConstants.DimensionTag);
 
 			xDimension.SetAttributeValue (XmlConstants.CodeTag, this.Code);
-			xDimension.SetAttributeValue (XmlConstants.NameTag, this.Name);
 			xDimension.SetAttributeValue (XmlConstants.TypeTag, this.GetXmlTypeName ());
 			xDimension.SetAttributeValue (XmlConstants.DataTag, this.GetStringData ());
 
@@ -161,11 +162,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			AbstractDimension.CheckXmlDimension (xDimension);
 
 			string code = AbstractDimension.ExtractXmlCode (xDimension);
-			string name = AbstractDimension.ExtractXmlName (xDimension);
 			string typeName = AbstractDimension.ExtractXmlTypeName (xDimension);
 			string data = AbstractDimension.ExtractXmlData (xDimension);
 
-			return AbstractDimension.BuildDimension (code, name, typeName, data);
+			return AbstractDimension.BuildDimension (code, typeName, data);
 		}
 
 
@@ -190,17 +190,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private static string ExtractXmlCode(XElement xDimension)
 		{
 			return xDimension.Attribute (XmlConstants.CodeTag).Value;
-		}
-
-
-		/// <summary>
-		/// Extracts the name of the serialized <c>AbstractDimension</c>.
-		/// </summary>
-		/// <param name="xDimension">The <see cref="XElement"/> that contains the data.</param>
-		/// <returns>The name.</returns>
-		private static string ExtractXmlName(XElement xDimension)
-		{
-			return xDimension.Attribute (XmlConstants.NameTag).Value;
 		}
 
 
@@ -234,15 +223,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="type">The concrete type of the dimension.</param>
 		/// <param name="data">The serialized data of the dimension.</param>
 		/// <returns>The new instance of the dimension.</returns>
-		private static AbstractDimension BuildDimension(string code, string name, string type, string data)
+		private static AbstractDimension BuildDimension(string code, string type, string data)
 		{
 			if (type == XmlConstants.CodeTypeName)
 			{
-				return CodeDimension.BuildCodeDimension (code, name, data);
+				return CodeDimension.BuildCodeDimension (code, data);
 			}
 			else if (type == XmlConstants.NumericTypeName)
 			{
-				return NumericDimension.BuildNumericDimension (code, name, data);
+				return NumericDimension.BuildNumericDimension (code, data);
 			}
 			else
 			{
@@ -259,7 +248,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			public static readonly string DimensionTag = "dimension";
 			public static readonly string CodeTag = "code";
-			public static readonly string NameTag = "name";
 			public static readonly string TypeTag = "type";
 			public static readonly string DataTag = "data";
 			public static readonly string CodeTypeName = "code";
@@ -268,9 +256,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		private string code;
-
-
-		private string name;
 
        
 	}

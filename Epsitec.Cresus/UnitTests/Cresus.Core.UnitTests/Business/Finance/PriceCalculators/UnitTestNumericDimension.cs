@@ -25,40 +25,17 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void Constructor1ArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			RoundingMode mode = RoundingMode.None;
 
-			//string name = "name";
-
-			//List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
-
-			//RoundingMode mode = RoundingMode.None;
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => new NumericDimension (null, values, mode)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => new NumericDimension ("", values, mode)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => new NumericDimension (name, null, mode)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => new NumericDimension (name, new List<decimal> (), mode)
-			//);
-		}
-
-
-		[TestMethod]
-		public void Constructor2ArgumentCheck()
-		{
-			Assert.Inconclusive ();
+			List<string> invalidCodes = new List<string> () { null, "", };
+			
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new NumericDimension (invalidCode, mode)
+				);
+			}
 		}
 
 
@@ -66,14 +43,42 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		public void Constructor1Test()
 		{
 			string code = "code";
-			string name = "name";
 			RoundingMode roundingMode = RoundingMode.Nearest;
 
-			NumericDimension dimension = new NumericDimension (code, name, roundingMode);
+			NumericDimension dimension = new NumericDimension (code, roundingMode);
 
 			Assert.AreEqual (code, dimension.Code);
-			Assert.AreEqual (name, dimension.Name);
 			Assert.AreEqual (roundingMode, dimension.RoundingMode);
+		}
+
+
+		[TestMethod]
+		public void Constructor2ArgumentCheck()
+		{
+			string code = "code";
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			RoundingMode mode = RoundingMode.None;
+
+			List<string> invalidCodes = new List<string> () { null, "", };
+			List<List<decimal>> invalidValues = new List<List<decimal>> () { null, new List<decimal> () { 0, 0 }, };
+
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new NumericDimension (invalidCode, mode, values)
+				);
+			}
+
+			foreach (List<decimal> invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new NumericDimension (code, mode, invalidValue)
+				);
+			}
 		}
 
 
@@ -81,14 +86,12 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		public void Constructor2Test()
 		{
 			string code = "code";
-			string name = "name";
 			RoundingMode roundingMode = RoundingMode.Nearest;
 			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			NumericDimension dimension = new NumericDimension (code, name, roundingMode, values);
+			NumericDimension dimension = new NumericDimension (code, roundingMode, values);
 
 			Assert.AreEqual (code, dimension.Code);
-			Assert.AreEqual (name, dimension.Name);
 			Assert.AreEqual (roundingMode, dimension.RoundingMode);
 			CollectionAssert.AreEqual (values, dimension.DecimalValues.ToList ());
 		}
@@ -100,28 +103,12 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			string code = "code";
 			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			NumericDimension dimension = new NumericDimension (code, "name", RoundingMode.None, values);
+			NumericDimension dimension = new NumericDimension (code, RoundingMode.None, values);
 			Assert.AreEqual (code, dimension.Code);
 
 			code = "newCode";
 			dimension.Code = code;
 			Assert.AreEqual (code, dimension.Code);
-		}
-
-
-		[TestMethod]
-		public void NameTest()
-		{
-			string name = "name";
-
-			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
-
-			NumericDimension dimension = new NumericDimension ("code", name, RoundingMode.None, values);
-			Assert.AreEqual (name, dimension.Name);
-
-			name = "newName";
-			dimension.Name = name;
-			Assert.AreEqual (name, dimension.Name);
 		}
 
 
@@ -132,7 +119,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<RoundingMode> roundingModes = new List<RoundingMode> () { RoundingMode.Down, RoundingMode.Nearest, RoundingMode.Up, RoundingMode.None, };
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.Up, values);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.Up, values);
 
 			Assert.AreEqual (RoundingMode.Up, dimension.RoundingMode);
 
@@ -153,7 +140,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<decimal> values = Enumerable.Range (0, totalLentgh).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values.Take (initialLength));
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values.Take (initialLength));
 
 			List<decimal> expected = values.Take (initialLength).OrderBy (v => v).ToList ();
 
@@ -190,7 +177,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<decimal> values = Enumerable.Range (0, totalLentgh).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values.Take (initialLength));
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values.Take (initialLength));
 
 			Assert.AreEqual (initialLength, dimension.Count);
 
@@ -215,14 +202,29 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void AddArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+			
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "x", "1", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Add (invalidValue)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void AddTest()
 		{
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None);
 
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
@@ -240,14 +242,29 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void AddDecimalArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<decimal> invalidValues = new List<decimal> () { 1 };
+
+			foreach (decimal invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.AddDecimal (invalidValue)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void AddDecimalTest()
 		{
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None);
 
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
@@ -265,7 +282,22 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "x", "11", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Remove (invalidValue)
+				);
+			}
 		}
 
 
@@ -274,7 +306,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 			
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values);
 
 			CollectionAssert.AreEqual (values.OrderBy (v => v).Select (v => InvariantConverter.ConvertToString (v)).ToList (), dimension.Values.ToList ());
 
@@ -290,7 +322,22 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveDecimalArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<decimal> invalidValues = new List<decimal> () { 11 };
+
+			foreach (decimal invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.RemoveDecimal (invalidValue)
+				);
+			}
 		}
 
 
@@ -299,7 +346,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values);
 
 			CollectionAssert.AreEqual (values.OrderBy (v => v).ToList (), dimension.DecimalValues.ToList ());
 
@@ -315,23 +362,22 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void ContainsArgumentCheck()
 		{
-			Assert.Inconclusive ();
-			
-			//List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
 
-			//NumericDimension dimension = new NumericDimension ("name", values, RoundingMode.None);
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//  () => dimension.IsValueDefined (null)
-			//);
-		}
+			NumericDimension dimension = new NumericDimension (code, mode, values);
 
+			List<string> invalidValues = new List<string> () { null, "", "x" };
 
-		[TestMethod]
-		public void ContainsDecimalArgumentCheck()
-		{
-			Assert.Inconclusive ();
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Remove (invalidValue)
+				);
+			}
 		}
 
 
@@ -343,7 +389,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			RoundingMode mode = RoundingMode.None;
 
-			NumericDimension dimension = new NumericDimension ("code", "name", mode, values1);
+			NumericDimension dimension = new NumericDimension ("code", mode, values1);
 
 			foreach (decimal value in values1)
 			{
@@ -362,14 +408,22 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsValueRoundableArgumentCheck()
 		{
-			Assert.Inconclusive ();
-		}
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
 
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-		[TestMethod]
-		public void IsDecimalValueRoundableArgumentCheck()
-		{
-			Assert.Inconclusive ();
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "x" };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.IsValueRoundable (invalidValue)
+				);
+			}
 		}
 
 
@@ -439,7 +493,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 		private void IsValueRoundableAndIsDecimalValueRoundableTestHelper(RoundingMode roundingMode, List<decimal> values, Dictionary<decimal, bool> expectedResults)
 		{
-			NumericDimension dimension = new NumericDimension ("code", "name", roundingMode, values);
+			NumericDimension dimension = new NumericDimension ("code", roundingMode, values);
 
 			foreach (var item in expectedResults)
 			{
@@ -452,54 +506,44 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetRoundedValueArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
 
-			//List<decimal> values = new List<decimal> () { 10, 20, };
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			//NumericDimension dimension1 = new NumericDimension ("name", values, RoundingMode.Down);
+			NumericDimension dimension = new NumericDimension (code, mode, values);
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//  () => dimension1.GetNearestValue (null)
-			//);
+			List<string> invalidValues = new List<string> () { null, "", "x", "-1", "1.5", "100" };
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => dimension1.GetNearestValue (9.9999999m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => dimension1.GetNearestValue (20.000001m)
-			//);
-			//NumericDimension dimension2 = new NumericDimension ("name", values, RoundingMode.None);
-
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//  () => dimension2.GetNearestValue (null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => dimension2.GetNearestValue (9.9999999m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => dimension2.GetNearestValue (15m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => dimension2.GetNearestValue (20.000001m)
-			//);
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetRoundedValue (invalidValue)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetRoundedDecimalValueArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<decimal> invalidValues = new List<decimal> () { -1, 1.5m, 100 };
+
+			foreach (decimal invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetRoundedDecimalValue (invalidValue)
+				);
+			}
 		}
 
 
@@ -509,37 +553,37 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<decimal> values = new List<decimal> () { 10, 20, };
 
 			Dictionary<decimal, decimal> testDataNone = new Dictionary<decimal, decimal> ()
-      {
-        {10, 10},
-        {20, 20},
-      };
+			{
+				{10, 10},
+				{20, 20},
+			};
 
 			Dictionary<decimal, decimal> testDataDown = new Dictionary<decimal, decimal> ()
-      {
-        {10, 10},
-        {10.0000001m, 10},
-        {15, 10},
-        {19.9999999m, 10},
-        {20, 20},
-      };
+			{
+				{10, 10},
+				{10.0000001m, 10},
+				{15, 10},
+				{19.9999999m, 10},
+				{20, 20},
+			};
 
 			Dictionary<decimal, decimal> testDataNearest = new Dictionary<decimal, decimal> ()
-      {
-        {10, 10},
-        {10.0000001m, 10},
-        {15, 20},
-        {19.9999999m, 20},
-        {20, 20},
-      };
+			{
+				{10, 10},
+				{10.0000001m, 10},
+				{15, 20},
+				{19.9999999m, 20},
+				{20, 20},
+			};
 
 			Dictionary<decimal, decimal> testDataUp = new Dictionary<decimal, decimal> ()
-      {
-        {10, 10},
-        {10.0000001m, 20},
-        {15, 20},
-        {19.9999999m, 20},
-        {20, 20},
-      };
+			{
+				{10, 10},
+				{10.0000001m, 20},
+				{15, 20},
+				{19.9999999m, 20},
+				{20, 20},
+			};
 
 			this.GetRoundedValueAndGetRoundedDecimalValueTestHelper (values, testDataNone, RoundingMode.None);
 			this.GetRoundedValueAndGetRoundedDecimalValueTestHelper (values, testDataDown, RoundingMode.Down);
@@ -550,7 +594,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 		private void GetRoundedValueAndGetRoundedDecimalValueTestHelper(List<decimal> values, Dictionary<decimal, decimal> testData, RoundingMode roundingMode)
 		{
-			NumericDimension dimension = new NumericDimension ("code", "name", roundingMode, values);
+			NumericDimension dimension = new NumericDimension ("code", roundingMode, values);
 
 			foreach (var item in testData)
 			{
@@ -563,14 +607,44 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetIndexOfArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "x", "-1", "1.5", "100" };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetIndexOf (invalidValue)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetIndexOfDecimalArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<decimal> invalidValues = new List<decimal> () { -1, 1.5m, 100 };
+
+			foreach (decimal invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetIndexOfDecimal (invalidValue)
+				);
+			}
 		}
 
 
@@ -579,7 +653,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values);
 
 			foreach (decimal value in values)
 			{
@@ -592,14 +666,44 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetValueAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<int> invalidIndexes = new List<int> () { -1, 11 };
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetValueAt (invalidIndex)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetDecimalValueAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			RoundingMode mode = RoundingMode.None;
+
+			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).ToList ();
+
+			NumericDimension dimension = new NumericDimension (code, mode, values);
+
+			List<int> invalidIndexes = new List<int> () { -1, 11 };
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetValueAt (invalidIndex)
+				);
+			}
 		}
 
 
@@ -608,7 +712,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 10).Select (v => System.Convert.ToDecimal (v)).Shuffle ().ToList ();
 
-			NumericDimension dimension = new NumericDimension ("code", "name", RoundingMode.None, values);
+			NumericDimension dimension = new NumericDimension ("code", RoundingMode.None, values);
 
 			foreach (decimal value in values)
 			{
@@ -621,47 +725,27 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void BuildNumericDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			string data = "Up;1;2";
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => NumericDimension.BuildNumericDimension (null, "a;b")
-			//);
+			List<string> invalidCodes = new List<string> () { null, "", };
+			List<string> invalidDatas = new List<string> () { null, "", "fds;1;2", ";", "Up;sd;2", };
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			// () => NumericDimension.BuildNumericDimension ("", "a;b")
-			//);
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => NumericDimension.BuildNumericDimension (invalidCode, data)
+				);
+			}
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", "")
-			//);
-
-			//ExceptionAssert.Throw<System.Exception>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", "gfsgsd:1")
-			//);
-
-			//ExceptionAssert.Throw<System.Exception>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", "ggfdgfd;")
-			//);
-
-			//ExceptionAssert.Throw<System.Exception>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", "Up;")
-			//);
-
-			//ExceptionAssert.Throw<System.Exception>
-			//(
-			//  () => NumericDimension.BuildNumericDimension ("name", "Up;1;fdfds")
-			//);
+			foreach (string invalidData in invalidDatas)
+			{
+				ExceptionAssert.Throw<System.Exception>
+				(
+					() => NumericDimension.BuildNumericDimension (code, invalidData)
+				);
+			}
 		}
 
 
@@ -670,11 +754,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			NumericDimension dimension1 = new NumericDimension ("code", "name", RoundingMode.Nearest, values);
-			NumericDimension dimension2 = NumericDimension.BuildNumericDimension (dimension1.Code, dimension1.Name, dimension1.GetStringData ());
+			NumericDimension dimension1 = new NumericDimension ("code", RoundingMode.Nearest, values);
+			NumericDimension dimension2 = NumericDimension.BuildNumericDimension (dimension1.Code, dimension1.GetStringData ());
 
 			Assert.AreEqual (dimension1.Code, dimension2.Code);
-			Assert.AreEqual (dimension1.Name, dimension2.Name);
 			CollectionAssert.AreEqual (dimension1.DecimalValues.ToList (), dimension2.DecimalValues.ToList ());
 			Assert.AreEqual (dimension1.RoundingMode, dimension2.RoundingMode);
 		}
@@ -683,7 +766,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void XmlImportArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => NumericDimension.XmlImport (null)
+			);
 		}
 
 
@@ -692,11 +778,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<decimal> values = Enumerable.Range (0, 11).Select (v => System.Convert.ToDecimal (v)).ToList ();
 
-			NumericDimension dimension1 = new NumericDimension ("code", "name", RoundingMode.Nearest, values);
+			NumericDimension dimension1 = new NumericDimension ("code", RoundingMode.Nearest, values);
 			NumericDimension dimension2 = (NumericDimension) AbstractDimension.XmlImport (dimension1.XmlExport ());
 
 			Assert.AreEqual (dimension1.Code, dimension2.Code);
-			Assert.AreEqual (dimension1.Name, dimension2.Name);
 			CollectionAssert.AreEqual (dimension1.DecimalValues.ToList (), dimension2.DecimalValues.ToList ());
 			Assert.AreEqual (dimension1.RoundingMode, dimension2.RoundingMode);
 		}

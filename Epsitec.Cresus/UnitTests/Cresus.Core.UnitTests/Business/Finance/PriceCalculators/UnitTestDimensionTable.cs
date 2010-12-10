@@ -13,8 +13,6 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-using System.Diagnostics;
-
 using System.Xml.Linq;
 
 
@@ -28,28 +26,6 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
-		public void Constructor2ArgumentCheck()
-		{
-			Assert.Inconclusive ();
-			
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () => new DimensionTable (null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new DimensionTable (new AbstractDimension[0])
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new DimensionTable (new AbstractDimension[] { null })
-			//);
-		}
-
-
-		[TestMethod]
 		public void Constructor1Test()
 		{
 			DimensionTable dimensionTable = new DimensionTable ();
@@ -60,13 +36,34 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
+		public void Constructor2ArgumentCheck()
+		{
+			AbstractDimension dimension = new CodeDimension ("code");
+
+			List<AbstractDimension[]> invalidArguments = new List<AbstractDimension[]> ()
+			{
+				null,
+				new AbstractDimension[] { dimension, dimension },
+			};
+
+			foreach (var invalidArgument in invalidArguments)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new DimensionTable (invalidArgument)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void Constructor2Test()
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
 			};
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -84,12 +81,12 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-				new NumericDimension ("4", "d4", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("5", "d5", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("6", "d6", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+				new NumericDimension ("d4", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d5", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d6", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.Take (initialLength).ToArray ());
@@ -120,12 +117,12 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-				new NumericDimension ("4", "d4", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("5", "d5", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("6", "d6", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+				new NumericDimension ("d4", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d5", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d6", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.Take (initialLength).ToArray ());
@@ -153,9 +150,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			List<string[]> expectedExactKeys = new List<string[]> ();
@@ -195,9 +192,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -262,7 +259,34 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void AddDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidDimensions = new List<AbstractDimension> ()
+			{
+				null,
+				dimensions[0],
+			};
+
+			foreach (var invalidDimension in invalidDimensions)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.AddDimension (invalidDimension)
+				);
+			}
+
+			DimensionTable other = new DimensionTable (new CodeDimension ("c"));
+
+			ExceptionAssert.Throw<System.InvalidOperationException>
+			(
+				() => dimensionTable.AddDimension (other.Dimensions.First ())
+			);
 		}
 
 
@@ -271,10 +295,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			DimensionTable dimensionTable = new DimensionTable ();
@@ -296,7 +320,37 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void InsertDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidDimensions = new List<AbstractDimension> ()
+			{
+				null,
+				dimensions[0],
+			};
+
+			List<int> invalidIndexes = new List<int> () { -1, 3, };
+
+			foreach (var invalidDimension in invalidDimensions)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.InsertDimension (0, invalidDimension)
+				);
+			}
+
+			foreach (var invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.InsertDimension (invalidIndex, new CodeDimension("c"))
+				);
+			}
 		}
 
 
@@ -305,10 +359,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			List<AbstractDimension> expected = new List<AbstractDimension> ();
@@ -337,7 +391,27 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidDimensions = new List<AbstractDimension> ()
+			{
+				null,
+				new CodeDimension ("c")
+			};
+
+			foreach (var invalidDimension in invalidDimensions)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.RemoveDimension (invalidDimension)
+				);
+			}
 		}
 
 
@@ -346,10 +420,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -370,7 +444,23 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveDimensionAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<int> invalidIndexes = new List<int> () { -1, 2, };
+
+			foreach (var invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.RemoveDimensionAt (invalidIndex)
+				);
+			}
 		}
 
 
@@ -379,10 +469,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			List<AbstractDimension> expected = dimensions.ToList ();
@@ -409,7 +499,32 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void SwapDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidDimensions = new List<AbstractDimension> ()
+			{
+				null,
+				new CodeDimension ("c")
+			};
+
+			foreach (var invalidDimension in invalidDimensions)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.SwapDimensions (invalidDimension, dimensions[0])
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.SwapDimensions (dimensions[0], invalidDimension)
+				);
+			}
 		}
 
 
@@ -418,10 +533,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			List<AbstractDimension> expectedDimensions = dimensions.ToList ();
@@ -476,7 +591,28 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void SwapDimensionAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<int> invalidIndexes = new List<int> () { -1, 2, };
+
+			foreach (var invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.SwapDimensionsAt (invalidIndex, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.SwapDimensionsAt (0, invalidIndex)
+				);
+			}
 		}
 
 
@@ -485,10 +621,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
 			{
-			    new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("2", "d2", new string[] { "0", "1", "2" }),
-			    new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-			    new CodeDimension ("4", "d4", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			    new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d4", new string[] { "0", "1", "2" }),
 			};
 
 			List<AbstractDimension> expectedDimensions = dimensions.ToList ();
@@ -540,7 +676,23 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void ContainsDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidValues = new List<AbstractDimension> () { null };
+
+			foreach (var invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.ContainsDimension (invalidValue)
+				);
+			}
 		}
 
 
@@ -549,16 +701,16 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions1 = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			List<NumericDimension> dimensions2 = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions1.ToArray ());
@@ -578,7 +730,27 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetIndexOfDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<AbstractDimension> invalidDimensions = new List<AbstractDimension> ()
+			{
+				null,
+				new CodeDimension ("c")
+			};
+
+			foreach (var invalidDimension in invalidDimensions)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.GetIndexOfDimension (invalidDimension)
+				);
+			}
 		}
 
 
@@ -587,9 +759,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -604,7 +776,23 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetDimensionAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "0", "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<int> invalidIndexes = new List<int> () { -1, 2, };
+
+			foreach (var invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.GetDimensionAt (invalidIndex)
+				);
+			}
 		}
 
 
@@ -613,9 +801,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<NumericDimension> dimensions = new List<NumericDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
-                new NumericDimension ("3", "d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
+                new NumericDimension ("d3", RoundingMode.Up, new decimal[] { 0, 1, 2 }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -632,9 +820,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<CodeDimension> dimensions = new List<CodeDimension> ()
             {
-                new CodeDimension ("1", "d1", new string[] { "1", "2", "3" }),
-                new CodeDimension ("2", "d2", new string[] { "1", "2", "3" }),
-                new CodeDimension ("3", "d3", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d1", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d2", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d3", new string[] { "1", "2", "3" }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -673,9 +861,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<CodeDimension> dimensions = new List<CodeDimension> ()
             {
-                new CodeDimension ("1", "d1", new string[] { "1", "2", "3" }),
-                new CodeDimension ("2", "d2", new string[] { "1", "2", "3" }),
-                new CodeDimension ("3", "d3", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d1", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d2", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d3", new string[] { "1", "2", "3" }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -720,9 +908,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<CodeDimension> dimensions = new List<CodeDimension> ()
             {
-                new CodeDimension ("1", "d1", new string[] { "1", "2", "3" }),
-                new CodeDimension ("2", "d2", new string[] { "1", "2", "3" }),
-                new CodeDimension ("3", "d3", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d1", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d2", new string[] { "1", "2", "3" }),
+                new CodeDimension ("d3", new string[] { "1", "2", "3" }),
             };
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
@@ -753,50 +941,44 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsValueDefinedArgumentCheck()
 		{
-			Assert.Fail ();
-			
-			//NumericDimension d1 = new NumericDimension ("1", "d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			//NumericDimension d2 = new NumericDimension ("2", "d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
 
-			//DimensionTable table = new DimensionTable (d1, d2);
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () => table.IsValueDefined (null)
-			//);
+			List<string[]> invalidKeys = new List<string[]> ()
+			{
+				null,
+				new string [0],
+				new string [] { "1" },
+				new string [] { "0", "1" },
+				new string [] { "", "1" },
+				new string [] { null, "1" },
+				new string [] { "1.5", "1" },
+				new string [] { "1", "0" },
+				new string [] { "1", "" },
+				new string [] { "1", null },
+				new string [] { "1", "1", "1" },
+			};
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => table.IsValueDefined (1m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => table.IsValueDefined (1m, 0m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => table.IsValueDefined (1m, null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => table.IsValueDefined (1m, 1.5m)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => table.IsValueDefined (1m, 1f)
-			//);
+			foreach (var invalidKey in invalidKeys)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.IsValueDefined (invalidKey)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void IsValueDefinedTest()
 		{
-			NumericDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			NumericDimension d2 = new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
+			NumericDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			NumericDimension d2 = new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
 
 			DimensionTable table = new DimensionTable (d1, d2);
 
@@ -860,15 +1042,41 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsKeyRoundableArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<string[]> invalidKeys = new List<string[]> ()
+			{
+				null,
+				new string [0],
+				new string [] { "1" },
+				new string [] { "", "1" },
+				new string [] { null, "1" },
+				new string [] { "1", "" },
+				new string [] { "1", null },
+				new string [] { "1", "1", "1" },
+			};
+
+			foreach (var invalidKey in invalidKeys)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.IsKeyRoundable (invalidKey)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void IsKeyRoundableTest()
 		{
-			NumericDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			NumericDimension d2 = new NumericDimension ("2", "d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
+			NumericDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			NumericDimension d2 = new NumericDimension ("d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
 
 			DimensionTable dimensionTable = new DimensionTable (d1, d2);
 
@@ -901,16 +1109,44 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetRoundedKeyArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<string[]> invalidKeys = new List<string[]> ()
+			{
+				null,
+				new string [0],
+				new string [] { "1" },
+				new string [] { "0", "1" },
+				new string [] { "", "1" },
+				new string [] { null, "1" },
+				new string [] { "1", "" },
+				new string [] { "1", "0" },
+				new string [] { "1", null },
+				new string [] { "1", "1", "1" },
+			};
+
+			foreach (var invalidKey in invalidKeys)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.GetRoundedKey (invalidKey)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetRoundedKeyRoundableTest()
 		{
-			AbstractDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			AbstractDimension d2 = new NumericDimension ("2", "d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
-			AbstractDimension d3 = new CodeDimension ("3", "d3", new string[] { "1", "2", "3" });
+			AbstractDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			AbstractDimension d2 = new NumericDimension ("d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
+			AbstractDimension d3 = new CodeDimension ("d3", new string[] { "1", "2", "3" });
 
 			DimensionTable dimensionTable = new DimensionTable (d1, d2, d3);
 
@@ -934,16 +1170,42 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetKeyFromIndexesArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<int[]> invalidIndexes = new List<int[]> ()
+			{
+				null,
+				new int[0],
+				new int[] { 0 },
+				new int[] { -1, 0 },
+				new int[] { 2, 0 },
+				new int[] { 0, -1 },
+				new int[] { 0, 2 },
+				new int[] { 0, 0, 0 },
+			};
+
+			foreach (var invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.GetKeyFromIndexes (invalidIndex)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetKeyFromIndexesTest()
 		{
-			AbstractDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			AbstractDimension d2 = new NumericDimension ("2", "d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
-			AbstractDimension d3 = new CodeDimension ("3", "d3", new string[] { "1", "2", "3" });
+			AbstractDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			AbstractDimension d2 = new NumericDimension ("d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
+			AbstractDimension d3 = new CodeDimension ("d3", new string[] { "1", "2", "3" });
 
 			DimensionTable dimensionTable = new DimensionTable (d1, d2, d3);
 
@@ -967,16 +1229,45 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetIndexesFromKeyArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
+
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
+
+			List<string[]> invalidKeys = new List<string[]> ()
+			{
+				null,
+				new string [0],
+				new string [] { "1" },
+				new string [] { "0", "1" },
+				new string [] { "", "1" },
+				new string [] { null, "1" },
+				new string [] { "1.5", "1" },
+				new string [] { "1", "" },
+				new string [] { "1", "0" },
+				new string [] { "1", null },
+				new string [] { "1", "1", "1" },
+			};
+
+			foreach (var invalidKey in invalidKeys)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable.GetIndexesFromKey (invalidKey)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetIndexesFromKeyTest()
 		{
-			AbstractDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			AbstractDimension d2 = new NumericDimension ("2", "d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
-			AbstractDimension d3 = new CodeDimension ("3", "d3", new string[] { "1", "2", "3" });
+			AbstractDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			AbstractDimension d2 = new NumericDimension ("d2", RoundingMode.None, new decimal[] { 1, 2, 3 });
+			AbstractDimension d3 = new CodeDimension ("d3", new string[] { "1", "2", "3" });
 
 			DimensionTable dimensionTable = new DimensionTable (d1, d2, d3);
 
@@ -998,122 +1289,53 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 
 		[TestMethod]
-		public void GetValueArgumentCheck()
+		public void AccessorArgumentCheck()
 		{
-			Assert.Fail ();
-			
-			//NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			//NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
+			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
+			{
+			    new NumericDimension ("d1", RoundingMode.Up, new decimal[] { 1, 2 }),
+			    new CodeDimension ("d2", new string[] { "1", "2" }),
+			};
 
-			//DimensionTable table = new DimensionTable (d1, d2);
+			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () =>
-			//    {
-			//        var v = table[null];
-			//    }
-			//);
+			List<string[]> invalidKeys = new List<string[]> ()
+			{
+				null,
+				new string [0],
+				new string [] { "1" },
+				new string [] { "0", "1" },
+				new string [] { "", "1" },
+				new string [] { null, "1" },
+				new string [] { "1.5", "1" },
+				new string [] { "1", "" },
+				new string [] { "1", "0" },
+				new string [] { "1", null },
+				new string [] { "1", "1", "1" },
+			};
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        var v = table[1m];
-			//    }
-			//);
+			foreach (var invalidKey in invalidKeys)
+			{
+				decimal? value;
+				
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimensionTable[invalidKey] = 0
+				);
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        var v = table[1m, null];
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        var v = table[1m, 0m];
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        var v = table[1m, 1f];
-			//    }
-			//);
-		}
-
-
-		[TestMethod]
-		public void SetValueArgumentCheck()
-		{
-			Assert.Inconclusive ();
-			
-			//NumericDimension d1 = new NumericDimension ("d1", new decimal[] { 1, 2, 3 }, RoundingMode.Down);
-			//NumericDimension d2 = new NumericDimension ("d2", new decimal[] { 1, 2, 3 }, RoundingMode.Up);
-
-			//DimensionTable table = new DimensionTable (d1, d2);
-
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () =>
-			//    {
-			//        table[null] = 0;
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        table[1m] = 0;
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        table[1m, null] = 0;
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        table[1m, 0m] = 0;
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        table[1m, 1f] = 0;
-			//    }
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () =>
-			//    {
-			//        table[1m, 11.5m] = 0;
-			//    }
-			//);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => value = dimensionTable[invalidKey]
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetAndSetValueTest()
 		{
-			NumericDimension d1 = new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
-			NumericDimension d2 = new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
+			NumericDimension d1 = new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 1, 2, 3 });
+			NumericDimension d2 = new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 1, 2, 3 });
 
 			DimensionTable table = new DimensionTable (d1, d2);
 
@@ -1156,10 +1378,10 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<AbstractDimension> dimensions = new List<AbstractDimension> ()
             {
-                new NumericDimension ("1", "d1", RoundingMode.Down, new decimal[] { 0, 1, 2, 3 }),
-                new NumericDimension ("2", "d2", RoundingMode.Up, new decimal[] { 0, 1, 2, 3 }),
-                new CodeDimension ("3", "d3", new string[] {"0", "1", "2", "3"}),
-                new CodeDimension ("4", "d4", new string[] {"0", "1", "2", "3"}),
+                new NumericDimension ("d1", RoundingMode.Down, new decimal[] { 0, 1, 2, 3 }),
+                new NumericDimension ("d2", RoundingMode.Up, new decimal[] { 0, 1, 2, 3 }),
+                new CodeDimension ("d3", new string[] {"0", "1", "2", "3"}),
+                new CodeDimension ("d4", new string[] {"0", "1", "2", "3"}),
             };
 
 			DimensionTable table1 = new DimensionTable (dimensions.ToArray ());
@@ -1193,7 +1415,6 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			for (int i = 0; i < dimensions1.Count; i++)
 			{
-				Assert.AreEqual (dimensions1[i].Name, dimensions2[i].Name);
 				CollectionAssert.AreEqual (dimensions1[i].Values.ToList (), dimensions2[i].Values.ToList ());
 
 				Assert.AreEqual (dimensions1.GetType (), dimensions2.GetType ());

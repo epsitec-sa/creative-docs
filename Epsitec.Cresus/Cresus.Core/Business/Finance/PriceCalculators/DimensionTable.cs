@@ -14,15 +14,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
-	// TODO Add function to create a new "similar" table from a given one, plus or minus a
-	// dimension? And to clone it?
+	// TODO Comment this class.
 	// Marc
 
 
 	/// <summary>
 	/// The <see cref="DimensionTable"/> class represents a table holding <see cref="System.Decimal"/>
-	/// values, which can have an arbitrary number of user defined dimensions. The definition of the
-	/// object, that is its dimensions, are immutable but its values are mutable.
+	/// values, which can have an arbitrary number of user defined dimensions.
 	/// </summary>
 	public sealed class DimensionTable
 	{
@@ -138,6 +136,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void InsertDimension(int index, AbstractDimension dimension)
 		{
+			dimension.ThrowIfNull ("dimension");
+			dimension.ThrowIf (d => this.dimensions.Contains (d), "dimension is already within this instance.");
+
 			this.dimensions.Insert (index, dimension);
 
 			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
@@ -157,7 +158,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void RemoveDimensionAt(int index)
 		{
-			AbstractDimension dimension = this.dimensions[index];
+			AbstractDimension dimension = this.GetDimensionAt (index);
 			
 			this.dimensions.RemoveAt (index);
 
@@ -179,8 +180,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void SwapDimensionsAt(int index1, int index2)
 		{
-			AbstractDimension dimension1 = this.dimensions[index1];
-			AbstractDimension dimension2 = this.dimensions[index2];
+			AbstractDimension dimension1 = this.GetDimensionAt (index1);
+			AbstractDimension dimension2 = this.GetDimensionAt (index2);
 
 			this.dimensions[index1] = dimension2;
 			this.dimensions[index2] = dimension1;
@@ -189,18 +190,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public bool ContainsDimension(AbstractDimension dimension)
 		{
+			dimension.ThrowIfNull ("dimension");
+
 			return this.dimensions.Contains (dimension);
 		}
 
 
 		public int GetIndexOfDimension(AbstractDimension dimension)
 		{
+			dimension.ThrowIfNull ("dimension");
+			dimension.ThrowIf (d => !this.dimensions.Contains (d), "dimension is not within this instance.");
+
 			return this.dimensions.IndexOf (dimension);
 		}
 
 
 		public AbstractDimension GetDimensionAt(int index)
 		{
+			index.ThrowIf (i => i < 0 || i >= this.dimensions.Count, "Index is out of range.");
+
 			return this.dimensions[index];
 		}
 
@@ -221,6 +229,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public bool IsKeyValid(params string[] key)
 		{
+			key.ThrowIfNull ("key");
+
 			bool valid = (key.Length == this.dimensions.Count);
 
 			for (int i = 0; i < key.Length && valid; i++)
@@ -234,6 +244,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public bool IsKeyRoundable(params string[] key)
 		{
+			key.ThrowIfNull ("key");
+			key.ThrowIf (k => k.Length != this.dimensions.Count, "Invalid key length");
+
 			bool roundable = true;
 
 			for (int i = 0; i < key.Length && roundable; i++)
@@ -252,6 +265,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <returns>The rounded key.</returns>
 		public string[] GetRoundedKey(params string[] key)
 		{
+			key.ThrowIfNull ("key");
+			key.ThrowIf (k => k.Length != this.dimensions.Count, "Invalid key length");
+
 			string[] nearestKey = new string[key.Length];
 
 			for (int i = 0; i < key.Length; i++)
@@ -265,6 +281,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public string[] GetKeyFromIndexes(params int[] indexes)
 		{
+			indexes.ThrowIfNull ("indexes");
+			indexes.ThrowIf (k => k.Length != this.dimensions.Count, "Invalid indexes length");
+
 			string[] key = new string[indexes.Length];
 
 			for (int i = 0; i < indexes.Length; i++)
@@ -278,6 +297,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public int[] GetIndexesFromKey(params string[] key)
 		{
+			key.ThrowIfNull ("key");
+			key.ThrowIf (k => k.Length != this.dimensions.Count, "Invalid key length");
+
 			int[] indexes = new int[key.Length];
 
 			for (int i = 0; i < key.Length; i++)
@@ -348,6 +370,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="key">The key to check.</param>
 		private void CheckKey(params string[] key)
 		{
+			key.ThrowIfNull ("key");
+
 			if (key.Length != this.dimensions.Count)
 			{
 				throw new System.ArgumentException ("Invalid number of element in key");

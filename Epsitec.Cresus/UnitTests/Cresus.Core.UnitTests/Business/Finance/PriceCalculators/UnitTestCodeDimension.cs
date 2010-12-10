@@ -26,53 +26,15 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void Constructor1ArgumentCheck()
 		{
-			Assert.Inconclusive ();
-			
-			//string name = "name";
+			List<string> invalidCodes = new List<string> () { null, "", };
 
-			//List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (null, values)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension ("", values)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (name, null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (name, new List<string> ())
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (name, new List<string> () { null })
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (name, new List<string> () { "" })
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => new CodeDimension (name, new List<string> () { "." })
-			//);
-		}
-
-
-		[TestMethod]
-		public void Constructor2ArgumentCheck()
-		{
-			Assert.Inconclusive ();
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new CodeDimension (invalidCode)
+				);
+			}
 		}
 
 
@@ -80,12 +42,38 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		public void Constructor1Test()
 		{
 			string code = "code";
-			string name = "name";
 
-			CodeDimension dimension = new CodeDimension (code, name);
+			CodeDimension dimension = new CodeDimension (code);
 
 			Assert.AreEqual (code, dimension.Code);
-			Assert.AreEqual (name, dimension.Name);
+		}
+
+
+		[TestMethod]
+		public void Constructor2ArgumentCheck()
+		{
+			string code = "code";
+
+			List<string> values = new List<string> () { "a", "b" };
+
+			List<string> invalidCodes = new List<string> () { null, "", };
+			List<List<string>> invalidValues = new List<List<string>> () { null, new List<string> () { "0", "0" }, };
+
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new CodeDimension (invalidCode, values)
+				);
+			}
+
+			foreach (List<string> invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new CodeDimension (code, invalidValue)
+				);
+			}
 		}
 
 
@@ -93,13 +81,11 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		public void Constructor2Test()
 		{
 			string code = "code";
-			string name = "name";
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension (code, name, values);
+			CodeDimension dimension = new CodeDimension (code, values);
 
 			Assert.AreEqual (code, dimension.Code);
-			Assert.AreEqual (name, dimension.Name);
 			CollectionAssert.AreEqual (values, dimension.Values.ToList ());
 		}
 
@@ -110,28 +96,12 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			string code = "code";
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension (code, "name", values);
+			CodeDimension dimension = new CodeDimension (code, values);
 			Assert.AreEqual (code, dimension.Code);
 
 			code = "newCode";
 			dimension.Code = code;
 			Assert.AreEqual (code, dimension.Code);
-		}
-
-
-		[TestMethod]
-		public void NameTest()
-		{
-			string name = "name";
-
-			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
-
-			CodeDimension dimension = new CodeDimension ("code", name, values);
-			Assert.AreEqual (name, dimension.Name);
-
-			name = "newName";
-			dimension.Name = name;
-			Assert.AreEqual (name, dimension.Name);
 		}
 
 
@@ -143,7 +113,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values.Take (initialLength));
+			CodeDimension dimension = new CodeDimension ("code", values.Take (initialLength));
 
 			CollectionAssert.AreEqual (values.Take (initialLength).ToList (), dimension.Values.ToList ());
 
@@ -171,7 +141,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values.Take (initialLength));
+			CodeDimension dimension = new CodeDimension ("code", values.Take (initialLength));
 
 			Assert.AreEqual (initialLength, dimension.Count);
 
@@ -196,14 +166,28 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void AddArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "Blupi", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Add (invalidValue)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void AddTest()
 		{
-			CodeDimension dimension = new CodeDimension ("code", "name");
+			CodeDimension dimension = new CodeDimension ("code");
 
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 
@@ -221,14 +205,37 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void InsertArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "Blupi", };
+			List<int> invalidIndexes = new List<int> () { -1, 4 };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Insert (0, invalidValue)
+				);
+			}
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Insert (invalidIndex, "Duke")
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void InsertTest()
 		{
-			CodeDimension dimension = new CodeDimension ("code", "name");
+			CodeDimension dimension = new CodeDimension ("code");
 
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 			List<string> expected = new List<string> ();
@@ -253,7 +260,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "Duke", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Remove (invalidValue)
+				);
+			}
 		}
 
 
@@ -262,7 +283,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 			
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			CollectionAssert.AreEqual (values, dimension.Values.ToList ());
 
@@ -278,7 +299,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void RemoveAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<int> invalidIndexes = new List<int> () { -1, 4 };
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.RemoveAt (invalidIndex)
+				);
+			}
 		}
 
 
@@ -288,7 +323,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 			List<string> expected = values.ToList ();
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			System.Random dice = new System.Random ();
 
@@ -309,7 +344,26 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void SwapArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "Duke" };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Swap (invalidValue, "Albert")
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Swap ("Albert", invalidValue)
+				);
+			}
 		}
 
 
@@ -319,7 +373,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 			List<string> expected = values.ToList ();
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			CollectionAssert.AreEqual (values, dimension.Values.ToList ());
 
@@ -345,7 +399,26 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void SwapAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<int> invalidIndexes = new List<int> () { -1, 4 };
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.SwapAt (invalidIndex, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.SwapAt (0, invalidIndex)
+				);
+			}
 		}
 
 
@@ -355,7 +428,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", "Duke", "Edgard", "Fluff", }.Shuffle ().ToList ();
 			List<string> expected = values.ToList ();
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			CollectionAssert.AreEqual (values, dimension.Values.ToList ());
 
@@ -381,16 +454,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void ContainsArgumentCheck()
 		{
-			Assert.Inconclusive ();
-			
-			//List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+			string code = "code";
 
-			//CodeDimension dimension = new CodeDimension ("name", values);
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () => dimension.IsValueDefined (null)
-			//);
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.Contains (invalidValue)
+				);
+			}
 		}
 
 
@@ -400,7 +478,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
 			List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values1);
+			CodeDimension dimension = new CodeDimension ("code", values1);
 
 			foreach (string value in values1)
 			{
@@ -417,7 +495,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void IsValueRoundableArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.IsValueRoundable (invalidValue)
+				);
+			}
 		}
 
 
@@ -427,7 +519,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 			List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
 			List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values1);
+			CodeDimension dimension = new CodeDimension ("code", values1);
 
 			foreach (string value in values1)
 			{
@@ -444,25 +536,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetRoundedValueArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
 
-			//List<string> values1 = new List<string> () { "Albert", "Blupi", "Christophe", };
-			//List<string> values2 = new List<string> () { "Duke", "Edgar", "Fluff", };
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			//CodeDimension dimension = new CodeDimension ("code", "name", values1);
+			CodeDimension dimension = new CodeDimension (code, values);
 
-			//ExceptionAssert.Throw<System.ArgumentNullException>
-			//(
-			//    () => dimension.GetRoundedValue (null)
-			//);
+			List<string> invalidValues = new List<string> () { null, "", "Duke"};
 
-			//foreach (string value in values2)
-			//{
-			//    ExceptionAssert.Throw<System.ArgumentException>
-			//    (
-			//        () => dimension.GetRoundedValue (value)
-			//    );
-			//}
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetRoundedValue (invalidValue)
+				);
+			}
 		}
 
 
@@ -471,7 +559,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			foreach (string value in values)
 			{
@@ -483,7 +571,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetIndexOfArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<string> invalidValues = new List<string> () { null, "", "Duke" };
+
+			foreach (string invalidValue in invalidValues)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetIndexOf (invalidValue)
+				);
+			}
 		}
 
 
@@ -492,7 +594,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			foreach (string value in values)
 			{
@@ -504,7 +606,21 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void GetValueAtArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+
+			CodeDimension dimension = new CodeDimension (code, values);
+
+			List<int> invalidIndexes = new List<int> () { -1, 4 };
+
+			foreach (int invalidIndex in invalidIndexes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dimension.GetValueAt (invalidIndex)
+				);
+			}
 		}
 
 
@@ -513,7 +629,7 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		{
 			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
 
-			CodeDimension dimension = new CodeDimension ("code", "name", values);
+			CodeDimension dimension = new CodeDimension ("code", values);
 
 			for (int i = 0; i < values.Count; i++)
 			{
@@ -525,50 +641,39 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void BuildCodeDimensionArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			string code = "code";
+			string data = ";1;2";
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => CodeDimension.BuildCodeDimension (null, "a;b")
-			//);
+			List<string> invalidCodes = new List<string> () { null, "", };
+			List<string> invalidDatas = new List<string> () { null, "", "f", };
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//  () => CodeDimension.BuildCodeDimension ("", "a;b")
-			//);
+			foreach (string invalidCode in invalidCodes)
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => CodeDimension.BuildCodeDimension (invalidCode, data)
+				);
+			}
 
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => CodeDimension.BuildCodeDimension ("name", null)
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => CodeDimension.BuildCodeDimension ("name", "")
-			//);
-
-			//ExceptionAssert.Throw<System.Exception>
-			//(
-			//    () => CodeDimension.BuildCodeDimension ("name", "True;")
-			//);
-
-			//ExceptionAssert.Throw<System.ArgumentException>
-			//(
-			//    () => CodeDimension.BuildCodeDimension ("name", "True;fdafda&;fdsafdas")
-			//);
+			foreach (string invalidData in invalidDatas)
+			{
+				ExceptionAssert.Throw<System.Exception>
+				(
+					() => CodeDimension.BuildCodeDimension (code, invalidData)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetStringDataAndBuildCodeDimensionTest()
 		{
-			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", ";", ":" };
 
-			CodeDimension dimension1 = new CodeDimension ("code", "name", values);
-			CodeDimension dimension2 = CodeDimension.BuildCodeDimension (dimension1.Code, dimension1.Name, dimension1.GetStringData ());
+			CodeDimension dimension1 = new CodeDimension ("code", values);
+			CodeDimension dimension2 = CodeDimension.BuildCodeDimension (dimension1.Code, dimension1.GetStringData ());
 
 			Assert.AreEqual (dimension1.Code, dimension2.Code);
-			Assert.AreEqual (dimension1.Name, dimension2.Name);
 			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
 		}
 
@@ -576,20 +681,22 @@ namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
 		[TestMethod]
 		public void XmlExportArgumentCheck()
 		{
-			Assert.Inconclusive ();
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => NumericDimension.XmlImport (null)
+			);
 		}
 
 
 		[TestMethod]
 		public void XmlImportExportTest()
 		{
-			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", };
+			List<string> values = new List<string> () { "Albert", "Blupi", "Christophe", ";", ":" };
 
-			CodeDimension dimension1 = new CodeDimension ("code", "name", values);
+			CodeDimension dimension1 = new CodeDimension ("code", values);
 			CodeDimension dimension2 = (CodeDimension) AbstractDimension.XmlImport (dimension1.XmlExport ());
 
 			Assert.AreEqual (dimension1.Code, dimension2.Code);
-			Assert.AreEqual (dimension1.Name, dimension2.Name);
 			CollectionAssert.AreEqual (dimension1.Values.ToList (), dimension2.Values.ToList ());
 		}
 
