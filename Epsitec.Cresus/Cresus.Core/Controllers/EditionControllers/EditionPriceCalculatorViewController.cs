@@ -41,9 +41,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin (tile);
-			builder.CreateMargin (tile);
+			builder.CreateTextField      (tile,   0, "Code",        Marshaler.Create (() => this.Entity.Code,        x => this.Entity.Code = x));
+			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
+			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			// TODO: Provisoirement, on crée un bouton qui ouvre une fenêtre. Cette fenêtre devra être intégrée dans les tuiles...
 			var button = builder.CreateButton (tile, 0, null, "Editer la tabelle de prix...");
 
 			button.Clicked += delegate
