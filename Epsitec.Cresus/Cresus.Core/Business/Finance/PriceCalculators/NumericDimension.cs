@@ -11,21 +11,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 
 
+	// TODO Comment this class.
+	// Marc
+
+
 	public sealed class NumericDimension : AbstractDimension
 	{
 
 		
-		public NumericDimension(string code, string name, RoundingMode roundingMode)
-			: this (code, name, roundingMode, new List<decimal> ())
+		public NumericDimension(string code, RoundingMode roundingMode)
+			: this (code, roundingMode, new List<decimal> ())
 		{
 		}
 
 
-		public NumericDimension(string code, string name, RoundingMode roundingMode, IEnumerable<decimal> values)
-			: base (code, name)
+		public NumericDimension(string code, RoundingMode roundingMode, IEnumerable<decimal> values)
+			: base (code)
 		{
-			this.values = new SortedSet<decimal> (values);
+			values.ThrowIfNull ("values");
+			
+			this.values = new SortedSet<decimal> ();
 			this.RoundingMode = roundingMode;
+
+			foreach (decimal value in values)
+			{
+				this.AddDecimal (value);
+			}
 		}
 
 
@@ -58,17 +69,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public RoundingMode RoundingMode
 		{
-			get
-			{
-				return this.roundingMode;
-			}
-			set
-			{
-				this.roundingMode = value;
-			}
+			get;
+			set;
 		}
-
-
+		
 
 		public override void Add(string value)
 		{
@@ -80,6 +84,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void AddDecimal(decimal value)
 		{
+			this.CheckValueIsNotInDimension (value);
+
 			this.values.Add (value);
 
 			string s = NumericDimension.Convert (value);
@@ -101,6 +107,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public void RemoveDecimal(decimal value)
 		{
+			this.CheckValueIsInDimension (value);
+
 			this.values.Remove (value);
 
 			string s = NumericDimension.Convert (value);
@@ -136,7 +144,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public bool IsDecimalValueRoundable(decimal value)
 		{
-			switch (this.roundingMode)
+			switch (this.RoundingMode)
 			{
 				case RoundingMode.None:
 					return this.ContainsDecimal (value);
@@ -165,10 +173,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public decimal GetRoundedDecimalValue(decimal value)
 		{
-			if (!this.IsDecimalValueRoundable (value))
-			{
-				throw new System.ArgumentException ();
-			}
+			value.ThrowIf (v => !this.IsDecimalValueRoundable (v), "value is not roundable.");
 
 			if (this.values.Contains (value))
 			{
@@ -185,12 +190,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			decimal d = NumericDimension.Convert (value);
 
-			return this.values.IndexOf (d);
+			return this.GetIndexOfDecimal (d);
 		}
 
 
 		public int GetIndexOfDecimal(decimal value)
 		{
+			this.CheckValueIsInDimension (value);
+
 			return this.values.IndexOf (value);
 		}
 
@@ -207,6 +214,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public decimal GetDecimalValueAt(int index)
 		{
+			index.ThrowIf (i => i < 0 || i >= this.values.Count, "index is out of range.");
+
 			return this.values.ElementAt (index);
 		}
 
@@ -311,7 +320,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <exception cref="System.ArgumentException">If <paramref name="code"> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="stringData"> is <c>null</c>, empty or invalid.</exception>
-		public static NumericDimension BuildNumericDimension(string code, string name, string stringData)
+		public static NumericDimension BuildNumericDimension(string code, string stringData)
 		{
 			stringData.ThrowIfNullOrEmpty ("stringData");
 
@@ -320,13 +329,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var values = splittedData.Skip (1).Select (v => InvariantConverter.ConvertFromString<decimal> (v));
 			var mode = (RoundingMode) System.Enum.Parse (typeof (RoundingMode), splittedData.First ());
 
-			return new NumericDimension (code, name, mode, values);
+			return new NumericDimension (code, mode, values);
 		}
 
 
 		private static decimal Convert(string value)
 		{
-			return InvariantConverter.ConvertFromString<decimal> (value);
+			value.ThrowIfNullOrEmpty ("value");
+
+			try
+			{
+				return InvariantConverter.ConvertFromString<decimal> (value);
+			}
+			catch (System.Exception e)
+			{
+				throw new System.ArgumentException ("invalid value", e);
+			}
 		}
 
 
@@ -336,9 +354,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private RoundingMode roundingMode;
-		
-		
+		private void CheckValueIsNotInDimension(decimal value)
+		{
+			value.ThrowIf (v => this.values.Contains (v), "value is already in this instance.");
+		}
+
+
+		private void CheckValueIsInDimension(decimal value)
+		{
+			value.ThrowIf (v => !this.values.Contains (v), "value is not in this instance.");
+		}
+
+
 		/// <summary>
 		/// The set of values that defines the points of the current instance.
 		/// </summary>
