@@ -181,7 +181,7 @@ namespace Epsitec.Common.Dialogs
 				return DialogResult.None;
 			}
 
-			IDialog dialog = MessageDialog.CreateOk (title ?? MessageDialog.GetDialogTitle (owner), DialogIcon.None, formattedMessage);
+			IDialog dialog = MessageDialog.CreateOk (title ?? MessageDialog.GetDialogTitle (owner), DialogIcon.Warning, formattedMessage);
 
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
