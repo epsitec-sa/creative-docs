@@ -52,9 +52,6 @@ namespace Epsitec.Cresus.CorePlugIn.TableDesigner
 				Padding = new Margins (5),
 			};
 
-			this.mainController = new MainController (this.businessContext, entity);
-			this.mainController.CreateUI (box);
-
 			return box;
 		}
 
@@ -67,7 +64,6 @@ namespace Epsitec.Cresus.CorePlugIn.TableDesigner
 
 		private void SaveTableDesignIntoEntity()
 		{
-			this.mainController.SaveDesign ();
 		}
 
 
@@ -92,6 +88,5 @@ namespace Epsitec.Cresus.CorePlugIn.TableDesigner
 		private readonly DataViewOrchestrator	orchestrator;
 
 		private Widget							editorUI;
-		private MainController					mainController;
 	}
 }
