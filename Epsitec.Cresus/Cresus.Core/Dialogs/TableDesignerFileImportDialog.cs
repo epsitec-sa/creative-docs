@@ -81,6 +81,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		protected override string ActionButtonName
+		{
+			get
+			{
+				return "Importer";
+			}
+		}
+
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
