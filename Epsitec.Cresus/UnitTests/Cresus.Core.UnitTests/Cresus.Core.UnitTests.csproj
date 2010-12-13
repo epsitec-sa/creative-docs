@@ -81,7 +81,6 @@
     <Compile Include="Data\UnitTestLockTransaction.cs" />
     <Compile Include="Entities\UnitTestPriceCalculatorEntity.cs" />
     <Compile Include="EntityPersistenceManager.cs" />
-    <Compile Include="Helpers\UnitTestArticleDocumentItemHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="UnitTestEntities.cs" />
