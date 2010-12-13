@@ -291,13 +291,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			decimal totalPrice = articlePrice.Value;
 
-			foreach (PriceCalculatorEntity pce in articlePrice.PriceCalculators)
+			var parameterCodesToValues = ArticleParameterHelper.GetArticleParametersValues (this.articleItem, false);
+
+			foreach (PriceCalculatorEntity priceCalculator in articlePrice.PriceCalculators)
 			{
 				decimal? price = null;
 
 				try
 				{
-					price = pce.Compute (this.articleItem);
+					price = this.ExecutePriceCalculator (parameterCodesToValues, priceCalculator);
 				}
 				catch
 				{
@@ -309,7 +311,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 					price = 0;
 				}
-				
+
 				if (price.HasValue)
 				{
 					totalPrice += price.Value;
@@ -322,6 +324,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 
 			return totalPrice;
+		}
+
+
+		private decimal? ExecutePriceCalculator(Dictionary<string, string> parameterCodesToValues, PriceCalculatorEntity priceCalculator)
+		{
+			decimal? result = null;
+
+			DimensionTable priceTable = priceCalculator.GetPriceTable ();
+
+			if (priceTable != null)
+			{
+				string[] key = priceTable.Dimensions
+					.Select (d => parameterCodesToValues[d.Code])
+					.ToArray ();
+
+				result = priceTable[key];
+			}
+
+			return result;
 		}
 
 
