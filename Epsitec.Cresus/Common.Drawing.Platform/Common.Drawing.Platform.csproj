@@ -129,7 +129,7 @@
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
-    <Reference Include="System.Xaml" />
+    <Reference Condition=" '$(TargetFrameworkVersion)' == 'v4.0' " Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
