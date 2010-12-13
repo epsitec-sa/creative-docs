@@ -4,7 +4,7 @@
     <LastOpenVersion>7.10.3077</LastOpenVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ReferencePath>S:\Epsitec.Cresus\External\;S:\cr\External\;C:\Epsitec.Cresus\External\</ReferencePath>
+    <ReferencePath>S:\Epsitec.Cresus\External\DotNet35\;S:\Epsitec.Cresus\External\</ReferencePath>
     <CopyProjectDestinationFolder>
     </CopyProjectDestinationFolder>
     <CopyProjectUncPath>

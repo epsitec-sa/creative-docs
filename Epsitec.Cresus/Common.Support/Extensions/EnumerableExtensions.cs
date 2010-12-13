@@ -118,7 +118,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// Checks that both <see cref="IEnumerable{T}"/> contain the same set of elements, ignoring
 		/// duplicates entries in both sequences.
 		/// </summary>
-		/// <remarks>This linq method will buffer both imput sequences and will execute immediately.
+		/// <remarks>This LINQ method will buffer both imput sequences and will execute immediately.
 		/// Its has a complexity of O(n) where n is the length of the longest input sequence.</remarks>
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="first">The first <see cref="IEnumerable{T}"/>.</param>
@@ -144,14 +144,17 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			get
 			{
-				return EnumerableExtensions.dice.Value;
+				if (EnumerableExtensions.dice == null)
+				{
+					EnumerableExtensions.dice = new System.Random ();
+				}
+
+				return EnumerableExtensions.dice;
 			}
 		}
 
-		/// <summary>
-		/// A field that stores one instance of <see cref="System.Random"/> for each calling thread.
-		/// </summary>
-		private static ThreadLocal<System.Random> dice = new ThreadLocal<System.Random> (() => new System.Random ());
+		[System.ThreadStatic]
+		private static System.Random	dice;
         
 	}
 }

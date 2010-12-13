@@ -57,4 +57,11 @@
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+    <StartProgram>S:\Epsitec.Cresus\External\nunit-2.4.x\nunit.exe</StartProgram>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartArguments>..\Common.Types.Tests\bin\Debug\Common.Types.Tests.dll</StartArguments>
+    <StartWithIE>true</StartWithIE>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

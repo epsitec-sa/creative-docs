@@ -1509,7 +1509,7 @@ namespace Epsitec.Common.Dialogs
 				okEnable = fileName.Length > 0;
 			}
 			
-			if (okEnable && (this.FileDialogType == Dialogs.FileDialogType.Save) && (!string.IsNullOrWhiteSpace (this.fileFilterPattern)))
+			if (okEnable && (this.FileDialogType == Dialogs.FileDialogType.Save) && (this.fileFilterPattern != null) && (this.fileFilterPattern.Trim ().Length > 0))
 			{
 				bool matchFolderName = false;
 

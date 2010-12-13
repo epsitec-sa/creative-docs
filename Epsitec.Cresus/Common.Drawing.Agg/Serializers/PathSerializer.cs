@@ -120,7 +120,7 @@ namespace Epsitec.Common.Drawing.Serializers
 		{
 			var path = new Path ();
 
-			if (!string.IsNullOrWhiteSpace (value))
+			if (!string.IsNullOrEmpty (value))
 			{
 				var list = value.Split (' ');
 

@@ -53,6 +53,20 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug .NET 2.0\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\X.Export.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -67,8 +81,8 @@ xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludes
 xcopy "$(TargetDir)*.xml" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 
-xcopy "$(SolutionDir)External\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)External\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)External\DotNet35\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)External\DotNet35\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
 
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
@@ -89,10 +103,6 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
       <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
       <Name>Common.Debug</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Designer\Common.Designer.csproj">
-      <Project>{A70AD57E-0E80-48D7-8583-836C4758669D}</Project>
-      <Name>Common.Designer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
       <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
@@ -153,18 +163,6 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
-      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
-      <Name>Cresus.Database.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Name>Cresus.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\X.Tool.ResGenerator\X.Tool.ResGenerator.csproj">
       <Project>{3E741450-319E-49CF-BFEC-35BE01CE0AFD}</Project>

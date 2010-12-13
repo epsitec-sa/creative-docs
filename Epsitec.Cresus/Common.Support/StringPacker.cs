@@ -100,7 +100,7 @@ namespace Epsitec.Common.Support
 		/// <returns>A single <see cref="System.String"/> that contains all the input ones.</returns>
 		private static string Join(IEnumerable<string> strings, char separatorChar, char escapeChar)
 		{
-			var processedStrings = strings.Select (s => StringPacker.Escape (s, separatorChar, escapeChar)).ToList ();
+			var processedStrings = strings.Select (s => StringPacker.Escape (s, separatorChar, escapeChar)).ToArray ();
 
 			return string.Join ("" + separatorChar, processedStrings);
 		}
