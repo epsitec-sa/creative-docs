@@ -788,6 +788,9 @@
     <EmbeddedResource Include="Images\Base.ImageBlobs.icon" />
     <EmbeddedResource Include="Images\Base.PriceCalculator.icon" />
     <EmbeddedResource Include="Images\Data.PriceCalculator.icon" />
+    <EmbeddedResource Include="Images\Export.icon" />
+    <EmbeddedResource Include="Images\Import.icon" />
+    <EmbeddedResource Include="Images\Delete.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
