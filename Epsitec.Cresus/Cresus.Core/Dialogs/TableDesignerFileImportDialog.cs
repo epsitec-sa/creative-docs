@@ -16,9 +16,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 {
 	public class TableDesignerFileImportDialog : AbstractFileDialog
 	{
-		public TableDesignerFileImportDialog(Widget parent)
+		public TableDesignerFileImportDialog(Widget parent, string title)
 		{
 			this.parent = parent;
+			this.title = title;
 
 			this.InitialDirectory = TableDesignerFileImportDialog.initialDirectory;
 			this.InitialFileName  = TableDesignerFileImportDialog.initialFilename;
@@ -70,7 +71,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void CreateWindow()
 		{
-			this.CreateUserInterface ("FileImport", new Size (720, 480), "Importation d'une tabelle de prix", 20, this.parent.Window);
+			this.CreateUserInterface ("FileImport", new Size (720, 480), this.title, 20, this.parent.Window);
 		}
 
 		protected override FileDialogType FileDialogType
@@ -263,6 +264,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static bool				showOptions = true;
 
 		private readonly Widget			parent;
+		private readonly string			title;
 
 		private GlyphButton				optionsExtend;
 		private Widget					optionsContainer;

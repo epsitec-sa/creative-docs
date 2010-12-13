@@ -16,9 +16,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 {
 	public class TableDesignerFileExportDialog : AbstractFileDialog
 	{
-		public TableDesignerFileExportDialog(Widget parent)
+		public TableDesignerFileExportDialog(Widget parent, string title)
 		{
 			this.parent = parent;
+			this.title = title;
 
 			this.InitialDirectory = TableDesignerFileExportDialog.initialDirectory;
 			this.InitialFileName  = TableDesignerFileExportDialog.initialFilename;
@@ -70,7 +71,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void CreateWindow()
 		{
-			this.CreateUserInterface ("FileExport", new Size (720, 480), "Exportation d'une tabelle de prix", 20, this.parent.Window);
+			this.CreateUserInterface ("FileExport", new Size (720, 480), this.title, 20, this.parent.Window);
 		}
 
 		protected override FileDialogType FileDialogType
@@ -183,7 +184,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.optionCheckButtonColumns != null)
 			{
 				this.optionCheckButtonColumns.ActiveState = (TableDesignerFileExportDialog.useColumns) ? ActiveState.Yes : ActiveState.No;
-				this.optionCheckButtonRows.ActiveState    = (TableDesignerFileExportDialog.useRows) ? ActiveState.Yes : ActiveState.No;
+				this.optionCheckButtonRows.ActiveState    = (TableDesignerFileExportDialog.useRows   ) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -263,6 +264,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static bool				showOptions = true;
 
 		private readonly Widget			parent;
+		private readonly string			title;
 
 		private GlyphButton				optionsExtend;
 		private Widget					optionsContainer;
