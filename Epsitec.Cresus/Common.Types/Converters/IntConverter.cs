@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +22,7 @@ namespace Epsitec.Common.Types.Converters
 
 		public override ConversionResult<int> ConvertFromString(string text)
 		{
-			if (string.IsNullOrWhiteSpace (text))
+			if (text.IsNullOrWhiteSpace ())
 			{
 				return new ConversionResult<int>
 				{

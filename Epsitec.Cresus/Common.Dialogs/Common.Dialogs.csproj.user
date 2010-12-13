@@ -64,4 +64,7 @@
     </StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+    <StartWithIE>true</StartWithIE>
+  </PropertyGroup>
 </Project>

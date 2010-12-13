@@ -1,0 +1,4 @@
+Apply following hotfixes to be able to compile the Setup project
+with Visual Studio 2010 :
+
+http://support.microsoft.com/kb/2286556

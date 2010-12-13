@@ -35,7 +35,7 @@ namespace Epsitec.Common.Drawing.Serializers
 
 		public static Transform Parse(string value)
 		{
-			if (!string.IsNullOrWhiteSpace (value))
+			if (!string.IsNullOrEmpty (value))
 			{
 				var list = value.Split (' ');
 
@@ -43,25 +43,17 @@ namespace Epsitec.Common.Drawing.Serializers
 				{
 					double xx, xy, yx, yy, tx, ty;
 
-					if (double.TryParse (list[0], out xx))
+					if ((double.TryParse (list[0], out xx)) &&
+						(double.TryParse (list[1], out xy)) &&
+						(double.TryParse (list[2], out yx)) &&
+						(double.TryParse (list[3], out yy)) &&
+						(double.TryParse (list[4], out tx)) &&
+						(double.TryParse (list[5], out ty)))
 					{
-						if (double.TryParse (list[1], out xy))
-						{
-							if (double.TryParse (list[2], out yx))
-							{
-								if (double.TryParse (list[3], out yy))
-								{
-									if (double.TryParse (list[4], out tx))
-									{
-										if (double.TryParse (list[5], out ty))
-										{
-											return new Transform (xx, xy, yx, yy, tx, ty);
-										}
-									}
-								}
-							}
-						}
+						return new Transform (xx, xy, yx, yy, tx, ty);
 					}
+
+					throw new System.FormatException ("Invalid transform format");
 				}
 			}
 

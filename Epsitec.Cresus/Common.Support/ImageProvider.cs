@@ -576,7 +576,11 @@ namespace Epsitec.Common.Support
 		private static IEnumerable<System.Reflection.Assembly> GetAssemblies()
 		{
 			var domain     = System.AppDomain.CurrentDomain;
+#if DOTNET35
+			var assemblies = domain.GetAssemblies ();
+#else
 			var assemblies = domain.GetAssemblies ().Where (x => x.IsDynamic == false);
+#endif
 			return assemblies;
 		}
 

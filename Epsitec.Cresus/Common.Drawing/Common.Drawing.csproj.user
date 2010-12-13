@@ -4,7 +4,7 @@
     <LastOpenVersion>7.10.3077</LastOpenVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ReferencePath>S:\Epsitec.Cresus\External\;S:\cr\External\;C:\Epsitec.Cresus\External\</ReferencePath>
+    <ReferencePath>S:\Epsitec.Cresus\External\;S:\Epsitec.Cresus\External\DotNet35\</ReferencePath>
     <CopyProjectDestinationFolder>
     </CopyProjectDestinationFolder>
     <CopyProjectUncPath>
@@ -61,6 +61,9 @@
     </StartURL>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
+    <StartWithIE>true</StartWithIE>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
 </Project>

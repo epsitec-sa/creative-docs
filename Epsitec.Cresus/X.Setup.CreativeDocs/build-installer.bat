@@ -52,7 +52,7 @@ IF %setupversion%=="%version%" (
 
 set EXE=CrDoc-%version%-installer.exe
 set EXEPATH="%CD%\X.Setup.CreativeDocs\%EXE%"
-set BUILD=Release
+set BUILD=Debug .NET 2.0
 set IEXPRESS="%CD%\External\iexpress.exe"
 set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
 
@@ -71,9 +71,9 @@ copy "%CD%\X.Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\X.Setup.CreativeDocs\Se
 copy "%CD%\X.Setup.CreativeDocs\%BUILD%\CreativeDocs.msi" "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
 
 
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Sleep.exe"
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Setup.exe"
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
+%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Sleep.exe"
+%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Setup.exe"
+%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
 
 echo Packaging installer into %EXE%
 
@@ -84,7 +84,7 @@ rename CrDoc-2.x.x-installer.exe %EXE%
 
 cd ..
 
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
+%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
 
 del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
 del "%CD%\X.Setup.CreativeDocs\Setup.exe" 2>NUL

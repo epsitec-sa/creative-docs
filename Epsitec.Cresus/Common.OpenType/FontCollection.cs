@@ -1,5 +1,7 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -766,8 +768,8 @@ namespace Epsitec.Common.OpenType
 		
 		private bool Add(string fullName, string fuidName, FontIdentity fid)
 		{
-			if ((string.IsNullOrWhiteSpace (fullName)) ||
-				(string.IsNullOrWhiteSpace (fuidName)))
+			if ((fullName.IsNullOrWhiteSpace ()) ||
+				(fuidName.IsNullOrWhiteSpace ()))
 			{
 				return false;
 			}

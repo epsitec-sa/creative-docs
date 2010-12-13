@@ -113,6 +113,10 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
+		public void AddRange(string[] values)
+		{
+			this.AddRange ((IEnumerable<string>) values);
+		}
 		
 		public void SetKey(int index, string key)
 		{

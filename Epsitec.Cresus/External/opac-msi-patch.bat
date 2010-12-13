@@ -7,5 +7,5 @@ cd %2
 SDK\msitran -a opac-Cleanup.mst %1
 SDK\msitran -a opac-MsiRMFilesInUseDialog.mst %1
 
-call CodeSigning\sign-opac-2.bat %1 "Creative Docs .NET Installer"
+call CodeSigning\sign-opac-single.bat %1 "Creative Docs .NET Installer"
 

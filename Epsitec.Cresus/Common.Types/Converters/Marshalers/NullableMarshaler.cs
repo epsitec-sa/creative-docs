@@ -1,6 +1,8 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,7 +27,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 
 		public override void SetStringValue(string text)
 		{
-			if (string.IsNullOrWhiteSpace (text))
+			if (text.IsNullOrWhiteSpace ())
 			{
 				this.SetValue (null);
 				return;
@@ -45,7 +47,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 
 		public override bool CanConvert(string text)
 		{
-			return string.IsNullOrWhiteSpace (text) || this.Converter.CanConvertFromString (text);
+			return text.IsNullOrWhiteSpace () || this.Converter.CanConvertFromString (text);
 		}
 	}
 }

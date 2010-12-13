@@ -60,4 +60,12 @@
     </StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+    <StartProgram>S:\Epsitec.Cresus\External\nunit-2.4.x\nunit.exe</StartProgram>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartArguments>..\Common.Drawing.Tests\bin\Debug\Common.Drawing.Tests.dll</StartArguments>
+    <StartWithIE>true</StartWithIE>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

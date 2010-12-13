@@ -1,8 +1,9 @@
 ﻿//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
+using Epsitec.Common.Support.Extensions;
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Common.Types
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return string.IsNullOrWhiteSpace (this.text);
+				return this.text.IsNullOrWhiteSpace ();
 			}
 		}
 
@@ -151,7 +152,7 @@ namespace Epsitec.Common.Types
 				list.Add (t.ToString ());
 			}
 
-			return new FormattedText (string.Join (separator, list));
+			return new FormattedText (string.Join (separator, list.ToArray ()));
 		}
 
 		public static FormattedText Concat(params FormattedText[] values)
