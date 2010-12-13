@@ -20,9 +20,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 		/// </summary>
 		public static void Initialize()
 		{
-			//	See http://geekswithblogs.net/sdorman/archive/2009/01/31/migrating-from-nunit-to-mstest.aspx
-			//	for migration tips, from nUnit to MSTest.
-
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests");
 		}
@@ -103,6 +100,37 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 				infrastructure.AttachToDatabase (access);
 				infrastructure.DropDatabase ();
 			}
+		}
+
+
+		public static IDbAbstraction CreateDbAbstraction(bool forceDbCreation)
+		{
+			IDbAbstraction dbAbstraction;
+		
+			DbAccess dbAccess = new DbAccess ("Firebird", "test", "localhost", "sysdba", "masterkey", forceDbCreation);
+
+			try
+			{
+				dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess);
+			}
+			catch (Exceptions.ExistsException)
+			{
+				dbAccess.CreateDatabase = false;
+				dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess);
+			}
+
+			return dbAbstraction;
+		}
+
+
+		public static DbInfrastructure GetInfrastructureFromBase(string name)
+		{
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			DbAccess dbAccess = DbInfrastructure.CreateDatabaseAccess (name);
+
+			infrastructure.AttachToDatabase (dbAccess);
+
+			return infrastructure;
 		}
 
 
