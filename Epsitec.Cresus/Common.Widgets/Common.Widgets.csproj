@@ -104,6 +104,8 @@
     <FileAlignment>4096</FileAlignment>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <CodeAnalysisLogFile>bin\Debug\Common.Widgets.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
