@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LastOpenVersion>7.10.3077</LastOpenVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ReferencePath>S:\Epsitec.Cresus\External\DotNet35\;S:\Epsitec.Cresus\External\</ReferencePath>
+    <ReferencePath Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">S:\Epsitec.Cresus\External\DotNet35\</ReferencePath>
+    <ReferencePath Condition=" '$(TargetFrameworkVersion)' != 'v3.5' ">S:\Epsitec.Cresus\External\</ReferencePath>
     <CopyProjectDestinationFolder>
     </CopyProjectDestinationFolder>
     <CopyProjectUncPath>
