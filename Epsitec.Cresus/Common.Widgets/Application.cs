@@ -135,6 +135,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static bool						HasPendingAsyncCallbacks
+		{
+			get
+			{
+				return Application.pendingCallbacks.Count > 0;
+			}
+		}
 
 		public static void SetWaitCursor()
 		{

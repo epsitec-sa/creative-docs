@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			CoreProgram.Application = this;
+			UI.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();

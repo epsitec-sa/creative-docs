@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.ribbonController = new RibbonViewController (this.Orchestrator);
 			this.mainViewController = this.Orchestrator.MainViewController;
+
+			Library.UI.UpdateRequested += sender => this.Update ();
 		}
 
 

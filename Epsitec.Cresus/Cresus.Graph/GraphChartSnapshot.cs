@@ -210,32 +210,10 @@ namespace Epsitec.Cresus.Graph
             }
         }
 
-		internal AbstractRenderer CreateRenderer(bool visibleLabels)
+		internal AbstractRenderer CreateAndSetupRenderer(bool visibleLabels)
 		{
-			AbstractRenderer renderer = null;
-			bool stackValues = false;
-			var  graphType   = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
-
-			if (graphType == Res.Commands.GraphType.UseLineChart)
-			{
-				renderer = new LineChartRenderer ()
-				{
-					SurfaceAlpha = stackValues ? 1.0 : 0.0
-				};
-			}
-			else if (graphType == Res.Commands.GraphType.UseBarChartVertical)
-			{
-				renderer = new BarChartRenderer ();
-			}
-			else if (graphType == Res.Commands.GraphType.UsePieChart)
-			{
-				renderer = new PieChartRenderer ();
-            }
-            else if (graphType == Res.Commands.GraphType.UseGeoChart)
-            {
-                renderer = new GeoChartRenderer ();
-            }
-
+			AbstractRenderer renderer = this.CreateRenderer ();
+			
 			System.Diagnostics.Debug.Assert (renderer != null);
 
 			var adorner = new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
@@ -284,7 +262,35 @@ namespace Epsitec.Cresus.Graph
 
 
 
-		
+
+		private AbstractRenderer CreateRenderer()
+		{
+			bool stackValues = false;
+			var  graphType   = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
+
+			if (graphType == Res.Commands.GraphType.UseLineChart)
+			{
+				return new LineChartRenderer ()
+				{
+					SurfaceAlpha = stackValues ? 1.0 : 0.0
+				};
+			}
+			else if (graphType == Res.Commands.GraphType.UseBarChartVertical)
+			{
+				return new BarChartRenderer ();
+			}
+			else if (graphType == Res.Commands.GraphType.UsePieChart)
+			{
+				return new PieChartRenderer ();
+			}
+			//else if (graphType == Res.Commands.GraphType.UseGeoChart)
+			//{
+			//    renderer = new GeoChartRenderer ();
+			//}
+
+			throw new System.ArgumentException ("No renderer can be found");
+		}
+
 		private static XElement SaveColorStyle(ColorStyle colorStyle)
 		{
 			return colorStyle.SaveSettings (new XElement ("colorStyle"));

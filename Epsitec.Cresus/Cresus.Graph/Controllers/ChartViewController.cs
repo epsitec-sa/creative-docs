@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             this.commandBar.SelectedItem = this.GraphType;
 
 			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType);
-			var renderer = snapshot.CreateRenderer (this.IsStandalone);
+			var renderer = snapshot.CreateAndSetupRenderer (this.IsStandalone);
 
 			if (renderer == null)
 			{
@@ -550,9 +550,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			yield return Res.Commands.GraphType.UseLineChart;
 			yield return Res.Commands.GraphType.UseBarChartVertical;
-            //-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
-            yield return Res.Commands.GraphType.UsePieChart;
-            yield return Res.Commands.GraphType.UseGeoChart;
+//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+			yield return Res.Commands.GraphType.UsePieChart;
+//-			yield return Res.Commands.GraphType.UseGeoChart;
 		}
 
 
