@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					PreferredWidth = WorkspaceController.DefaultViewWidth,
 					PreferredHeight = WorkspaceController.DefaultViewHeight,
 					Padding = new Margins (4, 4, 4, 4),
-					Renderer = chartSnapShot.CreateRenderer (false),
+					Renderer = chartSnapShot.CreateAndSetupRenderer (false),
 					Scale = 0.5,
 				};
 

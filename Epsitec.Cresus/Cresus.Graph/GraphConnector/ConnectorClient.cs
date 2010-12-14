@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Graph
 				EndpointAddress     address = new EndpointAddress (ConnectorServer.GetAddress (this.serverProcess.Id));
 
 				bool? result  = null;
-				int   timeout = 10*1000;
+				int   timeout = 30*1000;
 				int   sleep   = 50;
 
 				//	Try connecting to the endpoint; if it does not respond, wait a bit and try

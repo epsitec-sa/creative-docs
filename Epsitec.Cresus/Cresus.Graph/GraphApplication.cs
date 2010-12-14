@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -19,8 +19,12 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphApplication()
 		{
+			UI.SetApplication (this);
+
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+
 			this.graphCommands = new GraphCommands (this);
-			this.persistenceManager = new Core.PersistenceManager ();
+			this.persistenceManager = new PersistenceManager ();
 			
 			this.mainWindowController = new Controllers.MainWindowController (this);
 			this.workspaceController = new Controllers.WorkspaceController (this);
@@ -141,7 +145,7 @@ namespace Epsitec.Cresus.Graph
 			this.mainWindowController.SetupUI ();
 			this.workspaceController.SetupUI ();
 
-			System.Diagnostics.Debugger.Launch ();
+//-			System.Diagnostics.Debugger.Launch ();
 
 			this.Window = this.mainWindowController.Window;
 
@@ -623,7 +627,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly Controllers.MainWindowController mainWindowController;
 		private readonly Controllers.WorkspaceController workspaceController;
 
-		private readonly Core.PersistenceManager persistenceManager;
+		private readonly PersistenceManager		persistenceManager;
 
 		private const int PasteTickCountTimeout = 5000;	//	[ms]
 		

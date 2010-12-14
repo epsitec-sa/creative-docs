@@ -64,7 +64,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	  <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <CodeAnalysisLogFile>bin\Debug\App.BanquePiguet.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
@@ -169,9 +169,9 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Name>Cresus.Core.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

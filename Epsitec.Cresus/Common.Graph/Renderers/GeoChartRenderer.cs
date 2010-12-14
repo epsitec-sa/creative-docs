@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas SCHMID, Maintainer: Jonas SCHMID
 
+#if false
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
@@ -269,3 +270,4 @@ namespace Epsitec.Common.Graph.Renderers
 
     }
 }
+#endif
