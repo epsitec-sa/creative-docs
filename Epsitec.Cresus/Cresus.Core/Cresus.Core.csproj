@@ -105,6 +105,8 @@
     <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\ImageBlobEntity.cs" />
     <Compile Include="Entities\ImageCategoryEntity.cs" />
     <Compile Include="Entities\ImageGroupEntity.cs" />

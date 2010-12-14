@@ -4,18 +4,20 @@
 using Epsitec.Cresus.Core.Controllers.TabIds;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class FreeTextValueArticleParameterDefinitionEntity
+	public partial class OptionValueArticleParameterDefinitionEntity
 	{
 		public override ArticleParameterTabId TabId
 		{
 			get
 			{
-				return ArticleParameterTabId.FreeText;
+				return ArticleParameterTabId.Option;
 			}
 		}
 
@@ -37,13 +39,19 @@ namespace Epsitec.Cresus.Core.Entities
 			base.AppendSummary (builder);
 			builder.Append ("~: ");
 
-			if (!this.ShortText.IsNullOrWhiteSpace)
+			int count = this.Options.Count;
+
+			if (count == 0)
 			{
-				builder.Append (this.ShortText);
+				builder.Append ("Aucune option");
+			}
+			else if (count == 1)
+			{
+				builder.Append ("1 option");
 			}
 			else
 			{
-				builder.Append ("<i>Vide</i>");
+				builder.Append (string.Format ("{0} options", count.ToString ()));
 			}
 		}
 	}
