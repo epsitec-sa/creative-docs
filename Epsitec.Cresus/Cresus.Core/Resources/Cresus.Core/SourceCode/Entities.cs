@@ -6955,8 +6955,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticleDocumentItem</c> entity.
 	///	designer:cap/L0A9A
 	///	</summary>
-	public partial class ArticleDocumentItemEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
+	public partial class ArticleDocumentItemEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters
 	{
+		#region IArticleDefinitionParameters Members
+		///	<summary>
+		///	The <c>ArticleDefinition</c> field.
+		///	designer:fld/L0A9A/L0AMO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMO]")]
+		public global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity ArticleDefinition
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.GetArticleDefinition (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.SetArticleDefinition (this, value);
+			}
+		}
+		#endregion
 		#region IDateRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
@@ -6974,6 +6992,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
 			}
 		}
+		#endregion
+		#region IArticleDefinitionParameters Members
+		///	<summary>
+		///	The <c>ArticleParameters</c> field.
+		///	designer:fld/L0A9A/L0ANO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANO]")]
+		public string ArticleParameters
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.GetArticleParameters (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.SetArticleParameters (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
 		///	<summary>
 		///	The <c>EndDate</c> field.
 		///	designer:fld/L0A9A/L0ARK
@@ -6991,50 +7029,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		///	<summary>
-		///	The <c>ArticleDefinition</c> field.
-		///	designer:fld/L0A9A/L0ACA
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ACA]")]
-		public global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity ArticleDefinition
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0ACA]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = this.ArticleDefinition;
-				if (oldValue != value)
-				{
-					this.OnArticleDefinitionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0ACA]", oldValue, value);
-					this.OnArticleDefinitionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ArticleParameters</c> field.
-		///	designer:fld/L0A9A/L0ADA
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ADA]")]
-		public string ArticleParameters
-		{
-			get
-			{
-				return this.GetField<string> ("[L0ADA]");
-			}
-			set
-			{
-				string oldValue = this.ArticleParameters;
-				if (oldValue != value)
-				{
-					this.OnArticleParametersChanging (oldValue, value);
-					this.SetField<string> ("[L0ADA]", oldValue, value);
-					this.OnArticleParametersChanged (oldValue, value);
-				}
-			}
-		}
 		///	<summary>
 		///	The <c>ArticleTraceabilityDetails</c> field.
 		///	designer:fld/L0A9A/L0AEA
@@ -7424,10 +7418,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnArticleDefinitionChanging(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
-		partial void OnArticleDefinitionChanged(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
-		partial void OnArticleParametersChanging(string oldValue, string newValue);
-		partial void OnArticleParametersChanged(string oldValue, string newValue);
 		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
 		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
 		partial void OnPrimaryUnitPriceBeforeTaxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -12920,8 +12910,44 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>OptionValue</c> entity.
 	///	designer:cap/L0AHO
 	///	</summary>
-	public partial class OptionValueEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class OptionValueEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AHO/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region IArticleDefinitionParameters Members
+		///	<summary>
+		///	The <c>ArticleDefinition</c> field.
+		///	designer:fld/L0AHO/L0AMO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMO]")]
+		public global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity ArticleDefinition
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.GetArticleDefinition (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.SetArticleDefinition (this, value);
+			}
+		}
+		#endregion
 		#region INameDescription Members
 		///	<summary>
 		///	The <c>Name</c> field.
@@ -12939,6 +12965,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
 			}
 		}
+		#endregion
+		#region IArticleDefinitionParameters Members
+		///	<summary>
+		///	The <c>ArticleParameters</c> field.
+		///	designer:fld/L0AHO/L0ANO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANO]")]
+		public string ArticleParameters
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.GetArticleParameters (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParametersInterfaceImplementation.SetArticleParameters (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
 		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/L0AHO/L0AVN
@@ -12956,50 +13002,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		///	<summary>
-		///	The <c>ArticleDefinition</c> field.
-		///	designer:fld/L0AHO/L0AIO
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AIO]")]
-		public global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity ArticleDefinition
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0AIO]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = this.ArticleDefinition;
-				if (oldValue != value)
-				{
-					this.OnArticleDefinitionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0AIO]", oldValue, value);
-					this.OnArticleDefinitionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ArticleParameters</c> field.
-		///	designer:fld/L0AHO/L0AJO
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AJO]")]
-		public string ArticleParameters
-		{
-			get
-			{
-				return this.GetField<string> ("[L0AJO]");
-			}
-			set
-			{
-				string oldValue = this.ArticleParameters;
-				if (oldValue != value)
-				{
-					this.OnArticleParametersChanging (oldValue, value);
-					this.SetField<string> ("[L0AJO]", oldValue, value);
-					this.OnArticleParametersChanged (oldValue, value);
-				}
-			}
-		}
 		///	<summary>
 		///	The <c>Quantity</c> field.
 		///	designer:fld/L0AHO/L0AKO
@@ -13022,37 +13024,9 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>Unit</c> field.
-		///	designer:fld/L0AHO/L0ALO
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0ALO]")]
-		public global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity Unit
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0ALO]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue = this.Unit;
-				if (oldValue != value)
-				{
-					this.OnUnitChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0ALO]", oldValue, value);
-					this.OnUnitChanged (oldValue, value);
-				}
-			}
-		}
 		
-		partial void OnArticleDefinitionChanging(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
-		partial void OnArticleDefinitionChanged(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
-		partial void OnArticleParametersChanging(string oldValue, string newValue);
-		partial void OnArticleParametersChanged(string oldValue, string newValue);
 		partial void OnQuantityChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnQuantityChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnUnitChanging(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
-		partial void OnUnitChanged(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -13064,6 +13038,78 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 785);	// [L0AHO]
 		public static readonly new string EntityStructuredTypeKey = "[L0AHO]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IArticleDefinitionParameters Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IArticleDefinitionParameters</c> entity.
+	///	designer:cap/L0ALO
+	///	</summary>
+	public interface IArticleDefinitionParameters
+	{
+		///	<summary>
+		///	The <c>ArticleDefinition</c> field.
+		///	designer:fld/L0ALO/L0AMO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMO]")]
+		global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity ArticleDefinition
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>ArticleParameters</c> field.
+		///	designer:fld/L0ALO/L0ANO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANO]")]
+		string ArticleParameters
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IArticleDefinitionParametersInterfaceImplementation
+	{
+		public static global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity GetArticleDefinition(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0AMO]");
+		}
+		public static void SetArticleDefinition(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = obj.ArticleDefinition;
+			if (oldValue != value)
+			{
+				IArticleDefinitionParametersInterfaceImplementation.OnArticleDefinitionChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0AMO]", oldValue, value);
+				IArticleDefinitionParametersInterfaceImplementation.OnArticleDefinitionChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnArticleDefinitionChanged(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
+		static partial void OnArticleDefinitionChanging(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
+		public static string GetArticleParameters(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[L0ANO]");
+		}
+		public static void SetArticleParameters(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.ArticleParameters;
+			if (oldValue != value)
+			{
+				IArticleDefinitionParametersInterfaceImplementation.OnArticleParametersChanging (obj, oldValue, value);
+				entity.SetField<string> ("[L0ANO]", oldValue, value);
+				IArticleDefinitionParametersInterfaceImplementation.OnArticleParametersChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnArticleParametersChanged(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, string oldValue, string newValue);
+		static partial void OnArticleParametersChanging(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, string oldValue, string newValue);
 	}
 }
 #endregion
