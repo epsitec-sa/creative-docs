@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.TabIds;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -38,6 +39,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
 
+				using (var data = TileContainerController.Setup (this))
+				{
+					this.CreateUIOptions (data);
+				}
+
 				builder.CreateFooterEditorTile ();
 			}
 		}
@@ -53,8 +59,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 80, "Nom court", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
-			builder.CreateTextField (tile,  0, "Nom long",  Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField             (tile, 80, "Nom court",   Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
+			builder.CreateTextField             (tile,  0, "Nom long",    Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (() => this.Entity.Cardinality, x => this.Entity.Cardinality = x), Business.Enumerations.GetAllPossibleValueCardinalities (), x => TextFormatter.FormatText (x.Values[0]));
+		}
+
+		private void CreateUIOptions(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "OptionValue",
+					IconUri		 = "Data.OptionValue",
+					Title		 = TextFormatter.FormatText ("Options"),
+					CompactTitle = TextFormatter.FormatText ("Options"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<OptionValueEntity> ("OptionValue", this.BusinessContext);
+
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Options));
 		}
 	}
 }
