@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			catch (FbException e)
 			{
 				DbAccess dbAccess = this.fb.DbAccess;
-				string message = "Could not execute query because a problem occurred.";
+				string message = "Could not execute query because a problem occurred : " + e.Message;
 
 				throw new Database.Exceptions.GenericException (dbAccess, message, e);
 			}
