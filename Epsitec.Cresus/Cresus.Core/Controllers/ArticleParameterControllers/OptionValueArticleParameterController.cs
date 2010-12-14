@@ -37,7 +37,79 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			var optionParameter = this.ParameterDefinition as OptionValueArticleParameterDefinitionEntity;
 
-			// TODO:
+			List<FormattedText> names     = optionParameter.Options.Select (x => x.Name).ToList ();
+			List<FormattedText> summaries = optionParameter.Options.Select (x => x.GetSummary ()).ToList ();
+			int count = names.Count;
+
+			if (count == 0)
+			{
+				var label = new StaticText
+				{
+					Parent = parent,
+					Text = "<i>Aucune option</i>",
+					Dock = DockStyle.Fill,
+				};
+			}
+			if (count == 1)
+			{
+				var button = new CheckButton
+				{
+					Parent = parent,
+					FormattedText = summaries[0],
+					Dock = DockStyle.Fill,
+				};
+
+				button.ActiveStateChanged += delegate
+				{
+					this.ParameterValue = (button.ActiveState == ActiveState.Yes) ? names[0].ToString () : "-";
+				};
+			}
+			else
+			{
+				double buttonWidth = 14;
+
+				//	Ligne éditable.
+				this.editor = new ItemPicketCombo
+				{
+					Parent = parent,
+					MenuButtonWidth = buttonWidth,
+					Cardinality = optionParameter.Cardinality,
+					Dock = DockStyle.Fill,
+					TabIndex = 1,
+				};
+
+				//	Initialise le menu des valeurs.
+				for (int i = 0; i < count; i++)
+				{
+					this.editor.Items.Add (names[i].ToString (), summaries[i].ToString ());
+				}
+
+				// TODO: finir...
+#if false
+				//	Initialise le contenu.
+				var list = new List<int> ();
+
+				foreach (var parameterValue in parameterValues)
+				{
+					int i = this.GetIndex (parameterValue);
+
+					if (i != -1)
+					{
+						list.Add (i);
+					}
+				}
+
+				this.editor.AddSelection (list);
+
+				this.editor.SelectedItemChanged += delegate
+				{
+					this.ParameterValue = this.SelectedParameterValues;
+				};
+#endif
+			}
 		}
+
+
+		private ItemPicketCombo editor;
 	}
 }

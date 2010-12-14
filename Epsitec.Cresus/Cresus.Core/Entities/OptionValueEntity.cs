@@ -15,7 +15,14 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			if (this.ArticleDefinition.IsNull ())
+			{
+				return TextFormatter.FormatText (this.Name);
+			}
+			else
+			{
+				return TextFormatter.FormatText (this.Name, "(", this.Quantity.ToString (), this.ArticleDefinition.Name, ")");
+			}
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -23,10 +30,12 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
+
 		public override string[] GetEntityKeywords()
 		{
 			return new string[] { this.Name.ToSimpleText () };
 		}
+
 
 		public override EntityStatus GetEntityStatus()
 		{

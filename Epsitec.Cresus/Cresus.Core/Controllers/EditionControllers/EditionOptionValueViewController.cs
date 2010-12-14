@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.OptionValue", "Option");
 
 				this.CreateUIMain (builder);
-				this.CreateUIArticle (builder);
+				this.CreateUIArticleDefinition (builder);
+				//?this.CreateUIParameter (builder);
 				this.CreateUIUnit (builder);
 
 				builder.CreateFooterEditorTile ();
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 0, "Quantité", Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 		}
 
-		private void CreateUIArticle(UIBuilder builder)
+		private void CreateUIArticleDefinition(UIBuilder builder)
 		{
 			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 			{
@@ -64,6 +65,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateAutoCompleteTextField ("Article", controller);
 		}
+
+#if false
+		private void CreateUIParameter(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+			var group = builder.CreateGroup (tile);
+
+			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.TileContainer, tile);
+			this.parameterController.CallbackParameterChanged = this.ParameterChanged;
+			this.parameterController.CreateUI (group);
+			this.parameterController.UpdateUI (this.Entity);
+		}
+#endif
 
 		private void CreateUIUnit(UIBuilder builder)
 		{
@@ -87,5 +101,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 		}
+
+
+#if false
+		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
+		{
+			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
+			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.articleDescriptionTextField);
+		}
+#endif
+
+	
+		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
+		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
+		private TextFieldMultiEx												articleDescriptionTextField;
 	}
 }
