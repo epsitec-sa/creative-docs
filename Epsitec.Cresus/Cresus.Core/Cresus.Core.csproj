@@ -106,6 +106,7 @@
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionOptionValueViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\ImageBlobEntity.cs" />
     <Compile Include="Entities\ImageCategoryEntity.cs" />
@@ -791,6 +793,7 @@
     <EmbeddedResource Include="Images\Export.icon" />
     <EmbeddedResource Include="Images\Import.icon" />
     <EmbeddedResource Include="Images\Delete.icon" />
+    <EmbeddedResource Include="Images\Data.OptionValue.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
