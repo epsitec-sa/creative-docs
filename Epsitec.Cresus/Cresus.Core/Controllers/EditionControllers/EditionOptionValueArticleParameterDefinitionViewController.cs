@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<OptionValueEntity> ("OptionValue", this.BusinessContext);
 
-			template.DefineText (x => x.GetSummary ());
+			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Options));
