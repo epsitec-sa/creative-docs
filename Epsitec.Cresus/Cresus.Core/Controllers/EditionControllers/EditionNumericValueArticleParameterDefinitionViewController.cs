@@ -97,6 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+#if false
 		private string PreferredValues
 		{
 			get
@@ -108,6 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.PreferredValues = Common.EnumSingleLineToInternal (value);
 			}
 		}
+#endif
 
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)

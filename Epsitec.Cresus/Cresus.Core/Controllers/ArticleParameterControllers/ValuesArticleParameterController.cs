@@ -104,6 +104,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				controller.CreateUI (box);
 			}
 
+			if (parameter is OptionValueArticleParameterDefinitionEntity)
+			{
+				var controller = new OptionValueArticleParameterController (article, index);
+
+				controller.CallbackParameterChanged = this.CallbackParameterChanged;
+				controller.CreateUI (box);
+			}
+
 			if (parameter is FreeTextValueArticleParameterDefinitionEntity)
 			{
 				var controller = new FreeTextValueArticleParameterController (article, index);

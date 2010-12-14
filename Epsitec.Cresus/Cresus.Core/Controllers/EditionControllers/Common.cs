@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+
 		public static void CreateDocumentItemTabBook<T>(UIBuilder builder, EntityViewController<T> controller, DocumentItemTabId defaultId)
 			where T : AbstractDocumentItemEntity, new ()
 		{
@@ -80,7 +81,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			book.SelectTabPage (defaultId);
 		}
 
-
 		public static void CreateAbstractArticleParameterTabBook<T>(UIBuilder builder, EntityViewController<T> controller, ArticleParameterTabId defaultId)
 			where T : AbstractArticleParameterDefinitionEntity, new ()
 		{
@@ -89,8 +89,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (ArticleParameterTabId.Numeric,  "Valeur num.", id => Common.ChangeEditedParameterEntity (controller, id)),
-				TabPageDef.Create (ArticleParameterTabId.Enum,     "Énumération", id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.Numeric,  "Numérique",   id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.Enum,     "Énum.",       id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.Option,   "Option",      id => Common.ChangeEditedParameterEntity (controller, id)),
 				TabPageDef.Create (ArticleParameterTabId.FreeText, "Texte libre", id => Common.ChangeEditedParameterEntity (controller, id)));
 
 			book.SelectTabPage (defaultId);
@@ -189,6 +190,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					else if (id == ArticleParameterTabId.Enum)
 					{
 						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<EnumValueArticleParameterDefinitionEntity> ();
+					}
+					else if (id == ArticleParameterTabId.Option)
+					{
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<OptionValueArticleParameterDefinitionEntity> ();
 					}
 					else if (id == ArticleParameterTabId.FreeText)
 					{

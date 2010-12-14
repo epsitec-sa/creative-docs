@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Core.Controllers.TabIds
 
 		Numeric,
 		Enum,
+		Option,
 		FreeText,
 	}
 }
