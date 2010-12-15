@@ -65,8 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
-			//?template.CreateItemsOfType<NumericValueArticleParameterDefinitionEntity> ();  // TODO: [DR] remettre !
-			template.CreateItemsOfType<OptionValueArticleParameterDefinitionEntity> ();
+			template.CreateItemsOfType<NumericValueArticleParameterDefinitionEntity> ();
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticleParameterDefinitions));
 		}
