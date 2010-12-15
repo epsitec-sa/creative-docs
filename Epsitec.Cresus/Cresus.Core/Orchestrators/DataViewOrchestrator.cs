@@ -150,6 +150,27 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		public void ResetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
+		{
+			if ((this.activeEntityKey == entityKey) &&
+				(this.businessContext.ActiveNavigationPathElement.Equals (navigationPathElement)))
+			{
+				if (this.CanSetActiveEntity (entityKey, navigationPathElement))
+				{
+					var liveEntity = this.businessContext.ActiveEntity;
+					var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+					
+					this.dataViewController.PopAllViewControllers ();
+					this.dataViewController.PushViewController (controller);
+				}
+			}
+			else
+			{
+				this.ClearActiveEntity ();
+				this.SetActiveEntity (entityKey, navigationPathElement);
+			}
+		}
+
 		/// <summary>
 		/// Shows the specified sub view of a given controller. The view of the
 		/// sub view controller will be created, if needed.
