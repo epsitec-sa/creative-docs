@@ -119,15 +119,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.columns.Count > 0)
 			{
 				double x = 0;
-				//?double overlap = Widgets.TileArrow.Breadth - 3;
 				double overlap = Widgets.TileArrow.Breadth + 1;
 				int columnIndex = 0;
 
-				//	Positionne les colonnes de gauche à droite.
-				foreach (var column in this.columns.Reverse ())
+				var leftToRightTileContainerColumns = this.columns.Reverse ();
+
+				foreach (var column in leftToRightTileContainerColumns)
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = ViewLayoutController.GetPreferredColumnWidth (this.columns.Count, columnIndex++);
+					column.PreferredWidth = this.GetPreferredColumnWidth (columnIndex++, column);
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
 				}
@@ -145,9 +145,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.OnLayoutChanged ();
 		}
 
-		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
+		private double GetPreferredColumnWidth(int columnIndex, TileContainer column)
 		{
-			return 300;
+			return column.GetPreferredWidth (columnIndex, this.columns.Count);
 		}
 
 

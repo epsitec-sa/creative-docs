@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public CoreViewController Controller
+		public CoreViewController				Controller
 		{
 			get
 			{
@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		
 		public void Add(IWidgetUpdater widgetUpdater)
 		{
 			this.widgetUpdaters.Add (widgetUpdater);
@@ -45,6 +46,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		public void UpdateAllWidgets()
 		{
 			CoreProgram.Application.MainWindowController.Update ();
+		}
+
+		public double GetPreferredWidth(int columnIndex, int columnCount)
+		{
+			return this.controller.GetPreferredWidth (columnCount, columnCount);
 		}
 
 
@@ -130,7 +136,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public event EventHandler<TabNavigateEventArgs>		TabNavigating;
 
-		private readonly CoreViewController controller;
-		private readonly List<IWidgetUpdater> widgetUpdaters;
+		private readonly CoreViewController		controller;
+		private readonly List<IWidgetUpdater>	widgetUpdaters;
 	}
 }
