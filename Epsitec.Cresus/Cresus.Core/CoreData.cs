@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core
 			
 			if (repository != null)
 			{
-				var all = repository.GetAllEntities ();
+				IEnumerable<T> all = repository.GetAllEntitiesIncludingLiveEntities ();
 
 				if ((extraction & DataExtractionMode.IncludeArchives) == 0)
 				{

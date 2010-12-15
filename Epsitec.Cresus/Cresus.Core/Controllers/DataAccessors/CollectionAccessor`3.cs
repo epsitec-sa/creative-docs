@@ -83,12 +83,22 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public override void InsertItem(int index, AbstractEntity item)
 		{
+			if (this.IsReadOnly)
+			{
+				return;
+			}
+
 			var collection = this.GetWritableCollection ();
 			collection.Insert (index, item as T3);
 		}
 
 		public override int AddItem(AbstractEntity item)
 		{
+			if (this.IsReadOnly)
+			{
+				return this.GetItemCollection ().Count ();
+			}
+
 			var collection = this.GetWritableCollection ();
 			int index = collection.Count;
 			collection.Add (item as T3);

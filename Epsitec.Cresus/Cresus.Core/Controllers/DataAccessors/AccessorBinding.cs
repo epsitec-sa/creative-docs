@@ -9,11 +9,16 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
+	/// <summary>
+	/// The <c>AccessorBinding</c> class encapsulates a property setter for a given
+	/// property. Accessor bindings are considered to be equal if they apply to the
+	/// same property (based on its name).
+	/// </summary>
 	public sealed class AccessorBinding : System.IEquatable<AccessorBinding>
 	{
 		private AccessorBinding(string name, System.Action action)
 		{
-			this.name = name;
+			this.name   = name;
 			this.action = action;
 		}
 
@@ -22,6 +27,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.action ();
 		}
 
+		/// <summary>
+		/// Creates an accessor binding for the specified property.
+		/// </summary>
+		/// <typeparam name="T">The return type of the accessor.</typeparam>
+		/// <param name="accessor">The accessor.</param>
+		/// <param name="getterExpression">The property getter.</param>
+		/// <param name="setter">The property setter.</param>
+		/// <returns>The accessor binding.</returns>
 		public static AccessorBinding Create<T>(Accessor<T> accessor, Expression<System.Func<FormattedText>> getterExpression, System.Action<T> setter)
 		{
 			string name = ExpressionAnalyzer.GetLambdaPropertyInfo (getterExpression).Name;
@@ -55,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.name.GetHashCode ();
 		}
 
-		private readonly string name;
-		private readonly System.Action action;
+		private readonly string					name;
+		private readonly System.Action			action;
 	}
 }
