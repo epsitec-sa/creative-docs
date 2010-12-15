@@ -1,8 +1,11 @@
 using Epsitec.Common.UnitTesting;
 
+using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Collections.Generic;
 
 using System.Data;
 
@@ -540,6 +543,410 @@ namespace Epsitec.Cresus.Database.UnitTests
 			}
 		}
 
+
+		[TestMethod]
+		public void RenameColumn()
+		{
+			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			{
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+
+				SqlTable sqlTable = new SqlTable ("TestTable");
+
+				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.Int32);
+
+				sqlTable.Columns.Add (sqlColumn1);
+				sqlTable.Columns.Add (sqlColumn2);
+
+				sqlTable.PrimaryKey = new SqlColumn[] { sqlColumn1 };
+
+				sqlBuilder.InsertTable (sqlTable);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				
+				string tableName = sqlTable.Name;
+				string oldColumnName = sqlColumn2.Name;
+				string newColumnName = "NewName";
+
+				sqlBuilder.RenameTableColumn (tableName, oldColumnName, newColumnName);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+			}
+		}
+
+
+		[TestMethod]
+		public void SetAndDropAutoIncrementOnTableColumn()
+		{
+			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			{
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+
+				SqlTable sqlTable = new SqlTable ("TestTable");
+
+				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.Int32);
+				
+				sqlTable.Columns.Add (sqlColumn1);
+				sqlTable.Columns.Add (sqlColumn2);
+				
+				sqlTable.PrimaryKey = new SqlColumn[] { sqlColumn1 };
+
+				sqlBuilder.InsertTable (sqlTable);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField1 = SqlField.CreateConstant (0, DbRawType.Int32);
+				sqlField1.Alias = sqlColumn2.Name;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField1 });
+
+				ExceptionAssert.Throw<Exceptions.GenericException>
+				(
+					() => UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine)
+				);
+
+				int first = 11;
+				int count = 10;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SetAutoIncrementOnTableColumn (sqlTable.Name, sqlColumn1.Name, first - 1);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+				
+				for (int i = first; i < first + count; i++)
+				{
+					SqlField sqlField2 = SqlField.CreateConstant (i, DbRawType.Int32);
+					sqlField2.Alias = sqlColumn2.Name;
+
+					sqlBuilder.Clear ();
+					sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField2 });
+
+					UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+				}
+
+				SqlSelect sqlSelect = new SqlSelect ();
+				sqlSelect.Tables.Add (SqlField.CreateName (sqlTable.Name));
+				sqlSelect.Fields.Add (SqlField.CreateAll ());
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SelectData (sqlSelect);
+
+				DataSet result = UnitTestISqlBuilder.ExecuteDataSetQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				Assert.AreEqual (1, result.Tables.Count);
+				Assert.AreEqual (count, result.Tables[0].Rows.Count);
+
+				for (int i = 0; i < count; i++)
+				{
+					DataRow dataRow = result.Tables[0].Rows[i];
+
+					Assert.AreEqual (2, dataRow.ItemArray.Length);
+					Assert.AreEqual (first + i, dataRow.ItemArray[0]);
+					Assert.AreEqual (first + i, dataRow.ItemArray[1]);
+				}
+
+				sqlBuilder.Clear ();
+				sqlBuilder.DropAutoIncrementOnTableColumn (sqlTable.Name, sqlColumn1.Name);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField3 = SqlField.CreateConstant (0, DbRawType.Int32);
+				sqlField3.Alias = sqlColumn2.Name;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField3 });
+
+				ExceptionAssert.Throw<Exceptions.GenericException>
+				(
+					() => UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void SetAndDropAutoTimeStampOnTableColumnInsert()
+		{
+			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			{
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+
+				SqlTable sqlTable = new SqlTable ("TestTable");
+
+				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, DbNullability.Yes);
+				sqlTable.Columns.Add (sqlColumn1);
+				sqlTable.Columns.Add (sqlColumn2);
+
+				sqlTable.PrimaryKey = new SqlColumn[] { sqlColumn1 };
+
+				sqlBuilder.InsertTable (sqlTable);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField1 = SqlField.CreateConstant (0, DbRawType.Int32);
+				sqlField1.Alias = sqlColumn1.Name;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField1 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SetAutoTimeStampOnTableColumn (sqlTable.Name, sqlColumn2.Name, true, false);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.GetCurrentTimeStamp ();
+
+				object time1 = UnitTestISqlBuilder.ExecuteScalarQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField2 = SqlField.CreateConstant (1, DbRawType.Int32);
+				sqlField2.Alias = sqlColumn1.Name;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField2 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.GetCurrentTimeStamp ();
+
+				object time2 = UnitTestISqlBuilder.ExecuteScalarQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.DropAutoTimeStampOnTableColumn (sqlTable.Name, sqlColumn2.Name);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+				SqlField sqlField3 = SqlField.CreateConstant (2, DbRawType.Int32);
+				sqlField3.Alias = sqlColumn1.Name;
+
+				sqlBuilder.Clear ();
+				sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField3 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlSelect sqlSelect = new SqlSelect ();
+				sqlSelect.Tables.Add (SqlField.CreateName (sqlTable.Name));
+				sqlSelect.Fields.Add (SqlField.CreateAll ());
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SelectData (sqlSelect);
+
+				DataSet dataSet = UnitTestISqlBuilder.ExecuteDataSetQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				Assert.AreEqual (1, dataSet.Tables.Count);
+				Assert.AreEqual (3, dataSet.Tables[0].Rows.Count);
+
+				Assert.AreEqual (0, dataSet.Tables[0].Rows[0].ItemArray[0]);
+				Assert.AreEqual (System.DBNull.Value, dataSet.Tables[0].Rows[0].ItemArray[1]);
+
+				Assert.AreEqual (1, dataSet.Tables[0].Rows[1].ItemArray[0]);
+				Assert.IsTrue ((System.DateTime) time1 <= (System.DateTime) dataSet.Tables[0].Rows[1].ItemArray[1]);
+				Assert.IsTrue ((System.DateTime) time2 >= (System.DateTime) dataSet.Tables[0].Rows[1].ItemArray[1]);
+
+				Assert.AreEqual (2, dataSet.Tables[0].Rows[2].ItemArray[0]);
+				Assert.AreEqual (System.DBNull.Value, dataSet.Tables[0].Rows[2].ItemArray[1]);
+			}
+		}
+
+
+		[TestMethod]
+		public void SetAndDropAutoTimeStampOnTableColumnUpdate()
+		{
+			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			{
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+
+				SqlTable sqlTable = new SqlTable ("TestTable");
+
+				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, DbNullability.Yes);
+				sqlTable.Columns.Add (sqlColumn1);
+				sqlTable.Columns.Add (sqlColumn2);
+
+				sqlTable.PrimaryKey = new SqlColumn[] { sqlColumn1 };
+
+				sqlBuilder.InsertTable (sqlTable);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				for (int i = 0; i < 3; i++)
+				{
+					SqlField sqlField = SqlField.CreateConstant (i, DbRawType.Int32);
+					sqlField.Alias = sqlColumn1.Name;
+
+					sqlBuilder.Clear ();
+					sqlBuilder.InsertData (sqlTable.Name, new SqlFieldList () { sqlField });
+
+					UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+					System.Threading.Thread.Sleep (250);
+				}
+
+				SqlField sqlField1 = SqlField.CreateConstant (0, DbRawType.Int32);
+				sqlField1.Alias = sqlColumn1.Name;
+
+				SqlField sqlFunction1 = SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateName (sqlTable.Name, sqlColumn1.Name),
+						SqlField.CreateConstant (0, DbRawType.Int32)
+					)
+				);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.UpdateData (sqlTable.Name, new SqlFieldList () { sqlField1 }, new SqlFieldList () { sqlFunction1 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SetAutoTimeStampOnTableColumn (sqlTable.Name, sqlColumn2.Name, false, true);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.GetCurrentTimeStamp ();
+
+				object time1 = UnitTestISqlBuilder.ExecuteScalarQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField2 = SqlField.CreateConstant (1, DbRawType.Int32);
+				sqlField2.Alias = sqlColumn1.Name;
+
+				SqlField sqlFunction2 = SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateName (sqlTable.Name, sqlColumn1.Name),
+						SqlField.CreateConstant (1, DbRawType.Int32)
+					)
+				);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.UpdateData (sqlTable.Name, new SqlFieldList () { sqlField2 }, new SqlFieldList () { sqlFunction2 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.GetCurrentTimeStamp ();
+
+				object time2 = UnitTestISqlBuilder.ExecuteScalarQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.DropAutoTimeStampOnTableColumn (sqlTable.Name, sqlColumn2.Name);
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlField sqlField3 = SqlField.CreateConstant (2, DbRawType.Int32);
+				sqlField3.Alias = sqlColumn1.Name;
+
+				SqlField sqlFunction3 = SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateName (sqlTable.Name, sqlColumn1.Name),
+						SqlField.CreateConstant (2, DbRawType.Int32)
+					)
+				);
+
+				sqlBuilder.Clear ();
+				sqlBuilder.UpdateData (sqlTable.Name, new SqlFieldList () { sqlField3 }, new SqlFieldList () { sqlFunction3 });
+
+				UnitTestISqlBuilder.ExecuteNonQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				SqlSelect sqlSelect = new SqlSelect ();
+				sqlSelect.Tables.Add (SqlField.CreateName (sqlTable.Name));
+				sqlSelect.Fields.Add (SqlField.CreateAll ());
+
+				sqlBuilder.Clear ();
+				sqlBuilder.SelectData (sqlSelect);
+
+				DataSet dataSet = UnitTestISqlBuilder.ExecuteDataSetQuery (dbAbstraction, sqlBuilder, sqlEngine);
+
+				Assert.AreEqual (1, dataSet.Tables.Count);
+				Assert.AreEqual (3, dataSet.Tables[0].Rows.Count);
+
+				Assert.AreEqual (0, dataSet.Tables[0].Rows[0].ItemArray[0]);
+				Assert.AreEqual (System.DBNull.Value, dataSet.Tables[0].Rows[0].ItemArray[1]);
+
+				Assert.AreEqual (1, dataSet.Tables[0].Rows[1].ItemArray[0]);
+				Assert.IsTrue ((System.DateTime) time1 <= (System.DateTime) dataSet.Tables[0].Rows[1].ItemArray[1]);
+				Assert.IsTrue ((System.DateTime) time2 >= (System.DateTime) dataSet.Tables[0].Rows[1].ItemArray[1]);
+
+				Assert.AreEqual (2, dataSet.Tables[0].Rows[2].ItemArray[0]);
+				Assert.AreEqual (System.DBNull.Value, dataSet.Tables[0].Rows[2].ItemArray[1]);
+			}
+		}
+
+
+		private static void ExecuteNonQuery(IDbAbstraction dbAbstraction, ISqlBuilder sqlBuilder, ISqlEngine sqlEngine)
+		{
+			using (IDbCommand command = sqlBuilder.Command)
+			{
+				using (IDbTransaction transaction = dbAbstraction.BeginReadWriteTransaction ())
+				{
+					command.Transaction = transaction;
+
+					int result;
+					sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+					transaction.Commit ();
+				}
+			}
+		}
+
+
+		private static object ExecuteScalarQuery(IDbAbstraction dbAbstraction, ISqlBuilder sqlBuilder, ISqlEngine sqlEngine)
+		{
+			using (IDbCommand command = sqlBuilder.Command)
+			{
+				using (IDbTransaction transaction = dbAbstraction.BeginReadWriteTransaction ())
+				{
+					command.Transaction = transaction;
+
+					object result;
+					sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+					transaction.Commit ();
+
+					return result;
+				}
+			}
+		}
+
+
+		private static DataSet ExecuteDataSetQuery(IDbAbstraction dbAbstraction, ISqlBuilder sqlBuilder, ISqlEngine sqlEngine)
+		{
+			using (IDbCommand command = sqlBuilder.Command)
+			{
+				using (IDbTransaction transaction = dbAbstraction.BeginReadWriteTransaction ())
+				{
+					command.Transaction = transaction;
+
+					DataSet result;
+					sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+					transaction.Commit ();
+
+					return result;
+				}
+			}
+		}
+                
 
 	}
 

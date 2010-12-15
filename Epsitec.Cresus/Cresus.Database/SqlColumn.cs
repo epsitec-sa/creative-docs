@@ -75,8 +75,6 @@ namespace Epsitec.Cresus.Database
 			this.Name = name;
 			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode);
 			this.IsNullable = (nullability == DbNullability.Yes);
-			this.isAutoIncremented = false;
-			this.autoIncrementStartIndex = 0;
 			this.comment = null;
 		}
 
@@ -198,64 +196,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Indicates whether this column is auto incremented or not.
-		/// </summary>
-		public bool								IsAutoIncremented
-		{
-			get
-			{
-				return this.isAutoIncremented;
-			}
-			set
-			{
-				this.isAutoIncremented = value;
-			}
-		}
-
-		/// <summary>
-		/// The first value that will be used for this column if it is auto incremented.
-		/// </summary>
-		public long								AutoIncrementStartIndex
-		{
-			get
-			{
-				return this.autoIncrementStartIndex;
-			}
-			set
-			{
-				value.ThrowIf (v => v < 0, "Value cannot be lower than zero.");
-
-				this.autoIncrementStartIndex = value;
-			}
-		}
-
-
-		public bool IsAutoTimeStampOnInsert
-		{
-			get
-			{
-				return this.isAutoTimeStampOnInsert;
-			}
-			set
-			{
-				this.isAutoTimeStampOnInsert = value;
-			}
-		}
-
-
-		public bool IsAutoTimeStampOnUpdate
-		{
-			get
-			{
-				return this.isAutoTimeStampOnUpdate;
-			}
-			set
-			{
-				this.isAutoTimeStampOnUpdate = value;
-			}
-		}
-
 		
 		/// <summary>
 		/// Sets the type.
@@ -308,10 +248,6 @@ namespace Epsitec.Cresus.Database
 		private string							comment;
 		private DbRawType						type;
 		private bool							isNullable;
-		private bool							isAutoIncremented;
-		private long							autoIncrementStartIndex;
-		private bool							isAutoTimeStampOnInsert;
-		private bool							isAutoTimeStampOnUpdate;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
 		private DbCharacterEncoding				encoding;
