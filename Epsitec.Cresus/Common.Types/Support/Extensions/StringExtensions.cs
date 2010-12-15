@@ -59,9 +59,9 @@ namespace Epsitec.Common.Support.Extensions
 			{
 				throw new System.ArgumentNullException ("value");
 			}
-			if (separator == null)
+			if (string.IsNullOrEmpty (separator))
 			{
-				throw new System.ArgumentNullException ("separator");
+				throw new System.ArgumentException ("separator");
 			}
 
 			return value.Split (new string[] { separator }, System.StringSplitOptions.None);
