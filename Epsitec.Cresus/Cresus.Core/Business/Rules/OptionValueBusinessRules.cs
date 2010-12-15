@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplySetupRule(OptionValueEntity entity)
 		{
 			entity.Code = (string) ItemCodeGenerator.NewCode ();
+			entity.Quantity = 1;
 		}
 	}
 }

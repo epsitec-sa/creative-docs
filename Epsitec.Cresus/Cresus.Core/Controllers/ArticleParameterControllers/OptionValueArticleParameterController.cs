@@ -37,9 +37,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			var optionParameter = this.ParameterDefinition as OptionValueArticleParameterDefinitionEntity;
 
-			List<FormattedText> names     = optionParameter.Options.Select (x => x.Name).ToList ();
+			List<string> codes            = optionParameter.Options.Select (x => x.Code).ToList ();
 			List<FormattedText> summaries = optionParameter.Options.Select (x => x.GetSummary ()).ToList ();
-			int count = names.Count;
+			string[] parameterValues = (this.ParameterValue ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			int count = codes.Count;
 
 			if (count == 0)
 			{
@@ -59,9 +60,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Dock = DockStyle.Fill,
 				};
 
+				if (parameterValues.Length != 0 && !string.IsNullOrEmpty (parameterValues[0]))
+				{
+					button.ActiveState = (parameterValues[0] == codes[0]) ? ActiveState.Yes : ActiveState.No;
+				}
+
 				button.ActiveStateChanged += delegate
 				{
-					this.ParameterValue = (button.ActiveState == ActiveState.Yes) ? names[0].ToString () : "-";
+					this.ParameterValue = (button.ActiveState == ActiveState.Yes) ? codes[0] : "-";
 				};
 			}
 			else
@@ -81,11 +87,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				//	Initialise le menu des valeurs.
 				for (int i = 0; i < count; i++)
 				{
-					this.editor.Items.Add (names[i].ToString (), summaries[i].ToString ());
+					this.editor.Items.Add (codes[i], summaries[i].ToString ());
 				}
 
-				// TODO: finir...
-#if false
 				//	Initialise le contenu.
 				var list = new List<int> ();
 
@@ -105,7 +109,39 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				{
 					this.ParameterValue = this.SelectedParameterValues;
 				};
-#endif
+			}
+		}
+
+
+		private int GetIndex(string key)
+		{
+			//	Retourne l'index d'une clé.
+			for (int i = 0; i < this.editor.Items.Count; i++)
+			{
+				if (key == this.editor.Items.GetKey (i))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private string SelectedParameterValues
+		{
+			//	Retourne la liste des paramètres choisis (les codes spéarés par des '∙').
+			get
+			{
+				var list = new List<string> ();
+
+				var sel = this.editor.GetSortedSelection ();
+				foreach (int i in sel)
+				{
+					string key = this.editor.Items.GetKey (i);
+					list.Add (key);
+				}
+
+				return string.Join (AbstractArticleParameterDefinitionEntity.Separator, list);
 			}
 		}
 

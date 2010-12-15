@@ -129,11 +129,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					if (id == DocumentItemTabId.Text)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
 					}
 					else if (id == DocumentItemTabId.Article)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
 						var article = newEntity as ArticleDocumentItemEntity;
 						article.BeginDate = invoiceDocument.BillingDate;
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					}
 					else if (id == DocumentItemTabId.Price)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<SubTotalDocumentItemEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<SubTotalDocumentItemEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);
@@ -185,19 +185,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					if (id == ArticleParameterTabId.Numeric)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
 					}
 					else if (id == ArticleParameterTabId.Enum)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<EnumValueArticleParameterDefinitionEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<EnumValueArticleParameterDefinitionEntity> ();
 					}
 					else if (id == ArticleParameterTabId.Option)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<OptionValueArticleParameterDefinitionEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<OptionValueArticleParameterDefinitionEntity> ();
 					}
 					else if (id == ArticleParameterTabId.FreeText)
 					{
-						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<FreeTextValueArticleParameterDefinitionEntity> ();
+						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<FreeTextValueArticleParameterDefinitionEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);
