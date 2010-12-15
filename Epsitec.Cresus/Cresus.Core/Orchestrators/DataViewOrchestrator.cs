@@ -135,7 +135,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="navigationPathElement">The navigation path element.</param>
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
-			if (this.CanSetActiveEntity (entityKey, navigationPathElement))
+			if ((this.CanSetActiveEntity (entityKey, navigationPathElement)) &&
+				(this.activeEntityKey != entityKey))
 			{
 				this.ClearActiveEntity ();
 				this.CreateNewBusinessContext ();
@@ -250,11 +251,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				this.ClearActiveEntity ();
 			}
 
-			//	If this is still exactly the same entity; we won't do anything.
-			//	If the caller really wants the UI to be re-created from scratch,
-			//	he has to invoke ClearActiveEntity before.
-
-			return (this.activeEntityKey == entityKey) ? false : true;
+			return true;
 		}
 
 		private void CreateNewBusinessContext()
