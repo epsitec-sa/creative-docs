@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 	/// The <c>NavigationPathElement</c> is the base class used to record items into the
 	/// navigation  history, building a list of elements leading to the active controller.
 	/// </summary>
-	public abstract class NavigationPathElement
+	public abstract class NavigationPathElement : System.IEquatable<NavigationPathElement>
 	{
 		protected NavigationPathElement ()
 		{
@@ -25,5 +25,21 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		{
 			return false;
 		}
+
+		#region IEquatable<NavigationPathElement> Members
+
+		public bool Equals(NavigationPathElement other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.ToString () == other.ToString ();
+			}
+		}
+
+		#endregion
 	}
 }

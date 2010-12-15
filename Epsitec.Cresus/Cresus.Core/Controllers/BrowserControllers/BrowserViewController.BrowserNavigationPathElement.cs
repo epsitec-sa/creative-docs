@@ -28,10 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				browserViewController.SetActiveEntityKey (this.entityKey);
 				browserViewController.RefreshScrollList ();
 				
-				//	Make sure we re-select the active entity by clearing it first:
-				browserViewController.Orchestrator.ClearActiveEntity ();
-
-				return browserViewController.SelectActiveEntity ();
+				return browserViewController.ReselectActiveEntity ();
 			}
 
 			public override string ToString()

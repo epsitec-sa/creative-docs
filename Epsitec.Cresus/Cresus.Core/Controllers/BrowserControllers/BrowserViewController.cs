@@ -216,6 +216,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		private bool ReselectActiveEntity()
+		{
+			if (this.activeEntityKey.HasValue)
+			{
+				var activeEntityKey       = this.activeEntityKey.Value;
+				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
+				
+				this.Orchestrator.ResetActiveEntity (activeEntityKey, navigationPathElement);
+
+				return true;
+			}
+			else
+			{
+				this.Orchestrator.ClearActiveEntity ();
+				return false;
+			}
+		}
+
 
 		private AbstractEntity[] GetCollectionEntities()
 		{

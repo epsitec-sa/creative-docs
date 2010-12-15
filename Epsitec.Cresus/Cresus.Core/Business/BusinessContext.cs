@@ -92,6 +92,14 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		public NavigationPathElement			ActiveNavigationPathElement
+		{
+			get
+			{
+				return this.activeNavigationPathElement;
+			}
+		}
+
 		public GlobalLock						GlobalLock
 		{
 			get
