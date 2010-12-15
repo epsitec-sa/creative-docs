@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Database
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 
-			this.SchemasCache = new Dictionary<DbTable, System.Data.DataTable> ();
 			this.DbKeysCache = new Dictionary<string, Dictionary<string, DbKey[]>> ();
 		}
 
@@ -179,19 +178,13 @@ namespace Epsitec.Cresus.Database
 				return this.access;
 			}
 		}
-		
+
 		public bool								IsInGlobalLock
 		{
 			get
 			{
 				return this.globalLock.IsWriterLockHeld;
 			}
-		}
-
-		public Dictionary<DbTable, System.Data.DataTable> SchemasCache
-		{
-			get;
-			private set;
 		}
 		
 		public IEnumerable<EntityFieldPath> GetSourceReferences(Druid targetEntity)
