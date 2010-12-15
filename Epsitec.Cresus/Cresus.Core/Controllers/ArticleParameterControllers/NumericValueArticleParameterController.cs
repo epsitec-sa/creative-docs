@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class NumericValueArticleParameterController : AbstractArticleParameterController
 	{
-		public NumericValueArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
+		public NumericValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
 			: base (article, parameterIndex)
 		{
 		}
