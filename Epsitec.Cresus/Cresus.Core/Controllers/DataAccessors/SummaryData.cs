@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	{
 		public SummaryData()
 		{
-			this.bindings = new List<AccessorBinding> ();
+			this.bindings = new HashSet<AccessorBinding> ();
 			this.DefaultMode = ViewControllerMode.Edition;
 		}
 
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, x => this.Title = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.Title, x => this.Title = x));
 				}
 			}
 		}
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, x => this.Text = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.Text, x => this.Text = x));
 				}
 			}
 		}
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, x => this.CompactTitle = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.CompactTitle, x => this.CompactTitle = x));
 				}
 			}
 		}
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, x => this.CompactText = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.CompactText, x => this.CompactText = x));
 				}
 			}
 		}
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#endregion
 
-		private readonly List<AccessorBinding>	bindings;
-		private TitleTile						titleTile;
+		private readonly HashSet<AccessorBinding>	bindings;
+		private TitleTile							titleTile;
 	}
 }
