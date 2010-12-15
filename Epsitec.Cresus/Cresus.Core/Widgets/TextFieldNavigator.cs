@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Widget TextField qui intercepte les touche Tab/Return, pour envoyer des événements
+	/// permettant de naviguer comme dans un tableur.
+	/// </summary>
 	public class TextFieldNavigator : TextField
 	{
 		public TextFieldNavigator()
