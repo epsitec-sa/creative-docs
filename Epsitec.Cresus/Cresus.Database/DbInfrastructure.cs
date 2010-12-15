@@ -1419,9 +1419,9 @@ namespace Epsitec.Cresus.Database
 		private void RegisterDbTable(DbTransaction transaction, DbTable table, bool checkForKnownTable)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			this.CheckForRegisteredTypes (transaction, table);
-			
+
 			if (checkForKnownTable)
 			{
 				this.CheckForKnownTable (transaction, table);
@@ -1429,27 +1429,24 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				this.CheckForUnknownTable (transaction, table);
-				
+
 				//	Create the table description in the CR_TABLE_DEF table :
 				table.UpdatePrimaryKeyInfo ();
 				DbKey tableKey = this.InsertTableDefRow (transaction, table);
 				table.DefineKey (tableKey);
-				
+
 				//	Create the column descriptions in the CR_COLUMN_DEF table :
-				
+
 				foreach (DbColumn column in table.Columns)
 				{
 					DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
 					column.DefineKey (columnKey);
 				}
 			}
-			
+
 			//	Create the table itself :
-			
-			SqlTable sqlTable = table.CreateSqlTable (this.converter);
-			
-			transaction.SqlBuilder.InsertTable (sqlTable);
-			this.ExecuteSilent (transaction);
+
+			this.InsertDbTable (transaction, table);
 
 			//	Create the revision tracking table, if needed :
 
@@ -1466,6 +1463,36 @@ namespace Epsitec.Cresus.Database
 				if (column.Cardinality != DbCardinality.None)
 				{
 					this.CreateRelationTable (transaction, table, column);
+				}
+			}
+		}
+
+
+		private void InsertDbTable(DbTransaction transaction, DbTable table)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+
+			transaction.SqlBuilder.InsertTable (sqlTable);
+			this.ExecuteSilent (transaction);
+
+			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			{
+				string tableName = sqlTable.Name;
+				string columnName = dbColumn.GetSqlName ();
+
+				if (dbColumn.IsAutoIncremented)
+				{
+					transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
+					this.ExecuteSilent (transaction);
+				}
+
+				bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
+				bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
+
+				if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
+				{
+					transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
+					this.ExecuteSilent (transaction);
 				}
 			}
 		}
@@ -2863,10 +2890,7 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (DbTable table in tables)
 				{
-					SqlTable sqlTable = table.CreateSqlTable (infrastructure.converter);
-
-					infrastructure.DefaultSqlBuilder.InsertTable (sqlTable);
-					infrastructure.ExecuteSilent (transaction);
+					infrastructure.InsertDbTable (transaction, table);
 				}
 			}
 

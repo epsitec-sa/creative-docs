@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
@@ -279,11 +281,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			foreach (SqlColumn column in table.Columns)
 			{
 				this.BuildSetColumnCommentSqlCommand (table.Name, column);
-				this.BuildAutoIncrementTriggerForColumn (table.Name, column);
-				this.BuildAutoTimeStampTriggerForColumn (table.Name, column);
 			}
 		}
-
 
 		private void BuildSetColumnCommentSqlCommand(string tableName, SqlColumn column)
 		{
@@ -299,141 +298,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
-		private void BuildAutoIncrementTriggerForColumn(string tableName, SqlColumn column)
-		{
-			// Firebird does not support directly the auto incremented columns, so we need to use
-			// a workaround described here : http://www.firebirdfaq.org/faq29/ . Basically, we need
-			// to create an sequence generator and call that generator in a trigger before a row is
-			// inserted in the table.
-
-			if (column.IsAutoIncremented)
-			{
-				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
-				string triggerName = this.GetAutoIncrementTriggerName (tableName, column);
-				string columnName = column.Name;
-				long generatorInitialValue = column.AutoIncrementStartIndex;
-				
-				this.commandCount++;
-				this.Append ("CREATE GENERATOR " + generatorName + ";\n");
-
-				this.commandCount++;
-				this.Append ("SET GENERATOR " + generatorName + " TO " + generatorInitialValue + ";\n");
-
-				this.commandCount++;
-				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
-				this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
-				this.Append ("AS ");
-				this.Append ("BEGIN ");
-				this.Append ("IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = GEN_ID(" + generatorName + ", 1); ");
-				this.Append ("END;\n");
-			}
-		}
-
-		private void RemoveAutoIncrementedTriggerForColumn(string tableName, SqlColumn column)
-		{
-			// As Firebird does not support directly auto incremented columns, we need to cleanup the
-			// database if we are removing such a column. So first we remove the sequence generator
-			// and then we remove the trigger.
-			// Marc.
-
-			if (column.IsAutoIncremented)
-			{
-				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
-				string triggerName = this.GetAutoIncrementTriggerName (tableName, column);
-
-				this.commandCount++;
-				this.Append ("DROP GENERATOR " + generatorName + ";\n");
-
-				this.commandCount++;
-				this.Append ("DROP TRIGGER " + triggerName + ";\n");
-			}
-		}
-
-		private string GetAutoIncrementGeneratorName(string tableName, SqlColumn column)
-		{
-			string generatorName = tableName + "_" + column.Name + "_gid";
-
-			if (generatorName.Length > 32)
-			{
-				throw new System.Exception ("Generator name for column " + column.Name + " of table " + tableName + " is too long.");
-			}
-
-			return generatorName;
-		}
-
-		private string GetAutoIncrementTriggerName(string tableName, SqlColumn column)
-		{
-			string triggerName = tableName + "_" + column.Name + "_tid";
-
-			if (triggerName.Length > 32)
-			{
-				throw new System.Exception ("Trigger name for column " + column.Name + " of table " + tableName + " is too long.");
-			}
-
-			return triggerName;
-		}
-
-		private void BuildAutoTimeStampTriggerForColumn(string tableName, SqlColumn sqlColumn)
-		{
-			// Firebird does not support directly the auto timestamp columns, so we need to use
-			// a workaround described here : http://www.firebirdfaq.org/faq77/ . Basically, we need
-			// to create a trigger that assigns the timestamp on insert and updates.
-
-			if (sqlColumn.IsAutoTimeStampOnInsert || sqlColumn.IsAutoTimeStampOnUpdate)
-			{
-				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
-				string columnName = sqlColumn.Name;
-
-				this.commandCount++;
-				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
-
-				if (sqlColumn.IsAutoTimeStampOnInsert && sqlColumn.IsAutoTimeStampOnUpdate)
-				{
-					this.Append ("ACTIVE BEFORE INSERT OR UPDATE POSITION 0 ");
-				}
-				else if (sqlColumn.IsAutoTimeStampOnInsert)
-				{
-					this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
-				}
-				else
-				{
-					this.Append ("ACTIVE BEFORE UPDATE POSITION 0 ");
-				}
-
-				this.Append ("AS ");
-				this.Append ("BEGIN ");
-				this.Append ("NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);");
-				this.Append ("END;\n");
-			}
-		}
-
-		private void RemoveAutoTimeStampTriggerForColumn(string tableName, SqlColumn sqlColumn)
-		{
-			// As Firebird does not support directly auto timestamp columns, we need to cleanup the
-			// database if we are removing such a column by removing the trigger.
-
-			if (sqlColumn.IsAutoTimeStampOnInsert || sqlColumn.IsAutoTimeStampOnUpdate)
-			{
-				string triggerName = this.GetAutoTimeStampTriggerName (tableName, sqlColumn);
-
-				this.commandCount++;
-				this.Append ("DROP TRIGGER " + triggerName + ";\n");
-			}
-		}
-
-		private string GetAutoTimeStampTriggerName(string tableName, SqlColumn column)
-		{
-			string triggerName = tableName + "_" + column.Name + "_tts";
-
-			if (triggerName.Length > 32)
-			{
-				throw new System.Exception ("Trigger name for column " + column.Name + " of table " + tableName + " is too long.");
-			}
-
-			return triggerName;
-		}
-
-
 		public void RemoveTable(SqlTable table)
 		{
 			if (!this.ValidateName (table.Name))
@@ -444,12 +308,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.PrepareCommand ();
 			
 			this.commandType = DbCommandType.Silent;
-
-			foreach (SqlColumn column in table.Columns)
-			{
-				this.RemoveAutoIncrementedTriggerForColumn (table.Name, column);
-				this.RemoveAutoTimeStampTriggerForColumn (table.Name, column);
-			}
 			
 			this.commandCount++;
 			
@@ -488,28 +346,23 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (";\n");
 
 				this.BuildSetColumnCommentSqlCommand (tableName, column);
-				this.BuildAutoIncrementTriggerForColumn (tableName, column);
-				this.BuildAutoTimeStampTriggerForColumn (tableName, column);
 			}
 		}
 
-		public void UpdateTableColumns(string tableName, SqlColumn[] columns)
+		public void RenameTableColumn(string tableName, string oldColumnName, string newColumnName)
 		{
-			if (!this.ValidateName (tableName))
-			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
-			}
-
-			if (columns.Length == 0)
-			{
-				return;
-			}
-			
+			tableName.ThrowIf (n => !this.ValidateName (n), "invalid table name");
+			oldColumnName.ThrowIf (n => !this.ValidateName (n), "invalid old column name");
+			newColumnName.ThrowIf (n => !this.ValidateName (n), "invalid new column name");
+						
 			this.PrepareCommand ();
-			
 			this.commandType = DbCommandType.Silent;
 
-			throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Cannot update table {0}. Not supported", tableName));
+			this.commandCount++;
+			this.Append
+			(
+				"ALTER TABLE " + tableName + " ALTER " + oldColumnName + " TO " + newColumnName + ";\n"
+			);
 		}
 
 		public void RemoveTableColumns(string tableName, SqlColumn[] columns)
@@ -535,9 +388,6 @@ namespace Epsitec.Cresus.Database.Implementation
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
 
-				this.RemoveAutoIncrementedTriggerForColumn (tableName, column);
-				this.RemoveAutoTimeStampTriggerForColumn (tableName, column);
-				
 				this.commandCount++;
 				
 				this.Append ("ALTER TABLE ");
@@ -546,6 +396,143 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (column.Name);
 				this.Append (";\n");
 			}
+		}
+
+		public void SetAutoIncrementOnTableColumn(string tableName, string columnName, long initialValue)
+		{
+			// Firebird does not support directly the auto incremented columns, so we need to use
+			// a workaround described here : http://www.firebirdfaq.org/faq29/ . Basically, we need
+			// to create an sequence generator and call that generator in a trigger before a row is
+			// inserted in the table.
+			// Marc
+
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			string generatorName = this.GetAutoIncrementGeneratorName (tableName, columnName);
+			string triggerName = this.GetAutoIncrementTriggerName (tableName, columnName);
+
+			this.commandCount++;
+			this.Append ("CREATE GENERATOR " + generatorName + ";\n");
+
+			this.commandCount++;
+			this.Append ("SET GENERATOR " + generatorName + " TO " + initialValue + ";\n");
+
+			this.commandCount++;
+			this.Append
+			(
+				  "CREATE TRIGGER " + triggerName + " FOR " + tableName + " "
+				+ "ACTIVE BEFORE INSERT POSITION 0 "
+				+ "AS "
+				+ "BEGIN "
+				+ "IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = GEN_ID(" + generatorName + ", 1); "
+				+ "END;\n"
+			);
+		}
+
+		public void DropAutoIncrementOnTableColumn(string tableName, string columnName)
+		{
+			// As Firebird does not support directly auto incremented columns, we need a way to
+			// cleanup the database, for instance if we are removing such a column. So first we
+			// remove the sequence generator and then we remove the trigger.
+			// Marc.
+
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			string generatorName = this.GetAutoIncrementGeneratorName (tableName, columnName);
+			string triggerName = this.GetAutoIncrementTriggerName (tableName, columnName);
+
+			this.commandCount++;
+			this.Append ("DROP GENERATOR " + generatorName + ";\n");
+
+			this.commandCount++;
+			this.Append ("DROP TRIGGER " + triggerName + ";\n");
+		}
+
+		private string GetAutoIncrementGeneratorName(string tableName, string columnName)
+		{
+			string generatorName = tableName + "_" + columnName + "_gid";
+
+			if (generatorName.Length > 32)
+			{
+				throw new System.Exception ("Generator name for column " + columnName + " of table " + tableName + " is too long.");
+			}
+
+			return generatorName;
+		}
+
+		private string GetAutoIncrementTriggerName(string tableName, string columnName)
+		{
+			string triggerName = tableName + "_" + columnName + "_tid";
+
+			if (triggerName.Length > 32)
+			{
+				throw new System.Exception ("Trigger name for column " + columnName + " of table " + tableName + " is too long.");
+			}
+
+			return triggerName;
+		}
+
+		public void SetAutoTimeStampOnTableColumn(string tableName, string columnName, bool onInsert, bool onUpdate)
+		{
+			// Firebird does not support directly the auto timestamp columns, so we need to use
+			// a workaround described here : http://www.firebirdfaq.org/faq77/ . Basically, we need
+			// to create a trigger that assigns the timestamp on insert and updates.
+			// Marc
+
+			if (!onInsert && !onUpdate)
+			{
+				throw new System.ArgumentException ();
+			}
+
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			string triggerName = this.GetAutoTimeStampTriggerName (tableName, columnName);
+
+			this.commandCount++;
+			
+			var insert = (onInsert ? "INSERT" : "");
+			var or = (onInsert && onUpdate ? " OR " : "");
+			var update = (onUpdate ? "UPDATE" : "");
+
+			this.Append
+			(
+				  "CREATE TRIGGER " + triggerName + " FOR " + tableName + " "
+				+ "ACTIVE BEFORE " + insert + or + update + " POSITION 0 "
+				+ "AS "
+				+ "BEGIN "
+				+ "NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);"
+				+ "END;\n"
+			);
+		}
+
+		public void DropAutoTimeStampOnTableColumn(string tableName, string columnName)
+		{
+			// As Firebird does not support directly auto timestamp columns, we need to provide a
+			// way to cleanup the database, for instance if we are removing such a column.
+			// Marc
+
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			string triggerName = this.GetAutoTimeStampTriggerName (tableName, columnName);
+
+			this.commandCount++;
+			this.Append ("DROP TRIGGER " + triggerName + ";\n");
+		}
+
+		private string GetAutoTimeStampTriggerName(string tableName, string columnName)
+		{
+			string triggerName = tableName + "_" + columnName + "_tts";
+
+			if (triggerName.Length > 32)
+			{
+				throw new System.Exception ("Trigger name for column " + columnName + " of table " + tableName + " is too long.");
+			}
+
+			return triggerName;
 		}
 				
 		public void SelectData(SqlSelect sqlQuery)

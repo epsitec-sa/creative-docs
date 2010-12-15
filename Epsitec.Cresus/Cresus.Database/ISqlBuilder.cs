@@ -1,6 +1,10 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using System.Collections.Generic;
+
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -102,12 +106,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="columns">The columns.</param>
 		void InsertTableColumns(string tableName, SqlColumn[] columns);
 
-		/// <summary>
-		/// Updates the columns in a table definition.
-		/// </summary>
-		/// <param name="tableName">Name of the table.</param>
-		/// <param name="columns">The columns.</param>
-		void UpdateTableColumns(string tableName, SqlColumn[] columns);
+		void RenameTableColumn(string tableName, string oldColumnName, string newColumnName);
 		
 		/// <summary>
 		/// Removes the columns from a table definition.
@@ -116,6 +115,14 @@ namespace Epsitec.Cresus.Database
 		/// <param name="columns">The columns.</param>
 		void RemoveTableColumns(string tableName, SqlColumn[] columns);
 
+		void SetAutoIncrementOnTableColumn(string tableName, string columnName, long initialValue);
+
+		void DropAutoIncrementOnTableColumn(string tableName, string columnName);
+
+		void SetAutoTimeStampOnTableColumn(string tableName, string columnName, bool onInsert, bool onUpdate);
+
+		void DropAutoTimeStampOnTableColumn(string tableName, string columnName);
+		
 		/// <summary>
 		/// Selects data based on a query.
 		/// </summary>
