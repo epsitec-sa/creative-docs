@@ -795,6 +795,11 @@
     <EmbeddedResource Include="Images\Import.icon" />
     <EmbeddedResource Include="Images\Delete.icon" />
     <EmbeddedResource Include="Images\Data.OptionValue.icon" />
+    <EmbeddedResource Include="Images\Table.DeselectAll.icon" />
+    <EmbeddedResource Include="Images\Table.SelectAll.icon" />
+    <EmbeddedResource Include="Images\Table.SelectInvert.icon" />
+    <EmbeddedResource Include="Images\Table.SelectColumn.icon" />
+    <EmbeddedResource Include="Images\Table.SelectRow.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
