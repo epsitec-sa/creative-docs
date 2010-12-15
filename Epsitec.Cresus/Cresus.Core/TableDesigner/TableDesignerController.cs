@@ -18,15 +18,13 @@ namespace Epsitec.Cresus.Core.TableDesigner
 {
 	public sealed class TableDesignerController : System.IDisposable
 	{
-		public TableDesignerController(Window window, DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, PriceCalculatorEntity priceCalculatorEntity, ArticleDefinitionEntity articleDefinitionEntity)
+		public TableDesignerController(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, PriceCalculatorEntity priceCalculatorEntity, ArticleDefinitionEntity articleDefinitionEntity)
 		{
-			System.Diagnostics.Debug.Assert (window != null);
 			System.Diagnostics.Debug.Assert (orchestrator != null);
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (priceCalculatorEntity.IsNotNull ());
 			System.Diagnostics.Debug.Assert (articleDefinitionEntity.IsNotNull ());
 
-			this.window                  = window;
 			this.orchestrator            = orchestrator;
 			this.businessContext         = businessContext;
 			this.priceCalculatorEntity   = priceCalculatorEntity;
@@ -37,11 +35,17 @@ namespace Epsitec.Cresus.Core.TableDesigner
 
 
 
-		public Widget CreateUI()
+		public void CreateUI(Widget parent)
 		{
-			this.editorUI = this.CreateTableEditorUI ();
-			
-			return this.editorUI;
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (5),
+			};
+
+			this.mainController = new MainController (box, this.businessContext, this.priceCalculatorEntity, this.articleDefinitionEntity);
+			this.mainController.CreateUI (box);
 		}
 
 		public void NavigateTo(PriceCalculatorEntity entity)
@@ -50,20 +54,6 @@ namespace Epsitec.Cresus.Core.TableDesigner
 			var browserViewController = mainViewController.BrowserViewController;
 			
 			browserViewController.Select (entity);
-		}
-
-		private Widget CreateTableEditorUI()
-		{
-			var box = new FrameBox
-			{
-				Dock = DockStyle.Fill,
-				Padding = new Margins (5),
-			};
-
-			this.mainController = new MainController (this.window, this.businessContext, this.priceCalculatorEntity, this.articleDefinitionEntity);
-			this.mainController.CreateUI (box);
-
-			return box;
 		}
 
 
@@ -83,25 +73,17 @@ namespace Epsitec.Cresus.Core.TableDesigner
 
 		public void Dispose()
 		{
-			if (this.editorUI != null)
-			{
-				this.editorUI.Dispose ();
-				this.editorUI = null;
-			}
-
 			this.businessContext.SavingChanges -= this.HandleBusinessContextSavingChanges;
 		}
 
 		#endregion
 
 
-		private readonly Window								window;
 		private readonly DataViewOrchestrator				orchestrator;
 		private readonly BusinessContext					businessContext;
 		private readonly PriceCalculatorEntity				priceCalculatorEntity;
 		private readonly ArticleDefinitionEntity			articleDefinitionEntity;
 
-		private Widget										editorUI;
 		private MainController								mainController;
 	}
 }

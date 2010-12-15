@@ -45,48 +45,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			// TODO: Provisoirement, on crée un bouton qui ouvre une fenêtre. Cette fenêtre devra être intégrée dans les tuiles...
-			var button = builder.CreateButton (tile, 0, null, "Editer la tabelle de prix...");
-
-			button.Clicked += delegate
+			var box = new FrameBox
 			{
-				this.Edition ();
+				Parent = tile.Container,
+				PreferredHeight = 500,  // TODO: Comment mettre un mode "full height" ?
+				Dock = DockStyle.Top,
 			};
-		}
-
-
-		private void Edition()
-		{
-			var window = this.CreateWindow ();
 
 			var articleDefinition = this.BusinessContext.GetMasterEntity<ArticleDefinitionEntity> ();
 			System.Diagnostics.Debug.Assert (articleDefinition != null);
-			var tableDesigner = new TableDesignerController (window, this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
+			var tableDesigner = new TableDesignerController (this.Orchestrator, this.BusinessContext, this.Entity, articleDefinition);
 
-			var box = tableDesigner.CreateUI ();
-			box.Parent = window.Root;
-
-			window.ShowDialog ();
-		}
-
-		private Window CreateWindow()
-		{
-			var window = new Window ();
-
-			window.Owner = CoreProgram.Application.Window;
-			window.Icon = CoreProgram.Application.Window.Icon;
-			window.Text = "Calculateur de prix";
-			window.ClientSize = new Size (800, 600);
-			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
-			window.AdjustWindowSize ();
-
-			window.WindowCloseClicked += delegate
-			{
-				window.Hide ();
-				window.Close ();
-			};
-
-			return window;
+			tableDesigner.CreateUI (box);
 		}
 	}
 }
