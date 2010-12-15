@@ -26,9 +26,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 		{
-			var data = template.BusinessContext.Data;
+			var data    = template.BusinessContext.Data;
+			var context = template.BusinessContext.DataContext;
 
-			return new CollectionAccessor<T1, T2, T2> (source, () => data.GetAllEntities<T2> (DataExtractionMode.Sorted), template);
+			return new CollectionAccessor<T1, T2, T2> (source, () => data.GetAllEntities<T2> (DataExtractionMode.Sorted, dataContext: context), template);
 		}
 
 		public abstract CollectionTemplate Template
