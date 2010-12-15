@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionPriceCalculatorViewController : EditionViewController<Entities.PriceCalculatorEntity>
+	public class EditionPriceCalculatorViewController : EditionViewController<PriceCalculatorEntity>
 	{
-		public EditionPriceCalculatorViewController(string name, Entities.PriceCalculatorEntity entity)
+		public EditionPriceCalculatorViewController(string name, PriceCalculatorEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -47,6 +47,40 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			builder.CreateButtonOpeningSubviewController ("TableDesigner", TextFormatter.FormatText ("Voir la tabelle de prix &gt;"), this.Entity, ViewControllerMode.Edition, 1);
+		}
+	}
+
+	[ControllerSubType (1)]
+	public class EditionPriceCalculatorViewControllerTableDesigner : EditionViewController<PriceCalculatorEntity>
+	{
+		public EditionPriceCalculatorViewControllerTableDesigner(string name, PriceCalculatorEntity entity)
+			: base (name, entity)
+		{
+		}
+
+		public override double GetPreferredWidth(int columnIndex, int columnCount)
+		{
+			return base.GetPreferredWidth (columnIndex, columnCount) * 3;
+		}
+
+		protected override void CreateUI()
+		{
+			using (var builder = new UIBuilder (this))
+			{
+				builder.CreateHeaderEditorTile ();
+				builder.CreateEditionTitleTile ("Data.PriceCalculator", "Tabelle de prix");
+
+				this.CreateUIMain (builder);
+
+				builder.CreateFooterEditorTile ();
+			}
+		}
+
+		private void CreateUIMain(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
 
 			// TODO: Provisoirement, on crée un bouton qui ouvre une fenêtre. Cette fenêtre devra être intégrée dans les tuiles...
 			var button = builder.CreateButton (tile, 0, null, "Editer la tabelle de prix...");
