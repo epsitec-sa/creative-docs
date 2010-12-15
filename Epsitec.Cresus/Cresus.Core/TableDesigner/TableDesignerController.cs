@@ -59,6 +59,8 @@ namespace Epsitec.Cresus.Core.TableDesigner
 
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
+			// TODO: Lorsqu'on annule les modifications, l'événement SavingChanges est généré, avec Cancel = false. Normal ?
+			// TODO: Gérer l'annulation des modifications !
 			this.businessContext.DataContext.SaveChanges ();
 			this.SaveTableDesignIntoEntity ();
 		}
