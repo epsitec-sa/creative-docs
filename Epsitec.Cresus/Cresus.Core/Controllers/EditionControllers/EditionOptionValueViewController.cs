@@ -36,7 +36,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIMain (builder);
 				this.CreateUIArticleDefinition (builder);
 				//?this.CreateUIParameter (builder);
-				//?this.CreateUIUnit (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -79,29 +78,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 #endif
 
-#if false
-		private void CreateUIUnit(UIBuilder builder)
-		{
-			var controller = new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
-			{
-				ValueGetter         = () => this.Entity.Unit,
-				ValueSetter         = x => this.Entity.Unit = x,
-				ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnit),
-			};
-
-			builder.CreateAutoCompleteTextField ("Unité de mesure", controller);
-		}
-#endif
-
 
 		private NewEntityReference CreateNewArticle(DataContext context)
 		{
 			return context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
-		}
-
-		private NewEntityReference CreateNewUnit(DataContext context)
-		{
-			return context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 		}
 
 

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class EnumValueArticleParameterController : AbstractArticleParameterController
 	{
-		public EnumValueArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
+		public EnumValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
 			: base (article, parameterIndex)
 		{
 		}

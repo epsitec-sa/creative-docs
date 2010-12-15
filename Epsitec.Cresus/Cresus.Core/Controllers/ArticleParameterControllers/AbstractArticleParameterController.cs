@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public abstract class AbstractArticleParameterController
 	{
-		public AbstractArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
+		public AbstractArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
 		{
 			this.article = article;
 			this.parameterIndex = parameterIndex;
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		public const char				SeparatorChar	= (char) 0x25CA;					// '◊'
 		public static readonly string	Separator		= SeparatorChar.ToString ();		// "◊"
 
-		private readonly ArticleDocumentItemEntity article;
+		private readonly IArticleDefinitionParameters article;
 		private readonly int parameterIndex;
 	}
 }

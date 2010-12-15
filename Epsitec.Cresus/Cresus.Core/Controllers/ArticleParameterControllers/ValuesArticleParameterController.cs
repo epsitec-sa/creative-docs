@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 		}
 
-		public void UpdateUI(ArticleDocumentItemEntity article)
+		public void UpdateUI(IArticleDefinitionParameters article)
 		{
 			this.frameBox.Children.Clear ();
 
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.editionTile.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
 		}
 
-		private void CreateParameterUI(FrameBox parent, ArticleDocumentItemEntity article, int index)
+		private void CreateParameterUI(FrameBox parent, IArticleDefinitionParameters article, int index)
 		{
 			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameterDefinitions[index];
 

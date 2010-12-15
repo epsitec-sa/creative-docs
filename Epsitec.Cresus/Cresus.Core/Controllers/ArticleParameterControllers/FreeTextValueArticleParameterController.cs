@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class FreeTextValueArticleParameterController : AbstractArticleParameterController
 	{
-		public FreeTextValueArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
+		public FreeTextValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
 			: base (article, parameterIndex)
 		{
 		}
