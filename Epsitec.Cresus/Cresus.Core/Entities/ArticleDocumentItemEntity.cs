@@ -97,6 +97,11 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
+			if (this.GetEntityStatus () == EntityStatus.Empty)
+			{
+				return null;
+			}
+
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
 			var desc = Misc.FirstLine (Helpers.ArticleDocumentItemHelper.GetArticleDescription (this, shortDescription: true));
 			var price = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
