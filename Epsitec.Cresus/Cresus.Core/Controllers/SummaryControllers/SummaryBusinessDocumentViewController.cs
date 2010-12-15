@@ -273,7 +273,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				var line = this.Entity.Lines[index];
 
-				if (line.GroupLevel > 0)
+				if ((line.GroupLevel > 0) &&
+					(! (line is SubTotalDocumentItemEntity)))
 				{
 					return index+1;
 				}
