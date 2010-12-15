@@ -146,7 +146,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				node = node.ParentController;
 			}
 		}
-		
+
+		public virtual double GetPreferredWidth(int columnIndex, int columnCount)
+		{
+			return 300;
+		}
 
 		public bool Matches(CoreViewController controller)
 		{
