@@ -132,11 +132,6 @@ namespace Epsitec.Cresus.Core.Business
 		
 		public bool ContainsChanges()
 		{
-			if (this.hasExternalChanges)
-			{
-				return true;
-			}
-
 			if ((this.isDisposed) ||
 				(this.IsDiscarded))
 			{
@@ -144,7 +139,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 			else
 			{
-				return this.dataContext.ContainsChanges ();
+				return this.hasExternalChanges || this.dataContext.ContainsChanges ();
 			}
 		}
 
