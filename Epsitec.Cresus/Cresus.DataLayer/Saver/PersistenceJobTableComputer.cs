@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 							};
 
 			var fieldsIn = localEntityIds
-				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
+				.SelectMany (id => this.DataContext.DataInfrastructure.SchemaEngine.GetSourceReferences (id))
 				.Select (fp => new
 				{
 					localEntityId = fp.EntityId,
