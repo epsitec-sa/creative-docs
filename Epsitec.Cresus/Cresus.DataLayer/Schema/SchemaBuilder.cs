@@ -463,11 +463,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			Druid targetEntityId = field.TypeId;
 
-			DbTable targetTabe = newTables[targetEntityId];
+			DbTable targetTable = newTables[targetEntityId];
 
 			DbCardinality cardinality = this.FieldRelationToDbCardinality (field.Relation);
 
-			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, targetTabe, DbRevisionMode.TrackChanges, cardinality);
+			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, targetTable, DbRevisionMode.TrackChanges, cardinality);
 
 			return column;
 		}
