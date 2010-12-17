@@ -187,20 +187,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public IEnumerable<EntityFieldPath> GetSourceReferences(Druid targetEntity)
-		{
-			this.EnsureSourceReferenceResolverIsBuilt ();
-			
-			if (this.sourceReferenceResolver.ContainsKey (targetEntity))
-			{
-				return this.sourceReferenceResolver[targetEntity];
-			}
-			else
-			{
-				return new EntityFieldPath[0];
-			}
-		}
-		
 		/// <summary>
 		/// Creates a new database using the specified database access. This
 		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
@@ -2352,93 +2338,6 @@ namespace Epsitec.Cresus.Database
 			return tables;
 		}
 
-
-		private void EnsureSourceReferenceResolverIsBuilt()
-		{
-			if (this.sourceReferenceResolver == null)
-			{
-				this.sourceReferenceResolver = this.BuildSourceReferenceResolver ();
-			}
-		}
-
-
-		private void ClearSourceReferenceResolver()
-		{
-			this.sourceReferenceResolver = null;
-		}
-
-
-		private Dictionary<Druid, HashSet<EntityFieldPath>> BuildSourceReferenceResolver()
-		{
-			Dictionary<Druid, HashSet<EntityFieldPath>> sourceReferenceResolver = new Dictionary<Druid, HashSet<EntityFieldPath>> ();
-
-			foreach (System.Data.DataRow row in this.GetSourceReferenceResolverRows ().Rows)
-			{
-				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
-				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
-
-				Druid sourceId = Druid.Parse ("[" + row["T_NAME"] + "]");
-				Druid sourceFieldId = dbColumn.CaptionId;
-				Druid targetId = Druid.Parse ("[" + dbColumn.TargetTableName + "]");
-
-				EntityFieldPath sourcePath = EntityFieldPath.CreateAbsolutePath (sourceId, EntityFieldPath.CreateRelativePath (sourceFieldId.ToResourceId ()));
-
-				if (!sourceReferenceResolver.ContainsKey (targetId))
-				{
-					sourceReferenceResolver[targetId] = new HashSet<EntityFieldPath> ();
-				}
-
-				sourceReferenceResolver[targetId].Add (sourcePath);
-			}
-
-			return sourceReferenceResolver;
-		}
-
-
-		private System.Data.DataTable GetSourceReferenceResolverRows()
-		{
-			System.Data.DataTable dataTable;
-			
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlSelect query = this.BuildSourceReferenceResolverQuery ();
-
-				dataTable = this.ExecuteSqlSelect (transaction, query, 0);
-
-				transaction.Commit ();
-			}
-
-			return dataTable;
-		}
-
-
-		private SqlSelect BuildSourceReferenceResolverQuery()
-		{
-			SqlSelect query = new SqlSelect ();
-
-			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
-			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
-
-			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
-			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
-
-			SqlField tableColumnId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
-			SqlField columnRefTableId = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTable);
-			query.Joins.Add (new SqlJoin (tableColumnId, columnRefTableId, SqlJoinCode.Inner));
-
-			SqlField statusColumn  = SqlField.CreateName ("T_COLUMN", Tags.ColumnStatus);
-			SqlField statusValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusColumn, statusValue));
-
-			SqlField typeColumn = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType);
-			SqlField typeValue = SqlField.CreateConstant (DbKey.Empty.Id, DbKey.RawTypeForId);
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, typeColumn, typeValue));
-
-			return query;
-		}
-
-
-
 		/// <summary>
 		/// Loads the type definitions based on the metadata type key and the
 		/// specified search mode.
@@ -2657,8 +2556,6 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
-
-			this.ClearSourceReferenceResolver ();
 		}
 
 		/// <summary>
@@ -2737,8 +2634,6 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
 			object data = this.ExecuteScalar (transaction);
 
-			this.ClearSourceReferenceResolver ();
-
 			return new DbKey (new DbId ((long) data));
 		}
 
@@ -2774,9 +2669,74 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
 			object data = this.ExecuteScalar (transaction);
 
-			this.ClearSourceReferenceResolver ();
-
 			return new DbKey (new DbId ((long) data));
+		}
+
+		public IEnumerable<System.Tuple<string, string>> GetSourceReferences(string targetName)
+		{
+			// TODO Optimize this request because it fetches everything, where it could fetch only
+			// the rows that interests us. This is mainly because I think the CR_COLUMN_DEF table
+			// is not filled properly and that we do not insert the target table id of the column,
+			// which we should do. So we need to deserialize the xml data of the column in order
+			// to know its target table.
+			// Marc
+
+			foreach (System.Data.DataRow row in this.GetSourceReferenceData ().Rows)
+			{
+				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
+				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
+
+				if (dbColumn.TargetTableName == targetName)
+				{
+					string sourceName = (string) row["T_NAME"];
+					string fieldName = dbColumn.Name;
+
+					yield return System.Tuple.Create (sourceName, fieldName);
+				}
+			}
+		}
+
+		private System.Data.DataTable GetSourceReferenceData()
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = this.BuildSourceReferenceResolverQuery ();
+
+				System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
+
+				transaction.Commit ();
+
+				return dataTable;
+			}
+		}
+
+		private SqlSelect BuildSourceReferenceResolverQuery()
+		{
+			SqlSelect query = new SqlSelect ();
+
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
+			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
+
+			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
+			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
+
+			SqlField tableColumnId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
+			SqlField columnRefTableId = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTable);
+			query.Joins.Add (new SqlJoin (tableColumnId, columnRefTableId, SqlJoinCode.Inner));
+
+			SqlField statusTable  = SqlField.CreateName ("T_TABLE", Tags.ColumnStatus);
+			SqlField statusTableValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusTable, statusTableValue));
+
+			SqlField statusColumn  = SqlField.CreateName ("T_COLUMN", Tags.ColumnStatus);
+			SqlField statusColumnValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusColumn, statusColumnValue));
+
+			SqlField typeColumn = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType);
+			SqlField typeValue = SqlField.CreateConstant (DbKey.Empty.Id, DbKey.RawTypeForId);
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, typeColumn, typeValue));
+
+			return query;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -2834,7 +2794,6 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
 			System.Diagnostics.Debug.Assert (this.converter == null);
 		}
-
 
 		#region Initialisation
 
@@ -3443,8 +3402,8 @@ namespace Epsitec.Cresus.Database
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 
-		private Dictionary<Druid, HashSet<EntityFieldPath>> sourceReferenceResolver;
-
 		public static readonly int AutoIncrementStartIndex = 1000000000;
+
+
 	}
 }

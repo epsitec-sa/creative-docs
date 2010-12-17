@@ -11,6 +11,8 @@ using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Schema
 {
@@ -38,6 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			this.SchemaBuilder = new SchemaBuilder (dbInfrastructure);
 
 			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
+			this.sourceReferencesCache = new Dictionary<Druid, IList<EntityFieldPath>> ();
 		}
 
 
@@ -74,6 +77,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			return this.CreateSchema (EntityInfo<TEntity>.GetTypeId ());
 		}
 
+
 		public bool CreateSchema(Druid entityId)
 		{
 			bool createTable = (this.GetEntityTableDefinition (entityId) == null);
@@ -87,6 +91,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					transaction.Commit ();
 				}
 
+				this.sourceReferencesCache.Clear ();
 				this.LoadSchema (entityId);
 			}
 
@@ -226,6 +231,50 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
+		/// Gets the description of which fields of which entities references the entities defined
+		/// by the given <see cref="Druid"/>. The result is return as a sequence of
+		/// <see cref="EntityFieldPath"/> that contains the <see cref="Druid"/> of an entity and the
+		/// <see cref="Druid"/> of a field.
+		/// </summary>
+		/// <remarks>
+		/// This method retrieves only the source references for the given <see cref="Druid"/>, but
+		/// do not retrieves the ones of base or derived entities.
+		/// </remarks>
+		/// <param name="targetEntity">The kind of entities of the target.</param>
+		/// <returns>The description of the field and entities that references the given target entity.</returns>
+		public IEnumerable<EntityFieldPath> GetSourceReferences(Druid targetEntity)
+		{
+			if (!this.sourceReferencesCache.ContainsKey (targetEntity))
+			{
+				this.sourceReferencesCache[targetEntity] = this.RetrieveSourceReferences (targetEntity).ToList ();
+			}
+
+			return this.sourceReferencesCache[targetEntity];
+		}
+
+
+		/// <summary>
+		/// Builds the source references for the given <see cref="Druid"/>.
+		/// </summary>
+		/// <returns>The source referenced resolver.</returns>
+		private IEnumerable<EntityFieldPath> RetrieveSourceReferences(Druid targetEntity)
+		{
+			string tableName = this.GetEntityTableName (targetEntity);
+
+			foreach (var item in this.DbInfrastructure.GetSourceReferences (tableName))
+			{
+				Druid sourceId = Druid.Parse ("[" + item.Item1 + "]");
+				Druid sourceFieldId = Druid.Parse ("[" + item.Item2 + "]");
+
+				EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (sourceFieldId.ToResourceId ());
+				EntityFieldPath sourcePath = EntityFieldPath.CreateAbsolutePath (sourceId, fieldPath);
+
+				yield return sourcePath;
+			}
+		}
+
+
+		/// <summary>
 		/// Gets the name of the <see cref="DbTable"/> corresponding to an <see cref="AbstractEntity"/>
 		/// <see cref="Druid"/>.
 		/// </summary>
@@ -269,7 +318,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// The cache containing the <see cref="DbTable"/> that have been processed by the current
 		/// instance.
 		/// </summary>
-		private readonly Dictionary<Druid, DbTable> tableDefinitionCache;
+		private readonly IDictionary<Druid, DbTable> tableDefinitionCache;
+
+		
+		/// <summary>
+		/// The cache containing all the source references, that is, the information about which
+		/// field of which entity does reference a given entity <see cref="Druid"/>.
+		/// </summary>
+		private IDictionary<Druid, IList<EntityFieldPath>> sourceReferencesCache;
 
 
 	}

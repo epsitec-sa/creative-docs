@@ -1186,7 +1186,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
 			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
-				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
+				.SelectMany (id => this.DataInfrastructure.SchemaEngine.GetSourceReferences (id))
 				.GroupBy (fp => fp.EntityId, fp => Druid.Parse (fp.Fields[0]))
 				.ToDictionary (g => g.Key, g => g.ToList ());
 

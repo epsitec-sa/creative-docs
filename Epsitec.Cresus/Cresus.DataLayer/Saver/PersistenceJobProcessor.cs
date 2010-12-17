@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
 			{
-				var sourceReferences = this.DbInfrastructure.GetSourceReferences (localEntityId);
+				var sourceReferences = this.DataContext.DataInfrastructure.SchemaEngine.GetSourceReferences (localEntityId);
 
 				foreach (EntityFieldPath fieldPath in sourceReferences)
 				{
