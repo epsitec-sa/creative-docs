@@ -31,14 +31,6 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		#region IValidator Members
 		
-		public ValidationState					State
-		{
-			get
-			{
-				return this.state;
-			}
-		}
-		
 		public abstract void Validate();
 		
 		public void MakeDirty(bool deep)
@@ -46,6 +38,12 @@ namespace Epsitec.Common.Widgets.Validators
 			this.SetState (ValidationState.Dirty);
 		}
 		
+		public event Support.EventHandler		BecameDirty;
+
+#endregion
+
+		#region IValidationResult Members
+		 
 		public bool								IsValid
 		{
 			get
@@ -59,15 +57,21 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 
-		public FormattedText					ErrorMessage
+		public ValidationState					State
+		{
+			get
+			{
+				return this.state;
+			}
+		}
+		
+		public virtual FormattedText			ErrorMessage
 		{
 			get
 			{
 				return FormattedText.Empty;
 			}
 		}
-		
-		public event Support.EventHandler		BecameDirty;
 		
 		#endregion
 		

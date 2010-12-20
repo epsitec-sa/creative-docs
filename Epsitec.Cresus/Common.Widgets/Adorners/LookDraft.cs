@@ -1633,7 +1633,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintTooltipBackground(Drawing.Graphics graphics,
-										   Drawing.Rectangle rect)
+										   Drawing.Rectangle rect, Drawing.Color backColor)
 		{
 			//	Dessine le fond d'une bulle d'aide.
 			this.PaintImageButton(graphics, rect, 47);
@@ -2361,7 +2361,6 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Image		paper;
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
-		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;

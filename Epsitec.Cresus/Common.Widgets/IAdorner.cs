@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color, Direction dir);
 		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color, Direction dir);
 
-		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);
+		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Color defaultColor);
 		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 
 		/*
@@ -121,6 +121,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorWindow { get; }
 		Drawing.Color ColorDisabled { get; }
 		Drawing.Color ColorBorder { get; }
+		Drawing.Color ColorError { get; }
 		Drawing.Color ColorTextBackground { get; }
 		Drawing.Color ColorTabBackground { get; }
 		Drawing.Color ColorText(WidgetPaintState state);

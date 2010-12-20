@@ -162,6 +162,18 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		public Color ColorOrDefault(Color defaultValue)
+		{
+			if (this.IsEmpty)
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 
 		/// <summary>
 		/// Mixes the specified color A with a color B; the <c>mix</c> parameter specifies

@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets.Validators;
 using Epsitec.Common.Widgets;
@@ -29,16 +30,11 @@ namespace Epsitec.Common.Widgets.Validators
 			this.Marshaler = marshaler;
 		}
 
-		public static MarshalerValidator CreateValidator(Widget widget, Marshaler marshaler)
-		{
-			return new MarshalerValidator (widget, marshaler);
-		}
-
 		/// <summary>
 		/// Gets or sets the marshaler used to validate the widget.
 		/// </summary>
 		/// <value>The marshaler.</value>
-		public Marshaler Marshaler
+		public Marshaler						Marshaler
 		{
 			get
 			{
@@ -51,23 +47,36 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 
-		public System.Predicate<string> AdditionalPredicate
+		public override FormattedText			ErrorMessage
 		{
 			get
 			{
-				return this.predicate;
+				return this.errorMessage;
+			}
+		}
+
+		public System.Func<string, IValidationResult>	Validator
+		{
+			get
+			{
+				return this.validator;
 			}
 			set
 			{
-				this.predicate = value;
+				this.validator = value;
 				this.Predicate = this.CreateComposedPredicate ();
 			}
 		}
 
 
+		public static MarshalerValidator CreateValidator(Widget widget, Marshaler marshaler)
+		{
+			return new MarshalerValidator (widget, marshaler);
+		}
+
 		private System.Func<bool> CreateComposedPredicate()
 		{
-			if (this.predicate == null)
+			if (this.validator == null)
 			{
 				if (this.marshaler == null)
 				{
@@ -82,7 +91,7 @@ namespace Epsitec.Common.Widgets.Validators
 			{
 				if (this.marshaler == null)
 				{
-					return () => this.predicate (this.GetPredicateText ());
+					return () => this.EvaluateValidator (this.GetPredicateText ());
 				}
 				else
 				{
@@ -90,7 +99,7 @@ namespace Epsitec.Common.Widgets.Validators
 						delegate
 						{
 							string text = this.GetPredicateText ();
-							return this.marshaler.CanConvert (text) && this.predicate (text);
+							return this.marshaler.CanConvert (text) && this.EvaluateValidator (text);
 						};
 				}
 			}
@@ -101,7 +110,17 @@ namespace Epsitec.Common.Widgets.Validators
 			return TextConverter.ConvertToSimpleText (this.Widget.Text);
 		}
 
+		private bool EvaluateValidator(string value)
+		{
+			var validationResult = this.validator (value);
+
+			this.errorMessage = validationResult.ErrorMessage;
+			
+			return validationResult.IsValid;
+		}
+
 		private Marshaler marshaler;
-		private System.Predicate<string> predicate;
+		private System.Func<string, IValidationResult> validator;
+		private FormattedText errorMessage;
 	}
 }

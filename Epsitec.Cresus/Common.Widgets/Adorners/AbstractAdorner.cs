@@ -322,7 +322,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle fullRect, Drawing.Rectangle userRect, Drawing.Rectangle textRect, TextLayout text, WidgetPaintState state);
 		public abstract void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color, Widgets.Direction dir);
 		public abstract void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color, Widgets.Direction dir);
-		public abstract void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);
+		public abstract void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Color defaultColor);
 		public abstract void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 		public abstract void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		public abstract void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
@@ -381,6 +381,14 @@ namespace Epsitec.Common.Widgets.Adorners
 			get
 			{
 				return this.colorControl;
+			}
+		}
+
+		public virtual Drawing.Color ColorError
+		{
+			get
+			{
+				return this.colorError;
 			}
 		}
 
@@ -543,5 +551,6 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorInfo;
+		protected Drawing.Color		colorError;
 	}
 }

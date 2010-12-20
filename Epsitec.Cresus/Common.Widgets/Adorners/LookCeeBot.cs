@@ -1758,11 +1758,11 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintTooltipBackground(Drawing.Graphics graphics,
-										   Drawing.Rectangle rect)
+										   Drawing.Rectangle rect, Drawing.Color backColor)
 		{
 			//	Dessine le fond d'une bulle d'aide.
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorInfo);  // fond jaune pale
+			graphics.RenderSolid(backColor.ColorOrDefault (this.colorInfo));  // fond jaune pale
 			
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
@@ -2275,7 +2275,6 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
-		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorUndefinedLanguage;
 		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
