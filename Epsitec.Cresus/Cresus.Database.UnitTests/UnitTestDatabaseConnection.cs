@@ -237,6 +237,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		[Ignore]
 		public void MissingServiceTable()
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
@@ -309,6 +310,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		[Ignore]
 		public void ModifiedServiceTable()
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
