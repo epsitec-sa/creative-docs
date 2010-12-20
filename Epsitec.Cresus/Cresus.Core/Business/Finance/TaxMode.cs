@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		None			= 0,
 
 		LiableForVat	= 1,										//	assujetti à la TVA
-		NotLiableForVat	= 2,										//	non assujetti à la TVA
+		NotLiableForVat	= 2,										//	non assujetti à la TVA (ou assujetti à la TVA, mais libéré de l'assujettissement)
 
 		ExemptFromVat	= 3,										//	exonéré
 	}
