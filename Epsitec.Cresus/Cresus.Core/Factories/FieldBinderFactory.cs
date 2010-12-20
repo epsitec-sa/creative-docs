@@ -55,13 +55,14 @@ namespace Epsitec.Cresus.Core.Factories
 		}
 
 		/// <summary>
-		/// Gets a predicate returning <c>true</c> if the field binder validates its data.
+		/// Gets a validator returning an <see cref="IValidationResult"> based on the UI text
+		/// for the specified field binder.
 		/// </summary>
 		/// <param name="fieldValidator">The field binder.</param>
-		/// <returns>The predicate.</returns>
-		public static System.Predicate<string> GetPredicate(this IFieldBinder fieldValidator)
+		/// <returns>The validator returning an <see cref="IValidationResult"/>.</returns>
+		public static System.Func<string, IValidationResult> GetValidator(this IFieldBinder fieldValidator)
 		{
-			return text => fieldValidator.ValidateFromUI (text).IsValid;
+			return text => fieldValidator.ValidateFromUI (text);
 		}
 
 

@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.fieldBinder != null)
 			{
-				validator.AdditionalPredicate = this.fieldBinder.GetPredicate ();
+				validator.Validator = this.fieldBinder.GetValidator ();
 			}
 		}
 
