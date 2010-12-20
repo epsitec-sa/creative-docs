@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void CreateDbTypeTest()
+		public void CreateAndDeleteDbTypeTest()
 		{
 			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
 			{
@@ -116,6 +116,27 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void CreateAndAlterDbTypeDef()
+		{
+			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			{
+				DbTypeDef dbType1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+				DbTypeDef dbType2 = new DbTypeDef ("Nom", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
+
+				infrastructure.RegisterNewDbType (dbType1);
+				DbTypeDef dbTypeA = infrastructure.ResolveDbType ("Nom");
+
+				Assert.IsTrue (dbType1 == dbTypeA);
+
+				infrastructure.AlterDbType (dbTypeA , dbType2);
+				DbTypeDef dbTypeB = infrastructure.ResolveDbType ("Nom");
+
+				Assert.IsTrue (dbType2 == dbTypeB);		
+			}
+		}
+
+
+		[TestMethod]
 		public void ResolveDbTypeTest()
 		{
 			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
@@ -149,14 +170,11 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void CreateDbTableTest()
 		{
-			DbTable dbTable1;
-			DbTable dbTable2;
-
 			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
 			{
 				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
-				
-				dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbTable dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				DbTypeDef dbTypeLevel = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
@@ -183,19 +201,17 @@ namespace Epsitec.Cresus.Database.UnitTests
 				dbTable1.AddIndex (col2);
 
 				infrastructure.RegisterNewDbTable (dbTable1);
-			}
+				infrastructure.ClearCaches ();
 
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
-			{
-				dbTable2 = infrastructure.ResolveDbTable ("SimpleTest");
-			}
+				DbTable dbTable2 = infrastructure.ResolveDbTable ("SimpleTest");
 
-			Assert.IsNotNull (dbTable2);
-			Assert.AreEqual (dbTable1.Name, dbTable2.Name);
-			Assert.AreEqual (dbTable1.Category, dbTable2.Category);
-			Assert.AreEqual (dbTable1.PrimaryKeys.Count, dbTable2.PrimaryKeys.Count);
-			Assert.AreEqual (dbTable1.PrimaryKeys[0].Name, dbTable2.PrimaryKeys[0].Name);
-			Assert.AreEqual (dbTable1.Columns.Count, dbTable2.Columns.Count);
+				Assert.IsNotNull (dbTable2);
+				Assert.AreEqual (dbTable1.Name, dbTable2.Name);
+				Assert.AreEqual (dbTable1.Category, dbTable2.Category);
+				Assert.AreEqual (dbTable1.PrimaryKeys.Count, dbTable2.PrimaryKeys.Count);
+				Assert.AreEqual (dbTable1.PrimaryKeys[0].Name, dbTable2.PrimaryKeys[0].Name);
+				Assert.AreEqual (dbTable1.Columns.Count, dbTable2.Columns.Count);
+			}
 		}
 
 
@@ -216,6 +232,73 @@ namespace Epsitec.Cresus.Database.UnitTests
 				(
 					() => infrastructure.RegisterNewDbTable (dbTable2)
 				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AlterDbTableTest()
+		{
+			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			{
+				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
+				DbTypeDef dbTypeGuid  = new DbTypeDef ("Guid", DbSimpleType.Guid, null, 0, false, DbNullability.Yes);
+
+				infrastructure.RegisterNewDbType (dbTypeName);
+				infrastructure.RegisterNewDbType (dbTypeGuid);
+
+				DbTable dbTableA = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn colA1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.IgnoreChanges);
+				DbColumn colA2 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid, DbRevisionMode.IgnoreChanges);
+				dbTableA.Columns.AddRange (new DbColumn[] { colA1, colA2, });
+
+				infrastructure.RegisterNewDbTable (dbTableA);
+				infrastructure.ClearCaches ();
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (infrastructure.ResolveDbTable ("SimpleTest"), dbTableA));
+
+				DbTable dbTableB = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn colB1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.IgnoreChanges);
+				DbColumn colB2 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid, DbRevisionMode.IgnoreChanges);
+				dbTableB.Columns.AddRange (new DbColumn[] { colB1, colB2, });
+				dbTableB.Comment = "my comment";
+
+				infrastructure.AlterDbTable (infrastructure.ResolveDbTable ("SimpleTest"), dbTableB);
+				infrastructure.ClearCaches ();
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (infrastructure.ResolveDbTable ("SimpleTest"), dbTableB));
+
+				DbTable dbTableC = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn colC1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.IgnoreChanges);
+				DbColumn colC2 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid, DbRevisionMode.IgnoreChanges);
+				DbColumn colC3 = DbTable.CreateUserDataColumn ("New", dbTypeName, DbRevisionMode.IgnoreChanges);
+				dbTableC.Columns.AddRange (new DbColumn[] { colC1, colC2, colC3, });
+
+				infrastructure.AlterDbTable (infrastructure.ResolveDbTable ("SimpleTest"), dbTableC);
+				infrastructure.ClearCaches ();
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (infrastructure.ResolveDbTable ("SimpleTest"), dbTableC));
+
+				DbTable dbTableD = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn colD1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.IgnoreChanges);
+				DbColumn colD2 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid, DbRevisionMode.IgnoreChanges);
+				DbColumn colD3 = DbTable.CreateUserDataColumn ("New", dbTypeGuid, DbRevisionMode.Immutable);
+				dbTableD.Columns.AddRange (new DbColumn[] { colD1, colD2, colD3, });
+
+				infrastructure.AlterDbTable (infrastructure.ResolveDbTable ("SimpleTest"), dbTableD);
+				infrastructure.ClearCaches ();
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (infrastructure.ResolveDbTable ("SimpleTest"), dbTableD));
+
+				DbTable dbTableE = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn colE1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.IgnoreChanges);
+				DbColumn colE2 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid, DbRevisionMode.IgnoreChanges);
+				dbTableE.Columns.AddRange (new DbColumn[] { colE1, colE2, });
+
+				infrastructure.AlterDbTable (infrastructure.ResolveDbTable ("SimpleTest"), dbTableE);
+				infrastructure.ClearCaches ();
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (infrastructure.ResolveDbTable ("SimpleTest"), dbTableE));
 			}
 		}
 

@@ -1,12 +1,11 @@
 //	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
@@ -774,36 +773,117 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Unregisters a table from the database. The metadata is updated but
-		/// the real database table is not dropped for security reasons.
+		/// Alters the given table definition by replacing the old definition of a table by a newer
+		/// one.
 		/// </summary>
-		/// <param name="table">The table.</param>
-		public void UnregisterDbTable(DbTable table)
+		/// <remarks>
+		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
+		/// with the <see cref="DbInfrastructure.ResolveDbTable"/> method. Note also that this method
+		/// updates the table definition in the meta data, but does not make any modification to the
+		/// real SQL table.
+		/// </remarks>
+		/// <param name="oldDbTable">The old definition of the table.</param>
+		/// <param name="newDbTable">The new definition of the table.</param>
+		public void AlterDbTable(DbTable oldDbTable, DbTable newDbTable)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.UnregisterDbTable (transaction, table);
+				this.AlterDbTable (transaction, oldDbTable, newDbTable);
+
 				transaction.Commit ();
 			}
 		}
 
 		/// <summary>
-		/// Unregisters a table from the database. The metadata is updated but
-		/// the real database table is not dropped for security reasons.
+		/// Alters the given table definition by replacing the old definition of a table by a newer
+		/// one.
 		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
+		/// <remarks>
+		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
+		/// with the <see cref="DbInfrastructure.ResolveDbTable"/> method. Note also that this method
+		/// updates the table definition in the meta data, but does not make any modification to the
+		/// real SQL table.
+		/// </remarks>
+		/// <param name="transaction">The transaction to use for the requests.</param>
+		/// <param name="oldDbTable">The old definition of the table.</param>
+		/// <param name="newDbTable">The new definition of the table.</param>
+		public void AlterDbTable(DbTransaction transaction, DbTable oldDbTable, DbTable newDbTable)
+		{
+			newDbTable.DefineKey (oldDbTable.Key);
+
+			List<DbColumn> columnsToAdd = newDbTable.Columns
+				.Where (cNew => oldDbTable.Columns[cNew.Name] == null)
+				.ToList ();
+
+			List<DbColumn> columnsToAlter = newDbTable.Columns
+				.Where (cNew => oldDbTable.Columns[cNew.Name] != null)
+				.ToList ();
+
+			List<DbColumn> columnsToRemove = oldDbTable.Columns
+				.Where (cOld => newDbTable.Columns[cOld.Name] == null)
+				.ToList ();
+
+			this.UpdateTableDefRow (transaction, newDbTable);
+
+			foreach (DbColumn column in columnsToAdd)
+			{
+				DbKey key = this.InsertColumnDefRow (transaction, newDbTable, column);
+				column.DefineKey (key);
+			}
+
+			foreach (DbColumn column in columnsToAlter)
+			{
+				DbColumn oldColumn = oldDbTable.Columns[column.Name];
+				column.DefineKey (oldColumn.Key);
+
+				this.UpdateColumnDefRow (transaction, newDbTable, column);
+			}
+
+			foreach (DbColumn column in columnsToRemove)
+			{
+				this.DeleteColumnDefRow (transaction, column);
+			}
+
+			this.ClearCaches ();
+		}
+
+		/// <summary>
+		/// Unregisters a table from the database. The table definition is dropped in the meta data,
+		/// but the real sql table is not dropped.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="table"/> object used as argument must have been obtained with the
+		/// <see cref="DbInfrastructure.ResolveDbTable"/> method.
+		/// </remarks>
+		/// <param name="table">The table definition to unregister.</param>
+		public void UnregisterDbTable(DbTable table)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.UnregisterDbTable (transaction, table);
+
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Unregisters a table from the database. The table definition is dropped in the meta data,
+		/// but the real sql table is not dropped.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="table"/> object used as argument must have been obtained with the
+		/// <see cref="DbInfrastructure.ResolveDbTable"/> method.
+		/// </remarks>
+		/// <param name="transaction">The transaction to use to make the requests.</param>
+		/// <param name="table">The table definition to unregister.</param>
 		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
 		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
 			this.CheckForKnownTable (transaction, table);
-			
-			DbKey oldKey = table.Key;
-			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
-			
-			this.UpdateKeyInRow (transaction, Tags.TableTableDef, oldKey, newKey);
-			this.tableCache[oldKey] = null;
+
+			this.DeleteColumnDefRows (transaction, table);
+			this.DeleteTableDefRow (transaction, table);
+
+			this.ClearCaches ();
 		}
 
 		/// <summary>
@@ -981,6 +1061,10 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public void ClearCaches()
 		{
+			lock (this.DbKeysCache)
+			{
+				this.DbKeysCache.Clear ();
+			}
 			lock (this.tableCache)
 			{
 				this.tableCache.ClearCache ();
@@ -1066,7 +1150,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.RegisterNewDbType (transaction, typeDef);
+				this.RegisterDbType (transaction, typeDef);
 
 				transaction.Commit ();
 			}
@@ -1079,10 +1163,8 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="typeDef">The type definition.</param>
-		public void RegisterNewDbType(DbTransaction transaction, DbTypeDef typeDef)
+		public void RegisterDbType(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
 			this.CheckForUnknownType (transaction, typeDef);
 
 			DbKey typeKey = this.InsertTypeDefRow (transaction, typeDef);
@@ -1090,36 +1172,90 @@ namespace Epsitec.Cresus.Database
 			typeDef.DefineKey (typeKey);
 		}
 
+
 		/// <summary>
-		/// Unregisters the type from the database. This will not drop the
-		/// type but mark it as deleted for security reasons.
+		/// Alters the given type definition by replacing the old definition of a type by a newer
+		/// one.
 		/// </summary>
-		/// <param name="typeDef">The type definition.</param>
-		public void UnregisterDbType(DbTypeDef typeDef)
+		/// <remarks>
+		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
+		/// with the <see cref="DbInfrastructure.ResolveDbType"/> method. Note also that this method
+		/// updates the type definition in the meta data, but does not make any modification to the
+		/// real SQL tables that might use it.
+		/// </remarks>
+		/// <param name="oldDbTypeDef">The old definition of the type.</param>
+		/// <param name="newDbTypeDef">The new definition of the type.</param>
+		public void AlterDbType(DbTypeDef oldDbTypeDef, DbTypeDef newDbTypeDef)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.UnregisterDbType (transaction, typeDef);
+				this.AlterDbType (transaction, oldDbTypeDef, newDbTypeDef);
+
 				transaction.Commit ();
 			}
 		}
 
 		/// <summary>
-		/// Unregisters the type from the database. This will not drop the
-		/// type but mark it as deleted for security reasons.
+		/// Alters the given type definition by replacing the old definition of a type by a newer
+		/// one.
 		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="typeDef">The type definition.</param>
+		/// <remarks>
+		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
+		/// with the <see cref="DbInfrastructure.ResolveDbType"/> method. Note also that this method
+		/// updates the type definition in the meta data, but does not make any modification to the
+		/// real SQL tables that might use it.
+		/// </remarks>
+		/// <param name="transaction">The transaction to use for the requests.</param>
+		/// <param name="oldDbTypeDef">The old definition of the type.</param>
+		/// <param name="newDbTypeDef">The new definition of the type.</param>
+		public void AlterDbType(DbTransaction transaction, DbTypeDef oldDbTypeDef, DbTypeDef newDbTypeDef)
+		{
+			DbKey key = oldDbTypeDef.Key;
+			newDbTypeDef.DefineKey (key);
+
+			this.UpdateTypeDefRow (transaction, newDbTypeDef);
+
+			this.ClearCaches ();
+		}
+
+		/// <summary>
+		/// Unregisters a type definition from the database. The type definition is dropped in the
+		/// meta data, but the real SQL table that might use it are not updated, and the table meta
+		/// data that might also reference it are not updated either.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
+		/// <see cref="DbInfrastructure.ResolveDbType"/> method.
+		/// </remarks>
+		/// <param name="typeDef">The type definition to unregister.</param>
+		public void UnregisterDbType(DbTypeDef typeDef)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.UnregisterDbType (transaction, typeDef);
+
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Unregisters a type definition from the database. The type definition is dropped in the
+		/// meta data, but the real SQL table that might use it are not updated, and the table meta
+		/// data that might also reference it are not updated either.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
+		/// <see cref="DbInfrastructure.ResolveDbType"/> method.
+		/// </remarks>
+		/// <param name="transaction">The transaction to use to make the requests.</param>
+		/// <param name="typeDef">The type definition to unregister.</param>
 		public void UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			this.CheckForKnownType (transaction, typeDef);
-			
-			DbKey oldKey = typeDef.Key;
-			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
-			
-			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, oldKey, newKey);
 
-			this.typeCache[oldKey] = null;
+			this.DeleteTypeDefRow (transaction, typeDef);
+
+			this.ClearCaches ();
 		}
 
 		/// <summary>
@@ -2138,32 +2274,23 @@ namespace Epsitec.Cresus.Database
 			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
 		}
 
-		/// <summary>
-		/// Updates the specified row to use a new key.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="tableName">Name of the table.</param>
-		/// <param name="oldKey">The old key of the row.</param>
-		/// <param name="newKey">The new key of the row.</param>
-		private void UpdateKeyInRow(DbTransaction transaction, string tableName, DbKey oldKey, DbKey newKey)
+
+		private void DeleteRow(DbTransaction transaction, string tableName, DbKey key)
 		{
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
-			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
-			
-			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (newKey.Id,             DbKey.RawTypeForId));
-			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (newKey.IntStatus,      DbKey.RawTypeForStatus));
-			
-			DbInfrastructure.AddKeyExtraction (conds, tableName, oldKey);
-			
-			transaction.SqlBuilder.UpdateData (tableName, fields, conds);
-			
+			SqlFieldList conditions  = new SqlFieldList ();
+
+			DbInfrastructure.AddKeyExtraction (conditions, tableName, key);
+
+			transaction.SqlBuilder.RemoveData (tableName, conditions);
+
 			int numRowsAffected = InvariantConverter.ToInt (this.ExecuteNonQuery (transaction));
-			
+
 			if (numRowsAffected != 1)
 			{
-				throw new Exceptions.GenericException (this.access, string.Format ("Update of row {0} in table {1} produced {2} updates.", oldKey, tableName, numRowsAffected));
+				throw new Exceptions.GenericException (this.access, string.Format ("Delete of row {0} in table {1} produced {2} deletions.", key, tableName, numRowsAffected));
 			}
 		}
+
 
 		/// <summary>
 		/// Loads the table definitions based on the metadata table key and the
@@ -2219,7 +2346,7 @@ namespace Epsitec.Cresus.Database
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, key);
 			}
 			
-			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 1);
+			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
 			
 			long          rowId   = -1;
 			List<DbTable> tables  = new List<DbTable> ();
@@ -2369,7 +2496,7 @@ namespace Epsitec.Cresus.Database
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", typeKey);
 			}
 			
-			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 1);
+			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
 			List<DbTypeDef> types = new List<DbTypeDef> ();
 
 			foreach (System.Data.DataRow row in dataTable.Rows)
@@ -2407,11 +2534,11 @@ namespace Epsitec.Cresus.Database
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="key">The key.</param>
-		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string tableName, DbKey key)
+		private static void AddKeyExtraction(SqlFieldList conditions, string tableName, DbKey key)
 		{
 			SqlField nameColId  = SqlField.CreateName (tableName, Tags.ColumnId);
 			SqlField constantId = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
-			
+
 			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
 		}
 
@@ -2423,7 +2550,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="sourceTableName">Name of the source table.</param>
 		/// <param name="sourceColumnName">Name of the source column.</param>
 		/// <param name="targetTableName">Name of the target table.</param>
-		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string sourceTableName, string sourceColumnName, string targetTableName)
+		private static void AddKeyExtraction(SqlFieldList conditions, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
 			SqlField targetColumnId = SqlField.CreateName (targetTableName, Tags.ColumnId);
 			SqlField sourceColumnId = SqlField.CreateName (sourceTableName, sourceColumnName);
@@ -2439,11 +2566,11 @@ namespace Epsitec.Cresus.Database
 		/// <param name="sourceTableName">Name of the source table.</param>
 		/// <param name="sourceColumnName">Name of the source column.</param>
 		/// <param name="key">The key.</param>
-		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string sourceTableName, string sourceColumnName, DbKey key)
+		private static void AddKeyExtraction(SqlFieldList conditions, string sourceTableName, string sourceColumnName, DbKey key)
 		{
 			SqlField sourceColId = SqlField.CreateName (sourceTableName, sourceColumnName);
 			SqlField constantId  = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
-			
+
 			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColId, constantId));
 		}
 
@@ -2454,32 +2581,50 @@ namespace Epsitec.Cresus.Database
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="searchMode">The search mode (live, deleted, etc.).</param>
-		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string tableName, DbRowSearchMode searchMode)
+		private static void AddKeyExtraction(SqlFieldList conditions, string tableName, DbRowSearchMode searchMode)
 		{
 			SqlFunctionCode function;
 			DbRowStatus     status;
-			
+
 			//	See the definitions of DbRowStatus and DbRowSearchMode...
-			
+
 			switch (searchMode)
 			{
-				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionCode.CompareEqual;	break;
-				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionCode.CompareEqual;	break;
-				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareLessThan;	break;
-				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareEqual;	break;
-				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareLessThan;	break;
-				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareEqual;	break;
-				
+				case DbRowSearchMode.Copied:
+					status = DbRowStatus.Copied;
+					function = SqlFunctionCode.CompareEqual;
+					break;
+				case DbRowSearchMode.Live:
+					status = DbRowStatus.Live;
+					function = SqlFunctionCode.CompareEqual;
+					break;
+				case DbRowSearchMode.LiveActive:
+					status = DbRowStatus.ArchiveCopy;
+					function = SqlFunctionCode.CompareLessThan;
+					break;
+				case DbRowSearchMode.ArchiveCopy:
+					status = DbRowStatus.ArchiveCopy;
+					function = SqlFunctionCode.CompareEqual;
+					break;
+				case DbRowSearchMode.LiveAll:
+					status = DbRowStatus.Deleted;
+					function = SqlFunctionCode.CompareLessThan;
+					break;
+				case DbRowSearchMode.Deleted:
+					status = DbRowStatus.Deleted;
+					function = SqlFunctionCode.CompareEqual;
+					break;
+
 				case DbRowSearchMode.All:
 					return;
-				
+
 				default:
 					throw new System.ArgumentException (string.Format ("Search mode {0} not supported", searchMode), "searchMode");
 			}
-			
+
 			SqlField nameStatus  = SqlField.CreateName (tableName, Tags.ColumnStatus);
 			SqlField constStatus = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
-			
+
 			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
@@ -2542,18 +2687,18 @@ namespace Epsitec.Cresus.Database
 		private void UpdateColumnRelation(DbTransaction transaction, DbKey sourceTableKey, DbKey sourceColumnKey, DbKey targetTableKey)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			System.Diagnostics.Debug.Assert (sourceTableKey  != null);
 			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
 			System.Diagnostics.Debug.Assert (targetTableKey  != null);
-			
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
-			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
-			
+
+			SqlFieldList fields = new SqlFieldList ();
+			SqlFieldList conds  = new SqlFieldList ();
+
 			fields.Add (Tags.ColumnRefTarget, SqlField.CreateConstant (targetTableKey.Id, DbKey.RawTypeForId));
 
 			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, sourceColumnKey);
-			
+
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
@@ -2575,8 +2720,7 @@ namespace Epsitec.Cresus.Database
 			
 			this.UpdateColumnRelation (transaction, source.Key, column.Key, target.Key);
 		}
-
-
+		
 		/// <summary>
 		/// Inserts a type definition row into the CR_TYPE_DEF table.
 		/// </summary>
@@ -2585,18 +2729,18 @@ namespace Epsitec.Cresus.Database
 		private DbKey InsertTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
-			
-			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+
+			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus),
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName], typeDef.Name),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)),
 			};
 
-			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			SqlFieldList fieldsToReturn = new SqlFieldList ()
 			{
 				new SqlField() { Alias = typeDefTable.Columns[Tags.ColumnId].GetSqlName (), },
 			};
@@ -2606,7 +2750,34 @@ namespace Epsitec.Cresus.Database
 
 			return new DbKey (new DbId ((long) data));
 		}
+		
+		private void UpdateTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
+		{
+			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
+			string tableName = typeDefTable.GetSqlName ();
+			
+			SqlFieldList fieldsToUpdate = new SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName], typeDef.Name),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)),
+			};
 
+			SqlFieldList conditions = new SqlFieldList ();
+			DbInfrastructure.AddKeyExtraction (conditions, tableName, typeDef.Key);
+
+			transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
+			this.ExecuteNonQuery (transaction);
+		}
+		
+		private void DeleteTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
+		{
+			DbKey key = typeDef.Key;
+
+			this.DeleteRow (transaction, Tags.TableTypeDef, key);
+		}
+		
 		/// <summary>
 		/// Inserts a table definition row into the CR_TABLE_DEF table.
 		/// </summary>
@@ -2615,10 +2786,10 @@ namespace Epsitec.Cresus.Database
 		private DbKey InsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
 
-			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name),
@@ -2626,7 +2797,7 @@ namespace Epsitec.Cresus.Database
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)),
 			};
 
-			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			SqlFieldList fieldsToReturn = new SqlFieldList ()
 			{
 				new SqlField() { Alias = tableDefTable.Columns[Tags.ColumnId].GetSqlName (), },
 			};
@@ -2635,6 +2806,33 @@ namespace Epsitec.Cresus.Database
 			object data = this.ExecuteScalar (transaction);
 
 			return new DbKey (new DbId ((long) data));
+		}
+
+		private void UpdateTableDefRow(DbTransaction transaction, DbTable table)
+		{
+			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
+			string tableName = tableDefTable.GetSqlName ();
+			
+			SqlFieldList fields = new SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus], table.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName], table.Name),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)),
+			};
+
+			SqlFieldList conditions = new SqlFieldList ();
+			DbInfrastructure.AddKeyExtraction (conditions, tableName, table.Key);
+
+			transaction.SqlBuilder.UpdateData (tableName, fields, conditions);
+			this.ExecuteNonQuery (transaction);
+		}
+		
+		private void DeleteTableDefRow(DbTransaction transaction, DbTable table)
+		{
+			DbKey key = table.Key;
+
+			this.DeleteRow (transaction, Tags.TableTableDef, key);
 		}
 
 		/// <summary>
@@ -2648,10 +2846,10 @@ namespace Epsitec.Cresus.Database
 		private DbKey InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
 
-			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name),
@@ -2661,7 +2859,7 @@ namespace Epsitec.Cresus.Database
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id),
 			};
 
-			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			SqlFieldList fieldsToReturn = new SqlFieldList ()
 			{
 				new SqlField() { Alias = columnDefTable.Columns[Tags.ColumnId].GetSqlName (), },
 			};
@@ -2671,6 +2869,67 @@ namespace Epsitec.Cresus.Database
 
 			return new DbKey (new DbId ((long) data));
 		}
+
+		private void UpdateColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
+			string tableName = columnDefTable.GetSqlName ();
+
+			SqlFieldList fieldsToInsert = new SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus], column.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName], column.Name),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType], column.Type == null ? 0 : column.Type.Key.Id),
+			};
+
+			SqlFieldList conditions = new SqlFieldList ();
+			DbInfrastructure.AddKeyExtraction (conditions, tableName, column.Key);
+
+			transaction.SqlBuilder.UpdateData (columnDefTable.GetSqlName (), fieldsToInsert, conditions);
+			this.ExecuteNonQuery (transaction);
+		}	
+
+		private void DeleteColumnDefRow(DbTransaction transaction, DbColumn column)
+		{
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateName (Tags.TableColumnDef, Tags.ColumnId),
+						SqlField.CreateConstant (column.Key.Id, DbKey.RawTypeForId)
+					)
+				),
+			};
+
+			transaction.SqlBuilder.RemoveData (Tags.TableColumnDef, conditions);
+			this.ExecuteNonQuery (transaction);
+		}
+		
+		private void DeleteColumnDefRows(DbTransaction transaction, DbTable table)
+		{
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						SqlField.CreateName (Tags.TableColumnDef, Tags.ColumnRefTable),
+						SqlField.CreateConstant (table.Key.Id, DbKey.RawTypeForId)
+					)
+				),
+			};
+
+			transaction.SqlBuilder.RemoveData (Tags.TableColumnDef, conditions);
+			this.ExecuteNonQuery (transaction);
+		}
+
 
 		public IEnumerable<System.Tuple<string, string>> GetSourceReferences(string targetName)
 		{
@@ -3387,8 +3646,8 @@ namespace Epsitec.Cresus.Database
 		private DbLockManager					lockManager;
 		private DbConnectionManager				connectionManager;
 
-		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
-		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();
+		private DbTableList			internalTables = new DbTableList ();
+		private DbTypeDefList		internalTypes = new DbTypeDefList ();
 
 		private string							localizations;
 
