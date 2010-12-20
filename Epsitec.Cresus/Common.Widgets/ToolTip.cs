@@ -1,8 +1,10 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.ToolTip))]
 
@@ -125,11 +127,11 @@ namespace Epsitec.Common.Widgets
 			this.UnregisterWidget (widget);
 		}
 		
-		public void UpdateManualToolTip(Drawing.Point mouse, string caption)
+		public void UpdateManualToolTip(Drawing.Point mouse, string caption, Color color)
 		{
 			if (this.behaviour == ToolTipBehaviour.Manual)
 			{
-				this.ShowToolTip (mouse, caption);
+				this.ShowToolTip (mouse, caption, color);
 			}
 		}
 		
@@ -137,7 +139,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.behaviour == ToolTipBehaviour.Manual)
 			{
-				this.ShowToolTip (mouse, caption);
+				this.ShowToolTip (mouse, caption, Color.Empty);
 			}
 		}
 
@@ -222,7 +224,7 @@ namespace Epsitec.Common.Widgets
 				(this.isDisplayed))
 			{
 				this.caption = caption;
-				this.ShowToolTip (this.birthPos, this.caption);
+				this.ShowToolTip (this.birthPos, this.caption, ToolTip.GetDefaultToolTipColor (widget));
 			}
 		}
 
@@ -334,7 +336,7 @@ namespace Epsitec.Common.Widgets
 					(this.isDisplayed))
 				{
 					Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, pos);
-					this.ShowToolTip (mouse, caption);
+					this.ShowToolTip (mouse, caption, ToolTip.GetDefaultToolTipColor (this.widget));
 					this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
 				}
 				
@@ -460,12 +462,25 @@ namespace Epsitec.Common.Widgets
 				this.birthPos = (this.behaviour == ToolTipBehaviour.Manual)
 					/**/	   ? this.initialPos
 					/**/	   : Message.CurrentState.LastWindow.MapWindowToScreen (Message.CurrentState.LastPosition);
-				
-				this.ShowToolTip (this.birthPos, this.caption);
+
+				this.ShowToolTip (this.birthPos, this.caption, ToolTip.GetDefaultToolTipColor (this.widget));
+			}
+		}
+
+		private static Color GetDefaultToolTipColor(Widget widget)
+		{
+			if ((widget != null) &&
+				(widget.ContainsLocalValue (ToolTip.ToolTipColorProperty)))
+			{
+				return (Color) widget.GetLocalValue (ToolTip.ToolTipColorProperty);
+			}
+			else
+			{
+				return Color.Empty;
 			}
 		}
 		
-		private void ShowToolTip(Drawing.Point mouse, object caption)
+		private void ShowToolTip(Drawing.Point mouse, object caption, Color color)
 		{
 			Widget tip = null;
 			
@@ -504,6 +519,7 @@ namespace Epsitec.Common.Widgets
 
 				tip.Text                 = textCaption;
 				tip.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				tip.BackColor            = color;
 				
 				Drawing.Size size = tip.TextLayout.SingleLineSize;
 				
@@ -587,12 +603,10 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				
 				Drawing.Rectangle rect  = this.Client.Bounds;
-				WidgetPaintState       state = this.GetPaintState ();
-				Drawing.Point     pos   = new Drawing.Point();
+				Drawing.Point     pos   = new Drawing.Point (ToolTip.margin.X, 0);
+				Drawing.Color     color = this.BackColor;
 				
-				pos.X += ToolTip.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
-				
-				adorner.PaintTooltipBackground (graphics, rect);
+				adorner.PaintTooltipBackground (graphics, rect, color);
 				
 				if (this.TextLayout != null)
 				{
@@ -682,6 +696,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static void SetToolTipColor(DependencyObject obj, Color value)
+		{
+			obj.SetValue (ToolTip.ToolTipColorProperty, value);
+		}
+
+		public static void ClearToolTipColor(DependencyObject obj)
+		{
+			obj.ClearValue (ToolTip.ToolTipColorProperty);
+		}
+
 		public static void SetToolTipWidget(DependencyObject obj, Widget value)
 		{
 			if (value == null)
@@ -714,9 +738,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Caption), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipText",    typeof (string), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipWidget",  typeof (Widget), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipCaption", typeof (Caption), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipColorProperty   = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipColor",   typeof (Color), PrivateDependencyPropertyMetadata.Default);
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
 		

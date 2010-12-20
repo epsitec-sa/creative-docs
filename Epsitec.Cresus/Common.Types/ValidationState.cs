@@ -27,6 +27,6 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Dirty state (needs a validation to find out what the state is).
 		/// </summary>
-		Dirty
+		Dirty,
 	}
 }
