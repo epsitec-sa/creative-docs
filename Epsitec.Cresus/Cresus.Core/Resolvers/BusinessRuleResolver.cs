@@ -1,6 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
@@ -36,10 +37,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			string baseTypeName = "GenericBusinessRule`1";
 			string methodName   = BusinessRuleResolver.GetMethodName (ruleType);
 
-			var candidates = new HashSet<System.Type> ();
-
-			candidates.Add (entityType);
-			candidates.AddRange (entityType.GetInterfaces ());
+			var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
 
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
@@ -47,13 +45,114 @@ namespace Epsitec.Cresus.Core.Resolvers
 						let baseType = type.BaseType
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
 						let genericType = baseType.GetGenericArguments ()[0]
-						where candidates.Contains (genericType) && BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
-						orderby (genericType.IsInterface ? 1 : 0) ascending
-						orderby (genericType.Name)
+						where candidates.Contains (new TypeRank (genericType)) && BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
+						orderby candidates.First (x => x.Type == genericType) descending
 						select type;
 
 			return types;
 		}
+
+		private static IEnumerable<TypeRank> GetBaseTypesAndInterfaces(System.Type type)
+		{
+			HashSet<System.Type> interfaces = new HashSet<System.Type> ();
+			return BusinessRuleResolver.GetBaseTypesAndInterfaces (type, interfaces, 0);
+		}
+
+		private static IEnumerable<TypeRank> GetBaseTypesAndInterfaces(System.Type type, HashSet<System.Type> baseInterfaces, int depth)
+		{
+			if (type != typeof (AbstractEntity))
+			{
+				yield return new TypeRank (type, depth*2 + 0);
+			}
+
+			var baseType = type.BaseType;
+
+			if ((baseType != null) &&
+				(baseType != type) &&
+				(baseType != typeof (object)))
+			{
+				foreach (var result in BusinessRuleResolver.GetBaseTypesAndInterfaces (baseType, baseInterfaces, depth+1))
+				{
+					yield return result;
+				}
+			}
+
+			foreach (var typeInterface in type.GetInterfaces ().Where (x => baseInterfaces.Add (x)))
+			{
+				if (type != typeof (AbstractEntity))
+				{
+					yield return new TypeRank (typeInterface, depth*2 + 1);
+				}
+			}
+		}
+
+		#region TypeRank Structure
+
+		struct TypeRank : System.IComparable<TypeRank>, System.IEquatable<TypeRank>
+		{
+			public TypeRank(System.Type type, int rank = -1)
+			{
+				this.type = type;
+				this.rank = rank;
+			}
+
+			public System.Type Type
+			{
+				get
+				{
+					return this.type;
+				}
+			}
+
+			public override bool Equals(object obj)
+			{
+				return this.Equals ((TypeRank) obj);
+			}
+
+			public override int GetHashCode()
+			{
+				return this.type.GetHashCode ();
+			}
+
+			public override string ToString()
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}", this.rank, this.type.FullName);
+			}
+
+			#region IEquatable<TypeRank> Members
+
+			public bool Equals(TypeRank other)
+			{
+				return other.type == this.type;
+			}
+
+			#endregion
+
+			#region IComparable<TypeRank> Members
+
+			public int CompareTo(TypeRank other)
+			{
+				if (this.rank < other.rank)
+				{
+					return -1;
+				}
+				else if (this.rank > other.rank)
+				{
+					return 1;
+				}
+				else
+				{
+					return string.CompareOrdinal (this.type.Name, other.type.Name);
+				}
+			}
+
+			#endregion
+
+			private readonly System.Type type;
+			private readonly int rank;
+		}
+
+		#endregion
 
 		private static bool ImplementsRuleMethod(System.Type type, string methodName)
 		{
