@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return this.dbInfrastructure.UidManager;
+				return this.dbInfrastructure.ServiceManager.UidManager;
 			}
 		}
 
@@ -179,14 +179,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = UidGenerator.CreateWriteTransaction (dbInfrastructure))
 			{
-				if (dbInfrastructure.UidManager.ExistsUidCounter (name, 0))
+				if (dbInfrastructure.ServiceManager.UidManager.ExistsUidCounter (name, 0))
 				{
 					throw new System.InvalidOperationException ("UidGenerator " + name + " already exists.");
 				}
 
 				for (int i = 0; i < slotsAsList.Count; i++)
 				{
-					dbInfrastructure.UidManager.CreateUidCounter (name, i, slotsAsList[i].MinValue, slotsAsList[i].MaxValue);
+					dbInfrastructure.ServiceManager.UidManager.CreateUidCounter (name, i, slotsAsList[i].MinValue, slotsAsList[i].MaxValue);
 				}
 
 				transaction.Commit ();
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				foreach (DbUidSlot slot in UidGenerator.GetSlots (dbInfrastructure, name))
 				{
-					dbInfrastructure.UidManager.DeleteUidCounter (slot.Name, slot.SlotNumber);
+					dbInfrastructure.ServiceManager.UidManager.DeleteUidCounter (slot.Name, slot.SlotNumber);
 				}
 
 				transaction.Commit ();
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = UidGenerator.CreateReadTransaction (dbInfrastructure))
 			{
-				bool exists = dbInfrastructure.UidManager.ExistsUidCounter (name, 0);
+				bool exists = dbInfrastructure.ServiceManager.UidManager.ExistsUidCounter (name, 0);
 
 				transaction.Commit ();
 
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The sequence of slot indexes.</returns>
 		private static IEnumerable<DbUidSlot> GetSlots(DbInfrastructure dbInfrastructure, string name)
 		{
-			return from slot in dbInfrastructure.UidManager.GetUidCounterSlots (name)
+			return from slot in dbInfrastructure.ServiceManager.UidManager.GetUidCounterSlots (name)
 				   orderby slot.SlotNumber
 				   select slot;
 		}

@@ -13,15 +13,53 @@ namespace Epsitec.Cresus.Database.Services
 	/// The <c>DbInfoManager</c> class provides access to the table that stores informations about
 	/// the database. Informations are provided as key/value pairs of string.
 	/// </summary>
-	public sealed class DbInfoManager : DbAbstractAttachable
+	public sealed class DbInfoManager : DbAbstractTableService
 	{
+
+
+		// TODO Comment this class.
+		// Marc
 
 
 		/// <summary>
 		/// Builds a new <c>DbInfoManager</c>.
 		/// </summary>
-		internal DbInfoManager() : base ()
+		internal DbInfoManager(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
+		}
+
+
+		internal override string GetDbTableName()
+		{
+			return Tags.TableInfo;
+		}
+
+
+		internal override DbTable CreateDbTable()
+		{
+			DbInfrastructure.TypeHelper types = this.DbInfrastructure.TypeManager;
+
+			DbTable table = new DbTable (Tags.TableInfo);
+
+			DbColumn[] columns = new DbColumn[]
+		    {
+		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		        new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		    };
+
+			table.DefineCategory (DbElementCat.Internal);
+			table.Columns.AddRange (columns);
+			table.DefinePrimaryKey (columns[0]);
+
+			table.UpdatePrimaryKeyInfo ();
+			table.UpdateRevisionMode ();
+
+			return table;
 		}
 
 
@@ -34,7 +72,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is <c>null</c> or empty.</exception>
 		public bool ExistsInfo(string key)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			key.ThrowIfNullOrEmpty ("key");
 
@@ -52,7 +90,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is <c>null</c> or empty.</exception>
 		public void SetInfo(string key, string value)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			key.ThrowIfNullOrEmpty ("key");
 
@@ -86,7 +124,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is <c>null</c> or empty.</exception>
 		public string GetInfo(string key)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			key.ThrowIfNullOrEmpty ("key");
 

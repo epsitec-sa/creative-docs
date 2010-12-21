@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						ExceptionAssert.Throw<System.ArgumentNullException>
 						(
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -647,7 +647,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
 					{
-						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (0));
+						DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (0));
 
 						newKeys = processor.ProcessJobs (transaction, dbLogEntry, jobs).ToDictionary (p => p.Key, p => p.Value);
 

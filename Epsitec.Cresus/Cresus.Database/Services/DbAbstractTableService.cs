@@ -1,6 +1,4 @@
-﻿using Epsitec.Common.Support.Extensions;
-
-using Epsitec.Cresus.Database.Collections;
+﻿using Epsitec.Cresus.Database.Collections;
 
 using System.Collections.Generic;
 
@@ -17,36 +15,20 @@ namespace Epsitec.Cresus.Database.Services
 	/// The <c>DbAbstractAttachable</c> class provides the basic functions for classes that must deal
 	/// with a single <see cref="DbTable"/> in the database.
 	/// </summary>
-	public class DbAbstractAttachable
+	public abstract class DbAbstractTableService : DbAbstractService
 	{
+
+
+		// TODO Comment this class.
+		// Marc
 
 
 		/// <summary>
 		/// Builds a new instance of <c>DbAbstractAttachable</c>
 		/// </summary>
-		internal DbAbstractAttachable()
+		internal DbAbstractTableService(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
-			this.IsAttached = false;
-		}
-
-
-		/// <summary>
-		/// The state of this instance.
-		/// </summary>
-		protected bool IsAttached
-		{
-			get;
-			private set;
-		}
-
-
-		/// <summary>
-		/// The <see cref="DbInfrastructure"/> object to use to communicate with the database.
-		/// </summary>
-		protected DbInfrastructure DbInfrastructure
-		{
-			get;
-			private set;
 		}
 
 
@@ -60,48 +42,26 @@ namespace Epsitec.Cresus.Database.Services
 		}
 		
 
-		/// <summary>
-		/// Attaches this instance to the specified database table.
-		/// </summary>
-		/// <param name="dbInfrastructure">The infrastructure.</param>
-		/// <param name="dbTable">The database table.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure" /> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="dbTable" /> is <c>null</c>.</exception>
-		public void Attach(DbInfrastructure dbInfrastructure, DbTable dbTable)
-		{			
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			dbTable.ThrowIfNull ("dbTable");
-
-			this.DbInfrastructure = dbInfrastructure;
-			this.DbTable = dbTable;
-
-			this.IsAttached = true;
-		}
-
-
-		/// <summary>
-		/// Detaches this instance from the database.
-		/// </summary>
-		public void Detach()
+		internal override void TurnOn()
 		{
-			this.IsAttached = false;
+			DbTable actualTable = this.DbInfrastructure.ResolveDbTable (this.GetDbTableName ());
+			DbTable expectedTable = this.CreateDbTable ();
 
-			this.DbInfrastructure = null;
-			this.DbTable = null;
-		}
-		
-
-		/// <summary>
-		/// Checks that this instance is attached to a <see cref="DbInfrastructure"/>.
-		/// </summary>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		protected void CheckIsAttached()
-		{
-			if (!this.IsAttached)
+			if (!DbSchemaChecker.CheckTables (actualTable, expectedTable))
 			{
-				throw new System.InvalidOperationException ("Cannot use this instance because it is detached.");
+				throw new System.ArgumentException ("Invalid table!");
 			}
+
+			this.DbTable = actualTable;
+
+			base.TurnOn ();
 		}
+
+
+		internal abstract string GetDbTableName();
+
+
+		internal abstract DbTable CreateDbTable();
 
 
 		/// <summary>

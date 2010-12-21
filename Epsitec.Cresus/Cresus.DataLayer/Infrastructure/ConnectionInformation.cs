@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return this.dbInfrastructure.ConnectionManager;
+				return this.dbInfrastructure.ServiceManager.ConnectionManager;
 			}
 		}
 
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
-			return dbInfrastructure.ConnectionManager.InterruptDeadConnections (timeOutValue);
+			return dbInfrastructure.ServiceManager.ConnectionManager.InterruptDeadConnections (timeOutValue);
 		}
 		
 

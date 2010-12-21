@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return this.dbInfrastructure.LockManager;
+				return this.dbInfrastructure.ServiceManager.LockManager;
 			}
 		}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The identity of the locks owner and the locks name and creation time for this instance.</returns>
 		private IEnumerable<LockOwner> InternalGetLockOwners()
 		{
-			var data = this.dbInfrastructure.ConnectionManager.GetLockOwners (this.lockNames);
+			var data = this.dbInfrastructure.ServiceManager.ConnectionManager.GetLockOwners (this.lockNames);
 
 			return data.Select (x => new LockOwner (x)).ToList ();
 		}
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			lockNames.ThrowIf (names => names.Any (n => string.IsNullOrEmpty (n)), "lock names cannot be null or empty.");
 			lockNames.ThrowIf (names => names.Count () != names.Distinct ().Count (), "lockNames cannot contain duplicates.");
 
-			DbLockManager lockManager = dbInfrastructure.LockManager;
+			DbLockManager lockManager = dbInfrastructure.ServiceManager.LockManager;
 
 			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
 			{
@@ -307,8 +307,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		internal static void RemoveInactiveLocks(DbInfrastructure dbInfrastructure)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			
-			DbLockManager lockManager = dbInfrastructure.LockManager;
+
+			DbLockManager lockManager = dbInfrastructure.ServiceManager.LockManager;
 
 			lockManager.RemoveInactiveLocks ();
 		}

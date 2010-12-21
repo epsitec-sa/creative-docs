@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The value of the information corresponding to the given key.</returns>
 		public string GetDatabaseInfo(string key)
 		{
-			return this.dbInfrastructure.InfoManager.GetInfo (key);
+			return this.dbInfrastructure.ServiceManager.InfoManager.GetInfo (key);
 		}
 
 		/// <summary>
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="value">The new value of the information.</param>
 		public void SetDatabaseInfo(string key, string value)
 		{
-			this.dbInfrastructure.InfoManager.SetInfo (key, value);
+			this.dbInfrastructure.ServiceManager.InfoManager.SetInfo (key, value);
 		}
 		
 		/// <summary>
@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			file.ThrowIfNull ("file");
 
 			DbId connectionId = new DbId (this.ConnectionInformation.ConnectionId);
-			DbLogEntry dbLogEntry = this.DbInfrastructure.Logger.CreateLogEntry (connectionId);
+			DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
 
 			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure);
 			EpsitecEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry);

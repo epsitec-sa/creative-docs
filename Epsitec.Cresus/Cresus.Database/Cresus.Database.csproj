@@ -145,9 +145,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\DbAbstractService.cs" />
     <Compile Include="Services\DbConnection.cs" />
     <Compile Include="Services\DbInfoManager.cs" />
-    <Compile Include="Services\DbAbstractAttachable.cs" />
+    <Compile Include="Services\DbAbstractTableService.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -178,6 +179,7 @@
     <Compile Include="Services\DbLock.cs" />
     <Compile Include="Services\DbLockManager.cs" />
     <Compile Include="DbSchemaChecker.cs" />
+    <Compile Include="Services\DbServiceManager.cs" />
     <Compile Include="Services\DbUidSlot.cs" />
     <Compile Include="Services\DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />

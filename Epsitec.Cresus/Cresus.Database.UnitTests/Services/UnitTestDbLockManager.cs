@@ -32,30 +32,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void AttachArgumentCheck()
+		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbLockManager ().Attach (null, new DbTable ())
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbLockManager ().Attach (dbInfrastructure, null)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AttachAndDetach()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				Assert.IsNotNull (dbInfrastructure.LockManager);
-			}
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DbLockManager (null)
+			);
 		}
 
 
@@ -64,7 +46,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -89,7 +71,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -114,7 +96,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -134,7 +116,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
@@ -176,7 +158,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock"));
 
@@ -219,7 +201,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -239,7 +221,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager manager = dbInfrastructure.LockManager;
+				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
 				Assert.IsNull (manager.GetLock ("myLock1"));
 				Assert.IsNull (manager.GetLock ("myLock2"));
@@ -294,8 +276,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLockManager lockManager = dbInfrastructure.LockManager;
-				DbConnectionManager connectionManager = dbInfrastructure.ConnectionManager;
+				DbLockManager lockManager = dbInfrastructure.ServiceManager.LockManager;
+				DbConnectionManager connectionManager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				DbId connectionId1 = connectionManager.OpenConnection ("myId1").Id;
 				DbId connectionId2 = connectionManager.OpenConnection ("myId2").Id;

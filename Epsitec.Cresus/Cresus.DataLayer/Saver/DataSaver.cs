@@ -236,8 +236,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
 			
-				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);	
-				DbLogEntry dbLogEntry = this.DbInfrastructure.Logger.CreateLogEntry (connectionId);
+				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);
+				DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
 				
 				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, dbLogEntry, jobs);
 

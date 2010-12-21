@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (1));
+			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
 			EpsitecEntitySerializer.CleanDatabase (file, DatabaseHelper.DbInfrastructure);
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (1));
+			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
 			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (1));
+			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
 			
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.Logger.CreateLogEntry (new DbId (1));
+			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
 

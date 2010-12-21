@@ -130,46 +130,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbLogger							Logger
-		{
-			get
-			{
-				return this.logger;
-			}
-		}
-
-		public DbInfoManager					InfoManager
-		{
-			get
-			{
-				return this.infoManager;
-			}
-		}
-
-		public DbUidManager						UidManager
-		{
-			get
-			{
-				return this.uidManager;
-			}
-		}
-
-		public DbLockManager					LockManager
-		{
-			get
-			{
-				return this.lockManager;
-			}
-		}
-
-		public DbConnectionManager				ConnectionManager
-		{
-			get
-			{
-				return this.connectionManager;
-			}
-		}
-		
 		public DbAccess							Access
 		{
 			get
@@ -183,6 +143,22 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.globalLock.IsWriterLockHeld;
+			}
+		}
+
+		internal TypeHelper						TypeManager
+		{
+			get
+			{
+				return this.types;
+			}
+		}
+
+		public DbServiceManager					ServiceManager
+		{
+			get
+			{
+				return this.serviceManager;
 			}
 		}
 		
@@ -216,15 +192,13 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length == 0);
 
 			List<DbTable> tableCore = BootHelper.CreateCoreTables (this).ToList ();
-			List<DbTable> tableServices = BootHelper.CreateServicesTables (this).ToList ();
-
+			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				//	Create the tables required for our own metadata management. The
 				//	created tables must be committed before they can be populated.
 
 				BootHelper.RegisterTables (this, transaction, tableCore);
-				BootHelper.RegisterTables (this, transaction, tableServices);
 				
 				transaction.Commit ();
 			}
@@ -237,10 +211,10 @@ namespace Epsitec.Cresus.Database
 				
 				transaction.Commit ();
 			}
-			
-			//	The database is ready. Start using it...
-			
-			this.AttachServices ();
+
+			this.serviceManager = new DbServiceManager (this);
+			this.serviceManager.RegisterServiceTables ();
+			this.serviceManager.TurnOn ();
 
 			return true;
 		}
@@ -298,8 +272,9 @@ namespace Epsitec.Cresus.Database
 			{
 				this.ConnectToDatabase (access);
 				this.LoadCoreTables ();
-				this.LoadServicesTables ();
-				this.AttachServices ();		
+
+				this.serviceManager = new DbServiceManager (this);
+				this.serviceManager.TurnOn ();
 			}
 			catch
 			{
@@ -378,109 +353,6 @@ namespace Epsitec.Cresus.Database
 
 			return expectedTables.All (t => this.internalTables[t.Name] != null)
 				&& DbSchemaChecker.CheckSchema (this, expectedTables);
-		}
-
-		private void LoadServicesTables()
-		{
-			try
-			{
-				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableInfo));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnection));
-
-					transaction.Commit ();
-				}
-			}
-			catch (System.Exception e)
-			{
-				throw new Exceptions.GenericException (this.access, "Cannot load services tables.", e);
-			}
-
-			bool success = this.CheckServicesTables ();
-			
-			if (!success)
-			{
-				throw new Exceptions.IncompatibleDatabaseException (this.access, "Invalid services tables definition.");
-			}
-		}
-
-		private bool CheckServicesTables()
-		{
-			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
-			// therefore, if the meta data is correct but does not match the real state of the tables
-			// in the database (that is, a table has been modified without the meta data being updated)
-			// we won't detect the problem.
-			// Marc
-
-			List<DbTable> expectedTables = BootHelper.CreateServicesTables (this).ToList ();
-
-			foreach (DbTable table in expectedTables)
-			{
-				table.UpdatePrimaryKeyInfo ();
-			}
-
-			return expectedTables.All (t => this.internalTables[t.Name] != null)
-				&& DbSchemaChecker.CheckSchema (this, expectedTables);
-		}
-
-		/// <summary>
-		/// Starts using the database. This loads the global and local settings
-		/// and instantiates the client manager.
-		/// </summary>
-		private void AttachServices()
-		{
-			try
-			{
-				this.AttachInfoManager ();
-				this.AttachUidManager ();
-				this.AttachLockManager ();
-				this.AttachConnectionManager ();
-
-				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.AttachLogger (transaction);
-
-					transaction.Commit ();
-				}
-			}
-			catch (System.Exception e)
-			{
-				throw new System.Exception ("Cannot attach services", e);
-			}
-		}
-
-		private void AttachInfoManager()
-		{
-			this.infoManager = new DbInfoManager ();
-			this.infoManager.Attach (this, this.internalTables[Tags.TableInfo]);
-		}
-
-		private void AttachUidManager()
-		{
-			this.uidManager = new DbUidManager ();
-			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
-		}
-
-		private void AttachLockManager()
-		{
-			this.lockManager = new DbLockManager ();
-			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
-		}
-
-		private void AttachConnectionManager()
-		{
-			this.connectionManager = new DbConnectionManager ();
-			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
-		}
-		
-		private void AttachLogger(DbTransaction transaction)
-		{
-			this.logger = new DbLogger ();
-			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 		}
 
 		/// <summary>
@@ -800,7 +672,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbTable"/> method. Note also that this method
+		/// with the <see cref="DbInfrastructure.ResolveDbTable(string)"/> method. Note also that this method
 		/// updates the table definition in the meta data, but does not make any modification to the
 		/// real SQL table.
 		/// </remarks>
@@ -853,7 +725,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="table"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbTable"/> method.
+		/// <see cref="DbInfrastructure.ResolveDbTable(string)"/> method.
 		/// </remarks>
 		/// <param name="table">The table definition to unregister.</param>
 		public void UnregisterDbTable(DbTable table)
@@ -872,7 +744,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="table"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbTable"/> method.
+		/// <see cref="DbInfrastructure.ResolveDbTable(string)"/> method.
 		/// </remarks>
 		/// <param name="transaction">The transaction to use to make the requests.</param>
 		/// <param name="table">The table definition to unregister.</param>
@@ -1179,7 +1051,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbType"/> method. Note also that this method
+		/// with the <see cref="DbInfrastructure.ResolveDbType(string)"/> method. Note also that this method
 		/// updates the type definition in the meta data, but does not make any modification to the
 		/// real SQL tables that might use it.
 		/// </remarks>
@@ -1201,7 +1073,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbType"/> method. Note also that this method
+		/// with the <see cref="DbInfrastructure.ResolveDbType(string)"/> method. Note also that this method
 		/// updates the type definition in the meta data, but does not make any modification to the
 		/// real SQL tables that might use it.
 		/// </remarks>
@@ -1225,7 +1097,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbType"/> method.
+		/// <see cref="DbInfrastructure.ResolveDbType(string)"/> method.
 		/// </remarks>
 		/// <param name="typeDef">The type definition to unregister.</param>
 		public void UnregisterDbType(DbTypeDef typeDef)
@@ -1245,7 +1117,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbType"/> method.
+		/// <see cref="DbInfrastructure.ResolveDbType(string)"/> method.
 		/// </remarks>
 		/// <param name="transaction">The transaction to use to make the requests.</param>
 		/// <param name="typeDef">The type definition to unregister.</param>
@@ -2636,8 +2508,6 @@ namespace Epsitec.Cresus.Database
 		/// <param name="transaction">The transaction.</param>
 		private void SetupTables(DbTransaction transaction)
 		{
-			System.Diagnostics.Debug.Assert (this.logger == null);
-			
 			//	First, fill the type table so that we can reference them from
 			//	the column definition table :
 			
@@ -3007,37 +2877,7 @@ namespace Epsitec.Cresus.Database
 					this.globalLock.ReleaseLock ();
 					this.globalLock = null;
 				}
-				
-				if (this.logger != null)
-				{
-					this.logger.Detach ();
-					this.logger = null;
-				}
 
-				if (this.uidManager != null)
-				{
-					this.uidManager.Detach ();
-					this.uidManager = null;
-				}
-
-				if (this.lockManager != null)
-				{
-					this.lockManager.Detach ();
-					this.lockManager = null;
-				}
-
-				if (this.connectionManager != null)
-				{
-					this.connectionManager.Detach ();
-					this.connectionManager = null;
-				}
-
-				if (this.infoManager != null)
-				{
-					this.infoManager.Detach ();
-					this.infoManager = null;
-				}
-				
 				if (this.abstraction != null)
 				{
 					this.abstraction.Dispose ();
@@ -3122,15 +2962,6 @@ namespace Epsitec.Cresus.Database
 				columnDef.Columns[Tags.ColumnRefTable].DefineTargetTableName (tableDef.GetSqlName ());
 				columnDef.Columns[Tags.ColumnRefType].DefineTargetTableName (typeDef.GetSqlName ());
 				columnDef.Columns[Tags.ColumnRefTarget].DefineTargetTableName (tableDef.GetSqlName ());
-			}
-			
-			public static IEnumerable<DbTable> CreateServicesTables(DbInfrastructure infrastructure)
-			{
-				yield return BootHelper.CreateTableInfo (infrastructure);
-				yield return BootHelper.CreateTableLog (infrastructure);
-				yield return BootHelper.CreateTableUid (infrastructure);
-				yield return BootHelper.CreateTableLock (infrastructure);
-				yield return BootHelper.CreateTableConnection (infrastructure);
 			}
 
 			private static DbTable CreateTableTableDef(DbInfrastructure infrastructure)
@@ -3217,152 +3048,13 @@ namespace Epsitec.Cresus.Database
 				return table;
 			}
 
-			private static DbTable CreateTableLog(DbInfrastructure infrastructure)
-			{
-				TypeHelper types = infrastructure.types;
-
-				DbTable table = new DbTable (Tags.TableLog);
-				
-				DbColumn[] columns = new DbColumn[]
-				{
-					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsAutoTimeStampOnInsert = true,
-					},
-					new DbColumn (Tags.ColumnSequenceNumber, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsAutoIncremented = true,
-					},
-				};
-
-				table.DefineCategory (DbElementCat.Internal);
-				table.Columns.AddRange (columns);
-				table.DefinePrimaryKey (columns[0]);
-
-				return table;
-			}
-
-			private static DbTable CreateTableUid(DbInfrastructure infrastructure)
-			{
-				TypeHelper types = infrastructure.types;
-
-				DbTable table = new DbTable (Tags.TableUid);
-				
-				DbColumn[] columns = new DbColumn[]
-				{
-					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-				};
-
-				table.DefineCategory (DbElementCat.Internal);
-				table.Columns.AddRange (columns);
-				table.DefinePrimaryKey (columns[0]);
-
-				return table;
-			}
-
-			private static DbTable CreateTableLock(DbInfrastructure infrastructure)
-			{
-				TypeHelper types = infrastructure.types;
-
-				DbTable table = new DbTable (Tags.TableLock);
-				
-				DbColumn[] columns = new DbColumn[]
-				{
-					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsAutoTimeStampOnInsert = true,
-					},
-				};
-
-				table.DefineCategory (DbElementCat.Internal);
-				table.Columns.AddRange (columns);
-				table.DefinePrimaryKey (columns[0]);
-
-				return table;
-			}
-
-			private static DbTable CreateTableConnection(DbInfrastructure infrastructure)
-			{
-				TypeHelper types = infrastructure.types;
-
-				DbTable table = new DbTable (Tags.TableConnection);
-				
-				DbColumn[] columns = new DbColumn[]
-				{
-					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnEstablismentTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsAutoTimeStampOnInsert = true,
-					},
-					new DbColumn (Tags.ColumnRefreshTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsAutoTimeStampOnInsert = true,
-						IsAutoTimeStampOnUpdate = true,
-					},
-					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-				};
-
-				table.DefineCategory (DbElementCat.Internal);
-				table.Columns.AddRange (columns);
-				table.DefinePrimaryKey (columns[0]);
-
-				return table;
-			}
-
-			private static DbTable CreateTableInfo(DbInfrastructure infrastructure)
-			{
-				TypeHelper types = infrastructure.types;
-
-				DbTable table = new DbTable (Tags.TableInfo);
-
-				DbColumn[] columns = new DbColumn[]
-				{
-					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-				};
-
-				table.DefineCategory (DbElementCat.Internal);
-				table.Columns.AddRange (columns);
-				table.DefinePrimaryKey (columns[0]);
-
-				return table;
-			}
-
 		}
 		
 		#endregion
 		
 		#region TypeHelper Class
 		
-		private sealed class TypeHelper
+		internal sealed class TypeHelper
 		{
 
 			// TODO I'm not convinced that how I implemented the stuff for the default types is the
@@ -3640,14 +3332,10 @@ namespace Epsitec.Cresus.Database
 		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
-		private DbInfoManager					infoManager;
-		private DbLogger						logger;
-		private DbUidManager					uidManager;
-		private DbLockManager					lockManager;
-		private DbConnectionManager				connectionManager;
+		private DbServiceManager				serviceManager;
 
-		private DbTableList			internalTables = new DbTableList ();
-		private DbTypeDefList		internalTypes = new DbTypeDefList ();
+		private DbTableList						internalTables = new DbTableList ();
+		private DbTypeDefList					internalTypes = new DbTypeDefList ();
 
 		private string							localizations;
 

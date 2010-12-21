@@ -22,15 +22,62 @@ namespace Epsitec.Cresus.Database.Services
 	/// A connection might be automatically closed by calls to the method InterruptDeadConnections if
 	/// it has not given any sign of life with the KeepConnectionAlive method recently.
 	/// </summary>
-    public sealed class DbConnectionManager : DbAbstractAttachable
+    public sealed class DbConnectionManager : DbAbstractTableService
 	{
+
+
+		// TODO Comment this class.
+		// Marc
 
 
 		/// <summary>
 		/// Creates a new <c>DbConnectionManager</c>.
 		/// </summary>
-		internal DbConnectionManager() : base ()
+		internal DbConnectionManager(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
+		}
+
+
+		internal override string GetDbTableName()
+		{
+			return Tags.TableConnection;
+		}
+
+
+		internal override DbTable CreateDbTable()
+		{
+			DbInfrastructure.TypeHelper types = this.DbInfrastructure.TypeManager;
+
+			DbTable table = new DbTable (Tags.TableConnection);
+
+			DbColumn[] columns = new DbColumn[]
+		    {
+		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		        new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnEstablismentTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+		        {
+		            IsAutoTimeStampOnInsert = true,
+		        },
+		        new DbColumn (Tags.ColumnRefreshTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+		        {
+		            IsAutoTimeStampOnInsert = true,
+		            IsAutoTimeStampOnUpdate = true,
+		        },
+		        new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		    };
+
+			table.DefineCategory (DbElementCat.Internal);
+			table.Columns.AddRange (columns);
+			table.DefinePrimaryKey (columns[0]);
+
+			table.UpdatePrimaryKeyInfo ();
+			table.UpdateRevisionMode ();
+
+			return table;
 		}
 
 
@@ -43,7 +90,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public DbConnection OpenConnection(string connectionIdentity)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			connectionIdentity.ThrowIfNullOrEmpty ("connectionIdentity");
 
@@ -69,7 +116,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void CloseConnection(DbId id)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
@@ -103,7 +150,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool ConnectionExists(DbId id)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
@@ -120,7 +167,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The data of the connection.</returns>
 		public DbConnection GetConnection(DbId id)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForConnectionId (id);
 
@@ -141,7 +188,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void KeepConnectionAlive(DbId id)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			id.ThrowIf (cId => cId.Value < 0, "connectionId cannot be lower than zero.");
 
@@ -174,7 +221,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool InterruptDeadConnections(System.TimeSpan timeOutValue)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
@@ -200,7 +247,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public IEnumerable<DbConnection> GetOpenConnections()
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForConnectionStatus (DbConnectionStatus.Open);
 
@@ -368,7 +415,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		internal SqlFunction CreateConditionForOpenConnections()
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			return this.CreateConditionForConnectionStatus (DbConnectionStatus.Open);
 		}
@@ -431,7 +478,7 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateConstant (timeOutValue.TotalDays, DbRawType.SmallDecimal)
 			);
 		}
-		
+
 
 	}
 

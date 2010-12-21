@@ -14,15 +14,56 @@ namespace Epsitec.Cresus.Database.Services
 	/// the database. These counters are addressed by a name and a slot number. In addition, each
 	/// contains a minimum value, a maximum value and a next value.
 	/// </summary>
-	public sealed class DbUidManager : DbAbstractAttachable
+	public sealed class DbUidManager : DbAbstractTableService
 	{
+
+
+		// TODO Comment this class.
+		// Marc
 
 
 		/// <summary>
 		/// Builds a new instance of <see cref="DbUidManager"/>.
 		/// </summary>
-		internal DbUidManager() : base()
+		internal DbUidManager(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
+		}
+
+
+		internal override string GetDbTableName()
+		{
+			return Tags.TableUid;
+		}
+
+
+		internal override DbTable CreateDbTable()
+		{
+			DbInfrastructure.TypeHelper types = this.DbInfrastructure.TypeManager;
+
+			DbTable table = new DbTable (Tags.TableUid);
+
+			DbColumn[] columns = new DbColumn[]
+		    {
+		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		        new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		    };
+
+			table.DefineCategory (DbElementCat.Internal);
+			table.Columns.AddRange (columns);
+			table.DefinePrimaryKey (columns[0]);
+
+			table.UpdatePrimaryKeyInfo ();
+			table.UpdateRevisionMode ();
+
+			return table;
 		}
 
 
@@ -41,7 +82,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If the counter already exists.</exception>
 		public void CreateUidCounter(string name, int slot, long min, long max)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 			
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
@@ -94,7 +135,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void DeleteUidCounter(string name, int slot)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
@@ -120,7 +161,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool ExistsUidCounter(string name, int slot)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
@@ -144,7 +185,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public IEnumerable<DbUidSlot> GetUidCounterSlots(string name)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			name.ThrowIfNullOrEmpty ("name");
 
@@ -167,7 +208,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public DbUidSlot GetUidCounter(string name, int slot)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
@@ -196,7 +237,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public long? GetUidCounterNextValue(string name, int slot)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
