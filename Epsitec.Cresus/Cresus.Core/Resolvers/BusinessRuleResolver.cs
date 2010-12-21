@@ -1,7 +1,7 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -36,12 +36,20 @@ namespace Epsitec.Cresus.Core.Resolvers
 			string baseTypeName = "GenericBusinessRule`1";
 			string methodName   = BusinessRuleResolver.GetMethodName (ruleType);
 
+			var candidates = new HashSet<System.Type> ();
+
+			candidates.Add (entityType);
+			candidates.AddRange (entityType.GetInterfaces ());
+
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
 						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes (typeof (BusinessRuleAttribute), false).Length > 0
 						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
-						where BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
+						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
+						let genericType = baseType.GetGenericArguments ()[0]
+						where candidates.Contains (genericType) && BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
+						orderby (genericType.IsInterface ? 1 : 0) ascending
+						orderby (genericType.Name)
 						select type;
 
 			return types;

@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(NumericValueArticleParameterDefinitionEntity entity)
 		{
-			entity.Code = (string) ItemCodeGenerator.NewCode ();
+//-			entity.Code = (string) ItemCodeGenerator.NewCode ();
 		}
 	}
 }
