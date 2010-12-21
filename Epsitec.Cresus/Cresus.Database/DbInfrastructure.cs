@@ -778,7 +778,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <remarks>
 		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbTable"/> method. Note also that this method
+		/// with the <see cref="DbInfrastructure.ResolveDbTable(string)"/> method. Note also that this method
 		/// updates the table definition in the meta data, but does not make any modification to the
 		/// real SQL table.
 		/// </remarks>
