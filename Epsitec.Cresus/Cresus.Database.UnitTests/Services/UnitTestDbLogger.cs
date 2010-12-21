@@ -34,30 +34,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void AttachArgumentCheck()
+		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbLogger ().Attach (null, new DbTable ())
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbLogger ().Attach (dbInfrastructure, null)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AttachAndDetach()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				Assert.IsNotNull (dbInfrastructure.Logger);
-			}
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DbLogger (null)
+			);
 		}
 
 
@@ -66,7 +48,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbLogger logger = dbInfrastructure.Logger;
+				DbLogger logger = dbInfrastructure.ServiceManager.Logger;
 
 				foreach (DbId dbId in this.GetDbIdSamples ())
 				{

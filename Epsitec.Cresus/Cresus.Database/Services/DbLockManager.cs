@@ -18,15 +18,58 @@ namespace Epsitec.Cresus.Database.Services
 	/// and is defined by a name. In addition, a lock contains a value which tells how many time it
 	/// has been acquired by the user, which makes it reentrant.
 	/// </summary>
-	public sealed class DbLockManager : DbAbstractAttachable
+	public sealed class DbLockManager : DbAbstractTableService
 	{
+
+
+		// TODO Comment this class.
+		// Marc
 
 
 		/// <summary>
 		/// Creates a new <c>DbLockManager</c>.
 		/// </summary>
-		internal DbLockManager() : base ()
+		internal DbLockManager(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
+		}
+
+
+		internal override string GetDbTableName()
+		{
+			return Tags.TableLock;
+		}
+
+
+		internal override DbTable CreateDbTable()
+		{
+			DbInfrastructure.TypeHelper types = this.DbInfrastructure.TypeManager;
+
+			DbTable table = new DbTable (Tags.TableLock);
+
+			DbColumn[] columns = new DbColumn[]
+		    {
+		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		        new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+		        {
+		            IsAutoTimeStampOnInsert = true,
+		        },
+		    };
+
+			table.DefineCategory (DbElementCat.Internal);
+			table.Columns.AddRange (columns);
+			table.DefinePrimaryKey (columns[0]);
+
+			table.UpdatePrimaryKeyInfo ();
+			table.UpdateRevisionMode ();
+
+			return table;
 		}
 
 
@@ -42,7 +85,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void RequestLock(string lockName, long connectionId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 			connectionId.ThrowIf (c => c < 0, "connectionId cannot be lower than zero");
@@ -82,7 +125,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void ReleaseLock(string lockName, long connectionId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 			connectionId.ThrowIf (c => c < 0, "connectionId cannot be lower than zero");
@@ -123,7 +166,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.ArgumentException">If <paramref name="lockName"/> is <c>null</c> or empty.</exception>
 		public DbLock GetLock(string lockName)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 			
 			lockName.ThrowIfNullOrEmpty ("lockName");
 
@@ -144,7 +187,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool IsLockOwned(string lockName)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 
@@ -209,7 +252,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// </summary>
 		public void RemoveInactiveLocks()
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForInactiveLocks ();
 
@@ -248,7 +291,7 @@ namespace Epsitec.Cresus.Database.Services
 
 			queryForOpenConnectionIds.Tables.Add ("t", SqlField.CreateName (connectionTable.GetSqlName ()));
 			queryForOpenConnectionIds.Fields.Add ("c", SqlField.CreateName ("t", connectionIdColumn.GetSqlName ()));
-			queryForOpenConnectionIds.Conditions.Add (this.DbInfrastructure.ConnectionManager.CreateConditionForOpenConnections ());
+			queryForOpenConnectionIds.Conditions.Add (this.DbInfrastructure.ServiceManager.ConnectionManager.CreateConditionForOpenConnections ());
 
 			return new SqlFunction
 			(
@@ -257,7 +300,7 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateSubQuery (queryForOpenConnectionIds)
 			);
 		}
-		
+
 
 	}
 

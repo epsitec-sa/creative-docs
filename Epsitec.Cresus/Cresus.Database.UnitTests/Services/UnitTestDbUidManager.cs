@@ -32,32 +32,14 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 			TestHelper.CreateDatabase ();
 		}
 
-
-		[TestMethod]
-		public void AttachArgumentCheck()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbUidManager ().Attach (null, new DbTable ())
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbUidManager ().Attach (dbInfrastructure, null)
-				);
-			}
-		}
-
 		
 		[TestMethod]
-		public void AttachAndDetach()
+		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				Assert.IsNotNull (dbInfrastructure.UidManager);
-			}
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DbUidManager (null)
+			);
 		}
 
 
@@ -66,7 +48,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -110,7 +92,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				for (int i = 0; i < 10; i++)
 				{
@@ -126,7 +108,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -151,7 +133,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -176,7 +158,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				for (int i = 0; i < 10; i++)
 				{
@@ -195,7 +177,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				var slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
 				Assert.IsTrue (slots.Count == 0);
@@ -261,7 +243,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -286,7 +268,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				for (int i = 0; i < 10; i++)
 				{
@@ -304,7 +286,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -334,7 +316,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbUidManager manager = dbInfrastructure.UidManager;
+				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
 				for (int i = 0; i < 10; i++)
 				{

@@ -37,30 +37,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void AttachArgumentCheck()
+		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbConnectionManager ().Attach (null, new DbTable ())
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbConnectionManager ().Attach (dbInfrastructure, null)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AttachAndDetach()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				Assert.IsNotNull (dbInfrastructure.ConnectionManager);
-			}
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DbConnectionManager (null)
+			);
 		}
 
 
@@ -69,7 +51,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -89,7 +71,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -104,9 +86,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager ();
-
-				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
+				manager.TurnOn ();
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
@@ -132,8 +113,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 				(
 					() => manager.CloseConnection (connectionId2)
 				);
-
-				manager.Detach ();
 			}
 		}
 
@@ -143,7 +122,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				DbId connectionId = manager.OpenConnection ("connection").Id;
 
@@ -163,7 +142,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -178,7 +157,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				Assert.IsFalse (manager.ConnectionExists (0));
 
@@ -198,7 +177,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -213,9 +192,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager ();
-
-				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
+				manager.TurnOn ();
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
@@ -240,8 +218,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 				(
 					() => manager.KeepConnectionAlive (connectionId2)
 				);
-
-				manager.Detach ();
 			}
 		}
 
@@ -251,7 +227,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
 				DbId connectionId = manager.OpenConnection ("connection").Id;
 
@@ -285,9 +261,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager ();
-
-				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
+				manager.TurnOn ();
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
@@ -311,8 +286,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnection (connectionId3).Status);
 
 				manager.CloseConnection (connectionId2);
-
-				manager.Detach ();
 			}
 		}
 
@@ -322,9 +295,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager ();
-
-				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
+				manager.TurnOn ();
 
 				List<DbId> connectionIds = new List<DbId> ();
 
@@ -366,8 +338,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 				manager.CloseConnection (connectionId2);
 				connectionIds.Remove (connectionId2);
 				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
-
-				manager.Detach ();
 			}
 		}
 
@@ -377,7 +347,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager ();
+				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -392,11 +362,11 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager connectionManager = new DbConnectionManager ();
-				DbLockManager lockManager = new DbLockManager ();
+				DbConnectionManager connectionManager = new DbConnectionManager (dbInfrastructure);
+				DbLockManager lockManager = new DbLockManager (dbInfrastructure);
 
-				connectionManager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
-				lockManager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableLock));
+				connectionManager.TurnOn ();
+				lockManager.TurnOn ();
 
 				DbId connectionId1 = connectionManager.OpenConnection ("connection1").Id;
 				DbId connectionId2 = connectionManager.OpenConnection ("connection2").Id;

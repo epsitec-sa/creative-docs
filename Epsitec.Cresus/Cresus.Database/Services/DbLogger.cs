@@ -13,15 +13,60 @@ namespace Epsitec.Cresus.Database.Services
 	/// The <c>DbLogger</c> class is used to manage the <c>CR_LOG</c> table in the database, that
 	/// contains the log entries used to archive who has done what and when in the database.
 	/// </summary>
-	public sealed class DbLogger : DbAbstractAttachable
+	public sealed class DbLogger : DbAbstractTableService
 	{
-		
-		
+
+
+		// TODO Comment this class.
+		// Marc
+
+
 		/// <summary>
 		/// Creates a new <c>DbLogger</c>.
 		/// </summary>
-		internal DbLogger() : base()
+		internal DbLogger(DbInfrastructure dbInfrastructure)
+			: base (dbInfrastructure)
 		{
+		}
+
+
+		internal override string GetDbTableName()
+		{
+			return Tags.TableLog;
+		}
+
+
+		internal override DbTable CreateDbTable()
+		{
+			DbInfrastructure.TypeHelper types = this.DbInfrastructure.TypeManager;
+
+			DbTable table = new DbTable (Tags.TableLog);
+
+			DbColumn[] columns = new DbColumn[]
+		    {
+		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		        new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+		        {
+		            IsAutoTimeStampOnInsert = true,
+		        },
+		        new DbColumn (Tags.ColumnSequenceNumber, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
+		        {
+		            IsAutoIncremented = true,
+		        },
+		    };
+
+			table.DefineCategory (DbElementCat.Internal);
+			table.Columns.AddRange (columns);
+			table.DefinePrimaryKey (columns[0]);
+
+			table.UpdatePrimaryKeyInfo ();
+			table.UpdateRevisionMode ();
+
+			return table;
 		}
 
 
@@ -32,7 +77,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The data of the new entry.</returns>
 		public DbLogEntry CreateLogEntry(DbId connectionId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
@@ -52,7 +97,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns>The data of the entry.</returns>
 		public DbLogEntry GetLogEntry(DbId entryId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
@@ -68,7 +113,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <param name="entryId">The <see cref="DbId"/> of the entry to remove.</param>
 		public void RemoveLogEntry(DbId entryId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
@@ -83,7 +128,7 @@ namespace Epsitec.Cresus.Database.Services
 		/// <returns><c>true</c> if a log entry with the given <see cref="DbId"/> exists, <c>false</c> if there is n't.</returns>
 		public bool LogEntryExists(DbId entryId)
 		{
-			this.CheckIsAttached ();
+			this.CheckIsTurnedOn ();
 
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 

@@ -36,30 +36,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 
 
 		[TestMethod]
-		public void AttachArgumentCheck()
+		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbInfoManager ().Attach (null, new DbTable ())
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new DbInfoManager ().Attach (dbInfrastructure, null)
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AttachAndDetach()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				Assert.IsNotNull (dbInfrastructure.InfoManager);
-			}
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DbInfoManager (null)
+			);
 		}
 
 
@@ -70,12 +52,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.ExistsInfo (null)
+					() => dbInfrastructure.ServiceManager.InfoManager.ExistsInfo (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.ExistsInfo ("")
+					() => dbInfrastructure.ServiceManager.InfoManager.ExistsInfo ("")
 				);
 			}
 		}
@@ -88,12 +70,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.SetInfo (null, "test")
+					() => dbInfrastructure.ServiceManager.InfoManager.SetInfo (null, "test")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.SetInfo ("", "test")
+					() => dbInfrastructure.ServiceManager.InfoManager.SetInfo ("", "test")
 				);
 			}
 		}
@@ -106,12 +88,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.GetInfo (null)
+					() => dbInfrastructure.ServiceManager.InfoManager.GetInfo (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.InfoManager.GetInfo ("")
+					() => dbInfrastructure.ServiceManager.InfoManager.GetInfo ("")
 				);
 			}
 		}
@@ -122,7 +104,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbInfoManager manager = dbInfrastructure.InfoManager;
+				DbInfoManager manager = dbInfrastructure.ServiceManager.InfoManager;
 
 				Dictionary<string, string> info = new Dictionary<string, string> ();
 
