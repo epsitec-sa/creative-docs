@@ -169,14 +169,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbTable table2 = new DbTable ();
 			DbTable table3 = new DbTable ();
 
-			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
 			table1.AddIndex (table1.Columns[0], table1.Columns[1]);
 			table2.AddIndex (table2.Columns[0], table2.Columns[1]);
@@ -188,15 +188,15 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table1 = new DbTable ();
 			table2 = new DbTable ();
 			table3 = new DbTable ();
-			
-			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
 
-			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
+
+			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
 			table1.AddIndex (table1.Columns[0]);
 			table1.AddIndex (table1.Columns[1]);
@@ -211,9 +211,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2 = new DbTable ();
 			table3 = new DbTable ();
 
-			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
+			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
 
 			table1.AddIndex (SqlSortOrder.Ascending, table1.Columns[0]);
 			table2.AddIndex (SqlSortOrder.Ascending, table2.Columns[0]);
@@ -231,14 +231,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbTable table2 = new DbTable ();
 			DbTable table3 = new DbTable ();
 
-			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table1.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table1.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table2.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDef1 ()));
-			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDef2 ()));
+			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
+			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
 			table1.PrimaryKeys.Add (table1.Columns[0]);
 			table1.PrimaryKeys.Add (table1.Columns[1]);
@@ -592,18 +592,29 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			DbTable table1 = new DbTable ();
 			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
+			List<DbTable> tables3 = new List<DbTable> ();
 
 			table1.Columns.Add (new DbColumn ());
 			table2.Columns.Add (new DbColumn ());
-			table3.Columns.Add (new DbColumn ());
 
-			table1.Columns[0].DefineType (this.GetDbTypeDef1 ());
-			table2.Columns[0].DefineType (this.GetDbTypeDef1 ());
-			table3.Columns[0].DefineType (this.GetDbTypeDef2 ());
+			table1.Columns[0].DefineType (this.GetDbTypeDefs ().ElementAt (0));
+			table2.Columns[0].DefineType (this.GetDbTypeDefs ().ElementAt (0));
+
+			foreach (DbTypeDef dbTypeDef in this.GetDbTypeDefs ().Skip (1))
+			{
+				DbTable table3 = new DbTable ();
+				table3.Columns.Add (new DbColumn ());
+				table3.Columns[0].DefineType (dbTypeDef);
+
+				tables3.Add (table3);
+			}
 
 			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+
+			foreach (DbTable table3 in tables3)
+			{
+				Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			}
 		}
 
 
@@ -808,15 +819,15 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		private DbTypeDef GetDbTypeDef1()
+		private IEnumerable<DbTypeDef> GetDbTypeDefs()
 		{
-			return new DbTypeDef ("t1", DbSimpleType.String, null, 40, false, DbNullability.Yes);
-		}
-
-
-		private DbTypeDef GetDbTypeDef2()
-		{
-			return new DbTypeDef ("t2", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+			yield return new DbTypeDef ("type", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.Guid, null, 40, false, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.String, new DbNumDef (1, 0, 0, 9), 40, false, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.String, null, 50, false, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.String, null, 40, true, DbNullability.Yes);
+			yield return new DbTypeDef ("t", DbSimpleType.String, null, 40, false, DbNullability.No);
 		}
 
 
