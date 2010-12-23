@@ -325,13 +325,27 @@ namespace Epsitec.Common.Drawing.Platform
 
 		public NativeBitmap Crop(int x, int y, int dx, int dy)
 		{
-			CroppedBitmap cropped = new CroppedBitmap(this.bitmapSource, new System.Windows.Int32Rect (x, y, dx, dy));
+			if ((dx > 0) &&
+				(dy > 0))
+			{
+				try
+				{
+					CroppedBitmap cropped = new CroppedBitmap (this.bitmapSource, new System.Windows.Int32Rect (x, y, dx, dy));
+					return new NativeBitmap (cropped, this.fileFormat);
+				}
+				catch
+				{
+				}
+			}
 
-			//	TODO: check that the rectangle size is correct
-
-			return new NativeBitmap (cropped, this.fileFormat);
+			return NativeBitmap.CreateEmpty ();
 		}
 
+		public static NativeBitmap CreateEmpty()
+		{
+			byte[] data = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
+			return NativeBitmap.CreateFromPremultipliedArgb32 (data, 4, 1, 1);
+		}
 
 		public byte[] SaveToMemory(BitmapFileType fileType, int quality = 80, TiffCompressionOption tiffCompressionOption = TiffCompressionOption.Lzw)
 		{
@@ -439,24 +453,23 @@ namespace Epsitec.Common.Drawing.Platform
 		
 		public static NativeBitmap Load(byte[] buffer, string path = null)
 		{
-#if false
-			using (var imageStreamSource = new System.IO.MemoryStream (buffer))
+			try
 			{
-				PngBitmapDecoder decoder = new PngBitmapDecoder (imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-				return new ImageClient (decoder.Frames[0]);
+				using (var imageStreamSource = new System.IO.MemoryStream (buffer))
+				{
+					BitmapImage image = new BitmapImage ();
+					image.BeginInit ();
+					image.StreamSource = imageStreamSource;
+					image.CacheOption = BitmapCacheOption.OnLoad;
+					image.EndInit ();
+					BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
+					return new NativeBitmap (image, fileFormat);
+				}
 			}
-#else
-			using (var imageStreamSource = new System.IO.MemoryStream (buffer))
+			catch
 			{
-				BitmapImage image = new BitmapImage ();
-				image.BeginInit ();
-				image.StreamSource = imageStreamSource;
-				image.CacheOption = BitmapCacheOption.OnLoad;
-				image.EndInit ();
-				BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
-				return new NativeBitmap (image, fileFormat);
+				return null;
 			}
-#endif
 		}
 
 		public static NativeBitmap Create(System.Drawing.Bitmap bitmap)

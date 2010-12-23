@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Graph
 
 		private static LicensingInfo GetLicensingInfo()
 		{
-#if DEBUG
+#if false
 			GraphSerial.hasGraphLicense = true;
 			GraphSerial.hasValidGraphLicense = true;
 			return LicensingInfo.ValidLargo;

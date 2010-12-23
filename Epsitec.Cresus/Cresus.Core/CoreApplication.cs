@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Core
 			this.Window.Root.SizeChanged +=
 				delegate
 				{
-					this.Window.Text = string.Format ("{0} {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
+					this.Window.Text = string.Format ("{0} Alpha {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
 				};
 		}
 
