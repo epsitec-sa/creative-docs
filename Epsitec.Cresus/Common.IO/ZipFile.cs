@@ -458,7 +458,12 @@ namespace Epsitec.Common.IO
 
 				e.Crc = crc.Value;
 				e.DateTime = entry.DateTime;
-				e.Size = entry.Data.Length;
+
+				//	Do not set the size here; version 0.86.0.518 seems to be broken when reading
+				//	back ZIP files where the raw size is specified, but not the compressed size;
+				//	it produces EOF on reading back the input stream.
+
+//-				e.Size = entry.Data.Length;
 				e.CompressionMethod = entry.IsCompressed ? ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated : ICSharpCode.SharpZipLib.Zip.CompressionMethod.Stored;
 
 				zip.PutNextEntry (e);
