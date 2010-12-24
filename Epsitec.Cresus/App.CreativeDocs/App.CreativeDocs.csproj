@@ -271,6 +271,7 @@ xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y 
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+
 "$(SolutionDir)App.CreativeDocs\compile-rc.bat" "$(SolutionDir)App.CreativeDocs\App"</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
@@ -278,7 +279,6 @@ del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 xcopy "$(TargetDir)App.CreativeDocs.exe" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 xcopy "$(TargetDir)*.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
-xcopy "$(SolutionDir)External\FreeImage.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 
 ren "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
 
