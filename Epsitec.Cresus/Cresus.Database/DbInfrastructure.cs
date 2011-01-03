@@ -2342,10 +2342,10 @@ namespace Epsitec.Cresus.Database
 		/// specified search mode.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="typeKey">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
+		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
 		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
 		/// <returns>The type definitions.</returns>
-		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey typeKey, DbRowSearchMode rowSearchMode)
+		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
@@ -2359,13 +2359,13 @@ namespace Epsitec.Cresus.Database
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
-			if (typeKey.IsEmpty)
+			if (key.IsEmpty)
 			{
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", rowSearchMode);
 			}
 			else
 			{
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", typeKey);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", key);
 			}
 			
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
@@ -2378,6 +2378,7 @@ namespace Epsitec.Cresus.Database
 				string typeDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 				string typeInfo        = InvariantConverter.ToString (row["T_INFO"]);
 				int    status          = InvariantConverter.ToInt (row["T_STAT"]);
+				DbKey  typeKey		   = new DbKey (typeId);
 
 				if (status == 0)
 				{
