@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -312,14 +312,13 @@ namespace Epsitec.Common.IO
 					}
 				);
 			
-			ICSharpCode.SharpZipLib.Checksums.Crc32 crc = new ICSharpCode.SharpZipLib.Checksums.Crc32 ();
 			ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip = new ICSharpCode.SharpZipLib.Zip.ZipOutputStream (stream);
 
 			zip.SetLevel (this.level);
 
 			foreach (Entry entry in this.entries)
 			{
-				this.WriteEntry (zip, entry, crc);
+				this.WriteEntry (zip, entry);
 			}
 			
 			zip.Finish ();
@@ -441,7 +440,7 @@ namespace Epsitec.Common.IO
 			this.entries.RemoveAll (delegate (Entry entry) { return entry.Name == name; });
 		}
 
-		private void WriteEntry(ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip, Entry entry, ICSharpCode.SharpZipLib.Checksums.Crc32 crc)
+		private void WriteEntry(ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip, Entry entry)
 		{
 			ICSharpCode.SharpZipLib.Zip.ZipEntry e = new ICSharpCode.SharpZipLib.Zip.ZipEntry (entry.Name);
 
@@ -453,17 +452,8 @@ namespace Epsitec.Common.IO
 			}
 			else
 			{
-				crc.Reset ();
-				crc.Update (entry.Data);
-
-				e.Crc = crc.Value;
-				e.DateTime = entry.DateTime;
-
-				//	Do not set the size here; version 0.86.0.518 seems to be broken when reading
-				//	back ZIP files where the raw size is specified, but not the compressed size;
-				//	it produces EOF on reading back the input stream.
-
-//-				e.Size = entry.Data.Length;
+				e.DateTime          = entry.DateTime;
+				e.Size              = entry.Data.Length;
 				e.CompressionMethod = entry.IsCompressed ? ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated : ICSharpCode.SharpZipLib.Zip.CompressionMethod.Stored;
 
 				zip.PutNextEntry (e);
