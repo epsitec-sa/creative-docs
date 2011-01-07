@@ -19,22 +19,19 @@
 
 		public static void DeleteTestDatabase()
 		{
-			// TODO Have a better method to drop the database, that does not require to connect to
-			// it before, and that does not fail if the database does not exists or is invalid.
+			DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
 
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
-
-				infrastructure.AttachToDatabase (access);
-				infrastructure.DropDatabase ();
-			}
+			DbInfrastructure.DropDatabase (access);
 		}
 
 
 		public static void ResetTestDatabase()
 		{
-			DbInfrastructureHelper.DeleteTestDatabase ();
+			if (TestHelper.CheckDatabaseExistence ())
+			{
+				DbInfrastructureHelper.DeleteTestDatabase ();
+			}
+
 			DbInfrastructureHelper.CreateTestDatabase ();
 		}
 

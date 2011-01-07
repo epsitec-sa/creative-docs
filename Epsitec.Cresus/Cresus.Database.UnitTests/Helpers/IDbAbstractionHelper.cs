@@ -24,6 +24,9 @@
 		{
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
+			dbAccess.CheckConnection = false;
+			dbAccess.IgnoreInitialConnectionErrors = true;
+
 			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
 				idbAbstraction.DropDatabase ();
@@ -33,7 +36,11 @@
 
 		public static void ResetTestDatabase()
 		{
-			IDbAbstractionHelper.DeleteTestDatabase ();
+			if (TestHelper.CheckDatabaseExistence ())
+			{
+				IDbAbstractionHelper.DeleteTestDatabase ();
+			}
+
 			IDbAbstractionHelper.CreateTestDatabase ();
 		}
 
