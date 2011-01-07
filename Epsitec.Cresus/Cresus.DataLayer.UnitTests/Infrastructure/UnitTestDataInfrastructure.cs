@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 
 
 		[TestCleanup]
-		public static void TestCleanup()
+		public void TestCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
