@@ -9,6 +9,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Database
 {
 
+	// TODO Explode this class in DbTable, DbTypeDef, DbColumn, and so on... ?
+	// Marc
+
 
 	/// <summary>
 	/// The <c>DbSchemaChecker</c> class provides some functions used to compare schemas and
@@ -95,7 +98,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose values to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose values to compare.</param>
 		/// <returns><c>true</c> if the values of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTableValuesEqual(DbTable a, DbTable b)
+		public static bool AreDbTableValuesEqual(DbTable a, DbTable b)
 		{
 			bool same = a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
@@ -119,7 +122,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose primary keys to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose primary keys to compare.</param>
 		/// <returns><c>true</c> if the primary keys of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTablePrimaryKeysEqual(DbTable a, DbTable b)
+		public static bool AreDbTablePrimaryKeysEqual(DbTable a, DbTable b)
 		{
 			return a.HasPrimaryKeys == b.HasPrimaryKeys
 				&& DbSchemaChecker.CompareUnOrderedLists (a.PrimaryKeys.ToList (),b.PrimaryKeys.ToList (),DbSchemaChecker.AreDbColumnEqual);
@@ -132,7 +135,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose foreign keys to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose foreign keys to compare.</param>
 		/// <returns><c>true</c> if the foreign keys of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTableForeignKeysEqual(DbTable a, DbTable b)
+		public static bool AreDbTableForeignKeysEqual(DbTable a, DbTable b)
 		{
 			return DbSchemaChecker.CompareUnOrderedLists (a.ForeignKeys.ToList(),b.ForeignKeys.ToList(),DbSchemaChecker.AreDbForeignKeyEqual);
 		}
@@ -144,7 +147,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose indexes to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose indexes to compare.</param>
 		/// <returns><c>true</c> if the indexes of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTableIndexesEqual(DbTable a, DbTable b)
+		public static bool AreDbTableIndexesEqual(DbTable a, DbTable b)
 		{
 			return a.HasIndexes == b.HasIndexes
 				&& DbSchemaChecker.CompareUnOrderedLists (a.Indexes.ToList (), b.Indexes.ToList (), DbSchemaChecker.AreDbIndexEqual);
@@ -157,7 +160,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose localization to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose localization to compare.</param>
 		/// <returns><c>true</c> if the localization of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTableLocalizationsEqual(DbTable a, DbTable b)
+		public static bool AreDbTableLocalizationsEqual(DbTable a, DbTable b)
 		{
 			return a.LocalizationCount == b.LocalizationCount
 				&& DbSchemaChecker.CompareUnOrderedLists (a.Localizations.ToList (), b.Localizations.ToList (), string.Equals);
@@ -170,7 +173,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTable"/> whose <see cref="DbColumn"/> to compare.</param>
 		/// <param name="b">The second <see cref="DbTable"/> whose <see cref="DbColumn"/> to compare.</param>
 		/// <returns><c>true</c> if the <see cref="DbColumn"/> of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTableColumnsEqual(DbTable a, DbTable b)
+		public static bool AreDbTableColumnsEqual(DbTable a, DbTable b)
 		{
 			return DbSchemaChecker.CompareUnOrderedLists (a.Columns.ToList (), b.Columns.ToList (), DbSchemaChecker.AreDbColumnEqual);
 		}
@@ -182,7 +185,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbForeignKey"/> to compare.</param>
 		/// <param name="b">The second <see cref="DbForeignKey"/> to compare.</param>
 		/// <returns><c>true</c> if both <see cref="DbForeignKey"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbForeignKeyEqual(DbForeignKey a, DbForeignKey b)
+		public static bool AreDbForeignKeyEqual(DbForeignKey a, DbForeignKey b)
 		{
 			return DbSchemaChecker.CompareOrderedArrays (a.Columns, b.Columns, DbSchemaChecker.AreDbColumnEqual);
 		}
@@ -194,7 +197,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbIndex"/> to compare.</param>
 		/// <param name="b">The second <see cref="DbIndex"/> to compare.</param>
 		/// <returns><c>true</c> if both <see cref="DbIndex"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbIndexEqual(DbIndex a, DbIndex b)
+		public static bool AreDbIndexEqual(DbIndex a, DbIndex b)
 		{
 			return a.SortOrder == b.SortOrder
 				&& DbSchemaChecker.CompareOrderedArrays (a.Columns,b.Columns,DbSchemaChecker.AreDbColumnEqual);
@@ -209,7 +212,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbColumn"/> to compare.</param>
 		/// <param name="b">The second <see cref="DbColumn"/> to compare.</param>
 		/// <returns><c>true</c> if both <see cref="DbColumn"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbColumnEqual(DbColumn a, DbColumn b)
+		public static bool AreDbColumnEqual(DbColumn a, DbColumn b)
 		{
 			return (a == null && b == null) ||
 			(
@@ -242,7 +245,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first <see cref="DbTypeDef"/> to compare.</param>
 		/// <param name="b">The second <see cref="DbTypeDef"/> to compare.</param>
 		/// <returns><c>true</c> if both <see cref="DbTypeDef"/> are equal, <c>false</c> if they are not.</returns>
-		private static bool AreDbTypeDefEqual(DbTypeDef a, DbTypeDef b)
+		public static bool AreDbTypeDefEqual(DbTypeDef a, DbTypeDef b)
 		{
 			return (a == null && b == null) ||
 			(
