@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			foreach (DbTable dbTable in this.GetServiceTables ())
 			{
-				this.DbInfrastructure.RegisterNewDbTable (dbTable);
+				this.DbInfrastructure.AddTable (dbTable);
 			}
 		}
 

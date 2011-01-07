@@ -664,7 +664,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbTable table1 = this.CreateDbTableSample3 ("myTable");
 			DbTable table2 = this.CreateDbTableSample3 ("myTable");
 
-			TestHelper.DbInfrastructure.RegisterNewDbTable (table1);
+			TestHelper.DbInfrastructure.AddTable (table1);
 
 			DbTable table3 = TestHelper.DbInfrastructure.ResolveDbTable (table1.Name);
 
@@ -745,7 +745,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				Assert.IsFalse (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
 
-				TestHelper.DbInfrastructure.RegisterNewDbTable (table);
+				TestHelper.DbInfrastructure.AddTable (table);
 			}
 
 			Assert.IsTrue (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
