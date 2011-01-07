@@ -31,8 +31,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 			// does exist.
 			// Marc
 
-			return true;
-
 			DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
 
 			bool databaseExists = true;
