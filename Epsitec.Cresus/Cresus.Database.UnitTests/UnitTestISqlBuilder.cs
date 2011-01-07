@@ -29,14 +29,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbTools.DeleteDatabase ("test");
+			IDbAbstractionHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void InsertTablePrimaryKeyException()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void InsertTableTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableColumnsTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertDataTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void InsertTableWithSqlEngineTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			this.InsertTableWithSqlEngineTest ();
 
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ArrayTableTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -547,7 +547,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void RenameColumn()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -582,7 +582,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SetAndDropAutoIncrementOnTableColumn()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -674,7 +674,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SetAndDropAutoTimeStampOnTableColumnInsert()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
@@ -763,7 +763,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SetAndDropAutoTimeStampOnTableColumnUpdate()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;

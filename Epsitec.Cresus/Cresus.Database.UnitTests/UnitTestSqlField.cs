@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+
+			IDbAbstractionHelper.ResetTestDatabase ();
 		}
 
 
@@ -101,7 +103,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ValidateTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
 

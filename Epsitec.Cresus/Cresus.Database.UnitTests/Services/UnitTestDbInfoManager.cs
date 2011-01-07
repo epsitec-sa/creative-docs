@@ -30,8 +30,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -48,7 +47,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void ExistsInfoArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -66,7 +65,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void SetInfoArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -84,7 +83,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetInfoArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -102,7 +101,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetSetAndExistsInfo()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbInfoManager manager = dbInfrastructure.ServiceManager.InfoManager;
 

@@ -28,8 +28,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 		
@@ -46,7 +45,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void CreateUidCounterArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -90,7 +89,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void CreateAndExistsUidCounter()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -106,7 +105,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void DeleteUidCounterArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -131,7 +130,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void ExistsUidCounterArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -156,7 +155,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void DeleteAndExistsUidCounter()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -175,7 +174,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetUidCounterSlots()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -241,7 +240,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetUidCounterArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -266,7 +265,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetUidCounterMin()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -284,7 +283,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetUidCounterNextValueArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 
@@ -314,7 +313,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetUidCounterNextValue()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.ServiceManager.UidManager;
 

@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			UnitTestDatabaseConnection.DeleteDatabase ();
 
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.CreateTestDatabase ();
 		}
 
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			UnitTestDatabaseConnection.DeleteDatabase ();
 
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.CreateTestDatabase ();
 		}
 
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				dbInfrastructure.AttachToDatabase (dbAccess);
 			}
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 				
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
+				dbInfrastructure.AttachToDatabase (TestHelper.GetDbAccessForTestDatabase ());
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = TestHelper.CreateDbAccess ();
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				ExceptionAssert.Throw<System.Exception>
 				(
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 		private static void DeleteDatabase()
 		{
-			DbAccess access = TestHelper.CreateDbAccess ();
+			DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
 
 			string path = DbFactory.GetDatabaseFilePaths (access).First ();
 

@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.Database.UnitTests
 	{
 
 
+		// TODO Do not use DbInfrastructureHelper in this test? Because DbInfrastructure is precisely
+		// what we want to test here.
+		// Marc
+
+
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{
@@ -24,25 +29,18 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbTools.DeleteDatabase ("fiche");
-
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				DbAccess dbAccess = DbInfrastructure.CreateDatabaseAccess ("fiche");
-
-				infrastructure.CreateDatabase (dbAccess);
-			}
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void CreateDatabaseTest()
 		{
-			DbTools.DeleteDatabase ("fiche");
+			DbInfrastructureHelper.DeleteTestDatabase ();
 			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				DbAccess dbAccess = DbInfrastructure.CreateDatabaseAccess ("fiche");
+				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
 				infrastructure.CreateDatabase (dbAccess);
 
@@ -78,7 +76,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void AddTypeTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeSample1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
 				DbTypeDef dbTypeSample2 = new DbTypeDef ("NUPO", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
@@ -110,7 +108,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void RemoveTypeTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeSample1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
 				DbTypeDef dbTypeSample2 = new DbTypeDef ("NUPO", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
@@ -146,7 +144,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ResolveDbTypeTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbType1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
 				DbTypeDef dbType2 = new DbTypeDef ("NUPO", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
@@ -156,8 +154,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				infrastructure.AddType (dbType2);
 				infrastructure.AddType (dbType3);
 			}
-			
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbType1 = infrastructure.ResolveDbType ("Nom");
 				DbTypeDef dbType2 = infrastructure.ResolveDbType ("NUPO");
@@ -177,7 +175,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void CreateDbTableTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
 
@@ -225,7 +223,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void CreateDbTableException()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				infrastructure.AddType (dbTypeName);
@@ -246,13 +244,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void UnregisterDbTableTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable);
 			}
-			
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");
 				Assert.IsNotNull (dbTable);
@@ -266,19 +264,19 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void RegisterDbTableSameAsUnregisteredTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable);
 			}
 
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");			
 				infrastructure.RemoveTable (dbTable);
 			}
 
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable);
@@ -292,13 +290,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void UnregisterDbTableExeptionTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable);
 			}
 
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");
 				infrastructure.RemoveTable (dbTable);
@@ -314,7 +312,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsTest()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				Assert.IsNotNull (infrastructure);
 
@@ -354,7 +352,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest1()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 
@@ -372,7 +370,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest2()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
@@ -393,7 +391,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest3()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{		
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
@@ -409,7 +407,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExceptionTest4()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
@@ -425,7 +423,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExceptionTest5()
 		{
-			using (DbInfrastructure infrastructure = TestHelper.GetInfrastructureFromBase ("fiche"))
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
