@@ -481,7 +481,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			foreach (DbTypeDef dbTypeDef in dbTypeDefs)
 			{
-				this.DbInfrastructure.RegisterNewDbType (dbTypeDef);
+				this.DbInfrastructure.AddType (dbTypeDef);
 			}
 		}
 
@@ -492,15 +492,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="dbTables">The sequence of <see cref="DbTable"/> to register in the database.</param>
 		private void RegisterDbTables(IList<DbTable> dbTables)
 		{
-			foreach (DbTable dbTable in dbTables)
-			{
-				this.DbInfrastructure.RegisterNewDbTable (dbTable);
-			}
-
-			foreach (DbTable dbTable in dbTables)
-			{
-				this.DbInfrastructure.RegisterColumnRelations (dbTable);
-			}
+			this.DbInfrastructure.AddTables (dbTables);
 		}
 
 

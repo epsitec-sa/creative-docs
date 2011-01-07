@@ -14,6 +14,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
+
+	// TODO Split DbKeysCache in two, one for the types, and one for the tables?
+	// Marc
+
 	/// <summary>
 	/// The <c>DbInfrastructure</c> class provides support for the database
 	/// infrastructure needed by CRESUS (internal tables, metadata, etc.)
@@ -27,9 +31,8 @@ namespace Epsitec.Cresus.Database
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 
-			this.DbKeysCache = new Dictionary<string, Dictionary<string, DbKey[]>> ();
+			this.dbKeysCache = new Dictionary<string, Dictionary<string, DbKey[]>> ();
 		}
-
 
 		/// <summary>
 		/// Gets a value indicating whether the connection is open.
@@ -333,7 +336,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		private bool CheckCoreTables()
 		{
 			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
@@ -353,17 +355,6 @@ namespace Epsitec.Cresus.Database
 
 			return expectedTables.All (t => this.internalTables[t.Name] != null)
 				&& DbSchemaChecker.CheckSchema (this, expectedTables);
-		}
-
-		/// <summary>
-		/// Clears the table by removing all rows.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		private void ClearTable(DbTransaction transaction, DbTable table)
-		{
-			transaction.SqlBuilder.RemoveData (table.GetSqlName (), null);
-			this.ExecuteNonQuery (transaction);
 		}
 
 		/// <summary>
@@ -559,6 +550,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+
+
+
+
+
+
+
+
+
+
+
 		/// <summary>
 		/// Creates a minimal database table definition. This will only contain
 		/// the basic id and status columns required by <c>DbInfrastructure</c>.
@@ -607,155 +610,411 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Registers a new table for this database. This creates both the
-		/// metadata and the database table itself.
-		/// </summary>
-		/// <param name="table">The table.</param>
-		public void RegisterNewDbTable(DbTable table)
+		public void AddTable(DbTable table)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.RegisterNewDbTable (transaction, table);
-				transaction.Commit ();
-			}
-		}
-
-		/// <summary>
-		/// Registers a new table for this database. This creates both the
-		/// metadata and the database table itself.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
-		{
-			this.RegisterDbTable (transaction, table, false);
-		}
-
-		/// <summary>
-		/// Registers a known table for this database. This call is reserved for
-		/// the replication service which must be able to create tables in the
-		/// database for which there already exists metadata.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		public void RegisterKnownDbTable(DbTransaction transaction, DbTable table)
-		{
-			this.RegisterDbTable (transaction, table, true);
-		}
-
-		/// <summary>
-		/// Alters the given table definition by replacing the old definition of a table by a newer
-		/// one.
-		/// </summary>
-		/// <remarks>
-		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbTable(string)"/> method. Note also that this method
-		/// updates the table definition in the meta data, but does not make any modification to the
-		/// real SQL table.
-		/// </remarks>
-		/// <param name="oldDbTable">The old definition of the table.</param>
-		/// <param name="newDbTable">The new definition of the table.</param>
-		public void AlterDbTable(DbTable oldDbTable, DbTable newDbTable)
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				this.AlterDbTable (transaction, oldDbTable, newDbTable);
+				this.AddTable (transaction, table);
 
 				transaction.Commit ();
 			}
 		}
 
-		/// <summary>
-		/// Alters the given table definition by replacing the old definition of a table by a newer
-		/// one.
-		/// </summary>
-		/// <remarks>
-		/// Note that <paramref name="oldDbTable"/> should be a <see cref="DbTable"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbTable(string)"/> method. Note also that this method
-		/// updates the table definition in the meta data, but does not make any modification to the
-		/// real SQL table.
-		/// </remarks>
-		/// <param name="transaction">The transaction to use for the requests.</param>
-		/// <param name="oldDbTable">The old definition of the table.</param>
-		/// <param name="newDbTable">The new definition of the table.</param>
-		public void AlterDbTable(DbTransaction transaction, DbTable oldDbTable, DbTable newDbTable)
+		public void AddTable(DbTransaction transaction, DbTable table)
 		{
-			newDbTable.DefineKey (oldDbTable.Key);
+			// TODO Add checks on whether this table has a relation to another unexisting table.
+			// Marc
 
-			List<DbColumn> columnsToAdd = newDbTable.Columns
-				.Where (cNew => oldDbTable.Columns[cNew.Name] == null)
-				.ToList ();
+			// TODO Make sure that the table matches something legal.
+			// Marc
 
-			List<DbColumn> columnsToAlter = newDbTable.Columns
-				.Where (cNew => oldDbTable.Columns[cNew.Name] != null)
-				.ToList ();
+			this.CheckForRegisteredTypes (transaction, table);
+			this.CheckForUnknownTable (transaction, table);
 
-			List<DbColumn> columnsToRemove = oldDbTable.Columns
-				.Where (cOld => newDbTable.Columns[cOld.Name] == null)
-				.ToList ();
-
-			this.UpdateTableDefRow (transaction, newDbTable);
-
-			foreach (DbColumn column in columnsToAdd)
-			{
-				DbKey key = this.InsertColumnDefRow (transaction, newDbTable, column);
-				column.DefineKey (key);
-			}
-
-			foreach (DbColumn column in columnsToAlter)
-			{
-				DbColumn oldColumn = oldDbTable.Columns[column.Name];
-				column.DefineKey (oldColumn.Key);
-
-				this.UpdateColumnDefRow (transaction, newDbTable, column);
-			}
-
-			foreach (DbColumn column in columnsToRemove)
-			{
-				this.DeleteColumnDefRow (transaction, column);
-			}
-
-			this.ClearCaches ();
+			this.AddConcreteTable (transaction, table);
+			this.AddRelationTablesAndColumns (transaction, table);
 		}
 
-		/// <summary>
-		/// Unregisters a table from the database. The table definition is dropped in the meta data,
-		/// but the real sql table is not dropped.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="table"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbTable(string)"/> method.
-		/// </remarks>
-		/// <param name="table">The table definition to unregister.</param>
-		public void UnregisterDbTable(DbTable table)
+		public void AddTables(IEnumerable<DbTable> tables)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.UnregisterDbTable (transaction, table);
+				this.AddTables (transaction, tables);
 
 				transaction.Commit ();
 			}
 		}
 
-		/// <summary>
-		/// Unregisters a table from the database. The table definition is dropped in the meta data,
-		/// but the real sql table is not dropped.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="table"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbTable(string)"/> method.
-		/// </remarks>
-		/// <param name="transaction">The transaction to use to make the requests.</param>
-		/// <param name="table">The table definition to unregister.</param>
-		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
+		public void AddTables(DbTransaction transaction, IEnumerable<DbTable> tables)
+		{
+			// TODO Add checks on whether this table has a relation to a table that doesn't exist
+			// in the database and that isn't in the given sequence of tables.
+			// Marc
+
+			// TODO Add checks to ensure that the tables match something legal.
+			// Marc
+
+			var tmpTables = tables.ToList ();
+
+			foreach (DbTable table in tmpTables)
+			{
+				this.CheckForRegisteredTypes (transaction, table);
+				this.CheckForUnknownTable (transaction, table);
+			}
+
+			foreach (DbTable table in tmpTables)
+			{
+				this.AddConcreteTable (transaction, table);
+			}
+
+			foreach (DbTable table in tmpTables)
+			{
+				this.AddRelationTablesAndColumns (transaction, table);
+			}
+		}
+
+		public void RemoveTable(DbTable table)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.RemoveTable (transaction, table);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void RemoveTable(DbTransaction transaction, DbTable table)
 		{
 			this.CheckForKnownTable (transaction, table);
 
+			// TODO use the name of the table, instead of the DbTable object.
+			// Marc
+
+			this.RemoveRelationTablesAndColumns (transaction, table);
+			this.RemoveConcreteTable (transaction, table);
+
+			this.RemoveFromCache (table);
+		}
+
+		public void AddColumnToTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			this.CheckForKnownTable (transaction, table);
+
+			// Ensure that the column is valid, i.e. no primary key, no index, ...
+			// Marc
+
+			// TODO Add checks that the column does not exist.
+			// Marc
+
+			// TODO Use the name of the table instead of the dbTable object.
+			// Marc
+
+			// TODO Mutate the dbColumn object and the dbTable object?
+			// Marc
+
+			switch (column.Cardinality)
+			{
+				case DbCardinality.None:
+					this.AddConcreteColumnToTable (transaction, table, column);
+					break;
+
+				case DbCardinality.Reference:
+				case DbCardinality.Collection:
+					this.AddRelationTableAndColumn (transaction, table, column);
+					break;
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+
+			this.RemoveFromCache (table);
+		}
+
+		public void RemoveColumnFromTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			this.CheckForKnownTable (transaction, table);
+
+			// TODO Ensure that the column is valid, i.e no index, no primary key, ...
+			// Marc
+
+			// TODO Add Checks that the column does exist.
+			// Marc
+
+			// TODO use the name of the table instead of the dbTable object and use the name of the
+			// column instead of the dbColumn object.
+			// Marc
+
+			switch (column.Cardinality)
+			{
+				case DbCardinality.None:
+					this.RemoveConcreteColumnFromTable (transaction, table, column);
+					break;
+
+				case DbCardinality.Reference:
+				case DbCardinality.Collection:
+					this.RemoveRelationTableAndColumn (transaction, column);
+					break;
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+
+			this.RemoveFromCache (table);
+		}
+
+		private void AddConcreteTable(DbTransaction transaction, DbTable table)
+		{
+			this.RegisterTable (transaction, table);
+			this.InsertTable (transaction, table);
+		}
+
+		private void RemoveConcreteTable(DbTransaction transaction, DbTable table)
+		{
+			this.DropTable (transaction, table);
+			this.UnregisterTable (transaction, table);
+		}
+
+		private void AddConcreteColumnToTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			this.InsertConcreteColumnToTable (transaction, table, column);
+			this.RegisterConcreteTableColumn (transaction, table, column);
+		}
+
+		private void RemoveConcreteColumnFromTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			this.DropConcreteColumnFromTable (transaction, table, column);
+			this.UnregisterConcreteTableColumn (transaction, column);
+		}
+
+		private void AddRelationTablesAndColumns(DbTransaction transaction, DbTable table)
+		{
+			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality != DbCardinality.None))
+			{
+				this.AddRelationTableAndColumn (transaction, table, column);
+			}
+		}
+
+		private void AddRelationTableAndColumn(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			this.AddRelationTable (transaction, table, column);
+			this.RegisterRelationTableColumn (transaction, table, column);
+		}
+		
+		private void AddRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
+
+			this.AddTable (transaction, relationTable);
+		}
+
+		private void RemoveRelationTablesAndColumns(DbTransaction transaction, DbTable table)
+		{
+			var relationColumnsIn = this.FindInwardRelationColumns (table).ToList ();
+			var relationColumnsOut = this.FindOutwardRelationColumns (table).ToList ();
+
+			foreach (DbColumn column in relationColumnsIn.Concat (relationColumnsOut))
+			{
+				this.RemoveRelationTableAndColumn (transaction, column);
+			}
+		}
+
+		private void RemoveRelationTableAndColumn(DbTransaction transaction, DbColumn column)
+		{
+			this.RemoveRelationTable (transaction, column);
+			this.UnregisterRelationTableColumn (transaction, column);
+		}
+		
+		private void RemoveRelationTable(DbTransaction transaction, DbColumn column)
+		{
+			DbTable sourceTable = column.Table;
+
+			string relationTableName = sourceTable.GetRelationTableName (column);
+			DbTable relationTable = this.ResolveDbTable (relationTableName);
+
+			this.RemoveTable (transaction, relationTable);
+		}
+
+		private void RegisterTable(DbTransaction transaction, DbTable table)
+		{
+			table.UpdatePrimaryKeyInfo ();
+			DbKey tableKey = this.InsertTableDefRow (transaction, table);
+			table.DefineKey (tableKey);
+
+			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			{
+				this.RegisterConcreteTableColumn (transaction, table, column);
+			}
+		}
+
+		private void UnregisterTable(DbTransaction transaction, DbTable table)
+		{
 			this.DeleteColumnDefRows (transaction, table);
 			this.DeleteTableDefRow (transaction, table);
+		}
+		
+		private void RegisterConcreteTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
 
-			this.ClearCaches ();
+			column.DefineKey (columnKey);
+		}
+
+		private void UnregisterConcreteTableColumn(DbTransaction dbTransaction, DbColumn dbColumn)
+		{
+			this.DeleteColumnDefRow (dbTransaction, dbColumn);
+		}
+
+		private void RegisterRelationTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			// TODO Simplify a lot this method, when we make sure that some assumptions are valid
+			// in the public method related to this.
+
+			bool init = false;
+
+			// TODO Is that test invalid? Should it include other classes?
+			if (column.ColumnClass == DbColumnClass.RefId)
+			{
+				string targetTableName = column.TargetTableName;
+				
+				if (!string.IsNullOrEmpty (targetTableName))
+				{
+					DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
+
+					if (targetTable == null)
+					{
+						string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database", targetTableName, table.Name, column.Name);
+						throw new Exceptions.GenericException (this.access, message);
+					}
+
+					if (targetTable.Key.IsEmpty)
+					{
+						string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'", targetTableName, table.Name, column.Name);
+						throw new Exceptions.GenericException (this.access, message);
+					}
+
+					DbKey columnKey = this.InsertRelationColumnDefRow (transaction, table, column, targetTable);
+					column.DefineKey (columnKey);
+
+					init = true;
+				}
+			}
+
+			if (!init)
+			{
+				DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
+				column.DefineKey (columnKey);
+			}
+		}
+
+		public void UnregisterRelationTableColumn(DbTransaction transaction, DbColumn column)
+		{
+			this.DeleteColumnDefRow (transaction, column);
+		}
+
+		private void InsertConcreteColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string dbTableName = dbTable.GetSqlName ();
+			SqlColumn sqlColumn = dbTable.CreateSqlColumns (this.converter, dbColumn).Single ();
+
+			dbTransaction.SqlBuilder.InsertTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
+			this.ExecuteSilent (dbTransaction);
+
+			this.InsertAutoIncrementForColumn (dbTransaction, dbTable, dbColumn);
+			this.InsertAutoTimeStampForColumn (dbTransaction, dbTable, dbColumn);			
+		}
+
+		private void DropConcreteColumnFromTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
+			this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
+
+			string dbTableName = dbTable.GetSqlName ();
+			SqlColumn sqlColumn = dbTable.CreateSqlColumns (this.converter, dbColumn).Single ();
+
+			dbTransaction.SqlBuilder.RemoveTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
+			this.ExecuteSilent (dbTransaction);
+		}
+
+		private void DropTable(DbTransaction dbTransaction, DbTable dbTable)
+		{
+			foreach (DbColumn dbColumn in dbTable.Columns)
+			{
+				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
+				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
+			}
+
+			SqlTable sqlTable = dbTable.CreateSqlTable (this.converter);
+
+			dbTransaction.SqlBuilder.RemoveTable (sqlTable);
+			this.ExecuteSilent (dbTransaction);
+		}
+		
+		private void DropAutoIncrementFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			if (dbColumn.IsAutoIncremented)
+			{
+				dbTransaction.SqlBuilder.DropAutoIncrementOnTableColumn (tableName, columnName);
+				this.ExecuteSilent (dbTransaction);
+			}
+		}
+		
+		private void DropAutoTimeStampFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
+			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
+
+			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
+			{
+				dbTransaction.SqlBuilder.DropAutoTimeStampOnTableColumn (tableName, columnName);
+				this.ExecuteSilent (dbTransaction);
+			}
+		}
+
+		private void InsertTable(DbTransaction transaction, DbTable table)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+
+			transaction.SqlBuilder.InsertTable (sqlTable);
+			this.ExecuteSilent (transaction);
+
+			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			{
+				this.InsertAutoIncrementForColumn (transaction, table, dbColumn);
+				this.InsertAutoTimeStampForColumn (transaction, table, dbColumn);
+			}
+		}
+
+		private void InsertAutoIncrementForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			if (dbColumn.IsAutoIncremented)
+			{
+				transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
+				this.ExecuteSilent (transaction);
+			}
+		}
+
+		private void InsertAutoTimeStampForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
+			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
+
+			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
+			{
+				transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
+				this.ExecuteSilent (transaction);
+			}
 		}
 
 		/// <summary>
@@ -776,6 +1035,22 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Resolves the database table definition with the specified name. This
+		/// will return the same object when called multiple times with the same
+		/// name, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, string tableName)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+
+			DbKey key = this.FindDbTableKey (transaction, tableName);
+			return this.ResolveDbTable (transaction, key);
+		}
+
+		/// <summary>
 		/// Resolves the database table definition with the specified key. This
 		/// will return the same object when called multiple times with the same
 		/// key, unless the cache is cleared with <c>ClearCaches</c>.
@@ -790,22 +1065,6 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 				return value;
 			}
-		}
-
-		/// <summary>
-		/// Resolves the database table definition with the specified name. This
-		/// will return the same object when called multiple times with the same
-		/// name, unless the cache is cleared with <c>ClearCaches</c>.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="tableName">Name of the table.</param>
-		/// <returns>The table definition.</returns>
-		public DbTable ResolveDbTable(DbTransaction transaction, string tableName)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			DbKey key = this.FindDbTableKey (transaction, tableName);
-			return this.ResolveDbTable (transaction, key);
 		}
 
 		/// <summary>
@@ -927,207 +1186,81 @@ namespace Epsitec.Cresus.Database
 			return list.ToArray ();
 		}
 
-		/// <summary>
-		/// Clears the table and type caches. This will force a reload of the
-		/// table definitions and type definitions.
-		/// </summary>
-		public void ClearCaches()
+		internal IEnumerable<DbTable> FindBuiltInDbTables()
 		{
-			lock (this.DbKeysCache)
-			{
-				this.DbKeysCache.Clear ();
-			}
-			lock (this.tableCache)
-			{
-				this.tableCache.ClearCache ();
-			}
-			lock (this.typeCache)
-			{
-				this.typeCache.ClearCache ();
-			}
+			return this.internalTables;
 		}
 
-		public void RegisterColumnRelations(DbTable table)
+		private IEnumerable<DbColumn> FindInwardRelationColumns(DbTable dbTable)
 		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadWrite))
-			{
-				this.RegisterColumnRelations (transaction, table);
+			// This request might be optimized because it looks at all the table in the database. It
+			// might be more efficient to execute an appropriate SQL request or to use the method that
+			// gets the source reference resolvers.
+			// Marc
 
-				transaction.Commit ();
-			}
+			return this.FindDbTables (DbElementCat.Any)
+				.SelectMany (t => t.Columns)
+				.Where (c => c.Category == DbElementCat.Relation)
+				.Where (c => c.TargetTableName == dbTable.Name);
 		}
 
-		/// <summary>
-		/// Registers the column relations by generating the associated database
-		/// metadata. Every foreign key found in the table generates one relation.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
+		private IEnumerable<DbColumn> FindOutwardRelationColumns(DbTable dbTable)
 		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			foreach (DbColumn column in table.Columns)
-			{
-				if (column.ColumnClass == DbColumnClass.RefId)
-				{
-					string targetTableName = column.TargetTableName;
-					
-					if (! string.IsNullOrEmpty (targetTableName))
-					{
-						DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
-						
-						if (targetTable == null)
-						{
-							string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database", targetTableName, table.Name, column.Name);
-							throw new Exceptions.GenericException (this.access, message);
-						}
-						
-						DbKey sourceTableKey  = table.Key;
-						DbKey sourceColumnKey = column.Key;
-						DbKey targetTableKey  = targetTable.Key;
-						
-						if (sourceTableKey.IsEmpty)
-						{
-							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'", targetTableName, table.Name, column.Name);
-							throw new Exceptions.GenericException (this.access, message);
-						}
-
-						if (sourceColumnKey.IsEmpty)
-						{
-							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'", targetTableName, table.Name, column.Name);
-							throw new Exceptions.GenericException (this.access, message);
-						}
-
-						if (targetTableKey.IsEmpty)
-						{
-							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'", targetTableName, table.Name, column.Name);
-							throw new Exceptions.GenericException (this.access, message);
-						}
-						
-						//	We have found a valid relation between the source column
-						//	and the arget table. Update it in our metadata:
-						
-						this.UpdateColumnRelation (transaction, sourceTableKey, sourceColumnKey, targetTableKey);
-					}
-				}
-			}
+			return dbTable.Columns.Where (c => c.Category == DbElementCat.Relation);
 		}
 
-		/// <summary>
-		/// Registers a new type and stores it into the database metadata.
-		/// </summary>
-		/// <param name="typeDef">The type definition.</param>
-		public void RegisterNewDbType(DbTypeDef typeDef)
+		public void AddType(DbTypeDef type)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.RegisterDbType (transaction, typeDef);
+				this.AddType (transaction, type);
 
 				transaction.Commit ();
 			}
 		}
 
-		/// <summary>
-		/// Registers a new type and stores it into the database metadata. If
-		/// a type with the same name already exists in the database, this will
-		/// throw an exception.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="typeDef">The type definition.</param>
-		public void RegisterDbType(DbTransaction transaction, DbTypeDef typeDef)
+		public void AddType(DbTransaction transaction, DbTypeDef type)
 		{
-			this.CheckForUnknownType (transaction, typeDef);
+			this.CheckForUnknownType (transaction, type);
 
+			this.RegisterDbType (transaction, type);
+		}
+
+		public void RemoveType(DbTypeDef type)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.RemoveType (transaction, type);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void RemoveType(DbTransaction transaction, DbTypeDef type)
+		{
+			// TODO Check that the type is not used anywhere.
+			// Marc
+
+			// TODO Use only the name of the type instead of the dbTypeDef object.
+			// Marc
+
+			this.CheckForKnownType (transaction, type);
+
+			this.UnregisterDbType (transaction, type);
+
+			this.RemoveFromCache (type);
+		}
+
+		private void RegisterDbType(DbTransaction transaction, DbTypeDef typeDef)
+		{
 			DbKey typeKey = this.InsertTypeDefRow (transaction, typeDef);
 
 			typeDef.DefineKey (typeKey);
 		}
 
-
-		/// <summary>
-		/// Alters the given type definition by replacing the old definition of a type by a newer
-		/// one.
-		/// </summary>
-		/// <remarks>
-		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbType(string)"/> method. Note also that this method
-		/// updates the type definition in the meta data, but does not make any modification to the
-		/// real SQL tables that might use it.
-		/// </remarks>
-		/// <param name="oldDbTypeDef">The old definition of the type.</param>
-		/// <param name="newDbTypeDef">The new definition of the type.</param>
-		public void AlterDbType(DbTypeDef oldDbTypeDef, DbTypeDef newDbTypeDef)
+		private void UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				this.AlterDbType (transaction, oldDbTypeDef, newDbTypeDef);
-
-				transaction.Commit ();
-			}
-		}
-
-		/// <summary>
-		/// Alters the given type definition by replacing the old definition of a type by a newer
-		/// one.
-		/// </summary>
-		/// <remarks>
-		/// Note that <paramref name="oldDbTypeDef"/> should be a <see cref="DbTypeDef"/> object obtained
-		/// with the <see cref="DbInfrastructure.ResolveDbType(string)"/> method. Note also that this method
-		/// updates the type definition in the meta data, but does not make any modification to the
-		/// real SQL tables that might use it.
-		/// </remarks>
-		/// <param name="transaction">The transaction to use for the requests.</param>
-		/// <param name="oldDbTypeDef">The old definition of the type.</param>
-		/// <param name="newDbTypeDef">The new definition of the type.</param>
-		public void AlterDbType(DbTransaction transaction, DbTypeDef oldDbTypeDef, DbTypeDef newDbTypeDef)
-		{
-			DbKey key = oldDbTypeDef.Key;
-			newDbTypeDef.DefineKey (key);
-
-			this.UpdateTypeDefRow (transaction, newDbTypeDef);
-
-			this.ClearCaches ();
-		}
-
-		/// <summary>
-		/// Unregisters a type definition from the database. The type definition is dropped in the
-		/// meta data, but the real SQL table that might use it are not updated, and the table meta
-		/// data that might also reference it are not updated either.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbType(string)"/> method.
-		/// </remarks>
-		/// <param name="typeDef">The type definition to unregister.</param>
-		public void UnregisterDbType(DbTypeDef typeDef)
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				this.UnregisterDbType (transaction, typeDef);
-
-				transaction.Commit ();
-			}
-		}
-
-		/// <summary>
-		/// Unregisters a type definition from the database. The type definition is dropped in the
-		/// meta data, but the real SQL table that might use it are not updated, and the table meta
-		/// data that might also reference it are not updated either.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="typeDef"/> object used as argument must have been obtained with the
-		/// <see cref="DbInfrastructure.ResolveDbType(string)"/> method.
-		/// </remarks>
-		/// <param name="transaction">The transaction to use to make the requests.</param>
-		/// <param name="typeDef">The type definition to unregister.</param>
-		public void UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
-		{
-			this.CheckForKnownType (transaction, typeDef);
-
 			this.DeleteTypeDefRow (transaction, typeDef);
-
-			this.ClearCaches ();
 		}
 
 		/// <summary>
@@ -1142,25 +1275,6 @@ namespace Epsitec.Cresus.Database
 				DbTypeDef value = this.ResolveDbType (transaction, typeName);
 				transaction.Commit ();
 				return value;
-			}
-		}
-
-		/// <summary>
-		/// Resolves a type definition from its name.
-		/// </summary>
-		/// <param name="typeName">Name of the type.</param>
-		/// <returns>The type definition or <c>null</c>.</returns>
-		public DbTypeDef ResolveLoadedDbType(string typeName)
-		{
-			DbTypeDef value;
-
-			if (this.internalTypes.TryGetValue (typeName, out value))
-			{
-				return value;
-			}
-			else
-			{
-				return null;
 			}
 		}
 
@@ -1252,6 +1366,25 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Resolves a type definition from its name.
+		/// </summary>
+		/// <param name="typeName">Name of the type.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
+		public DbTypeDef ResolveLoadedDbType(string typeName)
+		{
+			DbTypeDef value;
+
+			if (this.internalTypes.TryGetValue (typeName, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Finds all the live type definitions.
 		/// </summary>
 		/// <returns>The type definitions.</returns>
@@ -1288,6 +1421,51 @@ namespace Epsitec.Cresus.Database
 			return this.LoadDbType (transaction, DbKey.Empty, rowSearchMode).ToArray ();
 		}
 
+		internal IEnumerable<DbTypeDef> FindBuiltInDbTypes()
+		{
+			return this.internalTypes;
+		}
+
+		private void RemoveFromCache(DbTable table)
+		{
+			this.tableCache[table.Key] = null;
+
+			if (this.dbKeysCache.ContainsKey (Tags.TableTableDef))
+			{
+				this.dbKeysCache[Tags.TableTableDef].Remove (table.Name);
+			}
+		}
+
+		private void RemoveFromCache(DbTypeDef type)
+		{
+			this.typeCache[type.Key] = null;
+
+			if (this.dbKeysCache.ContainsKey (Tags.TableTypeDef))
+			{
+				this.dbKeysCache[Tags.TableTableDef].Remove (type.Name);
+			}
+		}
+
+		/// <summary>
+		/// Clears the table and type caches. This will force a reload of the
+		/// table definitions and type definitions.
+		/// </summary>
+		public void ClearCaches()
+		{
+			lock (this.dbKeysCache)
+			{
+				this.dbKeysCache.Clear ();
+			}
+			lock (this.tableCache)
+			{
+				this.tableCache.ClearCache ();
+			}
+			lock (this.typeCache)
+			{
+				this.typeCache.ClearCache ();
+			}
+		}
+		
 		/// <summary>
 		/// Creates an SQL field definining a constant value for a given column.
 		/// The value is automatically converted from an ADO.NET representation
@@ -1392,127 +1570,6 @@ namespace Epsitec.Cresus.Database
 
 			table.PrimaryKeys.Add (colId);
 			table.UpdatePrimaryKeyInfo ();
-		}
-
-		/// <summary>
-		/// Registers a table for this database. This creates both the metadata and
-		/// the database table itself (if needed), but does not initialize the
-		/// relations between the columns and their target tables. See also the
-		/// <see cref="RegisterColumnRelations(DbTable)"/> method.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <param name="checkForKnownTable">If set to <c>true</c>, checks that the table is indeed known.</param>
-		private void RegisterDbTable(DbTransaction transaction, DbTable table, bool checkForKnownTable)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-
-			this.CheckForRegisteredTypes (transaction, table);
-
-			if (checkForKnownTable)
-			{
-				this.CheckForKnownTable (transaction, table);
-			}
-			else
-			{
-				this.CheckForUnknownTable (transaction, table);
-
-				//	Create the table description in the CR_TABLE_DEF table :
-				table.UpdatePrimaryKeyInfo ();
-				DbKey tableKey = this.InsertTableDefRow (transaction, table);
-				table.DefineKey (tableKey);
-
-				//	Create the column descriptions in the CR_COLUMN_DEF table :
-
-				foreach (DbColumn column in table.Columns)
-				{
-					DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
-					column.DefineKey (columnKey);
-				}
-			}
-
-			//	Create the table itself :
-
-			this.InsertDbTable (transaction, table);
-
-			//	Create the revision tracking table, if needed :
-
-			if (table.RevisionMode == DbRevisionMode.TrackChanges)
-			{
-				this.CreateRevisionTrackingTable (transaction, table);
-			}
-
-			//	Create relation tables if virtual columns exist in the source
-			//	table :
-
-			foreach (DbColumn column in table.Columns)
-			{
-				if (column.Cardinality != DbCardinality.None)
-				{
-					this.CreateRelationTable (transaction, table, column);
-				}
-			}
-		}
-
-
-		private void InsertDbTable(DbTransaction transaction, DbTable table)
-		{
-			SqlTable sqlTable = table.CreateSqlTable (this.converter);
-
-			transaction.SqlBuilder.InsertTable (sqlTable);
-			this.ExecuteSilent (transaction);
-
-			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
-			{
-				string tableName = sqlTable.Name;
-				string columnName = dbColumn.GetSqlName ();
-
-				if (dbColumn.IsAutoIncremented)
-				{
-					transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
-					this.ExecuteSilent (transaction);
-				}
-
-				bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
-				bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
-
-				if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
-				{
-					transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
-					this.ExecuteSilent (transaction);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Creates the revision tracking table for a given table.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		private void CreateRevisionTrackingTable(DbTransaction transaction, DbTable table)
-		{
-			SqlTable sqlTable;
-
-			sqlTable = new SqlTable (table.GetRevisionTableName ());
-			sqlTable.Comment = "Revision table for " + table.Comment;
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
-
-			transaction.SqlBuilder.InsertTable (sqlTable);
-			this.ExecuteSilent (transaction);
-		}
-
-		/// <summary>
-		/// Creates the relation table for the specified source column.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="sourceTable">The source table.</param>
-		/// <param name="sourceColumn">The source column.</param>
-		private void CreateRelationTable(DbTransaction transaction, DbTable sourceTable, DbColumn sourceColumn)
-		{
-			DbTable relationTable = DbTable.CreateRelationTable (this, sourceTable, sourceColumn);
-
-			this.RegisterNewDbTable (transaction, relationTable);
 		}
 
 		/// <summary>
@@ -1632,7 +1689,6 @@ namespace Epsitec.Cresus.Database
 			this.globalLock.ReleaseWriterLock ();
 		}
 
-
 		private class GlobalLockHelper : System.IDisposable
 		{
 			public GlobalLockHelper(DbInfrastructure infrastructure)
@@ -1662,7 +1718,6 @@ namespace Epsitec.Cresus.Database
 
 			readonly DbInfrastructure infrastructure;
 		}
-
 
 		/// <summary>
 		/// Locks a specific database connection. This prevents that the global
@@ -1805,21 +1860,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public System.DateTime GetDatabaseTime()
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				transaction.SqlBuilder.GetCurrentTimeStamp ();
-
-				object databaseTime = this.ExecuteScalar (transaction);
-
-				transaction.Commit ();
-
-				return (System.DateTime) databaseTime;
-			}
-		}
-
-
 		/// <summary>
 		/// Executes the command attached to the transaction.
 		/// </summary>
@@ -1934,7 +1974,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Executes the command attached to the transaction.
 		/// </summary>
@@ -2022,6 +2061,21 @@ namespace Epsitec.Cresus.Database
 			return dataTable;
 		}
 
+
+		public System.DateTime GetDatabaseTime()
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				transaction.SqlBuilder.GetCurrentTimeStamp ();
+
+				object databaseTime = this.ExecuteScalar (transaction);
+
+				transaction.Commit ();
+
+				return (System.DateTime) databaseTime;
+			}
+		}
+
 		/// <summary>
 		/// Finds the key for the specified table.
 		/// </summary>
@@ -2064,14 +2118,13 @@ namespace Epsitec.Cresus.Database
 			return DbKey.Empty;
 		}
 
-
 		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
 		{
 			DbKey[] dbKeys;
 			
-			if (this.DbKeysCache.ContainsKey (tableName) && this.DbKeysCache[tableName].ContainsKey (rowName))
+			if (this.dbKeysCache.ContainsKey (tableName) && this.dbKeysCache[tableName].ContainsKey (rowName))
 			{
-				dbKeys = this.DbKeysCache[tableName][rowName];
+				dbKeys = this.dbKeysCache[tableName][rowName];
 			}
 			else
 			{
@@ -2079,12 +2132,12 @@ namespace Epsitec.Cresus.Database
 
 				if (dbKeys.Length > 0)
 				{
-					if (!this.DbKeysCache.ContainsKey (tableName))
+					if (!this.dbKeysCache.ContainsKey (tableName))
 					{
-						this.DbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
+						this.dbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
 					}
 
-					this.DbKeysCache[tableName][rowName] = dbKeys;
+					this.dbKeysCache[tableName][rowName] = dbKeys;
 				}
 			}
 
@@ -2120,7 +2173,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Counts the rows of the specified table which have a matching value in
 		/// a given column.
@@ -2146,7 +2198,6 @@ namespace Epsitec.Cresus.Database
 			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
 		}
 
-
 		private void DeleteRow(DbTransaction transaction, string tableName, DbKey key)
 		{
 			SqlFieldList conditions  = new SqlFieldList ();
@@ -2162,7 +2213,6 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.GenericException (this.access, string.Format ("Delete of row {0} in table {1} produced {2} deletions.", key, tableName, numRowsAffected));
 			}
 		}
-
 
 		/// <summary>
 		/// Loads the table definitions based on the metadata table key and the
@@ -2501,7 +2551,6 @@ namespace Epsitec.Cresus.Database
 			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
-
 		/// <summary>
 		/// Sets up the metadata table definitions by filling them with the
 		/// defaults required by an empty database.
@@ -2552,14 +2601,12 @@ namespace Epsitec.Cresus.Database
 		/// source column.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="sourceTableKey">The source table key.</param>
 		/// <param name="sourceColumnKey">The source column key.</param>
 		/// <param name="targetTableKey">The target table key.</param>
-		private void UpdateColumnRelation(DbTransaction transaction, DbKey sourceTableKey, DbKey sourceColumnKey, DbKey targetTableKey)
+		private void UpdateColumnRelation(DbTransaction transaction, DbKey sourceColumnKey, DbKey targetTableKey)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 
-			System.Diagnostics.Debug.Assert (sourceTableKey  != null);
 			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
 			System.Diagnostics.Debug.Assert (targetTableKey  != null);
 
@@ -2588,8 +2635,8 @@ namespace Epsitec.Cresus.Database
 			DbTable  source = this.internalTables[sourceTableName];
 			DbTable  target = this.internalTables[targetTableName];
 			DbColumn column = source.Columns[sourceColumnName];
-			
-			this.UpdateColumnRelation (transaction, source.Key, column.Key, target.Key);
+
+			this.UpdateColumnRelation (transaction, column.Key, target.Key);
 		}
 		
 		/// <summary>
@@ -2728,6 +2775,34 @@ namespace Epsitec.Cresus.Database
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id),
+			};
+
+			SqlFieldList fieldsToReturn = new SqlFieldList ()
+			{
+				new SqlField() { Alias = columnDefTable.Columns[Tags.ColumnId].GetSqlName (), },
+			};
+
+			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+			object data = this.ExecuteScalar (transaction);
+
+			return new DbKey (new DbId ((long) data));
+		}
+
+		private DbKey InsertRelationColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column, DbTable targetTable)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+
+			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
+
+			SqlFieldList fieldsToInsert = new SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus], column.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName], column.Name),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType], column.Type == null ? 0 : column.Type.Key.Id),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTarget], targetTable.Key.Id),
 			};
 
 			SqlFieldList fieldsToReturn = new SqlFieldList ()
@@ -2942,7 +3017,7 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (DbTable table in tables)
 				{
-					infrastructure.InsertDbTable (transaction, table);
+					infrastructure.InsertTable (transaction, table);
 				}
 			}
 
@@ -3342,7 +3417,7 @@ namespace Epsitec.Cresus.Database
 
 		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
 		private Cache.DbTables					tableCache = new Cache.DbTables ();
-		private Dictionary<string, Dictionary<string, DbKey[]>> DbKeysCache;
+		private Dictionary<string, Dictionary<string, DbKey[]>> dbKeysCache;
 
 		private List<DbTransaction>				liveTransactions;
 		private List<IDbAbstraction>			releaseRequested;
@@ -3351,7 +3426,6 @@ namespace Epsitec.Cresus.Database
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 
 		public static readonly int AutoIncrementStartIndex = 1000000000;
-
 
 	}
 }
