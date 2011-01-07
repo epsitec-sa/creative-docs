@@ -25,15 +25,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			TestHelper.CreateAndConnectToDatabase ();
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
+		[TestInitialize]
+		public void TestInitialize()
 		{
-			TestHelper.DisposeInfrastructure ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -49,9 +47,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void DatabaseSameTest()
 		{
-			foreach (DbTable table in this.GetSampleTablesDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+				foreach (DbTable table in this.GetSampleTablesDatabase (dbInfrastructure))
+				{
+					Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+				}
 			}
 		}
 
@@ -59,9 +60,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MemorySameTest()
 		{
-			foreach (DbTable table in this.GetSampleTablesMemory ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+				foreach (DbTable table in this.GetSampleTablesMemory (dbInfrastructure))
+				{
+					Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+				}
 			}
 		}
 
@@ -258,13 +262,16 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbTable table2 = new DbTable ();
 			DbTable table3 = new DbTable ();
 
-			using (DbTransaction transaction = TestHelper.DbInfrastructure.BeginTransaction())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				table1.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c1", "t1", DbNullability.No));
-				table1.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c2", "t2", DbNullability.No));
-				table2.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c2", "t2", DbNullability.No));
-				table2.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c1", "t1", DbNullability.No));
-				table3.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c1", "t1", DbNullability.No));
+				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
+				{
+					table1.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c1", "t1", DbNullability.No));
+					table1.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c2", "t2", DbNullability.No));
+					table2.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c2", "t2", DbNullability.No));
+					table2.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c1", "t1", DbNullability.No));
+					table3.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c1", "t1", DbNullability.No));
+				}
 			}
 			
 			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
@@ -306,12 +313,15 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 
-			DbTable relationTable1 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource1, columnSource1);
-			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource2, columnSource2);
-			DbTable relationTable3 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource3, columnSource3);
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable relationTable1 = DbTable.CreateRelationTable (dbInfrastructure, tableSource1, columnSource1);
+				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource2, columnSource2);
+				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource3, columnSource3);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
+				Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+			}		
 		}
 
 
@@ -334,12 +344,15 @@ namespace Epsitec.Cresus.Database.UnitTests
 			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget2, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget3, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
 
-			DbTable relationTable1 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource1);
-			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource2);
-			DbTable relationTable3 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource3);
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable relationTable1 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource1);
+				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource2);
+				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource3);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
+				Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+			}
 		}
 
 
@@ -661,14 +674,17 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void DbTableMemoryDatabase()
 		{
-			DbTable table1 = this.CreateDbTableSample3 ("myTable");
-			DbTable table2 = this.CreateDbTableSample3 ("myTable");
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.CreateDbTableSample3 (dbInfrastructure, "myTable");
+				DbTable table2 = this.CreateDbTableSample3 (dbInfrastructure, "myTable");
 
-			TestHelper.DbInfrastructure.AddTable (table1);
+				dbInfrastructure.AddTable (table1);
 
-			DbTable table3 = TestHelper.DbInfrastructure.ResolveDbTable (table1.Name);
+				DbTable table3 = dbInfrastructure.ResolveDbTable (table1.Name);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table2, table3));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (table2, table3));
+			}
 		}
 
 
@@ -679,84 +695,102 @@ namespace Epsitec.Cresus.Database.UnitTests
 			(
 				() => DbSchemaChecker.CheckSchema (null, new List<DbTable> () { new DbTable () })
 			);
+		
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => DbSchemaChecker.CheckSchema (dbInfrastructure, null)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure , null)
-			);
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, new List<DbTable> () { new DbTable (), null })
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => DbSchemaChecker.CheckSchema (dbInfrastructure, new List<DbTable> () { new DbTable (), null })
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void CheckSchema1()
 		{
-			List<DbTable> dbTables = new List<DbTable> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTableDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableConnection),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableInfo),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableLock),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableLog),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableUid),
-			};
+				List<DbTable> dbTables = new List<DbTable> ()
+				{
+					dbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableTableDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableConnection),
+					dbInfrastructure.ResolveDbTable (Tags.TableInfo),
+					dbInfrastructure.ResolveDbTable (Tags.TableLock),
+					dbInfrastructure.ResolveDbTable (Tags.TableLog),
+					dbInfrastructure.ResolveDbTable (Tags.TableUid),
+				};
 
-			Assert.IsTrue (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables));
+			}
 		}
 
 
 		[TestMethod]
 		public void CheckSchema2()
 		{
-			List<DbTable> dbTables = new List<DbTable> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTableDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
-				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableConnection),
-				this.CreateDbTableSample3 ("myUndefinedTable")
-			};
+				List<DbTable> dbTables = new List<DbTable> ()
+				{
+					dbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableTableDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
+					dbInfrastructure.ResolveDbTable (Tags.TableConnection),
+					this.CreateDbTableSample3 (dbInfrastructure, "myUndefinedTable")
+				};
 
-			Assert.IsFalse (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+				Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables));
+			}
 		}
 
 
 		[TestMethod]
 		public void CheckSchema3()
 		{
-			List<string> names = new List<string> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				"myDefinedTable1",
-				"myDefinedTable2",
-				"myDefinedTable3",
-				"myDefinedTable4",
-				"myDefinedTable5",
-			};
+				List<string> names = new List<string> ()
+				{
+					"myDefinedTable1",
+					"myDefinedTable2",
+					"myDefinedTable3",
+					"myDefinedTable4",
+					"myDefinedTable5",
+				};
 
-			List<DbTable> dbTables = names.Select (this.CreateDbTableSample3).ToList ();
+				List<DbTable> dbTables1 = names
+					.Select (n => this.CreateDbTableSample3 (dbInfrastructure, n))
+					.ToList ();
 
-			foreach (DbTable table in names.Select (this.CreateDbTableSample3).ToList ())
-			{
-				Assert.IsFalse (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+				List<DbTable> dbTables2 = names
+					.Select (n => this.CreateDbTableSample3 (dbInfrastructure, n))
+					.ToList ();
 
-				TestHelper.DbInfrastructure.AddTable (table);
+				foreach (DbTable table in dbTables2)
+				{
+					Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables1));
+
+					dbInfrastructure.AddTable (table);
+				}
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables1));
 			}
-
-			Assert.IsTrue (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
 		}
 
 				
-		private IEnumerable<DbTable> GetSampleTablesMemory()
+		private IEnumerable<DbTable> GetSampleTablesMemory(DbInfrastructure dbInfrastructure)
 		{
 			yield return this.CreateDbTableSample1 ();
 			yield return this.CreateDbTableSample2 ();
-			yield return this.CreateDbTableSample3 ("myTable");
+			yield return this.CreateDbTableSample3 (dbInfrastructure, "myTable");
 		}
 
 
@@ -779,7 +813,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		private DbTable CreateDbTableSample3(string name)
+		private DbTable CreateDbTableSample3(DbInfrastructure dbInfrastructure, string name)
 		{
 			DbTable table = new DbTable ();
 
@@ -787,8 +821,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table.DefineCategory (DbElementCat.ManagedUserData);
 			table.DefineRevisionMode (DbRevisionMode.Immutable);
 
-			table.Columns.Add (new DbColumn ("myColumn1", TestHelper.DbInfrastructure.ResolveDbType ("K008")));
-			table.Columns.Add (new DbColumn ("myColumn2", TestHelper.DbInfrastructure.ResolveDbType ("K008")));
+			table.Columns.Add (new DbColumn ("myColumn1", dbInfrastructure.ResolveDbType ("K008")));
+			table.Columns.Add (new DbColumn ("myColumn2", dbInfrastructure.ResolveDbType ("K008")));
 
 			table.Columns[0].DefineCategory (DbElementCat.ManagedUserData);
 			table.Columns[1].DefineCategory (DbElementCat.ManagedUserData);
@@ -800,10 +834,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-        private IEnumerable<DbTable> GetSampleTablesDatabase()
+        private IEnumerable<DbTable> GetSampleTablesDatabase(DbInfrastructure dbInfrastructure)
 		{
 			return from tableName in this.GetSampleTableNames ()
-				   select TestHelper.DbInfrastructure.ResolveDbTable (tableName);
+				   select dbInfrastructure.ResolveDbTable (tableName);
 		}
 
 

@@ -28,8 +28,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -46,7 +45,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void CreateExistsGetDeleteLogEntry()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLogger logger = dbInfrastructure.ServiceManager.Logger;
 

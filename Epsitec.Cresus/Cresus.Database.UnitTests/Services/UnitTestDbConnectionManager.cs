@@ -31,8 +31,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -49,7 +48,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void OpenConnectionArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void CloseConnectionArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -84,7 +83,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void CloseConnectionInvalidBehavior()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 				manager.TurnOn ();
@@ -120,7 +119,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void OpenAndCloseConnection()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -140,7 +139,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void ConnectionExistsArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -155,7 +154,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void ConnectionExists()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -175,7 +174,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void KeepConnectionAliveArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -190,7 +189,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void KeepConnectionAliveInvalidBehavior()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 				manager.TurnOn ();
@@ -225,7 +224,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void KeepConnectionAlive()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = dbInfrastructure.ServiceManager.ConnectionManager;
 
@@ -259,7 +258,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void InterruptDeadConnections()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 				manager.TurnOn ();
@@ -293,7 +292,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetOpenedConnections()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 				manager.TurnOn ();
@@ -345,7 +344,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetLockOwnersArgumengCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager manager = new DbConnectionManager (dbInfrastructure);
 
@@ -360,7 +359,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetLockOwnersTest()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbConnectionManager connectionManager = new DbConnectionManager (dbInfrastructure);
 				DbLockManager lockManager = new DbLockManager (dbInfrastructure);

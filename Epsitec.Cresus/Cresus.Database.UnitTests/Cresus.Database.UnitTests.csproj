@@ -68,6 +68,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\IDbAbstractionHelper.cs" />
+    <Compile Include="Helpers\DbInfrastructureHelper.cs" />
     <Compile Include="UnitTestDbNumDef.cs" />
     <Compile Include="UnitTestDbSqlStandard.cs" />
     <Compile Include="UnitTestDbTable.cs" />

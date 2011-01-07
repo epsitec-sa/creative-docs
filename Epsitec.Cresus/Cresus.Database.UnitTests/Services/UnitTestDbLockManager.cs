@@ -26,8 +26,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -44,7 +43,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void RequestLockArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void ReleaseLockArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -94,7 +93,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void IsLockOwnedArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -114,7 +113,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void RequestReleaseAndIsLockOwned1()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -156,7 +155,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void RequestReleaseAndIsLockOwned2()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -199,7 +198,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetLockArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -219,7 +218,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void GetLockConnection()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.ServiceManager.LockManager;
 
@@ -274,7 +273,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 		[TestMethod]
 		public void RemoveInactiveLocks()
 		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbLockManager lockManager = dbInfrastructure.ServiceManager.LockManager;
 				DbConnectionManager connectionManager = dbInfrastructure.ServiceManager.ConnectionManager;

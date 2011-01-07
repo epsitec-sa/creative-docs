@@ -23,18 +23,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			DbTools.RestoreDatabase ("employee", @"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
-
-			System.Threading.Thread.Sleep (1000);
+			IDbAbstractionHelper.CloneDatabase(@"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
 		}
 
 
 		[TestMethod]
 		public void SqlSelectAllTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -63,9 +59,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectOrderByTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -98,9 +92,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectWhereTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -151,9 +143,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectWhereMaxTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -195,9 +185,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectInnerJoinTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -256,9 +244,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectAggregateOrderByTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -309,9 +295,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void SqlSelectUnionTest()
 		{
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -376,9 +360,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			// ourselves, or to remove this operator from the interface.
 			// Marc
 
-			DbAccess dbAccess = UnitTestSqlSelect.CreateDbAccess ();
-
-			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
 			{
 				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
 				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
@@ -466,12 +448,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			System.Console.Out.WriteLine ("{0} rows", rowCount);
 
 			return rowCount;
-		}
-
-
-		private static DbAccess CreateDbAccess()
-		{
-			return new DbAccess ("Firebird", "employee", "localhost", "sysdba", "masterkey", false);
 		}
 
 

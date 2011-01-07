@@ -15,6 +15,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 	public sealed class UnitTestDbFactory
 	{
 
+		// TODO Investigate those tests and rename this class to UnitTestDbAbstraction?
+		// Marc
+
+		// TODO Do not use IDbAbstractionHelper in this test? Because IDbAbstraction is precisely
+		// what we want to test here.
+		// Marc
+
 
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
@@ -26,20 +33,16 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbTools.DeleteDatabase ("test");
-
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (true))
-			{
-				dbAbstraction.Connection.Open ();
-				dbAbstraction.Connection.Close ();
-			}
+			IDbAbstractionHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void FindDbAbstractionAndOpenCloseTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
 				Assert.IsNotNull (dbAbstraction);
 				Assert.IsNotNull (dbAbstraction.Factory);
@@ -60,8 +63,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void NewDbCommandTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
+				dbAbstraction.Connection.Open ();
+
 				IDbCommand command = dbAbstraction.NewDbCommand ();
 
 				Assert.IsNotNull (command);
@@ -72,7 +79,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void NewDataAdapterTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
 				dbAbstraction.Connection.Open ();
 
@@ -89,8 +98,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ExecuteScalarTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
+				dbAbstraction.Connection.Open ();
+
 				IDbCommand command = dbAbstraction.NewDbCommand ();
 
 				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
@@ -110,8 +123,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ExecuteReaderTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
+				dbAbstraction.Connection.Open ();
+
 				IDbCommand command = dbAbstraction.NewDbCommand ();
 
 				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
@@ -143,8 +160,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void QueryUserTableNamesTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
+				dbAbstraction.Connection.Open ();
+
 				using (IDbCommand command = dbAbstraction.NewDbCommand ())
 				{
 					using (IDbTransaction transaction = dbAbstraction.BeginReadWriteTransaction ())
@@ -169,8 +190,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void ReadOnlyTransactionTest()
 		{
-			using (IDbAbstraction dbAbstraction = TestHelper.CreateDbAbstraction (false))
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			using (IDbAbstraction dbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
+				dbAbstraction.Connection.Open ();
+
 				using (IDbCommand command = dbAbstraction.NewDbCommand ())
 				{
 					using (IDbTransaction transaction = dbAbstraction.BeginReadOnlyTransaction ())
