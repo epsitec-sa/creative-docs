@@ -224,11 +224,17 @@ namespace Epsitec.Cresus.Database
 		
 		public void DropDatabase()
 		{
-			IDbAbstraction abstraction = this.abstraction;
-			
 			this.Dispose ();
-			
-			abstraction.DropDatabase ();
+
+			DbInfrastructure.DropDatabase (this.access);
+		}
+
+		public static void DropDatabase(DbAccess dbAccess)
+		{
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			{
+				idbAbstraction.DropDatabase ();
+			}
 		}
 
 		public static bool DeleteDatabaseFiles(DbAccess access, int recursion = 0)
