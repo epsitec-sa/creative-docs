@@ -28,15 +28,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 		
 		

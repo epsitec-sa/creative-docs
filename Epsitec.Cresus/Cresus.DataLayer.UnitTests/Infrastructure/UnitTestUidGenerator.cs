@@ -31,88 +31,86 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void CreateUidGeneratorArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			string name = "test";
-			List<UidSlot> slots = new List<UidSlot> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new UidSlot (0, 9),
-				new UidSlot (20, 29),
-				new UidSlot (10, 19),
-			};
+				string name = "test";
+				List<UidSlot> slots = new List<UidSlot> ()
+				{
+					new UidSlot (0, 9),
+					new UidSlot (20, 29),
+					new UidSlot (10, 19),
+				};
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => UidGenerator.CreateUidGenerator (null, name, slots)
-			);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => UidGenerator.CreateUidGenerator (null, name, slots)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, null, slots)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.CreateUidGenerator (dbInfrastructure, null, slots)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, "", slots)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.CreateUidGenerator (dbInfrastructure, "", slots)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, null)
+				);
 
-			List<UidSlot> badSlots = new List<UidSlot> ();
+				List<UidSlot> badSlots = new List<UidSlot> ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
+				);
 
-			badSlots = new List<UidSlot> ()
-			{
-				new UidSlot (0, 5),
-				new UidSlot (5, 10),
-			};
+				badSlots = new List<UidSlot> ()
+				{
+					new UidSlot (0, 5),
+					new UidSlot (5, 10),
+				};
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void CreateUidGeneratorTest()
 		{
-			for (int i = 0; i < 10; i++)
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				string name = "myCounter" + i;
+				for (int i = 0; i < 10; i++)
+				{
+					string name = "myCounter" + i;
 
-				List<UidSlot> slots = new List<UidSlot> ()
+					List<UidSlot> slots = new List<UidSlot> ()
 				{
 					new UidSlot (10, 19),
 					new UidSlot (20, 29),
 					new UidSlot (0, 9),
 				};
 
-				Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));
+					Assert.IsFalse (UidGenerator.UidGeneratorExists (dbInfrastructure, name));
 
-				UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+					UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-				Assert.IsTrue (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));	
+					Assert.IsTrue (UidGenerator.UidGeneratorExists (dbInfrastructure, name));
+				}
 			}
 		}
 
@@ -120,81 +118,86 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void DeleteUidGeneratorArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			string name = "test";
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				string name = "test";
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.DeleteUidGenerator (null, name)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.DeleteUidGenerator (null, name)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.DeleteUidGenerator (dbInfrastructure, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.DeleteUidGenerator (dbInfrastructure, null)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.DeleteUidGenerator (dbInfrastructure, "")
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.DeleteUidGenerator (dbInfrastructure, "")
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void DeleteUidGeneratorTest()
 		{
-			List<int> countersRemoved = new List<int> ();
-			List<int> countersCreated = new List<int> ();
-
-			for (int i = 0; i < 10; i++)
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				countersRemoved.Add (i);
-			}
+				List<int> countersRemoved = new List<int> ();
+				List<int> countersCreated = new List<int> ();
 
-			for (int i = 0; i < 10; i++)
-			{
-				string name = "myCounter";
-
-				List<UidSlot> slots = new List<UidSlot> ()
+				for (int i = 0; i < 10; i++)
 				{
-					new UidSlot (0, 9),
-					new UidSlot (20, 29),
-					new UidSlot (10, 19),
-				};
-
-				UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name + i, slots);
-
-				countersCreated.Add (i);
-				countersRemoved.Remove (i);
-
-				foreach (int j in countersCreated)
-				{
-					Assert.IsTrue (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name + j));
+					countersRemoved.Add (i);
 				}
 
-				foreach (int j in countersRemoved)
+				for (int i = 0; i < 10; i++)
 				{
-					Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name + j));
+					string name = "myCounter";
+
+					List<UidSlot> slots = new List<UidSlot> ()
+					{
+						new UidSlot (0, 9),
+						new UidSlot (20, 29),
+						new UidSlot (10, 19),
+					};
+
+					UidGenerator.CreateUidGenerator (dbInfrastructure, name + i, slots);
+
+					countersCreated.Add (i);
+					countersRemoved.Remove (i);
+
+					foreach (int j in countersCreated)
+					{
+						Assert.IsTrue (UidGenerator.UidGeneratorExists (dbInfrastructure, name + j));
+					}
+
+					foreach (int j in countersRemoved)
+					{
+						Assert.IsFalse (UidGenerator.UidGeneratorExists (dbInfrastructure, name + j));
+					}
 				}
-			}
 
-			for (int i = 0; i < 10; i++)
-			{
-				string name = "myCounter";
-
-				UidGenerator.DeleteUidGenerator (DatabaseHelper.DbInfrastructure, name + i);
-
-				countersCreated.Remove (i);
-				countersRemoved.Add (i);
-
-				foreach (int j in countersCreated)
+				for (int i = 0; i < 10; i++)
 				{
-					Assert.IsTrue (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name + j));
-				}
+					string name = "myCounter";
 
-				foreach (int j in countersRemoved)
-				{
-					Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name + j));
+					UidGenerator.DeleteUidGenerator (dbInfrastructure, name + i);
+
+					countersCreated.Remove (i);
+					countersRemoved.Add (i);
+
+					foreach (int j in countersCreated)
+					{
+						Assert.IsTrue (UidGenerator.UidGeneratorExists (dbInfrastructure, name + j));
+					}
+
+					foreach (int j in countersRemoved)
+					{
+						Assert.IsFalse (UidGenerator.UidGeneratorExists (dbInfrastructure, name + j));
+					}
 				}
 			}
 		}
@@ -203,85 +206,92 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void UidGeneratorExistsArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			string name = "test";
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				string name = "test";
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.UidGeneratorExists (null, name)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.UidGeneratorExists (null, name)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.UidGeneratorExists (dbInfrastructure, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.UidGeneratorExists (dbInfrastructure, null)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.UidGeneratorExists (dbInfrastructure, "")
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.UidGeneratorExists (dbInfrastructure, "")
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetUidGeneratorArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			string name = "test";
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				string name = "test";
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.GetUidGenerator (null, name)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.GetUidGenerator (null, name)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.GetUidGenerator (dbInfrastructure, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.GetUidGenerator (dbInfrastructure, null)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.GetUidGenerator (dbInfrastructure, "")
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => UidGenerator.GetUidGenerator (dbInfrastructure, "")
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetUidGeneratorTest()
 		{
-			for (int i = 0; i < 10; i++)
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				string name = "myCounter" + i;
+				for (int i = 0; i < 10; i++)
+				{
+					string name = "myCounter" + i;
 
-				List<UidSlot> slots = new List<UidSlot> ()
+					List<UidSlot> slots = new List<UidSlot> ()
 				{
 					new UidSlot (20, 29),
 					new UidSlot (0, 9),
 					new UidSlot (10, 19),
 				};
 
-				Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));
+					Assert.IsFalse (UidGenerator.UidGeneratorExists (dbInfrastructure, name));
 
-				UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+					UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-				Assert.IsTrue (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));
-			}
+					Assert.IsTrue (UidGenerator.UidGeneratorExists (dbInfrastructure, name));
+				}
 
-			for (int i = 0; i < 10; i++)
-			{
-				string name = "myCounter" + i;
+				for (int i = 0; i < 10; i++)
+				{
+					string name = "myCounter" + i;
 
-				UidGenerator generator = UidGenerator.GetUidGenerator (DatabaseHelper.DbInfrastructure, name);
+					UidGenerator generator = UidGenerator.GetUidGenerator (dbInfrastructure, name);
 
-				Assert.IsNotNull (generator);
-				Assert.AreEqual (generator.Name, name);
-				Assert.AreEqual (generator.Slots.Count (), 3);
-				Assert.AreEqual (0, generator.Slots.ElementAt (0).MinValue);
-				Assert.AreEqual (9, generator.Slots.ElementAt (0).MaxValue);
-				Assert.AreEqual (10, generator.Slots.ElementAt (1).MinValue);
-				Assert.AreEqual (19, generator.Slots.ElementAt (1).MaxValue);
-				Assert.AreEqual (20, generator.Slots.ElementAt (2).MinValue);
-				Assert.AreEqual (29, generator.Slots.ElementAt (2).MaxValue);
+					Assert.IsNotNull (generator);
+					Assert.AreEqual (generator.Name, name);
+					Assert.AreEqual (generator.Slots.Count (), 3);
+					Assert.AreEqual (0, generator.Slots.ElementAt (0).MinValue);
+					Assert.AreEqual (9, generator.Slots.ElementAt (0).MaxValue);
+					Assert.AreEqual (10, generator.Slots.ElementAt (1).MinValue);
+					Assert.AreEqual (19, generator.Slots.ElementAt (1).MaxValue);
+					Assert.AreEqual (20, generator.Slots.ElementAt (2).MinValue);
+					Assert.AreEqual (29, generator.Slots.ElementAt (2).MaxValue);
+				}
 			}
 		}
 
@@ -289,109 +299,121 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void GetNextUidTest1()
 		{
-			string name = "myCounter";
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				string name = "myCounter";
 
-			List<UidSlot> slots = new List<UidSlot> ()
+				List<UidSlot> slots = new List<UidSlot> ()
 			{
 				new UidSlot (0, 9),
 			};
 
-			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+				UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-			UidGenerator generator = UidGenerator.GetUidGenerator (DatabaseHelper.DbInfrastructure, name);
+				UidGenerator generator = UidGenerator.GetUidGenerator (dbInfrastructure, name);
 
-			for (int i = 0; i <= 9; i++)
-			{
-				Assert.AreEqual (i, generator.GetNextUid ());
+				for (int i = 0; i <= 9; i++)
+				{
+					Assert.AreEqual (i, generator.GetNextUid ());
+				}
+
+				ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUid ());
 			}
-
-			ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUid ());
 		}
 
 
 		[TestMethod]
 		public void GetNextUidTest2()
 		{
-			string name = "myCounter";
-
-			List<UidSlot> slots = new List<UidSlot> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new UidSlot (15, 15),
-				new UidSlot (19, 34),
-				new UidSlot (0, 9),
-			};
+				string name = "myCounter";
 
-			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+				List<UidSlot> slots = new List<UidSlot> ()
+				{
+					new UidSlot (15, 15),
+					new UidSlot (19, 34),
+					new UidSlot (0, 9),
+				};
 
-			UidGenerator generator = UidGenerator.GetUidGenerator (DatabaseHelper.DbInfrastructure, name);
+				UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-			for (int i = 0; i <= 9; i++)
-			{
-				Assert.AreEqual (i, generator.GetNextUid ());
+				UidGenerator generator = UidGenerator.GetUidGenerator (dbInfrastructure, name);
+
+				for (int i = 0; i <= 9; i++)
+				{
+					Assert.AreEqual (i, generator.GetNextUid ());
+				}
+
+				for (int i = 15; i <= 15; i++)
+				{
+					Assert.AreEqual (i, generator.GetNextUid ());
+				}
+
+				for (int i = 19; i <= 34; i++)
+				{
+					Assert.AreEqual (i, generator.GetNextUid ());
+				}
+
+				ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUid ());
 			}
-
-			for (int i = 15; i <= 15; i++)
-			{
-				Assert.AreEqual (i, generator.GetNextUid ());
-			}
-
-			for (int i = 19; i <= 34; i++)
-			{
-				Assert.AreEqual (i, generator.GetNextUid ());
-			}
-
-			ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUid ());
 		}
 
 
 		[TestMethod]
 		public void GetNextUidInSlotArgumentCheck()
 		{
-			string name = "myCounter";
-
-			List<UidSlot> slots = new List<UidSlot> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new UidSlot (0, 9),
-			};
+				string name = "myCounter";
 
-			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+				List<UidSlot> slots = new List<UidSlot> ()
+				{
+					new UidSlot (0, 9),
+				};
 
-			UidGenerator generator = UidGenerator.GetUidGenerator (DatabaseHelper.DbInfrastructure, name);
+				UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-			ExceptionAssert.Throw<System.Exception>
-			(
-				() => generator.GetNextUidInSlot (-1)
-			);
+				UidGenerator generator = UidGenerator.GetUidGenerator (dbInfrastructure, name);
 
-			ExceptionAssert.Throw<System.Exception>
-			(
-				() => generator.GetNextUidInSlot (2)
-			);
+				ExceptionAssert.Throw<System.Exception>
+				(
+					() => generator.GetNextUidInSlot (-1)
+				);
+
+				ExceptionAssert.Throw<System.Exception>
+				(
+					() => generator.GetNextUidInSlot (2)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void GetNextUidInSlotTest()
 		{
-			string name = "myCounter";
-
-			List<UidSlot> slots = new List<UidSlot> ()
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new UidSlot (12, 17),
-				new UidSlot (0, 9),
-				new UidSlot (19, 34),
-			};
+				string name = "myCounter";
 
-			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
+				List<UidSlot> slots = new List<UidSlot> ()
+				{
+					new UidSlot (12, 17),
+					new UidSlot (0, 9),
+					new UidSlot (19, 34),
+				};
 
-			UidGenerator generator = UidGenerator.GetUidGenerator (DatabaseHelper.DbInfrastructure, name);
+				UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 
-			for (int i = 12; i <= 17; i++)
-			{
-				Assert.AreEqual (i, generator.GetNextUidInSlot (1));
+				UidGenerator generator = UidGenerator.GetUidGenerator (dbInfrastructure, name);
+
+				for (int i = 12; i <= 17; i++)
+				{
+					Assert.AreEqual (i, generator.GetNextUidInSlot (1));
+				}
+
+				ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUidInSlot (1));
 			}
-
-			ExceptionAssert.Throw<System.Exception> (() => generator.GetNextUidInSlot (1));
 		}
 
 

@@ -76,13 +76,15 @@
     <Compile Include="General\UnitTestEntityCopy.cs" />
     <Compile Include="General\UnitTestEntityReload.cs" />
     <Compile Include="General\UnitTestForeignEntities.cs" />
-    <Compile Include="Helpers\DatabaseHelper.cs" />
+    <Compile Include="Helpers\DataContextHelper.cs" />
     <Compile Include="Helpers\DatabaseCreator1.cs" />
     <Compile Include="Helpers\DatabaseCreator2.cs" />
     <Compile Include="Context\UnitTestDataContextEventArgs.cs" />
     <Compile Include="Context\UnitTestDataContextPool.cs" />
     <Compile Include="Context\UnitTestEntityCache.cs" />
     <Compile Include="Context\UnitTestEntityKey.cs" />
+    <Compile Include="Helpers\DataInfrastructureHelper.cs" />
+    <Compile Include="Helpers\DbInfrastructureHelper.cs" />
     <Compile Include="ImportExport\UnitTestEpsitecEntitySerializer.cs" />
     <Compile Include="ImportExport\UnitTestImportExportManager.cs" />
     <Compile Include="ImportExport\UnitTestXmlEntitySerializer.cs" />

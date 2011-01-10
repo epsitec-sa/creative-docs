@@ -35,32 +35,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
-
-			DatabaseCreator2.PupulateDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void EntitySerializationManagerConstructorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					new EntitySerializationManager (dataContext);
-				}
+				new EntitySerializationManager (dataContext);
 			}
 		}
 
@@ -78,17 +64,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void SerializeArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-					   () => new EntitySerializationManager (dataContext).Serialize (null, 0)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+				   () => new EntitySerializationManager (dataContext).Serialize (null, 0)
+				);
 			}
 		}
 
@@ -96,27 +79,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void DeserializeArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+				   () => new EntitySerializationManager (dataContext).Deserialize (null)
+				);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-					   () => new EntitySerializationManager (dataContext).Deserialize (null)
-					);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+				   () => new EntitySerializationManager (dataContext).Deserialize (null, new EntityData (new DbKey (new DbId (1)), Druid.FromLong (1), Druid.FromLong (1), 0, new ValueData (), new ReferenceData (), new CollectionData ()))
+				);
 
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-					   () => new EntitySerializationManager (dataContext).Deserialize (null, new EntityData (new DbKey (new DbId (1)), Druid.FromLong (1), Druid.FromLong (1), 0, new ValueData (), new ReferenceData (), new CollectionData ()))
-					);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => new EntitySerializationManager (dataContext).Deserialize (new NaturalPersonEntity (), null)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new EntitySerializationManager (dataContext).Deserialize (new NaturalPersonEntity (), null)
+				);
 			}
 		}
 
@@ -124,21 +104,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void SerializeAndDeserialize()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				foreach (AbstractEntity entity in this.GetSampleEntities (dataContext))
 				{
-					EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
+					EntityData serializedEntity = serializer.Serialize (entity, 0);
+					AbstractEntity deserializedEntity = serializer.Deserialize (serializedEntity);
 
-					foreach (AbstractEntity entity in this.GetSampleEntities (dataContext))
-					{
-						EntityData serializedEntity = serializer.Serialize (entity, 0);
-						AbstractEntity deserializedEntity = serializer.Deserialize (serializedEntity);
-
-						this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
-					}
+					this.CheckEntitiesAreSimilar (dataContext, entity, deserializedEntity);
 				}
 			}
 		}
@@ -147,43 +124,40 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void Deserialize()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+				ValueData valueData = new ValueData ();
+				valueData[Druid.Parse ("[L0AV]")] = "Albert";
+				valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
 
-					ValueData valueData = new ValueData ();
-					valueData[Druid.Parse ("[L0AV]")] = "Albert";
-					valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
+				ReferenceData referenceData = new ReferenceData ();
+				referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (1000000002));
+				referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1000000001));
 
-					ReferenceData referenceData = new ReferenceData ();
-					referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (1000000002));
-					referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1000000001));
+				CollectionData collectionData = new CollectionData ();
+				collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000002)));
+				collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000001)));
 
-					CollectionData collectionData = new CollectionData ();
-					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000002)));
-					collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000001)));
+				int logSequenceId = 4;
+				EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), logSequenceId, valueData, referenceData, collectionData);
 
-					int logSequenceId = 4;
-					EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), logSequenceId, valueData, referenceData, collectionData);
+				new EntitySerializationManager (dataContext).Deserialize (alfred, data);
 
-					new EntitySerializationManager (dataContext).Deserialize (alfred, data);
-
-					Assert.AreEqual ("Albert", alfred.Firstname);
-					Assert.IsNull (alfred.Lastname);
-					Assert.AreEqual (new Date (1995, 1, 1), alfred.BirthDate);
-					Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))), alfred.PreferredLanguage);
-					Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
-					Assert.IsNull (alfred.Gender);
-					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[0]);
-					Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))), alfred.Contacts[1]);
-				}
+				Assert.AreEqual ("Albert", alfred.Firstname);
+				Assert.IsNull (alfred.Lastname);
+				Assert.AreEqual (new Date (1995, 1, 1), alfred.BirthDate);
+				Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))), alfred.PreferredLanguage);
+				Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
+				Assert.IsNull (alfred.Gender);
+				Assert.AreEqual (2, alfred.Contacts.Count);
+				Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))), alfred.Contacts[0]);
+				Assert.AreEqual (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))), alfred.Contacts[1]);
 			}
 		}
 
@@ -191,40 +165,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 		[TestMethod]
 		public void ReplaceFieldByProxy()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+				alfred.Firstname = "coucou";
 
-					alfred.Firstname = "coucou";
+				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AV]"));
 
-					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse("[L0AV]"));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+				alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
-					alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
+				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0A11]"));
 
-					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0A11]"));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-					
-					alfred.Contacts.Clear ();
+				alfred.Contacts.Clear ();
 
-					Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
+				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-					new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AS]"));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AS]"));
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-				}
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 			}
 		}
 

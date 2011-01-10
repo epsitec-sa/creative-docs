@@ -34,30 +34,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void PersistenceJobConverterConstructor()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					new PersistenceJobConverter (dataContext);
-				}
+				new PersistenceJobConverter (dataContext);
 			}
 		}
 
@@ -75,19 +63,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertDeleteJobArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => converter.Convert ((DeletePersistenceJob) null)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.Convert ((DeletePersistenceJob) null)
+				);
 			}
 		}
 
@@ -95,24 +80,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertDeleteJobTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				DeletePersistenceJob job1 = new DeletePersistenceJob (entity);
+				var job2 = converter.Convert (job1).ToList ();
 
-					DeletePersistenceJob job1 = new DeletePersistenceJob (entity);
-					var job2 = converter.Convert (job1).ToList ();
-
-					Assert.IsTrue (job2.Count == 1);
-					Assert.IsTrue (job2[0] is DeleteSynchronizationJob);
-					Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-					Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-				}
+				Assert.IsTrue (job2.Count == 1);
+				Assert.IsTrue (job2[0] is DeleteSynchronizationJob);
+				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
 			}
 		}
 
@@ -120,19 +102,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertValueJobArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => converter.Convert ((ValuePersistenceJob) null)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.Convert ((ValuePersistenceJob) null)
+				);
 			}
 		}
 
@@ -140,29 +119,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertValueJobTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
 					{
 						{ Druid.Parse("[L0AV]"), "prénom" },
 						{ Druid.Parse("[L0A01]"), "nom de famille" },
 					};
-					bool isRootType = false;
-					PersistenceJobType jobType = PersistenceJobType.Insert;
+				bool isRootType = false;
+				PersistenceJobType jobType = PersistenceJobType.Insert;
 
-					ValuePersistenceJob job1 = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootType, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				ValuePersistenceJob job1 = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootType, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 0);
-				}
+				Assert.IsTrue (job2.Count == 0);
 			}
 		}
 
@@ -170,38 +146,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertValueJobTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
 					{
 						{ Druid.Parse("[L0AV]"), "prénom" },
 						{ Druid.Parse("[L0A01]"), "nom de famille" },
 						{ Druid.Parse("[L0A61]"), null }
 					};
-					bool isRootType = false;
-					PersistenceJobType jobType = PersistenceJobType.Update;
+				bool isRootType = false;
+				PersistenceJobType jobType = PersistenceJobType.Update;
 
-					ValuePersistenceJob job1 = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootType, jobType);
-					var jobs2 = converter.Convert (job1).ToList ();
+				ValuePersistenceJob job1 = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootType, jobType);
+				var jobs2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (jobs2.Count == 3);
-					Assert.IsTrue (jobs2.All (j => j.DataContextId == dataContext.UniqueId));
-					Assert.IsTrue (jobs2.All (j => j.EntityKey == dataContext.GetNormalizedEntityKey (entity)));
-					Assert.IsTrue (jobs2.All (j => j is ValueSynchronizationJob));
+				Assert.IsTrue (jobs2.Count == 3);
+				Assert.IsTrue (jobs2.All (j => j.DataContextId == dataContext.UniqueId));
+				Assert.IsTrue (jobs2.All (j => j.EntityKey == dataContext.GetNormalizedEntityKey (entity)));
+				Assert.IsTrue (jobs2.All (j => j is ValueSynchronizationJob));
 
-					foreach (Druid fieldId in fieldIdsWithValues.Keys)
-					{
-						Assert.IsTrue (jobs2.Any (j => ((ValueSynchronizationJob) j).FieldId == fieldId));
-						Assert.IsTrue (jobs2.Any (j => ((ValueSynchronizationJob) j).NewValue == fieldIdsWithValues[fieldId]));
-					}
+				foreach (Druid fieldId in fieldIdsWithValues.Keys)
+				{
+					Assert.IsTrue (jobs2.Any (j => ((ValueSynchronizationJob) j).FieldId == fieldId));
+					Assert.IsTrue (jobs2.Any (j => ((ValueSynchronizationJob) j).NewValue == fieldIdsWithValues[fieldId]));
 				}
 			}
 		}
@@ -210,19 +183,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertReferenceJobArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => converter.Convert ((ReferencePersistenceJob) null)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.Convert ((ReferencePersistenceJob) null)
+				);
 			}
 		}
 
@@ -230,26 +200,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertReferenceJobTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Druid fieldId = Druid.Parse ("[L0A11]");
-					PersonGenderEntity target = entity.Gender;
-					PersistenceJobType jobType = PersistenceJobType.Insert;
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Druid fieldId = Druid.Parse ("[L0A11]");
+				PersonGenderEntity target = entity.Gender;
+				PersistenceJobType jobType = PersistenceJobType.Insert;
 
 
-					ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 0);
-				}
+				Assert.IsTrue (job2.Count == 0);
 			}
 		}
 
@@ -257,31 +224,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertReferenceJobTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Druid fieldId = Druid.Parse ("[L0A11]");
-					PersonGenderEntity target = entity.Gender;
-					PersistenceJobType jobType = PersistenceJobType.Update;
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Druid fieldId = Druid.Parse ("[L0A11]");
+				PersonGenderEntity target = entity.Gender;
+				PersistenceJobType jobType = PersistenceJobType.Update;
 
 
-					ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 1);
-					Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
-					Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-					Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-					Assert.AreEqual (dataContext.GetNormalizedEntityKey (target), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
-					Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
-				}
+				Assert.IsTrue (job2.Count == 1);
+				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
+				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (target), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
+				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
 			}
 		}
 
@@ -289,31 +253,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertReferenceJobTest3()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Druid fieldId = Druid.Parse ("[L0A11]");
-					PersonGenderEntity target = null;
-					PersistenceJobType jobType = PersistenceJobType.Update;
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Druid fieldId = Druid.Parse ("[L0A11]");
+				PersonGenderEntity target = null;
+				PersistenceJobType jobType = PersistenceJobType.Update;
 
 
-					ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 1);
-					Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
-					Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-					Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-					Assert.IsFalse (((ReferenceSynchronizationJob) job2[0]).NewTargetKey.HasValue);
-					Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
-				}
+				Assert.IsTrue (job2.Count == 1);
+				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
+				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
+				Assert.IsFalse (((ReferenceSynchronizationJob) job2[0]).NewTargetKey.HasValue);
+				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
 			}
 		}
 
@@ -321,19 +282,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertCollectionJobArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => converter.Convert ((CollectionPersistenceJob) null)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.Convert ((CollectionPersistenceJob) null)
+				);
 			}
 		}
 
@@ -341,27 +299,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertCollectionJobTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Druid fieldId = Druid.Parse ("[L0AS]");
-					List<AbstractEntity> targets = new List<AbstractEntity> ()
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Druid fieldId = Druid.Parse ("[L0AS]");
+				List<AbstractEntity> targets = new List<AbstractEntity> ()
 					{
 						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
 						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
-					PersistenceJobType jobType = PersistenceJobType.Insert;
+				PersistenceJobType jobType = PersistenceJobType.Insert;
 
-					CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 0);
-				}
+				Assert.IsTrue (job2.Count == 0);
 			}
 		}
 
@@ -369,39 +326,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 		[TestMethod]
 		public void ConvertCollectionJobTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid localEntityId = Druid.Parse ("[L0AN]");
-					Druid fieldId = Druid.Parse ("[L0AS]");
-					List<AbstractEntity> targets = new List<AbstractEntity> ()
+				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid localEntityId = Druid.Parse ("[L0AN]");
+				Druid fieldId = Druid.Parse ("[L0AS]");
+				List<AbstractEntity> targets = new List<AbstractEntity> ()
 					{
 						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
 						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
 					};
-					PersistenceJobType jobType = PersistenceJobType.Update;
+				PersistenceJobType jobType = PersistenceJobType.Update;
 
-					CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-					var job2 = converter.Convert (job1).ToList ();
+				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
+				var job2 = converter.Convert (job1).ToList ();
 
-					Assert.IsTrue (job2.Count == 1);
-					Assert.IsTrue (job2[0] is CollectionSynchronizationJob);
-					Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-					Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-					Assert.AreEqual (fieldId, ((CollectionSynchronizationJob) job2[0]).FieldId);
-					Assert.IsTrue
-					(
-						targets
-						.Select (t => dataContext.GetNormalizedEntityKey (t).Value)
-						.SequenceEqual (((CollectionSynchronizationJob) job2[0]).NewTargetKeys)
-					);
-				}
+				Assert.IsTrue (job2.Count == 1);
+				Assert.IsTrue (job2[0] is CollectionSynchronizationJob);
+				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (fieldId, ((CollectionSynchronizationJob) job2[0]).FieldId);
+				Assert.IsTrue
+				(
+					targets
+					.Select (t => dataContext.GetNormalizedEntityKey (t).Value)
+					.SequenceEqual (((CollectionSynchronizationJob) job2[0]).NewTargetKeys)
+				);
 			}
 		}
 

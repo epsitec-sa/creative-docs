@@ -31,21 +31,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
-
-			DatabaseCreator2.PupulateDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
@@ -54,39 +43,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			XDocument xDocument;
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
 				{
-					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-						dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))),
-					};
+					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+					dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))),
+				};
 
-					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+				HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
-				}
+				xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
 			}
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DatabaseCreator2.RegisterSchema (dataInfrastructure);
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -101,11 +86,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			XDocument xDocument;
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -129,7 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -146,11 +130,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			XDocument xDocument;
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
@@ -170,7 +153,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000002)));
 
@@ -199,11 +182,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			XDocument xDocument;
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -227,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 
@@ -242,11 +224,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			XDocument xDocument;
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					UriContactEntity uriContact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
@@ -276,7 +257,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
