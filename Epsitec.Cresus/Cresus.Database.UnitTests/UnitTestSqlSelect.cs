@@ -8,6 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Data;
 
+using System.IO;
+
 
 namespace Epsitec.Cresus.Database.UnitTests
 {
@@ -23,7 +25,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			IDbAbstractionHelper.CloneDatabase(@"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
+			FileInfo file = new FileInfo (@"\..\..\..\External\EMPLOYEE.GBAK");
+
+			IDbAbstractionHelper.CloneDatabase(file.FullName);
 		}
 
 

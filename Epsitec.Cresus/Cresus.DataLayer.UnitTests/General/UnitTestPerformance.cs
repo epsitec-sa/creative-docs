@@ -531,7 +531,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		private readonly static DatabaseSize databaseSize = DatabaseSize.Small;
 
 
-		private readonly static string logFile = @"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests\bin\Debug\results.txt";
+		private readonly static string logFile = @"results.txt";
 
 
 	}
