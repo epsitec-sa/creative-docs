@@ -35,22 +35,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					dataInfrastructure.CreateSchema<NaturalPersonEntity> ();
-					dataInfrastructure.CreateSchema<UriContactEntity> ();
-					dataInfrastructure.CreateSchema<MailContactEntity> ();
-					dataInfrastructure.CreateSchema<TelecomContactEntity> ();
-				}
-			}
-
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetEmptyTestDatabase ();
 		}
 
 
@@ -191,20 +176,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
-						}
-					}
+					this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
 				}
 			}
 			catch (System.Exception e)
@@ -257,20 +233,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
-						}
-					}
+					this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
 				}
 			}
 			catch (System.Exception e)
@@ -305,24 +272,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			int nbTotalInsertions = nbThreads * nbInsertions;
 
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
+				List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
+				persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
 
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
-
-						persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
-
-						Assert.IsTrue (persons.Count == nbTotalInsertions);
-					}
-				}
+				Assert.IsTrue (persons.Count == nbTotalInsertions);
 			}
 		}
 
@@ -351,23 +309,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ConflictingValueUpdateSetup()
 		{
-			DatabaseHelper.ConnectToDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+				person.Firstname = "name";
 
-					person.Firstname = "name";
-
-					dataContext.SaveChanges ();
-				}
+				dataContext.SaveChanges ();
 			}
-
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -377,20 +328,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
-						}
-					}
+					this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
 				}
 			}
 			catch (System.Exception e)
@@ -442,23 +384,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ConflictingReferenceUpdateSetup()
 		{
-			DatabaseHelper.ConnectToDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+				PersonGenderEntity gender1 = dataContext.CreateEntity<PersonGenderEntity> ();
+				PersonGenderEntity gender2 = dataContext.CreateEntity<PersonGenderEntity> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-					PersonGenderEntity gender1 = dataContext.CreateEntity<PersonGenderEntity> ();
-					PersonGenderEntity gender2 = dataContext.CreateEntity<PersonGenderEntity> ();
-
-					dataContext.SaveChanges ();
-				}
+				dataContext.SaveChanges ();
 			}
-
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -468,20 +403,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
-						}
-					}
+					this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
 				}
 			}
 			catch (System.Exception e)
@@ -517,11 +443,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void CheckConflictingReferenceUpdates()
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
-
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
 					SqlSelect query = new SqlSelect ();
@@ -572,26 +495,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ConflictingCollectionUpdateSetup(int nbContacts)
 		{
-			DatabaseHelper.ConnectToDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				for (int i = 0; i < nbContacts; i++)
 				{
-					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-					for (int i = 0; i < nbContacts; i++)
-					{
-						UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
-					}
-
-					dataContext.SaveChanges ();
+					UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
 				}
-			}
 
-			DatabaseHelper.DisconnectFromDatabase ();
+				dataContext.SaveChanges ();
+			}
 		}
 
 
@@ -601,20 +517,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
-						}
-					}
+					this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
 				}
 			}
 			catch (System.Exception e)
@@ -657,22 +564,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void CheckConflictingCollectionUpdates(int nbContactsToUse)
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
-					}
-				}
+				Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
 			}
 		}
 
@@ -701,11 +599,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		private void ConflictingSetup()
 		{
-			DatabaseHelper.ConnectToDatabase ();
-
 			DatabaseCreator1.PopulateDatabase (DatabaseSize.Small);
-
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -715,20 +609,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 
-				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					DbAccess access = TestHelper.CreateDbAccess ();
-					dbInfrastructure.AttachToDatabase (access);
-
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
-						}
-					}
+					this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
 				}
 			}
 			catch (System.Exception e)

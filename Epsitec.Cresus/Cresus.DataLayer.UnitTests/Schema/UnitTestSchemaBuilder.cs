@@ -25,31 +25,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void SchemaBuilderConstructorTest()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			new SchemaBuilder (dbInfrastructure);
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				new SchemaBuilder (dbInfrastructure);
+			}
 		}
 
 
@@ -66,75 +58,80 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void RegisterAndCheckSchema1()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
-
-			Druid entityId = Druid.Parse ("[L0A62]");
-			
-			Assert.IsFalse (builder.CheckSchema (entityId));
-
-			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				builder.RegisterSchema (entityId);
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
 
-				transaction.Commit ();
+				Druid entityId = Druid.Parse ("[L0A62]");
+
+				Assert.IsFalse (builder.CheckSchema (entityId));
+
+				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					builder.RegisterSchema (entityId);
+
+					transaction.Commit ();
+				}
+
+				Assert.IsTrue (builder.CheckSchema (entityId));
 			}
-
-			Assert.IsTrue (builder.CheckSchema (entityId));
 		}
 
 
 		[TestMethod]
 		public void RegisterAndCheckSchema2()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
-
-			Druid entityId = Druid.Parse ("[L0A5]");
-			
-			Assert.IsFalse (builder.CheckSchema (entityId));
-
-			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				builder.RegisterSchema (entityId);
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
 
-				transaction.Commit ();
+				Druid entityId = Druid.Parse ("[L0A5]");
+
+				Assert.IsFalse (builder.CheckSchema (entityId));
+
+				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					builder.RegisterSchema (entityId);
+
+					transaction.Commit ();
+				}
+
+				Assert.IsTrue (builder.CheckSchema (entityId));
 			}
-
-			Assert.IsTrue (builder.CheckSchema (entityId));
 		}
 
 
 		[TestMethod]
 		public void RegisterAndCheckSchema3()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-
-			SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
-
-			Druid entityId = Druid.Parse ("[L0AQ]");
-
-			Assert.IsFalse (builder.CheckSchema (entityId));
-
-			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				builder.RegisterSchema (entityId);
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
 
-				transaction.Commit ();
+				Druid entityId = Druid.Parse ("[L0AQ]");
+
+				Assert.IsFalse (builder.CheckSchema (entityId));
+
+				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					builder.RegisterSchema (entityId);
+
+					transaction.Commit ();
+				}
+
+				Assert.IsTrue (builder.CheckSchema (entityId));
 			}
-
-			Assert.IsTrue (builder.CheckSchema (entityId));
 		}
 
 
 		[TestMethod]
 		public void RegisterSchema1()
 		{
-			Druid entityId = Druid.Parse ("[L0AQ]");
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				Druid entityId = Druid.Parse ("[L0AQ]");
 
-			List<Druid> entityIds = new List<Druid> ()
+				List<Druid> entityIds = new List<Druid> ()
 			{
 				Druid.Parse ("[L0AQ]"),
 				Druid.Parse ("[L0AP]"),
@@ -155,23 +152,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 				Druid.Parse ("[L0A1]"),
 			};
 
-			foreach (Druid id in entityIds)
-			{
-				Assert.IsNull (DatabaseHelper.DbInfrastructure.ResolveDbTable (id));
-			}
+				foreach (Druid id in entityIds)
+				{
+					Assert.IsNull (dbInfrastructure.ResolveDbTable (id));
+				}
 
-			SchemaBuilder schemaBuilder = new SchemaBuilder (DatabaseHelper.DbInfrastructure);
+				SchemaBuilder schemaBuilder = new SchemaBuilder (dbInfrastructure);
 
-			schemaBuilder.RegisterSchema (entityId);
+				schemaBuilder.RegisterSchema (entityId);
 
-			foreach (Druid id in entityIds)
-			{
-				Assert.IsNotNull (DatabaseHelper.DbInfrastructure.ResolveDbTable (id));
-			}
+				foreach (Druid id in entityIds)
+				{
+					Assert.IsNotNull (dbInfrastructure.ResolveDbTable (id));
+				}
 
-			foreach (Druid id in entityIds)
-			{
-				Assert.IsTrue (schemaBuilder.CheckSchema (id));
+				foreach (Druid id in entityIds)
+				{
+					Assert.IsTrue (schemaBuilder.CheckSchema (id));
+				}
 			}
 		}
 
@@ -179,28 +177,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void CreateSchemaArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				var builder = new SchemaBuilder (dbInfrastructure);
 
-			var builder = new SchemaBuilder (dbInfrastructure);
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => builder.RegisterSchema (Druid.Empty)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => builder.RegisterSchema (Druid.Empty)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void CheckSchemaArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				var builder = new SchemaBuilder (dbInfrastructure);
 
-			var builder = new SchemaBuilder (dbInfrastructure);
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => builder.CheckSchema (Druid.Empty)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => builder.CheckSchema (Druid.Empty)
+				);
+			}
 		}
 
 

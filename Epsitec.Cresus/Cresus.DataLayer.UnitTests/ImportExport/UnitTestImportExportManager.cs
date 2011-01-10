@@ -33,21 +33,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
-
-			DatabaseCreator2.PupulateDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
@@ -56,32 +45,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
-					List<AbstractEntity> entities = new List<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
-					};
+					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+				};
 
-					ImportExportManager.Export (file, dataContext, entities, e => true);
-				}
+				ImportExportManager.Export (file, dataContext, entities, e => true);
 			}
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-				
+
 				ImportExportManager.Import (file, dataInfrastructure);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -99,32 +84,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
-					List<AbstractEntity> entities = new List<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
-					};
+					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+				};
 
-					ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity);
-				}
+				ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity);
 			}
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-				
+
 				ImportExportManager.Import (file, dataInfrastructure);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -138,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 					UriContactEntity contact1 = (UriContactEntity) alfred.Contacts[0];
 					UriContactEntity contact2 = (UriContactEntity) alfred.Contacts[1];
-					
+
 					Assert.AreEqual ("alfred@coucou.com", contact1.Uri);
 					Assert.AreEqual ("alfred@blabla.com", contact2.Uri);
 
@@ -157,32 +138,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
-					List<AbstractEntity> entities = new List<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
-					};
+					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+				};
 
-					ImportExportManager.Export (file, dataContext, entities, e => false);
-				}
+				ImportExportManager.Export (file, dataContext, entities, e => false);
 			}
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-				
+
 				ImportExportManager.Import (file, dataInfrastructure);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 

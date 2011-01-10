@@ -11,110 +11,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 
 	/// <summary>
-	/// The <c>TestSetup</c> class manages the global state needed to
-	/// successfully run the tests.
+	/// The <c>TestSetup</c> class manages the global state needed to successfully run the tests.
 	/// </summary>
 	internal static class TestHelper
 	{
 		
 		
 		/// <summary>
-		/// Initializes the global state of the assembly so that the tests can
-		/// find the resources.
+		/// Initializes the global state of the assembly so that the tests can find the resources.
 		/// </summary>
 		public static void Initialize()
 		{
-			//	See http://geekswithblogs.net/sdorman/archive/2009/01/31/migrating-from-nunit-to-mstest.aspx
-			//	for migration tips, from nUnit to MSTest.
-
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests");
 		}
 
 		
-		/// <summary>
-		/// Returns a clean database infrastructure instance.
-		/// </summary>
-		/// <returns>The infrastructure.</returns>
-		public static DbInfrastructure CreateAndConnectToDatabase()
-		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
-			return TestHelper.ConnectToDatabase ();
-		}
-
-
-		public static void CreateDatabase()
-		{
-			TestHelper.DisposeInfrastructure ();
-
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				infrastructure.CreateDatabase (access);
-			}
-		}
-
-
-		public static DbInfrastructure ConnectToDatabase()
-		{
-			TestHelper.DisposeInfrastructure ();
-			
-			DbAccess dbAccess = TestHelper.CreateDbAccess ();
-
-			TestHelper.infrastructure = new DbInfrastructure ();
-			TestHelper.infrastructure.AttachToDatabase (dbAccess);
-
-			return TestHelper.infrastructure;
-		}
-
-		public static void DisposeInfrastructure()
-		{
-			if (TestHelper.infrastructure != null)
-			{
-				TestHelper.infrastructure.Dispose ();
-				TestHelper.infrastructure = null;
-
-				System.Threading.Thread.Sleep (100);
-			}
-		}
-
-
-		public static DbAccess CreateDbAccess()
-		{
-			// local machine
-			string dbHost = "localhost";
-
-			// Marc's virtual machine
-			//string dbHost = "192.168.1.50";
-
-			// Mathieu's machine
-			//string dbHost = "DevBox2-PC";
-
-			string dbName = "CORETEST";
-			
-			return new DbAccess ("Firebird", dbName, dbHost, "sysdba", "masterkey", false);
-		}
-
-		
-		/// <summary>
-		/// Deletes the database files on disk. This works for Firebird.
-		/// </summary>
-		/// <param name="name">The database name.</param>
-		public static void DeleteDatabase()
-		{
-			TestHelper.DisposeInfrastructure ();
-
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-
-				infrastructure.AttachToDatabase (access);
-				infrastructure.DropDatabase ();
-			}
-		}
-
-
 		public static void WriteStartTest(string name, string file)
 		{
 			string message = TestHelper.GetStartTestString (name);
@@ -161,9 +73,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 			return result;
 		}
-
-
-		static DbInfrastructure infrastructure;
 
 
 	}

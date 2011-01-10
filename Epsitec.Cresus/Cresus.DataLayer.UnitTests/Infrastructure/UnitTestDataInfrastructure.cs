@@ -36,14 +36,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
@@ -54,18 +47,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			// This test is ignored because it throws an exception at its end, because the
 			// LockTransaction objects are not disposed.
 
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure3 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure4 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure3 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure4 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-
-				dbInfrastructure1.AttachToDatabase (access);
-				dbInfrastructure2.AttachToDatabase (access);
-				dbInfrastructure3.AttachToDatabase (access);
-				dbInfrastructure4.AttachToDatabase (access);
-
 				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
 				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
 				using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (dbInfrastructure3))
@@ -133,7 +119,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void GetDatabaseInfoArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -151,7 +138,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void SetDatabaseInfoArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -169,7 +157,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestMethod]
 		public void GetSetAndExistsInfo()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
 			{
 				Dictionary<string, string> info = new Dictionary<string, string> ();
 

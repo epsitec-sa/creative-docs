@@ -28,36 +28,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
-
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void EntityReference1()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
+					person1.Gender = gender2;
 
-						person1.Gender = gender2;
-
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext1.SaveChanges ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
 		}
@@ -66,25 +58,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityReference2()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
+					PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
-						PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
+					person1.Gender = gender2;
 
-						person1.Gender = gender2;
-
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext1.SaveChanges ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
 		}
@@ -93,25 +81,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityCollection1()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
+					person1.Contacts.Add (contact2);
 
-						person1.Contacts.Add (contact2);
-
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext1.SaveChanges ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
 		}
@@ -120,56 +104,48 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityCollection2()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
+					UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
+					person1.Contacts.Add (contact2);
 
-						person1.Contacts.Add (contact2);
-
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext1.SaveChanges ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void GetByRequest1()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person = new NaturalPersonEntity ();
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
+
+					Request request = new Request ()
 					{
-						NaturalPersonEntity person = new NaturalPersonEntity ();
+						RootEntity = person,
+					};
 
-						person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
-
-						Request request = new Request ()
-						{
-							RootEntity = person,
-						};
-
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext2.GetByRequest<NaturalPersonEntity> (request).ToList ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext2.GetByRequest<NaturalPersonEntity> (request).ToList ()
+					);
 				}
 			}
 		}
@@ -178,27 +154,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetByRequest2()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					Request request = new Request ()
 					{
-						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+						RequestedEntity = contact1,
+					};
 
-						Request request = new Request ()
-						{
-							RequestedEntity = contact1,
-						};
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetByRequest<NaturalPersonEntity> (request)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetByRequest<NaturalPersonEntity> (request)
+					);
 				}
 			}
 		}
@@ -207,26 +179,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetByRequest3()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					Request request = new Request ()
 					{
-						AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
-						Request request = new Request ()
-						{
-							RootEntity = contact1,
-						};
+						RootEntity = contact1,
+					};
 
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetByRequest<NaturalPersonEntity> (request)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetByRequest<NaturalPersonEntity> (request)
+					);
 				}
 			}
 		}
@@ -235,25 +203,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetByExample1()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
-
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+					AbstractContactEntity contact = new AbstractContactEntity ()
 					{
-						AbstractContactEntity contact = new AbstractContactEntity ()
-						{
-							NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
-						};
+						NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
+					};
 
-						ExceptionAssert.Throw<System.InvalidOperationException>
-						(
-							() => dataContext2.GetByExample (contact).ToList ()
-						);
-					}
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext2.GetByExample (contact).ToList ()
+					);
 				}
 			}
 		}
@@ -262,22 +226,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetByExample2()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity	person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity	person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetByExample (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetByExample (person1)
+					);
 				}
 			}
 		}
@@ -286,22 +246,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteEntity()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.DeleteEntity (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.DeleteEntity (person1)
+					);
 				}
 			}
 		}
@@ -310,22 +266,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IsDeleted()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.IsDeleted (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.IsDeleted (person1)
+					);
 				}
 			}
 		}
@@ -334,20 +286,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetLeafEntityKey()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetLeafEntityKey (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetLeafEntityKey (person1)
+					);
 				}
 			}
 		}
@@ -356,22 +306,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetNormalizedEntityKey()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetNormalizedEntityKey (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetNormalizedEntityKey (person1)
+					);
 				}
 			}
 		}
@@ -380,22 +326,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void GetPersistedId()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.GetPersistedId (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetPersistedId (person1)
+					);
 				}
 			}
 		}
@@ -404,22 +346,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IsPersistent()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.IsPersistent (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.IsPersistent (person1)
+					);
 				}
 			}
 		}
@@ -428,22 +366,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void IsRegisteredAsEmptyEntity()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.IsRegisteredAsEmptyEntity (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.IsRegisteredAsEmptyEntity (person1)
+					);
 				}
 			}
 		}
@@ -452,22 +386,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void RegisterEmptyEntity()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.RegisterEmptyEntity (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.RegisterEmptyEntity (person1)
+					);
 				}
 			}
 		}
@@ -476,22 +406,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void UnregisterEmptyEntity()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.UnregisterEmptyEntity (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.UnregisterEmptyEntity (person1)
+					);
 				}
 			}
 		}
@@ -500,22 +426,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void UpdateEmptyEntityStatus()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.UpdateEmptyEntityStatus (person1, false)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.UpdateEmptyEntityStatus (person1, false)
+					);
 				}
 			}
 		}
@@ -524,22 +446,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadEntity()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.ReloadEntity (person1)
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.ReloadEntity (person1)
+					);
 				}
 			}
 		}
@@ -548,35 +466,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadEntityField()
 		{
-			using (DbInfrastructure infrastructure = this.GetDbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (infrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					dataInfrastructure.OpenConnection ("id");
+					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-					using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
-					{
-						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-						ExceptionAssert.Throw<System.ArgumentException>
-						(
-							() => dataContext2.ReloadEntityField (person1, Druid.Parse("[L0AS]"))
-						);
-					}
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.ReloadEntityField (person1, Druid.Parse ("[L0AS]"))
+					);
 				}
 			}
-		}
-
-
-		private DbInfrastructure GetDbInfrastructure()
-		{
-			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
-
-			DbAccess access = TestHelper.CreateDbAccess ();
-			dbInfrastructure.AttachToDatabase (access);
-
-			return dbInfrastructure;
 		}
 
 

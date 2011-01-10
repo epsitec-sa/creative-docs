@@ -6,7 +6,6 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
@@ -28,15 +27,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 		

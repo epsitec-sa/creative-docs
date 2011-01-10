@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				TestHelper.WriteStartTest ("Database creation", UnitTestPerformance.logFile);
 
-				DatabaseHelper.CreateAndConnectToDatabase ();
+				DbInfrastructureHelper.ResetTestDatabase ();
 
 				TestHelper.MeasureAndWriteTime (
 					"database population",
@@ -50,16 +50,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			else
 			{
 				TestHelper.WriteStartTest ("Database connection", UnitTestPerformance.logFile);
-
-				DatabaseHelper.ConnectToDatabase ();
 			}
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -91,41 +82,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
-		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new()
+		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new ()
 		{
 			TestHelper.MeasureAndWriteTime (
-		        TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: false",
-		        UnitTestPerformance.logFile,
+				TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: false",
+				UnitTestPerformance.logFile,
 				() =>
-		        {
-					using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-					{
-						dataInfrastructure.OpenConnection ("id");
-
-						using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-						{
-							dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
-						}
-					}
-		        },
-				UnitTestPerformance.nbRuns
-		    );
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
 				{
-					dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
+					using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+					using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+					{
+						dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
+					}
+				},
+				UnitTestPerformance.nbRuns
+			);
 
-					TestHelper.MeasureAndWriteTime (
-						TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: true",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<EntityType> (new EntityType ()).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
+
+				TestHelper.MeasureAndWriteTime (
+					TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: true",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<EntityType> (new EntityType ()).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -143,53 +128,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetUriContactWithGivenUriSchemeReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				UriContactEntity example = new UriContactEntity ()
 				{
-					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+					UriScheme = uriScheme,
+				};
 
-					UriContactEntity example = new UriContactEntity ()
-					{
-						UriScheme = uriScheme,
-					};
-
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<UriContactEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<UriContactEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public void GetUriContactWithGivenUriSchemeValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				UriContactEntity example = new UriContactEntity ()
 				{
-					UriContactEntity example = new UriContactEntity ()
-						{
-							UriScheme = new UriSchemeEntity ()
-							{
-								Name = "name1",
-							},
-						};
+					UriScheme = new UriSchemeEntity ()
+					{
+						Name = "name1",
+					},
+				};
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<UriContactEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<UriContactEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -207,53 +186,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetLocationsGivenCountryReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				LocationEntity example = new LocationEntity ()
 				{
-					CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000001)));
+					Country = country,
+				};
 
-					LocationEntity example = new LocationEntity ()
-					{
-						Country = country,
-					};
-
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<LocationEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<LocationEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public void GetLocationsGivenCountryValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				LocationEntity example = new LocationEntity ()
 				{
-					LocationEntity example = new LocationEntity ()
-						{
-							Country = new CountryEntity ()
-							{
-								Name = "name1",
-							},
-						};
+					Country = new CountryEntity ()
+					{
+						Name = "name1",
+					},
+				};
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<LocationEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<LocationEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -271,53 +244,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetLegalPersonsGivenTypeReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				LegalPersonEntity example = new LegalPersonEntity ()
 				{
-					LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000001)));
+					LegalPersonType = legalPersonType,
+				};
 
-					LegalPersonEntity example = new LegalPersonEntity ()
-					{
-						LegalPersonType = legalPersonType,
-					};
-
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public void GetLegalPersonsGivenTypeValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					LegalPersonEntity example = new LegalPersonEntity ()
+				LegalPersonEntity example = new LegalPersonEntity ()
+					{
+						LegalPersonType = new LegalPersonTypeEntity ()
 						{
-							LegalPersonType = new LegalPersonTypeEntity ()
-							{
-								Name = "name1",
-							},
-						};
+							Name = "name1",
+						},
+					};
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -335,53 +302,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetContactsGivenPersonReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				AbstractContactEntity example = new AbstractContactEntity ()
 				{
-					NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPerson = naturalPerson,
+				};
 
-					AbstractContactEntity example = new AbstractContactEntity ()
-					{
-						NaturalPerson = naturalPerson,
-					};
-
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public void GetContactsGivenPersonValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					AbstractContactEntity example = new AbstractContactEntity ()
+				AbstractContactEntity example = new AbstractContactEntity ()
+					{
+						NaturalPerson = new NaturalPersonEntity ()
 						{
-							NaturalPerson = new NaturalPersonEntity ()
-							{
-								Lastname = "lastname1",
-							}
-						};
+							Lastname = "lastname1",
+						}
+					};
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -399,63 +360,57 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetPersonGivenLocationReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000001)));
-
-					NaturalPersonEntity example = new NaturalPersonEntity ();
-					example.Contacts.Add (new MailContactEntity ()
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+				example.Contacts.Add (new MailContactEntity ()
+					{
+						Address = new AddressEntity ()
 						{
-							Address = new AddressEntity ()
-							{
-								Location = location,
-							}
+							Location = location,
 						}
-					);
+					}
+				);
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public static void GetPersonGivenLocationValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity example = new NaturalPersonEntity ();
-					example.Contacts.Add (new MailContactEntity ()
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+				example.Contacts.Add (new MailContactEntity ()
+					{
+						Address = new AddressEntity ()
 						{
-							Address = new AddressEntity ()
+							Location = new LocationEntity ()
 							{
-								Location = new LocationEntity ()
-								{
-									Name = "name1",
-								}
+								Name = "name1",
 							}
 						}
-					);
+					}
+				);
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -473,53 +428,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 		public void GetAddressGivenLegalPersonReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000000 + UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				MailContactEntity example = new MailContactEntity ()
 				{
-					LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000000 + UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
+					LegalPerson = legalPerson,
+				};
 
-					MailContactEntity example = new MailContactEntity ()
-					{
-						LegalPerson = legalPerson,
-					};
-
-					TestHelper.MeasureAndWriteTime (
-						"mode: reference",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: reference",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
 
 		public void GetAddressGivenLegalPersonValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				MailContactEntity example = new MailContactEntity ()
 				{
-					MailContactEntity example = new MailContactEntity ()
-						{
-							LegalPerson = new LegalPersonEntity ()
-							{
-								Name = "name1",
-							}
-						};
+					LegalPerson = new LegalPersonEntity ()
+					{
+						Name = "name1",
+					}
+				};
 
-					TestHelper.MeasureAndWriteTime (
-						"mode: value",
-						UnitTestPerformance.logFile,
-						() => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
-						UnitTestPerformance.nbRuns
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					"mode: value",
+					UnitTestPerformance.logFile,
+					() => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
+					UnitTestPerformance.nbRuns
+				);
 			}
 		}
 
@@ -539,27 +488,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
-		public void DeleteEntity<EntityType>(long id) where EntityType : AbstractEntity, new()
+		public void DeleteEntity<EntityType>(long id) where EntityType : AbstractEntity, new ()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (1000000000 + id)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (1000000000 + id)));
-
-					TestHelper.MeasureAndWriteTime (
-						TestHelper.extendString (entity.GetType ().Name, 30),
-						UnitTestPerformance.logFile,
-						() =>
-						{
-							dataContext.DeleteEntity (entity);
-							dataContext.SaveChanges ();
-						},
-						1
-					);
-				}
+				TestHelper.MeasureAndWriteTime (
+					TestHelper.extendString (entity.GetType ().Name, 30),
+					UnitTestPerformance.logFile,
+					() =>
+					{
+						dataContext.DeleteEntity (entity);
+						dataContext.SaveChanges ();
+					},
+					1
+				);
 			}
 		}
 

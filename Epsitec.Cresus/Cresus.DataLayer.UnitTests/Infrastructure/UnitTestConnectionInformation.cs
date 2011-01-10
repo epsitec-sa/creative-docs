@@ -29,86 +29,83 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void ConnectionInformationConstructorArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			string connectionIdentity = "connexion";
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				string connectionIdentity = "connexion";
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => new ConnectionInformation (null, connectionIdentity)
-			);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new ConnectionInformation (null, connectionIdentity)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => new ConnectionInformation (dbInfrastructure, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new ConnectionInformation (dbInfrastructure, null)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => new ConnectionInformation (dbInfrastructure, "")
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new ConnectionInformation (dbInfrastructure, "")
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void SimpleCase()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ConnectionInformation connection = new ConnectionInformation (dbInfrastructure, "connexion");
 
-			ConnectionInformation connection = new ConnectionInformation (dbInfrastructure, "connexion");
+				Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
+				connection.RefreshStatus ();
+				Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
 
-			Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
-			connection.RefreshStatus ();
-			Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
+				connection.Open ();
 
-			connection.Open ();
+				Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+				connection.RefreshStatus ();
+				Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
-			connection.RefreshStatus ();
-			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+				connection.Close ();
 
-			connection.Close ();
-
-			Assert.AreEqual (ConnectionStatus.Closed, connection.Status);
-			connection.RefreshStatus ();
-			Assert.AreEqual (ConnectionStatus.Closed, connection.Status);
+				Assert.AreEqual (ConnectionStatus.Closed, connection.Status);
+				connection.RefreshStatus ();
+				Assert.AreEqual (ConnectionStatus.Closed, connection.Status);
+			}
 		}
 
 
 		[TestMethod]
 		public void InterruptionCase()
 		{
-			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ConnectionInformation connection = new ConnectionInformation (dbInfrastructure, "connexion");
+				Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
 
-			ConnectionInformation connection = new ConnectionInformation (dbInfrastructure, "connexion");
-			Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
+				connection.Open ();
+				Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			connection.Open ();
-			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+				System.Threading.Thread.Sleep (3000);
 
-			System.Threading.Thread.Sleep (3000);
+				connection.RefreshStatus ();
+				Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			connection.RefreshStatus ();
-			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+				ConnectionInformation.InterruptDeadConnections (dbInfrastructure, System.TimeSpan.FromSeconds (2));
+				Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			ConnectionInformation.InterruptDeadConnections (dbInfrastructure, System.TimeSpan.FromSeconds (2));
-			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
-			
-			connection.RefreshStatus ();
-			Assert.AreEqual (ConnectionStatus.Interrupted, connection.Status);
+				connection.RefreshStatus ();
+				Assert.AreEqual (ConnectionStatus.Interrupted, connection.Status);
+			}
 		}
 
 

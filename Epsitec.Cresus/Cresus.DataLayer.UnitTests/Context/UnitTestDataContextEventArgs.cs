@@ -1,8 +1,11 @@
-﻿using Epsitec.Cresus.DataLayer.Context;
+﻿using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Context
@@ -19,30 +22,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void DataContextEventArgsConstructorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					new DataContextEventArgs (dataContext);
-				}
+				new DataContextEventArgs (dataContext);
 			}
 		}
 
@@ -50,16 +41,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void DataContextTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);
-
-					Assert.AreSame (dataContext, eventArg.DataContext);
-				}
+				Assert.AreSame (dataContext, eventArg.DataContext);
 			}
 		}
 

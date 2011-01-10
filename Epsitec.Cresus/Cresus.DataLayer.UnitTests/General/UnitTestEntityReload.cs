@@ -26,40 +26,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			TestHelper.Initialize ();
 			
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void ReloadValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Assert.AreEqual ("Alfred", alfred.Firstname);
 
-					Assert.AreEqual ("Alfred", alfred.Firstname);
+				alfred.Firstname = "Albert";
 
-					alfred.Firstname = "Albert";
+				Assert.AreEqual ("Albert", alfred.Firstname);
 
-					Assert.AreEqual ("Albert", alfred.Firstname);
+				dataContext.ReloadEntity (alfred);
 
-					dataContext.ReloadEntity (alfred);
-
-					Assert.AreEqual ("Alfred", alfred.Firstname);
-				}
+				Assert.AreEqual ("Alfred", alfred.Firstname);
 			}
 		}
 
@@ -67,26 +55,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
-					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				Assert.AreSame (french, alfred.PreferredLanguage);
 
-					Assert.AreSame (french, alfred.PreferredLanguage);
+				alfred.PreferredLanguage = german;
 
-					alfred.PreferredLanguage = german;
+				Assert.AreSame (german, alfred.PreferredLanguage);
 
-					Assert.AreSame (german, alfred.PreferredLanguage);
+				dataContext.ReloadEntity (alfred);
 
-					dataContext.ReloadEntity (alfred);
-
-					Assert.AreSame (french, alfred.PreferredLanguage);
-				}
+				Assert.AreSame (french, alfred.PreferredLanguage);
 			}
 		}
 
@@ -94,30 +79,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadCollection()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
-					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+				Assert.AreEqual (2, alfred.Contacts.Count);
+				Assert.AreSame (contact1, alfred.Contacts[0]);
+				Assert.AreSame (contact2, alfred.Contacts[1]);
 
-					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreSame (contact1, alfred.Contacts[0]);
-					Assert.AreSame (contact2, alfred.Contacts[1]);
+				alfred.Contacts.Clear ();
 
-					alfred.Contacts.Clear ();
+				Assert.AreEqual (0, alfred.Contacts.Count);
 
-					Assert.AreEqual (0, alfred.Contacts.Count);
+				dataContext.ReloadEntity (alfred);
 
-					dataContext.ReloadEntity (alfred);
-					
-					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreSame (contact1, alfred.Contacts[0]);
-					Assert.AreSame (contact2, alfred.Contacts[1]);
-				}
+				Assert.AreEqual (2, alfred.Contacts.Count);
+				Assert.AreSame (contact1, alfred.Contacts[0]);
+				Assert.AreSame (contact2, alfred.Contacts[1]);
 			}
 		}
 
@@ -125,44 +107,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadDeletedEntity()
 		{
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
 			{
-				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
+				UriContactEntity contact1 = dataContext1.CreateEntity<UriContactEntity> ();
 
-				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
-				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
-				{
-					dataInfrastructure1.OpenConnection ("id");
-					dataInfrastructure2.OpenConnection ("id");
+				contact1.Uri = "coucou@blabla.com";
 
-					using (DataContext dataContext1 = dataInfrastructure1.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure2.CreateDataContext ())
-					{
-						UriContactEntity contact1 = dataContext1.CreateEntity<UriContactEntity> ();
+				dataContext1.SaveChanges ();
 
-						contact1.Uri = "coucou@blabla.com";
+				UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 
-						dataContext1.SaveChanges ();
+				Assert.IsFalse (dataContext1.IsDeleted (contact1));
+				Assert.IsFalse (dataContext2.IsDeleted (contact2));
 
-						UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
+				dataContext1.DeleteEntity (contact1);
+				dataContext1.SaveChanges ();
 
-						Assert.IsFalse (dataContext1.IsDeleted (contact1));
-						Assert.IsFalse (dataContext2.IsDeleted (contact2));
+				Assert.IsTrue (dataContext1.IsDeleted (contact1));
+				Assert.IsFalse (dataContext2.IsDeleted (contact2));
 
-						dataContext1.DeleteEntity (contact1);
-						dataContext1.SaveChanges ();
+				dataContext2.ReloadEntity (contact2);
 
-						Assert.IsTrue (dataContext1.IsDeleted (contact1));
-						Assert.IsFalse (dataContext2.IsDeleted (contact2));
-
-						dataContext2.ReloadEntity (contact2);
-
-						Assert.IsTrue (dataContext1.IsDeleted (contact1));
-						Assert.IsTrue (dataContext2.IsDeleted (contact2));
-					}
-				}
+				Assert.IsTrue (dataContext1.IsDeleted (contact1));
+				Assert.IsTrue (dataContext2.IsDeleted (contact2));
 			}
 		}
 
@@ -170,24 +147,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadFieldValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Assert.AreEqual ("Alfred", alfred.Firstname);
 
-					Assert.AreEqual ("Alfred", alfred.Firstname);
+				alfred.Firstname = "Albert";
 
-					alfred.Firstname = "Albert";
+				Assert.AreEqual ("Albert", alfred.Firstname);
 
-					Assert.AreEqual ("Albert", alfred.Firstname);
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AV]"));
 
-					dataContext.ReloadEntityField (alfred, Druid.Parse("[L0AV]"));
-
-					Assert.AreEqual ("Alfred", alfred.Firstname);
-				}
+				Assert.AreEqual ("Alfred", alfred.Firstname);
 			}
 		}
 
@@ -195,26 +169,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadFieldReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
-					LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				Assert.AreSame (french, alfred.PreferredLanguage);
 
-					Assert.AreSame (french, alfred.PreferredLanguage);
+				alfred.PreferredLanguage = german;
 
-					alfred.PreferredLanguage = german;
+				Assert.AreSame (german, alfred.PreferredLanguage);
 
-					Assert.AreSame (german, alfred.PreferredLanguage);
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AD1]"));
 
-					dataContext.ReloadEntityField (alfred, Druid.Parse("[L0AD1]"));
-
-					Assert.AreSame (french, alfred.PreferredLanguage);
-				}
+				Assert.AreSame (french, alfred.PreferredLanguage);
 			}
 		}
 
@@ -222,30 +193,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ReloadCollectionField()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
-					UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+				Assert.AreEqual (2, alfred.Contacts.Count);
+				Assert.AreSame (contact1, alfred.Contacts[0]);
+				Assert.AreSame (contact2, alfred.Contacts[1]);
 
-					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreSame (contact1, alfred.Contacts[0]);
-					Assert.AreSame (contact2, alfred.Contacts[1]);
+				alfred.Contacts.Clear ();
 
-					alfred.Contacts.Clear ();
+				Assert.AreEqual (0, alfred.Contacts.Count);
 
-					Assert.AreEqual (0, alfred.Contacts.Count);
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AS]"));
 
-					dataContext.ReloadEntityField (alfred, Druid.Parse("[L0AS]"));
-
-					Assert.AreEqual (2, alfred.Contacts.Count);
-					Assert.AreSame (contact1, alfred.Contacts[0]);
-					Assert.AreSame (contact2, alfred.Contacts[1]);
-				}
+				Assert.AreEqual (2, alfred.Contacts.Count);
+				Assert.AreSame (contact1, alfred.Contacts[0]);
+				Assert.AreSame (contact2, alfred.Contacts[1]);
 			}
 		}
 

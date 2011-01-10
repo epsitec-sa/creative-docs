@@ -29,29 +29,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void TestUpdateValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -94,10 +84,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -143,10 +132,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateCollection()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -195,10 +183,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestDeleteEntityReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -238,10 +225,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestDeleteEntityCollection()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -286,10 +272,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveValue()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -329,10 +314,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveReference()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -372,10 +356,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestRemoveCollectionItem()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -415,10 +398,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateReferenceWithNewEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -461,10 +443,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void TestUpdateCollectionWithNewEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();
@@ -507,10 +488,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void DeleteEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				int nbDataContexts = 10;
 
 				List<DataContext> dataContexts = new List<DataContext> ();

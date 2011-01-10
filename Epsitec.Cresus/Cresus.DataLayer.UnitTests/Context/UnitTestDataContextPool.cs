@@ -28,21 +28,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			DatabaseCreator2.PupulateDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void DataContextPoolConstructorTest()
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
@@ -54,10 +44,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
 					dataInfrastructure.CreateDataContext (),
@@ -110,10 +99,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
 					dataInfrastructure.CreateDataContext (),
@@ -183,10 +171,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void GetEnumeratorTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
@@ -230,10 +217,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEnumeratorTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
@@ -285,10 +271,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void FindDataContextTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -333,10 +318,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void FindEntityKeyTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -385,10 +369,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void RemoveTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -452,10 +435,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		[TestMethod]
 		public void AreEqualDatabaseInstancesTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				DataContext dataContext1 = dataInfrastructure.CreateDataContext ();

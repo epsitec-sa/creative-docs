@@ -28,46 +28,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
-
-			DatabaseCreator2.PupulateDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
-		
+
 
 		[TestMethod]
 		public void ExternalEntityCreatedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
-					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-					Assert.IsTrue (eventArgs.Count == 1);
-					Assert.AreSame (person, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Created, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
-				}
+				Assert.IsTrue (eventArgs.Count == 1);
+				Assert.AreSame (person, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Created, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -75,27 +61,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityUpdatedValueEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				language.Name = "new name";
 
-					language.Name = "new name";
-
-					Assert.IsTrue (eventArgs.Count == 1);
-					Assert.AreSame (language, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
-				}
+				Assert.IsTrue (eventArgs.Count == 1);
+				Assert.AreSame (language, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -103,28 +86,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityUpdatedReferenceEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				person.Gender = gender;
 
-					person.Gender = gender;
-
-					Assert.IsTrue (eventArgs.Count == 1);
-					Assert.AreSame (person, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
-				}
+				Assert.IsTrue (eventArgs.Count == 1);
+				Assert.AreSame (person, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -132,31 +112,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityUpdatedCollectionEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				dataContext.EntityChanged += (s, a) =>
 				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+					eventArgs.Add (a);
+				};
 
-					dataContext.EntityChanged += (s, a) =>
-					{
-						eventArgs.Add (a);
-					};
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000004)));
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				person.Contacts.Add (contact);
 
-					person.Contacts.Add (contact);
-
-					Assert.IsTrue (eventArgs.Count == 1);
-					Assert.AreSame (person, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
-				}
+				Assert.IsTrue (eventArgs.Count == 1);
+				Assert.AreSame (person, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -164,31 +141,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
 
-					LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.DeleteEntity (language);
 
-					dataContext.DeleteEntity (language);
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.SaveChanges ();
 
-					dataContext.SaveChanges ();
-
-					Assert.IsTrue (eventArgs.Count == 1);
-					Assert.AreSame (language, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
-				}
+				Assert.IsTrue (eventArgs.Count == 1);
+				Assert.AreSame (language, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -196,36 +170,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityReferenceDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity language = person.PreferredLanguage;
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					LanguageEntity language = person.PreferredLanguage;
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.DeleteEntity (language);
 
-					dataContext.DeleteEntity (language);
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.SaveChanges ();
 
-					dataContext.SaveChanges ();
+				Assert.IsTrue (eventArgs.Count == 2);
+				Assert.AreSame (person, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
 
-					Assert.IsTrue (eventArgs.Count == 2);
-					Assert.AreSame (person, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
-
-					Assert.AreSame (language, eventArgs[1].Entity);
-					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
-				}
+				Assert.AreSame (language, eventArgs[1].Entity);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
 			}
 		}
 
@@ -233,39 +204,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void ExternalEntityCollectionDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				dataContext.EntityChanged += (s, a) =>
 				{
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+					eventArgs.Add (a);
+				};
 
-					dataContext.EntityChanged += (s, a) =>
-					{
-						eventArgs.Add (a);
-					};
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				AbstractContactEntity contact = person.Contacts[0];
 
-					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					AbstractContactEntity contact = person.Contacts[0];
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.DeleteEntity (contact);
 
-					dataContext.DeleteEntity (contact);
+				Assert.IsTrue (eventArgs.Count == 0);
 
-					Assert.IsTrue (eventArgs.Count == 0);
+				dataContext.SaveChanges ();
 
-					dataContext.SaveChanges ();
+				Assert.IsTrue (eventArgs.Count == 2);
+				Assert.AreSame (person, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
 
-					Assert.IsTrue (eventArgs.Count == 2);
-					Assert.AreSame (person, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
-
-					Assert.AreSame (contact, eventArgs[1].Entity);
-					Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
-					Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
-				}
+				Assert.AreSame (contact, eventArgs[1].Entity);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
 			}
 		}
 
@@ -273,12 +241,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityValueUpdatedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -317,12 +284,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityReferenceUpdatedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -362,12 +328,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityCollectionUpdatedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -407,12 +372,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -450,12 +414,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityReferenceDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -498,12 +461,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void SynchronizationEntityCollectionDeletedEventTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext1 = dataInfrastructure.CreateDataContext ())
-				using (DataContext dataContext2 = dataInfrastructure.CreateDataContext ())
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
 					List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
@@ -546,27 +508,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityReloadUpdateEvent()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				alfred.Firstname = "Albert";
 
-					alfred.Firstname = "Albert";
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				dataContext.ReloadEntity (alfred);
 
-					dataContext.ReloadEntity (alfred);
-
-					Assert.AreEqual (1, eventArgs.Count);
-					Assert.AreSame (alfred, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
-				}
+				Assert.AreEqual (1, eventArgs.Count);
+				Assert.AreSame (alfred, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 			}
 		}
 
@@ -574,39 +534,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityReloadDeleteEvent()
 		{
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
 			{
-				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
-				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
-				{
-					dataInfrastructure1.OpenConnection ("id");
-					dataInfrastructure2.OpenConnection ("id");
+				dataContext1.DeleteEntity (alfred1);
+				dataContext1.SaveChanges ();
 
-					using (DataContext dataContext1 = dataInfrastructure1.CreateDataContext ())
-					using (DataContext dataContext2 = dataInfrastructure2.CreateDataContext ())
-					{
-						NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-						NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-						dataContext1.DeleteEntity (alfred1);
-						dataContext1.SaveChanges ();
+				dataContext2.EntityChanged += (s, a) => eventArgs.Add (a);
 
-						List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext2.ReloadEntity (alfred2);
 
-						dataContext2.EntityChanged += (s, a) => eventArgs.Add (a);
-
-						dataContext2.ReloadEntity (alfred2);
-
-						Assert.AreEqual (1, eventArgs.Count);
-						Assert.AreSame (alfred2, eventArgs[0].Entity);
-						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
-						Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
-					}
-				}
+				Assert.AreEqual (1, eventArgs.Count);
+				Assert.AreSame (alfred2, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 			}
 		}
 
@@ -614,27 +569,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityReloadFieldUpdateEvent()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				alfred.Firstname = "Albert";
 
-					alfred.Firstname = "Albert";
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-					List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-					dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AV]"));
 
-					dataContext.ReloadEntityField (alfred, Druid.Parse("[L0AV]"));
-
-					Assert.AreEqual (1, eventArgs.Count);
-					Assert.AreSame (alfred, eventArgs[0].Entity);
-					Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
-					Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
-				}
+				Assert.AreEqual (1, eventArgs.Count);
+				Assert.AreSame (alfred, eventArgs[0].Entity);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 			}
 		}
 

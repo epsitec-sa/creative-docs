@@ -32,40 +32,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		}
 
 
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DatabaseHelper.CreateAndConnectToDatabase (); 
-
-			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
-
-			DatabaseCreator2.PupulateDatabase ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void SimpleExportImport()
 		{
-			FileInfo file = new FileInfo ("test.xml");
-
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
-
-			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
-			EpsitecEntitySerializer.CleanDatabase (file, DatabaseHelper.DbInfrastructure);
-			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure(DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.OpenConnection ("id");
+				FileInfo file = new FileInfo ("test.xml");
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
+
+				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -78,39 +66,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 			}
 		}
 
+
 		[TestMethod]
 		public void CleanDatabase()
 		{
-			FileInfo file = new FileInfo ("test.xml");
-
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
-
-			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
-			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.OpenConnection ("id");
+				FileInfo file = new FileInfo ("test.xml");
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
+
+				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2))));
 					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3))));
-							 
+
 					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))));
 					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (3))));
 					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4))));
-							 
+
 					Assert.IsNotNull (dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1))));
-							 
+
 					Assert.IsNotNull (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))));
-							 
+
 					Assert.IsNotNull (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (2))));
-							
+
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2))));
 
@@ -134,15 +122,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))));
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))));
 				}
-			}
 
-			EpsitecEntitySerializer.CleanDatabase (file, DatabaseHelper.DbInfrastructure);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					Assert.IsNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))));
 					Assert.IsNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2))));
@@ -191,54 +175,53 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void ExportImportWithoutSomeTables()
 		{
-			FileInfo file = new FileInfo ("test.xml");
-
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
-
-			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
-			
-			EpsitecEntitySerializer.CleanDatabase (file, DatabaseHelper.DbInfrastructure);
-
-			XDocument xDocument = XDocument.Load (file.FullName);
-
-			var xtablesToRemove = from xTable in xDocument.Descendants ("table")
-								 let id = (string) xTable.Attribute ("id")
-								 where id == "9" || id == "10" || id == "22" || id == "30"
-								 select xTable;
-
-			foreach (XElement xTable in xtablesToRemove.ToList ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				xTable.Remove ();
-			}
+				FileInfo file = new FileInfo ("test.xml");
 
-			foreach (XElement xTable in xDocument.Descendants ("table").ToList ())
-			{
-				string sid = (string) xTable.Attribute ("id");
-				int iid = System.Int32.Parse (sid);
+				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				if (iid > 10 && iid < 22)
+				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
+
+				XDocument xDocument = XDocument.Load (file.FullName);
+
+				var xtablesToRemove = from xTable in xDocument.Descendants ("table")
+									  let id = (string) xTable.Attribute ("id")
+									  where id == "9" || id == "10" || id == "22" || id == "30"
+									  select xTable;
+
+				foreach (XElement xTable in xtablesToRemove.ToList ())
 				{
-					xTable.SetAttributeValue ("id", iid - 2);
+					xTable.Remove ();
 				}
-				else if (iid > 22 && iid < 30)
+
+				foreach (XElement xTable in xDocument.Descendants ("table").ToList ())
 				{
-					xTable.SetAttributeValue ("id", iid - 3);
+					string sid = (string) xTable.Attribute ("id");
+					int iid = System.Int32.Parse (sid);
+
+					if (iid > 10 && iid < 22)
+					{
+						xTable.SetAttributeValue ("id", iid - 2);
+					}
+					else if (iid > 22 && iid < 30)
+					{
+						xTable.SetAttributeValue ("id", iid - 3);
+					}
+					else if (iid > 30)
+					{
+						xTable.SetAttributeValue ("id", iid - 4);
+					}
 				}
-				else if (iid > 30)
-				{
-					xTable.SetAttributeValue ("id", iid - 4);
-				}
-			}
 
-			xDocument.Save (file.FullName);
+				xDocument.Save (file.FullName);
 
-			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
-
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -255,39 +238,38 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void ExportImportWithoutSomeColumns()
 		{
-			FileInfo file = new FileInfo ("test.xml");
-
-			DbLogEntry dbLogEntry = DatabaseHelper.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
-
-			EpsitecEntitySerializer.Export (file, DatabaseHelper.DbInfrastructure);
-
-			EpsitecEntitySerializer.CleanDatabase (file, DatabaseHelper.DbInfrastructure);
-
-			XDocument xDocument = XDocument.Load (file.FullName);
-
-			var xColumnsToRemove = from xTable in xDocument.Descendants ("table")
-								   let id = (string) xTable.Attribute ("id")
-								   where id == "0"
-								   select xTable into xTable
-								   from xColumn in xTable.Descendants ("column")
-								   let id = (string) xColumn.Attribute ("id")
-								   where id == "3"
-								   select xColumn;
-
-			foreach (XElement xColumn in xColumnsToRemove.ToList ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				xColumn.Remove ();
-			}
+				FileInfo file = new FileInfo ("test.xml");
 
-			xDocument.Save (file.FullName);
+				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-			EpsitecEntitySerializer.Import (file, DatabaseHelper.DbInfrastructure, dbLogEntry);
+				EpsitecEntitySerializer.Export (file, dbInfrastructure);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
-			{
-				dataInfrastructure.OpenConnection ("id");
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				XDocument xDocument = XDocument.Load (file.FullName);
+
+				var xColumnsToRemove = from xTable in xDocument.Descendants ("table")
+									   let id = (string) xTable.Attribute ("id")
+									   where id == "0"
+									   select xTable into xTable
+									   from xColumn in xTable.Descendants ("column")
+									   let id = (string) xColumn.Attribute ("id")
+									   where id == "3"
+									   select xColumn;
+
+				foreach (XElement xColumn in xColumnsToRemove.ToList ())
+				{
+					xColumn.Remove ();
+				}
+
+				xDocument.Save (file.FullName);
+
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+
+				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));

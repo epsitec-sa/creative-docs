@@ -27,28 +27,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			TestHelper.Initialize ();
 
-			DatabaseHelper.CreateAndConnectToDatabase ();
-		}
-
-
-		[ClassCleanup]
-		public static void ClassCleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 		
 		[TestMethod]
 		public void DataConverterConstructorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
-				
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					new DataConverter (dataContext);
-				}
+				new DataConverter (dataContext);
 			}
 		}
 
@@ -66,21 +56,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void FromCresusToDatabaseTypeTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataConverter dataConverter = new DataConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				foreach (var sample in this.GetSampleRawTypes ())
 				{
-					DataConverter dataConverter = new DataConverter (dataContext);
+					DbRawType result1 = sample.Item2;
+					DbRawType result2 = dataConverter.FromDotNetToDatabaseType (sample.Item1);
 
-					foreach (var sample in this.GetSampleRawTypes ())
-					{
-						DbRawType result1 = sample.Item2;
-						DbRawType result2 = dataConverter.FromDotNetToDatabaseType (sample.Item1);
-
-						Assert.AreEqual (result1, result2);
-					}
+					Assert.AreEqual (result1, result2);
 				}
 			}
 		}
@@ -89,49 +76,46 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void FromCresusToDatabaseValueArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataConverter dataConverter = new DataConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DataConverter dataConverter = new DataConverter (dataContext);
+				DbRawType rawType = DbRawType.Boolean;
+				DbSimpleType simpleType = DbSimpleType.Decimal;
+				DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
+				object value = true;
 
-					DbRawType rawType = DbRawType.Boolean;
-					DbSimpleType simpleType = DbSimpleType.Decimal;
-					DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
-					object value = true;
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (DbRawType.Null, simpleType, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (DbRawType.Null, simpleType, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (DbRawType.Unknown, simpleType, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (DbRawType.Unknown, simpleType, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Null, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Null, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Unknown, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Unknown, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, null)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, null)
-					);
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, this.GetInvalidNumDef (), value)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, this.GetInvalidNumDef (), value)
+				);
 			}
 		}
 
@@ -139,30 +123,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void FromCresusToDatabaseValueTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataConverter dataConverter = new DataConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				foreach (var sample in this.GetSampleValues1 ())
 				{
-					DataConverter dataConverter = new DataConverter (dataContext);
+					object result1 = sample.Item5;
+					object result2 = dataConverter.FromCresusToDatabaseValue (sample.Item1, sample.Item2, sample.Item3, sample.Item4);
 
-					foreach (var sample in this.GetSampleValues1 ())
+					if (result1 is byte[] && result2 is byte[])
 					{
-						object result1 = sample.Item5;
-						object result2 = dataConverter.FromCresusToDatabaseValue (sample.Item1, sample.Item2, sample.Item3, sample.Item4);
+						byte[] r1 = (byte[]) result1;
+						byte[] r2 = (byte[]) result2;
 
-						if (result1 is byte[] && result2 is byte[])
-						{
-							byte[] r1 = (byte[]) result1;
-							byte[] r2 = (byte[]) result2;
-
-							CollectionAssert.AreEquivalent (r1, r2);
-						}
-						else
-						{
-							Assert.AreEqual (result1, result2);
-						}
+						CollectionAssert.AreEquivalent (r1, r2);
+					}
+					else
+					{
+						Assert.AreEqual (result1, result2);
 					}
 				}
 			}
@@ -172,55 +153,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void FromDatabaseToCresusValueArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataConverter dataConverter = new DataConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
-				{
-					DataConverter dataConverter = new DataConverter (dataContext);
+				INamedType type = new BooleanType ();
+				DbRawType rawType = DbRawType.Boolean;
+				DbSimpleType simpleType = DbSimpleType.Decimal;
+				DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
+				object value = true;
 
-					INamedType type = new BooleanType ();
-					DbRawType rawType = DbRawType.Boolean;
-					DbSimpleType simpleType = DbSimpleType.Decimal;
-					DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
-					object value = true;
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (null, rawType, simpleType, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (null, rawType, simpleType, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Null, simpleType, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Null, simpleType, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Unknown, simpleType, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Unknown, simpleType, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Null, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Null, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Unknown, numDef, value)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Unknown, numDef, value)
-					);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, null)
+				);
 
-					ExceptionAssert.Throw<System.ArgumentNullException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, null)
-					);
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, this.GetInvalidNumDef (), value)
-					);
-				}
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, this.GetInvalidNumDef (), value)
+				);
 			}
 		}
 
@@ -228,30 +206,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void FromDatabaseToCresusValueTest()
 		{
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (DatabaseHelper.DbInfrastructure))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				DataConverter dataConverter = new DataConverter (dataContext);
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext ())
+				foreach (var sample in this.GetSampleValues2 ())
 				{
-					DataConverter dataConverter = new DataConverter (dataContext);
+					object result1 = sample.Item6;
+					object result2 = dataConverter.FromDatabaseToCresusValue (sample.Item1, sample.Item2, sample.Item3, sample.Item4, sample.Item5);
 
-					foreach (var sample in this.GetSampleValues2 ())
+					if (result1 is byte[] && result2 is byte[])
 					{
-						object result1 = sample.Item6;
-						object result2 = dataConverter.FromDatabaseToCresusValue (sample.Item1, sample.Item2, sample.Item3, sample.Item4, sample.Item5);
+						byte[] r1 = (byte[]) result1;
+						byte[] r2 = (byte[]) result2;
 
-						if (result1 is byte[] && result2 is byte[])
-						{
-							byte[] r1 = (byte[]) result1;
-							byte[] r2 = (byte[]) result2;
-
-							CollectionAssert.AreEquivalent (r1, r2);
-						}
-						else
-						{
-							Assert.AreEqual (result1, result2);
-						}
+						CollectionAssert.AreEquivalent (r1, r2);
+					}
+					else
+					{
+						Assert.AreEqual (result1, result2);
 					}
 				}
 			}
