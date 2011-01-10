@@ -1,8 +1,11 @@
 using Epsitec.Common.UnitTesting;
 
+using Epsitec.Cresus.Database.Exceptions;
 using Epsitec.Cresus.Database.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.Database.UnitTests
@@ -29,7 +32,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
+			IDbAbstractionHelper.ResetTestDatabase ();
 		}
 
 
@@ -72,10 +75,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 			}
 		}
 
-
+		
 		[TestMethod]
 		public void AddTypeTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeSample1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
@@ -106,8 +111,30 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void AddExistingTypeExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef dbTypeSample1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+				DbTypeDef dbTypeSample2 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+				
+				infrastructure.AddType (dbTypeSample1);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddType (dbTypeSample2)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void RemoveTypeTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeSample1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
@@ -142,8 +169,69 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void RemoveUnexistingTypeExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef dbTypeSample = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+				
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveType (dbTypeSample)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveBuiltInTypeExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef dbType = infrastructure.FindBuiltInDbTypes ().First ();
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveType (dbType)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveUsedTypeExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef dbType  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
+				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn dbColumn = DbTable.CreateUserDataColumn ("Name", dbType, DbRevisionMode.TrackChanges);
+
+				dbTable.Columns.Add (dbColumn);
+				dbTable.UpdateRevisionMode ();
+
+				infrastructure.AddType (dbType);
+				infrastructure.AddTable (dbTable);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveType (dbType)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void ResolveDbTypeTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbType1 = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
@@ -172,9 +260,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		// TODO Complete test.
+		// Marc
+
 		[TestMethod]
 		public void CreateDbTableTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
@@ -220,9 +313,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		// TODO Complete test.
+		// Marc
+
 		[TestMethod]
 		public void CreateDbTableException()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
@@ -241,9 +339,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		// TODO Complete test.
+		// Marc
+
 		[TestMethod]
 		public void UnregisterDbTableTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
@@ -261,9 +364,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		// TODO Complete test.
+		// Marc
+
 		[TestMethod]
 		public void RegisterDbTableSameAsUnregisteredTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
@@ -287,9 +395,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		// TODO Complete test.
+		// Marc
+
 		[TestMethod]
 		public void UnregisterDbTableExeptionTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
@@ -312,6 +425,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsTest()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				Assert.IsNotNull (infrastructure);
@@ -352,6 +467,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest1()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
@@ -370,6 +487,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest2()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
@@ -391,6 +510,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExeptionTest3()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{		
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
@@ -407,6 +528,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExceptionTest4()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
@@ -423,6 +546,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void MultipleTransactionsExceptionTest5()
 		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);

@@ -557,17 +557,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
 		/// <summary>
 		/// Creates a minimal database table definition. This will only contain
 		/// the basic id and status columns required by <c>DbInfrastructure</c>.
@@ -1244,13 +1233,9 @@ namespace Epsitec.Cresus.Database
 
 		public void RemoveType(DbTransaction transaction, DbTypeDef type)
 		{
-			// TODO Check that the type is not used anywhere.
-			// Marc
-
-			// TODO Use only the name of the type instead of the dbTypeDef object.
-			// Marc
-
 			this.CheckForKnownType (transaction, type);
+			this.CheckForUnusedType (transaction, type);
+			this.CheckForNotBuiltInType (type);
 
 			this.UnregisterDbType (transaction, type);
 
@@ -1637,6 +1622,26 @@ namespace Epsitec.Cresus.Database
 			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, typeDef.Name) == 0)
 			{
 				string message = string.Format ("Type {0} does not exist in database.", typeDef.Name);
+				throw new Exceptions.GenericException (this.access, message);
+			}
+		}
+
+		private void CheckForUnusedType(DbTransaction transaction, DbTypeDef type)
+		{
+			if (this.CountMatchingRows (transaction, Tags.TableColumnDef, Tags.ColumnRefType, type.Key.ToString ()) > 0)
+			{
+				string message = string.Format ("Type {0} is used in database.", type.Name);
+
+				throw new Exceptions.GenericException (this.access, message);
+			}
+		}
+
+		private void CheckForNotBuiltInType(DbTypeDef type)
+		{
+			if (this.FindBuiltInDbTypes ().Any (t => t.Name == type.Name))
+			{
+				string message = string.Format ("Type {0} is a built in type.", type.Name);
+
 				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
