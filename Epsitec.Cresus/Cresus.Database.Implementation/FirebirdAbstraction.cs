@@ -189,15 +189,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			string path = this.GetDbFilePath ();
 			string connection = FirebirdAbstraction.MakeConnectionString (this.dbAccess, path, this.serverType);
-
-			// HACK This waits a little bit of time, hoping that at the end, there is no transaction
-			// or lock around and that the drop can be done. It would be nice to do this in a proper
-			// way.
-			System.Threading.Thread.Sleep (5000);
-
+			
 			FbConnection.DropDatabase (connection);
 		}
-
 
 
 		internal string GetDbFilePath()
@@ -245,8 +239,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fbCharset);
 			
 			buffer.Append ("Role=;");
-			buffer.Append ("Pooling=true;");
-			buffer.Append ("Connection Lifetime=2;");
+			buffer.Append ("Pooling=false;");
+			buffer.Append ("Connection Lifetime=0;");
 
 			if (serverType == FbServerType.Embedded)
 			{
