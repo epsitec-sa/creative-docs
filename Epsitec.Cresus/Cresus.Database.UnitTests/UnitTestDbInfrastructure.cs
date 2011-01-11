@@ -531,6 +531,281 @@ namespace Epsitec.Cresus.Database.UnitTests
 				);
 			}
 		}
+		
+
+		[TestMethod]
+		public void AddColumnToTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table1);
+
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+
+				infrastructure.AddColumnToTable (table1, column1);
+				table2.Columns.Add (column2);
+
+				DbTable result = infrastructure.ResolveDbTable ("table");
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (result, table2));
+			}
+		}
+
+
+		[TestMethod]
+		public void AddColumnWithRelationToTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (dbTable1);
+
+				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn1.DefineDisplayName ("column");
+				dbTable1.Columns.Add (relationColumn1);
+
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn2.DefineDisplayName ("column");
+				dbTable2.Columns.Add (relationColumn2);
+
+				infrastructure.AddTable (dbTableRef);
+				infrastructure.AddColumnToTable (dbTable1, relationColumn1);
+
+				DbTable resulta = infrastructure.ResolveDbTable ("table");
+				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (resulta, dbTable2));
+				Assert.IsNotNull (resultb);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddColumnToTableExistingColumnException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				
+				infrastructure.AddTable (table);
+
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				
+				infrastructure.AddColumnToTable (table, column1);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddColumnToTable (table, column2)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddColumnToTablePrimaryKeyException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table);
+
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				column.DefinePrimaryKey (true);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddColumnToTable (table, column)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddColumnToTableStatusException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table);
+
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				column1.DefineColumnClass (DbColumnClass.KeyId);
+
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				column2.DefineColumnClass (DbColumnClass.KeyId);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddColumnToTable (table, column1)
+				);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddColumnToTable (table, column2)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnFromTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				table1.Columns.Add (column1);
+
+				infrastructure.AddTable (table1);
+
+				infrastructure.RemoveColumnFromTable (table1, column1);
+
+				DbTable result = infrastructure.ResolveDbTable ("table");
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (result, table2));
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnWithRelationFromTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn1.DefineDisplayName ("column");
+				dbTable1.Columns.Add (relationColumn1);
+
+				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTableRef });
+
+				infrastructure.RemoveColumnFromTable (dbTable1, relationColumn1);
+
+				DbTable resulta = infrastructure.ResolveDbTable ("table");
+				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (resulta, dbTable2));
+				Assert.IsNull (resultb);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnFromTableUnexistingColumnException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table);
+
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveColumnFromTable (table, column)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnFromTablePrimaryKeyException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveColumnFromTable (table, table.Columns[Tags.ColumnId])
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnFromTableStatusException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				infrastructure.AddTable (table);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveColumnFromTable (table, table.Columns[Tags.ColumnId])
+				);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveColumnFromTable (table, table.Columns[Tags.ColumnStatus])
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveColumnFromTableIndexException()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+
+				table.Columns.Add (column);
+				table.Indexes.Add (new DbIndex (SqlSortOrder.Ascending, column));
+
+				infrastructure.AddTable (table);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.RemoveColumnFromTable (table, column)
+				);
+			}
+		}
 
 
 		[TestMethod]

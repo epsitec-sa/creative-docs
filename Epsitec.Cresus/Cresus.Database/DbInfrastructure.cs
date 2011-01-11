@@ -619,6 +619,9 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTable(DbTransaction transaction, DbTable table)
 		{
+			// TODO Ensure that the table is not a relation table?
+			// Marc
+
 			this.CheckForRegisteredTypes (transaction, table);
 			this.CheckForUnknownTable (transaction, table);
 			this.CheckForRelations (table, this.FindDbTables (DbElementCat.Any).ToList ());
@@ -638,6 +641,9 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTables(DbTransaction transaction, IEnumerable<DbTable> tables)
 		{
+			// TODO Ensure that the table is not a relation table?
+			// Marc
+
 			var existingTables = this.FindDbTables (DbElementCat.Any);
 			var newTables = tables.ToList ();
 
@@ -663,6 +669,9 @@ namespace Epsitec.Cresus.Database
 
 		public void RemoveTable(DbTransaction transaction, DbTable table)
 		{
+			// TODO Ensure that the table is not a relation table?
+			// Marc
+
 			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
 			if (internalTable == null)
@@ -676,18 +685,46 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (internalTable);
 		}
 
+		public void AddColumnToTable(DbTable table, DbColumn column)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.AddColumnToTable (transaction, table, column);
+
+				transaction.Commit ();
+			}
+		}
+
 		public void AddColumnToTable(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			this.CheckForKnownTable (transaction, table);
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
-			// Ensure that the column is valid, i.e. no primary key, no index, ...
-			// Marc
+			if (internalTable == null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
+			}
 
-			// TODO Add checks that the column does not exist.
-			// Marc
+			DbColumn internalColumn = internalTable.Columns[column.Name];
 
-			// TODO Use the name of the table instead of the dbTable object.
-			// Marc
+			if (internalColumn != null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " has alreary a column " + column.Name + ".");
+			}
+
+			if (column.IsPrimaryKey)
+			{
+				throw new GenericException (this.access, "New colum " + column.Name + " for table " + table.Name + " cannot be a primary key.");
+			}
+
+			switch (column.ColumnClass)
+			{
+				case DbColumnClass.KeyId:
+				case DbColumnClass.KeyStatus:
+					throw new GenericException (this.access, "New colum " + column.Name + " for table " + table.Name + " has an invalid column class.");
+				
+				default:
+					break;
+			}
 
 			// TODO Mutate the dbColumn object and the dbTable object?
 			// Marc
@@ -695,51 +732,87 @@ namespace Epsitec.Cresus.Database
 			switch (column.Cardinality)
 			{
 				case DbCardinality.None:
-					this.AddConcreteColumnToTable (transaction, table, column);
+					this.AddConcreteColumnToTable (transaction, internalTable, column);
 					break;
 
 				case DbCardinality.Reference:
 				case DbCardinality.Collection:
-					this.AddRelationTableAndColumn (transaction, table, column);
+					this.AddRelationTableAndColumn (transaction, internalTable, column);
 					break;
 
 				default:
 					throw new System.NotImplementedException ();
 			}
 
-			this.RemoveFromCache (table);
+			this.RemoveFromCache (internalTable);
+		}
+
+		public void RemoveColumnFromTable(DbTable table, DbColumn column)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.RemoveColumnFromTable (transaction, table, column);
+
+				transaction.Commit ();
+			}
 		}
 
 		public void RemoveColumnFromTable(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			this.CheckForKnownTable (transaction, table);
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
-			// TODO Ensure that the column is valid, i.e no index, no primary key, ...
-			// Marc
+			if (internalTable == null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
+			}
 
-			// TODO Add Checks that the column does exist.
-			// Marc
+			DbColumn internalColumn = internalTable.Columns[column.Name];
 
-			// TODO use the name of the table instead of the dbTable object and use the name of the
-			// column instead of the dbColumn object.
+			if (internalColumn == null)
+			{
+				throw new GenericException (this.access, "The column " + column.Name + " is not defined for table " + table.Name + ".");
+			}
+
+			if (column.IsPrimaryKey)
+			{
+				throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because it is a primary key.");
+			}
+
+			switch (column.ColumnClass)
+			{
+				case DbColumnClass.KeyId:
+				case DbColumnClass.KeyStatus:
+					throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because of its status.");
+
+				default:
+					break;
+			}
+
+			if (table.Indexes.SelectMany (i => i.Columns).Contains (column))
+			{
+				throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because it part of an index.");
+			}
+
+			// TODO Add a check on the "foreign keys" of other tables? This is probably not necessary
+			// because the column can be referenced only if it is a primary key, and we check for that.
 			// Marc
 
 			switch (column.Cardinality)
 			{
 				case DbCardinality.None:
-					this.RemoveConcreteColumnFromTable (transaction, table, column);
+					this.RemoveConcreteColumnFromTable (transaction, internalTable, internalColumn);
 					break;
 
 				case DbCardinality.Reference:
 				case DbCardinality.Collection:
-					this.RemoveRelationTableAndColumn (transaction, column);
+					this.RemoveRelationTableAndColumn (transaction, internalColumn);
 					break;
 
 				default:
 					throw new System.NotImplementedException ();
 			}
 
-			this.RemoveFromCache (table);
+			this.RemoveFromCache (internalTable);
 		}
 
 		private void AddTableInternal(DbTransaction transaction, DbTable table)
