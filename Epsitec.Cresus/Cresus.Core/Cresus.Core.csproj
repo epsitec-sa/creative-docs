@@ -189,6 +189,8 @@
     <Compile Include="Data\ItemCodes.cs" />
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
+    <Compile Include="Dialogs\SettingsDialog.cs" />
+    <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
@@ -369,7 +371,7 @@
     <Compile Include="Repositories\AffairRepository.cs" />
     <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
-    <Compile Include="Dialogs\PrinterUnitListDialog.cs" />
+    <Compile Include="Dialogs\SettingsTabPages\PrinterUnitListTabPage.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />
