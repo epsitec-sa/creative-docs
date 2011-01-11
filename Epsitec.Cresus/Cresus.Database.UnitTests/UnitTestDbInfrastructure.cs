@@ -1,9 +1,13 @@
+using Epsitec.Common.Support;
+
 using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database.Exceptions;
 using Epsitec.Cresus.Database.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Collections.Generic;
 
 using System.Linq;
 
@@ -260,23 +264,18 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		// TODO Complete test.
-		// Marc
-
 		[TestMethod]
-		public void CreateDbTableTest()
+		public void AddTableTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
-
 				DbTable dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				DbTypeDef dbTypeLevel = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
-				DbTypeDef dbTypeType  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes, true);
+				DbTypeDef dbTypeType  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
 				DbTypeDef dbTypeData  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
 				DbTypeDef dbTypeGuid  = new DbTypeDef ("Guid", DbSimpleType.Guid, null, 0, false, DbNullability.Yes);
 
@@ -293,7 +292,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid);
 
 				dbTable1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
-				dbTable1.DefineLocalizations (infrastructure.DefaultLocalizations);
 				dbTable1.UpdateRevisionMode ();
 				dbTable1.AddIndex (col1);
 				dbTable1.AddIndex (col2);
@@ -313,11 +311,139 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		// TODO Complete test.
-		// Marc
+		[TestMethod]
+		public void AddTableWithRelationTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTableRef = infrastructure.FindDbTables (DbElementCat.Any).First ();
+
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn.DefineDisplayName ("column");
+
+				dbTable1.Columns.Add (relationColumn);
+								
+				infrastructure.AddTable (dbTable1);
+				infrastructure.ClearCaches ();
+
+				DbTable dbTable2 = infrastructure.ResolveDbTable ("table");
+				DbTable dbTableRelation2 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn));
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable1, dbTable2));
+				Assert.IsNotNull (dbTableRelation2);
+			}
+		}
+
 
 		[TestMethod]
-		public void CreateDbTableException()
+		public void AddTableWithInvalidRelationExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				dbTable1.Columns.Add (relationColumn);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddTable (dbTable1)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddTableWithInvalidTypeExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef dbType = new DbTypeDef ("type", DbSimpleType.String, null, 80, false, DbNullability.No);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn dbColumn = DbTable.CreateUserDataColumn ("column", dbType, DbRevisionMode.TrackChanges);
+				dbTable.Columns.Add (dbColumn);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddTable (dbTable)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddTablesWithRelationTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn1.DefineDisplayName ("column1");
+				dbTable2.Columns.Add (relationColumn1);
+
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn2.DefineDisplayName ("column2");
+				dbTable1.Columns.Add (relationColumn2);
+
+				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 });
+				infrastructure.ClearCaches ();
+
+				DbTable dbTable3 = infrastructure.ResolveDbTable ("table1");
+				DbTable dbTable4 = infrastructure.ResolveDbTable ("table2");
+				DbTable dbTableRelation3 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
+				DbTable dbTableRelation4 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
+
+				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable1, dbTable3));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable2, dbTable4));
+				Assert.IsNotNull (dbTableRelation3);
+				Assert.IsNotNull (dbTableRelation4);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddTablesWithRelationExceptionTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable3 = infrastructure.CreateDbTable ("table3", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn1.DefineDisplayName ("column1");
+				dbTable1.Columns.Add (relationColumn1);
+
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable3, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn2.DefineDisplayName ("column2");
+				dbTable1.Columns.Add (relationColumn2);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 })
+				);			
+			}
+		}
+
+
+		[TestMethod]
+		public void AddExistingTableExceptionTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
@@ -326,10 +452,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				infrastructure.AddType (dbTypeName);
 				
-				DbTable dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable1);
 
-				DbTable dbTable2 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				
 				ExceptionAssert.Throw<Exceptions.GenericException>
 				(
@@ -339,80 +465,65 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		// TODO Complete test.
-		// Marc
-
 		[TestMethod]
-		public void UnregisterDbTableTest()
+		public void RemoveTableTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 				infrastructure.AddTable (dbTable);
 			}
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");
+				DbTable dbTable = infrastructure.ResolveDbTable ("table");
 				Assert.IsNotNull (dbTable);
 
 				infrastructure.RemoveTable (dbTable);
-				Assert.IsNull (infrastructure.ResolveDbTable ("SimpleTest"));
+				Assert.IsNull (infrastructure.ResolveDbTable ("table"));
 			}
 		}
 
 
-		// TODO Complete test.
-		// Marc
-
 		[TestMethod]
-		public void RegisterDbTableSameAsUnregisteredTest()
+		public void RemoveTablesWithRelationTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				infrastructure.AddTable (dbTable);
-			}
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");			
-				infrastructure.RemoveTable (dbTable);
-			}
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn1.DefineDisplayName ("column1");
+				dbTable2.Columns.Add (relationColumn1);
 
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				infrastructure.AddTable (dbTable);
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				relationColumn2.DefineDisplayName ("column2");
+				dbTable1.Columns.Add (relationColumn2);
 
-				Assert.IsNotNull (infrastructure.ResolveDbTable ("SimpleTest"));
-				Assert.AreEqual (DbRowStatus.Live, dbTable.Key.Status);
+				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 });
+				infrastructure.RemoveTable (infrastructure.ResolveDbTable ("table1"));
+
+				Assert.IsNull (infrastructure.ResolveDbTable ("table1"));
+				Assert.IsNull (infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn2)));
+				Assert.IsNull (infrastructure.ResolveDbTable (dbTable2.GetRelationTableName (relationColumn1)));
+				Assert.IsNotNull (infrastructure.ResolveDbTable ("table2"));
 			}
 		}
 
 
-		// TODO Complete test.
-		// Marc
-
 		[TestMethod]
-		public void UnregisterDbTableExeptionTest()
+		public void RemoveUnexistingTableExeptionTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				infrastructure.AddTable (dbTable);
-			}
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable = infrastructure.ResolveDbTable ("SimpleTest");
-				infrastructure.RemoveTable (dbTable);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
 
 				ExceptionAssert.Throw<Exceptions.GenericException>
 				(

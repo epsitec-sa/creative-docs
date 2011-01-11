@@ -6,11 +6,13 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database.Collections;
+using Epsitec.Cresus.Database.Exceptions;
 using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
 
 using System.Linq;
+
 
 namespace Epsitec.Cresus.Database
 {
@@ -617,17 +619,11 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTable(DbTransaction transaction, DbTable table)
 		{
-			// TODO Add checks on whether this table has a relation to another unexisting table.
-			// Marc
-
-			// TODO Make sure that the table matches something legal.
-			// Marc
-
 			this.CheckForRegisteredTypes (transaction, table);
 			this.CheckForUnknownTable (transaction, table);
+			this.CheckForRelations (table, this.FindDbTables (DbElementCat.Any).ToList ());
 
-			this.AddConcreteTable (transaction, table);
-			this.AddRelationTablesAndColumns (transaction, table);
+			this.AddTableInternal (transaction, table);
 		}
 
 		public void AddTables(IEnumerable<DbTable> tables)
@@ -642,30 +638,17 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTables(DbTransaction transaction, IEnumerable<DbTable> tables)
 		{
-			// TODO Add checks on whether this table has a relation to a table that doesn't exist
-			// in the database and that isn't in the given sequence of tables.
-			// Marc
+			var existingTables = this.FindDbTables (DbElementCat.Any);
+			var newTables = tables.ToList ();
 
-			// TODO Add checks to ensure that the tables match something legal.
-			// Marc
-
-			var tmpTables = tables.ToList ();
-
-			foreach (DbTable table in tmpTables)
+			foreach (DbTable table in newTables)
 			{
 				this.CheckForRegisteredTypes (transaction, table);
 				this.CheckForUnknownTable (transaction, table);
+				this.CheckForRelations (table, existingTables.Concat (newTables).ToList ());
 			}
-
-			foreach (DbTable table in tmpTables)
-			{
-				this.AddConcreteTable (transaction, table);
-			}
-
-			foreach (DbTable table in tmpTables)
-			{
-				this.AddRelationTablesAndColumns (transaction, table);
-			}
+			
+			this.AddTablesInternal (transaction, newTables);
 		}
 
 		public void RemoveTable(DbTable table)
@@ -680,15 +663,17 @@ namespace Epsitec.Cresus.Database
 
 		public void RemoveTable(DbTransaction transaction, DbTable table)
 		{
-			this.CheckForKnownTable (transaction, table);
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
-			// TODO use the name of the table, instead of the DbTable object.
-			// Marc
+			if (internalTable == null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
+			}
 
-			this.RemoveRelationTablesAndColumns (transaction, table);
-			this.RemoveConcreteTable (transaction, table);
+			this.RemoveRelationTablesAndColumns (transaction, internalTable);
+			this.RemoveConcreteTable (transaction, internalTable);
 
-			this.RemoveFromCache (table);
+			this.RemoveFromCache (internalTable);
 		}
 
 		public void AddColumnToTable(DbTransaction transaction, DbTable table, DbColumn column)
@@ -757,6 +742,25 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (table);
 		}
 
+		private void AddTableInternal(DbTransaction transaction, DbTable table)
+		{
+			this.AddConcreteTable (transaction, table);
+			this.AddRelationTablesAndColumns (transaction, table);
+		}
+
+		private void AddTablesInternal(DbTransaction transaction, List<DbTable> newTables)
+		{
+			foreach (DbTable table in newTables)
+			{
+				this.AddConcreteTable (transaction, table);
+			}
+
+			foreach (DbTable table in newTables)
+			{
+				this.AddRelationTablesAndColumns (transaction, table);
+			}
+		}
+
 		private void AddConcreteTable(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterTable (transaction, table);
@@ -799,7 +803,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
 
-			this.AddTable (transaction, relationTable);
+			this.AddTableInternal (transaction, relationTable);
 		}
 
 		private void RemoveRelationTablesAndColumns(DbTransaction transaction, DbTable table)
@@ -861,49 +865,48 @@ namespace Epsitec.Cresus.Database
 
 		private void RegisterRelationTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			// TODO Simplify a lot this method, when we make sure that some assumptions are valid
-			// in the public method related to this.
-
-			bool init = false;
-
-			// TODO Is that test invalid? Should it include other classes?
-			if (column.ColumnClass == DbColumnClass.RefId)
+			switch (column.ColumnClass)
 			{
-				string targetTableName = column.TargetTableName;
-				
-				if (!string.IsNullOrEmpty (targetTableName))
+				// TODO Should it include other classes in this case?
+				// Marc
+
+				case DbColumnClass.RefId:
 				{
+					string targetTableName = column.TargetTableName;
+
 					DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
 
-					if (targetTable == null)
-					{
-						string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database", targetTableName, table.Name, column.Name);
-						throw new Exceptions.GenericException (this.access, message);
-					}
-
-					if (targetTable.Key.IsEmpty)
-					{
-						string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'", targetTableName, table.Name, column.Name);
-						throw new Exceptions.GenericException (this.access, message);
-					}
-
 					DbKey columnKey = this.InsertRelationColumnDefRow (transaction, table, column, targetTable);
-					column.DefineKey (columnKey);
-
-					init = true;
+					column.DefineKey (columnKey);	
 				}
-			}
+				break;
 
-			if (!init)
-			{
-				DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
-				column.DefineKey (columnKey);
+				default:
+				{
+					DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
+					column.DefineKey (columnKey);
+				}
+				break;
 			}
 		}
 
 		public void UnregisterRelationTableColumn(DbTransaction transaction, DbColumn column)
 		{
 			this.DeleteColumnDefRow (transaction, column);
+		}
+
+		private void InsertTable(DbTransaction transaction, DbTable table)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+
+			transaction.SqlBuilder.InsertTable (sqlTable);
+			this.ExecuteSilent (transaction);
+
+			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			{
+				this.InsertAutoIncrementForColumn (transaction, table, dbColumn);
+				this.InsertAutoTimeStampForColumn (transaction, table, dbColumn);
+			}
 		}
 
 		private void InsertConcreteColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
@@ -915,7 +918,48 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (dbTransaction);
 
 			this.InsertAutoIncrementForColumn (dbTransaction, dbTable, dbColumn);
-			this.InsertAutoTimeStampForColumn (dbTransaction, dbTable, dbColumn);			
+			this.InsertAutoTimeStampForColumn (dbTransaction, dbTable, dbColumn);
+		}
+
+		private void InsertAutoIncrementForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			if (dbColumn.IsAutoIncremented)
+			{
+				transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
+				this.ExecuteSilent (transaction);
+			}
+		}
+
+		private void InsertAutoTimeStampForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
+		{
+			string tableName = dbTable.GetSqlName ();
+			string columnName = dbColumn.GetSqlName ();
+
+			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
+			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
+
+			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
+			{
+				transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
+				this.ExecuteSilent (transaction);
+			}
+		}
+
+		private void DropTable(DbTransaction dbTransaction, DbTable dbTable)
+		{
+			foreach (DbColumn dbColumn in dbTable.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			{
+				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
+				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
+			}
+
+			SqlTable sqlTable = dbTable.CreateSqlTable (this.converter);
+
+			dbTransaction.SqlBuilder.RemoveTable (sqlTable);
+			this.ExecuteSilent (dbTransaction);
 		}
 
 		private void DropConcreteColumnFromTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
@@ -927,20 +971,6 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sqlColumn = dbTable.CreateSqlColumns (this.converter, dbColumn).Single ();
 
 			dbTransaction.SqlBuilder.RemoveTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
-			this.ExecuteSilent (dbTransaction);
-		}
-
-		private void DropTable(DbTransaction dbTransaction, DbTable dbTable)
-		{
-			foreach (DbColumn dbColumn in dbTable.Columns)
-			{
-				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
-				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
-			}
-
-			SqlTable sqlTable = dbTable.CreateSqlTable (this.converter);
-
-			dbTransaction.SqlBuilder.RemoveTable (sqlTable);
 			this.ExecuteSilent (dbTransaction);
 		}
 		
@@ -968,47 +998,6 @@ namespace Epsitec.Cresus.Database
 			{
 				dbTransaction.SqlBuilder.DropAutoTimeStampOnTableColumn (tableName, columnName);
 				this.ExecuteSilent (dbTransaction);
-			}
-		}
-
-		private void InsertTable(DbTransaction transaction, DbTable table)
-		{
-			SqlTable sqlTable = table.CreateSqlTable (this.converter);
-
-			transaction.SqlBuilder.InsertTable (sqlTable);
-			this.ExecuteSilent (transaction);
-
-			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
-			{
-				this.InsertAutoIncrementForColumn (transaction, table, dbColumn);
-				this.InsertAutoTimeStampForColumn (transaction, table, dbColumn);
-			}
-		}
-
-		private void InsertAutoIncrementForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
-		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
-			if (dbColumn.IsAutoIncremented)
-			{
-				transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
-				this.ExecuteSilent (transaction);
-			}
-		}
-
-		private void InsertAutoTimeStampForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
-		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
-			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
-			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
-
-			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
-			{
-				transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
-				this.ExecuteSilent (transaction);
 			}
 		}
 
@@ -1195,13 +1184,13 @@ namespace Epsitec.Cresus.Database
 
 			return this.FindDbTables (DbElementCat.Any)
 				.SelectMany (t => t.Columns)
-				.Where (c => c.Category == DbElementCat.Relation)
+				.Where (c => c.Cardinality != DbCardinality.None)
 				.Where (c => c.TargetTableName == dbTable.Name);
 		}
 
 		private IEnumerable<DbColumn> FindOutwardRelationColumns(DbTable dbTable)
 		{
-			return dbTable.Columns.Where (c => c.Category == DbElementCat.Relation);
+			return dbTable.Columns.Where (c => c.Cardinality != DbCardinality.None);
 		}
 
 		public void AddType(DbTypeDef type)
@@ -1674,6 +1663,23 @@ namespace Epsitec.Cresus.Database
 			{
 				string message = string.Format ("Table {0} does not exist in database.", table.Name);
 				throw new Exceptions.GenericException (this.access, message);
+			}
+		}
+
+		private void CheckForRelations(DbTable table, List<DbTable> tables)
+		{
+			IEnumerable<DbColumn> relationColumns = table.Columns.Where (c => c.Cardinality != DbCardinality.None);
+
+			foreach (DbColumn column in relationColumns)
+			{
+				string targetTableName = column.TargetTableName;
+
+				if (!tables.Any (t => t.Name == targetTableName))
+				{
+					string message = string.Format ("Column {0} of table {1} targets a tables which does not exist.", column.Name, table.Name);
+
+					throw new Exceptions.GenericException (this.access, message);
+				}
 			}
 		}
 
@@ -2236,59 +2242,65 @@ namespace Epsitec.Cresus.Database
 		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			//	We will build a join in order to query both the table definition
 			//	and the column definitions with a single SQL request.
-			
+
 			SqlSelect query = new SqlSelect ();
-			
+
 			//	Table related informations :
-			
-			query.Fields.Add ("T_ID",     SqlField.CreateName ("T_TABLE", Tags.ColumnId));
-			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TABLE", Tags.ColumnName));
+
+			SqlField sqlFieldForTableId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
+			sqlFieldForTableId.SortOrder = SqlSortOrder.Ascending;
+
+			query.Fields.Add ("T_ID", sqlFieldForTableId);
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnDisplayName));
-			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
+			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
 			query.Fields.Add ("T_STAT", SqlField.CreateName ("T_TABLE", Tags.ColumnStatus));
-			
+
 			//	Column related informations :
-			
-			query.Fields.Add ("C_ID",     SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
-			query.Fields.Add ("C_NAME",   SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
+
+			SqlField sqlFieldForColumnId = SqlField.CreateName ("T_COLUMN", Tags.ColumnId);
+			sqlFieldForColumnId.SortOrder = SqlSortOrder.Ascending;
+
+			query.Fields.Add ("C_ID", sqlFieldForColumnId);
+			query.Fields.Add ("C_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
 			query.Fields.Add ("C_D_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnDisplayName));
-			query.Fields.Add ("C_INFO",   SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
-			query.Fields.Add ("C_TYPE",   SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
+			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
+			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
 			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
-			
+
 			//	Tables to query :
-			
-			query.Tables.Add ("T_TABLE",  SqlField.CreateName (Tags.TableTableDef));
+
+			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
 			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
-			
+
 			if (key.IsEmpty)
 			{
 				//	Extract all tables and columns...
-				
+
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", rowSearchMode);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
 			{
 				//	Extract only matching tables...
-				
+
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", key);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, key);
 			}
-			
+
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
-			
+
 			long          rowId   = -1;
 			List<DbTable> tables  = new List<DbTable> ();
 			DbTable		  dbTable = null;
 			bool          recycle = false;
-			
+
 			//	Analyse the returned rows which are expected to be sorted first
 			//	by table definitions and second by column definitions.
-			
+
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
 				int status = InvariantConverter.ToInt (row["T_STAT"]);
@@ -2297,7 +2309,7 @@ namespace Epsitec.Cresus.Database
 				{
 					continue;
 				}
-				
+
 				long currentRowId = InvariantConverter.ToLong (row["T_ID"]);
 
 				if (rowId != currentRowId)
@@ -2311,7 +2323,7 @@ namespace Epsitec.Cresus.Database
 					string tableName = InvariantConverter.ToString (row["T_NAME"]);
 					string tableDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
-					
+
 					dbTable = this.tableCache[tableKey];
 
 					if (dbTable == null)
@@ -2339,12 +2351,12 @@ namespace Epsitec.Cresus.Database
 
 					tables.Add (dbTable);
 				}
-				
+
 				if (recycle)
 				{
 					continue;
 				}
-				
+
 				//	Every row defines one column :
 
 				long   typeDefId  = InvariantConverter.ToLong (row["C_TYPE"]);
@@ -2360,7 +2372,7 @@ namespace Epsitec.Cresus.Database
 					//	produce an endless loop if both tables refer to each
 					//	other, as the tables get cached even if they are not
 					//	yet fully initialized...
-					
+
 					DbKey   targetKey   = new DbKey (InvariantConverter.ToLong (row["C_TARGET"]));
 					DbTable targetTable = this.ResolveDbTable (transaction, targetKey);
 
@@ -2386,15 +2398,15 @@ namespace Epsitec.Cresus.Database
 				dbColumn.DefineKey (new DbKey (columnId));
 				dbColumn.DefineType (typeDef);
 				dbColumn.DefineTargetTableName (targetName ?? dbColumn.TargetTableName);
-				
+
 				dbTable.Columns.Add (dbColumn);
-				
+
 				if (dbColumn.IsPrimaryKey)
 				{
 					dbTable.PrimaryKeys.Add (dbColumn);
 				}
 			}
-			
+
 			return tables;
 		}
 
