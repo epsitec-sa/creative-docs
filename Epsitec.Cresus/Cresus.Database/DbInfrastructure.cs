@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -367,7 +368,7 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Releases the database connection. If transactions are still active
-		/// for this database, the connection will be released autmatically
+		/// for this database, the connection will be released automatically
 		/// when the transactions finish.
 		/// </summary>
 		public void ReleaseConnection()
@@ -377,7 +378,7 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Releases the database connection. If transactions are still active
-		/// for this database, the connection will be released autmatically
+		/// for this database, the connection will be released automatically
 		/// when the transactions finish.
 		/// </summary>
 		/// <param name="abstraction">The database abstraction.</param>
@@ -624,7 +625,7 @@ namespace Epsitec.Cresus.Database
 
 			this.CheckForRegisteredTypes (transaction, table);
 			this.CheckForUnknownTable (transaction, table);
-			this.CheckForRelations (table, this.FindDbTables (DbElementCat.Any).ToList ());
+			this.CheckForRelations (table, this.FindDbTables (DbElementCat.Any).Append (table).ToList ());
 
 			this.AddTableInternal (transaction, table);
 		}
@@ -672,6 +673,10 @@ namespace Epsitec.Cresus.Database
 			// TODO Ensure that the table is not a relation table?
 			// Marc
 
+			// TODO Do not remove the inward relation columns but throw an exception if the table
+			// to be removed is targeted by a relation table?
+			// Marc
+
 			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
 			if (internalTable == null)
@@ -679,10 +684,7 @@ namespace Epsitec.Cresus.Database
 				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
 			}
 
-			this.RemoveRelationTablesAndColumns (transaction, internalTable);
-			this.RemoveConcreteTable (transaction, internalTable);
-
-			this.RemoveFromCache (internalTable);
+			this.RemoveTableInternal (transaction, internalTable);
 		}
 
 		public void AddColumnToTable(DbTable table, DbColumn column)
@@ -819,6 +821,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.AddConcreteTable (transaction, table);
 			this.AddRelationTablesAndColumns (transaction, table);
+			this.RemoveFromCache (table);
 		}
 
 		private void AddTablesInternal(DbTransaction transaction, List<DbTable> newTables)
@@ -832,6 +835,20 @@ namespace Epsitec.Cresus.Database
 			{
 				this.AddRelationTablesAndColumns (transaction, table);
 			}
+
+			foreach (DbTable table in newTables)
+			{
+				this.RemoveFromCache (table);
+			}
+		}
+
+
+		private void RemoveTableInternal(DbTransaction transaction, DbTable internalTable)
+		{
+			this.RemoveRelationTablesAndColumns (transaction, internalTable);
+			this.RemoveConcreteTable (transaction, internalTable);
+
+			this.RemoveFromCache (internalTable);
 		}
 
 		private void AddConcreteTable(DbTransaction transaction, DbTable table)
@@ -903,7 +920,7 @@ namespace Epsitec.Cresus.Database
 			string relationTableName = sourceTable.GetRelationTableName (column);
 			DbTable relationTable = this.ResolveDbTable (relationTableName);
 
-			this.RemoveTable (transaction, relationTable);
+			this.RemoveTableInternal (transaction, relationTable);
 		}
 
 		private void RegisterTable(DbTransaction transaction, DbTable table)
