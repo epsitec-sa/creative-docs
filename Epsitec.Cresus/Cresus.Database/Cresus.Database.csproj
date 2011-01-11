@@ -145,6 +145,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbSchemaUpdater.cs" />
     <Compile Include="Services\DbAbstractService.cs" />
     <Compile Include="Services\DbConnection.cs" />
     <Compile Include="Services\DbInfoManager.cs" />
