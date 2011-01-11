@@ -62,14 +62,46 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 
-		public XElement SerializeToXml(string nodeName)
+		public XElement SerializeToXml(string xmlNodeName)
 		{
-			throw new System.NotImplementedException ();
+			var xml = new XElement (xmlNodeName);
+
+			xml.Add (new XAttribute ("title",     this.Title.ToSimpleText ()));
+			xml.Add (new XAttribute ("path",      this.Path.ToString ()));
+			xml.Add (new XAttribute ("beginDate", this.BeginDate.ToDateTime ().ToString (System.Globalization.CultureInfo.InvariantCulture)));
+			xml.Add (new XAttribute ("endDate",   this.EndDate  .ToDateTime ().ToString (System.Globalization.CultureInfo.InvariantCulture)));
+			xml.Add (new XAttribute ("id",        this.Id.ToString ()));
+
+			foreach (var item in this.items)
+			{
+				xml.Add (item.SerializeToXml ("account"));
+			}
+
+			return xml;
 		}
 
 		public static CresusChartOfAccounts DeserializeFromXml(XElement xml)
 		{
-			throw new System.NotImplementedException ();
+			var chartOfAccounts = new CresusChartOfAccounts ();
+
+			string title      = (string) xml.Attribute ("title");
+			string path       = (string) xml.Attribute ("path");
+			string beginDate  = (string) xml.Attribute ("beginDate");
+			string endDate    = (string) xml.Attribute ("endDate");
+			string id         = (string) xml.Attribute ("id");
+
+			chartOfAccounts.Title     = FormattedText.FromSimpleText (title);
+			chartOfAccounts.Path      = MachineFilePath.Parse (path);
+			chartOfAccounts.BeginDate = new Date (System.DateTime.Parse (beginDate));
+			chartOfAccounts.EndDate   = new Date (System.DateTime.Parse (endDate));
+			chartOfAccounts.Id        = new System.Guid (id);
+
+			foreach (XElement element in xml.Elements ("account"))
+			{
+				chartOfAccounts.items.Add (BookAccountDefinition.DeserializeFromXml (element));
+			}
+
+			return chartOfAccounts;
 		}
 
 		

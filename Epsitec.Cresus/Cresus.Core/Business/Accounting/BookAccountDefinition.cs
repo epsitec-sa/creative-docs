@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Accounting
 {
@@ -40,7 +41,26 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 
-		private readonly string accountNumber;
-		private readonly FormattedText caption;
+		public XElement SerializeToXml(string xmlNodeName)
+		{
+			var xml = new XElement (xmlNodeName);
+
+			xml.Add (new XAttribute ("number",  this.accountNumber));
+			xml.Add (new XAttribute ("caption", this.caption.ToSimpleText ()));
+
+			return xml;
+		}
+
+		public static BookAccountDefinition DeserializeFromXml(XElement xml)
+		{
+			string number  = (string) xml.Attribute ("number");
+			string caption = (string) xml.Attribute ("caption");
+
+			return new BookAccountDefinition (number, FormattedText.FromSimpleText (caption));
+		}
+
+	
+		private readonly string				accountNumber;
+		private readonly FormattedText		caption;
 	}
 }
