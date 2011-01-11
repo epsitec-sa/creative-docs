@@ -2,9 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business.Accounting;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Repositories;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -17,25 +21,35 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.chartsOfAccounts.AsReadOnly ();
 		}
 
-		public void AddChartOfAccounts(CresusChartOfAccounts chart)
+		public void AddChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			string chartId = chart.Id.ToString ("D");
+			var xml = chart.SerializeToXml ("chartOfAccounts");
 
-			//	TODO: ajouter un XmlBlob dans SerializedChartsOfAccounts
-			//	Le lien entre XmlBlob et chart se fait par leur 'Id'
-			throw new System.NotImplementedException ();
+			var blob = businessContext.DataContext.CreateEntity<XmlBlobEntity> ();
+			blob.Code = chartId;
+			blob.XmlData = xml;
+
+			this.SerializedChartsOfAccounts.Add (blob);
+			this.chartsOfAccounts.Add (chart);
 		}
 
-		public void RemoveChartOfAccounts(CresusChartOfAccounts chart)
+		public void RemoveChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			string chartId = chart.Id.ToString ("D");
 
-			//	TODO: ajouter un XmlBlob dans SerializedChartsOfAccounts
-			throw new System.NotImplementedException ();
+			XmlBlobRepository repository = new XmlBlobRepository (businessContext.Data, businessContext.DataContext);
+			var blob = repository.GetByCode (chartId).FirstOrDefault ();
+			if (blob != null)
+			{
+				businessContext.DataContext.DeleteEntity (blob);
+			}
+			
+			this.chartsOfAccounts.Remove (chart);
 		}
 
 
@@ -44,11 +58,16 @@ namespace Epsitec.Cresus.Core.Entities
 			if (this.chartsOfAccounts == null)
 			{
 				this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
-				//	TODO: désérialiser les CresusChartOfAccounts basés sur le XML stocké dans les XmlBlobs
-				throw new System.NotImplementedException ();
+
+				foreach (var blob in this.SerializedChartsOfAccounts)
+				{
+					var cresusChartOfAccounts = CresusChartOfAccounts.DeserializeFromXml (blob.XmlData);
+					this.chartsOfAccounts.Add (cresusChartOfAccounts);
+				}
 			}
 		}
 
-		private List<CresusChartOfAccounts> chartsOfAccounts;
+
+		private List<CresusChartOfAccounts>		chartsOfAccounts;
 	}
 }
