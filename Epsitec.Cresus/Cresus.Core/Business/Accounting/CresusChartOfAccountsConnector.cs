@@ -15,15 +15,20 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		{
 			var cresus = new CresusChartOfAccounts ();
 
-			IEnumerable<BookAccountDefinition> bookAccountDefs = null;	// TODO: charger les comptes
-			string title = "?"; // TODO: reprendre l'élément TITLE=... du fichier CRP
-			var fullPath = new Epsitec.Common.IO.MachineFilePath (path);
+			//	Lit le fichier .crp
+			var doc = new Epsitec.CresusToolkit.CresusComptaDocument (path);
 
-			cresus.Title = FormattedText.FromSimpleText (title);
-			cresus.Path  = fullPath;
-			cresus.Id    = System.Guid.NewGuid ();
-			cresus.Items.AddRange (bookAccountDefs);
-			//	TODO: reprendre les dates de début/fin de la période comptable
+			cresus.Title     = FormattedText.FromSimpleText (doc.Title);
+			cresus.BeginDate = new Date (doc.BeginDate);
+			cresus.EndDate   = new Date (doc.EndDate);
+			cresus.Path      = new Epsitec.Common.IO.MachineFilePath (path);
+			cresus.Id        = System.Guid.NewGuid ();
+
+			foreach (var account in doc.GetAccounts ())
+			{
+				var def = new BookAccountDefinition (account);
+				cresus.Items.Add (def);
+			}
 
 			return cresus;
 		}
