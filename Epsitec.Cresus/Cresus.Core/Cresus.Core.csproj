@@ -211,6 +211,7 @@
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\ImageBlobEntity.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Printers\DeserializedSection.cs" />
     <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
+    <Compile Include="Repositories\XmlBlobRepository.cs" />
     <Compile Include="Repositories\PriceCalculatorRepository.cs" />
     <Compile Include="Repositories\ImageCategoryRepository.cs" />
     <Compile Include="Repositories\ImageGroupRepository.cs" />
