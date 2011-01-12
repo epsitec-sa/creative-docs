@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
 			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure);
+			this.SchemaBuilder = new SchemaBuilder (this.dbInfrastructure);
 			this.DataContextPool = new DataContextPool ();
 		}
 		
@@ -90,6 +91,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get;
 			private set;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="SchemaBuilder"/> associated with this instance.
+		/// </summary>
+		private SchemaBuilder SchemaBuilder
+		{
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -333,46 +343,46 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 		/// <summary>
-		/// Checks that the given <see cref="AbstractEntity"/> given by <typeparamref name="TEntity"/>
-		/// is properly defined in the database.
+		/// Checks that the entity defined by the given sequence of <see cref="Druid"/> are properly
+		/// defined in the database.
 		/// </summary>
-		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to check.</typeparam>
-		/// <returns><c>true</c> if the type of the <see cref="AbstractEntity"/> is properly defined in the database, <c>false</c> if it is not.</returns>		
-		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
-		public bool CheckSchema<TEntity>() where TEntity : AbstractEntity, new ()
+		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the entities to check.</param>
+		/// <returns><c>true</c> if the schema in the database is valid, <c>false</c> if it isn't.</returns>
+		public bool CheckSchema(IEnumerable<Druid> entityIds)
 		{
 			this.AssertIsConnected ();
 
-			return this.SchemaEngine.SchemaBuilder.CheckSchema (EntityInfo<TEntity>.GetTypeId ());
-		}
-
-		public bool CheckSchema(Druid entityId)
-		{
-			this.AssertIsConnected ();
-
-			return this.SchemaEngine.SchemaBuilder.CheckSchema (entityId);
+			return this.SchemaBuilder.CheckSchema (entityIds);
 		}
 
 		/// <summary>
-		/// Creates and persists the schema describing an <see cref="AbstractEntity"/> to the
-		/// database. The schema for the <see cref="AbstractEntity"/> is created with all the
-		/// dependencies.
+		/// Creates the schema for the given entity ids in the database. This will use existing
+		/// tables and types in the database and will only add new items that are not yet defined
+		/// in the database. This method is thus intended to be used to add the schema of new
+		/// entities which are not yet defined in the database.
 		/// </summary>
-		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> whose schema to create.</typeparam>
-		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
-		public void CreateSchema<TEntity>()
-			where TEntity : AbstractEntity, new ()
+		/// <param name="entityIds">The <see cref="Druid"/> defining the entities to add to the database.</param>
+		public void CreateSchema(IEnumerable<Druid> entityIds)
 		{
 			this.AssertIsConnected ();
 
-			this.SchemaEngine.CreateSchema<TEntity> ();
+			this.SchemaBuilder.RegisterSchema (entityIds);
+			this.SchemaEngine.Clear ();
 		}
 
-		public void CreateSchema(Druid entityId)
+		/// <summary>
+		/// Updates the schema in the database so that it will match the schema given by the tables
+		/// corresponding to the entities defined by the given sequence of <see cref="Druid"/>. This
+		/// method is thus intended to be used to modify the existing schema by replacing it completely
+		/// with a new one.
+		/// </summary>
+		/// <param name="entityIds">The <see cref="Druid"/> defining the entities to put in the database.</param>
+		public void UpdateSchema(IEnumerable<Druid> entityIds)
 		{
 			this.AssertIsConnected ();
 
-			this.SchemaEngine.CreateSchema (entityId);
+			this.SchemaBuilder.UpdateSchema (entityIds);
+			this.SchemaEngine.Clear ();
 		}
 
 		/// <summary>
@@ -436,7 +446,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 		/// <summary>
-		/// Replaces the Epsitec data stored whitin the database by the one stored in the given file.
+		/// Replaces the Epsitec data stored within the database by the one stored in the given file.
 		/// </summary>
 		/// <param name="file">The file from which to read the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>

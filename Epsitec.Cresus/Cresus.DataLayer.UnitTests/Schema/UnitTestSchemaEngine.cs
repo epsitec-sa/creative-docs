@@ -5,7 +5,6 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Schema;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,61 +55,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			(
 				() => new SchemaEngine (dbInfrastructure)
 			);
-		}
-
-
-		[TestMethod]
-		public void CreateSchemaTest()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
-				
-				engine.CreateSchema<NaturalPersonEntity> ();
-			}
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
-
-				List<Druid> entityIds = new List<Druid> ()
-				{
-					Druid.Parse ("[L0AM]"),
-					Druid.Parse ("[L0AN]"),
-					Druid.Parse ("[L0A21]"),
-					Druid.Parse ("[L0AT]"),
-					Druid.Parse ("[L0AA1]"),
-					Druid.Parse ("[L0AP]"),
-					Druid.Parse ("[L0AE1]"),
-					Druid.Parse ("[L0AQ1]"),
-					Druid.Parse ("[L0AO]"),
-					Druid.Parse ("[L0AL1]"),
-				};
-
-				List<System.Tuple<Druid,Druid>> relationIds = new List<System.Tuple<Druid, Druid>> ()
-				{
-					System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AU]")),
-					System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0A11]")),
-					System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AS]")),
-					System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AD1]")),
-					System.Tuple.Create (Druid.Parse ("[L0AT]"), Druid.Parse ("[L0AB3]")),
-					System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AG1]")),
-					System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AP1]")),
-					System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A81]")),
-					System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A71]")),
-					System.Tuple.Create (Druid.Parse ("[L0AO]"), Druid.Parse ("[L0AO1]")),
-				};
-
-				foreach (Druid entityId in entityIds)
-				{
-					Assert.IsNotNull (engine.GetEntityTableDefinition (entityId));
-				}
-
-				foreach (var relationId in relationIds)
-				{
-					Assert.IsNotNull (engine.GetRelationTableDefinition (relationId.Item1, relationId.Item2));
-				}
-			}
 		}
 
 
@@ -212,9 +156,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				SchemaBuilder schemaBuilder = new SchemaBuilder (dbInfrastructure);
 
-				engine.CreateSchema<NaturalPersonEntity> ();
+				schemaBuilder.RegisterSchema (new List<Druid> () { Druid.Parse ("[L0AM]") });
 			}
 
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())

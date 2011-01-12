@@ -480,21 +480,9 @@ namespace Epsitec.Cresus.Core
 		{
 			this.connectionManager.Validate ();
 
-			foreach (var entityId in this.GetManagedEntityIds ())
+			if (!this.dataInfrastructure.CheckSchema(this.GetManagedEntityIds ()))
 			{
-				this.VerifyDatabaseSchema (entityId);
-			}
-		}
-
-
-		private void VerifyDatabaseSchema(Druid entityId)
-		{
-			if (!this.dataInfrastructure.CheckSchema (entityId))
-			{
-				System.Type type = EntityClassFactory.FindType (entityId);
-				string typeName = type == null ? entityId.ToString () : type.FullName;
-
-				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException (string.Format ("Incompatible database schema: schema for {0} or one of its dependencies does not exist or is incorrect", typeName));
+				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ("Incompatible database schema");
 			}
 		}
 
@@ -537,10 +525,7 @@ namespace Epsitec.Cresus.Core
 		{
 			this.connectionManager.Validate ();
 
-			foreach (var entityId in this.GetManagedEntityIds ())
-			{
-				this.DataInfrastructure.CreateSchema (entityId);
-			}
+			this.DataInfrastructure.CreateSchema (this.GetManagedEntityIds ());
 		}
 
 		private void PopulateDatabase()
