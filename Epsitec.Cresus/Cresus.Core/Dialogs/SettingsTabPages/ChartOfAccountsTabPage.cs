@@ -134,6 +134,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.table.SetWidthColumn (3, 90);
 			}
 
+			new StaticText
+			{
+				Parent = leftPane,
+				Dock = DockStyle.Bottom,
+				Text = "<i>Remarque: Il ne peut pas y avoir plus d'un plan comptable par période.</i>",
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
 			//	Connexion des événements.
 			this.addButton.Clicked += delegate
 			{
