@@ -65,14 +65,12 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public XElement SerializeToXml(string xmlNodeName)
 		{
-			var dateConverter = new DateConverter();
-
 			var xml = new XElement (xmlNodeName);
 
 			xml.Add (new XAttribute ("title",     this.Title.ToSimpleText ()));
 			xml.Add (new XAttribute ("path",      this.Path.ToString ()));
-			xml.Add (new XAttribute ("beginDate", dateConverter.ConvertToString (this.BeginDate)));
-			xml.Add (new XAttribute ("endDate",   dateConverter.ConvertToString (this.EndDate)));
+			xml.Add (new XAttribute ("beginDate", CresusChartOfAccounts.dateConverter.ConvertToString (this.BeginDate)));
+			xml.Add (new XAttribute ("endDate",   CresusChartOfAccounts.dateConverter.ConvertToString (this.EndDate)));
 			xml.Add (new XAttribute ("id",        this.Id.ToString ()));
 
 			foreach (var item in this.items)
@@ -85,8 +83,6 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public static CresusChartOfAccounts DeserializeFromXml(XElement xml)
 		{
-			var dateConverter = new DateConverter ();
-
 			var chartOfAccounts = new CresusChartOfAccounts ();
 
 			string title      = (string) xml.Attribute ("title");
@@ -97,8 +93,8 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 			chartOfAccounts.Title     = FormattedText.FromSimpleText (title);
 			chartOfAccounts.Path      = MachineFilePath.Parse (path);
-			chartOfAccounts.BeginDate = dateConverter.ConvertFromString (beginDate).Value;
-			chartOfAccounts.EndDate   = dateConverter.ConvertFromString (endDate).Value;
+			chartOfAccounts.BeginDate = CresusChartOfAccounts.dateConverter.ConvertFromString (beginDate).Value;
+			chartOfAccounts.EndDate   = CresusChartOfAccounts.dateConverter.ConvertFromString (endDate).Value;
 			chartOfAccounts.Id        = new System.Guid (id);
 
 			foreach (XElement element in xml.Elements ("account"))
@@ -110,6 +106,8 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 		
+		private static readonly DateConverter dateConverter = new DateConverter ();
+
 		private readonly List<BookAccountDefinition> items;
 	}
 }

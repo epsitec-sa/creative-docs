@@ -56,8 +56,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.window.WindowCloseClicked += delegate
 			{
-				this.OnDialogClosed ();
-				this.CloseDialog ();
+				this.RejectChangingsAndClose ();
 			};
 		}
 
@@ -146,26 +145,38 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Connection des événements.
 			this.acceptButton.Clicked += delegate
 			{
-				foreach (var tab in this.settingsTabPages)
-				{
-					tab.AcceptChangings ();
-				}
-
-				this.Result = DialogResult.Accept;
-				this.CloseDialog ();
+				this.AcceptChangingsAndClose ();
 			};
 
 			this.cancelButton.Clicked += delegate
 			{
-				foreach (var tab in this.settingsTabPages)
-				{
-					tab.RejectChangings ();
-				}
-
-				this.Result = DialogResult.Cancel;
-				this.CloseDialog ();
+				this.RejectChangingsAndClose ();
 			};
 
+		}
+
+		private void AcceptChangingsAndClose()
+		{
+			foreach (var tab in this.settingsTabPages)
+			{
+				tab.AcceptChangings ();
+			}
+
+			this.Result = DialogResult.Accept;
+			this.OnDialogClosed ();
+			this.CloseDialog ();
+		}
+
+		private void RejectChangingsAndClose()
+		{
+			foreach (var tab in this.settingsTabPages)
+			{
+				tab.RejectChangings ();
+			}
+
+			this.Result = DialogResult.Cancel;
+			this.OnDialogClosed ();
+			this.CloseDialog ();
 		}
 
 		private void HandlerSettingsAcceptStateChanging(object sender)
