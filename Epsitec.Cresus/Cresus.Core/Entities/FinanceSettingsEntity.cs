@@ -23,8 +23,33 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.chartsOfAccounts.AsReadOnly ();
 		}
 
+		public CresusChartOfAccounts GetRecentChartOfAccounts(Date date)
+		{
+			//	Retourne le plan comptable correspondant à une date, ou le plan comptable le plus récent.
+			//	Retourne null s'il n'existe aucun plan comptable.
+			var chart = this.GetChartOfAccounts (date);
+
+			if (chart == null)
+			{
+				Date max = new Date (0);  // date très ancienne
+
+				foreach (var c in this.GetChartsOfAccounts ())
+				{
+					if (max < c.EndDate)
+					{
+						max = c.EndDate;
+						chart = c;
+					}
+				}
+			}
+
+			return chart;
+		}
+
 		public CresusChartOfAccounts GetChartOfAccounts(Date date)
 		{
+			//	Retourne le plan comptable correspondant à une date.
+			//	Retourne null si aucun plan comptable ne correspond.
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			return this.GetChartsOfAccounts ().Where (chart => date >= chart.BeginDate && date <= chart.EndDate).FirstOrDefault ();
