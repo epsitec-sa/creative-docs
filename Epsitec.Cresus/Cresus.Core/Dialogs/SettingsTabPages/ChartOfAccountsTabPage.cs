@@ -30,21 +30,27 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public ChartOfAccountsTabPage(CoreApplication application)
 			: base (application)
 		{
+			//	Il faut utiliser un BusinessContext propre.
 			this.businessContext = this.application.Data.CreateBusinessContext ();
 
-			//?this. = Logic.Current.FinanceSettings;  // TODO: Logic.Current est null !
-			this.financeSettingsEntity = this.application.FinanceSettings;
-
+			//	Cherche l'entité sur le compte du BusinessContext propre.
+			this.financeSettingsEntity = this.businessContext.Data.GetAllEntities<FinanceSettingsEntity> ().FirstOrDefault ();
+	
+			//	Si elle n'existe pas, on la crée.
 			if (this.financeSettingsEntity == null)
 			{
 				this.financeSettingsEntity = this.businessContext.CreateEntity<FinanceSettingsEntity> ();
 			}
+
+			//	Obtient une copie de la liste des plans comptables.
+			this.chartOfAccounts = new List<CresusChartOfAccounts> ();
+			this.chartOfAccounts.AddRange (this.financeSettingsEntity.GetChartsOfAccounts ());
 		}
 
 
 		public override void AcceptChangings()
 		{
-			this.businessContext.SaveChanges ();
+			this.UpdateFinanceSettingsEntity ();
 			this.businessContext.Dispose ();
 		}
 
@@ -177,7 +183,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Met à jour le contenu de la table.
 			this.ignoreChange = true;
 
-			int rows = this.financeSettingsEntity.GetChartsOfAccounts ().Count;
+			int rows = this.chartOfAccounts.Count;
 			this.table.SetArraySize (4, rows);
 
 			this.table.SetWidthColumn (0, 160);
@@ -265,7 +271,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void TableUpdateRow(int row)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
-			var chartOfAccount = this.financeSettingsEntity.GetChartsOfAccounts ().ElementAt (row);
+			var chartOfAccount = this.chartOfAccounts[row];
 
 			{
 				var text = this.table[0, row].Children[0] as StaticText;
@@ -303,9 +309,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (string.IsNullOrEmpty (err))  // ok ?
 				{
-					this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
+					this.chartOfAccounts.Add (chart);
 
-					this.UpdateTable (this.financeSettingsEntity.GetChartsOfAccounts ().Count-1);
+					this.UpdateTable (this.chartOfAccounts.Count-1);
 					this.UpdateWidgets ();
 				}
 				else  // erreur ?
@@ -319,11 +325,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			int sel = this.table.SelectedRow;
 
-			var charts = this.financeSettingsEntity.GetChartsOfAccounts ();
-
-			if (sel >= 0 && sel < charts.Count)
+			if (sel >= 0 && sel < this.chartOfAccounts.Count)
 			{
-				this.financeSettingsEntity.RemoveChartOfAccounts (this.businessContext, charts[sel]);
+				this.chartOfAccounts.RemoveAt (sel);
 
 				this.UpdateTable ();
 				this.UpdateWidgets ();
@@ -357,7 +361,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string CheckChart(CresusChartOfAccounts chart)
 		{
-			foreach (var c in this.financeSettingsEntity.GetChartsOfAccounts ())
+			foreach (var c in this.chartOfAccounts)
 			{
 				if (chart.BeginDate < c.EndDate && chart.EndDate > c.BeginDate)
 				{
@@ -369,8 +373,53 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private void UpdateFinanceSettingsEntity()
+		{
+			bool dirty = false;
+			var originalCharts = this.financeSettingsEntity.GetChartsOfAccounts ();
+
+			//	Supprime les plans comptables qui ne sont plus utilisés.
+			bool removed;
+			do
+			{
+				removed = false;
+				for (int i=0; i<originalCharts.Count; i++)
+				{
+					var originalChart = originalCharts[i];
+
+					var c = this.chartOfAccounts.Where (x => x.Id == originalChart.Id).FirstOrDefault ();
+					if (c == null)  // pas utilisé dans la nouvelle liste ?
+					{
+						this.financeSettingsEntity.RemoveChartOfAccounts (this.businessContext, originalChart);
+						dirty = true;
+						removed = true;
+						break;
+					}
+				}
+			}
+			while (removed);
+
+			//	Ajoute les nouveaux plans comptables.
+			foreach (var newChart in this.chartOfAccounts)
+			{
+				var c = originalCharts.Where (x => x.Id == newChart.Id).FirstOrDefault ();
+				if (c == null)  // pas utilisé dans l'ancienne liste ?
+				{
+					this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, newChart);
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.businessContext.SaveChanges ();
+			}
+		}
+
+
 		private readonly BusinessContext				businessContext;
 		private readonly FinanceSettingsEntity			financeSettingsEntity;
+		private readonly List<CresusChartOfAccounts>	chartOfAccounts;
 
 		private FrameBox								toolbar;
 		private GlyphButton								addButton;
