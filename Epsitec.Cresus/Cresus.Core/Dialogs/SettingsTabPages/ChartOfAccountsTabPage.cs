@@ -14,6 +14,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Accounting;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,6 +30,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public ChartOfAccountsTabPage(CoreApplication application)
 			: base (application)
 		{
+			this.businessContext = this.application.Data.CreateBusinessContext ();
+
 			//?this.financeSettingsEntity = Logic.Current.FinanceSettings;  // TODO: Logic.Current est null !
 			this.financeSettingsEntity = this.application.FinanceSettings;
 		}
@@ -36,6 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public override void AcceptChangings()
 		{
+			this.businessContext.SaveChanges ();
 		}
 
 		public override void CreateUI(Widget parent)
@@ -52,7 +56,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var leftPane = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 150+60+60+50+10,
+				PreferredWidth = 160+70+70+90 + 20,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 				TabIndex = tabIndex++,
@@ -104,24 +108,25 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = leftPane,
 					Dock = DockStyle.Fill,
+					DrawFullFrame = true,
 					TabIndex = tabIndex++,
 				};
 
 				this.table = new CellTable
 				{
 					Parent = tile,
-					DefHeight = Misc.GetButtonWidth () + 1,
 					StyleH = CellArrayStyles.Separator,
 					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
+					Margins = new Margins (2),
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
 
 				this.table.SetArraySize (4, 0);
-				this.table.SetWidthColumn (0, 150);
-				this.table.SetWidthColumn (1, 60);
-				this.table.SetWidthColumn (2, 60);
-				this.table.SetWidthColumn (3, 50);
+				this.table.SetWidthColumn (0, 160);
+				this.table.SetWidthColumn (1, 70);
+				this.table.SetWidthColumn (2, 70);
+				this.table.SetWidthColumn (3, 90);
 			}
 
 			//	Connexion des événements.
@@ -155,7 +160,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.ignoreChange = true;
 
 			int rows = (this.financeSettingsEntity == null) ? 0 : this.financeSettingsEntity.GetChartsOfAccounts ().Count;
-			this.table.SetArraySize (2, rows);
+			this.table.SetArraySize (4, rows);
 
 			if (sel == null)
 			{
@@ -251,7 +256,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			{
 				var text = this.table[3, row].Children[0] as StaticText;
-				text.FormattedText = chartOfAccount.Items.Count.ToString ();
+				text.FormattedText = TextFormatter.FormatText (chartOfAccount.Items.Count.ToString (), "comptes");
 			}
 
 			this.table.SelectRow (row, false);
@@ -260,6 +265,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void AddAction()
 		{
+			string filename = this.OpenFileDialog (this.application);
+
+			if (!string.IsNullOrEmpty (filename))
+			{
+				CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
+				this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
+
+				this.UpdateTable ();
+			}
 		}
 
 		private void RemoveAction()
@@ -267,12 +281,39 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private string OpenFileDialog(CoreApplication application)
+		{
+			var dialog = new FileOpenDialog ();
+
+			dialog.Title = "Importation d'un plan comptable \"CRP\"";
+			dialog.InitialDirectory = this.initialDirectory;
+			//?dialog.FileName = "";
+
+			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+
+			dialog.AcceptMultipleSelection = false;
+			dialog.Owner = application.Window;
+			dialog.OpenDialog ();
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return null;
+			}
+
+			this.initialDirectory = dialog.InitialDirectory;
+
+			return dialog.FileName;
+		}
+
+
+		private readonly BusinessContext				businessContext;
 		private readonly FinanceSettingsEntity			financeSettingsEntity;
 
 		private FrameBox								toolbar;
 		private GlyphButton								addButton;
 		private GlyphButton								removeButton;
 		private CellTable								table;
+		private string									initialDirectory;
 		private bool									ignoreChange;
 	}
 }
