@@ -118,7 +118,9 @@
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
       <Name>ICSharpCode.SharpZipLib</Name>
-      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">..\External\DotNet35\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

@@ -445,6 +445,10 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				path = path.Substring (0, path.Length - 10);
 			}
+			else if (path.ToLower ().EndsWith (@"\bin\debug .net 2.0\"))
+			{
+				path = path.Substring (0, path.Length - 19);
+			}
 			else if (path.ToLower ().EndsWith (@"\bin\release\"))
 			{
 				path = path.Substring (0, path.Length - 12);

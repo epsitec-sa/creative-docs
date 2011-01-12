@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
