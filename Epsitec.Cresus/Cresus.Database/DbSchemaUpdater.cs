@@ -17,7 +17,12 @@ namespace Epsitec.Cresus.Database
 
 		public static void UpdateSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
 		{
-			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			// TODO We could have problems here if in the tables, there are two types that share the
+			// same name but have different values. Only one will be used. Should we check for that
+			// and throw an exception in such cases?
+			// Marc
+
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				var dbTablesIn = DbSchemaUpdater.GetDbTablesIn (dbInfrastructure, dbTransaction).ToList ();
 				var dbTablesOut = DbSchemaUpdater.GetDbTablesOut (dbInfrastructure, newSchema).ToList ();
@@ -55,6 +60,8 @@ namespace Epsitec.Cresus.Database
 				}
 
 				DbSchemaUpdater.AddNewDbTypes (dbInfrastructure, dbTransaction, dbTypeDefsToAdd);
+
+				DbSchemaUpdater.UpdateDbTypesKey (dbInfrastructure, dbTransaction, newSchema);
 
 				DbSchemaUpdater.AddNewDbTables (dbInfrastructure, dbTransaction, dbTablesToAdd);
 
@@ -98,14 +105,19 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<DbTypeDef> GetDbTypeDefsOfSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> dbTables)
+
+		private static IEnumerable<DbTypeDef> GetDbTypeDefsInTables(IEnumerable<DbTable> dbTables)
 		{
-			var types = dbTables
+			return dbTables
 				.SelectMany (t => t.Columns)
 				.Select (c => c.Type)
 				.Where (t => t != null)
 				.Distinct<DbTypeDef> (new INameComparer ());
+		}
 
+		private static IEnumerable<DbTypeDef> GetDbTypeDefsOfSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> dbTables)
+		{
+			var types = GetDbTypeDefsInTables (dbTables);
 			var internalTypes = dbInfrastructure.FindBuiltInDbTypes ().ToList ();
 
 			return DbSchemaUpdater.ExceptOnName (types, internalTypes);
@@ -204,20 +216,37 @@ namespace Epsitec.Cresus.Database
 
 		private static void AddNewDbTypes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTypeDef> dbTypeDefsToAdd)
 		{
-			var dbTypeDefsToRegister = DbSchemaUpdater.ExceptOnName (dbTypeDefsToAdd, dbInfrastructure.FindBuiltInDbTypes ());
-
-			foreach (DbTypeDef dbTypeDef in dbTypeDefsToRegister)
+			foreach (DbTypeDef dbTypeDef in dbTypeDefsToAdd)
 			{
 				dbInfrastructure.AddType (dbTransaction, dbTypeDef);
 			}
 		}
 
 
+		private static void UpdateDbTypesKey(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> newTables)
+		{
+			// NOTE This method might become incorrect if we allow the alteration of types and must
+			// be changed if that ever happens.
+			// Marc
+
+			foreach (DbTypeDef dbTypeDef in DbSchemaUpdater.GetDbTypeDefsInTables (newTables))
+			{
+				if (dbTypeDef.Key.IsEmpty)
+				{
+					DbTypeDef type = dbInfrastructure.ResolveDbType (dbTransaction, dbTypeDef.Name);
+
+					if (type != null)
+					{
+						dbTypeDef.DefineKey (type.Key);
+					}
+				}
+			}
+		}
+
+
 		private static void RemoveOldDbTypes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTypeDef> dbTypeDefsToRemove)
 		{
-			var dbTypeDefsToUnRegister = DbSchemaUpdater.ExceptOnName (dbTypeDefsToRemove, dbInfrastructure.FindBuiltInDbTypes ());
-
-			foreach (DbTypeDef dbTypeDef in dbTypeDefsToUnRegister)
+			foreach (DbTypeDef dbTypeDef in dbTypeDefsToRemove)
 			{
 				dbInfrastructure.RemoveType (dbTransaction, dbTypeDef);
 			}
@@ -226,17 +255,13 @@ namespace Epsitec.Cresus.Database
 
 		private static void AddNewDbTables(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToAdd)
 		{
-			var dbTablesToRegister = DbSchemaUpdater.ExceptOnName (dbTablesToAdd, dbInfrastructure.FindBuiltInDbTables ());
-
-			dbInfrastructure.AddTables (dbTransaction, dbTablesToRegister);
+			dbInfrastructure.AddTables (dbTransaction, dbTablesToAdd);
 		}
 
 
 		private static void RemoveOldDbTable(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToRemove)
 		{
-			var dbTablesToUnregister = DbSchemaUpdater.ExceptOnName (dbTablesToRemove, dbInfrastructure.FindBuiltInDbTables ());
-
-			foreach (DbTable dbTable in dbTablesToUnregister)
+			foreach (DbTable dbTable in dbTablesToRemove)
 			{
 				dbInfrastructure.RemoveTable (dbTransaction, dbTable);
 			}
