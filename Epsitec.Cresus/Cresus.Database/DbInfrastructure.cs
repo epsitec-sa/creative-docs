@@ -911,6 +911,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.RemoveRelationTable (transaction, column);
 			this.UnregisterRelationTableColumn (transaction, column);
+			this.RemoveFromCache (column.Table);
 		}
 		
 		private void RemoveRelationTable(DbTransaction transaction, DbColumn column)
