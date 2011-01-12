@@ -299,7 +299,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void AddAction()
 		{
-			string[] filenames = this.OpenFileDialog (this.application);
+			//	Bouton [+] cliqué.
+			string[] filenames = this.OpenFileDialog (this.application);  // choix des fichiers à ouvrir...
 
 			foreach (var filename in filenames)
 			{
@@ -324,6 +325,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void RemoveAction()
 		{
+			//	Bouton [-] cliqué.
 			int sel = this.table.SelectedRow;
 
 			if (sel >= 0 && sel < this.chartOfAccounts.Count)
@@ -338,6 +340,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string[] OpenFileDialog(CoreApplication application)
 		{
+			//	Demande quels plans comptables ouvrir.
 			var dialog = new FileOpenDialog ();
 
 			dialog.Title = "Importation d'un plan comptable \"CRP\"";
@@ -361,6 +364,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string CheckChart(CresusChartOfAccounts chart)
 		{
+			//	Vérifie si un plan comptable peut être ouvert.
+			//	Retourne null si l'ouverture est possible, ou un message en cas d'erreur.
 			foreach (var c in this.chartOfAccounts)
 			{
 				if (chart.BeginDate < c.EndDate && chart.EndDate > c.BeginDate)
@@ -375,6 +380,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateFinanceSettingsEntity()
 		{
+			//	Met à jour l'entité FinanceSettingsEntity en fonction de la liste des plans comptables
+			//	dans this.chartOfAccounts.
 			bool dirty = false;
 			var originalCharts = this.financeSettingsEntity.GetChartsOfAccounts ();
 
