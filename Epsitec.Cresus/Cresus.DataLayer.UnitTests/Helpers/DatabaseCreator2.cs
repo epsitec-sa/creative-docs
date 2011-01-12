@@ -1,10 +1,15 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
@@ -43,10 +48,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 		public static void RegisterSchema(DataInfrastructure dataInfrastructure)
 		{
-			dataInfrastructure.CreateSchema<NaturalPersonEntity> ();
-			dataInfrastructure.CreateSchema<MailContactEntity> ();
-			dataInfrastructure.CreateSchema<TelecomContactEntity> ();
-			dataInfrastructure.CreateSchema<UriContactEntity> ();
+			List<Druid> entityIds = new List<Druid> ()
+			{
+				EntityInfo<NaturalPersonEntity>.GetTypeId (),
+				EntityInfo<MailContactEntity>.GetTypeId (),
+				EntityInfo<TelecomContactEntity>.GetTypeId (),
+				EntityInfo<UriContactEntity>.GetTypeId (),
+			};
+
+			dataInfrastructure.CreateSchema (entityIds);
 		}
 		
 

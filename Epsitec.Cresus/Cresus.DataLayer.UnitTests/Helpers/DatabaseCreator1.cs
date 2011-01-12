@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -197,10 +200,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.CreateSchema<AbstractPersonEntity> ();
-				dataInfrastructure.CreateSchema<MailContactEntity> ();
-				dataInfrastructure.CreateSchema<TelecomContactEntity> ();
-				dataInfrastructure.CreateSchema<UriContactEntity> ();
+				List<Druid> entityIds = new List<Druid> ()
+				{
+					EntityInfo<NaturalPersonEntity>.GetTypeId (),
+					EntityInfo<MailContactEntity>.GetTypeId (),
+					EntityInfo<TelecomContactEntity>.GetTypeId (),
+					EntityInfo<UriContactEntity>.GetTypeId (),
+				};
+
+				dataInfrastructure.CreateSchema (entityIds);
 
 				System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 

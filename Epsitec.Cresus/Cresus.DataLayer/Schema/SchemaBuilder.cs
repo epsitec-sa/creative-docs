@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
+using System;
 
 
 namespace Epsitec.Cresus.DataLayer.Schema
@@ -50,55 +51,92 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		/// <summary>
 		/// Builds and registers the schema of the <see cref="AbstractEntity"/> defined by the given
-		/// <see cref="Druid"/> in the database. This method will also build and register all the
-		/// required <see cref="AbstractEntity"/> that are not yet defined in the database.
+		/// sequence of <see cref="Druid"/> in the database. This method will also build and register
+		/// all the required <see cref="AbstractEntity"/> that are not yet defined in the database.
 		/// </summary>
-		/// <param name="entityId">The <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schema to register.</param>
-		public void RegisterSchema(Druid entityId)
+		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to register.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
+		public void RegisterSchema(IEnumerable<Druid> entityIds)
 		{
-			entityId.ThrowIf (id => !id.IsValid, "entityId must be valid");
-			
-			var schema = this.BuildSchema (entityId, true);
+			entityIds.ThrowIfNull ("entityIds");
 
-			IList<DbTable> schemaDbTables = schema.Item1;
-			IList<DbTypeDef> schemaDbTypesDefs = schema.Item2;
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				var schema = this.BuildSchema (entityIds, true);
 
-			this.RegisterDbTypeDefs (schemaDbTypesDefs);
-			this.RegisterDbTables (schemaDbTables);
+				IList<DbTable> schemaDbTables = schema.Item1;
+				IList<DbTypeDef> schemaDbTypesDefs = schema.Item2;
+
+				this.RegisterDbTypeDefs (schemaDbTypesDefs);
+				this.RegisterDbTables (schemaDbTables);
+
+				transaction.Commit ();
+			}
 		}
 
 
 		/// <summary>
-		/// Checks that the schema of the <see cref="AbstractEntity"/> defined by the given
-		/// <see cref="Druid"/> is correctly defined in the database. All the referenced
+		/// This method will alter the schema that is in the database in order to make it match the
+		/// schema of the <see cref="AbstractEntity"/> defined by the given sequence of
+		/// <see cref="Druid"/>.
+		/// </summary>
+		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to update.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
+		public void UpdateSchema(IEnumerable<Druid> entityIds)
+		{
+			entityIds.ThrowIfNull ("entityIds");
+
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				var schema = this.BuildSchema (entityIds, false);
+
+				IList<DbTable> schemaDbTables = schema.Item1;
+
+				DbSchemaUpdater.UpdateSchema (this.DbInfrastructure, schemaDbTables);
+
+				transaction.Commit ();
+			}
+		}
+
+
+		/// <summary>
+		/// Checks that the schema of the <see cref="AbstractEntity"/> defined by the given sequence
+		/// of <see cref="Druid"/> is correctly defined in the database. All the referenced
 		/// <see cref="AbstractEntity"/> are also checked.
 		/// </summary>
-		/// <param name="entityId"></param>
-		/// <returns></returns>
-		public bool CheckSchema(Druid entityId)
+		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to check.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
+		public bool CheckSchema(IEnumerable<Druid> entityIds)
 		{
-			entityId.ThrowIf (id => !id.IsValid, "entityId must be valid");
+			entityIds.ThrowIfNull ("entityIds");
 
-			IList<DbTable> schemaDbTables = this.BuildSchema (entityId, false).Item1;
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				IList<DbTable> schemaDbTables = this.BuildSchema (entityIds, false).Item1;
 
-			return this.CheckSchema (schemaDbTables);
+				bool ok = this.CheckSchema (schemaDbTables);
+
+				transaction.Commit ();
+
+				return ok;
+			}
 		}
 
 
 		/// <summary>
-		/// Builds the schema of the <see cref="AbstractEntity"/> defined by the given
+		/// Builds the schema of the <see cref="AbstractEntity"/> defined by the given sequence of
 		/// <see cref="Druid"/>. The new schema may or may not reference existing stuff in the
 		/// database, depending on the value of <paramref name="useDatabase"/>.
 		/// </summary>
-		/// <param name="entityId">The <see cref="Druid"/> defining the schema to build.</param>
+		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the schema to build.</param>
 		/// <param name="useDatabase">If set to <c>true</c>, the created schema will reference existing stuff in the database, if set to <c>false</c>, the created schema will create everything, event if it already exists in the database.</param>
 		/// <returns>A tuple containing the sequence of created <see cref="DbTable"/> and the sequence of created <see cref="DbTypeDef"/>.</returns>
-		private System.Tuple<IList<DbTable>, IList<DbTypeDef>> BuildSchema(Druid entityId, bool useDatabase)
+		private Tuple<IList<DbTable>, IList<DbTypeDef>> BuildSchema(IEnumerable<Druid> entityIds, bool useDatabase)
 		{
-			// We follow the graph of AbstractEntity starting by the one defined by entityId in order
-			// to get all the StructuredTypes that are connected directly or indirectly to the one
-			// defined by entityId, including the one defined by entityId.
-			var structuredTypes = this.GetStructuredTypesUsedInSchema (entityId);
+			// We follow the graph of AbstractEntity starting by the ones defined by entityIds in
+			// order to get all the StructuredTypes that are connected directly or indirectly to the
+			// ones defined by entityIds, including the ones defined by entityIds.
+			var structuredTypes = this.GetStructuredTypesUsedInSchema (entityIds);
 
 			// We process these StructuredTypes to get on one side the list of StructuredTypes that
 			// are not yet defined in the database, and on the other side the list of DbTables that
@@ -121,30 +159,33 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			var registeredDbTypeDefs = splitedDbTypeDefs.Item2;
 
 			var dbTypeDefs = unregisteredDbTypeDefs.Concat (registeredDbTypeDefs).ToList ();
-			
+
 			// We build the DbTable objects that correspond to the StructuredTypes that must be
 			// created.
 			var unexistingDbTables = this.BuildDbTables (unregisteredTables, registeredDbTables, dbTypeDefs);
 
 			// We return the created schema, that is the newly created DbTables and the newly created
 			// DbTypeDefs.
-			return System.Tuple.Create (unexistingDbTables, unregisteredDbTypeDefs);
+			return Tuple.Create (unexistingDbTables, unregisteredDbTypeDefs);
 		}
 
 
 		/// <summary>
 		/// Gets the sequence of <see cref="StructuredType"/> that are referenced somewhere in the
 		/// graph of <see cref="AbstractEntity"/> containing the <see cref="AbstractEntity"/> defined
-		/// by the given <see cref="Druid"/>.
+		/// by the given sequence of <see cref="Druid"/>.
 		/// </summary>
-		/// <param name="typeId">The <see cref="Druid"/> defined the type of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="typeIds">The sequence of <see cref="Druid"/> defining the types of the <see cref="AbstractEntity"/>.</param>
 		/// <returns>The sequence of <see cref="StructuredType"/>.</returns>
-		private IList<StructuredType> GetStructuredTypesUsedInSchema(Druid typeId)
+		private IList<StructuredType> GetStructuredTypesUsedInSchema(IEnumerable<Druid> typeIds)
 		{
 			IDictionary<Druid, StructuredType> types = new Dictionary<Druid, StructuredType> ();
 
-			this.GetStructuredTypesUsedInSchema (types, typeId);
-
+			foreach (Druid typeId in typeIds)
+			{
+				this.GetStructuredTypesUsedInSchema (types, typeId);
+			}
+			
 			return types.Values.ToList ();
 		}
 

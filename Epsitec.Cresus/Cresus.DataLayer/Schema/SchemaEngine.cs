@@ -37,21 +37,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
 			this.DbInfrastructure = dbInfrastructure;
-			this.SchemaBuilder = new SchemaBuilder (dbInfrastructure);
 
 			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
 			this.sourceReferencesCache = new Dictionary<Druid, IList<EntityFieldPath>> ();
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="SchemaBuilder"/> used by this instance to build the schemas of the
-		/// <see cref="AbstractEntity"/>
-		/// </summary>
-		internal SchemaBuilder SchemaBuilder
-		{
-			get;
-			set;
 		}
 		
 		
@@ -66,36 +54,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Creates the schema of an <see cref="AbstractEntity"/> and all its references and relations
-		/// in the database.
+		/// Clears the data cached in this instance.
 		/// </summary>
-		/// <typeparam name="TEntity">The type whose schema to create.</typeparam>
-		/// <returns><c>true</c> if the schema was created, <c>false</c> if it already existed.</returns>
-		public bool CreateSchema<TEntity>()
-			where TEntity : AbstractEntity, new ()
+		public void Clear()
 		{
-			return this.CreateSchema (EntityInfo<TEntity>.GetTypeId ());
-		}
-
-
-		public bool CreateSchema(Druid entityId)
-		{
-			bool createTable = (this.GetEntityTableDefinition (entityId) == null);
-
-			if (createTable)
-			{
-				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-				{
-					this.SchemaBuilder.RegisterSchema (entityId);
-
-					transaction.Commit ();
-				}
-
-				this.sourceReferencesCache.Clear ();
-				this.LoadSchema (entityId);
-			}
-
-			return createTable;
+			this.tableDefinitionCache.Clear ();
+			this.sourceReferencesCache.Clear ();
 		}
 
 
@@ -238,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <remarks>
 		/// This method retrieves only the source references for the given <see cref="Druid"/>, but
-		/// do not retrieves the ones of base or derived entities.
+		/// do not retrieves the ones of base on derived entities.
 		/// </remarks>
 		/// <param name="targetEntity">The kind of entities of the target.</param>
 		/// <returns>The description of the field and entities that references the given target entity.</returns>
@@ -325,7 +289,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// The cache containing all the source references, that is, the information about which
 		/// field of which entity does reference a given entity <see cref="Druid"/>.
 		/// </summary>
-		private IDictionary<Druid, IList<EntityFieldPath>> sourceReferencesCache;
+		private readonly IDictionary<Druid, IList<EntityFieldPath>> sourceReferencesCache;
 
 
 	}

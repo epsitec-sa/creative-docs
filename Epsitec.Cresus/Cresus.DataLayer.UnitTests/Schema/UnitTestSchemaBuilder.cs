@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 {
 
 
-    [TestClass]
+	[TestClass]
 	public sealed class UnitTestSchemaBuilder
 	{
 
@@ -58,80 +58,77 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		[TestMethod]
 		public void RegisterAndCheckSchema1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			List<Druid> entityIds = new List<Druid> ()
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				Druid.Parse ("[L0A62]")
+			};
 
-				Druid entityId = Druid.Parse ("[L0A62]");
-
-				Assert.IsFalse (builder.CheckSchema (entityId));
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
-				{
-					builder.RegisterSchema (entityId);
-
-					transaction.Commit ();
-				}
-
-				Assert.IsTrue (builder.CheckSchema (entityId));
-			}
+			this.CheckSchema (entityIds, false);
+			this.RegisterSchema (entityIds);
+			this.CheckSchema (entityIds, true);
 		}
 
 
 		[TestMethod]
 		public void RegisterAndCheckSchema2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			List<Druid> entityIdsToRegister = new List<Druid> ()
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				Druid.Parse ("[L0A5]")
+			};
 
-				Druid entityId = Druid.Parse ("[L0A5]");
+			List<Druid> entityIdsToCheck = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]"),
+				Druid.Parse ("[L0A4]"),
+				Druid.Parse ("[L0A1]"),
+			};
 
-				Assert.IsFalse (builder.CheckSchema (entityId));
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
-				{
-					builder.RegisterSchema (entityId);
-
-					transaction.Commit ();
-				}
-
-				Assert.IsTrue (builder.CheckSchema (entityId));
-			}
+			this.CheckSchema (entityIdsToCheck, false);
+			this.RegisterSchema (entityIdsToRegister);
+			this.CheckSchema (entityIdsToCheck, true);
 		}
 
 
 		[TestMethod]
 		public void RegisterAndCheckSchema3()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			List<Druid> entityIdsToRegister = new List<Druid> ()
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				Druid.Parse ("[L0AQ]")
+			};
 
-				Druid entityId = Druid.Parse ("[L0AQ]");
-
-				Assert.IsFalse (builder.CheckSchema (entityId));
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
-				{
-					builder.RegisterSchema (entityId);
-
-					transaction.Commit ();
-				}
-
-				Assert.IsTrue (builder.CheckSchema (entityId));
-			}
+			List<Druid> entityIdsToCheck = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]"),
+				Druid.Parse ("[L0AP]"),
+				Druid.Parse ("[L0AE1]"),
+				Druid.Parse ("[L0AQ1]"),
+				Druid.Parse ("[L0AN]"),
+				Druid.Parse ("[L0AM]"),
+				Druid.Parse ("[L0AO]"),
+				Druid.Parse ("[L0AL1]"),
+				Druid.Parse ("[L0AT]"),
+				Druid.Parse ("[L0AA1]"),
+				Druid.Parse ("[L0A21]"),
+				Druid.Parse ("[L0AD]"),
+				Druid.Parse ("[L0AI]"),
+				Druid.Parse ("[L0AF]"),
+				Druid.Parse ("[L0A4]"),
+				Druid.Parse ("[L0A5]"),
+				Druid.Parse ("[L0A1]"),
+			};
+			
+			this.CheckSchema (entityIdsToCheck, false);
+			this.RegisterSchema (entityIdsToRegister);
+			this.CheckSchema (entityIdsToCheck, true);
 		}
 
 
 		[TestMethod]
-		public void RegisterSchema1()
+		public void RegisterAndCheckSchema4()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				Druid entityId = Druid.Parse ("[L0AQ]");
-
-				List<Druid> entityIds = new List<Druid> ()
+			List<Druid> entityIds = new List<Druid> ()
 			{
 				Druid.Parse ("[L0AQ]"),
 				Druid.Parse ("[L0AP]"),
@@ -152,25 +149,168 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 				Druid.Parse ("[L0A1]"),
 			};
 
-				foreach (Druid id in entityIds)
-				{
-					Assert.IsNull (dbInfrastructure.ResolveDbTable (id));
-				}
+			this.CheckSchema (entityIds, false);
+			this.RegisterSchema (entityIds);
+			this.CheckSchema (entityIds, true);
+		}
 
-				SchemaBuilder schemaBuilder = new SchemaBuilder (dbInfrastructure);
 
-				schemaBuilder.RegisterSchema (entityId);
+		[TestMethod]
+		public void RegisterAndCheckSchema5()
+		{
+			List<Druid> entityIdsToRegister1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]")
+			};
 
-				foreach (Druid id in entityIds)
-				{
-					Assert.IsNotNull (dbInfrastructure.ResolveDbTable (id));
-				}
+			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]"),
+				Druid.Parse ("[L0A4]"),
+				Druid.Parse ("[L0A1]"),
+			};
 
-				foreach (Druid id in entityIds)
-				{
-					Assert.IsTrue (schemaBuilder.CheckSchema (id));
-				}
-			}
+			List<Druid> entityIdsToRegister2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]")
+			};
+
+			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]"),
+				Druid.Parse ("[L0AP]"),
+				Druid.Parse ("[L0AE1]"),
+				Druid.Parse ("[L0AQ1]"),
+				Druid.Parse ("[L0AN]"),
+				Druid.Parse ("[L0AM]"),
+				Druid.Parse ("[L0AO]"),
+				Druid.Parse ("[L0AL1]"),
+				Druid.Parse ("[L0AT]"),
+				Druid.Parse ("[L0AA1]"),
+				Druid.Parse ("[L0A21]"),
+				Druid.Parse ("[L0AD]"),
+				Druid.Parse ("[L0AI]"),
+				Druid.Parse ("[L0AF]"),
+			};
+
+			this.CheckSchema (entityIdsToCheck1, false);
+			this.CheckSchema (entityIdsToCheck2, false);
+
+			this.RegisterSchema (entityIdsToRegister1);
+
+			this.CheckSchema (entityIdsToCheck1, true);
+			this.CheckSchema (entityIdsToCheck2, false);
+
+			this.RegisterSchema (entityIdsToRegister2);
+	
+			this.CheckSchema (entityIdsToCheck1, true);
+			this.CheckSchema (entityIdsToCheck2, true);
+		}
+
+
+		[TestMethod]
+		public void UpdateAndCheckSchema1()
+		{
+			List<Druid> entityIdsToRegister1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]")
+			};
+
+			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]"),
+				Druid.Parse ("[L0A4]"),
+				Druid.Parse ("[L0A1]"),
+			};
+
+			List<Druid> entityIdsToRegister2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]")
+			};
+
+			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]"),
+				Druid.Parse ("[L0AP]"),
+				Druid.Parse ("[L0AE1]"),
+				Druid.Parse ("[L0AQ1]"),
+				Druid.Parse ("[L0AN]"),
+				Druid.Parse ("[L0AM]"),
+				Druid.Parse ("[L0AO]"),
+				Druid.Parse ("[L0AL1]"),
+				Druid.Parse ("[L0AT]"),
+				Druid.Parse ("[L0AA1]"),
+				Druid.Parse ("[L0A21]"),
+				Druid.Parse ("[L0AD]"),
+				Druid.Parse ("[L0AI]"),
+				Druid.Parse ("[L0AF]"),
+			};
+
+			this.CheckSchema (entityIdsToCheck1, false);
+			this.CheckSchema (entityIdsToCheck2, false);
+
+			this.UpdateSchema (entityIdsToRegister1);
+
+			this.CheckSchema (entityIdsToCheck1, true);
+			this.CheckSchema (entityIdsToCheck2, false);
+
+			this.UpdateSchema (entityIdsToRegister2);
+
+			this.CheckSchema (entityIdsToCheck1, true);
+			this.CheckSchema (entityIdsToCheck2, true);
+		}
+
+
+		[TestMethod]
+		public void UpdateAndCheckSchema2()
+		{
+			List<Druid> entityIdsToRegister1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]")
+			};
+
+			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0AQ]"),
+				Druid.Parse ("[L0AP]"),
+				Druid.Parse ("[L0AE1]"),
+				Druid.Parse ("[L0AQ1]"),
+				Druid.Parse ("[L0AN]"),
+				Druid.Parse ("[L0AM]"),
+				Druid.Parse ("[L0AO]"),
+				Druid.Parse ("[L0AL1]"),
+				Druid.Parse ("[L0AT]"),
+				Druid.Parse ("[L0AA1]"),
+				Druid.Parse ("[L0A21]"),
+				Druid.Parse ("[L0AD]"),
+				Druid.Parse ("[L0AI]"),
+				Druid.Parse ("[L0AF]"),
+			};
+
+			List<Druid> entityIdsToRegister2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]")
+			};
+
+			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			{
+				Druid.Parse ("[L0A5]"),
+				Druid.Parse ("[L0A4]"),
+				Druid.Parse ("[L0A1]"),
+			};
+
+			this.CheckSchema (entityIdsToCheck1, false);
+			this.CheckSchema (entityIdsToCheck2, false);
+
+			this.UpdateSchema (entityIdsToRegister1);
+
+			this.CheckSchema (entityIdsToCheck1, true);
+			this.CheckSchema (entityIdsToCheck2, true);
+
+			this.UpdateSchema (entityIdsToRegister2);
+
+			this.CheckSchema (entityIdsToCheck1, false);
+			this.CheckSchema (entityIdsToCheck2, true);
 		}
 
 
@@ -181,9 +321,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				var builder = new SchemaBuilder (dbInfrastructure);
 
-				ExceptionAssert.Throw<System.ArgumentException>
+				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => builder.RegisterSchema (Druid.Empty)
+					() => builder.RegisterSchema (null)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void UpdateSchemaArgumentCheck()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				var builder = new SchemaBuilder (dbInfrastructure);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => builder.UpdateSchema (null)
 				);
 			}
 		}
@@ -196,13 +351,46 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				var builder = new SchemaBuilder (dbInfrastructure);
 
-				ExceptionAssert.Throw<System.ArgumentException>
+				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => builder.CheckSchema (Druid.Empty)
+					() => builder.CheckSchema (null)
 				);
 			}
 		}
 
+
+		private void RegisterSchema(List<Druid> entityIdsToRegister)
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+				builder.RegisterSchema (entityIdsToRegister);
+			}
+		}
+
+
+		private void UpdateSchema(List<Druid> entityIdsToRegister)
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+				builder.UpdateSchema (entityIdsToRegister);
+			}
+		}
+
+
+		private void CheckSchema(List<Druid> entityIdsToCheck, bool isRegistered)
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+
+				Assert.AreEqual (isRegistered, builder.CheckSchema (entityIdsToCheck));
+			}
+		}
+            
 
 	}
 
