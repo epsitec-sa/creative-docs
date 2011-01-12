@@ -32,8 +32,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.businessContext = this.application.Data.CreateBusinessContext ();
 
-			//?this.financeSettingsEntity = Logic.Current.FinanceSettings;  // TODO: Logic.Current est null !
+			//?this. = Logic.Current.FinanceSettings;  // TODO: Logic.Current est null !
 			this.financeSettingsEntity = this.application.FinanceSettings;
+
+			if (this.financeSettingsEntity == null)
+			{
+				this.financeSettingsEntity = this.businessContext.CreateEntity<FinanceSettingsEntity> ();
+			}
 		}
 
 
@@ -151,6 +156,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateWidgets()
 		{
+			int sel = this.table.SelectedRow;
+
+			this.removeButton.Enable = (sel != -1);
 		}
 
 
@@ -159,7 +167,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Met à jour le contenu de la table.
 			this.ignoreChange = true;
 
-			int rows = (this.financeSettingsEntity == null) ? 0 : this.financeSettingsEntity.GetChartsOfAccounts ().Count;
+			int rows = this.financeSettingsEntity.GetChartsOfAccounts ().Count;
 			this.table.SetArraySize (4, rows);
 
 			if (sel == null)
@@ -270,9 +278,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			if (!string.IsNullOrEmpty (filename))
 			{
 				CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
-				this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
 
-				this.UpdateTable ();
+				string err = this.CheckChart (chart);
+
+				if (string.IsNullOrEmpty (err))  // ok ?
+				{
+					this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
+
+					this.UpdateTable ();
+					this.UpdateWidgets ();
+				}
+				else  // erreur ?
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
+				}
 			}
 		}
 
@@ -303,6 +322,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.initialDirectory = dialog.InitialDirectory;
 
 			return dialog.FileName;
+		}
+
+		private string CheckChart(CresusChartOfAccounts chart)
+		{
+			foreach (var c in this.financeSettingsEntity.GetChartsOfAccounts ())
+			{
+				if (chart.BeginDate < c.EndDate && chart.EndDate > c.BeginDate)
+				{
+					return string.Format ("Il y a déjà un plan comptable couvrant la période du {0} au {1}.", chart.BeginDate.ToString (), chart.EndDate.ToString ());
+				}
+			}
+
+			return null;  // ok
 		}
 
 
