@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 		}
 
+		public virtual void RejectChangings()
+		{
+		}
+
 		public virtual void CreateUI(Widget parent)
 		{
 		}

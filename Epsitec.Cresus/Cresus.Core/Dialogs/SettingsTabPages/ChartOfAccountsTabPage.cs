@@ -45,7 +45,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public override void AcceptChangings()
 		{
 			this.businessContext.SaveChanges ();
+			this.businessContext.Dispose ();
 		}
+
+		public override void RejectChangings()
+		{
+			this.businessContext.Discard ();
+			this.businessContext.Dispose ();
+		}
+
 
 		public override void CreateUI(Widget parent)
 		{
@@ -120,18 +128,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.table = new CellTable
 				{
 					Parent = tile,
-					StyleH = CellArrayStyles.Separator,
+					StyleH = CellArrayStyles.Separator | CellArrayStyles.Header,
 					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 					Margins = new Margins (2),
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
-
-				this.table.SetArraySize (4, 0);
-				this.table.SetWidthColumn (0, 160);
-				this.table.SetWidthColumn (1, 70);
-				this.table.SetWidthColumn (2, 70);
-				this.table.SetWidthColumn (3, 90);
 			}
 
 			new StaticText
@@ -177,6 +179,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int rows = this.financeSettingsEntity.GetChartsOfAccounts ().Count;
 			this.table.SetArraySize (4, rows);
+
+			this.table.SetWidthColumn (0, 160);
+			this.table.SetWidthColumn (1, 70);
+			this.table.SetWidthColumn (2, 70);
+			this.table.SetWidthColumn (3, 90);
+
+			this.table.SetHeaderTextH (0, "Nom");
+			this.table.SetHeaderTextH (1, "Du");
+			this.table.SetHeaderTextH (2, "Au");
+			this.table.SetHeaderTextH (3, "Nb de comptes");
 
 			if (sel == null)
 			{
@@ -243,7 +255,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					ContentAlignment = ContentAlignment.MiddleRight,
 					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 0, 0),
+					Margins = new Margins (4, 8, 0, 0),
 				};
 
 				this.table[3, row].Insert (text);
@@ -272,7 +284,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			{
 				var text = this.table[3, row].Children[0] as StaticText;
-				text.FormattedText = TextFormatter.FormatText (chartOfAccount.Items.Count.ToString (), "comptes");
+				text.FormattedText = chartOfAccount.Items.Count.ToString ();
 			}
 
 			this.table.SelectRow (row, false);
