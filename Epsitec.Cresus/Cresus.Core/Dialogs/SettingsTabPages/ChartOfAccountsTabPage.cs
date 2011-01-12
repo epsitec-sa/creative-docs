@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
 
-					this.UpdateTable ();
+					this.UpdateTable (this.financeSettingsEntity.GetChartsOfAccounts ().Count-1);
 					this.UpdateWidgets ();
 				}
 				else  // erreur ?
@@ -297,6 +297,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void RemoveAction()
 		{
+			int sel = this.table.SelectedRow;
+
+			var charts = this.financeSettingsEntity.GetChartsOfAccounts ();
+
+			if (sel >= 0 && sel < charts.Count)
+			{
+				this.financeSettingsEntity.RemoveChartOfAccounts (this.businessContext, charts[sel]);
+
+				this.UpdateTable ();
+				this.UpdateWidgets ();
+			}
 		}
 
 
