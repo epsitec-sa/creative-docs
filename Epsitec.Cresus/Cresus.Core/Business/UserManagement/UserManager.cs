@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -229,10 +229,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The user or <c>null</c>.</returns>
 		public SoftwareUserEntity FindActiveUser()
 		{
-			var users = this.GetActiveUsers ();
+			var users = this.GetActiveUsers ().Where (user => user.Disabled == false && user.AuthenticationMethod == UserAuthenticationMethod.System);
 			var login = System.Environment.UserName;
 
-			return users.FirstOrDefault (user => user.LoginName == login && user.AuthenticationMethod == UserAuthenticationMethod.System && user.Disabled == false);
+			return users.FirstOrDefault (user => string.Equals (user.LoginName, login, System.StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		/// <summary>
