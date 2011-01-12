@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.addButton = new GlyphButton
 				{
-					Parent = toolbar,
+					Parent = this.toolbar,
 					PreferredSize = new Size (buttonSize*2+1, buttonSize),
 					GlyphShape = GlyphShape.Plus,
 					Margins = new Margins (0, 0, 0, 0),
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.removeButton = new GlyphButton
 				{
-					Parent = toolbar,
+					Parent = this.toolbar,
 					PreferredSize = new Size (buttonSize, buttonSize),
 					GlyphShape = GlyphShape.Minus,
 					Margins = new Margins (1, 0, 0, 0),

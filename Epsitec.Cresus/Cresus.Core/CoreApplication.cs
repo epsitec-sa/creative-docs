@@ -64,20 +64,33 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public BusinessSettingsEntity			BusinessSettings
+		public BusinessSettingsEntity BusinessSettings
 		{
 			get
 			{
 				if (this.businessSettings == null)
 				{
-					this.businessSettings = this.data.GetAllEntities<BusinessSettingsEntity> ().First ();
+					this.businessSettings = this.data.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ();
 				}
 
 				return this.businessSettings;
 			}
 		}
 
-		public IExceptionManager				ExceptionManager
+		public FinanceSettingsEntity FinanceSettings
+		{
+			get
+			{
+				if (this.financeSettings == null)
+				{
+					this.financeSettings = this.data.GetAllEntities<FinanceSettingsEntity> ().FirstOrDefault ();
+				}
+
+				return this.financeSettings;
+			}
+		}
+
+		public IExceptionManager ExceptionManager
 		{
 			get
 			{
@@ -509,6 +522,7 @@ namespace Epsitec.Cresus.Core
 		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
 		private BusinessSettingsEntity					businessSettings;
+		private FinanceSettingsEntity					financeSettings;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }
