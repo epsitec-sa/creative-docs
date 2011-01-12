@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// <summary>
 	/// Onglet de SettingsDialog pour choisir les unités d'impression à utiliser.
 	/// </summary>
-	public class PrinterUnitListTabPage : AbstractSettingsTabPage
+	public class PrinterUnitsTabPage : AbstractSettingsTabPage
 	{
-		public PrinterUnitListTabPage(CoreApplication application)
+		public PrinterUnitsTabPage(CoreApplication application)
 			: base (application)
 		{
 			this.optionButtons = new List<CheckButton> ();
@@ -252,8 +252,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.xOffsetField = PrinterUnitListTabPage.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
-				this.yOffsetField = PrinterUnitListTabPage.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
+				this.xOffsetField = PrinterUnitsTabPage.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
+				this.yOffsetField = PrinterUnitsTabPage.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
 			}
 
 			{
@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.copiesField = PrinterUnitListTabPage.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
+				this.copiesField = PrinterUnitsTabPage.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
 			}
 
 			//	Rempli le panneau de droite.
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.commentField.Text   = printerUnit.Comment;
 				this.physicalField.Text  = printerUnit.PhysicalPrinterName;
 				this.trayField.Text      = printerUnit.PhysicalPrinterTray;
-				this.paperSizeField.Text = PrinterUnitListTabPage.PaperSizeToNiceDescription (printerUnit.PhysicalPaperSize);
+				this.paperSizeField.Text = PrinterUnitsTabPage.PaperSizeToNiceDescription (printerUnit.PhysicalPaperSize);
 				this.duplexField.Text    = PrinterUnit.DuplexToDescription (printerUnit.PhysicalDuplexMode);
 				this.xOffsetField.Text   = printerUnit.XOffset.ToString ();
 				this.yOffsetField.Text   = printerUnit.YOffset.ToString ();
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdateTrayField()
 		{
 			PrinterUnit printerUnit = this.SelectedPrinter;
-			List<string> trayNames = PrinterUnitListTabPage.GetTrayList(printerUnit);
+			List<string> trayNames = PrinterUnitsTabPage.GetTrayList(printerUnit);
 
 			this.trayField.Items.Clear ();
 			foreach (var trayName in trayNames)
@@ -550,12 +550,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdatePaperSizeField()
 		{
 			PrinterUnit printerUnit = this.SelectedPrinter;
-			List<PaperSize> paperSizes = PrinterUnitListTabPage.GetPaperSizeList (printerUnit);
+			List<PaperSize> paperSizes = PrinterUnitsTabPage.GetPaperSizeList (printerUnit);
 
 			this.paperSizeField.Items.Clear ();
 			foreach (var paperSize in paperSizes)
 			{
-				string name = PrinterUnitListTabPage.PaperSizeToNiceDescription (paperSize.Size);
+				string name = PrinterUnitsTabPage.PaperSizeToNiceDescription (paperSize.Size);
 
 				if (!string.IsNullOrWhiteSpace (name) && !this.paperSizeField.Items.Contains (name))
 				{
@@ -573,7 +573,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			PrinterUnit printerUnit = this.SelectedPrinter;
 
-			if (PrinterUnitListTabPage.CanDuplex (printerUnit))
+			if (PrinterUnitsTabPage.CanDuplex (printerUnit))
 			{
 				this.duplexLabel.Enable = true;
 				this.duplexField.Enable = true;
@@ -766,7 +766,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			int sel = this.listController.SelectedIndex;
 
-			var paperSize = PrinterUnitListTabPage.NiceDescriptionToPaperSize (this.paperSizeField.Text);
+			var paperSize = PrinterUnitsTabPage.NiceDescriptionToPaperSize (this.paperSizeField.Text);
 
 			if (this.printerUnitList[sel].PhysicalPaperSize != paperSize)
 			{
@@ -881,7 +881,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 			}
 
-			paperSizes.Sort (PrinterUnitListTabPage.ComparePaperSize);
+			paperSizes.Sort (PrinterUnitsTabPage.ComparePaperSize);
 
 			return paperSizes;
 		}
@@ -950,7 +950,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].PhysicalPrinterTray))
 				{
-					List<string> trayNames = PrinterUnitListTabPage.GetTrayList(this.printerUnitList[i]);
+					List<string> trayNames = PrinterUnitsTabPage.GetTrayList(this.printerUnitList[i]);
 					if (trayNames.Count > 0)
 					{
 						return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerUnitList[i].LogicalName);
@@ -1057,9 +1057,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				double width  = paperSize.Width;
 				double height = paperSize.Height;
-				PrinterUnitListTabPage.PaperSizeRounding (ref width, ref height);
+				PrinterUnitsTabPage.PaperSizeRounding (ref width, ref height);
 
-				string description = PrinterUnitListTabPage.PaperSizeToDescription (paperSize);
+				string description = PrinterUnitsTabPage.PaperSizeToDescription (paperSize);
 
 				if (description != null)
 				{
@@ -1075,7 +1075,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Retourne le nom de quelques formats très courants.
 			double width  = paperSize.Width;
 			double height = paperSize.Height;
-			PrinterUnitListTabPage.PaperSizeRounding (ref width, ref height);
+			PrinterUnitsTabPage.PaperSizeRounding (ref width, ref height);
 
 			if (width == 297 && height == 420)
 			{
