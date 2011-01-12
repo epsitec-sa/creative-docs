@@ -1,6 +1,8 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business.Accounting;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.Core.Repositories;
@@ -17,8 +19,15 @@ namespace Epsitec.Cresus.Core.Entities
 		public IList<CresusChartOfAccounts> GetChartsOfAccounts()
 		{
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
-			
+
 			return this.chartsOfAccounts.AsReadOnly ();
+		}
+
+		public CresusChartOfAccounts GetChartOfAccounts(Date date)
+		{
+			this.EnsureThatChartsOfAccountsAreDeserialized ();
+
+			return this.GetChartsOfAccounts ().Where (chart => date >= chart.BeginDate && date <= chart.EndDate).FirstOrDefault ();
 		}
 
 		public void AddChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
