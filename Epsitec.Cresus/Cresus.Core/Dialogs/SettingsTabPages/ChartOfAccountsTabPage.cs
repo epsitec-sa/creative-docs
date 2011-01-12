@@ -299,9 +299,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void AddAction()
 		{
-			string filename = this.OpenFileDialog (this.application);
+			string[] filenames = this.OpenFileDialog (this.application);
 
-			if (!string.IsNullOrEmpty (filename))
+			foreach (var filename in filenames)
 			{
 				CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
 
@@ -317,6 +317,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				else  // erreur ?
 				{
 					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
+					break;
 				}
 			}
 		}
@@ -335,18 +336,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private string OpenFileDialog(CoreApplication application)
+		private string[] OpenFileDialog(CoreApplication application)
 		{
 			var dialog = new FileOpenDialog ();
 
 			dialog.Title = "Importation d'un plan comptable \"CRP\"";
 			dialog.InitialDirectory = this.initialDirectory;
-			//?dialog.FileName = "";
 
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
-			dialog.AcceptMultipleSelection = false;
+			dialog.AcceptMultipleSelection = true;
 			dialog.Owner = application.Window;
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.initialDirectory = dialog.InitialDirectory;
 
-			return dialog.FileName;
+			return dialog.FileNames;
 		}
 
 		private string CheckChart(CresusChartOfAccounts chart)
