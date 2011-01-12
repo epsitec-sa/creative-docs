@@ -9,7 +9,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
+using System.IO;
+
 using System.Linq;
+
+using System.Xml;
 
 
 
@@ -452,6 +456,51 @@ namespace Epsitec.Cresus.Database.UnitTests
 				dbInfrastructure2.ClearCaches ();
 
 				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure1, tables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void NewTableWithCopyOfExistingTypeTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef[] typesCopy =  dbInfrastructure1.FindBuiltInDbTypes ()
+					.Take (2)
+					.Select (t =>
+					{
+						using (StringWriter stringWriter = new StringWriter ())
+						{
+							XmlTextWriter xmlTextWriter = new XmlTextWriter (stringWriter);
+							t.Serialize (xmlTextWriter);
+							
+							using (StringReader stringReader = new StringReader (stringWriter.ToString ()))
+							{
+								XmlTextReader xmlTextReader = new XmlTextReader (stringReader);
+								xmlTextReader.Read ();
+
+								DbTypeDef type = DbTypeDef.Deserialize (xmlTextReader);
+								type.DefineKey (DbKey.Empty);
+
+								return type;
+							}
+						}					
+					})
+					.ToArray ();
+
+				DbTable table = this.BuildNewTableWithGivenTypes (2, typesCopy);
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
 				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
 			}
 
