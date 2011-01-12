@@ -130,11 +130,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Rempli les onglets.
-			var printerSettings = new SettingsTabPages.PrinterUnitListTabPage (this.application);
+			var printerSettings = new SettingsTabPages.PrinterUnitsTabPage (this.application);
 			printerSettings.CreateUI (printerPage);
-			printerSettings.AcceptStateChanging += new EventHandler (this.HandlePrinterSettingsAcceptStateChanging);
-
 			this.settingsTabPages.Add (printerSettings);
+
+			var accountSettings = new SettingsTabPages.ChartOfAccountsTabPage (this.application);
+			accountSettings.CreateUI (accountPage);
+			this.settingsTabPages.Add (accountSettings);
+
+			foreach (var tab in this.settingsTabPages)
+			{
+				tab.AcceptStateChanging += new EventHandler (this.HandlerSettingsAcceptStateChanging);
+			}
 
 			//	Connection des événements.
 			this.acceptButton.Clicked += delegate
@@ -156,7 +163,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		}
 
-		private void HandlePrinterSettingsAcceptStateChanging(object sender)
+		private void HandlerSettingsAcceptStateChanging(object sender)
 		{
 			//	Si l'un des onglets contient une erreur, on l'affiche et le bouton 'accept' est grisé.
 			string errorMessage = null;
