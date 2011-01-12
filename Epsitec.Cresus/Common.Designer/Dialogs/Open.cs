@@ -45,11 +45,33 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				StaticText label = new StaticText(this.window.Root);
-				label.Text = Res.Strings.Dialog.Open.Label;
-				label.ContentAlignment = ContentAlignment.MiddleLeft;
-				label.Dock = DockStyle.Top;
-				label.Margins = new Margins(0, 0, 0, 6);
+				FrameBox topFrame = new FrameBox
+				{
+					Parent = this.window.Root,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 6),
+					TabIndex = 1,
+					TabNavigationMode = TabNavigationMode.ForwardTabPassive,
+				};
+
+				StaticText label = new StaticText
+				{
+					Parent = topFrame,
+					Dock = DockStyle.Left,
+					PreferredWidth = 240,
+					Text = Res.Strings.Dialog.Open.Label,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+				};
+
+				this.filterTextField = new TextField
+				{
+					Parent = topFrame,
+					Dock = DockStyle.Fill,
+					TabIndex = 1,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
+
+				this.filterTextField.TextChanged += this.HandlerFilterTextChanged;
 
 				//	Tableau principal.
 				StructuredType st = new StructuredType();
@@ -84,6 +106,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelectAndDeselect;
 				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+				this.table.TabIndex = 2;
+				this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.table.Dock = Widgets.DockStyle.Fill;
 				
 				//	Boutons de fermeture.
@@ -91,6 +115,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.PreferredHeight = 22;
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
+				footer.TabIndex = 3;
+				footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 				this.checkOpened = new CheckButton(footer);
 				this.checkOpened.AutoToggle = false;
@@ -132,11 +158,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
+			this.filterTextField.Text = "";
+
 			this.UpdateModules(true);
 			this.moduleInfosShowed.MoveCurrentToPosition(-1);
 			this.UpdateButtons();
 
+			this.window.Root.SetFocusOnTabWidget ();
 			this.window.ShowDialog();
+		}
+
+		private void HandlerFilterTextChanged(object sender)
+		{
+			string filter = Open.GetComparableText (this.filterTextField.FormattedText.ToSimpleText ());
+
+			this.filterPredicate = moduleInfo => string.IsNullOrWhiteSpace (filter) || Open.GetComparableText (this.GetModulePath (moduleInfo)).Contains (filter);
+			this.UpdateModules (false);
+		}
+
+		private static string GetComparableText(string text)
+		{
+			return text.ToLowerInvariant ().Replace ('\\', '/');
 		}
 
 
@@ -169,34 +211,41 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour la liste des modules ouvrables/ouverts/bloqués.
 			if (scan)
 			{
-				this.designerApplication.ResourceManagerPool.ScanForAllModules();
-				this.moduleInfosAll = Collection.ToList(this.designerApplication.ResourceManagerPool.Modules);
+				this.designerApplication.ResourceManagerPool.ScanForAllModules ();
+				this.moduleInfosAll = Collection.ToList (this.designerApplication.ResourceManagerPool.Modules);
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
-			using (this.moduleInfosShowed.DeferRefresh())
+			using (this.moduleInfosShowed.DeferRefresh ())
 			{
-				this.moduleInfosLive.Clear();
+				this.moduleInfosLive.Clear ();
 				for (int i=0; i<this.moduleInfosAll.Count; i++)
 				{
-					ModuleState state = this.GetModuleState(this.moduleInfosAll[i]);
+					ResourceModuleInfo moduleInfo = this.moduleInfosAll[i];
+					ModuleState state = this.GetModuleState (moduleInfo);
+
+					if ((this.filterPredicate != null) &&
+						(this.filterPredicate (moduleInfo) == false))
+					{
+						continue;
+					}
 
 					if (state == ModuleState.Openable)
 					{
-						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add (moduleInfo);
 					}
 					else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
 					{
-						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add (moduleInfo);
 					}
 					else if (state == ModuleState.Locked && this.showLocked)
 					{
-						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add (moduleInfo);
 					}
 				}
 
 				//	Trie la liste des modules visibles.
-				this.moduleInfosLive.Sort(new Comparers.ResourceModuleInfoToOpen());
+				this.moduleInfosLive.Sort (new Comparers.ResourceModuleInfoToOpen ());
 			}
 		}
 
@@ -374,16 +423,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Retourne le nom du chemin d'un module.
 			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
-			string path = pool.GetRootRelativePath(info.FullId.Path);
-
-#if false
-			if (path.StartsWith("%app%\\"))
-			{
-				path = path.Substring(6);
-			}
-#endif
-
-			return path;
+			return pool.GetRootRelativePath(info.FullId.Path);
 		}
 
 		protected ModuleState GetModuleState(ResourceModuleInfo info)
@@ -547,5 +587,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							showOpened;
 		protected bool							showLocked;
 		protected bool							ignoreChange;
+
+		private TextField						filterTextField;
+		private System.Predicate<ResourceModuleInfo> filterPredicate;
 	}
 }
