@@ -3,6 +3,7 @@
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -64,12 +65,14 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public XElement SerializeToXml(string xmlNodeName)
 		{
+			var dateConverter = new DateConverter();
+
 			var xml = new XElement (xmlNodeName);
 
 			xml.Add (new XAttribute ("title",     this.Title.ToSimpleText ()));
 			xml.Add (new XAttribute ("path",      this.Path.ToString ()));
-			xml.Add (new XAttribute ("beginDate", this.BeginDate.ToDateTime ().ToString (System.Globalization.CultureInfo.InvariantCulture)));
-			xml.Add (new XAttribute ("endDate",   this.EndDate  .ToDateTime ().ToString (System.Globalization.CultureInfo.InvariantCulture)));
+			xml.Add (new XAttribute ("beginDate", dateConverter.ConvertToString (this.BeginDate)));
+			xml.Add (new XAttribute ("endDate",   dateConverter.ConvertToString (this.EndDate)));
 			xml.Add (new XAttribute ("id",        this.Id.ToString ()));
 
 			foreach (var item in this.items)
@@ -82,6 +85,8 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public static CresusChartOfAccounts DeserializeFromXml(XElement xml)
 		{
+			var dateConverter = new DateConverter ();
+
 			var chartOfAccounts = new CresusChartOfAccounts ();
 
 			string title      = (string) xml.Attribute ("title");
@@ -92,8 +97,8 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 			chartOfAccounts.Title     = FormattedText.FromSimpleText (title);
 			chartOfAccounts.Path      = MachineFilePath.Parse (path);
-			chartOfAccounts.BeginDate = new Date (System.DateTime.Parse (beginDate));
-			chartOfAccounts.EndDate   = new Date (System.DateTime.Parse (endDate));
+			chartOfAccounts.BeginDate = dateConverter.ConvertFromString (beginDate).Value;
+			chartOfAccounts.EndDate   = dateConverter.ConvertFromString (endDate).Value;
 			chartOfAccounts.Id        = new System.Guid (id);
 
 			foreach (XElement element in xml.Elements ("account"))

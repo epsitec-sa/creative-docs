@@ -16,19 +16,34 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				using (var stream = new System.IO.MemoryStream (this.Data))
+				string content = XmlBlobEntity.ByteArrayToString (this.Data);
+
+				try
 				{
-					return XElement.Load (stream);
+					return XElement.Parse (content);
+				}
+				catch
+				{
+					return null;
 				}
 			}
 			set
 			{
-				using (var stream = new System.IO.MemoryStream ())
-				{
-					value.Save (stream);
-					this.Data = stream.GetBuffer ();
-				}
+				string content = value.ToString ();
+				this.Data = XmlBlobEntity.StringToByteArray (content);
 			}
+		}
+
+		private static byte[] StringToByteArray(string str)
+		{
+			System.Text.UTF8Encoding  encoding = new System.Text.UTF8Encoding ();
+			return encoding.GetBytes (str);
+		}
+
+		private static string ByteArrayToString(byte[] data)
+		{
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			return encoding.GetString (data);
 		}
 	}
 }
