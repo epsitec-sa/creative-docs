@@ -121,7 +121,9 @@
   <ItemGroup>
     <Reference Include="AntiGrain.NET">
       <Name>AntiGrain.NET</Name>
-      <HintPath>..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">..\External\DotNet35\AntiGrain.NET.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
