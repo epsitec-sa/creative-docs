@@ -157,6 +157,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.cancelButton.Clicked += delegate
 			{
+				foreach (var tab in this.settingsTabPages)
+				{
+					tab.RejectChangings ();
+				}
+
 				this.Result = DialogResult.Cancel;
 				this.CloseDialog ();
 			};
