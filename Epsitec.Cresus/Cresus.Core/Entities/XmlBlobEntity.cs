@@ -36,13 +36,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static byte[] StringToByteArray(string str)
 		{
-			System.Text.UnicodeEncoding  encoding = new System.Text.UnicodeEncoding ();
+			var encoding = new System.Text.UTF8Encoding ();
 			return encoding.GetBytes (str);
 		}
 
 		private static string ByteArrayToString(byte[] data)
 		{
-			System.Text.UnicodeEncoding encoding = new System.Text.UnicodeEncoding ();
+			var encoding = new System.Text.UTF8Encoding ();
 			return encoding.GetString (data);
 		}
 	}
