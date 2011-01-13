@@ -702,7 +702,10 @@ namespace Epsitec.Cresus.Core
 		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
 		{
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
-			//	selon le plan comptable en cours (qui peut ne pas exister).
+			//	selon le plan comptable en cours. Si le plan comptable n'existe pas, on crée
+			//	une ligne éditable toute simple.
+
+			//	Cherche le plan comptable en cours.
 			var financeSettings = CoreProgram.Application.FinanceSettings;
 			Business.Accounting.CresusChartOfAccounts chart = null;
 
@@ -711,10 +714,9 @@ namespace Epsitec.Cresus.Core
 				chart = financeSettings.GetRecentChartOfAccounts (businessContext);
 			}
 
-			if (chart == null)
+			if (chart == null)  // aucun plan comptable trouvé ?
 			{
-				//	S'il n'existe pas de plan comptable défini, utilise une ligne éditable toute simple.
-				return this.CreateTextField (tile, 150, label, marshaler);
+				return this.CreateTextField (tile, 150, label, marshaler);  // crée une simple ligne éditable
 			}
 
 			if (!string.IsNullOrEmpty (label))
@@ -780,11 +782,11 @@ namespace Epsitec.Cresus.Core
 			editor.HintComparer                = (value, text) => UIBuilder.MatchAccountText ((Business.Accounting.BookAccountDefinition) value, text);
 			editor.HintComparisonConverter     = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			UIBuilder.GetAccount (editor, marshaler);
+			UIBuilder.InitializeAccount (editor, marshaler);
 
 			editor.EditionAccepted += delegate
 			{
-				UIBuilder.SetAccount (editor, marshaler);
+				UIBuilder.UpdateAccount (editor, marshaler);
 			};
 
 			menuButton.Clicked += delegate
@@ -815,10 +817,10 @@ namespace Epsitec.Cresus.Core
 			return AutoCompleteTextField.Compare (itemText, userText);
 		}
 
-		private static void GetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		private static void InitializeAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
 		{
 			//	Initialise le texte complet du widget, en fonction du numéro de compte stocké dans le champ de l'entité.
-			string value = marshaler.GetStringValue();
+			FormattedText value = marshaler.GetStringValue();
 
 			foreach (var item in editor.Items)
 			{
@@ -826,17 +828,17 @@ namespace Epsitec.Cresus.Core
 
 				if (account.AccountNumber == value)
 				{
-					value = UIBuilder.GetAccountText (account).ToSimpleText ();
+					value = UIBuilder.GetAccountText (account);
 					break;
 				}
 			}
 
-			editor.Text = value;
+			editor.FormattedText = value;
 		}
 
-		private static void SetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		private static void UpdateAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
 		{
-			//	Initialise le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
+			//	Met à jour le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
 			Business.Accounting.BookAccountDefinition account = (Business.Accounting.BookAccountDefinition) editor.Items.GetValue (editor.SelectedItemIndex);
 			marshaler.SetStringValue (account.AccountNumber);
 		}
