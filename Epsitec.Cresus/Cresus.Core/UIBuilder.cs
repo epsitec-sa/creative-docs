@@ -697,10 +697,145 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public TextFieldEx CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
+
+		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
 		{
-			return this.CreateTextField (tile, 150, label, marshaler);
+			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
+			//	selon le plan comptable en cours.
+			var financeSettings = CoreProgram.Application.FinanceSettings;
+			Business.Accounting.CresusChartOfAccounts chart = null;
+
+			if (financeSettings != null)
+			{
+				chart = financeSettings.GetRecentChartOfAccounts (businessContext);
+			}
+
+			if (chart == null)
+			{
+				//	S'il n'existe pas de plan comptable défini, utilise une ligne éditable toute simple.
+				return this.CreateTextField (tile, 150, label, marshaler);
+			}
+
+			if (!string.IsNullOrEmpty (label))
+			{
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
+
+			var container = new FrameBox
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				TabIndex = ++this.tabIndex,
+			};
+
+			var editor = new Widgets.AutoCompleteTextField
+			{
+				Parent = container,
+				IsReadOnly = this.ReadOnly,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+				PreferredHeight = 20,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
+				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
+				ComboMenuReasonableItemsLimit = 100,
+				TabIndex = ++this.tabIndex,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+			};
+
+			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
+			var menuButton = new GlyphButton
+			{
+				Parent = container,
+				Enable = !this.ReadOnly,
+				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+				GlyphShape = GlyphShape.Menu,
+				PreferredWidth = UIBuilder.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (-1, 0, 0, 0),
+				AutoFocus = false,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (container);
+
+			foreach (var account in chart.Items)
+			{
+				editor.Items.Add (account);
+			}
+
+			editor.ValueToDescriptionConverter = value => UIBuilder.GetAccountText ((Business.Accounting.BookAccountDefinition) value);
+			editor.HintComparer                = (value, text) => UIBuilder.MatchAccountText ((Business.Accounting.BookAccountDefinition) value, text);
+			editor.HintComparisonConverter     = x => TextConverter.ConvertToLowerAndStripAccents (x);
+
+			UIBuilder.GetAccount (editor, marshaler);
+
+			editor.EditionAccepted += delegate
+			{
+				UIBuilder.SetAccount (editor, marshaler);
+			};
+
+			menuButton.Clicked += delegate
+			{
+				editor.SelectAll ();
+				editor.Focus ();
+				editor.OpenComboMenu ();
+			};
+
+			return editor;
 		}
+
+		private static FormattedText GetAccountText(Business.Accounting.BookAccountDefinition account)
+		{
+			return TextFormatter.FormatText (account.AccountNumber, account.Caption);
+		}
+
+		private static HintComparerResult MatchAccountText(Business.Accounting.BookAccountDefinition account, string userText)
+		{
+			if (string.IsNullOrWhiteSpace (userText))
+			{
+				return Widgets.HintComparerResult.NoMatch;
+			}
+
+			var itemText = TextConverter.ConvertToLowerAndStripAccents (UIBuilder.GetAccountText (account).ToSimpleText ());
+			return AutoCompleteTextField.Compare (itemText, userText);
+		}
+
+		private static void GetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		{
+			string value = marshaler.GetStringValue();
+
+			foreach (var item in editor.Items)
+			{
+				var account = (Business.Accounting.BookAccountDefinition) item;
+
+				if (account.AccountNumber == value)
+				{
+					value = UIBuilder.GetAccountText (account).ToSimpleText ();
+					break;
+				}
+			}
+
+			editor.Text = value;
+		}
+
+		private static void SetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		{
+			Business.Accounting.BookAccountDefinition account = (Business.Accounting.BookAccountDefinition) editor.Items.GetValue (editor.SelectedItemIndex);
+			marshaler.SetStringValue (account.AccountNumber);
+		}
+
 
 		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
 		{
