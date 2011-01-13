@@ -141,8 +141,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
 
-			builder.CreateMargin    (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateAccountEditor (tile, "Compte débiteur (comptabilité)", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x), this.BusinessContext);
 		}
 
 		private static string GetOfferTileName(int index)
