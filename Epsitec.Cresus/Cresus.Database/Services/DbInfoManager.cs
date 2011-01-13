@@ -44,12 +44,9 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbColumn[] columns = new DbColumn[]
 		    {
-		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-		        {
-		            IsAutoIncremented = true,
-		        },
-		        new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-		        new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
+		        new DbColumn(Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal),
+		        new DbColumn(Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal),
 		    };
 
 			table.DefineCategory (DbElementCat.Internal);
@@ -57,7 +54,6 @@ namespace Epsitec.Cresus.Database.Services
 			table.DefinePrimaryKey (columns[0]);
 
 			table.UpdatePrimaryKeyInfo ();
-			table.UpdateRevisionMode ();
 
 			return table;
 		}

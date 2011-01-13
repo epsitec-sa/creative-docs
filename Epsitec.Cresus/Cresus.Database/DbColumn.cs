@@ -92,33 +92,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="type">The type.</param>
-		/// <param name="columnClass">The column class.</param>
-		/// <param name="category">The category.</param>
-		/// <param name="revisionMode">The revision mode.</param>
-		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbRevisionMode revisionMode)
-			: this (name, type, columnClass, category)
-		{
-			this.DefineRevisionMode (revisionMode);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// Initializes a new instance of the <see cref="DbColumn"></see> class.
 		/// </summary>
 		/// <param name="captionId">The caption id.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="columnClass">The column class.</param>
 		/// <param name="category">The category.</param>
-		/// <param name="revisionMode">The revision mode.</param>
-		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbRevisionMode revisionMode)
+		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
 			: this (captionId, type)
 		{
 			this.DefineColumnClass (columnClass);
 			this.DefineCategory (category);
-			this.DefineRevisionMode (revisionMode);
 		}
 
 		
@@ -314,18 +298,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Gets the revision mode for the column.
-		/// </summary>
-		/// <value>The revision mode.</value>
-		public DbRevisionMode					RevisionMode
-		{
-			get
-			{
-				return this.revisionMode;
-			}
-		}
-
 
 		/// <summary>
 		/// Gets a value indicating whether this column is a primary key.
@@ -486,28 +458,6 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category", this.Name));
-			}
-		}
-
-		/// <summary>
-		/// Defines the revision mode. A column revision mode may not be changed
-		/// after it has been defined.
-		/// </summary>
-		/// <param name="revisionMode">The revision mode.</param>
-		internal void DefineRevisionMode(DbRevisionMode revisionMode)
-		{
-			if (this.revisionMode == revisionMode)
-			{
-				return;
-			}
-
-			if (this.revisionMode == DbRevisionMode.Unknown)
-			{
-				this.revisionMode = revisionMode;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode", this.Name));
 			}
 		}
 
@@ -953,7 +903,6 @@ namespace Epsitec.Cresus.Database
 
 				column.captionId         = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
 				column.category          = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				column.revisionMode      = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				column.columnClass       = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
 				column.cardinality       = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
 				column.localization      = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
@@ -990,7 +939,6 @@ namespace Epsitec.Cresus.Database
 
 			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
-			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revisionMode == DbRevisionMode.Unknown ? DbRevisionMode.IgnoreChanges : this.revisionMode));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
 			DbTools.WriteAttribute (xmlWriter, "card", DbTools.CardinalityToString (this.Cardinality));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
@@ -1053,7 +1001,6 @@ namespace Epsitec.Cresus.Database
 		private long							autoIncrementStartIndex;
 		private string							comment;
 		private DbElementCat					category;
-		private DbRevisionMode					revisionMode;
 		private DbColumnClass					columnClass;
 		private DbColumnLocalization			localization;
 		private DbCardinality					cardinality;

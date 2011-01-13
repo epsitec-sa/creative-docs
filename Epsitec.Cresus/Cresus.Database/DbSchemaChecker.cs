@@ -103,8 +103,7 @@ namespace Epsitec.Cresus.Database
 			bool same = a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
 				&& string.Equals (a.Comment, b.Comment)
-				&& a.Category == b.Category
-				&& a.RevisionMode == b.RevisionMode;
+				&& a.Category == b.Category;
 
 			if (same && a.Category == DbElementCat.Relation)
 			{
@@ -233,7 +232,6 @@ namespace Epsitec.Cresus.Database
 				&& a.IsAutoIncremented == b.IsAutoIncremented
 				&& a.IsAutoTimeStampOnInsert == b.IsAutoTimeStampOnInsert
 				&& a.IsAutoTimeStampOnUpdate == b.IsAutoTimeStampOnUpdate
-				&& a.RevisionMode == b.RevisionMode
 				&& DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
 			);
 		}

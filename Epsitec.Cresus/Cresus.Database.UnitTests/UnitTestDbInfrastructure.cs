@@ -214,11 +214,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbType  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
-				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbColumn dbColumn = DbTable.CreateUserDataColumn ("Name", dbType, DbRevisionMode.TrackChanges);
+				DbTable dbTable = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, false);
+				DbColumn dbColumn = DbTable.CreateUserDataColumn ("Name", dbType);
 
 				dbTable.Columns.Add (dbColumn);
-				dbTable.UpdateRevisionMode ();
 
 				infrastructure.AddType (dbType);
 				infrastructure.AddTable (dbTable);
@@ -271,7 +270,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, false);
 
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				DbTypeDef dbTypeLevel = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
@@ -285,14 +284,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 				infrastructure.AddType (dbTypeData);
 				infrastructure.AddType (dbTypeGuid);
 
-				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", dbTypeName, DbRevisionMode.TrackChanges);
+				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", dbTypeName);
 				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", dbTypeLevel);
 				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", dbTypeType);
 				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", dbTypeData);
 				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid);
 
 				dbTable1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
-				dbTable1.UpdateRevisionMode ();
 				dbTable1.AddIndex (col1);
 				dbTable1.AddIndex (col2);
 
@@ -320,9 +318,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				DbTable dbTableRef = infrastructure.FindDbTables (DbElementCat.Any).First ();
 
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
 				relationColumn.DefineDisplayName ("column");
 
 				dbTable1.Columns.Add (relationColumn);
@@ -346,10 +344,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
 				dbTable1.Columns.Add (relationColumn);
 
 				ExceptionAssert.Throw<GenericException>
@@ -368,9 +366,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTypeDef dbType = new DbTypeDef ("type", DbSimpleType.String, null, 80, false, DbNullability.No);
-				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
-				DbColumn dbColumn = DbTable.CreateUserDataColumn ("column", dbType, DbRevisionMode.TrackChanges);
+				DbColumn dbColumn = DbTable.CreateUserDataColumn ("column", dbType);
 				dbTable.Columns.Add (dbColumn);
 
 				ExceptionAssert.Throw<GenericException>
@@ -388,14 +386,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbCardinality.Collection);
 				relationColumn1.DefineDisplayName ("column1");
 				dbTable2.Columns.Add (relationColumn1);
 
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
 				relationColumn2.DefineDisplayName ("column2");
 				dbTable1.Columns.Add (relationColumn2);
 
@@ -422,15 +420,15 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable3 = infrastructure.CreateDbTable ("table3", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
+				DbTable dbTable3 = infrastructure.CreateDbTable ("table3", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
 				relationColumn1.DefineDisplayName ("column1");
 				dbTable1.Columns.Add (relationColumn1);
 
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable3, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable3, DbCardinality.Collection);
 				relationColumn2.DefineDisplayName ("column2");
 				dbTable1.Columns.Add (relationColumn2);
 
@@ -452,10 +450,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				infrastructure.AddType (dbTypeName);
 				
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 				infrastructure.AddTable (dbTable1);
 
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 				
 				ExceptionAssert.Throw<Exceptions.GenericException>
 				(
@@ -472,7 +470,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 				infrastructure.AddTable (dbTable);
 			}
 
@@ -494,14 +492,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbCardinality.Collection);
 				relationColumn1.DefineDisplayName ("column1");
 				dbTable2.Columns.Add (relationColumn1);
 
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
 				relationColumn2.DefineDisplayName ("column2");
 				dbTable1.Columns.Add (relationColumn2);
 
@@ -523,7 +521,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				ExceptionAssert.Throw<Exceptions.GenericException>
 				(
@@ -540,13 +538,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table1);
 
-				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
-				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
 				infrastructure.AddColumnToTable (table1, column1);
 				table2.Columns.Add (column2);
@@ -565,18 +563,18 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (dbTable1);
 
-				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
 				relationColumn1.DefineDisplayName ("column");
 				dbTable1.Columns.Add (relationColumn1);
 
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
 				relationColumn2.DefineDisplayName ("column");
 				dbTable2.Columns.Add (relationColumn2);
 
@@ -599,12 +597,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 				
 				infrastructure.AddTable (table);
 
-				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
-				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				
 				infrastructure.AddColumnToTable (table, column1);
 
@@ -623,11 +621,11 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table);
 
-				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				column.DefinePrimaryKey (true);
 
 				ExceptionAssert.Throw<GenericException>
@@ -645,14 +643,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table);
 
-				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				column1.DefineColumnClass (DbColumnClass.KeyId);
 
-				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column2 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				column2.DefineColumnClass (DbColumnClass.KeyId);
 
 				ExceptionAssert.Throw<GenericException>
@@ -675,10 +673,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
-				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				table1.Columns.Add (column1);
 
 				infrastructure.AddTable (table1);
@@ -699,12 +697,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
-				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, false);
 
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbRevisionMode.Immutable, DbCardinality.Collection);
+				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
 				relationColumn1.DefineDisplayName ("column");
 				dbTable1.Columns.Add (relationColumn1);
 
@@ -728,11 +726,11 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table);
 
-				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 				
 				ExceptionAssert.Throw<GenericException>
 				(
@@ -749,7 +747,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table);
 
@@ -768,7 +766,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
 				infrastructure.AddTable (table);
 
@@ -792,8 +790,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, false);
-				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
 				table.Columns.Add (column);
 				table.Indexes.Add (new DbIndex (SqlSortOrder.Ascending, column));
