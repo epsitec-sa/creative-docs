@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Crée les onglets.
-			var tabBook = new TabBook
+			this.tabBook = new TabBook
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
@@ -96,9 +96,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Name = "account",
 			};
 
-			tabBook.Items.Add (printerPage);
-			tabBook.Items.Add (accountPage);
-			tabBook.ActivePage = printerPage;
+			this.tabBook.Items.Add (printerPage);
+			this.tabBook.Items.Add (accountPage);
+
+			this.ActiveLastPage ();
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -157,6 +158,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void AcceptChangingsAndClose()
 		{
+			this.UpdateLastActivedPageName ();
+
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.AcceptChangings ();
@@ -169,6 +172,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void RejectChangingsAndClose()
 		{
+			this.UpdateLastActivedPageName ();
+
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.RejectChangings ();
@@ -214,10 +219,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private void ActiveLastPage()
+		{
+			string name = SettingsDialog.lastActivedPageName;
+
+			if (string.IsNullOrEmpty (name))
+			{
+				name = "printer";  // page par défaut
+			}
+
+			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
+			this.tabBook.ActivePage = page;
+		}
+
+		private void UpdateLastActivedPageName()
+		{
+			SettingsDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
+		}
+
+
+		private static string									lastActivedPageName;
+
 		private readonly CoreApplication						application;
 		private List<SettingsTabPages.AbstractSettingsTabPage>	settingsTabPages;
 
 		private Window											window;
+		private TabBook											tabBook;
 		private StaticText										errorInfo;
 		private Button											acceptButton;
 		private Button											cancelButton;
