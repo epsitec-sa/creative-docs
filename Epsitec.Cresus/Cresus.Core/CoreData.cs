@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -21,14 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 
+
 namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData : System.IDisposable
 	{
-		public CoreData(bool forceDatabaseCreation)
+		public CoreData(bool forceDatabaseCreation, bool allowDatabaseUpdate)
 		{
 			this.IsReady = false;
 			this.ForceDatabaseCreation = forceDatabaseCreation;
+			this.AllowDatabaseUpdate = allowDatabaseUpdate;
 
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
@@ -108,6 +111,12 @@ namespace Epsitec.Cresus.Core
 			private set;
 		}
 
+		public bool								AllowDatabaseUpdate
+		{
+			get;
+			private set;
+		}
+
 		public ImageDataStore					ImageDataStore
 		{
 			get
@@ -167,18 +176,45 @@ namespace Epsitec.Cresus.Core
 				}
 				catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
 				{
+					// TODO All this part where we try to update the schema of the database if it is
+					// incompatible is experimental, and must be checked/modified in order to be of
+					// production quality.
+					// Marc
+					
 					System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
 
-					UI.ShowErrorMessage (
-						Res.Strings.Error.IncompatibleDatabase,
-						Res.Strings.Hint.Error.IncompatibleDatabase, ex);
+					if (this.AllowDatabaseUpdate)
+					{
+						IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
 
-					this.dbInfrastructure.Dispose ();
-					this.DeleteDatabase (databaseAccess);
+						d.OpenDialog ();
 
-					//	TODO: start external migration process...
+						if (d.Result == DialogResult.Yes)
+						{
+							try
+							{
+								this.dataInfrastructure.UpdateSchema (this.GetManagedEntityIds ());
+							}
+							catch (System.Exception e)
+							{
+								UI.ShowErrorMessage ("Erreur", "Impossible de mettre à jour la base de donnée.", e);
+							}
+						}
 
-					System.Environment.Exit (0);
+						System.Environment.Exit (0);
+					}
+					else
+					{
+						// TODO This way of exiting the program is kind of violent. It might be a
+						// good idea to soften it.
+						// Marc
+						
+						UI.ShowErrorMessage (
+							Res.Strings.Error.IncompatibleDatabase,
+							Res.Strings.Hint.Error.IncompatibleDatabase, ex);
+
+						System.Environment.Exit (0);
+					}
 				}
 				catch (System.Exception ex)
 				{
