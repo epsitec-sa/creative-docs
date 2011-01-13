@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,  0, "Résumé",             Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 70, "Description",        Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
-			builder.CreateTextField      (tile, 80, "Compte à créditer",  Marshaler.Create (() => this.Entity.BookAccount, x => this.Entity.BookAccount = x));
+			builder.CreateAccountEditor  (tile, "Compte à créditer", Marshaler.Create (() => this.Entity.BookAccount, x => this.Entity.BookAccount = x), this.BusinessContext);
 		}
 	}
 }

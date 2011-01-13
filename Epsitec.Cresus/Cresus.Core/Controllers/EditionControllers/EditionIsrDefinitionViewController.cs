@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 150, "Compte entrant pour la comptabilisation", Marshaler.Create (() => this.Entity.IncomingBookAccount, x => this.Entity.IncomingBookAccount = x));
+			builder.CreateAccountEditor (tile, "Compte entrant pour la comptabilisation", Marshaler.Create (() => this.Entity.IncomingBookAccount, x => this.Entity.IncomingBookAccount = x), this.BusinessContext);
 		}
 	}
 }

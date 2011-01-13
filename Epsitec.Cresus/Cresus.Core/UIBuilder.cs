@@ -697,6 +697,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public TextFieldEx CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
+		{
+			return this.CreateTextField (tile, 150, label, marshaler);
+		}
+
 		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
