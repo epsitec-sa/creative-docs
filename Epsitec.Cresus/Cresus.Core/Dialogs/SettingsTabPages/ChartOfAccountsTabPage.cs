@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			{
 				//	Crée la toolbar.
-				double buttonSize = 19;
+				double buttonSize = 23;
 
 				this.toolbar = UIBuilder.CreateMiniToolbar (leftPane, buttonSize);
 				this.toolbar.Margins = new Margins (0, 0, 0, -1);
@@ -302,23 +302,26 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Bouton [+] cliqué.
 			string[] filenames = this.OpenFileDialog (this.application);  // choix des fichiers à ouvrir...
 
-			foreach (var filename in filenames)
+			if (filenames != null)
 			{
-				CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
-
-				string err = this.CheckChart (chart);
-
-				if (string.IsNullOrEmpty (err))  // ok ?
+				foreach (var filename in filenames)
 				{
-					this.chartOfAccounts.Add (chart);
+					CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
 
-					this.UpdateTable (this.chartOfAccounts.Count-1);
-					this.UpdateWidgets ();
-				}
-				else  // erreur ?
-				{
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
-					break;
+					string err = this.CheckChart (chart);
+
+					if (string.IsNullOrEmpty (err))  // ok ?
+					{
+						this.chartOfAccounts.Add (chart);
+
+						this.UpdateTable (this.chartOfAccounts.Count-1);
+						this.UpdateWidgets ();
+					}
+					else  // erreur ?
+					{
+						MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
+						break;
+					}
 				}
 			}
 		}
