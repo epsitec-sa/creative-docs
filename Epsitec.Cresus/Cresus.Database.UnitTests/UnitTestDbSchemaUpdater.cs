@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
 				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
-				table2.DefineRevisionMode (DbRevisionMode.Immutable);
+				table2.DefineCategory (DbElementCat.Relation);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
 				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
 
-				DbColumn relationColumn = new DbColumn("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.Immutable);
+				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
 
 				relationColumn.DefineCardinality (DbCardinality.Collection);
 				relationColumn.DefineTargetTableName (table1.Name);
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
 				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
 
-				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.Immutable);
+				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
 
 				relationColumn.DefineCardinality (DbCardinality.Collection);
 				relationColumn.DefineTargetTableName (table1.Name);
@@ -384,21 +384,21 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTypeDef type2 = new DbTypeDef ("type2", DbSimpleType.String, null, 50, true, DbNullability.No);
 				DbTypeDef type3 = new DbTypeDef ("type3", DbSimpleType.String, null, 50, true, DbNullability.No);
 
-				DbTable table1 = dbInfrastructure1.CreateDbTable ("table1", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, true);
-				DbTable table2 = dbInfrastructure1.CreateDbTable ("table2", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, true);
-				DbTable table3 = dbInfrastructure1.CreateDbTable ("table3", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, true);
+				DbTable table1 = dbInfrastructure1.CreateDbTable ("table1", DbElementCat.ManagedUserData, true);
+				DbTable table2 = dbInfrastructure1.CreateDbTable ("table2", DbElementCat.ManagedUserData, true);
+				DbTable table3 = dbInfrastructure1.CreateDbTable ("table3", DbElementCat.ManagedUserData, true);
 
-				DbColumn column1 = DbTable.CreateUserDataColumn ("column1", type1, DbRevisionMode.IgnoreChanges);
-				DbColumn column2 = DbTable.CreateUserDataColumn ("column2", type2, DbRevisionMode.IgnoreChanges);
-				DbColumn column3 = DbTable.CreateUserDataColumn ("column3", type3, DbRevisionMode.IgnoreChanges);
+				DbColumn column1 = DbTable.CreateUserDataColumn ("column1", type1);
+				DbColumn column2 = DbTable.CreateUserDataColumn ("column2", type2);
+				DbColumn column3 = DbTable.CreateUserDataColumn ("column3", type3);
 
 				table1.Columns.Add (column1);
 				table2.Columns.Add (column2);
 				table3.Columns.Add (column3);
 
-				DbColumn columnRelation1 = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-				DbColumn columnRelation2 = DbTable.CreateRelationColumn (Druid.FromLong (0), table3, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-				DbColumn columnRelation3 = DbTable.CreateRelationColumn (Druid.FromLong (0), table1, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+				DbColumn columnRelation1 = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Reference);
+				DbColumn columnRelation2 = DbTable.CreateRelationColumn (Druid.FromLong (0), table3, DbCardinality.Reference);
+				DbColumn columnRelation3 = DbTable.CreateRelationColumn (Druid.FromLong (0), table1, DbCardinality.Reference);
 
 				columnRelation1.DefineDisplayName ("relation1");
 				columnRelation2.DefineDisplayName ("relation2");
@@ -426,14 +426,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				DbTable tableA = dbInfrastructure1.ResolveDbTable ("table1");
 				DbTable tableB = dbInfrastructure1.ResolveDbTable ("table2");
-				DbTable tableC = dbInfrastructure1.CreateDbTable ("table4", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, true);
+				DbTable tableC = dbInfrastructure1.CreateDbTable ("table4", DbElementCat.ManagedUserData, true);
 
 				tableA.Columns.Remove ("column1");
 				tableB.Columns.Remove ("0");
 
-				DbColumn columnA = DbTable.CreateUserDataColumn ("columnA", type1, DbRevisionMode.IgnoreChanges);
-				DbColumn columnRelationB = DbTable.CreateRelationColumn (Druid.FromLong (1), tableC, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-				DbColumn columnRelationC = DbTable.CreateRelationColumn (Druid.FromLong (1), dbInfrastructure1.FindBuiltInDbTables ().First (), DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+				DbColumn columnA = DbTable.CreateUserDataColumn ("columnA", type1);
+				DbColumn columnRelationB = DbTable.CreateRelationColumn (Druid.FromLong (1), tableC, DbCardinality.Reference);
+				DbColumn columnRelationC = DbTable.CreateRelationColumn (Druid.FromLong (1), dbInfrastructure1.FindBuiltInDbTables ().First (), DbCardinality.Reference);
 
 				columnRelationB.DefineDisplayName ("relationB");
 				columnRelationC.DefineDisplayName ("relationC");
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			for (int i = 0; i < nbColumns; i++)
 			{
-				table.Columns.Add (new DbColumn ("myNewColumn" + i, types[i % types.Length], DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.Immutable));
+				table.Columns.Add (new DbColumn ("myNewColumn" + i, types[i % types.Length], DbColumnClass.Data, DbElementCat.ManagedUserData));
 			}
 
 			return table;

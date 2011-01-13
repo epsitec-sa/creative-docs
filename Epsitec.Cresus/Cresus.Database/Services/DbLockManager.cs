@@ -49,17 +49,11 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbColumn[] columns = new DbColumn[]
 		    {
-		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
-		        {
-		            IsAutoIncremented = true,
-		        },
-		        new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-		        new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-		        new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-		        new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-		        {
-		            IsAutoTimeStampOnInsert = true,
-		        },
+		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
+		        new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+		        new DbColumn(Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
+		        new DbColumn(Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal),
+		        new DbColumn(Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true },
 		    };
 
 			table.DefineCategory (DbElementCat.Internal);
@@ -67,7 +61,6 @@ namespace Epsitec.Cresus.Database.Services
 			table.DefinePrimaryKey (columns[0]);
 
 			table.UpdatePrimaryKeyInfo ();
-			table.UpdateRevisionMode ();
 
 			return table;
 		}

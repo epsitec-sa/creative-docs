@@ -382,11 +382,6 @@ namespace Epsitec.Cresus.Database
 					buffer.Append (TablePrefixes.ManagedUserDataTablePrefix);
 					break;
 
-				case DbElementCat.RevisionHistory:
-					buffer = new System.Text.StringBuilder ();
-					buffer.Append (TablePrefixes.RevisionHistoryTablePrefix);
-					break;
-
 				case DbElementCat.Relation:
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append (TablePrefixes.RelationTablePrefix);
@@ -635,7 +630,6 @@ namespace Epsitec.Cresus.Database
 		private static class TablePrefixes
 		{
 			public static readonly string ManagedUserDataTablePrefix	= "MUD_";
-			public static readonly string RevisionHistoryTablePrefix	= "REV_";
 			public static readonly string RelationTablePrefix			= "X_";
 		}
 

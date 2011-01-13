@@ -304,23 +304,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the revision mode for this table.
-		/// </summary>
-		/// <value>The revision mode.</value>
-		public DbRevisionMode					RevisionMode
-		{
-			get
-			{
-				if (this.revisionMode == DbRevisionMode.Unknown)
-				{
-					this.UpdateRevisionMode ();
-				}
-				
-				return this.revisionMode;
-			}
-		}
-
-		/// <summary>
 		/// Gets the key for the table, used internally to identify the table
 		/// metadata.
 		/// </summary>
@@ -358,25 +341,6 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.category == DbElementCat.Relation);
 				return this.relationTargetTableName;
 			}
-		}
-
-
-		/// <summary>
-		/// Updates the revision mode based on the column definitions. This method
-		/// overwrites the <c>RevisionMode</c> defined by <c>DefineRevisionMode</c>.
-		/// </summary>
-		public void UpdateRevisionMode()
-		{
-			foreach (DbColumn column in this.columns)
-			{
-				if (column.RevisionMode == DbRevisionMode.TrackChanges)
-				{
-					this.revisionMode = DbRevisionMode.TrackChanges;
-					return;
-				}
-			}
-
-			this.revisionMode = DbRevisionMode.IgnoreChanges;
 		}
 
 		/// <summary>
@@ -431,28 +395,6 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new category", this.Name));
-			}
-		}
-
-		/// <summary>
-		/// Defines the revision mode for this table. A revision mode may not be changed
-		/// after it has been defined.
-		/// </summary>
-		/// <param name="revisionMode">The revision mode.</param>
-		public void DefineRevisionMode(DbRevisionMode revisionMode)
-		{
-			if (this.revisionMode == revisionMode)
-			{
-				return;
-			}
-
-			if (this.revisionMode == DbRevisionMode.Unknown)
-			{
-				this.revisionMode = revisionMode;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new revision mode", this.Name));
 			}
 		}
 
@@ -673,23 +615,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the name of the corresponding revision table.
-		/// </summary>
-		/// <returns>The name of the corresponding revision table or <c>null</c> if
-		/// the table is not revisioned.</returns>
-		public string GetRevisionTableName()
-		{
-			if (this.RevisionMode == DbRevisionMode.TrackChanges)
-			{
-				return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, DbElementCat.RevisionHistory, this.Key);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		/// <summary>
 		/// Gets the name of the relation table for the specified column.
 		/// </summary>
 		/// <param name="sourceColumn">The source column.</param>
@@ -821,7 +746,6 @@ namespace Epsitec.Cresus.Database
 			xmlWriter.WriteStartElement ("table");
 
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
-			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
@@ -961,7 +885,6 @@ namespace Epsitec.Cresus.Database
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
 				table.category                = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				table.revisionMode            = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				table.localizations           = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
 				table.captionId               = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
 				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
@@ -1010,15 +933,14 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="columnCaptionId">The column caption id.</param>
 		/// <param name="targetTable">The target table.</param>
-		/// <param name="revisionMode">The revision mode.</param>
 		/// <param name="cardinality">The cardinality.</param>
 		/// <returns>The column.</returns>
-		public static DbColumn CreateRelationColumn(Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality)
+		public static DbColumn CreateRelationColumn(Druid columnCaptionId, DbTable targetTable, DbCardinality cardinality)
 		{
 			System.Diagnostics.Debug.Assert (targetTable != null);
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 
-			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, revisionMode);
+			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
 
 			column.DefineCardinality (cardinality);
 			column.DefineTargetTableName (targetTable.Name);
@@ -1037,20 +959,6 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (type != null);
 
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
-		}
-
-		/// <summary>
-		/// Creates a column for user data.
-		/// </summary>
-		/// <param name="columnName">Name of the column.</param>
-		/// <param name="type">The type.</param>
-		/// <param name="revisionMode">The revision mode.</param>
-		/// <returns>The column.</returns>
-		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type, DbRevisionMode revisionMode)
-		{
-			System.Diagnostics.Debug.Assert (type != null);
-
-			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
 		}
 
 		/// <summary>
@@ -1126,7 +1034,6 @@ namespace Epsitec.Cresus.Database
 		private List<DbIndex>					indexes;
 		private string							serializedIndexTuples;
 		private DbElementCat					category;
-		private DbRevisionMode					revisionMode;
 		private string							relationSourceTableName;
 		private string							relationTargetTableName;
 	}

@@ -566,10 +566,9 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The category.</param>
-		/// <param name="revisionMode">The revision mode.</param>
 		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns>The database table definition.</returns>
-		public DbTable CreateDbTable(string name, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
+		public DbTable CreateDbTable(string name, DbElementCat category, bool autoIncrementedId)
 		{
 			switch (category)
 			{
@@ -577,7 +576,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
 				
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, revisionMode, autoIncrementedId);
+					return this.CreateTable(name, category, autoIncrementedId);
 				
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
@@ -590,10 +589,9 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The category.</param>
-		/// <param name="revisionMode">The revision mode.</param>
 		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns>The database table definition.</returns>
-		public DbTable CreateDbTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
+		public DbTable CreateDbTable(Druid captionId, DbElementCat category, bool autoIncrementedId)
 		{
 			switch (category)
 			{
@@ -601,7 +599,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", captionId));
 
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable (captionId, category, revisionMode, autoIncrementedId);
+					return this.CreateTable (captionId, category, autoIncrementedId);
 
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, captionId));
@@ -1593,14 +1591,13 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The table category.</param>
-		/// <param name="revisionMode">The table revision mode.</param>
 		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
+		internal DbTable CreateTable(string name, DbElementCat category, bool autoIncrementedId)
 		{
 			DbTable table = new DbTable (name);
 
-			this.DefineBasicTable (table, category, revisionMode, autoIncrementedId);
+			this.DefineBasicTable (table, category,  autoIncrementedId);
 
 			return table;
 		}
@@ -1610,31 +1607,27 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The table category.</param>
-		/// <param name="revisionMode">The table revision mode.</param>
 		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
+		internal DbTable CreateTable(Druid captionId, DbElementCat category, bool autoIncrementedId)
 		{
 			DbTable table = new DbTable (captionId);
 
-			this.DefineBasicTable (table, category, revisionMode, autoIncrementedId);
+			this.DefineBasicTable (table, category, autoIncrementedId);
 
 			return table;
 		}
 
-		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
+		private void DefineBasicTable(DbTable table, DbElementCat category, bool autoIncrementedId)
 		{
-			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
-
-			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = autoIncrementedId,
-				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex,
+				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex
 			};
-			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
 
 			table.DefineCategory (category);
-			table.DefineRevisionMode (revisionMode);
 
 			table.Columns.Add (colId);
 			table.Columns.Add (colStat);
@@ -3163,14 +3156,11 @@ namespace Epsitec.Cresus.Database
 
 				DbColumn[] columns = new DbColumn[]
 				{
-					new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
+					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),
 				};
 
 				table.DefineCategory (DbElementCat.Internal);
@@ -3189,20 +3179,14 @@ namespace Epsitec.Cresus.Database
 
 				DbColumn[] columns = new DbColumn[]
 				{
-					new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnDisplayName, types.Name,		   DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnRefTarget,	  types.KeyId, DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges)
-					{
-						IsNullable = true,
-					},
+					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
+					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnRefTable, types.KeyId, DbColumnClass.RefId, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnRefType, types.KeyId, DbColumnClass.RefId, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnRefTarget, types.KeyId, DbColumnClass.RefId, DbElementCat.Internal) { IsNullable = true },
 				};
 
 				table.DefineCategory (DbElementCat.Internal);
@@ -3221,14 +3205,11 @@ namespace Epsitec.Cresus.Database
 
 				DbColumn[] columns = new DbColumn[]
 				{
-					new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable)
-					{
-						IsAutoIncremented = true,
-					},
-					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
-					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
+					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
+					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),
 				};
 
 				table.DefineCategory (DbElementCat.Internal);

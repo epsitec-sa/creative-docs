@@ -135,22 +135,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void RevisionModeTest()
-		{
-			DbTable table1 = new DbTable ();
-			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
-
-			table1.DefineRevisionMode (DbRevisionMode.Immutable);
-			table2.DefineRevisionMode (DbRevisionMode.Immutable);
-			table3.DefineRevisionMode (DbRevisionMode.TrackChanges);
-
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
-		}
-
-
-		[TestMethod]
 		public void LocalizationsTest()
 		{
 			DbTable table1 = new DbTable ();
@@ -309,9 +293,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			tableTarget.DefineDisplayName ("targetA");
 
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
+			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
+			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
 
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -340,9 +324,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 			tableTarget2.DefineDisplayName ("targetA");
 			tableTarget3.DefineDisplayName ("targetB");
 
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget1, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget2, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget3, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget1, DbCardinality.Reference);
+			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget2, DbCardinality.Reference);
+			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget3, DbCardinality.Reference);
 
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -550,26 +534,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table1.Columns[0].DefineDisplayName ("name1");
 			table2.Columns[0].DefineDisplayName ("name1");
 			table3.Columns[0].DefineDisplayName ("name2");
-
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
-		}
-
-
-		[TestMethod]
-		public void DbTableColumnRevisionModeTest()
-		{
-			DbTable table1 = new DbTable ();
-			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
-
-			table1.Columns.Add (new DbColumn ());
-			table2.Columns.Add (new DbColumn ());
-			table3.Columns.Add (new DbColumn ());
-
-			table1.Columns[0].DefineRevisionMode (DbRevisionMode.TrackChanges);
-			table2.Columns[0].DefineRevisionMode (DbRevisionMode.TrackChanges);
-			table3.Columns[0].DefineRevisionMode (DbRevisionMode.Immutable);
 
 			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
 			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
@@ -807,7 +771,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table.DefineCaptionId (Druid.FromLong (1));
 			table.DefineCategory (DbElementCat.Internal);
 			table.DefineLocalizations (new string[] { "fr", "en", "de" });
-			table.DefineRevisionMode (DbRevisionMode.Immutable);
 
 			return table;
 		}
@@ -819,16 +782,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			table.DefineDisplayName (name);
 			table.DefineCategory (DbElementCat.ManagedUserData);
-			table.DefineRevisionMode (DbRevisionMode.Immutable);
 
 			table.Columns.Add (new DbColumn ("myColumn1", dbInfrastructure.ResolveDbType ("K008")));
 			table.Columns.Add (new DbColumn ("myColumn2", dbInfrastructure.ResolveDbType ("K008")));
 
 			table.Columns[0].DefineCategory (DbElementCat.ManagedUserData);
 			table.Columns[1].DefineCategory (DbElementCat.ManagedUserData);
-
-			table.Columns[0].DefineRevisionMode (DbRevisionMode.Immutable);
-			table.Columns[1].DefineRevisionMode (DbRevisionMode.Immutable);
 
 			return table;
 		}

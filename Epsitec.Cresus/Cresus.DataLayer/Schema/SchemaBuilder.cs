@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The newly created <see cref="DbTable"/>.</returns>
 		private DbTable BuildBasicTable(StructuredType tableType)
 		{
-			DbTable table = this.DbInfrastructure.CreateDbTable (tableType.CaptionId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges, (tableType.BaseType == null));
+			DbTable table = this.DbInfrastructure.CreateDbTable (tableType.CaptionId, DbElementCat.ManagedUserData, (tableType.BaseType == null));
 
 			table.Comment = table.DisplayName;
 
@@ -462,9 +462,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				// who made the last change to the entity.
 	
 				DbTypeDef keyTypeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
-				
-				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
-				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges);
+
+				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal);
+				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal);
 
 				table.Columns.Add (typeColumn);
 				table.Columns.Add (logColumn);
@@ -484,7 +484,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private DbColumn BuildValueColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
 		{
 			DbTypeDef columnType = dbTypeDefs[field.Type.CaptionId];
-			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
 			column.Comment = column.DisplayName;
 			column.IsNullable = field.IsNullable;
@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			DbCardinality cardinality = this.FieldRelationToDbCardinality (field.Relation);
 
-			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, targetTable, DbRevisionMode.TrackChanges, cardinality);
+			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, targetTable, cardinality);
 
 			return column;
 		}
