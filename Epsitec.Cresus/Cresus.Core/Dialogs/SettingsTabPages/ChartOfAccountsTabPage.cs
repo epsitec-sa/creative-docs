@@ -19,6 +19,7 @@ using Epsitec.Cresus.Core.Business.Accounting;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 {
@@ -34,8 +35,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.businessContext = this.application.Data.CreateBusinessContext ();
 
 			//	Cherche l'entité sur le compte du BusinessContext propre.
-			this.financeSettingsEntity = this.businessContext.Data.GetAllEntities<FinanceSettingsEntity> ().FirstOrDefault ();
-	
+			DataContext dataContext = this.businessContext.DataContext;
+			CoreData coreData = this.businessContext.Data;
+			this.financeSettingsEntity = coreData.GetAllEntities<FinanceSettingsEntity> (DataExtractionMode.Default, dataContext).FirstOrDefault ();
+
 			//	Si elle n'existe pas, on la crée.
 			if (this.financeSettingsEntity == null)
 			{
