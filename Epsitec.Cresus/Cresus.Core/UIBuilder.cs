@@ -698,10 +698,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		#region Account editor
 		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
 		{
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
-			//	selon le plan comptable en cours.
+			//	selon le plan comptable en cours (qui peut ne pas exister).
 			var financeSettings = CoreProgram.Application.FinanceSettings;
 			Business.Accounting.CresusChartOfAccounts chart = null;
 
@@ -798,11 +799,13 @@ namespace Epsitec.Cresus.Core
 
 		private static FormattedText GetAccountText(Business.Accounting.BookAccountDefinition account)
 		{
+			//	Retourne le texte complet à utiliser pour un compte donné.
 			return TextFormatter.FormatText (account.AccountNumber, account.Caption);
 		}
 
 		private static HintComparerResult MatchAccountText(Business.Accounting.BookAccountDefinition account, string userText)
 		{
+			//	Compare un compte avec le texte partiel entré par l'utilisateur.
 			if (string.IsNullOrWhiteSpace (userText))
 			{
 				return Widgets.HintComparerResult.NoMatch;
@@ -814,6 +817,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void GetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
 		{
+			//	Initialise le texte complet du widget, en fonction du numéro de compte stocké dans le champ de l'entité.
 			string value = marshaler.GetStringValue();
 
 			foreach (var item in editor.Items)
@@ -832,9 +836,11 @@ namespace Epsitec.Cresus.Core
 
 		private static void SetAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
 		{
+			//	Initialise le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
 			Business.Accounting.BookAccountDefinition account = (Business.Accounting.BookAccountDefinition) editor.Items.GetValue (editor.SelectedItemIndex);
 			marshaler.SetStringValue (account.AccountNumber);
 		}
+		#endregion
 
 
 		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
