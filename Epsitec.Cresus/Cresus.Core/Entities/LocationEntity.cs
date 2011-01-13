@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Country.Code, "-", this.PostalCode, " ", this.Name);
+			return TextFormatter.FormatText (this.Country.Code, "-", this.PostalCode, this.Name);
 		}
 
 		public override string[] GetEntityKeywords()
