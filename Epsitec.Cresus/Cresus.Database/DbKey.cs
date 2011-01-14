@@ -57,35 +57,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this instance represents a temporary key.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance represents a temporary key; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsTemporary
-		{
-			get
-			{
-				return DbKey.CheckTemporaryId (this.id);
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this instance represents a definitive key.
-		/// A definitive key is not empty and not temporary.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance represents a definitive key; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsDefinitive
-		{
-			get
-			{
-				return !this.IsEmpty && !this.IsTemporary;
-			}
-		}
-
-		/// <summary>
 		/// Gets a value indicating whether this instance represents an empty key.
 		/// </summary>
 		/// <value><c>true</c> if this instance represents an empty key; otherwise, <c>false</c>.</value>
@@ -93,11 +64,9 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return (this.id == 0);
+				return this.id.IsEmpty;
 			}
 		}
-		
-		public static readonly DbKey			Empty = new DbKey ();
 
 		/// <summary>
 		/// Sets the row key id and status.
@@ -252,31 +221,6 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		/// <summary>
-		/// Creates a temporary id.
-		/// </summary>
-		/// <returns></returns>
-		public static DbId CreateTemporaryId()
-		{
-			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
-		}
-
-		/// <summary>
-		/// Checks whether the id is a temporary id.
-		/// </summary>
-		/// <param name="id">The id to check.</param>
-		/// <returns><c>true</c> if the id is a temporary id; otherwise, <c>false</c>.</returns>
-		public static bool CheckTemporaryId(DbId id)
-		{
-			if ((id >= DbId.MinimumTemp) &&
-				(id <= DbId.MaximumTemp))
-			{
-				return true;
-			}
-			
-			return false;
-		}
-
-		/// <summary>
 		/// Gets the row id.
 		/// </summary>
 		/// <param name="row">The row.</param>
@@ -316,9 +260,18 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
-		
-		private static long						tempId;
 
 		private DbId							id;
+
+		public static DbKey Empty
+		{
+			get
+			{
+				return DbKey.empty;
+			}
+		}
+
+		private static readonly DbKey empty = new DbKey (0);
+
 	}
 }
