@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 		{
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests");
+
+			System.IO.Directory.SetCurrentDirectory (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests\bin\Debug");
 		}
 
 
@@ -27,7 +29,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 		{
 			// TODO This method is not very reliable, as it could tell that the database does not
 			// exists when the database exists but the login information is not valid. This might
-			// be improved, but it doesn't seem to be an eays way to ask Firebird if a database
+			// be improved, but it doesn't seem to be an easy way to ask Firebird if a database
 			// does exist.
 			// Marc
 
