@@ -516,8 +516,6 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				index++;
 			}
 
-			sqlFields.Add (this.CreateSqlFieldForStatus ());
-
 			if (this.Category == TableCategory.Data && this.ContainsLogColumn)
 			{
 				sqlFields.Add (this.CreateSqlFieldForLog (dbLogEntry));
@@ -525,18 +523,6 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			dbTransaction.SqlBuilder.InsertData (tableName, sqlFields);
 			dbInfrastructure.ExecuteNonQuery (dbTransaction);
-		}
-
-
-		private SqlField CreateSqlFieldForStatus()
-		{
-			// TODO Get the real value for the status.
-			// Marc
-			
-			SqlField sqlField = SqlField.CreateConstant ((short) DbRowStatus.Live , DbRawType.Int16);
-			sqlField.Alias = Tags.ColumnStatus;
-
-			return sqlField;
 		}
 
 

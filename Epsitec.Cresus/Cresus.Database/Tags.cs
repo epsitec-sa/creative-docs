@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Database
 		//	Basic CRESUS column names :
 		
 		public const string	ColumnId					= "CR_ID";
-		public const string	ColumnStatus				= "CR_STAT";
 		public const string ColumnName					= "CR_NAME";
 		public const string ColumnDisplayName			= "CR_DISPLAY_NAME";
 		public const string ColumnInfoXml				= "CR_INFO";

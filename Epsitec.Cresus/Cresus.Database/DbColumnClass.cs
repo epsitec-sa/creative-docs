@@ -20,11 +20,6 @@ namespace Epsitec.Cresus.Database
 		KeyId				= 1,
 
 		/// <summary>
-		/// The column contains a key status.
-		/// </summary>
-		KeyStatus			= 2,
-
-		/// <summary>
 		/// The column contains a reference to a key ID.
 		/// </summary>
 		RefId				= 3,

@@ -16,19 +16,9 @@ namespace Epsitec.Cresus.Database
 		/// Initializes a new instance of the <see cref="DbKey"/> class.
 		/// </summary>
 		/// <param name="id">The id.</param>
-		public DbKey(DbId id) : this (id, DbRowStatus.Live)
+		public DbKey(DbId id)
 		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbKey"/> class.
-		/// </summary>
-		/// <param name="id">The id.</param>
-		/// <param name="status">The status.</param>
-		public DbKey(DbId id, DbRowStatus status)
-		{
-			this.id     = id;
-			this.status = DbKey.ConvertToIntStatus (status);
+			this.id = id;
 		}
 
 		/// <summary>
@@ -38,9 +28,8 @@ namespace Epsitec.Cresus.Database
 		public DbKey(System.Data.DataRow dataRow)
 		{
 			this.id = 0;
-			this.status = 0;
 			
-			this.DefineIdAndStatus (dataRow[Tags.ColumnId], dataRow[Tags.ColumnStatus]);
+			this.DefineId (dataRow[Tags.ColumnId]);
 		}
 
 		/// <summary>
@@ -50,9 +39,8 @@ namespace Epsitec.Cresus.Database
 		public DbKey(object[] dataRow)
 		{
 			this.id = 0;
-			this.status = 0;
 
-			this.DefineIdAndStatus (dataRow[0], dataRow[1]);
+			this.DefineId (dataRow[0]);
 		}
 
 
@@ -65,30 +53,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.id;
-			}
-		}
-
-		/// <summary>
-		/// Gets the row status.
-		/// </summary>
-		/// <value>The status.</value>
-		public DbRowStatus						Status
-		{
-			get
-			{
-				return DbKey.ConvertFromIntStatus (this.status);
-			}
-		}
-
-		/// <summary>
-		/// Gets the row status, represented as a number.
-		/// </summary>
-		/// <value>The int status.</value>
-		internal short							IntStatus
-		{
-			get
-			{
-				return this.status;
 			}
 		}
 
@@ -129,7 +93,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return (this.id == 0) && (this.status == 0);
+				return (this.id == 0);
 			}
 		}
 		
@@ -142,7 +106,6 @@ namespace Epsitec.Cresus.Database
 		public void SetRowKey(System.Data.DataRow row)
 		{
 			DbKey.SetRowId (row, this.Id);
-			DbKey.SetRowStatus (row, this.Status);
 		}
 
 		#region IXmlSerializable Members
@@ -178,7 +141,6 @@ namespace Epsitec.Cresus.Database
 		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
 		{
 			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
-			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
 		}
 
 		public static DbKey Deserialize(System.Xml.XmlTextReader xmlReader)
@@ -223,18 +185,15 @@ namespace Epsitec.Cresus.Database
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
 		{
 			string argId   = xmlReader.GetAttribute (prefix+"id");
-			string argStat = xmlReader.GetAttribute (prefix+"stat");
 
-			if ((string.IsNullOrEmpty (argId)) &&
-				(string.IsNullOrEmpty (argStat)))
+			if (string.IsNullOrEmpty (argId))
 			{
 				return DbKey.Empty;
 			}
 
-			DbId id     = InvariantConverter.ParseLong (argId);
-			int  status = InvariantConverter.ParseInt (argStat);
+			DbId id = InvariantConverter.ParseLong (argId);
 
-			return new DbKey (id, DbKey.ConvertFromIntStatus (status));
+			return new DbKey (id);
 		}
 		
 		#region IComparable Members
@@ -318,26 +277,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Converts the status to an integer representation.
-		/// </summary>
-		/// <param name="status">The status.</param>
-		/// <returns>The status represented as an integer.</returns>
-		public static short ConvertToIntStatus(DbRowStatus status)
-		{
-			return (short) status;
-		}
-
-		/// <summary>
-		/// Converts an integer representation of the status back to a status.
-		/// </summary>
-		/// <param name="status">The value.</param>
-		/// <returns>The status.</returns>
-		public static DbRowStatus ConvertFromIntStatus(int status)
-		{
-			return (DbRowStatus) status;
-		}
-
-		/// <summary>
 		/// Gets the row id.
 		/// </summary>
 		/// <param name="row">The row.</param>
@@ -345,16 +284,6 @@ namespace Epsitec.Cresus.Database
 		public static DbId GetRowId(System.Data.DataRow row)
 		{
 			return InvariantConverter.ToLong (row[Tags.ColumnId]);
-		}
-
-		/// <summary>
-		/// Gets the row status.
-		/// </summary>
-		/// <param name="row">The row.</param>
-		/// <returns>The row status.</returns>
-		public static DbRowStatus GetRowStatus(System.Data.DataRow row)
-		{
-			return DbKey.ConvertFromIntStatus (InvariantConverter.ToShort (row[Tags.ColumnStatus]));
 		}
 
 		/// <summary>
@@ -368,21 +297,10 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Sets the row status.
-		/// </summary>
-		/// <param name="row">The row.</param>
-		/// <param name="status">The row status.</param>
-		public static void SetRowStatus(System.Data.DataRow row, DbRowStatus status)
-		{
-			row[Tags.ColumnStatus] = (short) status;
-		}
-
-		/// <summary>
-		/// Defines the id and status of the key based on object values.
+		/// Defines the id of the key based on object values.
 		/// </summary>
 		/// <param name="valueId">The id value (<c>long</c>).</param>
-		/// <param name="valueStatus">The status value (<c>short</c>).</param>
-		private void DefineIdAndStatus(object valueId, object valueStatus)
+		private void DefineId(object valueId)
 		{
 			long id;
 
@@ -390,7 +308,6 @@ namespace Epsitec.Cresus.Database
 				(id >= 0))
 			{
 				this.id     = id;
-				this.status = InvariantConverter.ToShort (valueStatus);
 			}
 			else
 			{
@@ -399,11 +316,9 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
-		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		private static long						tempId;
 
 		private DbId							id;
-		private short							status;
 	}
 }

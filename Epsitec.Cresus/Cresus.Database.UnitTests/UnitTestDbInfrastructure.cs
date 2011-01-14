@@ -57,19 +57,19 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1L, table.Key.Id.Value);
-				Assert.AreEqual (5, table.Columns.Count);
+				Assert.AreEqual (4, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_COLUMN_DEF");
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (2L, table.Key.Id.Value);
-				Assert.AreEqual (8, table.Columns.Count);
+				Assert.AreEqual (7, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_TYPE_DEF");
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (3L, table.Key.Id.Value);
-				Assert.AreEqual (5, table.Columns.Count);
+				Assert.AreEqual (4, table.Columns.Count);
 
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 				{
@@ -773,11 +773,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 				ExceptionAssert.Throw<GenericException>
 				(
 					() => infrastructure.RemoveColumnFromTable (table, table.Columns[Tags.ColumnId])
-				);
-
-				ExceptionAssert.Throw<GenericException>
-				(
-					() => infrastructure.RemoveColumnFromTable (table, table.Columns[Tags.ColumnStatus])
 				);
 			}
 		}

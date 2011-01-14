@@ -358,8 +358,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			SqlFieldList fields = new SqlFieldList ();
 
 			fields.AddRange (this.CreateSqlFields (table, localEntityId, job.GetFieldIdsWithValues ()));
-			fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
-
+			
 			if (job.IsRootTypeJob)
 			{
 				fields.Add (this.CreateSqlFieldForLog (table, dbLogEntry));
@@ -547,7 +546,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				SqlFieldList fields = new SqlFieldList ();
 
-				fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
 				fields.Add (this.CreateSqlFieldForSourceId (table, sourceKey));
 				fields.Add (this.CreateSqlFieldForTargetId (table, targetKeysList[rank]));
 				fields.Add (this.CreateSqlFieldForRank (table, rank));
@@ -725,22 +723,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			DbColumn column = table.Columns[Tags.ColumnId];
 			object value = key.Id.Value;
-
-			return this.CreateSqlFieldForColumn (column, value);
-		}
-
-
-		/// <summary>
-		/// Builds the <see cref="SqlField"/> used to set the value of the status of a row in a
-		/// SQL request.
-		/// </summary>
-		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
-		/// <param name="status">The value of the <see cref="DbRowStatus"/>.</param>
-		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
-		private SqlField CreateSqlFieldForStatus(DbTable table, DbRowStatus status)
-		{
-			DbColumn column = table.Columns[Tags.ColumnStatus];
-			object value = (short) status;
 
 			return this.CreateSqlFieldForColumn (column, value);
 		}

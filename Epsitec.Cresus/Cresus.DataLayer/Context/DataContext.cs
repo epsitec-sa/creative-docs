@@ -1327,20 +1327,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertEntityIsNotForeign (entity);
 
 			string persistedId = null;
-			
+
 			if (this.IsPersistent (entity))
 			{
 				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 				DbKey key = this.GetNormalizedEntityKey (entity).Value.RowKey;
 
-				if (key.Status == DbRowStatus.Live)
-				{
-					persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", leafEntityId, key.Id);
-				}
-				else
-				{
-					persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}:{2}", leafEntityId, key.Id, (short) key.Status);
-				}
+				persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", leafEntityId, key.Id);
 			}
 
 			return persistedId;
@@ -1360,31 +1353,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 				DbKey key = DbKey.Empty;
 				Druid entityId = Druid.Empty;
 
+				entityId = Druid.Parse (args[1]);
+
 				long  keyId;
-				short keyStatus;
 
-				switch (args.Length)
+				if ((entityId.IsValid) &&
+					(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
 				{
-					case 3:
-						entityId = Druid.Parse (args[1]);
-
-						if ((entityId.IsValid) &&
-							(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
-						{
-							key = new DbKey (keyId);
-						}
-						break;
-
-					case 4:
-						entityId = Druid.Parse (args[1]);
-
-						if ((entityId.IsValid) &&
-							(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)) &&
-							(short.TryParse (args[3], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyStatus)))
-						{
-							key = new DbKey (keyId, DbKey.ConvertFromIntStatus (keyStatus));
-						}
-						break;
+					key = new DbKey (keyId);
 				}
 
 				if (!key.IsEmpty && !entityId.IsEmpty)

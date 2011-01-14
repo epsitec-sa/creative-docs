@@ -113,13 +113,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				Assert.AreEqual ("1234:A", table.Name);
 				Assert.AreEqual ("X_1234_A", table.GetSqlName ());
-				Assert.AreEqual (5, table.Columns.Count);
+				Assert.AreEqual (4, table.Columns.Count);
 
 				Assert.AreEqual ("CR_ID", table.Columns[0].Name);
-				Assert.AreEqual ("CR_STAT", table.Columns[1].Name);
-				Assert.AreEqual ("CREF_SOURCE_ID", table.Columns[2].Name);
-				Assert.AreEqual ("CREF_TARGET_ID", table.Columns[3].Name);
-				Assert.AreEqual ("CREF_RANK", table.Columns[4].Name);
+				Assert.AreEqual ("CREF_SOURCE_ID", table.Columns[1].Name);
+				Assert.AreEqual ("CREF_TARGET_ID", table.Columns[2].Name);
+				Assert.AreEqual ("CREF_RANK", table.Columns[3].Name);
 			}
 		}
 

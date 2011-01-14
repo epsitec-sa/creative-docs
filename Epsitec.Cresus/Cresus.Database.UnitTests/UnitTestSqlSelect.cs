@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			FileInfo file = new FileInfo (@"\..\..\..\External\EMPLOYEE.GBAK");
+			FileInfo file = new FileInfo (@"..\..\..\External\EMPLOYEE.GBAK");
 
 			IDbAbstractionHelper.CloneDatabase(file.FullName);
 		}

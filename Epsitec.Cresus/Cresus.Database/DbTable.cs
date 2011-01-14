@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.Database
 					{
 						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name == Tags.ColumnId);
 
-						key = new DbKey (DbKey.GetRowId (row), DbKey.GetRowStatus (row));
+						key = new DbKey (DbKey.GetRowId (row));
 					}
 					break;
 
@@ -859,7 +859,6 @@ namespace Epsitec.Cresus.Database
 				IsAutoIncremented = true,
 				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex
 			});
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank,     rankType,   DbColumnClass.Data,        DbElementCat.Internal));
