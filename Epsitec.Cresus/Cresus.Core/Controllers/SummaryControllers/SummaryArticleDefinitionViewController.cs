@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIArticleDefinition (data);
 				this.CreateUIParameters        (data);
 				this.CreateUIPrices            (data);
+				this.CreateUIAccountings       (data);
 				this.CreateUIComments          (data);
 			}
 		}
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", this.BusinessContext);
 
-			template.DefineText (x => x.GetSummary ());
+			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 			template.CreateItemsOfType<NumericValueArticleParameterDefinitionEntity> ();
 
@@ -85,12 +86,33 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", this.BusinessContext);
 
-			template.DefineText (x => x.GetSummary ());
+			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticlePrices));
 		}
-		
+
+		private void CreateUIAccountings(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "ArticleAccountingDefinitions",
+					IconUri		 = "Data.ArticleAccountingDefinition",
+					Title		 = TextFormatter.FormatText ("Comptabilisation"),
+					CompactTitle = TextFormatter.FormatText ("Comptabilisation"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<ArticleAccountingDefinitionEntity> ("ArticleAccountingDefinitions", this.BusinessContext);
+
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Accounting));
+		}
+
 		private void CreateUIComments(SummaryDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);

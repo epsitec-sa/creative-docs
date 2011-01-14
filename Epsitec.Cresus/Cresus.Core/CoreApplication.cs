@@ -77,19 +77,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public FinanceSettingsEntity FinanceSettings
-		{
-			get
-			{
-				if (this.financeSettings == null)
-				{
-					this.financeSettings = this.data.GetAllEntities<FinanceSettingsEntity> ().FirstOrDefault ();
-				}
-
-				return this.financeSettings;
-			}
-		}
-
 		public IExceptionManager ExceptionManager
 		{
 			get

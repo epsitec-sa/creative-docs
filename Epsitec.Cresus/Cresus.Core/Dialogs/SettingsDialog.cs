@@ -90,14 +90,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Name = "printer",
 			};
 
-			var accountPage = new TabPage
-			{
-				TabTitle = "Comptabilisation",
-				Name = "account",
-			};
-
 			this.tabBook.Items.Add (printerPage);
-			this.tabBook.Items.Add (accountPage);
 
 			this.ActiveLastPage ();
 
@@ -133,10 +126,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var printerSettings = new SettingsTabPages.PrinterUnitsTabPage (this.application);
 			printerSettings.CreateUI (printerPage);
 			this.settingsTabPages.Add (printerSettings);
-
-			var accountSettings = new SettingsTabPages.ChartOfAccountsTabPage (this.application);
-			accountSettings.CreateUI (accountPage);
-			this.settingsTabPages.Add (accountSettings);
 
 			foreach (var tab in this.settingsTabPages)
 			{
