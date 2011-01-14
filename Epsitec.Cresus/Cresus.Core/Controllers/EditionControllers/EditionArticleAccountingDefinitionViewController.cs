@@ -45,13 +45,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAccountEditor (tile, "Compte pour les ventes",            Marshaler.Create (() => this.Entity.SellingBookAccount,          x => this.Entity.SellingBookAccount = x));
-			builder.CreateAccountEditor (tile, "Compte pour les rabais des ventes", Marshaler.Create (() => this.Entity.SellingDiscountBookAccount,  x => this.Entity.SellingDiscountBookAccount = x));
+			builder.CreateAccountEditor (tile, "Compte pour les ventes",                Marshaler.Create (() => this.Entity.SellingBookAccount,          x => this.Entity.SellingBookAccount = x));
+			builder.CreateAccountEditor (tile, "Compte pour les rabais sur les ventes", Marshaler.Create (() => this.Entity.SellingDiscountBookAccount,  x => this.Entity.SellingDiscountBookAccount = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			
-			builder.CreateAccountEditor (tile, "Compte pour les achats",            Marshaler.Create (() => this.Entity.PurchaseBookAccount,         x => this.Entity.PurchaseBookAccount = x));
-			builder.CreateAccountEditor (tile, "Compte pour les rabais des achats", Marshaler.Create (() => this.Entity.PurchaseDiscountBookAccount, x => this.Entity.PurchaseDiscountBookAccount = x));
+			builder.CreateAccountEditor (tile, "Compte pour les achats",                Marshaler.Create (() => this.Entity.PurchaseBookAccount,         x => this.Entity.PurchaseBookAccount = x));
+			builder.CreateAccountEditor (tile, "Compte pour les rabais sur les achats", Marshaler.Create (() => this.Entity.PurchaseDiscountBookAccount, x => this.Entity.PurchaseDiscountBookAccount = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			
