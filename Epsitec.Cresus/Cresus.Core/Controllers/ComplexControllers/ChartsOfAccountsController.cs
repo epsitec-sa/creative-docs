@@ -21,7 +21,7 @@ using System.Globalization;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
 
-namespace Epsitec.Cresus.Core.Controllers.ChartsOfAccountsControllers
+namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 {
 	/// <summary>
 	/// Permet de choisir les plans comptables.
