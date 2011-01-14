@@ -174,7 +174,6 @@ namespace Epsitec.Cresus.Database
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableValuesEqual (t.Item1, t.Item2)
-						  || !DbSchemaChecker.AreDbTableLocalizationsEqual (t.Item1, t.Item2)
 						  || !DbSchemaChecker.AreDbTablePrimaryKeysEqual (t.Item1, t.Item2)
 						  || !DbSchemaChecker.AreDbTableForeignKeysEqual (t.Item1, t.Item2)
 						  || !DbSchemaChecker.AreDbTableIndexesEqual (t.Item1, t.Item2)

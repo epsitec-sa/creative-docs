@@ -199,7 +199,6 @@
     <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
-    <Compile Include="DbColumnLocalization.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
     <Compile Include="Res.cs" />

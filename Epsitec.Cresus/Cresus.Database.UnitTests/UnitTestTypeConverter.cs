@@ -273,7 +273,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Num.KeyId);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
@@ -286,7 +285,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Num.NullableKeyId);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (true, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
@@ -299,7 +297,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Num.KeyStatus);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
@@ -312,7 +309,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Num.ReqExecState);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
@@ -325,7 +321,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Other.DateTime);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
@@ -338,7 +333,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 			type = new DbTypeDef (Res.Types.Other.ReqData);
 
 			Assert.AreEqual (true, type.IsFixedLength);
-			Assert.AreEqual (false, type.IsMultilingual);
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);

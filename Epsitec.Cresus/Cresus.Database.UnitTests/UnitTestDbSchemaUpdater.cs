@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
 				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
-				table2.DefineCategory (DbElementCat.Relation);
+				table2.AddIndex (table2.Columns[0]);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();

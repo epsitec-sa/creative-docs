@@ -135,22 +135,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void LocalizationsTest()
-		{
-			DbTable table1 = new DbTable ();
-			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
-
-			table1.DefineLocalizations (new string[] { "fr", "de", "en", });
-			table2.DefineLocalizations (new string[] { "de", "en", "fr", });
-			table3.DefineLocalizations (new string[] { "fr", "en", });
-
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
-		}
-
-
-		[TestMethod]
 		public void IndexesTest()
 		{
 			DbTable table1 = new DbTable ();
@@ -501,26 +485,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void DbTableColumnLocalizationTest()
-		{
-			DbTable table1 = new DbTable ();
-			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
-
-			table1.Columns.Add (new DbColumn ());
-			table2.Columns.Add (new DbColumn ());
-			table3.Columns.Add (new DbColumn ());
-
-			table1.Columns[0].DefineLocalization (DbColumnLocalization.Localized);
-			table2.Columns[0].DefineLocalization (DbColumnLocalization.Localized);
-			table3.Columns[0].DefineLocalization (DbColumnLocalization.None);
-
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
-		}
-
-
-		[TestMethod]
 		public void DbTableColumnNameTest()
 		{
 			DbTable table1 = new DbTable ();
@@ -770,7 +734,6 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			table.DefineCaptionId (Druid.FromLong (1));
 			table.DefineCategory (DbElementCat.Internal);
-			table.DefineLocalizations (new string[] { "fr", "en", "de" });
 
 			return table;
 		}

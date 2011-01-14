@@ -329,18 +329,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the column localization.
-		/// </summary>
-		/// <value>The column localization.</value>
-		public DbColumnLocalization				Localization
-		{
-			get
-			{
-				return this.localization;
-			}
-		}
-
-		/// <summary>
 		/// Gets the column class (data, reference, key, etc.).
 		/// </summary>
 		/// <value>The column class.</value>
@@ -563,21 +551,11 @@ namespace Epsitec.Cresus.Database
 			if (this.type == null)
 			{
 				this.type = value;
-				this.localization = this.type.IsMultilingual ? DbColumnLocalization.Localized : DbColumnLocalization.None;
 			}
 			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its type", this.Name));
 			}
-		}
-
-		/// <summary>
-		/// Defines the localization for the column.
-		/// </summary>
-		/// <param name="value">The localization mode.</param>
-		internal void DefineLocalization(DbColumnLocalization value)
-		{
-			this.localization = value;
 		}
 
 		/// <summary>
@@ -729,51 +707,11 @@ namespace Epsitec.Cresus.Database
 		/// Creates the SQL column for this column definition.
 		/// </summary>
 		/// <param name="typeConverter">The type converter.</param>
-		/// <param name="localizationSuffix">The localization suffix.</param>
 		/// <returns>The SQL column.</returns>
-		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter, string localizationSuffix)
+		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter)
 		{
 			DbRawType rawType = this.type.RawType;
 			SqlColumn column;
-			
-			//	Verify that we do not attempt to create an SQL column based on
-			//	incorrect settings; check localization related constraints :
-
-			if (this.localization == DbColumnLocalization.None)
-			{
-				if (!string.IsNullOrEmpty (localizationSuffix))
-				{
-					string message = string.Format ("Column '{0}' does not specify localization, but caller provides suffix '{1}'", this.Name, localizationSuffix);
-					throw new System.InvalidOperationException (message);
-				}
-				if (this.type.IsMultilingual)
-				{
-					string message = string.Format ("Column '{0}' does not specify localization, but type is multilingual", this.Name);
-					throw new System.InvalidOperationException (message);
-				}
-			}
-			else if (this.localization == DbColumnLocalization.Localized)
-			{
-				if (string.IsNullOrEmpty (localizationSuffix))
-				{
-					string message = string.Format ("Column '{0}' specifies localization, but caller provides no suffix", this.Name);
-					throw new System.InvalidOperationException (message);
-				}
-				if (!this.type.IsMultilingual)
-				{
-					string message = string.Format ("Column '{0}' specifies localization, but type is not multilingual", this.Name);
-					throw new System.InvalidOperationException (message);
-				}
-				if (this.columnClass != DbColumnClass.Data)
-				{
-					string message = string.Format ("Column '{0}' specifies localization {1} for wrong class {2}", this.Name, this.localization, this.columnClass);
-					throw new System.InvalidOperationException (message);
-				}
-			}
-			else
-			{
-				throw new System.NotSupportedException (string.Format ("Column '{0}' specifies unsupported localization", this.Name));
-			}
 
 			if ((this.columnClass == DbColumnClass.KeyId) ||
 				(this.columnClass == DbColumnClass.KeyStatus))
@@ -784,9 +722,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
-			//	OK. The column is properly formed and we can now attempt to
-			//	generate the SQL column definition for it :
-			
 			IRawTypeConverter rawConverter;
 
 			if (typeConverter.CheckNativeSupport (rawType))
@@ -804,7 +739,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
 			}
 
-			column.Name = this.MakeLocalizedSqlName (localizationSuffix);
+			column.Name = this.GetSqlName ();
 			column.Comment = this.Comment;
 			column.IsNullable = this.IsNullable || this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
@@ -905,7 +840,6 @@ namespace Epsitec.Cresus.Database
 				column.category          = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				column.columnClass       = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
 				column.cardinality       = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
-				column.localization      = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
 				column.isPrimaryKey      = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 				column.targetTableName   = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
 				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
@@ -941,7 +875,6 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
 			DbTools.WriteAttribute (xmlWriter, "card", DbTools.CardinalityToString (this.Cardinality));
-			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			DbTools.WriteAttribute (xmlWriter, "ttab", DbTools.StringToString (this.TargetTableName));
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
@@ -954,33 +887,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Creates a localized column name.
-		/// </summary>
-		/// <param name="localizationSuffix">The localization suffix.</param>
-		/// <returns>The localized column name.</returns>
-		internal string MakeLocalizedName(string localizationSuffix)
-		{
-			return string.Concat (this.Name, " (", localizationSuffix, ")");
-		}
-
-		/// <summary>
-		/// Creates a localized SQL column name.
-		/// </summary>
-		/// <param name="localizationSuffix">The localization suffix.</param>
-		/// <returns>The localized SQL column name.</returns>
-		internal string MakeLocalizedSqlName(string localizationSuffix)
-		{
-			if (string.IsNullOrEmpty (localizationSuffix))
-			{
-				return this.GetSqlName ();
-			}
-			else
-			{
-				return DbTools.MakeCompositeName (this.GetSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
-			}
-		}
 
 		private static readonly Caption nullCaption = new Caption ();
 
@@ -1002,7 +908,6 @@ namespace Epsitec.Cresus.Database
 		private string							comment;
 		private DbElementCat					category;
 		private DbColumnClass					columnClass;
-		private DbColumnLocalization			localization;
 		private DbCardinality					cardinality;
 	}
 }

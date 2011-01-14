@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 					SqlColumn[] sqlColumns = new SqlColumn[]
 					{
-						dbTable.Columns[2].CreateSqlColumn (dbInfrastructure.Converter, null)
+						dbTable.Columns[2].CreateSqlColumn (dbInfrastructure.Converter)
 					};
 
 					transaction.SqlBuilder.RemoveTableColumns (sqlTable.Name, sqlColumns);
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 					SqlColumn[] sqlColumns = new SqlColumn[]
 					{
-						dbTable.Columns[2].CreateSqlColumn (dbInfrastructure.Converter, null)
+						dbTable.Columns[2].CreateSqlColumn (dbInfrastructure.Converter)
 					};
 
 					transaction.SqlBuilder.RemoveTableColumns (sqlTable.Name, sqlColumns);
