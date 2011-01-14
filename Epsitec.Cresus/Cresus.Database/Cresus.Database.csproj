@@ -200,7 +200,6 @@
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
     <Compile Include="DbContext.cs" />
-    <Compile Include="DbIdClass.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="SqlSet.cs" />
     <Compile Include="SqlSortOrder.cs" />
