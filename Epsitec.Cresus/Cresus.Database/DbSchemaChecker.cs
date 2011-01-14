@@ -83,7 +83,6 @@ namespace Epsitec.Cresus.Database
 		private static bool AreDbTableEqual(DbTable a, DbTable b)
 		{
 			return DbSchemaChecker.AreDbTableValuesEqual (a, b)
-				&& DbSchemaChecker.AreDbTableLocalizationsEqual (a, b)
 				&& DbSchemaChecker.AreDbTablePrimaryKeysEqual (a, b)
 				&& DbSchemaChecker.AreDbTableForeignKeysEqual (a, b)
 				&& DbSchemaChecker.AreDbTableIndexesEqual (a, b)
@@ -154,19 +153,6 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
-		/// Checks that the localization of both <see cref="DbTable"/> are equal.
-		/// </summary>
-		/// <param name="a">The first <see cref="DbTable"/> whose localization to compare.</param>
-		/// <param name="b">The second <see cref="DbTable"/> whose localization to compare.</param>
-		/// <returns><c>true</c> if the localization of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
-		public static bool AreDbTableLocalizationsEqual(DbTable a, DbTable b)
-		{
-			return a.LocalizationCount == b.LocalizationCount
-				&& DbSchemaChecker.CompareUnOrderedLists (a.Localizations.ToList (), b.Localizations.ToList (), string.Equals);
-		}
-
-
-		/// <summary>
 		/// Checks that the <see cref="DbColumn"/> of both <see cref="DbTable"/> are equal.
 		/// </summary>
 		/// <param name="a">The first <see cref="DbTable"/> whose <see cref="DbColumn"/> to compare.</param>
@@ -225,7 +211,6 @@ namespace Epsitec.Cresus.Database
 				&& a.Category == b.Category
 				&& a.ColumnClass == b.ColumnClass
 				&& a.Cardinality == b.Cardinality
-				&& a.Localization == b.Localization
 				&& a.IsNullable == b.IsNullable
 				&& a.IsPrimaryKey == b.IsPrimaryKey
 				&& a.IsForeignKey == b.IsForeignKey
@@ -256,7 +241,6 @@ namespace Epsitec.Cresus.Database
 				&& a.Length == b.Length
 				&& a.IsNullable == b.IsNullable
 				&& a.IsFixedLength == b.IsFixedLength
-				&& a.IsMultilingual == b.IsMultilingual
 			);
 		}
 

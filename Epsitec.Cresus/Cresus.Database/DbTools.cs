@@ -101,23 +101,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Parses the localization.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <returns>The value or <c>DbColumnLocalization.None</c> if the text is empty.</returns>
-		public static DbColumnLocalization ParseLocalization(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return DbColumnLocalization.None;
-			}
-			else
-			{
-				return (DbColumnLocalization) InvariantConverter.ParseInt (text);
-			}
-		}
-
-		/// <summary>
 		/// Parses the type of the raw.
 		/// </summary>
 		/// <param name="text">The text.</param>
@@ -294,23 +277,6 @@ namespace Epsitec.Cresus.Database
 		public static string CardinalityToString(DbCardinality value)
 		{
 			if (value == DbCardinality.None)
-			{
-				return null;
-			}
-			else
-			{
-				return InvariantConverter.ToString ((int) value);
-			}
-		}
-
-		/// <summary>
-		/// Converts the value to a string.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
-		public static string ColumnLocalizationToString(DbColumnLocalization value)
-		{
-			if (value == DbColumnLocalization.None)
 			{
 				return null;
 			}

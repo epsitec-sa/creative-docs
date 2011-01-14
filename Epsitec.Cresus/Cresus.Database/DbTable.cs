@@ -144,54 +144,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the table localizations.
-		/// </summary>
-		/// <value>The table localizations or an empty array if there are no localizations.</value>
-		public string[]							Localizations
-		{
-			get
-			{
-				if (string.IsNullOrEmpty (this.localizations))
-				{
-					return new string[0];
-				}
-				else
-				{
-					return this.localizations.Split ('/');
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the number of localizations for this table.
-		/// </summary>
-		/// <value>The localization count or <c>0</c> if there are no localizations.</value>
-		public int								LocalizationCount
-		{
-			get
-			{
-				if (string.IsNullOrEmpty (this.localizations))
-				{
-					return 0;
-				}
-				else
-				{
-					int count = 1;
-					
-					for (int i = 0; i < this.localizations.Length; i++)
-					{
-						if (this.localizations[i] == '/')
-						{
-							count++;
-						}
-					}
-
-					return count;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets the columns defined for the table.
 		/// </summary>
 		/// <value>The columns.</value>
@@ -459,23 +411,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Defines the localizations for this table.
-		/// </summary>
-		/// <param name="localizations">The localizations.</param>
-		public void DefineLocalizations(IEnumerable<string> localizations)
-		{
-			if (string.IsNullOrEmpty (this.localizations))
-			{
-				string[] array = Collection.ToArray<string> (localizations);
-				this.localizations = array.Length == 0 ? null : string.Join ("/", array);
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' may not change its localization", this.Name));
-			}
-		}
-
 
 		/// <summary>
 		/// Creates an SQL table definition based on this high level table definition.
@@ -490,26 +425,18 @@ namespace Epsitec.Cresus.Database
 
 			foreach (DbColumn dbColumn in this.columns)
 			{
-				if ((dbColumn.IsPrimaryKey) &&
-					(dbColumn.Localization != DbColumnLocalization.None))
-				{
-					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Primary key '{0}' may not be localized", dbColumn.Name));
-				}
-
 				if (dbColumn.Cardinality == DbCardinality.None)
 				{
-					foreach (SqlColumn sqlColumn in this.CreateSqlColumns (converter, dbColumn))
+					SqlColumn sqlColumn = dbColumn.CreateSqlColumn (converter);
+
+					//	Make sure we don't try to create an SQL column more than once.
+					if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
 					{
-						//	Make sure we don't try to create an SQL column more than once.
-
-						if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
-						{
-							string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
-							throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-						}
-
-						sqlTable.Columns.Add (sqlColumn);
+						string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 					}
+
+					sqlTable.Columns.Add (sqlColumn);
 				}
 			}
 
@@ -573,29 +500,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			return sqlTable;
-		}
-
-		/// <summary>
-		/// Creates the SQL columns for a given column.
-		/// </summary>
-		/// <param name="converter">The type converter.</param>
-		/// <param name="column">The column.</param>
-		/// <returns>The SQL columns.</returns>
-		internal IEnumerable<SqlColumn> CreateSqlColumns(ITypeConverter converter, DbColumn column)
-		{
-			if (column.Localization == DbColumnLocalization.Localized)
-			{
-				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (this.localizations) == false);
-
-				foreach (string localizationSuffix in this.Localizations)
-				{
-					yield return column.CreateSqlColumn (converter, localizationSuffix);
-				}
-			}
-			else
-			{
-				yield return column.CreateSqlColumn (converter, null);
-			}
 		}
 
 		/// <summary>
@@ -684,40 +588,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the number of SQL columns. This may be different from the number
-		/// of columns defined in the table (localized columns need several columns
-		/// to represent their data, for instance).
-		/// </summary>
-		/// <returns>The number of SQL columns.</returns>
-		public int GetSqlColumnCount()
-		{
-			int localizationCount = this.LocalizationCount;
-
-			if (localizationCount > 1)
-			{
-				int count = 0;
-
-				foreach (DbColumn column in this.columns)
-				{
-					if (column.Localization == DbColumnLocalization.Localized)
-					{
-						count += localizationCount;
-					}
-					else
-					{
-						count += 1;
-					}
-				}
-				
-				return count;
-			}
-			else
-			{
-				return this.columns.Count;
-			}
-		}
-
-		/// <summary>
 		/// Updates the primary key flags of the table columns.
 		/// </summary>
 		internal void UpdatePrimaryKeyInfo()
@@ -746,7 +616,6 @@ namespace Epsitec.Cresus.Database
 			xmlWriter.WriteStartElement ("table");
 
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
-			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
 			DbTools.WriteAttribute (xmlWriter, "rstn", DbTools.StringToString (this.relationSourceTableName));
@@ -885,7 +754,6 @@ namespace Epsitec.Cresus.Database
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
 				table.category                = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				table.localizations           = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
 				table.captionId               = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
 				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
 				table.relationTargetTableName = DbTools.ParseString (xmlReader.GetAttribute ("rttn"));
@@ -1027,7 +895,6 @@ namespace Epsitec.Cresus.Database
 		private string							name;
 		private Druid							captionId;
 		private Caption							caption;
-		private string							localizations;
 
 		private Collections.DbColumnList		columns;
 		private Collections.DbColumnList		primaryKeys;

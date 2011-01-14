@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Database
 		
 		public DbInfrastructure()
 		{
-			this.localizations    = "fr";
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 
@@ -48,32 +47,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return (this.abstraction != null) && (this.abstraction.IsConnectionOpen);
-			}
-		}
-		
-		public string[]							DefaultLocalizations
-		{
-			get
-			{
-				if (string.IsNullOrEmpty (this.localizations))
-				{
-					return new string[0];
-				}
-				else
-				{
-					return this.localizations.Split ('/');
-				}
-			}
-			set
-			{
-				if (value == null || value.Length == 0)
-				{
-					this.localizations = null;
-				}
-				else
-				{
-					this.localizations = string.Join ("/", value);
-				}
 			}
 		}
 		
@@ -1001,7 +974,7 @@ namespace Epsitec.Cresus.Database
 		private void InsertConcreteColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
 			string dbTableName = dbTable.GetSqlName ();
-			SqlColumn sqlColumn = dbTable.CreateSqlColumns (this.converter, dbColumn).Single ();
+			SqlColumn sqlColumn = dbColumn.CreateSqlColumn (this.converter);
 
 			dbTransaction.SqlBuilder.InsertTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
 			this.ExecuteSilent (dbTransaction);
@@ -1057,7 +1030,7 @@ namespace Epsitec.Cresus.Database
 			this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
 
 			string dbTableName = dbTable.GetSqlName ();
-			SqlColumn sqlColumn = dbTable.CreateSqlColumns (this.converter, dbColumn).Single ();
+			SqlColumn sqlColumn = dbColumn.CreateSqlColumn (this.converter);
 
 			dbTransaction.SqlBuilder.RemoveTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
 			this.ExecuteSilent (dbTransaction);
@@ -3507,8 +3480,6 @@ namespace Epsitec.Cresus.Database
 
 		private DbTableList						internalTables = new DbTableList ();
 		private DbTypeDefList					internalTypes = new DbTypeDefList ();
-
-		private string							localizations;
 
 		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
 		private Cache.DbTables					tableCache = new Cache.DbTables ();

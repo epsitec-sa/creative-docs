@@ -64,13 +64,11 @@ namespace Epsitec.Cresus.Database
 
 				this.length         = System.Math.Min (1000, stringType.MaximumLength);
 				this.isFixedLength  = stringType.UseFixedLengthStorage;
-				this.isMultilingual = stringType.UseMultilingualStorage;
 			}
 			else
 			{
 				this.length         = 0;
 				this.isFixedLength  = false;
-				this.isMultilingual = false;
 			}
 
 			INullableType nullableType = namedType as INullableType;
@@ -88,21 +86,6 @@ namespace Epsitec.Cresus.Database
 		/// <param name="isFixedLength">If set to <c>true</c>, denotes a fixed length string.</param>
 		/// <param name="nullability">The nullability mode.</param>
 		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullability)
-			: this (name, simpleType, numDef, length, isFixedLength, nullability, false)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="simpleType">The simple type.</param>
-		/// <param name="numDef">The numeric defition.</param>
-		/// <param name="length">The length (if this is a string).</param>
-		/// <param name="isFixedLength">If set to <c>true</c>, denotes a fixed length string.</param>
-		/// <param name="nullability">The nullability mode.</param>
-		/// <param name="isMultilingual">If set to <c>true</c>, denotes a multilingual type.</param>
-		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullability, bool isMultilingual)
 		{
 			this.name = name;
 			this.simpleType = simpleType;
@@ -111,7 +94,6 @@ namespace Epsitec.Cresus.Database
 			this.length = length;
 			this.isFixedLength = isFixedLength;
 			this.isNullable = nullability == DbNullability.Yes;
-			this.isMultilingual = isMultilingual;
 		}
 
 
@@ -174,20 +156,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.length == 0 ? true : this.isFixedLength;
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this type is multilingual.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this type is multilingual; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsMultilingual
-		{
-			get
-			{
-				return this.isMultilingual;
 			}
 		}
 
@@ -371,7 +339,6 @@ namespace Epsitec.Cresus.Database
 				&& (a.length == b.length)
 				&& (a.isNullable == b.isNullable)
 				&& (a.isFixedLength == b.isFixedLength)
-				&& (a.isMultilingual == b.isMultilingual)
 				&& (a.key == b.key);
 			
 		}
@@ -392,7 +359,6 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "simple", DbTools.SimpleTypeToString (this.simpleType));
 			DbTools.WriteAttribute (xmlWriter, "length", DbTools.IntToString (this.length));
 			DbTools.WriteAttribute (xmlWriter, "fixed", DbTools.BoolDefaultingToTrueToString (this.isFixedLength));
-			DbTools.WriteAttribute (xmlWriter, "multi", DbTools.BoolDefaultingToFalseToString (this.isMultilingual));
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.isNullable));
 
 			if ((this.numDef != null) &&
@@ -425,7 +391,6 @@ namespace Epsitec.Cresus.Database
 				type.simpleType     = DbTools.ParseSimpleType (xmlReader.GetAttribute ("simple"));
 				type.length         = DbTools.ParseInt (xmlReader.GetAttribute ("length"));
 				type.isFixedLength  = DbTools.ParseDefaultingToTrueBool (xmlReader.GetAttribute ("fixed"));
-				type.isMultilingual = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("multi"));
 				type.isNullable     = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
 
 				type.numDef = DbNumDef.DeserializeAttributes (xmlReader, "num.");
@@ -466,7 +431,6 @@ namespace Epsitec.Cresus.Database
 		private DbNumDef						numDef;
 		private int								length;
 		private bool							isFixedLength;
-		private bool							isMultilingual;
 		private bool							isNullable;
 		private DbKey							key;
 	}
