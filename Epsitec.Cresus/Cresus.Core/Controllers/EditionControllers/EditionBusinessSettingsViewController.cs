@@ -92,11 +92,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			this.chartsOfAccountsController = new ChartsOfAccountsControllers.ChartsOfAccountsController (this.BusinessContext, this.Entity.Finance);
+			this.chartsOfAccountsController = new ComplexControllers.ChartsOfAccountsController (this.BusinessContext, this.Entity.Finance);
 			this.chartsOfAccountsController.CreateUI (tile.Container);
 		}
 
 
-		private ChartsOfAccountsControllers.ChartsOfAccountsController chartsOfAccountsController;
+		private ComplexControllers.ChartsOfAccountsController chartsOfAccountsController;
 	}
 }
