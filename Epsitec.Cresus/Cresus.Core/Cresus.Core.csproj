@@ -108,6 +108,8 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ChartsOfAccountsControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleAccountingDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Printers\DeserializedSection.cs" />
     <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
+    <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
     <Compile Include="Repositories\FinanceSettingsRepository.cs" />
     <Compile Include="Repositories\XmlBlobRepository.cs" />
     <Compile Include="Repositories\PriceCalculatorRepository.cs" />
@@ -809,6 +812,7 @@
     <EmbeddedResource Include="Images\Table.SelectInvert.icon" />
     <EmbeddedResource Include="Images\Table.SelectColumn.icon" />
     <EmbeddedResource Include="Images\Table.SelectRow.icon" />
+    <EmbeddedResource Include="Images\Data.ArticleAccountingDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

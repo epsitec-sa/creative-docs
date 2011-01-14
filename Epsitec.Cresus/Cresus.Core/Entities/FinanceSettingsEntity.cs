@@ -87,13 +87,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 			string chartId = chart.Id.ToString ("D");
 
-			XmlBlobRepository repository = new XmlBlobRepository (businessContext.Data, businessContext.DataContext);
+			var repository = new XmlBlobRepository (businessContext.Data, businessContext.DataContext);
 			var blob = repository.GetByCode (chartId).FirstOrDefault ();
 			if (blob != null)
 			{
 				businessContext.DataContext.DeleteEntity (blob);
 			}
-			
+
+			this.SerializedChartsOfAccounts.Remove (blob);
 			this.chartsOfAccounts.Remove (chart);
 		}
 

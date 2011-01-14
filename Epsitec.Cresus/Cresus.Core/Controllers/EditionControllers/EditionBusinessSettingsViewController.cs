@@ -35,9 +35,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUITax       (builder);
 				this.CreateUISeparator (builder);
 				this.CreateUILogo      (builder);
+				this.CreateUISeparator (builder);
+				this.CreateUICharts    (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
+		}
+
+		private void CreateUIRelation(UIBuilder builder)
+		{
+			var controller = new SelectionController<RelationEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Company,
+				ValueSetter         = x => this.Entity.Company = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Company),
+
+				ToTextArrayConverter     = x => x.GetEntityKeywords (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
+			};
+
+			builder.CreateAutoCompleteTextField ("Entreprise", controller);
 		}
 
 		private void CreateUITax(UIBuilder builder)
@@ -56,21 +73,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
-		private void CreateUIRelation(UIBuilder builder)
-		{
-			var controller = new SelectionController<RelationEntity> (this.BusinessContext)
-			{
-				ValueGetter         = () => this.Entity.Company,
-				ValueSetter         = x => this.Entity.Company = x,
-				ReferenceController = new ReferenceController (() => this.Entity.Company),
-
-				ToTextArrayConverter     = x => x.GetEntityKeywords (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
-			};
-
-			builder.CreateAutoCompleteTextField ("Entreprise", controller);
-		}
-
 		private void CreateUILogo(UIBuilder builder)
 		{
 			var controller = new SelectionController<ImageEntity> (this.BusinessContext)
@@ -85,5 +87,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateAutoCompleteTextField ("Logo pour les documents imprimés", controller);
 		}
+
+		private void CreateUICharts(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			this.chartsOfAccountsController = new ChartsOfAccountsControllers.ChartsOfAccountsController (this.BusinessContext, this.Entity.Finance);
+			this.chartsOfAccountsController.CreateUI (tile.Container);
+		}
+
+
+		private ChartsOfAccountsControllers.ChartsOfAccountsController chartsOfAccountsController;
 	}
 }

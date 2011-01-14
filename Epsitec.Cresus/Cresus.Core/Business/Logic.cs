@@ -45,14 +45,6 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public FinanceSettingsEntity FinanceSettings
-		{
-			get
-			{
-				return this.Application.FinanceSettings;
-			}
-		}
-
 		public BusinessContext BusinessContext
 		{
 			get

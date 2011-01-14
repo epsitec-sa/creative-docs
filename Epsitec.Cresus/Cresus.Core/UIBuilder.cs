@@ -699,26 +699,23 @@ namespace Epsitec.Cresus.Core
 
 
 		#region Account editor
-		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler, BusinessContext businessContext)
+		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler)
 		{
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
 			//	selon le plan comptable en cours. Si le plan comptable n'existe pas, on crée
 			//	une ligne éditable toute simple.
 
 			//	Cherche le plan comptable en cours.
-			var financeSettings = CoreProgram.Application.FinanceSettings;
-			Business.Accounting.CresusChartOfAccounts chart = null;
-
-			if (financeSettings != null)
-			{
-				chart = financeSettings.GetRecentChartOfAccounts (businessContext);
-			}
+			var financeSettings = CoreProgram.Application.BusinessSettings.Finance;
+			System.Diagnostics.Debug.Assert (financeSettings != null);
+			var chart = financeSettings.GetRecentChartOfAccounts (this.businessContext);
 
 			if (chart == null)  // aucun plan comptable trouvé ?
 			{
 				return this.CreateTextField (tile, 150, label, marshaler);  // crée une simple ligne éditable
 			}
 
+			//	Crée les widgets.
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
@@ -839,8 +836,15 @@ namespace Epsitec.Cresus.Core
 		private static void UpdateAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
 		{
 			//	Met à jour le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
-			Business.Accounting.BookAccountDefinition account = (Business.Accounting.BookAccountDefinition) editor.Items.GetValue (editor.SelectedItemIndex);
-			marshaler.SetStringValue (account.AccountNumber);
+			if (string.IsNullOrEmpty (editor.Text) || editor.SelectedItemIndex == -1)
+			{
+				marshaler.SetStringValue (null);
+			}
+			else
+			{
+				var account = (Business.Accounting.BookAccountDefinition) editor.Items.GetValue (editor.SelectedItemIndex);
+				marshaler.SetStringValue (account.AccountNumber);
+			}
 		}
 		#endregion
 
