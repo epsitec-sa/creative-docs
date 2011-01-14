@@ -100,7 +100,6 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		    IList<DbColumn> regularDbColumns = dbTable.Columns
 		        .Where (c => !idDbColumns.Contains (c))
-		        .Where (c => c.Name != Tags.ColumnStatus)
 		        .Where (c => c.Name != Tags.ColumnRefLog)
 		        .Where (c => c.Cardinality == DbCardinality.None)
 		        .ToList ();

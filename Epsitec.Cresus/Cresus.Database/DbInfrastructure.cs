@@ -689,14 +689,9 @@ namespace Epsitec.Cresus.Database
 				throw new GenericException (this.access, "New colum " + column.Name + " for table " + table.Name + " cannot be a primary key.");
 			}
 
-			switch (column.ColumnClass)
+			if (column.ColumnClass == DbColumnClass.KeyId)
 			{
-				case DbColumnClass.KeyId:
-				case DbColumnClass.KeyStatus:
-					throw new GenericException (this.access, "New colum " + column.Name + " for table " + table.Name + " has an invalid column class.");
-				
-				default:
-					break;
+				throw new GenericException (this.access, "New colum " + column.Name + " for table " + table.Name + " has an invalid column class.");
 			}
 
 			// TODO Mutate the dbColumn object and the dbTable object?
@@ -751,14 +746,9 @@ namespace Epsitec.Cresus.Database
 				throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because it is a primary key.");
 			}
 
-			switch (column.ColumnClass)
+			if (column.ColumnClass == DbColumnClass.KeyId)
 			{
-				case DbColumnClass.KeyId:
-				case DbColumnClass.KeyStatus:
-					throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because of its status.");
-
-				default:
-					break;
+				throw new GenericException (this.access, "Colum " + column.Name + " of table " + table.Name + " cannot be removed because of its status.");
 			}
 
 			if (table.Indexes.SelectMany (i => i.Columns).Contains (column))
@@ -1136,7 +1126,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (table == null)
 				{
-					List<DbTable> tables = this.LoadDbTable (transaction, key, DbRowSearchMode.LiveActive);
+					List<DbTable> tables = this.LoadDbTable (transaction, key);
 					
 					if (tables.Count > 0)
 					{
@@ -1203,20 +1193,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definitions or an empty array.</returns>
 		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
 		{
-			return this.FindDbTables (transaction, category, DbRowSearchMode.LiveActive);
-		}
-
-		/// <summary>
-		/// Finds the database table definitions belonging to the specified
-		/// category (either internal or user data).
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="category">The table category.</param>
-		/// <param name="rowSearchMode">The row search mode.</param>
-		/// <returns>The table definitions or an empty array.</returns>
-		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode rowSearchMode)
-		{
-			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty, rowSearchMode);
+			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty);
 			
 			if (category != DbElementCat.Any)
 			{
@@ -1391,7 +1368,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (typeDef == null)
 				{
-					List<DbTypeDef> types = this.LoadDbType (transaction, key, DbRowSearchMode.LiveActive);
+					List<DbTypeDef> types = this.LoadDbType (transaction, key);
 					
 					if (types.Count > 0)
 					{
@@ -1448,19 +1425,7 @@ namespace Epsitec.Cresus.Database
 		public DbTypeDef[] FindDbTypes(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			return this.FindDbTypes (transaction, DbRowSearchMode.LiveActive);
-		}
-
-		/// <summary>
-		/// Finds all the type definitions using a specific search mode.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="rowSearchMode">The row search mode.</param>
-		/// <returns>The type definitions.</returns>
-		public DbTypeDef[] FindDbTypes(DbTransaction transaction, DbRowSearchMode rowSearchMode)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			return this.LoadDbType (transaction, DbKey.Empty, rowSearchMode).ToArray ();
+			return this.LoadDbType (transaction, DbKey.Empty).ToArray ();
 		}
 
 		internal IEnumerable<DbTypeDef> FindBuiltInDbTypes()
@@ -1598,12 +1563,9 @@ namespace Epsitec.Cresus.Database
 				IsAutoIncremented = autoIncrementedId,
 				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex
 			};
-			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
-
 			table.DefineCategory (category);
 
 			table.Columns.Add (colId);
-			table.Columns.Add (colStat);
 
 			table.PrimaryKeys.Add (colId);
 			table.UpdatePrimaryKeyInfo ();
@@ -2158,7 +2120,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The key to the table metadata.</returns>
 		public DbKey FindDbTableKey(DbTransaction transaction, string name)
 		{
-			return this.FindLiveKey (this.FindDbKeys (transaction, Tags.TableTableDef, name));
+			return this.FindDbKeys (transaction, Tags.TableTableDef, name).FirstOrDefault ();
 		}
 
 		/// <summary>
@@ -2169,27 +2131,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The key to the type metadata.</returns>
 		public DbKey FindDbTypeKey(DbTransaction transaction, string name)
 		{
-			return this.FindLiveKey (this.FindDbKeys (transaction, Tags.TableTypeDef, name));
-		}
-
-		/// <summary>
-		/// Finds the first live key in the collection.
-		/// </summary>
-		/// <param name="keys">The keys.</param>
-		/// <returns>The live key or <c>DbKey.Empty</c>.</returns>
-		internal DbKey FindLiveKey(IEnumerable<DbKey> keys)
-		{
-			foreach (DbKey key in keys)
-			{
-				switch (key.Status)
-				{
-					case DbRowStatus.Live:
-					case DbRowStatus.Copied:
-						return key;
-				}
-			}
-			
-			return DbKey.Empty;
+			return this.FindDbKeys (transaction, Tags.TableTypeDef, name).FirstOrDefault ();
 		}
 
 		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
@@ -2230,7 +2172,6 @@ namespace Epsitec.Cresus.Database
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T", Tags.ColumnId));
-			query.Fields.Add ("T_STAT",	SqlField.CreateName ("T", Tags.ColumnStatus));
 			
 			query.Tables.Add ("T", SqlField.CreateName (tableName));
 			
@@ -2240,10 +2181,9 @@ namespace Epsitec.Cresus.Database
 
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				long  id     = InvariantConverter.ToLong (row["T_ID"]);
-				short status = InvariantConverter.ToShort (row["T_STAT"]);
+				long  id = InvariantConverter.ToLong (row["T_ID"]);
 
-				yield return new DbKey (id, DbKey.ConvertFromIntStatus (status));
+				yield return new DbKey (id);
 			}
 		}
 
@@ -2265,8 +2205,6 @@ namespace Epsitec.Cresus.Database
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", nameColumn), SqlField.CreateConstant (value, DbRawType.String)));
 
-			DbInfrastructure.AddKeyExtraction (query.Conditions, "T", DbRowSearchMode.LiveActive);
-			
 			transaction.SqlBuilder.SelectData (query);
 			
 			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
@@ -2294,9 +2232,8 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="key">The table key or <c>DbKey.Empty</c> to load all table definitions based on the search mode.</param>
-		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
 		/// <returns>The table definitions.</returns>
-		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
+		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 
@@ -2314,7 +2251,6 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnDisplayName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
-			query.Fields.Add ("T_STAT", SqlField.CreateName ("T_TABLE", Tags.ColumnStatus));
 
 			//	Column related informations :
 
@@ -2337,7 +2273,6 @@ namespace Epsitec.Cresus.Database
 			{
 				//	Extract all tables and columns...
 
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", rowSearchMode);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
@@ -2360,13 +2295,6 @@ namespace Epsitec.Cresus.Database
 
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				int status = InvariantConverter.ToInt (row["T_STAT"]);
-
-				if (status != 0)
-				{
-					continue;
-				}
-
 				long currentRowId = InvariantConverter.ToLong (row["T_ID"]);
 
 				if (rowId != currentRowId)
@@ -2394,11 +2322,7 @@ namespace Epsitec.Cresus.Database
 						dbTable.DefineDisplayName (tableDisplayName);
 						dbTable.DefineKey (tableKey);
 
-						if ((tableKey.Status == DbRowStatus.Live) ||
-							(tableKey.Status == DbRowStatus.Copied))
-						{
-							this.tableCache[tableKey] = dbTable;
-						}
+						this.tableCache[tableKey] = dbTable;
 					}
 					else
 					{
@@ -2473,9 +2397,8 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
-		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
 		/// <returns>The type definitions.</returns>
-		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
+		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey key)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
@@ -2485,15 +2408,10 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TYPE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnDisplayName));
 			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
-			query.Fields.Add ("T_STAT", SqlField.CreateName ("T_TYPE", Tags.ColumnStatus));
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
-			if (key.IsEmpty)
-			{
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", rowSearchMode);
-			}
-			else
+			if (!key.IsEmpty)
 			{
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", key);
 			}
@@ -2507,25 +2425,21 @@ namespace Epsitec.Cresus.Database
 				string typeName        = InvariantConverter.ToString (row["T_NAME"]);
 				string typeDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 				string typeInfo        = InvariantConverter.ToString (row["T_INFO"]);
-				int    status          = InvariantConverter.ToInt (row["T_STAT"]);
 				DbKey  typeKey		   = new DbKey (typeId);
 
-				if (status == 0)
+				DbTypeDef typeDef = this.typeCache[typeKey];
+
+				if (typeDef == null)
 				{
-					DbTypeDef typeDef = this.typeCache[typeKey];
+					typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
 
-					if (typeDef == null)
-					{
-						typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
+					typeDef.DefineDisplayName (typeDisplayName);
+					typeDef.DefineKey (new DbKey (typeId));
 
-						typeDef.DefineDisplayName (typeDisplayName);
-						typeDef.DefineKey (new DbKey (typeId));
-
-						this.typeCache[typeKey] = typeDef;
-					}
-
-					types.Add (typeDef);
+					this.typeCache[typeKey] = typeDef;
 				}
+
+				types.Add (typeDef);
 			}
 			
 			return types;
@@ -2575,60 +2489,6 @@ namespace Epsitec.Cresus.Database
 			SqlField constantId  = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 
 			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColId, constantId));
-		}
-
-		/// <summary>
-		/// Adds a SELECT extraction condition for any keys in a table matching
-		/// the search mode (live, deleted, etc.)
-		/// </summary>
-		/// <param name="conditions">The conditions.</param>
-		/// <param name="tableName">Name of the table.</param>
-		/// <param name="searchMode">The search mode (live, deleted, etc.).</param>
-		private static void AddKeyExtraction(SqlFieldList conditions, string tableName, DbRowSearchMode searchMode)
-		{
-			SqlFunctionCode function;
-			DbRowStatus     status;
-
-			//	See the definitions of DbRowStatus and DbRowSearchMode...
-
-			switch (searchMode)
-			{
-				case DbRowSearchMode.Copied:
-					status = DbRowStatus.Copied;
-					function = SqlFunctionCode.CompareEqual;
-					break;
-				case DbRowSearchMode.Live:
-					status = DbRowStatus.Live;
-					function = SqlFunctionCode.CompareEqual;
-					break;
-				case DbRowSearchMode.LiveActive:
-					status = DbRowStatus.ArchiveCopy;
-					function = SqlFunctionCode.CompareLessThan;
-					break;
-				case DbRowSearchMode.ArchiveCopy:
-					status = DbRowStatus.ArchiveCopy;
-					function = SqlFunctionCode.CompareEqual;
-					break;
-				case DbRowSearchMode.LiveAll:
-					status = DbRowStatus.Deleted;
-					function = SqlFunctionCode.CompareLessThan;
-					break;
-				case DbRowSearchMode.Deleted:
-					status = DbRowStatus.Deleted;
-					function = SqlFunctionCode.CompareEqual;
-					break;
-
-				case DbRowSearchMode.All:
-					return;
-
-				default:
-					throw new System.ArgumentException (string.Format ("Search mode {0} not supported", searchMode), "searchMode");
-			}
-
-			SqlField nameStatus  = SqlField.CreateName (tableName, Tags.ColumnStatus);
-			SqlField constStatus = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
-
-			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
 		/// <summary>
@@ -2732,7 +2592,6 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName], typeDef.Name),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)),
@@ -2756,7 +2615,6 @@ namespace Epsitec.Cresus.Database
 			
 			SqlFieldList fieldsToUpdate = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName], typeDef.Name),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)),
@@ -2789,7 +2647,6 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)),
@@ -2813,7 +2670,6 @@ namespace Epsitec.Cresus.Database
 			
 			SqlFieldList fields = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus], table.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName], table.Name),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName),
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)),
@@ -2849,7 +2705,6 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)),
@@ -2876,7 +2731,6 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus], column.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName], column.Name),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)),
@@ -2903,7 +2757,6 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ()
 			{
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus], column.Key.IntStatus),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName], column.Name),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)),
@@ -3008,14 +2861,6 @@ namespace Epsitec.Cresus.Database
 			SqlField tableColumnId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
 			SqlField columnRefTableId = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTable);
 			query.Joins.Add (new SqlJoin (tableColumnId, columnRefTableId, SqlJoinCode.Inner));
-
-			SqlField statusTable  = SqlField.CreateName ("T_TABLE", Tags.ColumnStatus);
-			SqlField statusTableValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusTable, statusTableValue));
-
-			SqlField statusColumn  = SqlField.CreateName ("T_COLUMN", Tags.ColumnStatus);
-			SqlField statusColumnValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusColumn, statusColumnValue));
 
 			SqlField typeColumn = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType);
 			SqlField typeValue = SqlField.CreateConstant (DbKey.Empty.Id, DbKey.RawTypeForId);
@@ -3130,7 +2975,6 @@ namespace Epsitec.Cresus.Database
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),
@@ -3153,7 +2997,6 @@ namespace Epsitec.Cresus.Database
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),
@@ -3179,7 +3022,6 @@ namespace Epsitec.Cresus.Database
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-					new DbColumn(Tags.ColumnStatus, types.KeyStatus, DbColumnClass.KeyStatus, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnDisplayName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
 					new DbColumn(Tags.ColumnInfoXml, types.InfoXml, DbColumnClass.Data, DbElementCat.Internal),

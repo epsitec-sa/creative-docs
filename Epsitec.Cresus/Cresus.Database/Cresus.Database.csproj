@@ -241,12 +241,6 @@
     <Compile Include="DbRawType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbRowSearchMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbRowStatus.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DbSimpleType.cs">
       <SubType>Code</SubType>
     </Compile>

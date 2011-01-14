@@ -713,8 +713,7 @@ namespace Epsitec.Cresus.Database
 			DbRawType rawType = this.type.RawType;
 			SqlColumn column;
 
-			if ((this.columnClass == DbColumnClass.KeyId) ||
-				(this.columnClass == DbColumnClass.KeyStatus))
+			if (this.columnClass == DbColumnClass.KeyId)
 			{
 				if (this.Category != DbElementCat.Internal)
 				{
@@ -766,7 +765,6 @@ namespace Epsitec.Cresus.Database
 			{
 				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
-				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
 				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
 
