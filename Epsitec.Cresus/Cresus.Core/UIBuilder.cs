@@ -768,6 +768,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.RegisterTextField (editor);
 			this.ContentListAdd (container);
 
 			foreach (var account in chart.Items)
@@ -942,20 +943,15 @@ namespace Epsitec.Cresus.Core
 
 		private void RegisterTextField(AbstractTextField textField)
 		{
-			if ((this.businessContext != null) &&
-				(this.ReadOnly == false))
+			if (this.businessContext != null && this.ReadOnly == false)
 			{
-				textField.TextEdited +=
-					delegate
+				textField.TextEdited += delegate
+				{
+					if (!this.businessContext.AcquireLock ())
 					{
-						if (this.businessContext.AcquireLock ())
-						{
-						}
-						else
-						{
-							textField.RejectEdition ();
-						}
-					};
+						textField.RejectEdition ();
+					}
+				};
 			}
 		}
 
@@ -1049,6 +1045,7 @@ namespace Epsitec.Cresus.Core
 				};
 			}
 
+			this.RegisterTextField (textField);
 			this.ContentListAdd (container);
 
 			menuButton.Clicked += delegate
@@ -1155,6 +1152,7 @@ namespace Epsitec.Cresus.Core
 				};
 			}
 
+			this.RegisterTextField (textField);
 			this.ContentListAdd (container);
 
 			menuButton.Clicked += delegate
@@ -1443,6 +1441,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = tabIndex1,
 			};
 
+			this.RegisterTextField (editor);
 			this.ContentListAdd (container);
 
 			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController, createEnabled: referenceController.HasCreator);
