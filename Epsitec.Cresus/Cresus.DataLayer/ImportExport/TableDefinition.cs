@@ -130,16 +130,16 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			this.WriteXmlStart (xmlWriter, index);
 
-			foreach (IList<string> row in this.ProcessRowsWrite(this.GetRows (dbInfrastructure)))
+			foreach (IList<string> row in this.ProcessRowsWrite(dbInfrastructure.Converter, this.GetRows (dbInfrastructure)))
 			{
-				this.writeXmlRow (xmlWriter, row);
+				this.WriteXmlRow (xmlWriter, row);
 			}
 
 			this.WriteXmlEnd (xmlWriter);
 		}
 
 
-		private void writeXmlRow(XmlWriter xmlWriter, IList<string> row)
+		private void WriteXmlRow(XmlWriter xmlWriter, IList<string> row)
 		{
 			xmlWriter.WriteStartElement ("row");
 
@@ -253,9 +253,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private IEnumerable<IList<string>> ProcessRowsWrite(IEnumerable<object> rows)
+		private IEnumerable<IList<string>> ProcessRowsWrite(ITypeConverter iTypeConverter, IEnumerable<object> rows)
 		{
-			var converters = this.Columns.Select (c => this.GetSerializationConverter (c)).ToList ();
+			var converters = this.Columns.Select (c => this.GetSerializationConverter (iTypeConverter, c)).ToList ();
 			var isIdColumn = this.Columns.Select (c => c.IsIdColumn).ToList ();
 
 			foreach (IList<object> row in rows)
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!isEmpty)
 			{
-				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (this.ReadXmlRows (xmlReader)));
+				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (dbInfrastructure.Converter, this.ReadXmlRows (xmlReader)));
 
 				TableDefinition.ReadXmlEnd (xmlReader);
 			}
@@ -455,9 +455,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private IEnumerable<IList<object>> ProcessRowsRead(IEnumerable<IList<string>> rows)
+		private IEnumerable<IList<object>> ProcessRowsRead(ITypeConverter iTypeConverter, IEnumerable<IList<string>> rows)
 		{
-			var converters = this.Columns.Select (c => this.GetSerializationConverter (c)).ToList ();
+			var converters = this.Columns.Select (c => this.GetSerializationConverter (iTypeConverter, c)).ToList ();
 
 			foreach (IList<string> row in rows)
 			{
@@ -508,7 +508,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			foreach (ColumnDefinition column in this.Columns)
 			{
-				SqlField sqlField = SqlField.CreateConstant (row[index], column.DbRawType);
+				DbRawType internalDbRawType = this.GetInternalRawType (dbInfrastructure.Converter, column.DbRawType);
+
+				SqlField sqlField = SqlField.CreateConstant (row[index], internalDbRawType);
 				sqlField.Alias = column.Name;
 
 				sqlFields.Add (sqlField);
@@ -535,13 +537,35 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private ISerializationConverter GetSerializationConverter(ColumnDefinition column)
+		private ISerializationConverter GetSerializationConverter(ITypeConverter iTypeConverter, ColumnDefinition column)
 		{
-			System.Type adoType = TypeConverter.GetAdoType (column.DbRawType);
+			DbRawType rawType = this.GetInternalRawType (iTypeConverter, column.DbRawType);
+
+			System.Type adoType = TypeConverter.GetAdoType (rawType);
 
 			return InvariantConverter.GetSerializationConverter (adoType);
 		}
 
+
+
+		private DbRawType GetInternalRawType(ITypeConverter iTypeConverter, DbRawType rawType)
+		{
+			DbRawType internalRawType = rawType;
+
+			if (!iTypeConverter.CheckNativeSupport (internalRawType))
+			{
+				IRawTypeConverter iRawTypeConverter;
+
+				if (!iTypeConverter.GetRawTypeConverter (internalRawType, out iRawTypeConverter))
+				{
+					throw new System.Exception ("Cannot convert type.");
+				}
+
+				internalRawType = iRawTypeConverter.InternalType;
+			}
+
+			return internalRawType;
+		}
 
 		public void Clean(DbInfrastructure dbInfrastructure)
 		{
