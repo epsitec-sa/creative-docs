@@ -78,7 +78,8 @@ namespace Epsitec.Cresus.Core.Entities
 			blob.XmlData = xml;
 
 			this.SerializedChartsOfAccounts.Add (blob);
-			this.chartsOfAccounts.Add (chart);
+			//?this.chartsOfAccounts.Add (chart);
+			//?this.lastChecksum = this.Checksum;
 		}
 
 		public void RemoveChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
@@ -95,15 +96,27 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			this.SerializedChartsOfAccounts.Remove (blob);
-			this.chartsOfAccounts.Remove (chart);
+			//?this.chartsOfAccounts.Remove (chart);
+			//?this.lastChecksum = this.Checksum;
 		}
 
 
 		private void EnsureThatChartsOfAccountsAreDeserialized()
 		{
-			if (this.chartsOfAccounts == null)
+			string currentHash = this.CurrentHash;
+
+			if (this.lastHash != currentHash)
 			{
-				this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
+				this.lastHash = currentHash;
+
+				if (this.chartsOfAccounts == null)
+				{
+					this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
+				}
+				else
+				{
+					this.chartsOfAccounts.Clear ();
+				}
 
 				foreach (var blob in this.SerializedChartsOfAccounts)
 				{
@@ -113,7 +126,32 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		private string CurrentHash
+		{
+			//	Retourne une chaîne de longueur quelconque représentant un checksum unique des plans comptables
+			//	actuellement sérialisés.
+			get
+			{
+				if (this.SerializedChartsOfAccounts.Count == 0)
+				{
+					return "empty";
+				}
+
+				var builder = new System.Text.StringBuilder ();
+
+				foreach (var blob in this.SerializedChartsOfAccounts)
+				{
+					string md5 = Common.IO.Checksum.ComputeMd5Hash (blob.Data);
+					builder.Append (md5);
+					builder.Append ("+");
+				}
+
+				return builder.ToString ();
+			}
+		}
+
 
 		private List<CresusChartOfAccounts>		chartsOfAccounts;
+		private string							lastHash;
 	}
 }
