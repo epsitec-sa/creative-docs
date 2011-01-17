@@ -33,10 +33,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				Indent = true,
 			};
 
+			string version = "1.0.0";
+			long idShift = DbInfrastructure.AutoIncrementStartIndex;
+
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
 				EpsitecEntitySerializer.WriteDocumentStart (xmlWriter);
-				EpsitecEntitySerializer.WriteHeader (xmlWriter);
+				EpsitecEntitySerializer.WriteHeader (xmlWriter, version, idShift);
 				EpsitecEntitySerializer.WriteDefinition (xmlWriter, tableDefinitions);
 				EpsitecEntitySerializer.WriteData (dbInfrastructure, xmlWriter, tableDefinitions);
 				EpsitecEntitySerializer.WriteDocumentEnd (xmlWriter);
@@ -156,11 +159,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void WriteHeader(XmlWriter xmlWriter)
+		private static void WriteHeader(XmlWriter xmlWriter, string version, long idShift)
 		{
 			xmlWriter.WriteStartElement ("header");
 			xmlWriter.WriteStartElement ("version");
-			xmlWriter.WriteValue ("1.0.0");
+			xmlWriter.WriteValue (version);
+			xmlWriter.WriteEndElement ();
+			xmlWriter.WriteStartElement ("idShift");
+			xmlWriter.WriteValue (idShift);
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteEndElement ();
 		}
@@ -199,14 +205,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry)
+		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, ImportMode importMode)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
 				EpsitecEntitySerializer.ReadDocumentStart (xmlReader);
 				EpsitecEntitySerializer.ReadHeader (xmlReader);
 				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
-				EpsitecEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions);
+				EpsitecEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions, importMode);
 				EpsitecEntitySerializer.ReadDocumentEnd (xmlReader);
 			}
 		}
@@ -226,11 +232,28 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			string version = xmlReader.ReadString ();
 			
 			xmlReader.ReadEndElement ();
+			xmlReader.ReadStartElement ("idShift");
+
+			string idShift = xmlReader.ReadString ();
+
+			xmlReader.ReadEndElement ();
 			xmlReader.ReadEndElement ();
 
 			if (!string.Equals (version, "1.0.0"))
 			{
 				throw new System.FormatException ("Invalid version number: 1.0.0 expected but " + version + " found");
+			}
+
+			long idShiftAsLong;
+
+			if (!long.TryParse (idShift, out idShiftAsLong))
+			{
+				throw new System.FormatException ("Invalid id shift.");
+			}
+
+			if (idShiftAsLong != DbInfrastructure.AutoIncrementStartIndex)
+			{
+				throw new System.FormatException ("Invalid id shift.");
 			}
 		}
 
@@ -259,9 +282,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions)
+		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions, ImportMode importMode)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
+			bool decrementIds = importMode == ImportMode.DecrementIds;
+
 
 			xmlReader.ReadStartElement ("data");
 
@@ -273,7 +298,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				{
 					if (index < tableDefinitions.Count)
 					{
-						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, dbLogEntry, index);
+						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, dbLogEntry, index, decrementIds);
 					}
 
 					index++;
@@ -295,7 +320,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void CleanDatabase(FileInfo file, DbInfrastructure dbInfrastructure)
+		public static void CleanDatabase(FileInfo file, DbInfrastructure dbInfrastructure, ImportMode importMode)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
@@ -304,16 +329,18 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
 
-				EpsitecEntitySerializer.CleanTables (dbInfrastructure, tableDefinitions);
+				EpsitecEntitySerializer.CleanTables (dbInfrastructure, importMode, tableDefinitions);
 			}
 		}
 
 
-		private static void CleanTables(DbInfrastructure dbInfrastructure, IList<TableDefinition> tableDefinitions)
+		private static void CleanTables(DbInfrastructure dbInfrastructure, ImportMode importMode, IList<TableDefinition> tableDefinitions)
 		{
+			bool cleanWholeTable = importMode == ImportMode.PreserveIds;
+
 			foreach (TableDefinition tableDefinition in tableDefinitions)
 			{
-				tableDefinition.Clean (dbInfrastructure);
+				tableDefinition.Clean (dbInfrastructure, cleanWholeTable);
 			}
 		}
 

@@ -256,16 +256,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private IEnumerable<IList<string>> ProcessRowsWrite(ITypeConverter iTypeConverter, IEnumerable<object> rows)
 		{
 			var converters = this.Columns.Select (c => this.GetSerializationConverter (iTypeConverter, c)).ToList ();
-			var isIdColumn = this.Columns.Select (c => c.IsIdColumn).ToList ();
-
+			
 			foreach (IList<object> row in rows)
 			{
-				yield return this.ProcessRowWrite (converters, isIdColumn, row);
+				yield return this.ProcessRowWrite (converters, row);
 			}
 		}
 
 
-		private IList<string> ProcessRowWrite(IList<ISerializationConverter> converters, IList<bool> isIdColumn, IList<object> row)
+		private IList<string> ProcessRowWrite(IList<ISerializationConverter> converters, IList<object> row)
 		{
 			List<string> processedRow = new List<string> ();
 			
@@ -274,11 +273,6 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				object valueAsObject = row[i];
 
 				ISerializationConverter converter = converters[i];
-
-				if (isIdColumn[i])
-				{
-					valueAsObject = ((long) valueAsObject) - DbInfrastructure.AutoIncrementStartIndex;
-				}
 
 				string valueAsString = (valueAsObject == null || valueAsObject == System.DBNull.Value) ? null : converter.ConvertToString (valueAsObject, null);
 
@@ -385,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, int index)
+		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, int index, bool decrementIds)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 
@@ -393,7 +387,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!isEmpty)
 			{
-				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (dbInfrastructure.Converter, this.ReadXmlRows (xmlReader)));
+				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, this.ReadXmlRows (xmlReader)));
 
 				TableDefinition.ReadXmlEnd (xmlReader);
 			}
@@ -455,18 +449,19 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private IEnumerable<IList<object>> ProcessRowsRead(ITypeConverter iTypeConverter, IEnumerable<IList<string>> rows)
+		private IEnumerable<IList<object>> ProcessRowsRead(ITypeConverter iTypeConverter, bool decrementIds, IEnumerable<IList<string>> rows)
 		{
 			var converters = this.Columns.Select (c => this.GetSerializationConverter (iTypeConverter, c)).ToList ();
+			var isIdColumn = this.Columns.Select (c => c.IsIdColumn && decrementIds).ToList ();
 
 			foreach (IList<string> row in rows)
 			{
-				yield return this.ProcessRowRead (converters, row);
+				yield return this.ProcessRowRead (converters, isIdColumn, row);
 			}
 		}
 
 
-		private IList<object> ProcessRowRead(IList<ISerializationConverter> converters, IList<string> row)
+		private IList<object> ProcessRowRead(IList<ISerializationConverter> converters, IList<bool> isIdColumn, IList<string> row)
 		{
 			List<object> processedRow = new List<object> ();
 
@@ -477,6 +472,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				ISerializationConverter converter = converters[i];
 
 				object valueAsObject = (valueAsString == null) ? null : converter.ConvertFromString (valueAsString, null);
+
+				if (isIdColumn[i])
+				{
+					valueAsObject = ((long) valueAsObject) - DbInfrastructure.AutoIncrementStartIndex;
+				}
 
 				processedRow.Add (valueAsObject);
 			}
@@ -567,13 +567,17 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			return internalRawType;
 		}
 
-		public void Clean(DbInfrastructure dbInfrastructure)
+		public void Clean(DbInfrastructure dbInfrastructure, bool cleanWholeTable)
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				string tableName = this.Name;
 				SqlFieldList conditions = new SqlFieldList ();
-				conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartIndex));
+
+				if (!cleanWholeTable)
+				{
+					conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartIndex));
+				}
 
 				dbTransaction.SqlBuilder.RemoveData (tableName, conditions);
 				dbInfrastructure.ExecuteNonQuery (dbTransaction);

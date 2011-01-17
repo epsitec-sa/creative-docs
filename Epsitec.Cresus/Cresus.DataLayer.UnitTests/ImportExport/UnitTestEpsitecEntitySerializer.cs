@@ -40,7 +40,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 
 		[TestMethod]
-		public void SimpleExportImport()
+		public void SimpleExportImport1()
+		{
+			ImportMode mode = ImportMode.DecrementIds;
+
+			this.SimpleExportImport (mode);
+		}
+
+
+		[TestMethod]
+		public void SimpleExportImport2()
+		{
+			ImportMode mode = ImportMode.PreserveIds;
+
+			this.SimpleExportImport (mode);
+		}
+
+
+		private void SimpleExportImport(ImportMode mode)
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -49,26 +66,64 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 				EpsitecEntitySerializer.Export (file, dbInfrastructure);
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
+
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, mode);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+					bool decrementIds = mode == ImportMode.DecrementIds;
 
-					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
-					Assert.IsTrue (DatabaseCreator2.CheckHans (hans));
+					NaturalPersonEntity alfred1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity gertrude1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity hans1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+
+					if (decrementIds)
+					{
+						Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred1));
+						Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude1));
+						Assert.IsTrue (DatabaseCreator2.CheckHans (hans1));
+					}
+					else
+					{
+						Assert.IsNull (alfred1);
+						Assert.IsNull (gertrude1);
+						Assert.IsNull (hans1);
+					}
+
+					NaturalPersonEntity alfred2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+					NaturalPersonEntity gertrude2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+					NaturalPersonEntity hans2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred2));
+					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude2));
+					Assert.IsTrue (DatabaseCreator2.CheckHans (hans2));
 				}
 			}
 		}
 
 
 		[TestMethod]
-		public void CleanDatabase()
+		public void CleanDatabase1()
+		{
+			ImportMode mode = ImportMode.DecrementIds;
+
+			this.CleanDatabase (mode);
+		}
+		
+
+		[TestMethod]
+		public void CleanDatabase2()
+		{
+			ImportMode mode = ImportMode.PreserveIds;
+
+			this.CleanDatabase (mode);
+		}
+
+
+		private void CleanDatabase(ImportMode mode)
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -77,7 +132,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
 				EpsitecEntitySerializer.Export (file, dbInfrastructure);
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -123,7 +178,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))));
 				}
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -148,29 +203,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					Assert.IsNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1))));
 					Assert.IsNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))));
-					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002))));
-					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003))));
+					bool isNull = mode == ImportMode.PreserveIds;
+					
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
-					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))));
-					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000003))));
-					Assert.IsNotNull (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000003))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))));
-					Assert.IsNotNull (dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))));
-					Assert.IsNotNull (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000002))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000002))));
 
-					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))));
-					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001))));
+					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))));
 				}
 			}
 		}
-
 
 		[TestMethod]
 		public void ExportImportWithoutSomeTables()
@@ -183,7 +239,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				EpsitecEntitySerializer.Export (file, dbInfrastructure);
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
 
 				XDocument xDocument = XDocument.Load (file.FullName);
 
@@ -218,7 +274,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				xDocument.Save (file.FullName);
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -246,7 +302,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				EpsitecEntitySerializer.Export (file, dbInfrastructure);
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
 
 				XDocument xDocument = XDocument.Load (file.FullName);
 
@@ -266,7 +322,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				xDocument.Save (file.FullName);
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry);
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
