@@ -838,7 +838,7 @@ namespace Epsitec.Cresus.Core
 			//	Met à jour le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
 			if (string.IsNullOrEmpty (editor.Text) || editor.SelectedItemIndex == -1)
 			{
-				marshaler.SetStringValue (null);
+				marshaler.SetStringValue ("");
 			}
 			else
 			{
