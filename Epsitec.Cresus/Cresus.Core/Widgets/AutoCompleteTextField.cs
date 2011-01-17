@@ -646,6 +646,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (selectedHintMode == SelectedHintMode.FinalEdition)
 			{
+				this.StartEdition ();
 				this.OnAcceptingEdition (new CancelEventArgs ());
 				this.OnEditionAccepted ();
 				this.SelectAll ();
