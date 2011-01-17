@@ -3,10 +3,11 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.UnitTests
 {
 	[TestClass]
 	public class UnitTestEntities

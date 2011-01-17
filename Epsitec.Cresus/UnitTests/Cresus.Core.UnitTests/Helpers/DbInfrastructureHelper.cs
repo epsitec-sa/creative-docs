@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Cresus.Database.UnitTests.Helpers
+﻿using Epsitec.Cresus.Database;
+
+
+namespace Epsitec.Cresus.Core.UnitTests.Helpers
 {
 
 
@@ -8,9 +11,9 @@
 
 		public static bool CheckDatabaseExistence()
 		{
-			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
-			return DbInfrastructure.CheckDatabaseExistence (dbAccess);
+			return DbInfrastructure.CheckDatabaseExistence (access);
 		}
 
 
@@ -18,7 +21,7 @@
 		{
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
+				DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
 				infrastructure.CreateDatabase (access);
 			}
@@ -27,7 +30,7 @@
 
 		public static void DeleteTestDatabase()
 		{
-			DbAccess access = TestHelper.GetDbAccessForTestDatabase ();
+			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
 			DbInfrastructure.DropDatabase (access);
 		}
@@ -46,13 +49,19 @@
 
 		public static DbInfrastructure ConnectToTestDatabase()
 		{
-			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+			DbAccess dbAccess = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
 			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
 
 			dbInfrastructure.AttachToDatabase (dbAccess);
 
 			return dbInfrastructure;
+		}
+
+
+		public static DbAccess GetDbAccessForTestDatabase()
+		{
+			return new DbAccess ("Firebird", "UTD_CORE", "localhost", "sysdba", "masterkey", false);
 		}
 
 

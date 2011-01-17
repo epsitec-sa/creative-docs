@@ -197,54 +197,6 @@ namespace Epsitec.Cresus.Database
 
 			return true;
 		}
-		
-		public void DropDatabase()
-		{
-			this.Dispose ();
-
-			DbInfrastructure.DropDatabase (this.access);
-		}
-
-		public static void DropDatabase(DbAccess dbAccess)
-		{
-			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
-			{
-				idbAbstraction.DropDatabase ();
-			}
-		}
-
-		public static bool DeleteDatabaseFiles(DbAccess access, int recursion = 0)
-		{
-			string path = DbFactory.GetDatabaseFilePaths (access).First ();
-
-			try
-			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-					return true;
-				}
-
-				return false;
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}", ex.ToString ());
-
-				if (recursion < 5)
-				{
-					System.Threading.Thread.Sleep (1000);
-					return DbInfrastructure.DeleteDatabaseFiles (access, ++recursion);
-				}
-			}
-
-			return false;
-		}
-
-		public static bool CheckForDatabaseFiles(DbAccess access)
-		{
-			return DbFactory.GetDatabaseFilePaths (access).Any (path => System.IO.File.Exists (path));
-		}
 
 		public void AttachToDatabase(DbAccess access)
 		{
@@ -370,6 +322,42 @@ namespace Epsitec.Cresus.Database
 			}				
 			
 			abstraction.ReleaseConnection ();
+		}
+
+		public static void DropDatabase(DbAccess dbAccess)
+		{
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			{
+				idbAbstraction.DropDatabase ();
+			}
+		}
+
+		public static bool CheckDatabaseExistence(DbAccess dbAccess)
+		{
+			// TODO This method is not very reliable, as it could tell that the database does not
+			// exists when the database exists but the login information is not valid. This might
+			// be improved, but it doesn't seem to be an easy way to ask Firebird if a database
+			// does exist or not.
+			// Marc
+
+			bool databaseExists;
+
+			try
+			{
+				using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+				{
+					idbAbstraction.Connection.Open ();
+					idbAbstraction.Connection.Close ();
+				}
+
+				databaseExists = true;
+			}
+			catch
+			{
+				databaseExists = false;
+			}
+
+			return databaseExists;
 		}
 
 		/// <summary>
@@ -3256,7 +3244,7 @@ namespace Epsitec.Cresus.Database
 
 			public void InitializeDefaultTypes()
 			{
-				var defaultStringType = Epsitec.Common.Types.Res.Types.Default.String;
+				//var defaultStringType = Epsitec.Common.Types.Res.Types.Default.String;
 
 				this.defaultInteger		= new DbTypeDef (IntegerType.Default);
 				this.defaultLongInteger = new DbTypeDef (LongIntegerType.Default);

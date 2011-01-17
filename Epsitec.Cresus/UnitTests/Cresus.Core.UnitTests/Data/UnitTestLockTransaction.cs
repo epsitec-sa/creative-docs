@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.UnitTests.Helpers;
 
 using Epsitec.Cresus.Database;
 
@@ -30,18 +31,15 @@ namespace Epsitec.Cresus.Core.UnitTests.Data
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			TestHelper.DeleteDatabase ();
-			TestHelper.CreateDatabase ();
+			DbInfrastructureHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void SimpleTest1()
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				dbInfrastructure.AttachToDatabase (TestHelper.CreateDbAccess ());
-
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure))
 				{
 					dataInfrastructure.OpenConnection ("id");
@@ -59,12 +57,9 @@ namespace Epsitec.Cresus.Core.UnitTests.Data
 		[TestMethod]
 		public void SimpleTest2()
 		{
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
-
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
 				{
@@ -119,16 +114,11 @@ namespace Epsitec.Cresus.Core.UnitTests.Data
 		[TestMethod]
 		public void GetLockOwnersAndCreationTimeTest()
 		{
-			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure3 = new DbInfrastructure ())
-			using (DbInfrastructure dbInfrastructure4 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure3 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure4 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				dbInfrastructure1.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure2.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure3.AttachToDatabase (TestHelper.CreateDbAccess ());
-				dbInfrastructure4.AttachToDatabase (TestHelper.CreateDbAccess ());
-
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
 				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure3 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure3))

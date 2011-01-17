@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Epsitec.Cresus.Database.Implementation
@@ -89,19 +90,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			try
 			{
-				if ((testConnection) &&
-					(ignoreErrors) &&
-					(this.dbAccess.IsLocalHost))
-				{
-					if (!FirebirdAbstractionFactory.GetDatabaseFilePaths (this.dbAccess).Any (path => System.IO.File.Exists (path)))
-                    {
-						//	We know that we will fail - no need to try, the file is
-						//	missing.
-
-						return;
-                    }
-				}
-
 				this.dbConnection = new FbConnection (this.dbConnectionString);
 				
 				if (testConnection)
@@ -173,11 +161,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			System.Diagnostics.Debug.Assert (this.dbAccess.CreateDatabase);
 			
-			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier, si nécessaire.
-			//	Il faut donc que nous le créions nous-même s'il n'existe pas encore.
-
 			string path = this.GetDbFilePath ();
-			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (path));
 
 			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, path, this.serverType);
 			
@@ -335,13 +319,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("Name is to long (length={0})", name));
 			}
-
-			// TODO This check is too restrictive, it should be relaxed. In the meantime, I disabled
-			// it.
-			//if (RegexFactory.AlphaNumDotName2.IsMatch (name) == false)
-			//{
-			//    throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
-			//}
 		}
 
 		#region IDisposable Members
