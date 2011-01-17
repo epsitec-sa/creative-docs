@@ -449,16 +449,17 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Replaces the Epsitec data stored within the database by the one stored in the given file.
 		/// </summary>
 		/// <param name="file">The file from which to read the data.</param>
+		/// <param name="importMode">The mode used to import the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
-		public void ImportEpsitecData(FileInfo file)
+		public void ImportEpsitecData(FileInfo file, ImportMode importMode)
 		{
 			file.ThrowIfNull ("file");
 
 			DbId connectionId = new DbId (this.ConnectionInformation.ConnectionId);
 			DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
 
-			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure);
-			EpsitecEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry);
+			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure, importMode);
+			EpsitecEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry, importMode);
 		}
 
 		
