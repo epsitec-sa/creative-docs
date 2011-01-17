@@ -39,6 +39,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Download.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
+				this.window.Icon = this.editor.Window.Icon;
 				this.window.WindowCloseClicked += this.HandleWindowDownloadCloseClicked;
 
 				StaticText title = new StaticText(this.window.Root);

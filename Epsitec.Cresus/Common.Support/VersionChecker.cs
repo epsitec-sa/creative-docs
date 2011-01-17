@@ -46,7 +46,9 @@ namespace Epsitec.Common.Support
 			}
 
 			this.context = System.Threading.SynchronizationContext.Current ?? new System.Threading.SynchronizationContext ();
+			
 			System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += this.HandleNetworkAvailabilityChanged;
+			System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged += this.HandleNetworkAddressChanged;
 		}
 
 		private VersionChecker(System.Reflection.Assembly assembly)
@@ -57,7 +59,7 @@ namespace Epsitec.Common.Support
 		private VersionChecker(string version)
 			: this ()
 		{
-			VersionChecker.SplitVersionString (version, out this.currentMajor, out this.currentMinor, out this.currentBuild, out this.currentRevision);
+			VersionChecker.SplitVersionString (version, out this.currentMajor, out this.currentMinor, out this.currentRevision, out this.currentBuild);
 		}
 
 		public bool IsReady
@@ -96,8 +98,8 @@ namespace Epsitec.Common.Support
 				return this.IsCheckSuccessful &&
 					((this.currentMajor < this.foundMajor) ||
 					((this.currentMajor == this.foundMajor) && (this.currentMinor < this.foundMinor)) ||
-					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentBuild < this.foundBuild)) ||
-					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentBuild == this.foundBuild) && (this.currentRevision < this.foundRevision)));
+					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentRevision < this.foundRevision)) ||
+					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentRevision == this.foundRevision) && (this.currentBuild < this.foundBuild)));
 			}
 		}
 
@@ -134,7 +136,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2:000}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3:0000}", this.currentMajor, this.currentMinor, this.currentRevision, this.currentBuild);
 			}
 		}
 
@@ -283,6 +285,7 @@ namespace Epsitec.Common.Support
 		private void ReadVersionInfoFromWebServer(string url)
 		{
 			string result = "";
+			System.Threading.Thread.Sleep (200);
 
 			try
 			{
@@ -292,7 +295,7 @@ namespace Epsitec.Common.Support
 
 				while (this.IsNetworkAvailable == false)
 				{
-					System.Threading.Thread.Sleep (1000);
+					System.Threading.Thread.Sleep (200);
 				}
 
 				System.Diagnostics.Debug.WriteLine ("Checking for updates at URL " + url);
@@ -308,6 +311,8 @@ namespace Epsitec.Common.Support
 				reader.Close ();
 				response.Close ();
 
+				System.Diagnostics.Debug.WriteLine ("Update result : " + result);
+
 				lock (this.exclusion)
 				{
 					this.readerResult = result;
@@ -320,14 +325,14 @@ namespace Epsitec.Common.Support
 						this.foundVersion = args[0];
 						this.foundUrl = args[1];
 
-						VersionChecker.SplitVersionString (this.foundVersion, out this.foundMajor, out this.foundMinor, out this.foundBuild, out this.foundRevision);
+						VersionChecker.SplitVersionString (this.foundVersion, out this.foundMajor, out this.foundMinor, out this.foundRevision, out this.foundBuild);
 					}
 				}
 
 				this.OnVersionInformationChanged ();
 				this.IsNetworkAvailable = true;
 
-				System.Diagnostics.Debug.WriteLine ("Update result : " + result);
+				System.Diagnostics.Debug.WriteLine ("Update result transmitted to main thread...");
 			}
 			catch (System.Exception)
 			{
@@ -340,7 +345,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private static void SplitVersionString(string v, out int major, out int minor, out int build, out int revision)
+		private static void SplitVersionString(string v, out int major, out int minor, out int revision, out int build)
 		{
 			string[] args = v.Split ('.');
 
@@ -361,11 +366,11 @@ namespace Epsitec.Common.Support
 
 						if (args.Length > 2)
 						{
-							build = System.Int32.Parse (args[2].Split (' ')[0], System.Globalization.CultureInfo.InvariantCulture);
+							revision = System.Int32.Parse (args[2].Split (' ')[0], System.Globalization.CultureInfo.InvariantCulture);
 
 							if (args.Length > 3)
 							{
-								revision = System.Int32.Parse (args[3], System.Globalization.CultureInfo.InvariantCulture);
+								build = System.Int32.Parse (args[3], System.Globalization.CultureInfo.InvariantCulture);
 							}
 						}
 					}
@@ -379,6 +384,11 @@ namespace Epsitec.Common.Support
 		private void HandleNetworkAvailabilityChanged(object sender, System.Net.NetworkInformation.NetworkAvailabilityEventArgs e)
 		{
 			this.IsNetworkAvailable = e.IsAvailable;
+		}
+
+		private void HandleNetworkAddressChanged(object sender, System.EventArgs e)
+		{
+			this.IsNetworkAvailable = true;
 		}
 
 		private void OnVersionInformationChanged()
