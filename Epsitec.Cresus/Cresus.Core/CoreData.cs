@@ -449,12 +449,12 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.ForceDatabaseCreation)
 			{
-				this.DeleteDatabase (access);
+				this.DropDatabase (access);
 			}
 
 			try
 			{
-				if (DbInfrastructure.CheckForDatabaseFiles (access))
+				if (DbInfrastructure.CheckDatabaseExistence (access))
 				{
 					this.dbInfrastructure.AttachToDatabase (access);
 					System.Diagnostics.Trace.WriteLine ("Connected to database");
@@ -477,9 +477,9 @@ namespace Epsitec.Cresus.Core
 			return true;
 		}
 
-		private void DeleteDatabase(DbAccess access)
+		private void DropDatabase(DbAccess access)
 		{
-			DbInfrastructure.DeleteDatabaseFiles (access);
+			DbInfrastructure.DropDatabase (access);
 		}
 
 		private void SetupDatabase(bool createNewDatabase)

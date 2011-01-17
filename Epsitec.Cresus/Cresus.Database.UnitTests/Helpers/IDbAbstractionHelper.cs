@@ -6,6 +6,31 @@
 	{
 
 
+		public static bool CheckDatabaseExistence()
+		{
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+
+			bool databaseExists;
+
+			try
+			{
+				using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+				{
+					idbAbstraction.Connection.Open ();
+					idbAbstraction.Connection.Close ();
+				}
+
+				databaseExists = true;
+			}
+			catch
+			{
+				databaseExists = false;
+			}
+
+			return databaseExists;
+		}
+
+
 		public static void CreateTestDatabase()
 		{
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
@@ -36,7 +61,7 @@
 
 		public static void ResetTestDatabase()
 		{
-			if (TestHelper.CheckDatabaseExistence ())
+			if (IDbAbstractionHelper.CheckDatabaseExistence ())
 			{
 				IDbAbstractionHelper.DeleteTestDatabase ();
 			}

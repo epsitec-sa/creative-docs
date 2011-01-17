@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,7 +16,8 @@ using System.Linq;
 using System.Xml.Linq;
 
 
-namespace Epsitec.Cresus.Core
+
+namespace Epsitec.Cresus.Core.UnitTests
 {
 	/// <summary>
 	/// The <c>UnitTestFormState</c> unit test applies to <see cref="FormState"/>.
