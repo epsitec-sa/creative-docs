@@ -12810,9 +12810,33 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Informations</c> field.
+		///	designer:fld/L0A6O/L0KN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0KN]")]
+		public string Informations
+		{
+			get
+			{
+				return this.GetField<string> ("[L0KN]");
+			}
+			set
+			{
+				string oldValue = this.Informations;
+				if (oldValue != value)
+				{
+					this.OnInformationsChanging (oldValue, value);
+					this.SetField<string> ("[L0KN]", oldValue, value);
+					this.OnInformationsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnInformationsChanging(string oldValue, string newValue);
+		partial void OnInformationsChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
