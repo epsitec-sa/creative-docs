@@ -81,8 +81,7 @@ namespace Epsitec.Common.Support
 				xSettings.Add (new XElement (
 					"entry",
 					new XElement ("key", key),
-					new XElement ("value", this[key])
-				));
+					new XElement ("value", this[key])));
 			}
 
 			XmlWriterSettings xmlSettings = new XmlWriterSettings ()

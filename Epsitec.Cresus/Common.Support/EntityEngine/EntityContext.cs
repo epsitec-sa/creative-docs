@@ -1099,8 +1099,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 
-			IStructuredType type;
-			Dictionary<string, object> store;
+			private IStructuredType type;
+			private Dictionary<string, object> store;
 
 		}
 

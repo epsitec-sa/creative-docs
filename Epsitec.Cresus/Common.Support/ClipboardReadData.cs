@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return data.GetFormats (false);
+				return this.data.GetFormats (false);
 			}
 		}
 		
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return data.GetFormats (true);
+				return this.data.GetFormats (true);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				return data.GetData (format, true);
+				return this.data.GetData (format, true);
 			}
 		}
 		

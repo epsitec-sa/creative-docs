@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// The <c>IDbAbstractionFactory</c> interface is used to instanciate database
+	/// The <c>IDbAbstractionFactory</c> interface is used to instantiate database
 	/// abstraction objects for a given provider.
 	/// </summary>
 	public interface IDbAbstractionFactory

@@ -678,9 +678,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <c>DeveloperId</c> value (an <c>int</c>).
 		/// </summary>
 		public const string		DeveloperIdPropertyName = "DeveloperId";
-		
-		readonly CultureMapList					items;
-		readonly Dictionary<CultureMap, bool>	dirtyItems;
+
+		private readonly CultureMapList					items;
+		private readonly Dictionary<CultureMap, bool>	dirtyItems;
 
 		private ResourceManager					resourceManager;
 		private int								suspendNotifications;

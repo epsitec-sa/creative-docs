@@ -247,6 +247,6 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 		internal const string LineSeparator = "\r\n";
 
-		Dictionary<TemplateItem, string> templateItems;
+		private Dictionary<TemplateItem, string> templateItems;
 	}
 }

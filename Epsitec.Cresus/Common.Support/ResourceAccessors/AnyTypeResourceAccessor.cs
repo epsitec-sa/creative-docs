@@ -1386,8 +1386,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 				}
 			}
-			
-			List<StructuredData> originalValues;
+
+			private List<StructuredData> originalValues;
 		}
 
 		/// <summary>
@@ -1577,7 +1577,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			#endregion
 
-			Druid id;
+			private Druid id;
 		}
 
 		#endregion

@@ -642,7 +642,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			List<Weak<AbstractFileResourceAccessor>> list;
+			private List<Weak<AbstractFileResourceAccessor>> list;
 		}
 
 		#endregion

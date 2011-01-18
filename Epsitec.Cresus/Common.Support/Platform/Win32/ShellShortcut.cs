@@ -125,7 +125,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			set
 			{
-				this.link.SetIconLocation (value, IconIndex);
+				this.link.SetIconLocation (value, this.IconIndex);
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			set
 			{
-				this.link.SetIconLocation (IconPath, value);
+				this.link.SetIconLocation (this.IconPath, value);
 			}
 		}
 

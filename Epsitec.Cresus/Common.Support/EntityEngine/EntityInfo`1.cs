@@ -94,7 +94,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public T CreateEmptyEntity()
 			{
-				return base.CreateEmptyEntity<T> ();
+				return this.CreateEmptyEntity<T> ();
 			}
 
 			public static EmptyEntityContext Instance = new EmptyEntityContext ();

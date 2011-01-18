@@ -419,9 +419,9 @@ namespace Epsitec.Common.Support
 		public event EventHandler				VersionInformationChanged;
 
 		private static VersionChecker			defaultChecker;
-		
-		readonly object                         exclusion = new object ();
-		readonly System.Threading.SynchronizationContext context;
+
+		private readonly object                         exclusion = new object ();
+		private readonly System.Threading.SynchronizationContext context;
 		
 		private string							readerResult;
 

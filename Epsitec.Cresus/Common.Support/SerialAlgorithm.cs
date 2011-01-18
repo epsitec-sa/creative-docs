@@ -198,9 +198,9 @@ namespace Epsitec.Common.Support
 			return path.Substring (0, pos);
 		}
 
-		static System.DateTime	BuildDate			= new System.DateTime (2009, 12, 10);	//	TODO: update on each publication
-		static int				ProductGeneration	= 1;
-		static int				ProductGracePeriod	= 0;
+		private static System.DateTime	BuildDate			= new System.DateTime (2011, 01, 15);	//	TODO: update on each publication
+		private static int				ProductGeneration	= 1;
+		private static int				ProductGracePeriod	= 0;
 		#endregion
 		
 		public static string ReadCrDocSerial()

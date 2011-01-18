@@ -52,8 +52,8 @@ namespace Epsitec.Common.Support
 
 		public static readonly FileFilterInfo Empty = new FileFilterInfo ();
 
-		string path;
-		string extension;
-		System.IO.FileAttributes attributes;
+		private string path;
+		private string extension;
+		private System.IO.FileAttributes attributes;
 	}
 }

@@ -684,7 +684,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			List<AbstractCaptionResourceAccessor> list;
+			private List<AbstractCaptionResourceAccessor> list;
 		}
 
 		#endregion
