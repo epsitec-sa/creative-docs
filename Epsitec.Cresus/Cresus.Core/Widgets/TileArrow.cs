@@ -1,24 +1,32 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Cette classe, sans être un widget, sait peindre un cadre rectangulaire avec ou sans flèche.
+	/// </summary>
 	public class TileArrow
 	{
 		public TileArrow()
 		{
-			this.surfaceColors   = new List<Color> ();
-			this.outlineColors   = new List<Color> ();
-			this.thicknessColors = new List<Color> ();
+			this.surfaceColors = new List<Color> ();
+			this.outlineColors = new List<Color> ();
 		}
 
 
+		/// <summary>
+		/// Couleurs pour la surface.
+		/// S'il n'y en a qu'une, elle est unie.
+		/// S'il y en a deux, un dégradé est dessiné.
+		/// </summary>
+		/// <param name="colors"></param>
 		public void SetSurfaceColors(IEnumerable<Color> colors)
 		{
 			this.surfaceColors.Clear ();
@@ -29,6 +37,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Couleur pour le cadre. Une seule couleur est utilisée.
+		/// </summary>
+		/// <param name="colors"></param>
 		public void SetOutlineColors(IEnumerable<Color> colors)
 		{
 			this.outlineColors.Clear ();
@@ -36,16 +48,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (colors != null)
 			{
 				this.outlineColors.AddRange (colors);
-			}
-		}
-
-		public void SetThicknessColors(IEnumerable<Color> colors)
-		{
-			this.thicknessColors.Clear ();
-
-			if (colors != null)
-			{
-				this.thicknessColors.AddRange (colors);
 			}
 		}
 
@@ -80,22 +82,22 @@ namespace Epsitec.Cresus.Core.Widgets
 				return 8;
 			}
 		}
-		
-		
-		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, Direction direction)
+
+
+		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, Direction arrowLocation)
 		{
 			switch (mode)
 			{
 				case TileArrowMode.Normal:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, arrowLocation, deflate));
 					break;
 
 				case TileArrowMode.Selected:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, arrowLocation, deflate));
 					break;
 
 				case TileArrowMode.Hilited:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, arrowLocation, deflate));
 					break;
 
 				default:
@@ -126,15 +128,6 @@ namespace Epsitec.Cresus.Core.Widgets
 							Painter.PaintLeftToRightGradient (graphics, bounds, this.surfaceColors[0], this.surfaceColors[1]);
 						}
 					}
-				}
-			}
-
-			if (this.thicknessColors.Count > 0 && this.thicknessColors[0].IsValid)
-			{
-				using (Path path = pathProvider (2.0))
-				{
-					graphics.Rasterizer.AddOutline (path, 3.0);
-					graphics.RenderSolid (this.thicknessColors[0]);
 				}
 			}
 
@@ -287,6 +280,5 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private List<Color> surfaceColors;
 		private List<Color> outlineColors;
-		private List<Color> thicknessColors;
 	}
 }
