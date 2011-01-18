@@ -61,7 +61,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				var arrow = new TileArrow ();
 
 				arrow.SetOutlineColors (Tile.BorderColors);
-				arrow.SetThicknessColors (null);
 				arrow.SetSurfaceColors (Tile.SurfaceSummaryColors);
 				arrow.MouseHilite = false;
 

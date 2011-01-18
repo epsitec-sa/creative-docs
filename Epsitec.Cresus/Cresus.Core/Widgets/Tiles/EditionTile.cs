@@ -87,9 +87,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors   (this.OutlineColors);
-				arrow.SetThicknessColors (this.ThicknessColors);
-				arrow.SetSurfaceColors   (this.SurfaceColors);
+				arrow.SetOutlineColors (this.OutlineColors);
+				arrow.SetSurfaceColors (this.SurfaceColors);
 				arrow.MouseHilite = this.MouseHilite;
 
 				return arrow;
@@ -159,14 +158,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					}
 				}
 
-				return null;
-			}
-		}
-
-		private IEnumerable<Color> ThicknessColors
-		{
-			get
-			{
 				return null;
 			}
 		}
