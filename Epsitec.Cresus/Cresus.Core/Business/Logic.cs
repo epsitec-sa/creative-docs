@@ -14,14 +14,15 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class Logic
 	{
-		internal Logic(System.Type entityType, BusinessContext businessContext)
+		internal Logic(AbstractEntity entity, BusinessContext businessContext)
 		{
-			this.entityType = entityType;
+			this.entity = entity;
+			this.entityType = entity.GetType ();
 			this.rules = new Dictionary<RuleType, GenericBusinessRule> ();
 			this.businessContext = businessContext;
 		}
 
-		public CoreData Data
+		public CoreData							Data
 		{
 			get
 			{
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public CoreApplication Application
+		public CoreApplication					Application
 		{
 			get
 			{
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public BusinessSettingsEntity BusinessSettings
+		public BusinessSettingsEntity			BusinessSettings
 		{
 			get
 			{
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public BusinessContext BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public DataContext DataContext
+		public DataContext						DataContext
 		{
 			get
 			{
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Core.Business
 		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
 		{
 			var rule = this.ResolveRule (ruleType);
-			var link = Logic.current;
+			this.link = Logic.current;
 
 			Logic.current = this;
 
@@ -75,7 +76,8 @@ namespace Epsitec.Cresus.Core.Business
 			}
 			finally
 			{
-				Logic.current = link;
+				Logic.current = this.link;
+				this.link = null;
 			}
 		}
 
@@ -84,6 +86,22 @@ namespace Epsitec.Cresus.Core.Business
 			where T : AbstractEntity, new ()
 		{
 			return this.Data.GetAllEntities<T> (extraction);
+		}
+
+		public IEnumerable<T> Find<T>()
+			where T : AbstractEntity
+		{
+			var logic = this;
+
+			while (logic != null)
+			{
+				if (logic.entity is T)
+				{
+					yield return logic.entity as T;
+				}
+
+				logic = logic.link;
+			}
 		}
 
 
@@ -114,9 +132,11 @@ namespace Epsitec.Cresus.Core.Business
 
 		[System.ThreadStatic]
 		private static Logic current;
-		
+
+		private readonly AbstractEntity entity;
 		private readonly System.Type entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
 		private readonly BusinessContext businessContext;
+		private Logic link;
 	}
 }

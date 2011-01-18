@@ -19,6 +19,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			return null;
 		}
 
+		/// <summary>
+		/// Finds the default workflow definition associated with the specified entity
+		/// type.
+		/// </summary>
+		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <returns>
+		/// The default workflow definition associated with the specified entity type.
+		/// </returns>
 		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>()
 			where T : AbstractEntity, new ()
 		{
@@ -27,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			string nakedEntityName = AbstractEntity.GetNakedEntityName<T> ();
 			
-			example.Name = FormattedText.FromSimpleText ("Default ", nakedEntityName, "Workflow");
+			example.WorkflowName = FormattedText.FromSimpleText ("Default ", nakedEntityName, "Workflow");
 
 			var matches = repository.GetByExample (example);
 

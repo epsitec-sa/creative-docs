@@ -39,7 +39,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				var date = Misc.GetDateTimeShortDescription (this.Workflow.Threads[0].History[0].Date);
+				var thread = this.Workflow.Threads.FirstOrDefault ();
+
+				if (thread.IsNull () || thread.History.Count == 0)
+				{
+					return TextFormatter.FormatText (this.IdA);
+				}
+
+				var date = Misc.GetDateTimeShortDescription (thread.History[0].Date);
 				return TextFormatter.FormatText (this.IdA, " - ", date, "(", this.Documents.Count, "doc.)");
 			}
 		}

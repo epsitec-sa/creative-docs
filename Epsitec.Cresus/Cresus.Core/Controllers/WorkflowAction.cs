@@ -120,8 +120,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <returns>A <see cref="WorkflowAction"/> ready for execution.</returns>
 		public static WorkflowAction Parse(string source)
 		{
-			var lines  = source.Split ('\n');
 			var action = new WorkflowAction ();
+			
+			if (string.IsNullOrEmpty (source))
+			{
+				return action;
+			}
+
+			var lines  = source.Split ('\n');
 			var result = action.Compile (lines);
 			
 			if (result.IsValid)

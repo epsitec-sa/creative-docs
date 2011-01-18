@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Protocols
@@ -9,6 +9,7 @@ namespace Epsitec.Common.Drawing.Protocols
 		{
 			using (System.Net.WebClient client = new System.Net.WebClient ())
 			{
+				client.Proxy = new System.Net.WebProxy ();
 				return client.DownloadData (string.Concat ("ftp:", name));
 			}
 		}
