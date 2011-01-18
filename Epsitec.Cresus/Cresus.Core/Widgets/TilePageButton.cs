@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override TileArrowMode ArrowMode
+		public override Tiles.TileArrowMode ArrowMode
 		{
 			get
 			{
@@ -81,14 +81,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);
 		}
 
-		private TileArrowMode GetPaintingArrowMode()
+		private Tiles.TileArrowMode GetPaintingArrowMode()
 		{
 			if (this.IsSelected)
 			{
-				return Widgets.TileArrowMode.Selected;
+				return Tiles.TileArrowMode.Selected;
 			}
 
-			return Widgets.TileArrowMode.Normal;
+			return Tiles.TileArrowMode.Normal;
 		}
 
 		private bool MouseHilite

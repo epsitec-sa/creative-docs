@@ -27,11 +27,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public override TileArrowMode ArrowMode
+		public override Tiles.TileArrowMode ArrowMode
 		{
 			get
 			{
-				return Widgets.TileArrowMode.Selected;
+				return Widgets.Tiles.TileArrowMode.Selected;
 			}
 			set
 			{

@@ -600,7 +600,7 @@
     <Compile Include="Widgets\Tiles\EditionTile.cs" />
     <Compile Include="Widgets\Tiles\SummaryTile.cs" />
     <Compile Include="Widgets\Tiles\GenericTile.cs" />
-    <Compile Include="Widgets\TileArrowMode.cs" />
+    <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
     <Compile Include="Widgets\TileTabBook.cs" />
   </ItemGroup>
   <ItemGroup>
