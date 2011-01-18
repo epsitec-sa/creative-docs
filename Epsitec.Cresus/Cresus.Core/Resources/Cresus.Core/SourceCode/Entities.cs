@@ -5439,8 +5439,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticleAccountingDefinition</c> entity.
 	///	designer:cap/L0A56
 	///	</summary>
-	public partial class ArticleAccountingDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateTimeRange
+	public partial class ArticleAccountingDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateTimeRange, global::Epsitec.Cresus.Core.Entities.IBusinessLink
 	{
+		#region IBusinessLink Members
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/L0A56/L0ARL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARL]")]
+		public string BusinessCodeVector
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
+			}
+		}
+		#endregion
 		#region IDateTimeRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
