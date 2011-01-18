@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.IsEntered || this.Hilited || this.IsSelected)
 				{
-					return TileArrowMode.Hilite;
+					return TileArrowMode.Hilited;
 				}
 			}
 			

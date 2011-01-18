@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	public enum TileArrowMode
 	{
 		None,
-		VisibleDirect,
-		Hilite,
+		Visible,
+		Hilited,
 	}
 }

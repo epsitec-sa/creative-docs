@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return Widgets.TileArrowMode.VisibleDirect;
+				return Widgets.TileArrowMode.Visible;
 			}
 			set
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override TileArrow DirectArrow
+		public override TileArrow TileArrow
 		{
 			get
 			{
