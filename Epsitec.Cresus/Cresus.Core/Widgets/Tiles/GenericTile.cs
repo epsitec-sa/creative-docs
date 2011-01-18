@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrow DirectArrow
+		public override TileArrow TileArrow
 		{
 			get
 			{
@@ -165,13 +165,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered || this.Hilited)
 					{
-						return Widgets.TileArrowMode.VisibleDirect;
+						return Widgets.TileArrowMode.Visible;
 					}
 				}
 
 				if (this.IsSelected)
 				{
-					return Widgets.TileArrowMode.VisibleDirect;
+					return Widgets.TileArrowMode.Visible;
 				}
 			}
 
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.IsSelected)
 				{
-					return Widgets.TileArrowMode.VisibleDirect;
+					return Widgets.TileArrowMode.Visible;
 				}
 			}
 

@@ -90,11 +90,11 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetInactiveArrowPath (bounds, direction, deflate));
 					break;
 
-				case TileArrowMode.VisibleDirect:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetDirectArrowPath (bounds, direction, deflate));
+				case TileArrowMode.Visible:
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetArrowPath (bounds, direction, deflate));
 					break;
 
-				case TileArrowMode.Hilite:
+				case TileArrowMode.Hilited:
 					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
 					break;
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		
-		private static Path GetDirectArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			bounds.Deflate (deflate);
 

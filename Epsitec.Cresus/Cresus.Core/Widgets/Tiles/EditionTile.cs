@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrow DirectArrow
+		public override TileArrow TileArrow
 		{
 			get
 			{
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.IsSelected)
 				{
-					return Widgets.TileArrowMode.VisibleDirect;
+					return Widgets.TileArrowMode.Visible;
 				}
 			}
 

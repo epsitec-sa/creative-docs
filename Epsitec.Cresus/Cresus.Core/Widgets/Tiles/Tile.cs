@@ -17,31 +17,36 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// 
 	/// Résumé de l'héritage des différents widgets 'Tile':
 	/// 
-	///   o--Common.Widgets.FrameBox
-	///      |
-	///      o--Tile
-  	///         |
-	///         o--GenericTile (abstract)
-  	///         |  |
-  	///         |  o--SummaryTile
-  	///         |  |  |
-  	///         |  |  o--CollectionItemTile
-  	///         |  |
-  	///         |  o--EditionTile
-  	///         | 
-	///         o--StaticTitleTile (abstract)
-  	///         |  |
-  	///         |  o--PanelTitleTile
-  	///         |  o--TitleTile
-  	///         | 
-	///         o--FrameTile
+	/// o--Common.Widgets.FrameBox
+	///    |
+	///    o--Tiles.Tile
+  	///       |
+	///       o--Tiles.GenericTile (abstract)
+  	///       |  |
+	///       |  o--Tiles.EditionTile
+	///       |  |
+	///       |  o--Tiles.SummaryTile
+  	///       |  |  |
+	///       |  |  o--Tiles.CollectionItemTile
+  	///       | 
+	///       o--Tiles.StaticTitleTile (abstract)
+  	///       |  |
+	///       |  o--Tiles.PanelTitleTile
+	///       |  |
+	///       |  o--Tiles.TitleTile
+	///       | 
+	///       o--Tiles.FrameTile
+	///       | 
+	///       o--ArrowedFrame
+	///       | 
+	///       o--TilePageButton
 	/// 
 	/// </summary>
 	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
 		public Tile()
 		{
-			this.directArrow  = new TileArrow ();
+			this.tileArrow    = new TileArrow ();
 			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
 		}
 
@@ -95,11 +100,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public virtual TileArrow DirectArrow
+		public virtual TileArrow TileArrow
 		{
 			get
 			{
-				return this.directArrow;
+				return this.tileArrow;
 			}
 		}
 
@@ -120,9 +125,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			switch (this.ArrowMode)
 			{
 				case TileArrowMode.None:
-				case TileArrowMode.Hilite:
-				case TileArrowMode.VisibleDirect:
-					this.DirectArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
+				case TileArrowMode.Hilited:
+				case TileArrowMode.Visible:
+					this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
 					break;
 			}
 		}
@@ -648,7 +653,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private static readonly double dragBeginMinimalMove = 4;
 		private static readonly Size dragTargetMarkerSize = new Size (250, 21);
 
-		private readonly TileArrow								directArrow;
+		private readonly TileArrow								tileArrow;
 		private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		
 		private Direction										arrowDirection;
