@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
 	/// alors une flèche (qui déborde de son Client.Bounds) qui pointe vers son enfant.
 	/// </summary>
-	public class GenericTile : Tile
+	public abstract class GenericTile : Tile
 	{
 		public GenericTile()
 		{
