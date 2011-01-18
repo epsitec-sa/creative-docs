@@ -86,16 +86,16 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			switch (mode)
 			{
-				case TileArrowMode.None:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetInactiveArrowPath (bounds, direction, deflate));
+				case TileArrowMode.Normal:
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, direction, deflate));
 					break;
 
-				case TileArrowMode.Visible:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetArrowPath (bounds, direction, deflate));
+				case TileArrowMode.Selected:
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, direction, deflate));
 					break;
 
 				case TileArrowMode.Hilited:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, direction, deflate));
 					break;
 
 				default:
@@ -148,15 +148,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		
-		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
-		{
-			bounds.Deflate (deflate);
 
-			return TileArrow.GetArrowPath (bounds, arrowLocation);
-		}
-
-		private static Path GetInactiveArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		private static Path GetNormalArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			Rectangle box;
 			Point pick1, pick2, pick3;
@@ -167,9 +160,22 @@ namespace Epsitec.Cresus.Core.Widgets
 			return path;
 		}
 
-		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation)
+		private static Path GetHilitedPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		{
+			Rectangle box;
+			Point pick1, pick2, pick3;
+			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
+
+			Path path = new Path ();
+			path.AppendRoundedRectangle (box, 3.0);
+			return path;
+		}
+
+		private static Path GetSelectedArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			Path path = new Path ();
+
+			bounds.Deflate (deflate);
 
 			Rectangle box;
 			Point pick1, pick2, pick3;
@@ -222,17 +228,6 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 			}
 
-			return path;
-		}
-
-		private static Path GetHilitePath(Rectangle bounds, Direction arrowLocation, double deflate)
-		{
-			Rectangle box;
-			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
-
-			Path path = new Path ();
-			path.AppendRoundedRectangle (box, 2.0);
 			return path;
 		}
 

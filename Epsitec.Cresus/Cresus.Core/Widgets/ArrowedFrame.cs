@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return Widgets.TileArrowMode.Visible;
+				return Widgets.TileArrowMode.Selected;
 			}
 			set
 			{

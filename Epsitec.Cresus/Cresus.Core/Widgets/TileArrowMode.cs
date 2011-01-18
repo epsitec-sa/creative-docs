@@ -5,8 +5,8 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	public enum TileArrowMode
 	{
-		None,
-		Visible,
-		Hilited,
+		Normal,			// cadre rectangulaire à coins droits, sans flèche
+		Hilited,		// cadre rectangulaire à coins arrondis, sans flèche
+		Selected,		// cadre rectangulaire avec flèche
 	}
 }
