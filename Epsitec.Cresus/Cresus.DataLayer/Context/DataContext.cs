@@ -1085,7 +1085,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 							}
 							else
 							{
-								collection = null;
+								collection = UndefinedValue.Value;
 							}
 
 							entity.InternalSetValue (fieldId.ToResourceId (), collection);

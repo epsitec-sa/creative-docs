@@ -396,6 +396,48 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		public void TestRemoveAllCollectionItems()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			{
+				int nbDataContexts = 10;
+
+				List<DataContext> dataContexts = new List<DataContext> ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+
+					dataContexts.Add (dataContext);
+				}
+
+				DbKey dbKey = new DbKey (new DbId (1000000001));
+
+				List<NaturalPersonEntity> naturalPersons = new List<NaturalPersonEntity> ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					naturalPersons.Add (dataContexts[i].ResolveEntity<NaturalPersonEntity> (dbKey));
+				}
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
+				}
+
+				naturalPersons.First ().Contacts.Clear ();
+				dataContexts.First ().SaveChanges ();
+
+				for (int i = 0; i < nbDataContexts; i++)
+				{
+					Assert.AreEqual (0, naturalPersons[i].Contacts.Count);
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void TestUpdateReferenceWithNewEntity()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
