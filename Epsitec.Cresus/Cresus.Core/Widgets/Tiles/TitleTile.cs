@@ -276,18 +276,18 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.HasSelectedChild)
 				{
-					return Widgets.TileArrowMode.Selected;
+					return Tiles.TileArrowMode.Selected;
 				}
 			}
 			else if (this.CanExpandSubTile)
 			{
 				if (this.HasSelectedChild)
 				{
-					return Widgets.TileArrowMode.Selected;
+					return Tiles.TileArrowMode.Selected;
 				}
 			}
 
-			return Widgets.TileArrowMode.Normal;
+			return Tiles.TileArrowMode.Normal;
 		}
 
 		private bool MouseHilite
