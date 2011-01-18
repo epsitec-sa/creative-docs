@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget s'utilise un peu à la façon d'un TabPage, pour simuler des onglets
 	/// avec une tuile ayant une flèche 'v' en bas.
 	/// </summary>
-	public sealed class TilePageButton : Tile
+	public sealed class TilePageButton : Tiles.Tile
 	{
 		public TilePageButton()
 		{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors (Tile.BorderColors);
+				arrow.SetOutlineColors (Tiles.Tile.BorderColors);
 				arrow.SetThicknessColors (null);
 				arrow.SetSurfaceColors (this.SurfaceColors);
 				arrow.MouseHilite = this.MouseHilite;
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return Misc.ColorsCompare (this.SurfaceColors, Tile.SurfaceHilitedColors);
+				return Misc.ColorsCompare (this.SurfaceColors, Tiles.Tile.SurfaceHilitedColors);
 			}
 		}
 
@@ -124,22 +124,22 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					if (this.IsSelected)
 					{
-						return Tile.SurfaceHilitedSelectedColors;
+						return Tiles.Tile.SurfaceHilitedSelectedColors;
 					}
 					else
 					{
-						return Tile.SurfaceHilitedColors;
+						return Tiles.Tile.SurfaceHilitedColors;
 					}
 				}
 				else
 				{
 					if (this.IsSelected)
 					{
-						return Tile.SurfaceSelectedContainerColors;
+						return Tiles.Tile.SurfaceSelectedContainerColors;
 					}
 					else
 					{
-						return Tile.SurfaceSummaryColors;
+						return Tiles.Tile.SurfaceSummaryColors;
 					}
 				}
 			}

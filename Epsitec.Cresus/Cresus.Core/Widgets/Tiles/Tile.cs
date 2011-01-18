@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets
+namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// The <c>Tile</c> class paints a widget with an arrow; the logic which defines
@@ -17,31 +17,31 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// 
 	/// Résumé de l'héritage des différents widgets 'Tile':
 	/// 
-	///   FrameBox
-	///   |
-	///   o--Tile
-  	///      |
-  	///      o--GenericTile
-  	///      |  |
-  	///      |  o--SummaryTile
-  	///      |  |  |
-  	///      |  |  o--CollectionItemTile
-  	///      |  |
-  	///      |  o--EditionTile
-  	///      | 
-  	///      o--StaticTitleTile
-  	///      |  |
-  	///      |  o--PanelTitleTile
-  	///      |  o--TitleTile
-  	///      | 
-	///      o--FrameTile
+	///   o--Common.Widgets.FrameBox
+	///      |
+	///      o--Tile
+  	///         |
+	///         o--GenericTile (abstract)
+  	///         |  |
+  	///         |  o--SummaryTile
+  	///         |  |  |
+  	///         |  |  o--CollectionItemTile
+  	///         |  |
+  	///         |  o--EditionTile
+  	///         | 
+	///         o--StaticTitleTile (abstract)
+  	///         |  |
+  	///         |  o--PanelTitleTile
+  	///         |  o--TitleTile
+  	///         | 
+	///         o--FrameTile
 	/// 
 	/// </summary>
 	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
 		public Tile()
 		{
-			this.directArrow = new TileArrow ();
+			this.directArrow  = new TileArrow ();
 			this.reverseArrow = new TileArrow ();
 			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
 		}
