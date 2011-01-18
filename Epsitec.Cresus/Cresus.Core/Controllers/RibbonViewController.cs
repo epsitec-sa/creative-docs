@@ -547,11 +547,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (devel)
 				{
-					yield return Res.Commands.Base.ShowPriceCalculators;
-				}
-
-				if (devel)
-				{
 					yield return Res.Commands.Base.ShowWorkflowDefinitions;
 				}
 			}
