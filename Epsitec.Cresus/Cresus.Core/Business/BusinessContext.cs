@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core.Business
 				return true;
 			}
 
-			var lockNames       = this.GetLockNames ();
+			var lockNames       = this.GetLockNames ().Where (name => !string.IsNullOrEmpty (name));
 			var lockTransaction = this.locker.RequestLock (lockNames, out foreignLockOwners);
 
 			if (lockTransaction == null)
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (this.IsLocked)
 			{
-				throw new System.InvalidOperationException ("Cannot acquire new lock when business context is already locked");
+				return new NoOpUnlocker (this);
 			}
 			if (entity.IsNull ())
             {
@@ -265,6 +265,28 @@ namespace Epsitec.Cresus.Core.Business
 				{
 					this.context.ReleaseLock ();
 					this.context.lockEntity = null;
+				}
+			}
+
+			#endregion
+
+			private readonly BusinessContext	context;
+		}
+
+		private class NoOpUnlocker : System.IDisposable
+		{
+			public NoOpUnlocker(BusinessContext context)
+			{
+				this.context = context;
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				if (this.context != null)
+				{
+					System.Diagnostics.Debug.Assert (this.context.IsLocked);
 				}
 			}
 
@@ -324,14 +346,21 @@ namespace Epsitec.Cresus.Core.Business
 
 			if (master == null)
 			{
-				foreach (var entity in entities)
-				{
-					if (master != null)
-					{
-						throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
-					}
+				master = Logic.Current.Find<T> ().FirstOrDefault ();
 
-					master = entity;
+				if (master == null)
+				{
+					//	There is no defined master entity in the current context; try to derive it
+					//	from the active entities.
+					foreach (var entity in entities)
+					{
+						if (master != null)
+						{
+							throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
+						}
+
+						master = entity;
+					}
 				}
 			}
 
@@ -470,7 +499,7 @@ namespace Epsitec.Cresus.Core.Business
 		public T ApplyRules<T>(RuleType ruleType, T entity)
 			where T : AbstractEntity
 		{
-			var logic = this.CreateLogic (entity.GetType ());
+			var logic = this.CreateLogic (entity);
 			logic.ApplyRules (ruleType, entity);
 			return entity;
 		}
@@ -574,7 +603,7 @@ namespace Epsitec.Cresus.Core.Business
 				{
 					if (this.logic == null)
                     {
-						this.logic = this.businessContext.CreateLogic (this.entity.GetType ());
+						this.logic = this.businessContext.CreateLogic (this.entity);
                     }
 
 					return this.logic;
@@ -600,9 +629,9 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		
-		private Logic CreateLogic(System.Type entityType)
+		private Logic CreateLogic(AbstractEntity entity)
 		{
-			return new Logic (entityType, this);
+			return new Logic (entity, this);
 		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)

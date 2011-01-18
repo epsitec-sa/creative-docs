@@ -15,12 +15,13 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(AffairEntity affair)
 		{
-			var pool = Logic.Current.Data.RefIdGeneratorPool;
-			var generator = pool.GetGenerator<AffairEntity> ();
-			var nextId    = generator.GetNextId ();
+			var generatorPool   = Logic.Current.Data.RefIdGeneratorPool;
+			var businessContext = Logic.Current.BusinessContext;
 
-			var workflow = Logic.Current.BusinessContext.CreateEntity<WorkflowEntity> ();
-			var thread   = Logic.Current.BusinessContext.CreateEntity<WorkflowThreadEntity> ();
+			var generator = generatorPool.GetGenerator<AffairEntity> ();
+			var nextId    = generator.GetNextId ();
+			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
+			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
 
 			affair.IdA = string.Format ("{0:000000}", nextId);
 			affair.Workflow = workflow;
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			workflow.Affair = affair;
 			workflow.Threads.Add (thread);
 
-			thread.Definition = WorkflowFactory.FindDefaultWorkflowDefinition<AffairEntity> ();
+			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<AffairEntity> ());
 
 			//	TODO: ...compléter...
 		}

@@ -300,11 +300,12 @@ namespace Epsitec.Common.Support
 
 				System.Diagnostics.Debug.WriteLine ("Checking for updates at URL " + url);
 
-				System.Net.WebRequest  request  = System.Net.HttpWebRequest.Create (new System.Uri (url));
-				System.Net.WebResponse response = request.GetResponse ();
+				var request = System.Net.HttpWebRequest.Create (new System.Uri (url));
+				request.Proxy = new System.Net.WebProxy ();
 
-				System.IO.Stream       raw      = response.GetResponseStream ();
-				System.IO.StreamReader reader   = new System.IO.StreamReader (raw);
+				var response = request.GetResponse ();
+				var raw      = response.GetResponseStream ();
+				var reader   = new System.IO.StreamReader (raw);
 
 				result = reader.ReadToEnd ();
 
