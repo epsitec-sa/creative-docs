@@ -18,13 +18,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	
-	
 	public partial class PriceCalculatorEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Code, this.Name);
+			return TextFormatter.FormatText (this.Code, this.Name, "(", this.Informations, ")");
 		}
 
 		public override FormattedText GetCompactSummary()
