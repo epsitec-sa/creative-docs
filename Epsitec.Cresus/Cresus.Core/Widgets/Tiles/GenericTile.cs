@@ -45,12 +45,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public bool AutoReverse
-		{
-			get;
-			set;
-		}
-
 		public bool Hilited
 		{
 			get;
@@ -103,22 +97,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				return arrow;
 			}
 		}
-
-		public override TileArrow ReverseArrow
-		{
-			get
-			{
-				var arrow = new TileArrow ();
-
-				arrow.SetOutlineColors   (this.ReverseOutlineColors);
-				arrow.SetThicknessColors (this.ReverseThicknessColors);
-				arrow.SetSurfaceColors   (this.ReverseSurfaceColors);
-				arrow.MouseHilite = true;
-
-				return arrow;
-			}
-		}
-
 
 
 		public void ToggleSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement = null)
@@ -187,14 +165,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered || this.Hilited)
 					{
-						if (this.IsSelected && this.AutoReverse)
-						{
-							return Widgets.TileArrowMode.VisibleReverse;
-						}
-						else
-						{
-							return Widgets.TileArrowMode.VisibleDirect;
-						}
+						return Widgets.TileArrowMode.VisibleDirect;
 					}
 				}
 
@@ -273,37 +244,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		private IEnumerable<Color> ThicknessColors
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		private IEnumerable<Color> ReverseSurfaceColors
-		{
-			get
-			{
-				if (this.IsReadOnly == false)
-				{
-					return null;
-				}
-				else
-				{
-					return Tile.ThicknessHilitedColors;
-				}
-			}
-		}
-
-		private IEnumerable<Color> ReverseOutlineColors
-		{
-			get
-			{
-				return Tile.BorderColors;
-			}
-		}
-
-		private IEnumerable<Color> ReverseThicknessColors
 		{
 			get
 			{

@@ -54,21 +54,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override TileArrow ReverseArrow
-		{
-			get
-			{
-				var arrow = new TileArrow ();
-
-				arrow.SetOutlineColors (null);
-				arrow.SetThicknessColors (null);
-				arrow.SetSurfaceColors (null);
-				arrow.MouseHilite = true;
-
-				return arrow;
-			}
-		}
-
 
 		private IEnumerable<Color> InternalSurfaceColors
 		{
