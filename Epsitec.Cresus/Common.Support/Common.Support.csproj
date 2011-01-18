@@ -195,6 +195,7 @@
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
+    <Compile Include="LockTimeoutException.cs" />
     <Compile Include="StringPacker.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
@@ -231,7 +232,6 @@
     <Compile Include="CodeGeneration\CodeFormatter.cs" />
     <Compile Include="CodeGeneration\CodeVisibility.cs" />
     <Compile Include="CodeGeneration\CodeAccessibility.cs" />
-    <Compile Include="CodeGeneration\Sample.cs" />
     <Compile Include="EntityEngine\IEntityProxyProvider.cs" />
     <Compile Include="EntityEngine\EntityCollectionProxy.cs" />
     <Compile Include="EntityEngine\EntityFieldPath.cs" />

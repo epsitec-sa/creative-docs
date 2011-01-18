@@ -214,7 +214,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					if (UndefinedValue.IsUndefinedValue (value))
 					{
-						base.Remove (property);
+						this.Remove (property);
 					}
 					else
 					{

@@ -1,3 +1,6 @@
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 namespace Epsitec.Common.Support
 {
 	//	Thanks to Eric Gunnerson for recommending this be a struct rather
@@ -59,25 +62,5 @@ namespace Epsitec.Common.Support
 #endif
 		
 		private object target;
-	}
-	
-	[System.Serializable]
-	public class LockTimeoutException : System.ApplicationException, System.Runtime.Serialization.ISerializable
-	{
-		public LockTimeoutException () : base ("Timed out waiting for lock.")
-		{
-		}
-		
-		
-		#region ISerializable Members
-		protected LockTimeoutException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
-		{
-		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-		{
-			base.GetObjectData (info, context);
-		}
-		#endregion
 	}
 }

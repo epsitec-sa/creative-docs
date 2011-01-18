@@ -784,9 +784,9 @@ namespace Epsitec.Common.Support.Platform.Win32
  				return this.path.GetHashCode () ^ this.mode.GetHashCode ();
 			}
 
-			FolderItem item;
-			string mode;
-			string path;
+			private FolderItem item;
+			private string mode;
+			private string path;
 		}
 
 		private static FolderItem recentFolderItem = FileInfo.CreateFolderItem (FolderId.Recent, FolderQueryMode.NoIcons);

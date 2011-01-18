@@ -76,7 +76,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		#region ClipboardViewerHelper Class
 
-		class ClipboardViewerHelper : System.Windows.Forms.Form
+		private class ClipboardViewerHelper : System.Windows.Forms.Form
 		{
 			public ClipboardViewerHelper()
 			{

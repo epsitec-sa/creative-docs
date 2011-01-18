@@ -881,14 +881,14 @@ namespace Epsitec.Common.Support.CodeGeneration
 		}
 		
 		
-		enum LineState
+		private enum LineState
 		{
 			EmptyLine,
 			EmptyLineWithIndentation,
 			PartialLine
 		}
 
-		enum ElementState
+		private enum ElementState
 		{
 			None,
 			Namespace,
@@ -931,16 +931,16 @@ namespace Epsitec.Common.Support.CodeGeneration
 				public const string Virtual = "virtual";
 			}
 		}
-		
-		System.Text.StringBuilder output;
-		System.IO.TextWriter stream;
-		int indentationLevel;
-		string indentationChars;
-		string indentationString;
-		LineState lineState;
-		Stack<ElementState> elementStates = new Stack<ElementState> ();
-		bool isInInterface;
-		int isInClassCount;
-		bool isAbstract;
+
+		private System.Text.StringBuilder output;
+		private System.IO.TextWriter stream;
+		private int indentationLevel;
+		private string indentationChars;
+		private string indentationString;
+		private LineState lineState;
+		private Stack<ElementState> elementStates = new Stack<ElementState> ();
+		private bool isInInterface;
+		private int isInClassCount;
+		private bool isAbstract;
 	}
 }

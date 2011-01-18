@@ -217,8 +217,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 			fileOpStruct.hwnd = this.OwnerWindow == null ? System.IntPtr.Zero : this.OwnerWindow.GetPlatformHandle ();
 			fileOpStruct.wFunc = (uint) this.Operation;
 
-			string multiSource = ShellFileOperation.StringArrayToMultiString (SourceFiles);
-			string multiDest = ShellFileOperation.StringArrayToMultiString (DestFiles);
+			string multiSource = ShellFileOperation.StringArrayToMultiString (this.SourceFiles);
+			string multiDest = ShellFileOperation.StringArrayToMultiString (this.DestFiles);
 			fileOpStruct.pFrom = Marshal.StringToHGlobalUni (multiSource);
 			fileOpStruct.pTo = Marshal.StringToHGlobalUni (multiDest);
 

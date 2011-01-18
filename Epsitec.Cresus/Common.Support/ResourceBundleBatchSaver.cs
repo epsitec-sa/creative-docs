@@ -138,7 +138,7 @@ namespace Epsitec.Common.Support
 		public event ResourceBundleSaver SavingBundle;
 		public event ResourceBundleSaver BundleSaved;
 
-		Dictionary<ResourceBundle, ResourceSetMode> bundles;
-		List<ResourceBundle> blackList;
+		private Dictionary<ResourceBundle, ResourceSetMode> bundles;
+		private List<ResourceBundle> blackList;
 	}
 }

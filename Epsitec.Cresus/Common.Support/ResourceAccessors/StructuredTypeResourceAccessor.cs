@@ -1549,7 +1549,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			List<StructuredData> originalFields;
+			private List<StructuredData> originalFields;
 		}
 
 		#endregion
@@ -1633,8 +1633,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					accessor.RefreshItem (this.Item);
 				}
 			}
-			
-			List<StructuredData> originalInterfaceIds;
+
+			private List<StructuredData> originalInterfaceIds;
 		}
 
 		#endregion
@@ -1767,7 +1767,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			List<Weak<StructuredTypeResourceAccessor>> list;
+			private List<Weak<StructuredTypeResourceAccessor>> list;
 		}
 
 		#endregion

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -259,6 +259,18 @@ namespace Epsitec.Common.Types
 		public static FormattedText FromSimpleText(string value)
 		{
 			return new FormattedText (FormattedText.Escape (value));
+		}
+
+		/// <summary>
+		/// Converts the texts represented as a simple <see cref="string"/>s to
+		/// a <see cref="FormattedText"/> object. The source texts will be properly
+		/// escaped to produce a compatible formatted text.
+		/// </summary>
+		/// <param name="values">The source texts.</param>
+		/// <returns>The result of the conversion.</returns>
+		public static FormattedText FromSimpleText(params string[] values)
+		{
+			return FormattedText.FromSimpleText (string.Join ("", values));
 		}
 
 		/// <summary>

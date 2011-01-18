@@ -117,6 +117,7 @@
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
+    <Compile Include="Controllers\WorkflowFactory.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
     <Compile Include="Data\DatabaseTime.cs" />
     <Compile Include="Data\ItemCode.cs" />

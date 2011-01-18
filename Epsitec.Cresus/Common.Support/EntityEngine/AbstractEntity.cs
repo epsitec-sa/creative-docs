@@ -487,6 +487,20 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static string GetNakedEntityName<T>()
+		{
+			string name = typeof (T).Name;
+			const string suffix = "Entity";
+
+			if (name.EndsWith (suffix))
+			{
+				return name.Substring (0, name.Length - suffix.Length);
+			}
+
+			throw new System.ArgumentException (string.Format ("The type {0} does not follow the entity naming conventions", name));
+		}
+
+
 		/// <summary>
 		/// Resolves the specified entity to the specified type. If the specified
 		/// entity is a façade, this will return the real underlying entity, cast
@@ -1065,7 +1079,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			bool isNullValue = field.IsNullValue (newValue);
 
-			if (isNullValue && (field.IsNullable || context.SkipConstraintChecking))
+			if (isNullValue && (field.IsNullable || this.context.SkipConstraintChecking))
 			{
 				//	The value is null and the field is nullable; this operation
 				//	is valid and it will clear the field.
@@ -1079,7 +1093,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				System.Diagnostics.Debug.Assert (constraint != null);
 
-				if ((context.SkipConstraintChecking) ||
+				if ((this.context.SkipConstraintChecking) ||
 					(constraint.IsValidValue (newValue)))
 				{
 					object value;

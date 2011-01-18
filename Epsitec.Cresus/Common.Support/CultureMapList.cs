@@ -109,6 +109,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		ResourceAccessors.AbstractResourceAccessor accessor;
+		private ResourceAccessors.AbstractResourceAccessor accessor;
 	}
 }

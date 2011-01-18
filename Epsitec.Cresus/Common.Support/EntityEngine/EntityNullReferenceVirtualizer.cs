@@ -482,7 +482,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		class StoreForwarder : IValueStore
+		private class StoreForwarder : IValueStore
 		{
 			public StoreForwarder(IValueStore store1, Store store2)
 			{

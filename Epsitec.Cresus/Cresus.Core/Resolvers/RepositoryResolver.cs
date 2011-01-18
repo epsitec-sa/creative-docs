@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Repositories;
@@ -22,13 +22,13 @@ namespace Epsitec.Cresus.Core.Resolvers
 			}
 			else
 			{
-				return null;
+				throw new System.Exception (string.Format ("No repository found for entity of type {0}", entityType.Name));
 			}
 		}
 		
 		private static IEnumerable<System.Type> FindRepositorySystemTypes(System.Type entityType)
 		{
-			var baseTypeName = "Repository`1";
+			const string baseTypeName = "Repository`1";
 
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
