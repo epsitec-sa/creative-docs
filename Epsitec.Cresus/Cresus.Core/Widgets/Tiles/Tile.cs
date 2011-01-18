@@ -122,14 +122,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			switch (this.ArrowMode)
-			{
-				case TileArrowMode.None:
-				case TileArrowMode.Hilited:
-				case TileArrowMode.Visible:
-					this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
-					break;
-			}
+			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
 		}
 
 		#region Colors

@@ -165,13 +165,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered || this.Hilited)
 					{
-						return Widgets.TileArrowMode.Visible;
+						return Widgets.TileArrowMode.Selected;
 					}
 				}
 
 				if (this.IsSelected)
 				{
-					return Widgets.TileArrowMode.Visible;
+					return Widgets.TileArrowMode.Selected;
 				}
 			}
 
@@ -179,11 +179,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.IsSelected)
 				{
-					return Widgets.TileArrowMode.Visible;
+					return Widgets.TileArrowMode.Selected;
 				}
 			}
 
-			return Widgets.TileArrowMode.None;
+			return Widgets.TileArrowMode.Normal;
 		}
 
 		private bool MouseHilite
