@@ -14,6 +14,28 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// The <c>Tile</c> class paints a widget with an arrow; the logic which defines
 	/// how and where the arrow should be painted can be overridden by the derived
 	/// classes.
+	/// 
+	/// Résumé de l'héritage des différentes classes 'Tile':
+	/// 
+	///   FrameBox
+	///   |
+	///   o-Tile
+  	///     |
+  	///     o-GenericTile
+  	///     | |
+  	///     | o-SummaryTile
+  	///     | | |
+  	///     | | o-CollectionItemTile
+  	///     | |
+  	///     | o-EditionTile
+  	///     |
+  	///     o-StaticTitleTile
+  	///     | |
+  	///     | o-PanelTitleTile
+  	///     | o-TitleTile
+  	///     |
+	///     o-FrameTile
+	/// 
 	/// </summary>
 	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
