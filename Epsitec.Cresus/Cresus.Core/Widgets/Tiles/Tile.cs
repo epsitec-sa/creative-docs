@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public Tile()
 		{
 			this.directArrow  = new TileArrow ();
-			this.reverseArrow = new TileArrow ();
 			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
 		}
 
@@ -104,14 +103,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public virtual TileArrow ReverseArrow
-		{
-			get
-			{
-				return this.reverseArrow;
-			}
-		}
-
 		public virtual Controllers.ITileController Controller
 		{
 			get
@@ -132,20 +123,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				case TileArrowMode.Hilite:
 				case TileArrowMode.VisibleDirect:
 					this.DirectArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
-					break;
-
-				case TileArrowMode.VisibleReverse:
-					this.DirectArrow.Paint (graphics, this.Client.Bounds, TileArrowMode.None, this.ArrowDirection);
-					break;
-			}
-		}
-
-		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			switch (this.ArrowMode)
-			{
-				case TileArrowMode.VisibleReverse:
-					this.ReverseArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
 					break;
 			}
 		}
@@ -672,7 +649,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private static readonly Size dragTargetMarkerSize = new Size (250, 21);
 
 		private readonly TileArrow								directArrow;
-		private readonly TileArrow								reverseArrow;
 		private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		
 		private Direction										arrowDirection;

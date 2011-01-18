@@ -94,10 +94,6 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetDirectArrowPath (bounds, direction, deflate));
 					break;
 
-				case TileArrowMode.VisibleReverse:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetReverseArrowPath (bounds, direction, deflate));
-					break;
-
 				case TileArrowMode.Hilite:
 					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
 					break;
@@ -171,45 +167,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			return path;
 		}
 
-		private static Path GetReverseArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
-		{
-			double revertedArrowBody;
-
-			switch (arrowLocation)
-			{
-				case Direction.Left:
-					arrowLocation = Direction.Right;
-					revertedArrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, revertedArrowBody, bounds.Height);
-					break;
-
-				case Direction.Right:
-					arrowLocation = Direction.Left;
-					revertedArrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Right-revertedArrowBody, bounds.Bottom, revertedArrowBody, bounds.Height);
-					break;
-
-				case Direction.Up:
-					arrowLocation = Direction.Down;
-					revertedArrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Top-revertedArrowBody, bounds.Width, revertedArrowBody);
-					break;
-
-				case Direction.Down:
-					arrowLocation = Direction.Up;
-					revertedArrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, revertedArrowBody);
-					break;
-
-				default:
-					throw new System.NotImplementedException (string.Format ("Support for Direction.{0} not implemented", arrowLocation));
-			}
-
-			bounds.Deflate (deflate);
-
-			return TileArrow.GetArrowPath (bounds, arrowLocation);
-		}
-		
 		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation)
 		{
 			Path path = new Path ();

@@ -96,31 +96,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrow ReverseArrow
-		{
-			get
-			{
-				var arrow = new TileArrow ();
-
-				arrow.SetOutlineColors   (this.ReverseOutlineColors);
-				arrow.SetThicknessColors (this.ReverseThicknessColors);
-				arrow.SetSurfaceColors   (this.ReverseSurfaceColors);
-				arrow.MouseHilite = true;
-
-				return arrow;
-			}
-		}
-
 
 		private TileArrowMode GetArrowMode()
 		{
 			if (this.AllowSelection)
 			{
-				if (this.TileArrowHilite && this.AutoReverse)
-				{
-					return Widgets.TileArrowMode.VisibleReverse;
-				}
-
 				if (this.IsSelected)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
@@ -188,31 +168,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			get
 			{
 				return null;
-			}
-		}
-
-
-		private IEnumerable<Color> ReverseSurfaceColors
-		{
-			get
-			{
-				return Tile.SurfaceHilitedColors;
-			}
-		}
-
-		private IEnumerable<Color> ReverseOutlineColors
-		{
-			get
-			{
-				return Tile.BorderColors;
-			}
-		}
-
-		private IEnumerable<Color> ReverseThicknessColors
-		{
-			get
-			{
-				return Tile.ThicknessHilitedColors;
 			}
 		}
 
