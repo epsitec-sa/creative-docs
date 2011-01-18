@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// how and where the arrow should be painted can be overridden by the derived
 	/// classes.
 	/// 
-	/// Résumé de l'héritage des différentes classes 'Tile':
+	/// Résumé de l'héritage des différents widgets 'Tile':
 	/// 
 	///   FrameBox
 	///   |

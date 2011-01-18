@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// just an icon and a title text. See <see cref="TitleTile"/> for a specialized
 	/// version which manages sub-tiles.
 	/// </summary>
-	public class StaticTitleTile : Tile
+	public abstract class StaticTitleTile : Tile
 	{
 		public StaticTitleTile()
 		{
