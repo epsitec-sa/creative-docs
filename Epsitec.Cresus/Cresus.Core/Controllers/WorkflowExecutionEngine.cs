@@ -234,6 +234,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				example.IsForeign = false;
 
 				node = repo.GetByExample (example).FirstOrDefault ();
+				node = this.businessContext.GetLocalEntity (node);
 			}
 
 			return node;
