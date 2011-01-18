@@ -19,22 +19,22 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// 
 	///   FrameBox
 	///   |
-	///   o-Tile
-  	///     |
-  	///     o-GenericTile
-  	///     | |
-  	///     | o-SummaryTile
-  	///     | | |
-  	///     | | o-CollectionItemTile
-  	///     | |
-  	///     | o-EditionTile
-  	///     |
-  	///     o-StaticTitleTile
-  	///     | |
-  	///     | o-PanelTitleTile
-  	///     | o-TitleTile
-  	///     |
-	///     o-FrameTile
+	///   o--Tile
+  	///      |
+  	///      o--GenericTile
+  	///      |  |
+  	///      |  o--SummaryTile
+  	///      |  |  |
+  	///      |  |  o--CollectionItemTile
+  	///      |  |
+  	///      |  o--EditionTile
+  	///      | 
+  	///      o--StaticTitleTile
+  	///      |  |
+  	///      |  o--PanelTitleTile
+  	///      |  o--TitleTile
+  	///      | 
+	///      o--FrameTile
 	/// 
 	/// </summary>
 	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
