@@ -103,26 +103,59 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private void EnsureThatChartsOfAccountsAreDeserialized()
 		{
-			string currentHash = this.CurrentHash;
-
-			if (this.lastHash != currentHash)
+			//	Crée les listes si elles n'existent pas.
+			if (this.chartsOfAccounts == null)
 			{
-				this.lastHash = currentHash;
+				this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
+			}
 
-				if (this.chartsOfAccounts == null)
-				{
-					this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
-				}
-				else
-				{
-					this.chartsOfAccounts.Clear ();
-				}
+			if (this.lastCodes == null)
+			{
+				this.lastCodes = new List<string> ();
+			}
+
+			if (!this.HasSameCodes)  // y a-t-il eu un changement de plan comptable ?
+			{
+				this.CopyCodes ();
+
+				this.chartsOfAccounts.Clear ();
 
 				foreach (var blob in this.SerializedChartsOfAccounts)
 				{
 					var cresusChartOfAccounts = CresusChartOfAccounts.DeserializeFromXml (blob.XmlData);
 					this.chartsOfAccounts.Add (cresusChartOfAccounts);
 				}
+			}
+		}
+
+		private bool HasSameCodes
+		{
+			get
+			{
+				if (this.lastCodes.Count != this.SerializedChartsOfAccounts.Count)
+				{
+					return false;
+				}
+
+				for (int i = 0; i < this.lastCodes.Count; i++)
+				{
+					if (this.lastCodes[i] != this.SerializedChartsOfAccounts[i].Code)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
+		private void CopyCodes()
+		{
+			this.lastCodes.Clear ();
+
+			foreach (var blob in this.SerializedChartsOfAccounts)
+			{
+				this.lastCodes.Add (blob.Code);
 			}
 		}
 
@@ -152,6 +185,6 @@ namespace Epsitec.Cresus.Core.Entities
 
 
 		private List<CresusChartOfAccounts>		chartsOfAccounts;
-		private string							lastHash;
+		private List<string>					lastCodes;
 	}
 }
