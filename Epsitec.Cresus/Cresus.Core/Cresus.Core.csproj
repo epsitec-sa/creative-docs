@@ -587,7 +587,7 @@
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
     <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TileArrow.cs" />
-    <Compile Include="Widgets\Tile.cs" />
+    <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Widgets\TilePageButton.cs" />

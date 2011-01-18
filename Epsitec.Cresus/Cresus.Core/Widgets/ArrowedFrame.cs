@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget permet de dessiner un cadre avec une pointe/flèche sur l'un des côtés.
 	/// Il sert de conteneur pour ListController.
 	/// </summary>
-	public sealed class ArrowedFrame : Tile
+	public sealed class ArrowedFrame : Tiles.Tile
 	{
 		public ArrowedFrame()
 		{
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors (Tile.BorderColors);
+				arrow.SetOutlineColors (Tiles.Tile.BorderColors);
 				arrow.SetThicknessColors (null);
 				arrow.SetSurfaceColors (this.InternalSurfaceColors);
 				arrow.MouseHilite = false;
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.IsSelected)
 				{
-					return Tile.SurfaceSelectedContainerColors;
+					return Tiles.Tile.SurfaceSelectedContainerColors;
 				}
 				else
 				{
