@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.columns.Count > 0)
 			{
 				double x = 0;
-				double overlap = Widgets.TileArrow.Breadth + 1;
+				double overlap = Widgets.Tiles.TileArrow.Breadth + 1;
 				int columnIndex = 0;
 
 				var leftToRightTileContainerColumns = this.columns.Reverse ();

@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				double buttonSize = 19;
 
 				this.toolbar = UIBuilder.CreateMiniToolbar (leftPane, buttonSize);
-				this.toolbar.Margins = new Margins (0, TileArrow.Breadth, 0, -1);
+				this.toolbar.Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth, 0, -1);
 				this.toolbar.TabIndex = tabIndex++;
 
 				this.addButton = new GlyphButton
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = leftPane,
 					ArrowDirection = Direction.Right,
 					Dock = DockStyle.Fill,
-					Padding = new Margins (0, TileArrow.Breadth+2, 0, 0),
+					Padding = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2, 0, 0),
 					TabIndex = tabIndex++,
 				};
 

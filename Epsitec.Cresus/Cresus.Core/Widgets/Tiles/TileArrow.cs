@@ -7,10 +7,12 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets
+namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// Cette classe, sans être un widget, sait peindre un cadre rectangulaire avec ou sans flèche.
+	/// Pour obtenir la zone rectangulaire intérieure, il faut soustraire la marge (Breadth), qui
+	/// dépend du côté où est dessinée la flèche (arrowDirection).
 	/// </summary>
 	public class TileArrow
 	{
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		/// <summary>
-		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ArrowLocation.
+		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de arrowDirection.
 		/// </summary>
 		/// <value>Epaisseur de la flèche.</value>
 		public static double Breadth
@@ -84,20 +86,20 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, Direction arrowLocation)
+		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, Direction arrowDirection)
 		{
 			switch (mode)
 			{
 				case TileArrowMode.Normal:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, arrowLocation, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, arrowDirection, deflate));
 					break;
 
 				case TileArrowMode.Selected:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, arrowLocation, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, arrowDirection, deflate));
 					break;
 
 				case TileArrowMode.Hilited:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, arrowLocation, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, arrowDirection, deflate));
 					break;
 
 				default:
@@ -142,29 +144,29 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private static Path GetNormalArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		private static Path GetNormalArrowPath(Rectangle bounds, Direction arrowDirection, double deflate)
 		{
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
+			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRectangle (box);
 			return path;
 		}
 
-		private static Path GetHilitedPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		private static Path GetHilitedPath(Rectangle bounds, Direction arrowDirection, double deflate)
 		{
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
+			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRoundedRectangle (box, 3.0);
 			return path;
 		}
 
-		private static Path GetSelectedArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
+		private static Path GetSelectedArrowPath(Rectangle bounds, Direction arrowDirection, double deflate)
 		{
 			Path path = new Path ();
 
@@ -172,9 +174,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
+			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
 
-			switch (arrowLocation)
+			switch (arrowDirection)
 			{
 				case Direction.Left:
 					path.MoveTo (pick1);
@@ -224,7 +226,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			return path;
 		}
 
-		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowLocation, out Rectangle box, out Point pick1, out Point pick2, out Point pick3)
+		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowDirection, out Rectangle box, out Point pick1, out Point pick2, out Point pick3)
 		{
 			//	Les points pick1..3 sont dans le sens CCW.
 			Point pick;
@@ -232,7 +234,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			bounds.Deflate (0.5);
 
-			switch (arrowLocation)
+			switch (arrowDirection)
 			{
 				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileArrow.Breadth, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
@@ -278,7 +280,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private List<Color> surfaceColors;
-		private List<Color> outlineColors;
+		private readonly List<Color>		surfaceColors;
+		private readonly List<Color>		outlineColors;
 	}
 }

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override Rectangle GetFrameRectangle()
 		{
-			var margins = new Margins (0.5, TileArrow.Breadth + 0.5, 0.5, 0.5);
+			var margins = new Margins (0.5, Tiles.TileArrow.Breadth + 0.5, 0.5, 0.5);
 			var frame   = Rectangle.Deflate (this.Client.Bounds, margins);
 			
 			return frame;
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			if ((this.DrawFrameState & FrameState.Right) != 0)
 			{
 				var adorner = Common.Widgets.Adorners.Factory.Active;
-				var gradientRect = new Rectangle (this.Client.Bounds.Right-TileArrow.Breadth, this.Client.Bounds.Bottom, TileArrow.Breadth*0.5, this.Client.Bounds.Height);
+				var gradientRect = new Rectangle (this.Client.Bounds.Right-Tiles.TileArrow.Breadth, this.Client.Bounds.Bottom, Tiles.TileArrow.Breadth*0.5, this.Client.Bounds.Height);
 
 				graphics.AddFilledRectangle (gradientRect);
 				Painter.PaintLeftToRightGradient (graphics, gradientRect, Color.FromAlphaColor (0.3, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
@@ -95,8 +95,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override Widget TabNavigate(int index, TabNavigationDir dir, Widget[] siblings)
 		{
-			if ((dir == TabNavigationDir.Backwards) ||
-				(dir == TabNavigationDir.Forwards))
+			if (dir == TabNavigationDir.Backwards ||
+				dir == TabNavigationDir.Forwards  )
             {
 				var e = new TabNavigateEventArgs (dir);
 				var window = this.Window;
@@ -133,6 +133,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				handler (this, e);
 			}
 		}
+
 
 		public event EventHandler<TabNavigateEventArgs>		TabNavigating;
 

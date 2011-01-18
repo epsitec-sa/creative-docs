@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				var tilePage = new Widgets.TilePageButton (pageDescription)
 				{
 					Parent = this,
-					PreferredHeight = 24 + Widgets.TileArrow.Breadth,
+					PreferredHeight = 24 + Widgets.Tiles.TileArrow.Breadth,
 					Margins = new Margins (0, pageDescription == lastPageDescription ? 0 : -1, 0, 0),
 					Dock = DockStyle.StackFill,
 				};

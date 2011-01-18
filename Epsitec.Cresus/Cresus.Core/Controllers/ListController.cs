@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			this.toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize.Value);
-			this.toolbar.Margins = new Margins (0, arrowDirection == Direction.Right ? TileArrow.Breadth : 0, 0, -1);
+			this.toolbar.Margins = new Margins (0, arrowDirection == Direction.Right ? Widgets.Tiles.TileArrow.Breadth : 0, 0, -1);
 			this.toolbar.TabIndex = 1;
 
 			this.addButton = new GlyphButton
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = parent,
 				ArrowDirection = arrowDirection,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (1, arrowDirection == Direction.Right ? TileArrow.Breadth+1 : 1, 1, arrowDirection == Direction.Down ? TileArrow.Breadth+1 : 1),
+				Padding = new Margins (1, arrowDirection == Direction.Right ? Widgets.Tiles.TileArrow.Breadth+1 : 1, 1, arrowDirection == Direction.Down ? Widgets.Tiles.TileArrow.Breadth+1 : 1),
 				TabIndex = 2,
 			};
 

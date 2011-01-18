@@ -55,11 +55,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override TileArrow TileArrow
+		public override Tiles.TileArrow TileArrow
 		{
 			get
 			{
-				var arrow = new TileArrow ();
+				var arrow = new Tiles.TileArrow ();
 
 				arrow.SetOutlineColors (Tiles.Tile.BorderColors);
 				arrow.SetSurfaceColors (this.SurfaceColors);
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			var rect  = this.Client.Bounds;
-			rect.Bottom += TileArrow.Breadth;
+			rect.Bottom += Tiles.TileArrow.Breadth;
 
 			graphics.Color = Color.FromName ("Black");
 			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);

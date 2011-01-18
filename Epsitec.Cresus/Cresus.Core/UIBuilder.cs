@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Core
 				Parent = container,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (40, 18),
-				Margins = new Margins (0, Widgets.TileArrow.Breadth+2+offset1+offset2, 2, 0),
+				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2+offset1+offset2, 2, 0),
 				Name = "DataContext#Debug",
 				FormattedText = FormattedText.FromSimpleText (string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId)),
 			};
@@ -513,7 +513,7 @@ namespace Epsitec.Cresus.Core
 				GlyphShape = GlyphShape.Close,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
+				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2, 2, 0),
 				Name = "ColumnTileCloseButton",
 			};
 
@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.Core
 				GlyphShape = GlyphShape.Lock,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (20, 20),
-				Margins = new Margins (0, Widgets.TileArrow.Breadth+2 + offset, 2, 0),
+				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2 + offset, 2, 0),
 				Name = "ColumnTileLockButton",
 				Visibility = this.ReadOnly
 			};
