@@ -5,7 +5,11 @@ using Epsitec.Common.Splash;
 
 using Epsitec.Cresus.Core.Library;
 
+using Epsitec.Cresus.Database;
+
 using System.Collections.Generic;
+
+using System.IO;
 
 namespace Epsitec.Cresus.Core
 {
@@ -16,11 +20,26 @@ namespace Epsitec.Cresus.Core
 		/// </summary>
 		[System.STAThread]
 		static void Main(string[] args)
-		{
-			Data.Test.Example1 ();
-			using (var splash = new SplashScreen ("logo.png"))
+		{		
+			if (args.Length == 2 && args[0].Equals ("-db-create-epsitec"))
 			{
-				CoreProgram.ExecuteCoreProgram (splash);
+				CoreProgram.ExecuteCreateEpsitecDatabase (args);
+			}
+			else if (args.Length == 2 && args[0].Equals ("-db-create-user"))
+			{
+				CoreProgram.ExecuteCreateUserDatabase (args);
+			}
+			else if (args.Length == 2 && args[0].Equals ("-db-reload-epsitec"))
+			{
+				CoreProgram.ExecuteReloadEpsitecData (args);
+			}
+			else if (args.Length == 2 && args[0].Equals ("-db-export"))
+			{
+				CoreProgram.ExecuteDatabaseExport (args);
+			}
+			else
+			{
+				CoreProgram.ExecuteCoreProgram ();
 			}
 		}
 
@@ -47,8 +66,48 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		private static void ExecuteCreateEpsitecDatabase(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-		static void ExecuteCoreProgram(SplashScreen splash)
+			CoreData.CreateEpsitecDatabase (file, dbAccess);
+		}
+
+		private static void ExecuteCreateUserDatabase(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.CreateUserDatabase (file, dbAccess);
+		}
+
+		private static void ExecuteReloadEpsitecData(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.ReloadEpsitecData (file, dbAccess);
+		}
+
+		private static void ExecuteDatabaseExport(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.ExportEpsitecData  (file, dbAccess);
+		}
+
+		private static void ExecuteCoreProgram()
+		{
+			Data.Test.Example1 ();
+			using (var splash = new SplashScreen ("logo.png"))
+			{
+				CoreProgram.ExecuteCoreProgram (splash);
+			}
+		}
+
+		private static void ExecuteCoreProgram(SplashScreen splash)
 		{
 			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
 			
