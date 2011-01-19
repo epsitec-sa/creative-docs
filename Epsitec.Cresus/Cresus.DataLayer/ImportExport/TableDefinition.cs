@@ -25,16 +25,24 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public TableDefinition(string name, TableCategory category, bool containsLogColumn, IEnumerable<ColumnDefinition> columns)
+		public TableDefinition(string dbName, string sqlName, TableCategory category, bool containsLogColumn, IEnumerable<ColumnDefinition> columns)
 		{
-			this.Name = name;
+			this.DbName = dbName;
+			this.SqlName = sqlName;
 			this.Category = category;
 			this.ContainsLogColumn = containsLogColumn;
 			this.Columns = columns.ToList ();
 		}
 
 
-		public string Name
+		public string DbName
+		{
+			get;
+			private set;
+		}
+
+
+		public string SqlName
 		{
 			get;
 			private set;
@@ -65,7 +73,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		public void WriteXmlDefinition(XmlWriter xmlWriter, int index)
 		{
 			this.WriteXmlStart (xmlWriter, index);
-			this.WriteXmlName (xmlWriter);
+			this.WriteXmlDbName (xmlWriter);
+			this.WriteXmlSqlName (xmlWriter);
 			this.WriteXmlCategory (xmlWriter);
 			this.WriteXmlContainsLogColumn (xmlWriter);
 			this.WriteXmlColumns (xmlWriter);
@@ -80,10 +89,18 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void WriteXmlName(XmlWriter xmlWriter)
+		private void WriteXmlDbName(XmlWriter xmlWriter)
 		{
-			xmlWriter.WriteStartElement ("name");
-			xmlWriter.WriteValue (this.Name);
+			xmlWriter.WriteStartElement ("dbname");
+			xmlWriter.WriteValue (this.DbName);
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		private void WriteXmlSqlName(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("sqlname");
+			xmlWriter.WriteValue (this.SqlName);
 			xmlWriter.WriteEndElement ();
 		}
 
@@ -202,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private SqlField CreateTableSqlField()
 		{
-			return SqlField.CreateName (this.Name);
+			return SqlField.CreateName (this.SqlName);
 		}
 
 
@@ -287,15 +304,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			TableDefinition.ReadXmlStart (xmlReader, index);
 
-			string name = TableDefinition.ReadXmlName (xmlReader);
+			string dbName = TableDefinition.ReadXmlDbName (xmlReader);
+			string sqlName = TableDefinition.ReadXmlSqlName (xmlReader);
 			TableCategory category = TableDefinition.ReadXmlCategory (xmlReader);
 			bool containsLogColumn = TableDefinition.ReadXmlContainsLogColumn (xmlReader);
 			IEnumerable<ColumnDefinition> columns = TableDefinition.ReadXmlColumns (xmlReader);
 
 			TableDefinition.ReadXmlEnd (xmlReader);
 
-
-			return new TableDefinition (name, category, containsLogColumn, columns);
+			return new TableDefinition (dbName, sqlName, category, containsLogColumn, columns);
 		}
 
 
@@ -318,9 +335,21 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static string ReadXmlName(XmlReader xmlReader)
+		private static string ReadXmlDbName(XmlReader xmlReader)
 		{
-			xmlReader.ReadStartElement ("name");
+			xmlReader.ReadStartElement ("dbname");
+
+			string name = xmlReader.ReadContentAsString ();
+
+			xmlReader.ReadEndElement ();
+
+			return name;
+		}
+
+
+		private static string ReadXmlSqlName(XmlReader xmlReader)
+		{
+			xmlReader.ReadStartElement ("sqlname");
 
 			string name = xmlReader.ReadContentAsString ();
 
@@ -388,6 +417,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			if (!isEmpty)
 			{
 				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, this.ReadXmlRows (xmlReader)));
+
+				if (!decrementIds)
+				{
+					this.UpdateAutoIncrementStartValue (dbInfrastructure);
+				}
 
 				TableDefinition.ReadXmlEnd (xmlReader);
 			}
@@ -501,7 +535,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, DbLogEntry dbLogEntry, IList<object> row)
 		{
-			string tableName = this.Name;
+			string tableName = this.SqlName;
 			SqlFieldList sqlFields = new SqlFieldList ();
 
 			int index = 0;
@@ -525,6 +559,39 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			dbTransaction.SqlBuilder.InsertData (tableName, sqlFields);
 			dbInfrastructure.ExecuteNonQuery (dbTransaction);
+		}
+
+
+		private void UpdateAutoIncrementStartValue(DbInfrastructure dbInfrastructure)
+		{
+			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction(DbTransactionMode.ReadWrite))
+			{
+				DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, this.DbName);
+				DbColumn dbColumn = dbTable.Columns[Tags.ColumnId];
+
+				if (dbColumn != null && dbColumn.IsAutoIncremented)
+				{
+					SqlSelect query = new SqlSelect ();
+
+					query.Tables.Add (SqlField.CreateName (dbTable.GetSqlName ()));
+					query.Fields.Add
+					(
+						SqlField.CreateAggregate
+						(
+							SqlAggregateFunction.Max,
+							SqlField.CreateName (dbColumn.GetSqlName ())
+						)
+					);
+					
+					dbTransaction.SqlBuilder.SelectData (query);
+
+					object value = dbInfrastructure.ExecuteScalar (dbTransaction);
+
+					dbInfrastructure.SetColumnAutoIncrementValue (dbTransaction, dbTable, dbColumn, (long) value);
+				}
+
+				dbTransaction.Commit ();
+			}
 		}
 
 
@@ -571,7 +638,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				string tableName = this.Name;
+				string tableName = this.SqlName;
 				SqlFieldList conditions = new SqlFieldList ();
 
 				if (!cleanWholeTable)
@@ -589,7 +656,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
         public override string ToString()
 		{
-			string value = "Table : Name = " + this.Name;
+			string value = "Table : Name = " + this.SqlName;
 
 			foreach (ColumnDefinition column in this.Columns)
 			{

@@ -131,14 +131,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static TableDefinition GetTableDefitition(DbTable dbTable, TableCategory tableCategory, IEnumerable<DbColumn> idDbColumns, IEnumerable<DbColumn> regularDbColumns)
 		{
-			string tableName = dbTable.GetSqlName ();
+			string dbName = dbTable.Name;
+			string sqlName = dbTable.GetSqlName ();
 
 			IEnumerable<ColumnDefinition> idColumns = EpsitecEntitySerializer.GetColumnDefinitions (idDbColumns, true);
 			IEnumerable<ColumnDefinition> regularColumns = EpsitecEntitySerializer.GetColumnDefinitions (regularDbColumns, false);
 
 			bool containsLogColumn = dbTable.Columns.Any (c => c.Name == Tags.ColumnRefLog);
 
-			return new TableDefinition (tableName, tableCategory,  containsLogColumn, idColumns.Concat (regularColumns));
+			return new TableDefinition (dbName, sqlName, tableCategory, containsLogColumn, idColumns.Concat (regularColumns));
 		}
 
 
@@ -286,8 +287,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 			bool decrementIds = importMode == ImportMode.DecrementIds;
-
-
+			
 			xmlReader.ReadStartElement ("data");
 
 			if (!isEmpty)
