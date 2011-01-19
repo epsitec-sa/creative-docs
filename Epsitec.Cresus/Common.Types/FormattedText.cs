@@ -47,7 +47,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="formattedTextSource">The formatted text source.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static implicit operator Fo)rmattedText(string formattedTextSource)
+		public static implicit operator FormattedText(string formattedTextSource)
 		{
 			return new FormattedText (formattedTextSource);
 		}
