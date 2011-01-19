@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class TelecomContactRepository : AbstractContactRepository<TelecomContactEntity>
+	public class TelecomContactRepository : Repository<TelecomContactEntity>
 	{
 		public TelecomContactRepository(CoreData data, DataContext context = null)
 			: base (data, context)

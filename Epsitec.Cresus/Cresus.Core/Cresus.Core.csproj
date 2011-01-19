@@ -531,7 +531,6 @@
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Repositories\RelationRepository.cs" />
     <Compile Include="Data\CoreDataBrowser.cs" />
-    <Compile Include="Repositories\AbstractContactRepository.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\CommentRepository.cs" />
     <Compile Include="Repositories\ContactRoleRepository.cs" />
