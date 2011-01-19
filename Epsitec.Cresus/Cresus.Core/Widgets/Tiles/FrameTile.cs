@@ -34,8 +34,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Rectangle rect = this.Client.Bounds;
-			rect.Width -= TileArrow.Breadth;
+			Rectangle rect = this.ContainerBounds;
 			rect.Deflate (0.5);
 
 			graphics.AddFilledRectangle (rect);

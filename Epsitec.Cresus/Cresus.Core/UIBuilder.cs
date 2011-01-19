@@ -331,81 +331,6 @@ namespace Epsitec.Cresus.Core
 			return tileTabBook;
 		}
 
-#if false
-		public TileTabBook CreateTabBook(List<string> pageDescriptions, System.Action<string> action)
-		{
-#if false
-			var container = new FrameBox
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
-				TabIndex = ++this.tabIndex,
-			};
-
-			for (int i = 0; i < pageDescriptions.Count; i++)
-			{
-				string[] parts = pageDescriptions[i].Split ('.');
-				System.Diagnostics.Debug.Assert (parts.Length == 2);
-				string name = parts[0];
-				string text = parts[1];
-
-				var tilePage = new Widgets.TilePage
-				{
-					Parent = container,
-					Name = name,
-					Text = text,
-					PreferredHeight = 24 + Widgets.TileArrow.Breadth,
-					Margins = new Margins (0, (i == pageDescriptions.Count-1) ? 0 : -1, 0, 0),
-					Dock = DockStyle.StackFill,
-				};
-
-				if (name == defaultName)
-				{
-					tilePage.SetSelected (true);
-				}
-
-				tilePage.Clicked += delegate
-				{
-					foreach (Widgets.TilePage t in container.Children)
-					{
-						t.SetSelected (t.Name == tilePage.Name);
-					}
-
-					action (tilePage.Name);
-				};
-			}
-
-			return container;
-#else
-			var list = new List<TabPageDef> ();
-
-			foreach (var def in pageDescriptions)
-			{
-				string[] parts = def.Split ('.');
-				System.Diagnostics.Debug.Assert (parts.Length == 2);
-				string name = parts[0];
-				string text = parts[1];
-				list.Add (new TabPageDef (name, text, () => action (name)));
-			}
-
-			var tile = this.titleTile.Items.Last () as EditionTile;
-
-			this.tileTabBook = new TileTabBook (list)
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				TabIndex = ++this.tabIndex,
-			};
-
-			return this.tileTabBook;
-#endif
-		}
-#endif
-
 
 		public void CreateHeaderEditorTile()
 		{
@@ -465,7 +390,7 @@ namespace Epsitec.Cresus.Core
 				Parent = container,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (40, 18),
-				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2+offset1+offset2, 2, 0),
+				Margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right) + new Margins (0, 2+offset1+offset2, 2, 0),
 				Name = "DataContext#Debug",
 				FormattedText = FormattedText.FromSimpleText (string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId)),
 			};
@@ -511,7 +436,7 @@ namespace Epsitec.Cresus.Core
 				GlyphShape = GlyphShape.Close,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2, 2, 0),
+				Margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right) + new Margins (0, 2, 2, 0),
 				Name = "ColumnTileCloseButton",
 			};
 
@@ -536,7 +461,7 @@ namespace Epsitec.Cresus.Core
 				GlyphShape = GlyphShape.Lock,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (20, 20),
-				Margins = new Margins (0, Widgets.Tiles.TileArrow.Breadth+2 + offset, 2, 0),
+				Margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right) + new Margins (0, 2+offset, 2, 0),
 				Name = "ColumnTileLockButton",
 				Visibility = this.ReadOnly
 			};
