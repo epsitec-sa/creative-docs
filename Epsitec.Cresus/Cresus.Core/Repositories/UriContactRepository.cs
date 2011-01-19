@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class UriContactRepository : AbstractContactRepository<UriContactEntity>
+	public class UriContactRepository : Repository<UriContactEntity>
 	{
 		public UriContactRepository(CoreData data, DataContext context = null)
 			: base (data, context)

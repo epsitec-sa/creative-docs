@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class MailContactRepository : AbstractContactRepository<MailContactEntity>
+	public class MailContactRepository : Repository<MailContactEntity>
 	{
 		public MailContactRepository(CoreData data, DataContext context = null)
 			: base (data, context)
