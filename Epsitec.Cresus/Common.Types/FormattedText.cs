@@ -47,11 +47,18 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="formattedTextSource">The formatted text source.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static implicit operator FormattedText(string formattedTextSource)
+		public static implicit operator Fo)rmattedText(string formattedTextSource)
 		{
 			return new FormattedText (formattedTextSource);
 		}
 
+#if true
+		// TODO: provisoire
+		public static implicit operator string(FormattedText formattedText)
+		{
+			return formattedText.ToString ();
+		}
+#endif
 
 		/// <summary>
 		/// Gets a value indicating whether this instance represents a null

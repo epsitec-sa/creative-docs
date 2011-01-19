@@ -1436,4 +1436,6 @@
   <data id="K9">Size of layer thumbnails</data>
   <data id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
   <data id="K7">Size of page thumbnails</data>
+  <data id="KC">
+  </data>
 </bundle>

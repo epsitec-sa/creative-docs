@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( type == Properties.Type.Name )  return true;
 			if ( type == Properties.Type.Image )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			return false;
 		}
 

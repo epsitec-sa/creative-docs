@@ -240,6 +240,7 @@
     </Compile>
     <Compile Include="Containers\PageMiniatures.cs" />
     <Compile Include="GlobalImageCache.Item.cs" />
+    <Compile Include="Panels\Frame.cs" />
     <Compile Include="Polar.cs" />
     <Compile Include="Dialogs\AbstractFile.cs" />
     <Compile Include="Dialogs\FileSaveImage.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="Properties\Color.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\Frame.cs" />
     <Compile Include="Properties\Tension.cs" />
     <Compile Include="Properties\Corner.cs">
       <SubType>Code</SubType>
@@ -505,9 +507,7 @@
     <Compile Include="Properties\Volume.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Res.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Resources\Common.Document\SourceCode\Res.cs" />
     <Compile Include="Ribbons\Abstract.cs">
       <SubType>Code</SubType>
     </Compile>

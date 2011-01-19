@@ -1438,4 +1438,5 @@
   <data name="Container.LayerMiniatures.Slider.Tooltip" id="K9">Taille des calques miniatures</data>
   <data name="Container.LayerMiniatures.Box.Tooltip" id="KA">Calque &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Container.PageMiniatures.Box.Tooltip" id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Property.Frame.None" id="KC">Pas de cadre</data>
 </bundle>

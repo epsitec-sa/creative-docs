@@ -35,6 +35,7 @@ namespace Epsitec.Common.Document.Properties
 		Dimension      = 23,	// cotes
 		LineDimension  = 24,	// lignes secondaires d'une cote
 		Tension        = 25,	// tension d'un trait à main levée
+		Frame          = 26,	// cadre
 	}
 
 	/// <summary>
@@ -81,6 +82,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Arc:            property = new Arc(document, type);       break;
 				case Type.Surface:        property = new Surface(document, type);   break;
 				case Type.Volume:         property = new Volume(document, type);    break;
+				case Type.Frame:          property = new Frame(document, type);     break;
 				case Type.TextFont:       property = new Font(document, type);      break;
 				case Type.TextJustif:     property = new Justif(document, type);    break;
 				case Type.TextLine:       property = new TextLine(document, type);  break;
@@ -144,6 +146,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.ModColor:       return 23;
 				case Type.Dimension:      return 24;
 				case Type.Tension:        return 25;
+				case Type.Frame:          return 26;
 			}
 			return 0;
 		}
@@ -278,6 +281,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Image:          return 0.90;
 				case Type.ModColor:       return 0.95;
 				case Type.Tension:        return 0.90;
+				case Type.Frame:          return 0.90;
 			}
 			return 0.0;
 		}
@@ -312,6 +316,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.TextLine:       return Res.Strings.Property.Abstract.TextLine;
 				case Type.Image:          return Res.Strings.Property.Abstract.Image;
 				case Type.ModColor:       return Res.Strings.Property.Abstract.ModColor;
+				case Type.Frame:          return "Cadre"; //Res.Strings.Property.Abstract.Frame;
 			}
 			return "";
 		}
@@ -346,6 +351,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.TextLine:       return "PropertyTextLine";
 				case Type.Image:          return "PropertyImage";
 				case Type.ModColor:       return "PropertyModColor";
+				case Type.Frame:          return "PropertyFrame";
 			}
 			return "";
 		}
