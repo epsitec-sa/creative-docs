@@ -16,8 +16,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// </summary>
 	public class TileArrow
 	{
-		public TileArrow()
+		public TileArrow(Direction arrowDirection)
 		{
+			this.arrowDirection = arrowDirection;
+
 			this.surfaceColors = new List<Color> ();
 			this.outlineColors = new List<Color> ();
 		}
@@ -86,20 +88,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, Direction arrowDirection)
+		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode)
 		{
 			switch (mode)
 			{
 				case TileArrowMode.Normal:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetNormalArrowPath (bounds, arrowDirection, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetNormalArrowPath (bounds, deflate));
 					break;
 
 				case TileArrowMode.Selected:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetSelectedArrowPath (bounds, arrowDirection, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetSelectedArrowPath (bounds, deflate));
 					break;
 
 				case TileArrowMode.Hilited:
-					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitedPath (bounds, arrowDirection, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetHilitedPath (bounds, deflate));
 					break;
 
 				default:
@@ -144,29 +146,29 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private static Path GetNormalArrowPath(Rectangle bounds, Direction arrowDirection, double deflate)
+		private Path GetNormalArrowPath(Rectangle bounds, double deflate)
 		{
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
+			this.ComputeArrowGeometry (bounds, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRectangle (box);
 			return path;
 		}
 
-		private static Path GetHilitedPath(Rectangle bounds, Direction arrowDirection, double deflate)
+		private Path GetHilitedPath(Rectangle bounds, double deflate)
 		{
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
+			this.ComputeArrowGeometry (bounds, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRoundedRectangle (box, 3.0);
 			return path;
 		}
 
-		private static Path GetSelectedArrowPath(Rectangle bounds, Direction arrowDirection, double deflate)
+		private Path GetSelectedArrowPath(Rectangle bounds, double deflate)
 		{
 			Path path = new Path ();
 
@@ -174,9 +176,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			Rectangle box;
 			Point pick1, pick2, pick3;
-			TileArrow.ComputeArrowGeometry (bounds, arrowDirection, out box, out pick1, out pick2, out pick3);
+			this.ComputeArrowGeometry (bounds, out box, out pick1, out pick2, out pick3);
 
-			switch (arrowDirection)
+			switch (this.arrowDirection)
 			{
 				case Direction.Left:
 					path.MoveTo (pick1);
@@ -226,7 +228,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return path;
 		}
 
-		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowDirection, out Rectangle box, out Point pick1, out Point pick2, out Point pick3)
+		private void ComputeArrowGeometry(Rectangle bounds, out Rectangle box, out Point pick1, out Point pick2, out Point pick3)
 		{
 			//	Les points pick1..3 sont dans le sens CCW.
 			Point pick;
@@ -234,7 +236,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			bounds.Deflate (0.5);
 
-			switch (arrowDirection)
+			switch (this.arrowDirection)
 			{
 				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileArrow.Breadth, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
@@ -280,6 +282,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		private readonly Direction			arrowDirection;
 		private readonly List<Color>		surfaceColors;
 		private readonly List<Color>		outlineColors;
 	}

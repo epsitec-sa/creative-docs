@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	public class FrameTile : Tile
 	{
 		public FrameTile()
+			: base (Direction.Right)
 		{
 		}
 

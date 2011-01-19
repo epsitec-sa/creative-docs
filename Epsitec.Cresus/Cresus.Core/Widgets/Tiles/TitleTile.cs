@@ -90,13 +90,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				var arrow = new TileArrow ();
+				this.tileArrow.SetOutlineColors (this.OutlineColors);
+				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
+				this.tileArrow.MouseHilite = this.MouseHilite;
 
-				arrow.SetOutlineColors (this.OutlineColors);
-				arrow.SetSurfaceColors (this.SurfaceColors);
-				arrow.MouseHilite = this.MouseHilite;
-
-				return arrow;
+				return this.tileArrow;
 			}
 		}
 
@@ -361,8 +359,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
 		{
-			widget.Dock = DockStyle.Top;
-			widget.ArrowDirection = Direction.Right;
+			widget.Dock   = DockStyle.Top;
 			widget.Parent = this.mainPanel;
 
 			this.AttachEventHandlers (widget);
