@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -35,11 +35,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			string nakedEntityName = AbstractEntity.GetNakedEntityName<T> ();
 			
-			example.WorkflowName = FormattedText.FromSimpleText ("Default ", nakedEntityName, "Workflow");
+			example.WorkflowName = FormattedText.FromSimpleText (WorkflowFactory.DefaultWorkflowPrefix, nakedEntityName);
 
 			var matches = repository.GetByExample (example);
 
 			return matches.FirstOrDefault ();
 		}
+		
+		private const string DefaultWorkflowPrefix = "DefaultWorkflow/";
 	}
 }
