@@ -344,9 +344,7 @@
     <Compile Include="DocumentEditor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Res.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Resources\Common.DocumentEditor\SourceCode\Res.cs" />
     <EmbeddedResource Include="Images\About.icon" />
     <EmbeddedResource Include="Images\ActiveCurrent.icon" />
     <EmbeddedResource Include="Images\ActiveNo.icon" />
@@ -761,6 +759,11 @@
     <EmbeddedResource Include="Images\ZoomSub.icon" />
     <Content Include="Resources\Common.DocumentEditor\Strings.00.resource" />
     <Content Include="Resources\Common.DocumentEditor\Strings.en.resource" />
+    <EmbeddedResource Include="Images\FrameNone.icon" />
+    <EmbeddedResource Include="Images\FrameShadow.icon" />
+    <EmbeddedResource Include="Images\FrameSimple.icon" />
+    <EmbeddedResource Include="Images\FrameWhite.icon" />
+    <EmbeddedResource Include="Images\FrameWhiteAndShadow.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

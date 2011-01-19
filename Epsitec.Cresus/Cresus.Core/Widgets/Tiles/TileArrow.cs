@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 		/// <summary>
-		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de arrowDirection.
+		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ArrowDirection.
 		/// </summary>
 		/// <value>Epaisseur de la flèche.</value>
 		public static double Breadth

@@ -1436,4 +1436,6 @@
   <data id="K9">Grösse der Miniaturansichten</data>
   <data id="KB">Seite &lt;b&gt;{0}&lt;/b&gt;</data>
   <data id="K7">Grösse der Miniaturansichten</data>
+  <data id="KC">
+  </data>
 </bundle>

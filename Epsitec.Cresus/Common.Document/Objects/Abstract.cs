@@ -1815,7 +1815,12 @@ namespace Epsitec.Common.Document.Objects
 
 		public Properties.Volume PropertyVolume
 		{
-			get { return this.Property(Properties.Type.Volume) as Properties.Volume; }
+			get { return this.Property (Properties.Type.Volume) as Properties.Volume; }
+		}
+
+		public Properties.Frame PropertyFrame
+		{
+			get { return this.Property(Properties.Type.Frame) as Properties.Frame; }
 		}
 
 		public Properties.Color PropertyBackColor
