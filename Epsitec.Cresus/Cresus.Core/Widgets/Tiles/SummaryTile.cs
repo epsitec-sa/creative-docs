@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Parent = this,
 				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (2, TileArrow.Breadth, 0, 0),
+				Margins = this.ContainerPadding + new Margins (2, 0, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
 			};

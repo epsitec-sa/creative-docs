@@ -25,6 +25,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public Direction ArrowDirection
+		{
+			get
+			{
+				return this.arrowDirection;
+			}
+		}
+
+
 		/// <summary>
 		/// Couleurs pour la surface.
 		/// S'il n'y en a qu'une, elle est unie.

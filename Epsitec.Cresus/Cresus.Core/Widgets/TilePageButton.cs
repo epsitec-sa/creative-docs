@@ -72,8 +72,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			var rect  = this.Client.Bounds;
-			rect.Bottom += Tiles.TileArrow.Breadth;
+			var rect = this.ContainerBounds;
 
 			graphics.Color = Color.FromName ("Black");
 			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);

@@ -63,6 +63,47 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public Rectangle ContainerBounds
+		{
+			get
+			{
+				var bounds = this.Client.Bounds;
+				bounds.Deflate (this.ContainerPadding);
+
+				return bounds;
+			}
+		}
+
+		public Margins ContainerPadding
+		{
+			get
+			{
+				return Tile.GetContainerPadding (this.tileArrow.ArrowDirection);
+			}
+		}
+
+		public static Margins GetContainerPadding(Direction arrowDirection)
+		{
+			switch (arrowDirection)
+			{
+				case Direction.Left:
+					return new Margins (TileArrow.Breadth, 0, 0, 0);
+
+				case Direction.Right:
+					return new Margins (0, TileArrow.Breadth, 0, 0);
+
+				case Direction.Up:
+					return new Margins (0, 0, TileArrow.Breadth, 0);
+
+				case Direction.Down:
+					return new Margins (0, 0, 0, TileArrow.Breadth);
+
+				default:
+					return new Margins (0);
+			}
+		}
+
+
 		public virtual TileArrowMode ArrowMode
 		{
 			get
@@ -103,6 +144,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode);
 		}
+
 
 		#region Colors
 

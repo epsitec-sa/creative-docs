@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				GlyphShape = Common.Widgets.GlyphShape.Plus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
 				PreferredSize = new Size (CollectionItemTile.simpleButtonSize, CollectionItemTile.simpleButtonSize),
-				Margins = new Margins (0, TileArrow.Breadth+CollectionItemTile.simpleButtonSize-1, 0, 0),
+				Margins = this.ContainerPadding + new Margins (0, CollectionItemTile.simpleButtonSize-1, 10, 0),
 				Visibility = false,
 			};
 
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
 				PreferredSize = new Size (CollectionItemTile.simpleButtonSize, CollectionItemTile.simpleButtonSize),
-				Margins = new Margins (0, TileArrow.Breadth, 0, 0),
+				Margins = this.ContainerPadding,
 				Visibility = false,
 			};
 

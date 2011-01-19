@@ -108,9 +108,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (1, arrowDirection == Direction.Right ? Widgets.Tiles.TileArrow.Breadth+1 : 1, 1, arrowDirection == Direction.Down ? Widgets.Tiles.TileArrow.Breadth+1 : 1),
 				TabIndex = 2,
 			};
+
+			tile.Padding = tile.ContainerPadding + new Margins (1);
 
 			//	Crée la liste.
 			this.scrollList = new ScrollList

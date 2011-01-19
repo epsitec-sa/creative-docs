@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				GlyphShape		= Common.Widgets.GlyphShape.Minus,
 				Anchor			= AnchorStyles.BottomRight,
 				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
-				Margins			= new Margins (0, TileArrow.Breadth, 0, 0),
+				Margins         = this.ContainerPadding,
 				Visibility		= false,
 			};
 
