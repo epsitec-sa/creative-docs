@@ -379,17 +379,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public long AutoIncrementStartIndex
+		public long AutoIncrementStartValue
 		{
 			get
 			{
-				return this.autoIncrementStartIndex;
+				return this.autoIncrementStartValue;
 			}
 			set
 			{
 				value.ThrowIf (v => v < 0, "Value cannot be lower than zero.");
 
-				this.autoIncrementStartIndex = value;
+				this.autoIncrementStartValue = value;
 			}
 		}
 
@@ -902,7 +902,7 @@ namespace Epsitec.Cresus.Database
 		private bool							isAutoIncremented;
 		private bool							isAutoTimeStampOnInsert;
 		private bool							isAutoTimeStampOnUpdate;
-		private long							autoIncrementStartIndex;
+		private long							autoIncrementStartValue;
 		private string							comment;
 		private DbElementCat					category;
 		private DbColumnClass					columnClass;

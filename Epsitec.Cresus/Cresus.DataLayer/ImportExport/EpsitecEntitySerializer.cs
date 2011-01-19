@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			};
 
 			string version = "1.0.0";
-			long idShift = DbInfrastructure.AutoIncrementStartIndex;
+			long idShift = DbInfrastructure.AutoIncrementStartValue;
 
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				throw new System.FormatException ("Invalid id shift.");
 			}
 
-			if (idShiftAsLong != DbInfrastructure.AutoIncrementStartIndex)
+			if (idShiftAsLong != DbInfrastructure.AutoIncrementStartValue)
 			{
 				throw new System.FormatException ("Invalid id shift.");
 			}
