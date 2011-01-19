@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			XElement xField;
 
-			if (target == null)
+			if (!ImportExportManager.IsExportable(target))
 			{
 				xField = null;
 			}
@@ -264,14 +264,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static XElement SerializeEntityCollectionField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
-			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (field.Id);
+			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (field.Id)
+				.Where (t => ImportExportManager.IsExportable (t))
+				.ToList ();
 
 			XElement xField;
 
 			if (targets.Any ())
 			{
 				IEnumerable<string> targetIds = targets
-					.Where (t => t != null)
 					.Select (t => entitiesToIds[t])
 					.Select (t => InvariantConverter.ConvertToString (t));
 
