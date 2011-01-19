@@ -63,7 +63,6 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				value = System.Math.Max(value, 0.0);
-				value = System.Math.Min(value, 10.0);
 
 				if (this.frameWidth != value)
 				{
@@ -84,7 +83,6 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				value = System.Math.Max(value, 0.0);
-				value = System.Math.Min(value, 20.0);
 
 				if (this.marginWidth != value)
 				{
@@ -105,7 +103,6 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				value = System.Math.Max(value, 0.0);
-				value = System.Math.Min(value, 10.0);
 
 				if (this.shadowSize != value)
 				{
@@ -191,6 +188,71 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
+
+		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize)
+		{
+			//	Retourne les valeurs par défaut et les min/max pour un type donné.
+			frameWidth = 0;
+			marginWidth = 0;
+			shadowSize = 0;
+
+			switch (type)
+			{
+				case FrameType.Simple:
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						frameWidth = 2.0;  // 0.2mm
+					}
+					else
+					{
+						frameWidth = 2.54;  // 0.01in
+					}
+					break;
+
+				case FrameType.White:
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						frameWidth = 2.0;  // 0.2mm
+						marginWidth = 50.0;  // 5mm
+					}
+					else
+					{
+						frameWidth = 2.54;  // 0.01in
+						marginWidth = 63.5;  // 0.25in
+					}
+					break;
+
+				case FrameType.Shadow:
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						frameWidth = 2.0;  // 0.2mm
+						shadowSize = 20.0;  // 2mm
+					}
+					else
+					{
+						frameWidth = 2.54;  // 0.01in
+						shadowSize = 25.4;  // 0.1in
+					}
+					break;
+
+				case FrameType.WhiteAndSnadow:
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						frameWidth = 2.0;  // 0.2mm
+						marginWidth = 50.0;  // 5mm
+						shadowSize = 20.0;  // 2mm
+					}
+					else
+					{
+						frameWidth = 2.54;  // 0.01in
+						marginWidth = 63.5;  // 0.25in
+						shadowSize = 25.4;  // 0.1in
+					}
+					break;
+
+			}
+		}
+		
 		
 		public override bool AlterBoundingBox
 		{
@@ -266,6 +328,27 @@ namespace Epsitec.Common.Document.Properties
 			//	Crée le panneau permettant d'éditer la propriété.
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Frame(document);
+		}
+
+
+		public void DrawFrame(IPaintPort port, DrawingContext drawingContext, Path path)
+		{
+			if (this.shadowSize > 0)
+			{
+			}
+
+			if (this.marginWidth > 0)
+			{
+				port.Color = Drawing.Color.FromBrightness (1.0);
+				port.PaintSurface (path);
+			}
+
+			if (this.frameWidth > 0)
+			{
+				port.Color = Drawing.Color.FromBrightness (0.0);
+				port.LineWidth = this.frameWidth/drawingContext.ScaleX;
+				port.PaintOutline (path);  // dessine un rectangle
+			}
 		}
 
 

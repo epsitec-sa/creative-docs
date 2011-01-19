@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Corner(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += HandleTypeChanged;
+			this.grid.SelectionChanged += this.HandleTypeChanged;
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
