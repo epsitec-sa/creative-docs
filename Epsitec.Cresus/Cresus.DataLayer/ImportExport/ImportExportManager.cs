@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		public static void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
-			var result = ImportExportManager.GetEntities (entities, predicate);
+			var result = ImportExportManager.GetEntities (dataContext, entities, predicate);
 
 			ISet<AbstractEntity> exportableEntities = result.Item1;
 			ISet<AbstractEntity> externalEntities = result.Item2;
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 		
-		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
+		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
 			Stack<AbstractEntity> entitiesToProcess = new Stack<AbstractEntity> ();
 			ISet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ();
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					{
 						exportableEntities.Add (e);
 
-						foreach (AbstractEntity child in ImportExportManager.GetChildren (e))
+						foreach (AbstractEntity child in ImportExportManager.GetChildren (dataContext, e))
 						{
 							entitiesToProcess.Push (child);
 						}
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<AbstractEntity> GetChildren(AbstractEntity entity)
+		private static IEnumerable<AbstractEntity> GetChildren(DataContext dataContext, AbstractEntity entity)
 		{
 			EntityContext entityContext = entity.GetEntityContext ();
 
@@ -105,24 +105,38 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				switch (field.Cardinality)
 				{
 					case FieldRelation.Reference:
-						
-						yield return entity.GetField<AbstractEntity> (field.Id);
-						
-						break;
+					{
+						AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
-					case FieldRelation.Collection:
-						
-						foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
+						if (ImportExportManager.IsExportable (dataContext, target))
 						{
 							yield return target;
 						}
 
 						break;
+					}
+					case FieldRelation.Collection:
+					{
+						foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
+						{
+							if (ImportExportManager.IsExportable (dataContext, target))
+							{
+								yield return target;
+							}
+						}
 
+						break;
+					}
 					default:
 						throw new System.NotImplementedException ();
 				}
 			}
+		}
+
+
+		public static bool IsExportable(DataContext dataContext, AbstractEntity entity)
+		{
+			return entity != null && dataContext.IsPersistent (entity);
 		}
 
 
