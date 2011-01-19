@@ -24,33 +24,33 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon (Properties.FrameType.WhiteAndSnadow);
 
 			this.fieldFrameWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldFrameWidth.LabelShortText = "T"; //Res.Strings.Panel.Frame.Short.FrameWidth;
-			this.fieldFrameWidth.LabelLongText  = "Epaisseur du trait"; //Res.Strings.Panel.Frame.Long.FrameWidth;
+			this.fieldFrameWidth.LabelShortText = Res.Strings.Panel.Frame.Short.FrameWidth;
+			this.fieldFrameWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.FrameWidth;
 			this.document.Modifier.AdaptTextFieldRealPercent (this.fieldFrameWidth.TextFieldReal);
 			this.fieldFrameWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldFrameWidth.TabIndex = 2;
 			this.fieldFrameWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			//?ToolTip.Default.SetToolTip (this.fieldFrameWidth, Res.Strings.Panel.Frame.Tooltip.FrameWidth);
+			ToolTip.Default.SetToolTip (this.fieldFrameWidth, Res.Strings.Panel.Frame.Tooltip.FrameWidth);
 
 			this.fieldMarginWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldMarginWidth.LabelShortText = "C"; //Res.Strings.Panel.Frame.Short.MarginWidth;
-			this.fieldMarginWidth.LabelLongText  = "Epaisseur de l'ombre"; //Res.Strings.Panel.Frame.Long.MarginWidth;
+			this.fieldMarginWidth.LabelShortText = Res.Strings.Panel.Frame.Short.MarginWidth;
+			this.fieldMarginWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.MarginWidth;
 			this.document.Modifier.AdaptTextFieldRealAngle (this.fieldMarginWidth.TextFieldReal);
 			this.fieldMarginWidth.TextFieldReal.InternalMaxValue = 90.0M;
 			this.fieldMarginWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldMarginWidth.TabIndex = 3;
 			this.fieldMarginWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			//?ToolTip.Default.SetToolTip (this.fieldMarginWidth, Res.Strings.Panel.Frame.Tooltip.MarginWidth);
+			ToolTip.Default.SetToolTip (this.fieldMarginWidth, Res.Strings.Panel.Frame.Tooltip.MarginWidth);
 
 			this.fieldShadowSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldShadowSize.LabelShortText = "O"; //Res.Strings.Panel.Frame.Short.ShadowSize;
-			this.fieldShadowSize.LabelLongText  = "Dimension de l'ombre"; //Res.Strings.Panel.Frame.Long.ShadowSize;
+			this.fieldShadowSize.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowSize;
+			this.fieldShadowSize.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowSize;
 			this.document.Modifier.AdaptTextFieldRealAngle (this.fieldShadowSize.TextFieldReal);
 			this.fieldShadowSize.TextFieldReal.InternalMaxValue = 90.0M;
 			this.fieldShadowSize.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldShadowSize.TabIndex = 4;
 			this.fieldShadowSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			//?ToolTip.Default.SetToolTip (this.fieldShadowSize, Res.Strings.Panel.Frame.Tooltip.ShadowSize);
+			ToolTip.Default.SetToolTip (this.fieldShadowSize, Res.Strings.Panel.Frame.Tooltip.ShadowSize);
 
 			this.isNormalAndExtended = true;
 		}

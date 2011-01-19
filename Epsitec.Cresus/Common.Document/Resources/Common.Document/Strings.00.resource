@@ -1439,4 +1439,18 @@
   <data name="Container.LayerMiniatures.Box.Tooltip" id="KA">Calque &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Container.PageMiniatures.Box.Tooltip" id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Property.Frame.None" id="KC">Pas de cadre</data>
+  <data name="Property.Frame.Simple" id="KD">Cadre simple</data>
+  <data name="Property.Frame.White" id="KE">Cadre blanc</data>
+  <data name="Property.Frame.Shadow" id="KF">Cadre ombré</data>
+  <data name="Property.Frame.WhiteAndShadow" id="KG">Cadre blanc et ombré</data>
+  <data name="Panel.Frame.Short.FrameWidth" id="KH">T</data>
+  <data name="Panel.Frame.Short.MarginWidth" id="KI">M</data>
+  <data name="Panel.Frame.Short.ShadowSize" id="KJ">O&lt;br/&gt;</data>
+  <data name="Panel.Frame.Long.FrameWidth" id="KK">Epaisseur trait</data>
+  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epaisseur cadre</data>
+  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dimension ombre&lt;br/&gt;</data>
+  <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
+  <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur du cadre</data>
+  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre&lt;br/&gt;</data>
+  <data name="Property.Abstract.Frame" id="KQ">Cadre</data>
 </bundle>

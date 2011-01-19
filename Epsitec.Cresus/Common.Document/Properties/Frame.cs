@@ -168,19 +168,11 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-#if false
 				case FrameType.None:            name = Res.Strings.Property.Frame.None;            break;
 				case FrameType.Simple:          name = Res.Strings.Property.Frame.Simple;          break;
 				case FrameType.White:           name = Res.Strings.Property.Frame.White;           break;
 				case FrameType.Shadow:          name = Res.Strings.Property.Frame.Shadow;          break;
-				case FrameType.WhiteAndSnadow:  name = Res.Strings.Property.Frame.WhiteAndSnadow;  break;
-#else
-				case FrameType.None:            name = "Pas de cadre";  break;
-				case FrameType.Simple:          name = "Cadre simple";  break;
-				case FrameType.White:           name = "Cadre blanc";  break;
-				case FrameType.Shadow:          name = "Cadre ombré";  break;
-				case FrameType.WhiteAndSnadow:  name = "Cadre blanc et ombré";  break;
-#endif
+				case FrameType.WhiteAndSnadow:  name = Res.Strings.Property.Frame.WhiteAndShadow;  break;
 			}
 			return name;
 		}
