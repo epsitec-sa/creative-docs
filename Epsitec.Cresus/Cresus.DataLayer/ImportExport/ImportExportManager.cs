@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		public static void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
-			var result = ImportExportManager.GetEntities (dataContext, entities, predicate);
+			var result = ImportExportManager.GetEntities (entities, predicate);
 
 			ISet<AbstractEntity> exportableEntities = result.Item1;
 			ISet<AbstractEntity> externalEntities = result.Item2;
@@ -49,8 +49,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			xDocument.Save (file.FullName);
 		}
 
-		
-		private static System.Tuple<ISet<AbstractEntity>,ISet<AbstractEntity>> GetEntities(DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
+
+		private static System.Tuple<ISet<AbstractEntity>, ISet<AbstractEntity>> GetEntities(IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
 		{
 			Stack<AbstractEntity> entitiesToProcess = new Stack<AbstractEntity> ();
 			ISet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ();
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					{
 						exportableEntities.Add (e);
 
-						foreach (AbstractEntity child in ImportExportManager.GetChildren (dataContext, e))
+						foreach (AbstractEntity child in ImportExportManager.GetChildren (e))
 						{
 							entitiesToProcess.Push (child);
 						}
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<AbstractEntity> GetChildren(DataContext dataContext, AbstractEntity entity)
+		private static IEnumerable<AbstractEntity> GetChildren(AbstractEntity entity)
 		{
 			EntityContext entityContext = entity.GetEntityContext ();
 
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					{
 						AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
-						if (ImportExportManager.IsExportable (dataContext, target))
+						if (ImportExportManager.IsExportable (target))
 						{
 							yield return target;
 						}
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					{
 						foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
 						{
-							if (ImportExportManager.IsExportable (dataContext, target))
+							if (ImportExportManager.IsExportable (target))
 							{
 								yield return target;
 							}
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static bool IsExportable(DataContext dataContext, AbstractEntity entity)
+		public static bool IsExportable(AbstractEntity entity)
 		{
 			return EntityNullReferenceVirtualizer.IsNullEntity (entity) == false;
 		}
