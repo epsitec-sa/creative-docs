@@ -32,5 +32,10 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			return Epsitec.Common.IO.Ascii85.MapEncodedStringToXmlTransparent (Epsitec.Common.IO.Ascii85.EncodeGuid (guid));
 		}
+		
+		public static string FromGuid(string guid)
+		{
+			return ItemCodeGenerator.FromGuid (System.Guid.Parse (guid));
+		}
 	}
 }

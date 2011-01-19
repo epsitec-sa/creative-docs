@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Core
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
+			DocumentCategoryEntity[] docCats = this.InsertDocumentCategoriesInDatabase ().ToArray ();
 			DocumentMetadataEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
 			
 			this.DataContext.SaveChanges ();
@@ -872,6 +873,36 @@ namespace Epsitec.Cresus.Core
 			yield return business;
 		}
 
+		private IEnumerable<DocumentCategoryEntity> InsertDocumentCategoriesInDatabase()
+		{
+			DocumentCategoryEntity cat = this.DataContext.CreateEntity<DocumentCategoryEntity> ();
+
+			cat.Code = (string) ItemCodeGenerator.FromGuid ("{CD7CFC5B-0085-485E-848E-AF1B2529C5A8}");
+			cat.Name = TextFormatter.FormatText ("Offre");
+			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client.");
+			cat.DocumentType = DocumentType.SalesQuote;
+			
+			yield return cat;
+
+			cat = this.DataContext.CreateEntity<DocumentCategoryEntity> ();
+
+			cat.Code = (string) ItemCodeGenerator.FromGuid ("{08DB17F8-D01D-479C-8270-00A7C1867223}");
+			cat.Name = TextFormatter.FormatText ("Bon pour commande");
+			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client. Le client retourne en principe le bon pour commande signé, indiquant ainsi qu'il passe la commande de manière ferme.");
+			cat.DocumentType = DocumentType.OrderBooking;
+
+			yield return cat;
+
+			cat = this.DataContext.CreateEntity<DocumentCategoryEntity> ();
+
+			cat.Code = (string) ItemCodeGenerator.FromGuid ("{C115E665-BFEA-4765-B409-8F9335AC499E}");
+			cat.Name = TextFormatter.FormatText ("Confirmation de commande");
+			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client. La confirmation de commande indique au client que sa commande a été acceptée.");
+			cat.DocumentType = DocumentType.OrderConfirmation;
+
+			yield return cat;
+		}
+		
 		private IEnumerable<DocumentMetadataEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
 		{
 			var decimalType = DecimalType.Default;

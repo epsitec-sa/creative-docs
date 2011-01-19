@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -50,8 +50,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// </returns>
 		public static IEnumerable<string> GetActionClasses()
 		{
-			const string suffix = "Actions";
-			int suffixLen = suffix.Length;
+			int suffixLen = BusinessActionResolver.ClassSuffixActions.Length;
 
 			return from type in BusinessActionResolver.FindBusinessActionSystemTypes ()
 				   let name = type.Name
@@ -106,7 +105,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
 						let name = type.Name
-						where name.EndsWith ("Actions")
+						where name.EndsWith (BusinessActionResolver.ClassSuffixActions)
 						where type.IsClass && type.IsAbstract && type.IsSealed
 						select type;
 
@@ -115,7 +114,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static System.Type FindBusinessActionSystemType(string actionClass)
 		{
-			actionClass = actionClass + "Actions";
+			actionClass = actionClass + BusinessActionResolver.ClassSuffixActions;
 
 			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 						from type in assembly.GetTypes ()
@@ -127,6 +126,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 			return types.FirstOrDefault ();
 		}
 
+		private const string ClassSuffixActions = "Actions";
+		
 		[System.ThreadStatic]
 		private static Dictionary<string, System.Type>	actionCache;
 	}

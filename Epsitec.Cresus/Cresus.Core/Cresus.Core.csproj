@@ -93,6 +93,7 @@
     <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
+    <Compile Include="Business\Actions\AffairActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
     <Compile Include="Business\ActionVerb.cs" />
     <Compile Include="Business\BusinessContext.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="Printers\DeserializedPage.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
+    <Compile Include="Repositories\DocumentCategoryRepository.cs" />
     <Compile Include="Repositories\FinanceSettingsRepository.cs" />
     <Compile Include="Repositories\XmlBlobRepository.cs" />
     <Compile Include="Repositories\PriceCalculatorRepository.cs" />
