@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			object proxy = this.GetProxyForField (entity, field);
 
-			entity.InternalSetValue (field.Id, proxy);
+			entity.InternalSetValue (field.Id, proxy, ValueStoreSetMode.ShortCircuit);
 		}
 
 
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			Druid fieldId = field.CaptionId;
 			object fieldValue = entityData.ValueData[fieldId];
 
-			entity.InternalSetValue (field.Id, fieldValue);
+			entity.InternalSetValue (field.Id, fieldValue, ValueStoreSetMode.ShortCircuit);
 		}
 
 
@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 				object target = new KeyedReferenceFieldProxy (this.DataContext, entity, fieldId, entityKey);
 
-				entity.InternalSetValue (fieldId.ToResourceId (), target);
+				entity.InternalSetValue (fieldId.ToResourceId (), target, ValueStoreSetMode.ShortCircuit);
 			}
 		}
 
@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 				object target = new KeyedCollectionFieldProxy (this.DataContext, entity, fieldId, targetKeys);
 
-				entity.InternalSetValue (fieldId.ToResourceId (), target);
+				entity.InternalSetValue (fieldId.ToResourceId (), target, ValueStoreSetMode.ShortCircuit);
 			}
 		}
 
