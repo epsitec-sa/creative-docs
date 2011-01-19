@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public void AddChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
+			businessContext.AcquireLock ();
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			string chartId = chart.Id.ToString ("D");
@@ -78,12 +79,11 @@ namespace Epsitec.Cresus.Core.Entities
 			blob.XmlData = xml;
 
 			this.SerializedChartsOfAccounts.Add (blob);
-			//?this.chartsOfAccounts.Add (chart);
-			//?this.lastChecksum = this.Checksum;
 		}
 
 		public void RemoveChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
+			businessContext.AcquireLock ();
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			string chartId = chart.Id.ToString ("D");
@@ -96,8 +96,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			this.SerializedChartsOfAccounts.Remove (blob);
-			//?this.chartsOfAccounts.Remove (chart);
-			//?this.lastChecksum = this.Checksum;
 		}
 
 
