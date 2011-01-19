@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document.Panels
 			: base (document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += HandleTypeChanged;
+			this.grid.SelectionChanged += this.HandleTypeChanged;
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -26,7 +26,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFrameWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldFrameWidth.LabelShortText = Res.Strings.Panel.Frame.Short.FrameWidth;
 			this.fieldFrameWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.FrameWidth;
-			this.document.Modifier.AdaptTextFieldRealPercent (this.fieldFrameWidth.TextFieldReal);
+			this.fieldFrameWidth.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldFrameWidth.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldFrameWidth.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldFrameWidth.TextFieldReal);
 			this.fieldFrameWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldFrameWidth.TabIndex = 2;
 			this.fieldFrameWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -35,8 +38,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMarginWidth.LabelShortText = Res.Strings.Panel.Frame.Short.MarginWidth;
 			this.fieldMarginWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.MarginWidth;
-			this.document.Modifier.AdaptTextFieldRealAngle (this.fieldMarginWidth.TextFieldReal);
-			this.fieldMarginWidth.TextFieldReal.InternalMaxValue = 90.0M;
+			this.fieldMarginWidth.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldMarginWidth.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldMarginWidth.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldMarginWidth.TextFieldReal);
 			this.fieldMarginWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldMarginWidth.TabIndex = 3;
 			this.fieldMarginWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -45,8 +50,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldShadowSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldShadowSize.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowSize;
 			this.fieldShadowSize.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowSize;
-			this.document.Modifier.AdaptTextFieldRealAngle (this.fieldShadowSize.TextFieldReal);
-			this.fieldShadowSize.TextFieldReal.InternalMaxValue = 90.0M;
+			this.fieldShadowSize.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldShadowSize.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldShadowSize.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldShadowSize.TextFieldReal);
 			this.fieldShadowSize.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldShadowSize.TabIndex = 4;
 			this.fieldShadowSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -118,7 +125,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.grid.SelectedValue = (int) p.FrameType;
 			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) p.FrameWidth;
-			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) p.FrameWidth;
+			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) p.MarginWidth;
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) p.ShadowSize;
 
 			this.EnableWidgets();
@@ -133,7 +140,7 @@ namespace Epsitec.Common.Document.Panels
 
 			p.FrameType = (Properties.FrameType) this.grid.SelectedValue;
 			p.FrameWidth = (double) this.fieldFrameWidth.TextFieldReal.InternalValue;
-			p.FrameWidth = (double) this.fieldMarginWidth.TextFieldReal.InternalValue;
+			p.MarginWidth = (double) this.fieldMarginWidth.TextFieldReal.InternalValue;
 			p.ShadowSize = (double) this.fieldShadowSize.TextFieldReal.InternalValue;
 		}
 
@@ -201,8 +208,21 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleTypeChanged(object sender)
 		{
 			//	Le type a été changé.
-			if ( this.ignoreChanged )  return;
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
 			this.EnableWidgets();
+
+			//	Met les valeurs par défaut correspondant au type choisi.
+			Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
+			double frameWidth, marginWidth, shadowSize;
+			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize);
+			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) frameWidth;
+			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) marginWidth;
+			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
+
 			this.OnChanged();
 		}
 

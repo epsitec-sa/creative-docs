@@ -599,6 +599,8 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 				}
+
+				this.DrawFrame (port, drawingContext, this.PathBuildSurface ());
 			}
 			else
 			{
@@ -658,6 +660,18 @@ namespace Epsitec.Common.Document.Objects
 				}
 
 				port.Transform = ot;
+
+				this.DrawFrame (port, drawingContext, this.PathBuildSurface ());
+			}
+		}
+
+		private void DrawFrame(IPaintPort port, DrawingContext drawingContext, Path path)
+		{
+			Properties.Frame frame = this.PropertyFrame;
+
+			if (frame != null && frame.FrameType != Properties.FrameType.None)
+			{
+				frame.DrawFrame (port, drawingContext, path);
 			}
 		}
 
