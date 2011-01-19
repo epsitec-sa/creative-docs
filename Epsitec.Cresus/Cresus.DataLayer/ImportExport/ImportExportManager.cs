@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		public static bool IsExportable(DataContext dataContext, AbstractEntity entity)
 		{
-			return entity != null && dataContext.IsPersistent (entity);
+			return EntityNullReferenceVirtualizer.IsNullEntity (entity) == false;
 		}
 
 
