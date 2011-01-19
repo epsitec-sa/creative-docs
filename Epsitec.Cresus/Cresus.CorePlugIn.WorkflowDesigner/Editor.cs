@@ -1586,12 +1586,21 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			this.businessContext.Data.DataInfrastructure.Import (file);
 		}
 
-		internal void Export(string path)
+		internal void Export(string path, bool exportAll)
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo (path);
 
 			var list = new List<WorkflowDefinitionEntity> ();
-			list.Add (this.workflowDefinitionEntity);
+
+			if (exportAll)
+			{
+				list.AddRange (this.businessContext.Data.GetAllEntities<WorkflowDefinitionEntity> (Core.DataExtractionMode.Default, this.businessContext.DataContext));
+			}
+			else
+			{
+				list.Add (this.workflowDefinitionEntity);
+			}
+
 			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, list);
 		}
 
