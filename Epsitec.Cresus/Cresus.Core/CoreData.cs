@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.ImportExport;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -193,7 +194,7 @@ namespace Epsitec.Cresus.Core
 						{
 							try
 							{
-								this.dataInfrastructure.UpdateSchema (this.GetManagedEntityIds ());
+								this.dataInfrastructure.UpdateSchema (CoreData.GetManagedEntityIds ());
 							}
 							catch (System.Exception e)
 							{
@@ -447,14 +448,14 @@ namespace Epsitec.Cresus.Core
 
 		private bool ConnectToDatabase(DbAccess access)
 		{
-			if (this.ForceDatabaseCreation)
+			if (this.ForceDatabaseCreation && CoreData.CheckDatabaseEsistence (access))
 			{
-				this.DropDatabase (access);
+				CoreData.DropDatabase (access);
 			}
 
 			try
 			{
-				if (DbInfrastructure.CheckDatabaseExistence (access))
+				if (CoreData.CheckDatabaseEsistence (access))
 				{
 					this.dbInfrastructure.AttachToDatabase (access);
 					System.Diagnostics.Trace.WriteLine ("Connected to database");
@@ -477,7 +478,13 @@ namespace Epsitec.Cresus.Core
 			return true;
 		}
 
-		private void DropDatabase(DbAccess access)
+
+		private static bool CheckDatabaseEsistence(DbAccess access)
+		{
+			return DbInfrastructure.CheckDatabaseExistence (access);
+		}
+
+		private static void DropDatabase(DbAccess access)
 		{
 			DbInfrastructure.DropDatabase (access);
 		}
@@ -516,13 +523,13 @@ namespace Epsitec.Cresus.Core
 		{
 			this.connectionManager.Validate ();
 
-			if (!this.dataInfrastructure.CheckSchema(this.GetManagedEntityIds ()))
+			if (!this.dataInfrastructure.CheckSchema (CoreData.GetManagedEntityIds ()))
 			{
 				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ("Incompatible database schema");
 			}
 		}
 
-		private IEnumerable<Druid> GetManagedEntityIds()
+		private static IEnumerable<Druid> GetManagedEntityIds()
 		{
 			yield return EntityInfo<RelationEntity>.GetTypeId ();
 			yield return EntityInfo<NaturalPersonEntity>.GetTypeId ();
@@ -561,7 +568,7 @@ namespace Epsitec.Cresus.Core
 		{
 			this.connectionManager.Validate ();
 
-			this.DataInfrastructure.CreateSchema (this.GetManagedEntityIds ());
+			this.DataInfrastructure.CreateSchema (CoreData.GetManagedEntityIds ());
 		}
 
 		private void PopulateDatabase()
@@ -660,7 +667,70 @@ namespace Epsitec.Cresus.Core
 			return this.DataContext.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
 		}
 
+		public static void CreateEpsitecDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			ImportMode importMode = ImportMode.PreserveIds;
 
+			CoreData.CreateDatabase (file, dbAccess, importMode);
+		}
+
+		public static void CreateUserDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			ImportMode importMode = ImportMode.DecrementIds;
+
+			CoreData.CreateDatabase (file, dbAccess, importMode);
+		}
+
+		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, ImportMode importMode)
+		{
+			if (CoreData.CheckDatabaseEsistence (dbAccess))
+			{
+				CoreData.DropDatabase (dbAccess);
+			}
+
+			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			{
+				dbInfrastructure.CreateDatabase (dbAccess);
+
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					dataInfrastructure.CreateSchema (CoreData.GetManagedEntityIds ());
+					dataInfrastructure.ImportEpsitecData (file, importMode);
+				}
+			}
+		}
+
+		public static void ReloadEpsitecData(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			{
+				dbInfrastructure.AttachToDatabase (dbAccess);
+
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					dataInfrastructure.ImportEpsitecData (file, ImportMode.DecrementIds);
+				}
+			}
+		}
+
+		public static void ExportEpsitecData(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			{
+				dbInfrastructure.AttachToDatabase (dbAccess);
+
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					dataInfrastructure.ExportEpsitecData(file);
+				}
+			}
+		}
 
 		private void ReloadDatabase()
 		{
@@ -673,7 +743,7 @@ namespace Epsitec.Cresus.Core
 			this.activeDataContext = dataContext;
 		}
 
-		private static DbAccess GetDatabaseAccess()
+		public static DbAccess GetDatabaseAccess()
 		{
 			DbAccess access = DbInfrastructure.CreateDatabaseAccess ("core");
 
