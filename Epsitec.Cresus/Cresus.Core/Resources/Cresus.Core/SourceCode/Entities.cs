@@ -2464,7 +2464,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>DocumentMetadata</c> entity.
 	///	designer:cap/L0AO2
 	///	</summary>
-	public partial class DocumentMetadataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.IComments
+	public partial class DocumentMetadataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.IComments, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
 	{
 		#region IDateMetadata Members
 		///	<summary>
@@ -2495,6 +2495,24 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return global::Epsitec.Cresus.Core.Entities.ICommentsInterfaceImplementation.GetComments (this);
+			}
+		}
+		#endregion
+		#region IWorkflowHost Members
+		///	<summary>
+		///	The <c>Workflow</c> field.
+		///	designer:fld/L0AO2/L0A7L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7L]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowEntity Workflow
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.GetWorkflow (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.SetWorkflow (this, value);
 			}
 		}
 		#endregion
