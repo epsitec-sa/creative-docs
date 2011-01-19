@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 
 				case EngineType.Embedded:
+					FirebirdAbstraction.LoadFirebirdEmbedded ();
 					this.serverType = FbServerType.Embedded;
 					this.engineType = engineType;
 					break;
@@ -182,16 +183,15 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			return FirebirdAbstraction.MakeDbFilePath (this.dbAccess, this.engineType);
 		}
-
 		
 		public static string MakeConnectionStringForDbCreation(DbAccess dbAccess, string path, FbServerType serverType)
 		{
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginName);
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginPassword);
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Server);
-			
+
 			FbConnectionStringBuilder cs = new FbConnectionStringBuilder ();
-			
+
 			cs.UserID     = dbAccess.LoginName;
 			cs.Password   = dbAccess.LoginPassword;
 			cs.DataSource = dbAccess.Server;
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			cs.Dialect    = FirebirdAbstraction.fbDialect;
 			cs.Charset    = FirebirdAbstraction.fbCharset;
 			cs.ServerType = serverType;
-			
+
 			return cs.ConnectionString;
 		}
 		
@@ -209,29 +209,23 @@ namespace Epsitec.Cresus.Database.Implementation
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginName);
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginPassword);
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Server);
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.AppendFormat ("User={0};", dbAccess.LoginName);
-			buffer.AppendFormat ("Password={0};", dbAccess.LoginPassword);
-			buffer.AppendFormat ("Data Source={0};", dbAccess.Server);
-			buffer.AppendFormat ("Database={0};", path);
-			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fbPort);
-			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fbDialect);
-			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fbPageSize);
-			buffer.AppendFormat ("Server Type={0};", serverType == FbServerType.Embedded ? 1 : 0);
-			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fbCharset);
-			
-			buffer.Append ("Role=;");
-			buffer.Append ("Pooling=false;");
-			buffer.Append ("Connection Lifetime=0;");
 
-			if (serverType == FbServerType.Embedded)
+			FbConnectionStringBuilder cs = new FbConnectionStringBuilder
 			{
-				FirebirdAbstraction.LoadFirebirdEmbedded ();
-			}
-			
-			return buffer.ToString ();
+				UserID				= dbAccess.LoginName,
+				Password			= dbAccess.LoginPassword,
+				DataSource			= dbAccess.Server,
+				Database			= path,
+				Port				= FirebirdAbstraction.fbPort,
+				Dialect				= FirebirdAbstraction.fbDialect,
+				PacketSize			= FirebirdAbstraction.fbPageSize,
+				ServerType			= serverType,
+				Charset				= FirebirdAbstraction.fbCharset,
+				Pooling				= false,
+				ConnectionLifeTime	= 0,			
+			};
+
+			return cs.ConnectionString;
 		}
 
 		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
