@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public sealed class ArrowedFrame : Tiles.Tile
 	{
-		public ArrowedFrame()
+		public ArrowedFrame(Direction arrowDirection)
+			: base (arrowDirection)
 		{
-			this.ArrowDirection = Direction.Down;
 		}
 
 
@@ -43,13 +43,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				var arrow = new Tiles.TileArrow ();
+				this.tileArrow.SetOutlineColors (Tiles.Tile.BorderColors);
+				this.tileArrow.SetSurfaceColors (this.InternalSurfaceColors);
+				this.tileArrow.MouseHilite = false;
 
-				arrow.SetOutlineColors (Tiles.Tile.BorderColors);
-				arrow.SetSurfaceColors (this.InternalSurfaceColors);
-				arrow.MouseHilite = false;
-
-				return arrow;
+				return this.tileArrow;
 			}
 		}
 

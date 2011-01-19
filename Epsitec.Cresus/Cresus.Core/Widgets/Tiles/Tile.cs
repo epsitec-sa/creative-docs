@@ -44,9 +44,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// </summary>
 	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
-		public Tile()
+		public Tile(Direction arrowDirection)
 		{
-			this.tileArrow    = new TileArrow ();
+			this.tileArrow    = new TileArrow (arrowDirection);
 			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
 		}
 
@@ -62,27 +62,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-
-		/// <summary>
-		/// Détermine le côté sur lequel s'affiche la flèche. Si la flèche n'est pas dessinée, le côté
-		/// correspondant aura un vide.
-		/// </summary>
-		/// <value>Position de la flèche.</value>
-		public Direction ArrowDirection
-		{
-			get
-			{
-				return this.arrowDirection;
-			}
-			set
-			{
-				if (this.arrowDirection != value)
-				{
-					this.arrowDirection = value;
-					this.Invalidate ();
-				}
-			}
-		}
 
 		public virtual TileArrowMode ArrowMode
 		{
@@ -122,7 +101,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
+			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode);
 		}
 
 		#region Colors
@@ -445,7 +424,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					this.dragWindowSourceOffset = this.MapScreenToClient (mouseCursor);
 					this.dragWindowSourceSize = this.ActualSize;
 
-					this.dragErsatzTile = new Tile ()
+					this.dragErsatzTile = new Tile (Direction.Left)
 					{
 						Margins       = this.Margins,
 						PreferredSize = this.dragWindowSourceSize,
@@ -646,10 +625,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private static readonly double dragBeginMinimalMove = 4;
 		private static readonly Size dragTargetMarkerSize = new Size (250, 21);
 
-		private readonly TileArrow								tileArrow;
+		protected readonly TileArrow							tileArrow;
 		private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		
-		private Direction										arrowDirection;
 		private TileArrowMode									arrowMode;
 
 		private bool											isClickForDrag;

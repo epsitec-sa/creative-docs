@@ -232,7 +232,6 @@ namespace Epsitec.Cresus.Core
 				Parent = this.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, bottomMargin),
-				ArrowDirection = Direction.Right,
 				TitleIconUri = iconUri,
 				Title = title,
 				IsReadOnly = false,
@@ -271,7 +270,6 @@ namespace Epsitec.Cresus.Core
 				TabIndex       = ++this.tabIndex,
 				Name           = fullName,
 				Margins        = new Margins (0, 0, 0, -1),
-				ArrowDirection = Direction.Right,
 			};
 
 			this.ContentListAdd (tile);

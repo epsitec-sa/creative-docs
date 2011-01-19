@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	public sealed class TilePageButton : Tiles.Tile
 	{
 		public TilePageButton()
+			: base (Direction.Down)
 		{
-			this.ArrowDirection = Direction.Down;
 		}
 
 		public TilePageButton(TabPageDef tabPageDef)
@@ -59,13 +59,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				var arrow = new Tiles.TileArrow ();
+				this.tileArrow.SetOutlineColors (Tiles.Tile.BorderColors);
+				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
+				this.tileArrow.MouseHilite = this.MouseHilite;
 
-				arrow.SetOutlineColors (Tiles.Tile.BorderColors);
-				arrow.SetSurfaceColors (this.SurfaceColors);
-				arrow.MouseHilite = this.MouseHilite;
-
-				return arrow;
+				return this.tileArrow;
 			}
 		}
 

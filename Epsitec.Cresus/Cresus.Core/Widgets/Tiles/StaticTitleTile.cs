@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	public abstract class StaticTitleTile : Tile
 	{
 		public StaticTitleTile()
+			: base (Direction.Right)
 		{
 			this.CreateUI ();
 		}

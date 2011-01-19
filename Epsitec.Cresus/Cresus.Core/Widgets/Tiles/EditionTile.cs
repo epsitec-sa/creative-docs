@@ -85,13 +85,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				var arrow = new TileArrow ();
+				this.tileArrow.SetOutlineColors (this.OutlineColors);
+				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
+				this.tileArrow.MouseHilite = this.MouseHilite;
 
-				arrow.SetOutlineColors (this.OutlineColors);
-				arrow.SetSurfaceColors (this.SurfaceColors);
-				arrow.MouseHilite = this.MouseHilite;
-
-				return arrow;
+				return this.tileArrow;
 			}
 		}
 

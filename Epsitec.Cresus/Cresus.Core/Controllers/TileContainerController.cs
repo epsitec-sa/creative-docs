@@ -652,11 +652,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var titleTile in this.GetTitleTiles ())
 			{
-				titleTile.Parent         = parent;
-				titleTile.Dock           = DockStyle.Top;
-				titleTile.Margins        = new Margins (0, 0, 0, -1);
-				titleTile.ArrowDirection = Direction.Right;
-				titleTile.IsReadOnly     = true;
+				titleTile.Parent     = parent;
+				titleTile.Dock       = DockStyle.Top;
+				titleTile.Margins    = new Margins (0, 0, 0, -1);
+				titleTile.IsReadOnly = true;
 			}
 
 			Window.RefreshEnteredWidgets ();
