@@ -281,8 +281,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		public long? GetLogSequenceNumberForEntity(EntityKey normalizedEntityKey)
-		{
-			
+		{	
 			DbTable entityDbTable = this.SchemaEngine.GetEntityTableDefinition (normalizedEntityKey.EntityId);
 			DbTable logDbTable = this.DbInfrastructure.ResolveDbTable (Tags.TableLog);
 
@@ -719,6 +718,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForValueField(AliasNode rootEntityAlias, AbstractEntity entity, StructuredTypeField field)
 		{
+			// TODO Make sure that the way we obtain the values is ok even in cases when the values
+			// are not supported. It seems to me that we should call the DataConverter.
+			// Marc
+
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
 
@@ -737,7 +740,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					// TODO The call to FormattedText is not very nice, but it must be done in order
 					// to allow research on regular text as well as on formatted text. This might
 					// indicate some kind of design flow in how the text in entities are implemented.
-					// So we can't much right here to improve the situation. The correction must be
+					// So we can't do much right here to improve the situation. The correction must be
 					// done elsewhere first.
 					// Marc
 
@@ -752,9 +755,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					break;
 
 				case TypeCode.Decimal:
+
+					// TODO Implement this case.
+					// Marc
+
 					throw new System.NotImplementedException ();
 
 				case TypeCode.Double:
+					
+					// TODO Implement this case.
+					// Marc
+
 					throw new System.NotImplementedException ();
 
 				case TypeCode.Integer:
@@ -762,7 +773,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					(
 						SqlFunctionCode.CompareEqual,
 						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((int) fieldValue, DbRawType.String)
+						SqlField.CreateConstant ((int) fieldValue, DbRawType.Int32)
 					);
 					break;
 
@@ -771,7 +782,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					(
 						SqlFunctionCode.CompareEqual,
 						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((long) fieldValue, DbRawType.String)
+						SqlField.CreateConstant ((long) fieldValue, DbRawType.Int64)
 					);
 					break;
 
@@ -780,18 +791,39 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					(
 						SqlFunctionCode.CompareEqual,
 						this.BuildSqlFieldForEntityColumn(rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((bool) fieldValue, DbRawType.String)
+						SqlField.CreateConstant ((bool) fieldValue, DbRawType.Boolean)
 					);
 					break;
 
 				case TypeCode.Date:
+
+					// TODO Implement this case.
+					// Marc
+
 					throw new System.NotImplementedException ();
 
 				case TypeCode.DateTime:
+
+					// TODO Implement this case.
+					// Marc
+
 					throw new System.NotImplementedException ();
 
 				case TypeCode.Time:
+
+					// TODO Implement this case.
+					// Marc
+
 					throw new System.NotImplementedException ();
+
+				case TypeCode.Enum:
+					sqlCondition = new SqlFunction
+					(
+						SqlFunctionCode.CompareEqual,
+						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
+						SqlField.CreateConstant (EnumType.ConvertToInt ((System.Enum) fieldValue), DbRawType.Int32)
+					);
+					break;
 
 				default:
 					throw new System.NotImplementedException ();
