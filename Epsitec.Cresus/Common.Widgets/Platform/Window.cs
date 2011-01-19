@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -847,6 +847,22 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				return new Drawing.Rectangle (ox, oy, dx, dy);
+			}
+		}
+
+		private WindowPlacement CurrentWindowPlacement
+		{
+			set
+			{
+				if (!this.windowPlacement.Equals (value))
+				{
+					this.windowPlacement = value;
+					
+					if (this.widgetWindow != null)
+					{
+						this.widgetWindow.OnWindowPlacementChanged ();
+					}
+				}
 			}
 		}
 
@@ -1814,6 +1830,8 @@ namespace Epsitec.Common.Widgets.Platform
 					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
 					this.formBounds = new System.Drawing.Rectangle (wp->X, wp->Y, wp->Width, wp->Height);
 				}
+
+				this.CurrentWindowPlacement = this.NativeWindowPlacement;
 			}
 			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
@@ -2670,6 +2688,8 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							isLayoutInProgress;
 		private int								disableSyncPaint;
 		private int								isSyncUpdating;
+
+		private WindowPlacement					windowPlacement;
 		
 		private static bool						isAppActive;
 		private static bool						isSyncRequested;

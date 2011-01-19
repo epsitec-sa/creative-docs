@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -100,6 +100,25 @@ namespace Epsitec.Cresus.Core.Library
 				});
 		}
 
+		/// <summary>
+		/// Registers the specified window with the persistence manager. If the window
+		/// gets resized, the persistence manager will generate <see cref="SettingsChanged"/>
+		/// events.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		public void Register(Window window)
+		{
+			window.WindowPlacementChanged += this.NotifyChange;
+		}
+
+		/// <summary>
+		/// Unregisters the specified window from the persistence manager.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		public void Unregister(Window window)
+		{
+			window.WindowPlacementChanged -= this.NotifyChange;
+		}
 
 
 

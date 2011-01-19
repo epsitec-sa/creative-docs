@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -255,8 +255,13 @@ namespace Epsitec.Cresus.Core
 		{
 			try
 			{
-				string[] lines = System.IO.File.ReadAllLines (CoreApplication.GetSettingsPath ());
-				CoreApplication.SetDeserializedData (lines);
+				string path = CoreApplication.GetSettingsPath ();
+				
+				if (System.IO.File.Exists (path))
+				{
+					string[] lines = System.IO.File.ReadAllLines (path);
+					CoreApplication.SetDeserializedData (lines);
+				}
 			}
 			catch
 			{
@@ -391,6 +396,7 @@ namespace Epsitec.Cresus.Core
 			Window window = new Window
 			{
 				Text = this.ShortWindowTitle,
+//-				Name = "Application",
 				ClientSize = new Epsitec.Common.Drawing.Size (600, 400),
 				Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
 			};
@@ -401,6 +407,8 @@ namespace Epsitec.Cresus.Core
 				{
 					this.Window.Text = string.Format ("{0} Alpha {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
 				};
+
+			CoreProgram.Application.PersistanceManager.Register (this.Window);
 		}
 
 		private void CreateUIControllers()

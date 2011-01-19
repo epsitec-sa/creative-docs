@@ -1,4 +1,4 @@
-//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -13,7 +13,6 @@ namespace Epsitec.Common.Widgets
 	/// including its state (full screen and/or minimized).
 	/// </summary>
 	[System.ComponentModel.TypeConverter (typeof (WindowPlacement.Converter))]
-
 	public struct WindowPlacement : System.IEquatable<WindowPlacement>
 	{
 		public WindowPlacement(Drawing.Rectangle bounds, bool isFullScreen, bool isMinimized, bool isHidden)

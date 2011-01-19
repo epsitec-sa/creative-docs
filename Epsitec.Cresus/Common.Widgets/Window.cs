@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -1639,6 +1639,14 @@ namespace Epsitec.Common.Widgets
 				this.WindowResizeEnded (this);
 			}
 		}
+
+		internal void OnWindowPlacementChanged()
+		{
+			if (this.WindowPlacementChanged != null)
+			{
+				this.WindowPlacementChanged (this);
+			}
+		}
 		
 		
 		internal bool FilterMessage(Message message)
@@ -2695,6 +2703,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowSizeMoveStatusChanged;
 		public event EventHandler				WindowResizeBeginning;
 		public event EventHandler				WindowResizeEnded;
+		public event EventHandler				WindowPlacementChanged;
 
 		public event EventHandler<DependencyPropertyChangedEventArgs> FocusedWidgetChanged;
 		public event EventHandler<FocusChangingEventArgs> FocusedWidgetChanging;

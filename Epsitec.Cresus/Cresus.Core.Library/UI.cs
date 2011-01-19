@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core.Library
 					window.Hide ();
 				}
 
-				//	Changning the WindowPlacement will update the window placement hints, therefore
+				//	Changing the WindowPlacement will update the window placement hints, therefore
 				//	we really need to iterate over a copy of UI.windowPlacementHints.
 
 				window.WindowPlacement = hint.Placement;

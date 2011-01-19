@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// The <c>WindowPlacementHint</c> structure records the placement
 		/// information for a window identified by its name and title.
 		/// </summary>
-		struct WindowPlacementHint : System.IEquatable<WindowPlacementHint>
+		private struct WindowPlacementHint : System.IEquatable<WindowPlacementHint>
 		{
 			public WindowPlacementHint(string name, string title, WindowPlacement placement)
 			{
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Library
 				this.placement = placement;
 			}
 
-			public string Name
+			public string						Name
 			{
 				get
 				{
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Library
 				}
 			}
 
-			public string Title
+			public string						Title
 			{
 				get
 				{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Library
 				}
 			}
 
-			public WindowPlacement Placement
+			public WindowPlacement				Placement
 			{
 				get
 				{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library
 				}
 			}
 
-			public bool IsEmpty
+			public bool							IsEmpty
 			{
 				get
 				{
@@ -81,9 +81,9 @@ namespace Epsitec.Cresus.Core.Library
 					^ (this.title == null ? 0 : this.title.GetHashCode ());
 			}
 
-			private readonly string name;
-			private readonly string title;
-			private readonly WindowPlacement placement;
+			private readonly string				name;
+			private readonly string				title;
+			private readonly WindowPlacement	placement;
 		}
 	}
 }

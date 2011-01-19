@@ -48,6 +48,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="PersistenceManagerBinding`1.cs" />
     <Compile Include="ExceptionManager.cs" />
     <Compile Include="PersistenceManager.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
