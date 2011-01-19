@@ -1516,7 +1516,7 @@ namespace Epsitec.Cresus.Database
 			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
 			
 			SqlField field = SqlField.CreateConstant (value, rawType);
-			field.Alias = column.Name;
+			field.Alias = column.GetSqlName ();
 			return field;
 		}
 
