@@ -63,6 +63,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		/// <summary>
+		/// Retourne le rectangle pour le contenu, qui exclu la zone occupée par la flèche.
+		/// </summary>
 		public Rectangle ContainerBounds
 		{
 			get
@@ -74,6 +77,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Retourne les marges pour le contenu, qui excluent la zone occupée par la flèche.
+		/// </summary>
 		public Margins ContainerPadding
 		{
 			get
@@ -82,6 +88,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Retourne les marges pour le contenu, qui excluent la zone occupée par la flèche.
+		/// </summary>
+		/// <param name="arrowDirection">Position de la flèche</param>
+		/// <returns>Marges sans la zone de la flèche</returns>
 		public static Margins GetContainerPadding(Direction arrowDirection)
 		{
 			switch (arrowDirection)
