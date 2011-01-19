@@ -766,6 +766,45 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (internalTable);
 		}
 
+		public void SetColumnAutoIncrementValue(DbTable table, DbColumn column, long value)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.SetColumnAutoIncrementValue (transaction, table, column, value);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void SetColumnAutoIncrementValue(DbTransaction transaction, DbTable table, DbColumn column, long value)
+		{
+			value.ThrowIf (v => v < 0, "value is lower than zero");
+
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			if (internalTable == null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
+			}
+
+			DbColumn internalColumn = internalTable.Columns[column.Name];
+
+			if (internalColumn == null)
+			{
+				throw new GenericException (this.access, "The column " + column.Name + " is not defined for table " + table.Name + ".");
+			}
+
+			if (!internalColumn.IsAutoIncremented)
+			{
+				throw new GenericException (this.access, "The column " + column.Name + " is not autoincremented");
+			}
+
+			internalColumn.AutoIncrementStartValue = value;
+
+			this.DropAutoIncrementFromColumn (transaction, internalTable, internalColumn);
+			this.InsertAutoIncrementForColumn (transaction, internalTable, internalColumn);
+		}
+		
 		private void AddTableInternal(DbTransaction transaction, DbTable table)
 		{
 			this.AddConcreteTable (transaction, table);
@@ -963,26 +1002,26 @@ namespace Epsitec.Cresus.Database
 
 		private void InsertAutoIncrementForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
 		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
 			if (dbColumn.IsAutoIncremented)
 			{
-				transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartIndex);
+				string tableName = dbTable.GetSqlName ();
+				string columnName = dbColumn.GetSqlName ();
+
+				transaction.SqlBuilder.SetAutoIncrementOnTableColumn (tableName, columnName, dbColumn.AutoIncrementStartValue);
 				this.ExecuteSilent (transaction);
 			}
 		}
 
 		private void InsertAutoTimeStampForColumn(DbTransaction transaction, DbTable dbTable, DbColumn dbColumn)
 		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
 			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
 			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
 
 			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
 			{
+				string tableName = dbTable.GetSqlName ();
+				string columnName = dbColumn.GetSqlName ();
+
 				transaction.SqlBuilder.SetAutoTimeStampOnTableColumn (tableName, columnName, autoTimeStampOnInsert, autoTimeStampOnUpdate);
 				this.ExecuteSilent (transaction);
 			}
@@ -1016,11 +1055,11 @@ namespace Epsitec.Cresus.Database
 		
 		private void DropAutoIncrementFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
 			if (dbColumn.IsAutoIncremented)
 			{
+				string tableName = dbTable.GetSqlName ();
+				string columnName = dbColumn.GetSqlName ();
+
 				dbTransaction.SqlBuilder.DropAutoIncrementOnTableColumn (tableName, columnName);
 				this.ExecuteSilent (dbTransaction);
 			}
@@ -1028,14 +1067,14 @@ namespace Epsitec.Cresus.Database
 		
 		private void DropAutoTimeStampFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
-			string tableName = dbTable.GetSqlName ();
-			string columnName = dbColumn.GetSqlName ();
-
 			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
 			bool autoTimeStampOnUpdate = dbColumn.IsAutoTimeStampOnUpdate;
 
 			if (autoTimeStampOnInsert || autoTimeStampOnUpdate)
 			{
+				string tableName = dbTable.GetSqlName ();
+				string columnName = dbColumn.GetSqlName ();
+
 				dbTransaction.SqlBuilder.DropAutoTimeStampOnTableColumn (tableName, columnName);
 				this.ExecuteSilent (dbTransaction);
 			}
@@ -1546,10 +1585,10 @@ namespace Epsitec.Cresus.Database
 
 		private void DefineBasicTable(DbTable table, DbElementCat category, bool autoIncrementedId)
 		{
-			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal)
+			DbColumn colId = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = autoIncrementedId,
-				AutoIncrementStartIndex = DbInfrastructure.AutoIncrementStartIndex
+				AutoIncrementStartValue = DbInfrastructure.AutoIncrementStartValue
 			};
 			table.DefineCategory (category);
 
@@ -3321,7 +3360,7 @@ namespace Epsitec.Cresus.Database
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 
-		public static readonly int AutoIncrementStartIndex = 1000000000;
+		public static readonly int AutoIncrementStartValue = 1000000000;
 
 	}
 }

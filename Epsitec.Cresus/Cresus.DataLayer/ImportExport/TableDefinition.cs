@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			SqlField tableSqlField = this.CreateTableSqlField ();
 			IList<SqlField> columnSqlFields = this.CreateColumnSqlFields ();
 
-			int startIndex = DbInfrastructure.AutoIncrementStartIndex;
+			int startIndex = DbInfrastructure.AutoIncrementStartValue;
 			int length = 1000;
 
 			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (isIdColumn[i])
 				{
-					valueAsObject = ((long) valueAsObject) - DbInfrastructure.AutoIncrementStartIndex;
+					valueAsObject = ((long) valueAsObject) - DbInfrastructure.AutoIncrementStartValue;
 				}
 
 				processedRow.Add (valueAsObject);
@@ -576,7 +576,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (!cleanWholeTable)
 				{
-					conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartIndex));
+					conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartValue));
 				}
 
 				dbTransaction.SqlBuilder.RemoveData (tableName, conditions);

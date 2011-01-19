@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Cresus.Database.Collections;
 
 
 namespace Epsitec.Cresus.Database.UnitTests
@@ -33,18 +34,14 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			IDbAbstractionHelper.ResetTestDatabase ();
-		}
-
-
 		[TestMethod]
 		public void CreateDatabaseTest()
 		{
-			DbInfrastructureHelper.DeleteTestDatabase ();
-			
+			if (DbInfrastructureHelper.CheckDatabaseExistence ())
+			{
+				DbInfrastructureHelper.DeleteTestDatabase ();
+			}
+
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
 				DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
@@ -797,6 +794,92 @@ namespace Epsitec.Cresus.Database.UnitTests
 				(
 					() => infrastructure.RemoveColumnFromTable (table, column)
 				);
+			}
+		}
+
+
+		[TestMethod]
+		public void SetAutoIncrementValueArgumentCheck()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
+				DbColumn column1 = new DbColumn ("column1", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table1.Columns.Add (column1);
+
+				DbTable table2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
+				DbColumn column2 = new DbColumn ("column2", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table2.Columns.Add (column2);
+
+				infrastructure.AddTable (table1);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.SetColumnAutoIncrementValue (table2, column2, 1)
+				);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.SetColumnAutoIncrementValue (table1, column2, 1)
+				);
+
+				ExceptionAssert.Throw<GenericException>
+				(
+					() => infrastructure.SetColumnAutoIncrementValue (table1, column1, 1)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => infrastructure.SetColumnAutoIncrementValue (table1, table1.Columns[Tags.ColumnId], -1)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void SetAutoIncrementValue()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, true);
+				DbColumn columnId = table.Columns[Tags.ColumnId];
+				DbColumn columnData = new DbColumn ("columnData", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table.Columns.Add (columnData);
+
+				infrastructure.AddTable (table);
+
+				for (int i = 0; i < 10; i++)
+				{
+					long value = i * 1000;
+					
+					infrastructure.SetColumnAutoIncrementValue (table, columnId, value);
+
+					SqlFieldList fieldsToInsert = new SqlFieldList ()
+					{
+						infrastructure.CreateSqlFieldFromAdoValue (columnData, 1)
+					};
+
+					SqlFieldList fieldsToReturn = new SqlFieldList ()
+					{
+						new SqlField() { Alias = columnId.GetSqlName (), },
+					};
+
+					using (DbTransaction transaction = infrastructure.BeginTransaction(DbTransactionMode.ReadWrite))
+                    {
+						transaction.SqlBuilder.InsertData (table.GetSqlName (), fieldsToInsert, fieldsToReturn);
+
+						object id = infrastructure.ExecuteScalar (transaction);
+
+						Assert.IsInstanceOfType (id, typeof (long));
+						Assert.AreEqual (value + 1, id);
+
+						transaction.Commit ();
+                    }			
+				}
 			}
 		}
 
