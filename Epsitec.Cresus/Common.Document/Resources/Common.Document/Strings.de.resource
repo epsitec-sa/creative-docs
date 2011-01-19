@@ -1438,4 +1438,23 @@
   <data id="K7">Grösse der Miniaturansichten</data>
   <data id="KC">
   </data>
+  <data id="KD">
+  </data>
+  <data id="KE">
+  </data>
+  <data id="KF">
+  </data>
+  <data id="KG">
+  </data>
+  <data id="KH">L</data>
+  <data id="KI">L</data>
+  <data id="KJ">L</data>
+  <data id="KK">L</data>
+  <data id="KL">L</data>
+  <data id="KM">L</data>
+  <data id="KN">L</data>
+  <data id="KO">L</data>
+  <data id="KP">L</data>
+  <data id="KQ">
+  </data>
 </bundle>

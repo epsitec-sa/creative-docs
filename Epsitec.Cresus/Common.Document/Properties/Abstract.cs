@@ -316,7 +316,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.TextLine:       return Res.Strings.Property.Abstract.TextLine;
 				case Type.Image:          return Res.Strings.Property.Abstract.Image;
 				case Type.ModColor:       return Res.Strings.Property.Abstract.ModColor;
-				case Type.Frame:          return "Cadre"; //Res.Strings.Property.Abstract.Frame;
+				case Type.Frame:          return Res.Strings.Property.Abstract.Frame;
 			}
 			return "";
 		}

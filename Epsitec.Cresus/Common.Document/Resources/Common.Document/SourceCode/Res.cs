@@ -6759,6 +6759,93 @@ namespace Epsitec.Common.Document
 					}
 				}
 				
+				public static class Frame
+				{
+					public static class Long
+					{
+						//	designer:str/20KK
+						public static global::Epsitec.Common.Types.FormattedText FrameWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544340));
+							}
+						}
+						//	designer:str/20KL
+						public static global::Epsitec.Common.Types.FormattedText MarginWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544341));
+							}
+						}
+						//	designer:str/20KM
+						public static global::Epsitec.Common.Types.FormattedText ShadowSize
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544342));
+							}
+						}
+					}
+					
+					public static class Short
+					{
+						//	designer:str/20KH
+						public static global::Epsitec.Common.Types.FormattedText FrameWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544337));
+							}
+						}
+						//	designer:str/20KI
+						public static global::Epsitec.Common.Types.FormattedText MarginWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544338));
+							}
+						}
+						//	designer:str/20KJ
+						public static global::Epsitec.Common.Types.FormattedText ShadowSize
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
+							}
+						}
+					}
+					
+					public static class Tooltip
+					{
+						//	designer:str/20KN
+						public static global::Epsitec.Common.Types.FormattedText FrameWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343));
+							}
+						}
+						//	designer:str/20KO
+						public static global::Epsitec.Common.Types.FormattedText MarginWidth
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544344));
+							}
+						}
+						//	designer:str/20KP
+						public static global::Epsitec.Common.Types.FormattedText ShadowSize
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544345));
+							}
+						}
+					}
+				}
+				
 				public static class Gradient
 				{
 					public static class Button
@@ -8560,6 +8647,14 @@ namespace Epsitec.Common.Document
 							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (631));
 						}
 					}
+					//	designer:str/20KQ
+					public static global::Epsitec.Common.Types.FormattedText Frame
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346));
+						}
+					}
 					//	designer:str/2008K
 					public static global::Epsitec.Common.Types.FormattedText Image
 					{
@@ -9030,6 +9125,38 @@ namespace Epsitec.Common.Document
 						get
 						{
 							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544332));
+						}
+					}
+					//	designer:str/20KF
+					public static global::Epsitec.Common.Types.FormattedText Shadow
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544335));
+						}
+					}
+					//	designer:str/20KD
+					public static global::Epsitec.Common.Types.FormattedText Simple
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544333));
+						}
+					}
+					//	designer:str/20KE
+					public static global::Epsitec.Common.Types.FormattedText White
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544334));
+						}
+					}
+					//	designer:str/20KG
+					public static global::Epsitec.Common.Types.FormattedText WhiteAndShadow
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544336));
 						}
 					}
 				}
