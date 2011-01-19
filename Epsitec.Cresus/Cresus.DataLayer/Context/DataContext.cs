@@ -860,9 +860,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 					this.DataLoader.ReloadEntity (entity);
 				}
 			}
-			else
-			{
-			}
 		}
 
 		/// <summary>
