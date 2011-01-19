@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	{
 		public CollectionItemTile()
 		{
-			this.EnableAddRemoveButtons = true;
+			this.EnableRemoveButtons = true;
 
 			this.CreateUI ();
 		}
 
 
-		public bool EnableAddRemoveButtons
+		public bool EnableRemoveButtons
 		{
 			get;
 			set;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void OnEntered(MessageEventArgs e)
 		{
-			this.SetButtonVisibility (this.EnableAddRemoveButtons);
+			this.SetButtonVisibility (this.EnableRemoveButtons);
 			
 			base.OnEntered (e);
 		}
@@ -68,32 +68,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateUI()
 		{
-			this.CreateAddButton ();
 			this.CreateRemoveButton ();
-		}
-
-		private void CreateAddButton()
-		{
-			this.buttonAdd = new GlyphButton
-			{
-				Parent = this,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
-				GlyphShape = Common.Widgets.GlyphShape.Plus,
-				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
-				PreferredSize = new Size (CollectionItemTile.simpleButtonSize, CollectionItemTile.simpleButtonSize),
-				Margins = this.ContainerPadding + new Margins (0, CollectionItemTile.simpleButtonSize-1, 10, 0),
-				Visibility = false,
-			};
-
-			//	Parfois, lorsque la touche Tab est pressée, ce handler est appelé suite à un Widget.SimulateClicked(),
-			//	ce qui ne devrait pas arriver. Pour palier à cette erreur, je teste la visibilité du widget. En effet,
-			//	un vrai événement ne peut pas subvenir si le bouton est caché.
-			//	TODO: Pour Pierre, à corriger !
-			this.buttonAdd.Clicked +=
-				delegate
-				{
-					this.OnAddClicked ();
-				};
 		}
 
 		private void CreateRemoveButton()
@@ -119,20 +94,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		private void SetButtonVisibility(bool visibility)
 		{
-//-			this.buttonAdd.Visibility = visibility;
 			this.buttonRemove.Visibility = visibility;
 		}
 
-
-		protected virtual void OnAddClicked()
-		{
-			var handler = (EventHandler) this.GetUserEventHandler (CollectionItemTile.AddClickedEvent);
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
 
 		protected virtual void OnRemoveClicked()
 		{
@@ -145,18 +109,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		
-		public event EventHandler AddClicked
-		{
-			add
-			{
-				this.AddUserEventHandler (CollectionItemTile.AddClickedEvent, value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler (CollectionItemTile.AddClickedEvent, value);
-			}
-		}
-
 		public event EventHandler RemoveClicked
 		{
 			add
@@ -170,13 +122,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private const string AddClickedEvent	= "AddClicked";
 		private const string RemoveClickedEvent = "RemoveClicked";
 		
 
 		private static readonly double simpleButtonSize = 16;
 
-		private GlyphButton buttonAdd;
 		private GlyphButton buttonRemove;
 	}
 }

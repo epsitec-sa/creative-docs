@@ -426,12 +426,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var tile = new CollectionItemTile ();
 
-				tile.AddClicked += sender =>
-				{
-					item.AddNewItem ();
-					this.GenerateTiles ();
-				};
-
 				if (item.DeleteItem != null)
 				{
 					tile.RemoveClicked += sender =>
@@ -442,7 +436,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
+				tile.EnableRemoveButtons = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
 				item.SummaryTile = tile;
 
 				if (item.AutoGroup)
