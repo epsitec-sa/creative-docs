@@ -1,10 +1,11 @@
-//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
 {
 	/// <summary>
-	/// La classe Win32Const exporte des constantes liées à Windows.
+	/// The <c>Win32Const</c> class exports the Window constants used by the
+	/// framework.
 	/// </summary>
 	internal class Win32Const
 	{
