@@ -33,13 +33,13 @@ namespace Epsitec.Cresus.Core.Controllers
 	{
 		private TileContainerController(TileContainer container, Widget parent = null)
 		{
-			this.controller  = container.Controller as EntityViewController;
-			this.navigator   = this.controller.Navigator;
-			this.container   = container;
-			this.parent      = parent ?? this.container;
-			this.dataItems   = new SummaryDataItems (this.controller);
-			this.liveItems = new List<SummaryDataItem> ();
-			this.dataContext = this.controller.DataContext;
+			this.controller   = container.Controller as EntityViewController;
+			this.navigator    = this.controller.Navigator;
+			this.container    = container;
+			this.parent       = parent ?? this.container;
+			this.dataItems    = new SummaryDataItems (this.controller);
+			this.liveItems    = new List<SummaryDataItem> ();
+			this.dataContext  = this.controller.DataContext;
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.parent.SizeChanged += this.HandleContainerSizeChanged;
 
-			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
+			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus  (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 
 			this.controller.Disposing += this.HandleControllerDisposing;
@@ -295,11 +295,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void DisposeDataItem(SummaryDataItem item)
 		{
-			var summary = item.SummaryTile;
+			var summary = item.Tile;
 			var title   = item.TitleTile;
 
 			item.TitleTile   = null;
-			item.SummaryTile = null;
+			item.Tile = null;
 
 			if (summary != null)
 			{
@@ -320,28 +320,43 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateMissingSummaryTiles()
 		{
-			foreach (var item in this.liveItems)
+			using (var builder = new UIBuilder (this.controller))
 			{
-				if (item.SummaryTile == null)
+				foreach (var item in this.liveItems)
 				{
-					this.CreateSummaryTile (item);
-					this.CreateSummaryTileClickHandler (item);
-				}
+					if (item.Tile == null)
+					{
+						if (item.IsEditionTile)
+						{
+							this.CreateEditionTile (item, builder);
+						}
+						else
+						{
+							this.CreateSummaryTile (item);
+							this.CreateSummaryTileClickHandler (item);
+						}
+					}
 
-				if (item.TitleTile == null)
-				{
-					this.CreateTitleTile (item);
+					if (item.TitleTile == null)
+					{
+						this.CreateTitleTile (item);
+					}
 				}
 			}
 		}
 
 		private void CreateSummaryTileClickHandler(SummaryDataItem item)
 		{
-			item.SummaryTile.Clicked += (sender, e) => this.HandleTileClicked (item);
+			item.Tile.Clicked += (sender, e) => this.HandleTileClicked (item);
 		}
 
 		private void CreateTitleTileClickHandler(SummaryDataItem item, TitleTile tile)
 		{
+			if (item.IsEditionTile)  // tuile d'édition ?
+			{
+				return;
+			}
+
 			tile.Clicked += (sender, e) => this.HandleTileClicked (this.liveItems.First (x => x.TitleTile == tile));
 			tile.AddClicked += (sender, e) =>
 				{
@@ -363,6 +378,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(SummaryDataItem item)
 		{
+			if (item.IsEditionTile)  // tuile d'édition ?
+			{
+				return;
+			}
+
 			if (item.DataType == SummaryDataType.EmptyItem)
 			{
 				string itemName = item.Name;
@@ -374,9 +394,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				if (!item.SummaryTile.IsClickForDrag)
+				if (!item.Tile.IsClickForDrag)
 				{
-					item.SummaryTile.ToggleSubView (this.controller.Orchestrator, this.controller);
+					item.Tile.ToggleSubView (this.controller.Orchestrator, this.controller);
 				}
 			}
 		}
@@ -410,19 +430,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (last != null)
 				{
-					last.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
+					last.Tile.OpenSubView (this.controller.Orchestrator, this.controller);
 				}
 			}
 			else
 			{
-				sel.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
+				sel.Tile.OpenSubView (this.controller.Orchestrator, this.controller);
 			}
 		}
 
 		private void CreateSummaryTile(SummaryDataItem item)
 		{
-			if ((item.DataType == SummaryDataType.CollectionItem) ||
-				(item.DataType == SummaryDataType.EmptyItem))
+			if (item.DataType == SummaryDataType.CollectionItem ||
+				item.DataType == SummaryDataType.EmptyItem      )
 			{
 				var tile = new CollectionItemTile ();
 
@@ -437,7 +457,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 
 				tile.EnableRemoveButtons = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
-				item.SummaryTile = tile;
+				item.Tile = tile;
 
 				if (item.AutoGroup)
 				{
@@ -447,22 +467,33 @@ namespace Epsitec.Cresus.Core.Controllers
 			else
 			{
 				var tile = new SummaryTile ();
-				item.SummaryTile = tile;
+				item.Tile = tile;
 			}
 			
-			item.SummaryTile.Controller = item;
+			item.Tile.Controller = item;
+		}
+
+		private void CreateEditionTile(SummaryDataItem item, UIBuilder builder)
+		{
+			var tile = new EditionTile ();
+
+			item.CreateUI (tile, builder);
+
+			item.Tile = tile;
+			item.Tile.Controller = item;
 		}
 
 		private TitleTile CreateTitleTile(SummaryDataItem item)
 		{
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
-			System.Diagnostics.Debug.Assert (item.SummaryTile != null);
+			System.Diagnostics.Debug.Assert (item.Tile != null);
 			
 			item.TitleTile = new TitleTile ();
+			item.TitleTile.IsReadOnly = !item.IsEditionTile;
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
 
-			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.SummaryTile));
+			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
 			
 			return item.TitleTile;
 		}
@@ -479,7 +510,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var item in this.liveItems)
 			{
-				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
+				System.Diagnostics.Debug.Assert (item.Tile != null);
 
 				if (item.AutoGroup)
 				{
@@ -496,7 +527,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					case SummaryDataType.CollectionItem:
 					case SummaryDataType.EmptyItem:
-						item.TitleTile.ContainsCollectionItemTiles = true;
+						item.TitleTile.ContainsCollectionItemTiles = !item.IsEditionTile;
 						break;
 
 					default:
@@ -505,8 +536,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 				}
 				
-				item.SummaryTile.IsCompact  = isItemPartOfCollection;
-				item.SummaryTile.AutoHilite = isItemPartOfCollection;
+				item.Tile.IsCompact  = isItemPartOfCollection;
+				item.Tile.AutoHilite = isItemPartOfCollection;
 			}
 
 			tileCache.Values.ForEach (tile => tile.Parent = null);
@@ -518,11 +549,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (item.AutoGroup)
 				{
-					item.SummaryTile.SetFrozen (false);
+					item.Tile.SetFrozen (false);
 				}
 				else
 				{
-					item.SummaryTile.SetFrozen (true);
+					item.Tile.SetFrozen (true);
 				}
 			}
 		}
@@ -575,18 +606,30 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void SetTileContent(SummaryDataItem item)
 		{
+			item.TitleTile.TitleIconUri = item.IconUri;
+
 			if (item.IsCompact)
 			{
-				item.SummaryTile.Summary = item.CompactText.ToString ();
-				item.TitleTile.Title     = item.CompactTitle.ToString ();
+				item.TitleTile.Title = item.CompactTitle.ToString ();
 			}
 			else
 			{
-				item.SummaryTile.Summary = item.Text.ToString ();
-				item.TitleTile.Title     = item.DefaultTitle.ToString ();
+				item.TitleTile.Title = item.DefaultTitle.ToString ();
 			}
 
-			item.TitleTile.TitleIconUri = item.IconUri;
+			if (item.Tile is SummaryTile)
+			{
+				var summaryTile = item.Tile as SummaryTile;
+
+				if (item.IsCompact)
+				{
+					summaryTile.Summary = item.CompactText.ToString ();
+				}
+				else
+				{
+					summaryTile.Summary = item.Text.ToString ();
+				}
+			}
 		}
 
 		private IEnumerable<TitleTile> GetTitleTiles()
@@ -602,12 +645,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private IEnumerable<SummaryTile> GetSummaryTiles()
+		private IEnumerable<GenericTile> GetSummaryTiles()
 		{
-			return this.liveItems.Select (x => x.SummaryTile);
+			return this.liveItems.Select (x => x.Tile);
 		}
 
-		private IEnumerable<SummaryTile> GetCyclicSummaryTiles(bool cyclic)
+		private IEnumerable<GenericTile> GetCyclicSummaryTiles(bool cyclic)
 		{
 			if (cyclic)
 			{
@@ -618,8 +661,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.GetSummaryTiles ();
 			}
 		}
-		
-		private static SummaryTile GetNextLiveSummaryTile(IEnumerable<SummaryTile> tiles)
+
+		private static GenericTile GetNextLiveSummaryTile(IEnumerable<GenericTile> tiles)
 		{
 			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
 		}
@@ -646,10 +689,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var titleTile in this.GetTitleTiles ())
 			{
-				titleTile.Parent     = parent;
-				titleTile.Dock       = DockStyle.Top;
-				titleTile.Margins    = new Margins (0, 0, 0, -1);
-				titleTile.IsReadOnly = true;
+				titleTile.Parent  = parent;
+				titleTile.Dock    = DockStyle.Top;
+				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
 
 			Window.RefreshEnteredWidgets ();
@@ -671,7 +713,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
+		private bool ActivateNextSummaryTile(IEnumerable<GenericTile> tiles)
 		{
 			var tile = TileContainerController.GetNextLiveSummaryTile (tiles);
 
@@ -719,18 +761,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private readonly EntityViewController	controller;
-		private readonly NavigationOrchestrator	navigator;
-		private readonly Widget					parent;
-		private readonly TileContainer		container;
-		private readonly SummaryDataItems		dataItems;
+		private readonly EntityViewController		controller;
+		private readonly NavigationOrchestrator		navigator;
+		private readonly Widget						parent;
+		private readonly TileContainer				container;
+		private readonly SummaryDataItems			dataItems;
 		private readonly List<SummaryDataItem>		liveItems;
-		private readonly DataContext			dataContext;
-		private readonly Timer					refreshTimer;
+		private readonly DataContext				dataContext;
+		private readonly Timer						refreshTimer;
 
-		private readonly Button					closeButton;
+		private readonly Button						closeButton;
 
-		private bool							refreshNeeded;
-		private bool							isDisposed;
+		private bool								refreshNeeded;
+		private bool								isDisposed;
 	}
 }

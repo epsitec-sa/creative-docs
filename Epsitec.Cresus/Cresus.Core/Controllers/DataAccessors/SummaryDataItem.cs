@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	/// <summary>
 	/// The <c>SummaryData</c> provides the texts used to set up the
-	/// <see cref="TitleTile"/> and <see cref="SummaryTile"/>. It is
+	/// <see cref="TitleTile"/> and <see cref="Tile"/>. It is
 	/// built to support asynchronous tile initialization.
 	/// </summary>
 	public class SummaryDataItem : System.IComparable<SummaryDataItem>, ITileController, IGroupedItem
@@ -33,15 +33,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (template != null)
 			{
-				this.Name         = template.Name;
-				this.Rank         = template.Rank;
-				this.IconUri      = template.IconUri;
-				this.AutoGroup    = template.AutoGroup;
-				this.DataType     = template.DataType;
-				this.Title        = template.Title;
-				this.CompactTitle = template.CompactTitle;
-				this.DefaultMode  = template.DefaultMode;
+				this.Name                     = template.Name;
+				this.Rank                     = template.Rank;
+				this.IconUri                  = template.IconUri;
+				this.AutoGroup                = template.AutoGroup;
+				this.DataType                 = template.DataType;
+				this.Title                    = template.Title;
+				this.CompactTitle             = template.CompactTitle;
+				this.DefaultMode              = template.DefaultMode;
 				this.EntityMarshalerConverter = template.EntityMarshalerConverter;
+				this.CreateUI                 = template.CreateUI;
 			}
 		}
 
@@ -150,10 +151,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		public System.Action<UIBuilder>			CreateUI
+		public System.Action<EditionTile, UIBuilder> CreateUI
 		{
+			//	Constructeur de l'interface utilisateur pour une tuile d'édition.
 			get;
 			set;
+		}
+
+		public bool IsEditionTile
+		{
+			get
+			{
+				return this.CreateUI != null;
+			}
 		}
 
 
@@ -176,23 +186,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	collection:
 
 					if ((this.titleTile != null) &&
-						(this.SummaryTile != null))
+						(this.Tile != null))
                     {
-						this.titleTile.Items.Remove (this.SummaryTile);
+						this.titleTile.Items.Remove (this.Tile);
                     }
 
 					this.titleTile = value;
 
 					if ((this.titleTile != null) &&
-						(this.SummaryTile != null))
+						(this.Tile != null))
 					{
-						this.titleTile.Items.Add (this.SummaryTile);
+						this.titleTile.Items.Add (this.Tile);
 					}
 				}
 			}
 		}
 
-		public SummaryTile						SummaryTile
+		public GenericTile						Tile
 		{
 			get;
 			set;
