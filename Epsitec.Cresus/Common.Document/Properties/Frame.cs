@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
@@ -330,6 +331,57 @@ namespace Epsitec.Common.Document.Properties
 			return new Panels.Frame(document);
 		}
 
+
+		public void AddShapes(List<Shape> shapes, IPaintPort port, DrawingContext drawingContext, Path path)
+		{
+			//	Ajoute les éléments qui permettront de dessiner le cadre.
+			if (this.shadowSize > 0)
+			{
+			}
+
+			if (this.marginWidth > 0)
+			{
+			}
+
+			if (this.frameWidth > 0)
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertyStroke (port, this.PropertyStroke, this.PropertySurface);
+
+				shapes.Add (shape);
+			}
+		}
+
+		private Properties.Line PropertyStroke
+		{
+			//	Retourne une propriété permettant de dessiner le cadre.
+			get
+			{
+				var line = Properties.Abstract.NewProperty (this.document, Properties.Type.LineMode) as Properties.Line;
+
+				line.IsOnlyForCreation = true;
+				line.Width = this.frameWidth;
+				line.Cap = CapStyle.Round;
+
+				return line;
+			}
+		}
+
+		private Properties.Gradient PropertySurface
+		{
+			//	Retourne une propriété permettant de dessiner le cadre.
+			get
+			{
+				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+
+				surface.IsOnlyForCreation = true;
+				surface.Color1 = RichColor.FromBrightness (0);
+
+				return surface;
+			}
+		}
+		
 
 		public void DrawFrame(IPaintPort port, DrawingContext drawingContext, Path path)
 		{

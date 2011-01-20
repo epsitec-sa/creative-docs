@@ -172,45 +172,61 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
-			Path pathImage = this.PathBuildImage();
-			Path pathSurface = this.PathBuildSurface();
-			Path pathOutline = this.PathBuildOutline();
+			Path pathImage = this.PathBuildImage ();
+			Path pathSurface = this.PathBuildSurface ();
+			Path pathOutline = this.PathBuildOutline ();
 
-			int totalShapes = 4;
+			List<Shape> shapes = new List<Shape> ();
 
-			Shape[] shapes = new Shape[totalShapes];
-			int i = 0;
-			
 			//	Trait du rectangle.
-			shapes[i] = new Shape();
-			shapes[i].Path = pathOutline;
-			shapes[i].Type = Type.Stroke;
-			if (drawingContext != null && (drawingContext.FillEmptyPlaceholders || drawingContext.PreviewActive || (drawingContext.DrawImageFilter != null && drawingContext.DrawImageFilter (new DrawingContext.DrawImageFilterInfo (this, "box")) == false)))
 			{
-				shapes[i].Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointillé
+				var shape = new Shape ();
+				shape.Path = pathOutline;
+				shape.Type = Type.Stroke;
+				if (drawingContext != null && (drawingContext.FillEmptyPlaceholders || drawingContext.PreviewActive || (drawingContext.DrawImageFilter != null && drawingContext.DrawImageFilter (new DrawingContext.DrawImageFilterInfo (this, "box")) == false)))
+				{
+					shape.Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointillé
+				}
+
+				shapes.Add (shape);
 			}
-			i ++;
 
 			//	Image bitmap.
-			shapes[i] = new Shape();
-			shapes[i].SetImageObject(this);
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.SetImageObject (this);
+
+				shapes.Add (shape);
+			}
+
+			//	Cadre.
+			var frame = this.PropertyFrame;
+			if (frame != null && frame.FrameType != Properties.FrameType.None)
+			{
+				frame.AddShapes (shapes, port, drawingContext, pathImage);
+			}
 
 			//	Rectangle complet pour bbox et détection.
-			shapes[i] = new Shape();
-			shapes[i].Path = pathSurface;
-			shapes[i].Type = Type.Surface;
-			shapes[i].Aspect = Aspect.InvisibleBox;
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.Path = pathSurface;
+				shape.Type = Type.Surface;
+				shape.Aspect = Aspect.InvisibleBox;
+
+				shapes.Add (shape);
+			}
 
 			//	Rectangle complet pour bbox et détection.
-			shapes[i] = new Shape();
-			shapes[i].Path = pathImage;
-			shapes[i].Type = Type.Surface;
-			shapes[i].Aspect = Aspect.InvisibleBox;
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.Path = pathImage;
+				shape.Type = Type.Surface;
+				shape.Aspect = Aspect.InvisibleBox;
 
-			return shapes;
+				shapes.Add (shape);
+			}
+
+			return shapes.ToArray ();
 		}
 
 		protected Path PathBuildImage()
@@ -599,8 +615,6 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 				}
-
-				this.DrawFrame (port, drawingContext, this.PathBuildSurface ());
 			}
 			else
 			{
@@ -660,18 +674,6 @@ namespace Epsitec.Common.Document.Objects
 				}
 
 				port.Transform = ot;
-
-				this.DrawFrame (port, drawingContext, this.PathBuildSurface ());
-			}
-		}
-
-		private void DrawFrame(IPaintPort port, DrawingContext drawingContext, Path path)
-		{
-			Properties.Frame frame = this.PropertyFrame;
-
-			if (frame != null && frame.FrameType != Properties.FrameType.None)
-			{
-				frame.DrawFrame (port, drawingContext, path);
 			}
 		}
 
