@@ -41,13 +41,40 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10),
+				Margins = new Margins (50),
 			};
 
-			this.CreateButton (frame, "Exporter les données", "Exporte l'ensemble de la base de données dans un fichier.", this.ActionExport);
-			this.CreateButton (frame, "Importer les données", "Importe l'ensemble de la base de données à partir d'un fichier, en écrasant tout.", this.ActionImport);
-			this.CreateButton (frame, "Créer une base de données", "Crée une base de données vide, avec uniquement les données modèles.", this.ActionCreate);
-			this.CreateButton (frame, "Effacer les données modèles", "Efface toutes les données modèles.", this.ActionClear);
+			this.CreateButton
+			(
+				frame,
+				"Exporter les données",
+				"Exporte l'ensemble de la base de données dans un fichier.",
+				this.ActionExport
+			);
+
+			this.CreateButton
+			(
+				frame,
+				"Importer les données",
+				"Importe l'ensemble de la base de données à partir d'un fichier, en écrasant tout.",
+				this.ActionImport
+			);
+
+			this.CreateButton
+			(
+				frame,
+				"Créer une base de données",
+				"Crée une base de données vide, avec uniquement les données modèles.",
+				this.ActionCreate
+			);
+
+			this.CreateButton
+			(
+				frame,
+				"Effacer les données modèles",
+				"Efface toutes les données modèles.",
+				this.ActionClear
+			);
 		}
 
 		private void CreateButton(FrameBox parent, string buttonText, string description, System.Action action)
@@ -85,19 +112,95 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionExport()
 		{
+			string filename = this.ExportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			var fileInfo = new System.IO.FileInfo (filename);
+			var dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.ExportEpsitecData (fileInfo, dbAccess);
 		}
 
 		private void ActionImport()
 		{
+			string filename = this.ImportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			var fileInfo = new System.IO.FileInfo (filename);
+			var dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.CreateEpsitecDatabase (fileInfo, dbAccess);
 		}
 
 		private void ActionCreate()
 		{
+			//?CoreData.CreateUserDatabase ();
 		}
 
 		private void ActionClear()
 		{
+			//?CoreData.ReloadEpsitecData ();
 		}
 
+
+		private string ExportFileDialog()
+		{
+			var dialog = new FileSaveDialog ();
+
+			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
+			dialog.Title = "Exportation d'une base de données";
+
+			dialog.Filters.Add ("firebird", "Base de données Firebird", "*.FIREBIRD");
+			dialog.Filters.Add ("xml", "Xml", "*.xml");
+			dialog.Filters.Add ("txt", "Texte", "*.txt");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+
+			dialog.OwnerWindow = CoreProgram.Application.Window;
+			dialog.OpenDialog ();
+
+			if (dialog.Result != DialogResult.Accept)
+			{
+				return null;
+			}
+
+			MaintenanceTabPage.currentDirectory = dialog.FileName;
+			return dialog.FileName;
+		}
+
+		private string ImportFileDialog()
+		{
+			var dialog = new FileOpenDialog ();
+
+			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
+			dialog.Title = "Importation d'une base de données";
+
+			dialog.Filters.Add ("firebird", "Base de données Firebird", "*.FIREBIRD");
+			dialog.Filters.Add ("xml", "Xml", "*.xml");
+			dialog.Filters.Add ("txt", "Texte", "*.txt");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+
+			dialog.AcceptMultipleSelection = false;
+			dialog.OwnerWindow = CoreProgram.Application.Window;
+			dialog.OpenDialog ();
+
+			if (dialog.Result != DialogResult.Accept)
+			{
+				return null;
+			}
+
+			MaintenanceTabPage.currentDirectory = dialog.FileName;
+			return dialog.FileName;
+		}
+
+
+		private static string			currentDirectory;
 	}
 }

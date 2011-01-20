@@ -92,7 +92,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public Common.Widgets.Window	Owner
+		public Common.Widgets.Window	OwnerWindow
 		{
 			get
 			{

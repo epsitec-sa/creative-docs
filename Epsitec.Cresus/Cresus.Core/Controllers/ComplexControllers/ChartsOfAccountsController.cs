@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = true;
-			dialog.Owner = this.table.Window;
+			dialog.OwnerWindow = this.table.Window;
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
 			{

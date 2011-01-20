@@ -75,7 +75,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("text", "Textes", "*.txt");
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			dialog.Owner = this.app_window;
+			dialog.OwnerWindow = this.app_window;
 			dialog.OpenDialog ();
 		}
 
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Dialogs
 				dialog.Filters.Add ("text", "Textes", "*.txt");
 				dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 				dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-				dialog.Owner = this.app_window;
+				dialog.OwnerWindow = this.app_window;
 				dialog.OpenDialog ();
 
 				System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
