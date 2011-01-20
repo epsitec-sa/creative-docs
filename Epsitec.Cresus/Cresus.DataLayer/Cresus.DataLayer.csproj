@@ -165,6 +165,7 @@
     <Compile Include="ImportExport\ColumnDefinition.cs" />
     <Compile Include="ImportExport\ExportMode.cs" />
     <Compile Include="ImportExport\EpsitecEntitySerializer.cs" />
+    <Compile Include="ImportExport\ExportationMode.cs" />
     <Compile Include="ImportExport\ImportExportManager.cs" />
     <Compile Include="ImportExport\ImportMode.cs" />
     <Compile Include="ImportExport\TableCategory.cs" />

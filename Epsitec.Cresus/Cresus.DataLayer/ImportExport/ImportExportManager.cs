@@ -37,24 +37,26 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
+		public static void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate, ExportationMode exportMode)
 		{
-			var result = ImportExportManager.GetEntities (entities, predicate);
+			var result = ImportExportManager.GetEntities (dataContext, entities, predicate, exportMode);
 
 			ISet<AbstractEntity> exportableEntities = result.Item1;
 			ISet<AbstractEntity> externalEntities = result.Item2;
+			ISet<AbstractEntity> discardedEntities = result.Item3;
 
-			XDocument xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+			XDocument xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 
 			xDocument.Save (file.FullName);
 		}
 
 
-		private static System.Tuple<ISet<AbstractEntity>, ISet<AbstractEntity>> GetEntities(IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate)
+		private static System.Tuple<ISet<AbstractEntity>, ISet<AbstractEntity>, ISet<AbstractEntity>> GetEntities(DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate, ExportationMode exportMode)
 		{
 			Stack<AbstractEntity> entitiesToProcess = new Stack<AbstractEntity> ();
 			ISet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ();
 			ISet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+			ISet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
 
 			entitiesToProcess.PushRange (entities);
 
@@ -62,10 +64,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			{
 				AbstractEntity e = entitiesToProcess.Pop ();
 
-				if (!exportableEntities.Contains (e) && !externalEntities.Contains (e))
+				if (!exportableEntities.Contains (e) && !externalEntities.Contains (e) && !discardedEntities.Contains (e))
 				{
-
-					if (predicate (e))
+					if (ImportExportManager.DiscardEntity (dataContext, e, exportMode))
+					{
+						discardedEntities.Add (e);
+					}
+					else if (predicate (e))
 					{
 						exportableEntities.Add (e);
 
@@ -74,14 +79,18 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 							entitiesToProcess.Push (child);
 						}
 					}
-					else
+					else if (dataContext.IsPersistent (e))
 					{
 						externalEntities.Add (e);
+					}
+					else
+					{
+						discardedEntities.Add (e);
 					}
 				}
 			}
 
-			return System.Tuple.Create (exportableEntities, externalEntities);
+			return System.Tuple.Create (exportableEntities, externalEntities, discardedEntities);
 		}
 
 
@@ -105,28 +114,19 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				switch (field.Cardinality)
 				{
 					case FieldRelation.Reference:
-					{
-						AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
-						if (ImportExportManager.IsExportable (target))
+						yield return entity.GetField<AbstractEntity> (field.Id);
+						break;
+
+					case FieldRelation.Collection:
+
+						foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
 						{
 							yield return target;
 						}
 
 						break;
-					}
-					case FieldRelation.Collection:
-					{
-						foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
-						{
-							if (ImportExportManager.IsExportable (target))
-							{
-								yield return target;
-							}
-						}
 
-						break;
-					}
 					default:
 						throw new System.NotImplementedException ();
 				}
@@ -134,9 +134,19 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static bool IsExportable(AbstractEntity entity)
+		private static bool DiscardEntity(DataContext dataContext, AbstractEntity entity, ExportationMode exportMode)
 		{
-			return EntityNullReferenceVirtualizer.IsNullEntity (entity) == false;
+			switch (exportMode)
+			{
+				case ExportationMode.PersistedEntities:
+					return !dataContext.IsPersistent (entity);
+
+				case ExportationMode.NonNullVirtualizedEntities:
+					return EntityNullReferenceVirtualizer.IsNullEntity (entity);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
 		}
 
 

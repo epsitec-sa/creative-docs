@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml;
+using Epsitec.Cresus.DataLayer.ImportExport;
 
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 {
@@ -1601,7 +1602,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				list.Add (this.workflowDefinitionEntity);
 			}
 
-			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, list);
+			this.businessContext.Data.DataInfrastructure.Export (file, this.businessContext.DataContext, list, e => true, ExportationMode.NonNullVirtualizedEntities);
 		}
 
 		internal void SaveImage(string path, double zoom)

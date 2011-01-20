@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static XDocument Serialize(DataContext dataContext, ISet<AbstractEntity> exportableEntities, ISet<AbstractEntity> externalEntities)
+		public static XDocument Serialize(DataContext dataContext, ISet<AbstractEntity> exportableEntities, ISet<AbstractEntity> externalEntities, ISet<AbstractEntity> discardedEntities)
 		{
 			var entitiesToIds = XmlEntitySerializer.AssignIdToEntities (exportableEntities, externalEntities);
 			var entityDefinitionsToIds = XmlEntitySerializer.AssignIdToEntityDefinitions (exportableEntities);
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			XElement xData = new XElement (XName.Get (XmlConstants.DataTag));
 
 			xData.Add (XmlEntitySerializer.SerializeEntityDefinitions (dataContext, entityDefinitionsToIds, fieldDefinitionsToIds));
-			xData.Add (XmlEntitySerializer.SerializeExportableEntities (dataContext, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, exportableEntities));
+			xData.Add (XmlEntitySerializer.SerializeExportableEntities (dataContext, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, exportableEntities, discardedEntities));
 			xData.Add (XmlEntitySerializer.SerializeExternalEntities (dataContext, entitiesToIds, externalEntities));
 
 			XDocument xDocument = new XDocument ();
@@ -140,13 +140,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static XElement SerializeExportableEntities(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, ISet<AbstractEntity> entitiesToExport)
+		private static XElement SerializeExportableEntities(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, ISet<AbstractEntity> entitiesToExport, ISet<AbstractEntity> discardedEntities)
 		{
 			XElement xEntities = new XElement (XName.Get (XmlConstants.ExportedEntitiesTag));
 
 			foreach (AbstractEntity entity in entitiesToExport)
 			{
-				XElement xEntity = XmlEntitySerializer.SerializeEntity (dataContext, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, entity);
+				XElement xEntity = XmlEntitySerializer.SerializeEntity (dataContext, discardedEntities, entitiesToIds, entityDefinitionsToIds, fieldDefinitionsToIds, entity);
 
 				xEntities.Add (xEntity);
 			}
@@ -155,13 +155,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static XElement SerializeEntity(DataContext dataContext, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity)
+		private static XElement SerializeEntity(DataContext dataContext, ISet<AbstractEntity> discardedEntities, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity)
 		{
 			XElement xEntity = XmlEntitySerializer.CreateXElementForEntity (entitiesToIds, entityDefinitionsToIds, entity);
 
 			foreach (StructuredTypeField field in dataContext.EntityContext.GetEntityFieldDefinitions (entity.GetEntityStructuredTypeId ()))
 			{
-				XElement xField = XmlEntitySerializer.SerializeEntityField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+				XElement xField = XmlEntitySerializer.SerializeEntityField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 
 				if (xField != null)
 				{
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static XElement SerializeEntityField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
+		private static XElement SerializeEntityField(ISet<AbstractEntity> discardedEntities, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			XElement xField;
 			
@@ -202,11 +202,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					break;
 
 				case FieldRelation.Reference:
-					xField = XmlEntitySerializer.SerializeEntityReferenceField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+					xField = XmlEntitySerializer.SerializeEntityReferenceField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 					break;
 
 				case FieldRelation.Collection:
-					xField = XmlEntitySerializer.SerializeEntityCollectionField(entitiesToIds, fieldDefinitionsToIds, entity, field);
+					xField = XmlEntitySerializer.SerializeEntityCollectionField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 					break;
 
 				default:
@@ -241,13 +241,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static XElement SerializeEntityReferenceField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
+		private static XElement SerializeEntityReferenceField(ISet<AbstractEntity> discardedEntities, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
 			XElement xField;
 
-			if (!ImportExportManager.IsExportable(target))
+			if (target == null || discardedEntities.Contains (target))
 			{
 				xField = null;
 			}
@@ -262,10 +262,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static XElement SerializeEntityCollectionField(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
+		private static XElement SerializeEntityCollectionField(ISet<AbstractEntity> discardedEntities, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			IList<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (field.Id)
-				.Where (t => ImportExportManager.IsExportable (t))
+				.Where (t => t != null && !discardedEntities.Contains (t))
 				.ToList ();
 
 			XElement xField;

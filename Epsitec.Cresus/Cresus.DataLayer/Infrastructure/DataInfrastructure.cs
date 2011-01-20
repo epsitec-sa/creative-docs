@@ -397,12 +397,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="dataContext">The <see cref="DataContext"/> that owns the given <see cref="AbstractEntity"/>.</param>
 		/// <param name="entities">The collection of entities which will be exported.</param>
 		/// <param name="predicate">The predicate used to determine whether to export an <see cref="AbstractEntity"/> or not.</param>
+		/// <param name="exportMode">The mode used to export the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="dataContext"/> has not been created by this instance.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entities"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entities"/> contains any entity foreign to <paramref name="dataContext"/>.</exception>
-		public void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate = null)
+		public void Export(FileInfo file, DataContext dataContext, IEnumerable<AbstractEntity> entities, System.Func<AbstractEntity, bool> predicate = null, ExportationMode exportMode = ExportationMode.PersistedEntities)
 		{
 			file.ThrowIfNull ("file");
 			dataContext.ThrowIfNull ("dataContext");
@@ -415,7 +416,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				predicate = x => true;
 			}
 
-			ImportExportManager.Export (file, dataContext, entities, predicate);
+			ImportExportManager.Export (file, dataContext, entities, predicate, exportMode);
 		}
 
 		/// <summary>
@@ -436,6 +437,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Exports the Epsitec data stored in the database.
 		/// </summary>
 		/// <param name="file">The file in which to write the data.</param>
+		/// <param name="exportMode">The mode used to export the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
 		public void ExportEpsitecData(FileInfo file, ExportMode exportMode)
 		{

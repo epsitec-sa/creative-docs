@@ -41,20 +41,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 
 		[TestMethod]
-		public void CompleteGraph()
+		public void CompleteGraphPersistedEntities()
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
+
+				contact.UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+				contact.Uri = "new@uri.com";
+				contact.NaturalPerson = person;
+				person.Contacts.Add (contact);
+
+				var x = person.Title;
+
 				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
-					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
+					person
 				};
 
-				ImportExportManager.Export (file, dataContext, entities, e => true);
+				ImportExportManager.Export (file, dataContext, entities, e => true, ExportationMode.PersistedEntities);
 			}
 
 			DbInfrastructureHelper.ResetTestDatabase ();
@@ -80,6 +90,72 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 
 		[TestMethod]
+		public void CompleteGraphNonNullVirtualizedEntities()
+		{
+			FileInfo file = new FileInfo ("test.xml");
+
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = dataInfrastructure.CreateDataContext(true))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
+
+				contact.UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+				contact.Uri = "new@uri.com";
+				contact.NaturalPerson = person;
+				person.Contacts.Add (contact);
+
+				var x = person.Title;
+
+				List<AbstractEntity> entities = new List<AbstractEntity> ()
+				{
+					person
+				};
+
+				ImportExportManager.Export (file, dataContext, entities, e => true, ExportationMode.NonNullVirtualizedEntities);
+			}
+
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			{
+				DatabaseCreator2.RegisterSchema (dataInfrastructure);
+
+				ImportExportManager.Import (file, dataInfrastructure);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+					Assert.AreEqual ("Alfred", alfred.Firstname);
+					Assert.AreEqual ("Dupond", alfred.Lastname);
+					Assert.AreEqual (new Date (1950, 12, 31), alfred.BirthDate);
+					Assert.IsNull (alfred.Title);
+					Assert.IsNotNull (alfred.PreferredLanguage);
+					Assert.AreEqual ("French", alfred.PreferredLanguage.Name);
+					Assert.AreEqual ("Fr", alfred.PreferredLanguage.Code);
+					Assert.IsNotNull (alfred.Gender);
+					Assert.AreEqual ("Male", alfred.Gender.Name);
+					Assert.AreEqual ("M", alfred.Gender.Code);
+					Assert.AreEqual (3, alfred.Contacts.Count);
+					Assert.AreEqual ("alfred@coucou.com", (alfred.Contacts[0] as UriContactEntity).Uri);
+					Assert.AreEqual ("alfred@blabla.com", (alfred.Contacts[1] as UriContactEntity).Uri);
+					Assert.AreEqual ("new@uri.com", (alfred.Contacts[2] as UriContactEntity).Uri);
+					Assert.IsNotNull ((alfred.Contacts[0] as UriContactEntity).UriScheme);
+					Assert.IsNotNull ((alfred.Contacts[1] as UriContactEntity).UriScheme);
+					Assert.IsNotNull ((alfred.Contacts[2] as UriContactEntity).UriScheme);
+					Assert.AreSame ((alfred.Contacts[0] as UriContactEntity).UriScheme, (alfred.Contacts[1] as UriContactEntity).UriScheme);
+					Assert.AreSame ((alfred.Contacts[0] as UriContactEntity).UriScheme, (alfred.Contacts[2] as UriContactEntity).UriScheme);
+					Assert.AreEqual ("mailto:", (alfred.Contacts[0] as UriContactEntity).UriScheme.Code);
+					Assert.AreEqual ("email", (alfred.Contacts[0] as UriContactEntity).UriScheme.Name);
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void PartialGraph()
 		{
 			FileInfo file = new FileInfo ("test.xml");
@@ -93,7 +169,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
 				};
 
-				ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity);
+				ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity, ExportationMode.PersistedEntities);
 			}
 
 			DbInfrastructureHelper.ResetTestDatabase ();
@@ -147,7 +223,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)))
 				};
 
-				ImportExportManager.Export (file, dataContext, entities, e => false);
+				ImportExportManager.Export (file, dataContext, entities, e => false, ExportationMode.PersistedEntities);
 			}
 
 			DbInfrastructureHelper.ResetTestDatabase ();
