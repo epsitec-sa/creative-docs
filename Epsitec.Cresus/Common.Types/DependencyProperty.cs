@@ -1,4 +1,4 @@
-//	Copyright © 2005-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -665,13 +665,13 @@ namespace Epsitec.Common.Types
 		private Support.Druid						captionId;
 		
 		private Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
-		
-		static readonly object						exclusion = new object ();
-		static readonly List<DependencyProperty>	attachedPropertiesList = new List<DependencyProperty> ();
-		static DependencyProperty[]					attachedPropertiesArray;
-		static int									globalPropertyCount;
-		static readonly DependencyProperty[]		bitsetBasedCachedInheritedProperties = new DependencyProperty[InheritedPropertyCache.MaskBits];
-		static int									bitsetBasedCachedInheritedPropertyCount;
-		static System.Text.RegularExpressions.Regex validNameRegex;
+
+		private static readonly object						exclusion = new object ();
+		private static readonly List<DependencyProperty>	attachedPropertiesList = new List<DependencyProperty> ();
+		private static DependencyProperty[]					attachedPropertiesArray;
+		private static int									globalPropertyCount;
+		private static readonly DependencyProperty[]		bitsetBasedCachedInheritedProperties = new DependencyProperty[InheritedPropertyCache.MaskBits];
+		private static int									bitsetBasedCachedInheritedPropertyCount;
+		private static System.Text.RegularExpressions.Regex validNameRegex;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			list.CopyTo (array, arrayIndex);
+			this.list.CopyTo (array, arrayIndex);
 		}
 
 		public int Count
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Types.Collections
 				}
 			}
 
-			Weak<ReadOnlyObservableList<T>> host;
+			private Weak<ReadOnlyObservableList<T>> host;
 		}
 
 		#region INotifyCollectionChanged Members
