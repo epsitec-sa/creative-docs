@@ -8,6 +8,8 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -134,21 +136,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var summaryData = new SummaryDataItem
 			{
 				Name         = "Toto",
-				IconUri		 = "Data.Toto",
-				Title		 = TextFormatter.FormatText ("Toto"),
-				CompactTitle = TextFormatter.FormatText ("Toto"),
+				IconUri		 = "Data.LegalPerson",
+				Title		 = TextFormatter.FormatText ("Toto1"),
+				CompactTitle = TextFormatter.FormatText ("Toto2"),
 				CreateUI     = this.CreateUIToto2,
 			};
 
 			data.Add (summaryData);
 		}
 
-		private void CreateUIToto2(UIBuilder builder)
+		private void CreateUIToto2(EditionTile tile, UIBuilder builder)
 		{
-			var tile = builder.CreateEditionTile ();
-
 			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateStaticText (tile, 100, "Toto !");
+			builder.CreateStaticText (tile, 50, "Toto !");
 			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 	}
