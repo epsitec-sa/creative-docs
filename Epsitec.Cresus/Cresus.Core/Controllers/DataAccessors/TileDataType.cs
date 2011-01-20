@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		SimpleItem,
 
 		/// <summary>
-		/// Editable item: represents plain light blue fields of an entity.
+		/// Editable item: represents plain light blue editable fields of an entity.
 		/// </summary>
 		EditableItem,
 
