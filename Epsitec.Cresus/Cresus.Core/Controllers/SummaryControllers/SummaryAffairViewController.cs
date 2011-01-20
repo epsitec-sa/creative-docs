@@ -1,6 +1,10 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
@@ -26,6 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIDocumentWorkflows (data);
 				this.CreateUIEvents            (data);
 				this.CreateUIComments          (data);
+				this.CreateUIToto              (data);
 			}
 		}
 
@@ -121,6 +126,30 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIComments(TileContainerController.Initializer data)
 		{
 			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
+		}
+
+
+		private void CreateUIToto(TileContainerController.Initializer data)
+		{
+			var summaryData = new SummaryDataItem
+			{
+				Name         = "Toto",
+				IconUri		 = "Data.Toto",
+				Title		 = TextFormatter.FormatText ("Toto"),
+				CompactTitle = TextFormatter.FormatText ("Toto"),
+				CreateUI     = this.CreateUIToto2,
+			};
+
+			data.Add (summaryData);
+		}
+
+		private void CreateUIToto2(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateStaticText (tile, 100, "Toto !");
+			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 	}
 }
