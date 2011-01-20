@@ -1750,16 +1750,17 @@ namespace Epsitec.Cresus.Core
 		[System.ThreadStatic]
 		private static UIBuilder				current;
 
-		private readonly CoreViewController controller;
-		private readonly TileContainer container;
-		private readonly BusinessContext businessContext;
-		private readonly UIBuilder nextBuilder;
-		private bool isDisposed;
-		private int tabIndex;
-		private int recursionCount;
-		private TitleTile titleTile;
-		private PanelTitleTile panelTitleTile;
-		private TileTabBook tileTabBook;
-		private IList<Widget> contentList;
+		private readonly CoreViewController		controller;
+		private readonly TileContainer			container;
+		private readonly BusinessContext		businessContext;
+		private readonly UIBuilder				nextBuilder;
+
+		private bool							isDisposed;
+		private int								tabIndex;
+		private int								recursionCount;
+		private TitleTile						titleTile;
+		private PanelTitleTile					panelTitleTile;
+		private TileTabBook						tileTabBook;
+		private IList<Widget>					contentList;
 	}
 }
