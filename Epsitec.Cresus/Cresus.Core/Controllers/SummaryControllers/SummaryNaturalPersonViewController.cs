@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIPerson(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name				= "NaturalPerson",
 					IconUri				= "Data.NaturalPerson",

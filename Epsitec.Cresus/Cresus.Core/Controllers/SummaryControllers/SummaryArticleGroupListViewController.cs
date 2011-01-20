@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIArticleGroups(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleGroups",

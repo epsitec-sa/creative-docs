@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
-	public class SummaryDataItems : IEnumerable<SummaryData>
+	public class SummaryDataItems : IEnumerable<SummaryDataItem>
 	{
 		public SummaryDataItems(EntityViewController controller)
 		{
 			this.controller = controller;
-			this.simpleItems = new List<SummaryData> ();
-			this.emptyItems  = new List<SummaryData> ();
-			this.collectionItems = new List<SummaryData> ();
+			this.simpleItems = new List<SummaryDataItem> ();
+			this.emptyItems  = new List<SummaryDataItem> ();
+			this.collectionItems = new List<SummaryDataItem> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
 		}
 
@@ -35,13 +35,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		public void Add(SummaryData data)
+		public void Add(SummaryDataItem data)
 		{
 			int rank = this.emptyItems.Count + this.simpleItems.Count;
 
 			if (data.Rank == 0)
 			{
-				data.Rank = SummaryData.CreateRank (rank+1, 0);
+				data.Rank = SummaryDataItem.CreateRank (rank+1, 0);
 			}
 			
 			System.Diagnostics.Debug.Assert (data.DataType == SummaryDataType.Undefined);
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		public void RefreshCollectionItems()
 		{
-			var items = new List<SummaryData> ();
+			var items = new List<SummaryDataItem> ();
 
 			foreach (var accessor in this.collectionAccessors)
 			{
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.collectionAccessors.FirstOrDefault (x => x.Template.NamePrefix == templateName);
 		}
 
-		private SummaryData GetTemplate(string name, int index)
+		private SummaryDataItem GetTemplate(string name, int index)
 		{
 			//	Look for templates in the existing collection items first, then
 			//	in the empty items. This will enforce reuse of existing items.
@@ -113,17 +113,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		/// <summary>
-		/// Gets the <see cref="SummaryData"/> template for the specified name; look it up in the
+		/// Gets the <see cref="SummaryDataItem"/> template for the specified name; look it up in the
 		/// collection. If an exact match (name + index) cannot be found, this will create a new
 		/// template.
 		/// </summary>
 		/// <param name="collection">The collection of templates.</param>
 		/// <param name="name">The name of the template.</param>
 		/// <param name="index">The index of the template.</param>
-		/// <returns>The <see cref="SummaryData"/> template.</returns>
-		private static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
+		/// <returns>The <see cref="SummaryDataItem"/> template.</returns>
+		private static SummaryDataItem GetTemplate(IEnumerable<SummaryDataItem> collection, string name, int index)
 		{
-			SummaryData template;
+			SummaryDataItem template;
 
 			System.Diagnostics.Debug.Assert (name.Contains ('.'));
 
@@ -139,18 +139,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		/// <summary>
 		/// Finds the template and returns <c>true</c> if the template must be used to create a
-		/// new instance of <see cref="SummaryData"/>.
+		/// new instance of <see cref="SummaryDataItem"/>.
 		/// </summary>
 		/// <param name="collection">The collection.</param>
 		/// <param name="name">The item name.</param>
 		/// <param name="result">The matching template (if any).</param>
-		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryData"/>; otherwise, <c>false</c>.</returns>
-		private static bool FindTemplate(IEnumerable<SummaryData> collection, string name, out SummaryData result)
+		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryDataItem"/>; otherwise, <c>false</c>.</returns>
+		private static bool FindTemplate(IEnumerable<SummaryDataItem> collection, string name, out SummaryDataItem result)
 		{
-			string prefix = SummaryData.GetNamePrefix (name);
+			string prefix = SummaryDataItem.GetNamePrefix (name);
 			string search = prefix + ".";
 
-			SummaryData template = null;
+			SummaryDataItem template = null;
 
 			foreach (var item in collection)
 			{
@@ -189,14 +189,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <param name="name">The name.</param>
 		/// <param name="index">The index.</param>
 		/// <returns>The summary data based on the specified template.</returns>
-		private static SummaryData CreateSummayData(SummaryData template, string name, int index)
+		private static SummaryDataItem CreateSummayData(SummaryDataItem template, string name, int index)
 		{
-			string prefix = SummaryData.GetNamePrefix (name);
+			string prefix = SummaryDataItem.GetNamePrefix (name);
 			
-			string summaryName = SummaryData.BuildName (prefix, index);
-			int    summaryRank = SummaryData.CreateRank (template.GroupingRank, index);
+			string summaryName = SummaryDataItem.BuildName (prefix, index);
+			int    summaryRank = SummaryDataItem.CreateRank (template.GroupingRank, index);
 
-			return new SummaryData (template)
+			return new SummaryDataItem (template)
 			{
 				Name = summaryName,
 				Rank = summaryRank,
@@ -204,19 +204,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		private IEnumerable<SummaryData> GetItems()
+		private IEnumerable<SummaryDataItem> GetItems()
 		{
 			lock (this.SyncObject)
 			{
 				var itemNames = new HashSet<string> ();
-				return new List<SummaryData> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
+				return new List<SummaryDataItem> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
 			}
 		}
 
 
 		#region IEnumerable<SummaryData> Members
 
-		public IEnumerator<SummaryData> GetEnumerator()
+		public IEnumerator<SummaryDataItem> GetEnumerator()
 		{
 			return this.GetItems ().GetEnumerator ();
 		}
@@ -235,9 +235,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private readonly object exclusion = new object ();
 
 		private readonly EntityViewController controller;
-		private readonly List<SummaryData> simpleItems;
-		private readonly List<SummaryData> emptyItems;
-		private readonly List<SummaryData> collectionItems;
+		private readonly List<SummaryDataItem> simpleItems;
+		private readonly List<SummaryDataItem> emptyItems;
+		private readonly List<SummaryDataItem> collectionItems;
 		private readonly List<CollectionAccessor> collectionAccessors;
 	}
 }

@@ -482,7 +482,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
-    <Compile Include="Controllers\DataAccessors\SummaryData.cs" />
+    <Compile Include="Controllers\DataAccessors\SummaryDataItem.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataType.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />

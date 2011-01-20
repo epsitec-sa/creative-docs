@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
+		public override IEnumerable<SummaryDataItem> Resolve(System.Func<string, int, SummaryDataItem> summaryDataGetter)
 		{
 			var source     = this.GetSource ();
 			var collection = this.GetItemCollection ();
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				if (this.template.IsCompatible (item))
 				{
 					var current   = item;
-					var name      = SummaryData.BuildName (this.template.NamePrefix, index);
+					var name      = SummaryDataItem.BuildName (this.template.NamePrefix, index);
 					var data      = summaryDataGetter (name, index);
 					var marshaler = Marshaler.Create (() => current, null);
 					

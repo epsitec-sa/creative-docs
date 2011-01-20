@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected void CreateUIMain(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name				= "UnitOfMeasureGroup",
 					IconUri				= "Data.UnitOfMeasureGroup",
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIUnits(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "UnitOfMeasures",

@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIMetadata(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name				= "InvoiceDocument",
 					IconUri				= "Data.InvoiceDocument",

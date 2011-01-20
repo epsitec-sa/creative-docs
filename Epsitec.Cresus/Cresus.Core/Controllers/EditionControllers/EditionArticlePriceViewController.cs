@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIPriceCalculators(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "PriceCalculator",
