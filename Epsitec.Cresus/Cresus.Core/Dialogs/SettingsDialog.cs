@@ -90,7 +90,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Name = "printer",
 			};
 
+			var maintenancePage = new TabPage
+			{
+				TabTitle = "Maintenance",
+				Name = "maintenance",
+			};
+
 			this.tabBook.Items.Add (printerPage);
+			this.tabBook.Items.Add (maintenancePage);
 
 			this.ActiveLastPage ();
 
