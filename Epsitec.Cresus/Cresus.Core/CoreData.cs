@@ -667,6 +667,13 @@ namespace Epsitec.Cresus.Core
 			return this.DataContext.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
 		}
 
+		public void ImportDatabase(System.IO.FileInfo file)
+		{
+			ImportMode importMode = ImportMode.PreserveIds;
+
+			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
+		}
+
 		public static void ImportDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
 			ImportMode importMode = ImportMode.PreserveIds;
@@ -679,6 +686,13 @@ namespace Epsitec.Cresus.Core
 			ImportMode importMode = ImportMode.DecrementIds;
 
 			CoreData.CreateDatabase (file, dbAccess, importMode);
+		}
+
+		public void CreateUserDatabase(System.IO.FileInfo file)
+		{
+			ImportMode importMode = ImportMode.DecrementIds;
+
+			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
 		}
 
 		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, ImportMode importMode)
@@ -697,9 +711,20 @@ namespace Epsitec.Cresus.Core
 					dataInfrastructure.OpenConnection ("root");
 
 					dataInfrastructure.CreateSchema (CoreData.GetManagedEntityIds ());
-					dataInfrastructure.ImportEpsitecData (file, importMode);
+
+					CoreData.ImportDatabase (file, dataInfrastructure, importMode);
 				}
 			}
+		}
+
+		private static void ImportDatabase(System.IO.FileInfo file, DataInfrastructure dataInfrastructure, ImportMode importMode)
+		{
+			dataInfrastructure.ImportEpsitecData (file, importMode);
+		}
+
+		public void ImportSharedData(System.IO.FileInfo file)
+		{
+			CoreData.ImportSharedData (file, this.dataInfrastructure);
 		}
 
 		public static void ImportSharedData(System.IO.FileInfo file, DbAccess dbAccess)
@@ -712,9 +737,19 @@ namespace Epsitec.Cresus.Core
 				{
 					dataInfrastructure.OpenConnection ("root");
 
-					dataInfrastructure.ImportEpsitecData (file, ImportMode.DecrementIds);
+					CoreData.ImportSharedData (file, dataInfrastructure);
 				}
 			}
+		}
+		
+		private static void ImportSharedData(System.IO.FileInfo file, DataInfrastructure dataInfrastructure)
+		{
+			dataInfrastructure.ImportEpsitecData (file, ImportMode.DecrementIds);
+		}
+
+		public void ExportDatabase(System.IO.FileInfo file, bool exportOnlyUserData)
+		{
+			CoreData.ExportDatabase (file, this.dataInfrastructure, exportOnlyUserData);
 		}
 
 		public static void ExportDatabase(System.IO.FileInfo file, DbAccess dbAccess, bool exportOnlyUserData)
@@ -727,11 +762,16 @@ namespace Epsitec.Cresus.Core
 				{
 					dataInfrastructure.OpenConnection ("root");
 
-					ExportMode exportMode = exportOnlyUserData ? ExportMode.UserData : ExportMode.EpsitecAndUserData;
-
-					dataInfrastructure.ExportEpsitecData(file, exportMode);
+					CoreData.ExportDatabase (file, dataInfrastructure, exportOnlyUserData);
 				}
 			}
+		}
+
+		private static void ExportDatabase(System.IO.FileInfo file, DataInfrastructure dataInfrastructure, bool exportOnlyUserData)
+		{
+			ExportMode exportMode = exportOnlyUserData ? ExportMode.UserData : ExportMode.EpsitecAndUserData;
+
+			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
 
 		private void ReloadDatabase()

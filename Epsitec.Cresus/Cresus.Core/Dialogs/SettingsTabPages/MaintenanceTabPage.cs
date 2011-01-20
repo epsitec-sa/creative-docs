@@ -124,9 +124,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			var fileInfo = new System.IO.FileInfo (filename);
-			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ExportDatabase (fileInfo, dbAccess, false);
+			this.application.Data.ExportDatabase (fileInfo, false);
 		}
 
 		private void ActionImport()
@@ -139,9 +138,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			var fileInfo = new System.IO.FileInfo (filename);
-			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ImportDatabase (fileInfo, dbAccess);
+			this.application.Data.ImportDatabase (fileInfo);
 		}
 
 		private void ActionCreate()
@@ -154,9 +152,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			var fileInfo = new System.IO.FileInfo (filename);
-			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.CreateUserDatabase (fileInfo, dbAccess);
+			this.application.Data.CreateUserDatabase (fileInfo);
 		}
 
 		private void ActionUpdate()
@@ -169,9 +166,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			var fileInfo = new System.IO.FileInfo (filename);
-			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ImportSharedData (fileInfo, dbAccess);
+			this.application.Data.ImportSharedData (fileInfo);
 		}
 
 
