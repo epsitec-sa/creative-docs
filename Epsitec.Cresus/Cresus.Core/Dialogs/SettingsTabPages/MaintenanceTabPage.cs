@@ -64,16 +64,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			(
 				frame,
 				"Créer une base de données",
-				"Crée une base de données vide, avec uniquement les données modèles.",
+				"Crée une base de données vide, en important les données modèles.",
 				this.ActionCreate
 			);
 
 			this.CreateButton
 			(
 				frame,
-				"Effacer les données modèles",
-				"Efface toutes les données modèles.",
-				this.ActionClear
+				"Mettre à jour les données modèles",
+				"Met à jour toutes les données modèles, en les réimportant.",
+				this.ActionUpdate
 			);
 		}
 
@@ -142,12 +142,32 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionCreate()
 		{
-			//?CoreData.CreateUserDatabase ();
+			string filename = this.ImportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			var fileInfo = new System.IO.FileInfo (filename);
+			var dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.CreateUserDatabase (fileInfo, dbAccess);
 		}
 
-		private void ActionClear()
+		private void ActionUpdate()
 		{
-			//?CoreData.ReloadEpsitecData ();
+			string filename = this.ImportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			var fileInfo = new System.IO.FileInfo (filename);
+			var dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.ImportSharedData (fileInfo, dbAccess);
 		}
 
 
@@ -158,9 +178,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Exportation d'une base de données";
 
-			dialog.Filters.Add ("firebird", "Base de données", "*.FIREBIRD");
 			dialog.Filters.Add ("xml", "Xml", "*.xml");
-			dialog.Filters.Add ("txt", "Texte", "*.txt");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.OwnerWindow = CoreProgram.Application.Window;
@@ -182,9 +200,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Importation d'une base de données";
 
-			dialog.Filters.Add ("firebird", "Base de données", "*.FIREBIRD");
 			dialog.Filters.Add ("xml", "Xml", "*.xml");
-			dialog.Filters.Add ("txt", "Texte", "*.txt");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = false;
