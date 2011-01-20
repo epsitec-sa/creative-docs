@@ -37,8 +37,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public override void CreateUI(Widget parent)
 		{
-			int tabIndex = 0;
-
 			var frame = new FrameBox
 			{
 				Parent = parent,
@@ -46,13 +44,60 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (10),
 			};
 
-			this.UpdateWidgets ();
+			this.CreateButton (frame, "Exporter les données", "Exporte l'ensemble de la base de données dans un fichier.", this.ActionExport);
+			this.CreateButton (frame, "Importer les données", "Importe l'ensemble de la base de données à partir d'un fichier, en écrasant tout.", this.ActionImport);
+			this.CreateButton (frame, "Créer une base de données", "Crée une base de données vide, avec uniquement les données modèles.", this.ActionCreate);
+			this.CreateButton (frame, "Effacer les données modèles", "Efface toutes les données modèles.", this.ActionClear);
 		}
 
-		private void UpdateWidgets()
+		private void CreateButton(FrameBox parent, string buttonText, string description, System.Action action)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			var button = new Button
+			{
+				Parent = frame,
+				Text = buttonText,
+				PreferredWidth = 200,
+				Dock = DockStyle.Left,
+			};
+
+			var text = new StaticText
+			{
+				Parent = frame,
+				Text = description,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (20, 0, 0, 0),
+			};
+
+			button.Clicked += delegate
+			{
+				action ();
+			};
+		}
+
+
+
+		private void ActionExport()
 		{
 		}
 
+		private void ActionImport()
+		{
+		}
+
+		private void ActionCreate()
+		{
+		}
+
+		private void ActionClear()
+		{
+		}
 
 	}
 }
