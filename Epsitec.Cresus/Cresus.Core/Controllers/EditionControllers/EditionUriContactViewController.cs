@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private void CreateUIComments(SummaryDataItems data)
+		private void CreateUIComments(TileDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}

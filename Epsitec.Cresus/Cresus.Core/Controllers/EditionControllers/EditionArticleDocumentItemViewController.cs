@@ -116,10 +116,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingLinePriceAfterTax));
 		}
 
-		private void CreateUIQuantities(SummaryDataItems data)
+		private void CreateUIQuantities(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleQuantities",

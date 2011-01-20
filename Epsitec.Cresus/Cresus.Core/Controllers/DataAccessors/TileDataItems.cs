@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
-	public class SummaryDataItems : IEnumerable<SummaryDataItem>
+	public class TileDataItems : IEnumerable<TileDataItem>
 	{
-		public SummaryDataItems(EntityViewController controller)
+		public TileDataItems(EntityViewController controller)
 		{
 			this.controller = controller;
-			this.simpleItems = new List<SummaryDataItem> ();
-			this.emptyItems  = new List<SummaryDataItem> ();
-			this.collectionItems = new List<SummaryDataItem> ();
+			this.simpleItems = new List<TileDataItem> ();
+			this.emptyItems  = new List<TileDataItem> ();
+			this.collectionItems = new List<TileDataItem> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
 		}
 
@@ -35,25 +35,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		public void Add(SummaryDataItem data)
+		public void Add(TileDataItem data)
 		{
 			int rank = this.emptyItems.Count + this.simpleItems.Count;
 
 			if (data.Rank == 0)
 			{
-				data.Rank = SummaryDataItem.CreateRank (rank+1, 0);
+				data.Rank = TileDataItem.CreateRank (rank+1, 0);
 			}
 			
-			System.Diagnostics.Debug.Assert (data.DataType == SummaryDataType.Undefined);
+			System.Diagnostics.Debug.Assert (data.DataType == TileDataType.Undefined);
 			
 			if (data.EntityMarshaler == null)
 			{
-				data.DataType = SummaryDataType.EmptyItem;
+				data.DataType = TileDataType.EmptyItem;
 				this.emptyItems.Add (data);
 			}
 			else
 			{
-				data.DataType = SummaryDataType.SimpleItem;
+				data.DataType = TileDataType.SimpleItem;
 				this.simpleItems.Add (data);
 			}
 		}
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		public void RefreshCollectionItems()
 		{
-			var items = new List<SummaryDataItem> ();
+			var items = new List<TileDataItem> ();
 
 			foreach (var accessor in this.collectionAccessors)
 			{
@@ -103,33 +103,33 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.collectionAccessors.FirstOrDefault (x => x.Template.NamePrefix == templateName);
 		}
 
-		private SummaryDataItem GetTemplate(string name, int index)
+		private TileDataItem GetTemplate(string name, int index)
 		{
 			//	Look for templates in the existing collection items first, then
 			//	in the empty items. This will enforce reuse of existing items.
 
 			var items = this.collectionItems.Concat (this.emptyItems);
-			return SummaryDataItems.GetTemplate (items, name, index);
+			return TileDataItems.GetTemplate (items, name, index);
 		}
 
 		/// <summary>
-		/// Gets the <see cref="SummaryDataItem"/> template for the specified name; look it up in the
+		/// Gets the <see cref="TileDataItem"/> template for the specified name; look it up in the
 		/// collection. If an exact match (name + index) cannot be found, this will create a new
 		/// template.
 		/// </summary>
 		/// <param name="collection">The collection of templates.</param>
 		/// <param name="name">The name of the template.</param>
 		/// <param name="index">The index of the template.</param>
-		/// <returns>The <see cref="SummaryDataItem"/> template.</returns>
-		private static SummaryDataItem GetTemplate(IEnumerable<SummaryDataItem> collection, string name, int index)
+		/// <returns>The <see cref="TileDataItem"/> template.</returns>
+		private static TileDataItem GetTemplate(IEnumerable<TileDataItem> collection, string name, int index)
 		{
-			SummaryDataItem template;
+			TileDataItem template;
 
 			System.Diagnostics.Debug.Assert (name.Contains ('.'));
 
-			if (SummaryDataItems.FindTemplate (collection, name, out template))
+			if (TileDataItems.FindTemplate (collection, name, out template))
 			{
-				return SummaryDataItems.CreateSummayData (template, name, index);
+				return TileDataItems.CreateSummayData (template, name, index);
 			}
 			else
 			{
@@ -139,25 +139,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		/// <summary>
 		/// Finds the template and returns <c>true</c> if the template must be used to create a
-		/// new instance of <see cref="SummaryDataItem"/>.
+		/// new instance of <see cref="TileDataItem"/>.
 		/// </summary>
 		/// <param name="collection">The collection.</param>
 		/// <param name="name">The item name.</param>
 		/// <param name="result">The matching template (if any).</param>
-		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryDataItem"/>; otherwise, <c>false</c>.</returns>
-		private static bool FindTemplate(IEnumerable<SummaryDataItem> collection, string name, out SummaryDataItem result)
+		/// <returns><c>true</c> if the caller should create a new <see cref="TileDataItem"/>; otherwise, <c>false</c>.</returns>
+		private static bool FindTemplate(IEnumerable<TileDataItem> collection, string name, out TileDataItem result)
 		{
-			string prefix = SummaryDataItem.GetNamePrefix (name);
+			string prefix = TileDataItem.GetNamePrefix (name);
 			string search = prefix + ".";
 
-			SummaryDataItem template = null;
+			TileDataItem template = null;
 
 			foreach (var item in collection)
 			{
 				if (item.Name == name)
 				{
 					//	Exact match: return the item and tell the caller there is no need to
-					//	create a new SummaryData -- the template can be reused as is.
+					//	create a new TileDataItem -- the template can be reused as is.
 
 					result = item;
 					return false;
@@ -189,14 +189,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <param name="name">The name.</param>
 		/// <param name="index">The index.</param>
 		/// <returns>The summary data based on the specified template.</returns>
-		private static SummaryDataItem CreateSummayData(SummaryDataItem template, string name, int index)
+		private static TileDataItem CreateSummayData(TileDataItem template, string name, int index)
 		{
-			string prefix = SummaryDataItem.GetNamePrefix (name);
+			string prefix = TileDataItem.GetNamePrefix (name);
 			
-			string summaryName = SummaryDataItem.BuildName (prefix, index);
-			int    summaryRank = SummaryDataItem.CreateRank (template.GroupingRank, index);
+			string summaryName = TileDataItem.BuildName (prefix, index);
+			int    summaryRank = TileDataItem.CreateRank (template.GroupingRank, index);
 
-			return new SummaryDataItem (template)
+			return new TileDataItem (template)
 			{
 				Name = summaryName,
 				Rank = summaryRank,
@@ -204,19 +204,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		private IEnumerable<SummaryDataItem> GetItems()
+		private IEnumerable<TileDataItem> GetItems()
 		{
 			lock (this.SyncObject)
 			{
 				var itemNames = new HashSet<string> ();
-				return new List<SummaryDataItem> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
+				return new List<TileDataItem> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
 			}
 		}
 
 
-		#region IEnumerable<SummaryData> Members
+		#region IEnumerable<TileDataItem> Members
 
-		public IEnumerator<SummaryDataItem> GetEnumerator()
+		public IEnumerator<TileDataItem> GetEnumerator()
 		{
 			return this.GetItems ().GetEnumerator ();
 		}
@@ -235,9 +235,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private readonly object exclusion = new object ();
 
 		private readonly EntityViewController controller;
-		private readonly List<SummaryDataItem> simpleItems;
-		private readonly List<SummaryDataItem> emptyItems;
-		private readonly List<SummaryDataItem> collectionItems;
+		private readonly List<TileDataItem> simpleItems;
+		private readonly List<TileDataItem> emptyItems;
+		private readonly List<TileDataItem> collectionItems;
 		private readonly List<CollectionAccessor> collectionAccessors;
 	}
 }

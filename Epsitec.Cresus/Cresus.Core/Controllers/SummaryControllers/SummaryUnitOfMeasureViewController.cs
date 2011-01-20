@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				data.Add (
-					new SummaryDataItem
+					new TileDataItem
 					{
 						Name				= "UnitOfMeasure",
 						IconUri				= "Data.UnitOfMeasure",

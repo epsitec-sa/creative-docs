@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private void CreateUIPerson(SummaryDataItems data)
+		private void CreateUIPerson(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "LegalPerson",
 					IconUri				= "Data.LegalPerson",
@@ -49,17 +49,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIMailContacts(SummaryDataItems data)
+		private void CreateUIMailContacts(TileDataItems data)
 		{
 			Common.CreateUIMailContacts (this.BusinessContext, data, this.EntityGetter, x => x.Contacts);
 		}
 
-		private void CreateUITelecomContacts(SummaryDataItems data)
+		private void CreateUITelecomContacts(TileDataItems data)
 		{
 			Common.CreateUITelecomContacts (this.BusinessContext, data, this.EntityGetter, x => x.Contacts);
 		}
 
-		private void CreateUIUriContacts(SummaryDataItems data)
+		private void CreateUIUriContacts(TileDataItems data)
 		{
 			Common.CreateUIUriContacts (this.BusinessContext, data, this.EntityGetter, x => x.Contacts);
 		}

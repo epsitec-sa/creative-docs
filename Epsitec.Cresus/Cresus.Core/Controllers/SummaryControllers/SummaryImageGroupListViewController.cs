@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private void CreateUIImageGroups(SummaryDataItems data)
+		private void CreateUIImageGroups(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ImageGroups",

@@ -32,10 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.CreateUIPreview (this.TileContainer);
 		}
 
-		private void CreateUIImage(SummaryDataItems data)
+		private void CreateUIImage(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "ImageBlob",
 					IconUri				= "Data.ImageBlob",

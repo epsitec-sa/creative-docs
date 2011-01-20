@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected void CreateUIMain(SummaryDataItems data)
+		protected void CreateUIMain(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "UnitOfMeasureGroup",
 					IconUri				= "Data.UnitOfMeasureGroup",
@@ -49,10 +49,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIUnits(SummaryDataItems data)
+		private void CreateUIUnits(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "UnitOfMeasures",

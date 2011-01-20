@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIArticleDefinition(SummaryDataItems data)
+		private void CreateUIArticleDefinition(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "ArticleDefinition",
 					IconUri				= "Data.ArticleDefinition",
@@ -49,10 +49,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIParameters(SummaryDataItems data)
+		private void CreateUIParameters(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleParameterDefinition",
@@ -71,10 +71,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticleParameterDefinitions));
 		}
 
-		private void CreateUIPrices(SummaryDataItems data)
+		private void CreateUIPrices(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticlePrice",
@@ -92,10 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticlePrices));
 		}
 
-		private void CreateUIAccountings(SummaryDataItems data)
+		private void CreateUIAccountings(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleAccountingDefinitions",
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Accounting));
 		}
 
-		private void CreateUIComments(SummaryDataItems data)
+		private void CreateUIComments(TileDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}

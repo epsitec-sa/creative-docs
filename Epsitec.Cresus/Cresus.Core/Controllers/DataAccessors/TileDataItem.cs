@@ -16,19 +16,19 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	/// <summary>
-	/// The <c>SummaryData</c> provides the texts used to set up the
+	/// The <c>TileDataItem</c> provides the texts used to set up the
 	/// <see cref="TitleTile"/> and <see cref="Tile"/>. It is
 	/// built to support asynchronous tile initialization.
 	/// </summary>
-	public class SummaryDataItem : System.IComparable<SummaryDataItem>, ITileController, IGroupedItem
+	public class TileDataItem : System.IComparable<TileDataItem>, ITileController, IGroupedItem
 	{
-		public SummaryDataItem()
+		public TileDataItem()
 		{
 			this.bindings = new HashSet<AccessorBinding> ();
 			this.DefaultMode = ViewControllerMode.Edition;
 		}
 
-		public SummaryDataItem(SummaryDataItem template)
+		public TileDataItem(TileDataItem template)
 			: this ()
 		{
 			if (template != null)
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return SummaryDataItem.GetGroupingRank (this.Rank);
+				return TileDataItem.GetGroupingRank (this.Rank);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return SummaryDataItem.GetLocalRank (this.Rank);
+				return TileDataItem.GetLocalRank (this.Rank);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		public SummaryDataType					DataType
+		public TileDataType					DataType
 		{
 			get;
 			set;
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 		/// <summary>
-		/// Gets or sets the associated title tile. The <see cref="SummaryDataItem"/>
+		/// Gets or sets the associated title tile. The <see cref="TileDataItem"/>
 		/// will be inserted into the title tile collection of items.
 		/// </summary>
 		/// <value>The title tile.</value>
@@ -394,12 +394,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#endregion
 		
-		#region IComparable<SummaryData> Members
+		#region IComparable<TileDataItem> Members
 
-		public int CompareTo(SummaryDataItem other)
+		public int CompareTo(TileDataItem other)
 		{
-			int groupingRankA = SummaryDataItem.GetGroupingRank (this.Rank);
-			int groupingRankB = SummaryDataItem.GetGroupingRank (other.Rank);
+			int groupingRankA = TileDataItem.GetGroupingRank (this.Rank);
+			int groupingRankB = TileDataItem.GetGroupingRank (other.Rank);
 
 			if (groupingRankA < groupingRankB)
 			{
