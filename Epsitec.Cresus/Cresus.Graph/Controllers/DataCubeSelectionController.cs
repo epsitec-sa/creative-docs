@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var dialog = new FileOpenDialog ()
 			{
-				Owner = this.container.Window,
+				OwnerWindow = this.container.Window,
 				Title = "Importer des données",
 			};
 
