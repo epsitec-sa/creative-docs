@@ -13,6 +13,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Printers;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -62,6 +63,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupWidgets()
 		{
+			bool admin = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
+
 			var frame = new FrameBox
 			{
 				Parent = this.window.Root,
@@ -90,14 +93,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Name = "printer",
 			};
 
-			var maintenancePage = new TabPage
-			{
-				TabTitle = "Maintenance",
-				Name = "maintenance",
-			};
-
 			this.tabBook.Items.Add (printerPage);
-			this.tabBook.Items.Add (maintenancePage);
+
+			TabPage maintenancePage = null;
+
+			if (admin)
+			{
+				maintenancePage = new TabPage
+				{
+					TabTitle = "Maintenance",
+					Name = "maintenance",
+				};
+
+				this.tabBook.Items.Add (maintenancePage);
+			}
 
 			this.ActiveLastPage ();
 
@@ -134,9 +143,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			printerSettings.CreateUI (printerPage);
 			this.settingsTabPages.Add (printerSettings);
 
-			var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
-			maintenanceSettings.CreateUI (maintenancePage);
-			this.settingsTabPages.Add (maintenanceSettings);
+			if (admin)
+			{
+				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
+				maintenanceSettings.CreateUI (maintenancePage);
+				this.settingsTabPages.Add (maintenanceSettings);
+			}
 
 			foreach (var tab in this.settingsTabPages)
 			{
