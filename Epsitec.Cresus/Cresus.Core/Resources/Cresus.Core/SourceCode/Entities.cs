@@ -11429,8 +11429,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>WorkflowDefinition</c> entity.
 	///	designer:cap/L0AAL
 	///	</summary>
-	public partial class WorkflowDefinitionEntity : global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity
+	public partial class WorkflowDefinitionEntity : global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AAL/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>WorkflowName</c> field.
 		///	designer:fld/L0AAL/L0ALL
