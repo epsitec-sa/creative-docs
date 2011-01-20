@@ -134,6 +134,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			printerSettings.CreateUI (printerPage);
 			this.settingsTabPages.Add (printerSettings);
 
+			var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
+			maintenanceSettings.CreateUI (maintenancePage);
+			this.settingsTabPages.Add (maintenanceSettings);
+
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.AcceptStateChanging += new EventHandler (this.HandlerSettingsAcceptStateChanging);
