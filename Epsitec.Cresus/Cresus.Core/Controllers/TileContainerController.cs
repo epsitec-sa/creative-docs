@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (item.Tile == null)
 					{
-						if (item.IsEditionTile)
+						if (item.DataType == TileDataType.EditableItem)
 						{
 							this.CreateEditionTile (item, builder);
 						}
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateTitleTileClickHandler(TileDataItem item, TitleTile tile)
 		{
-			if (item.IsEditionTile)  // tuile d'édition ?
+			if (item.DataType == TileDataType.EditableItem)
 			{
 				return;
 			}
@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(TileDataItem item)
 		{
-			if (item.IsEditionTile)  // tuile d'édition ?
+			if (item.DataType == TileDataType.EditableItem)
 			{
 				return;
 			}
@@ -477,7 +477,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var tile = new EditionTile ();
 
-			item.CreateUI (tile, builder);
+			item.CreateEditionUI (tile, builder);
 
 			item.Tile = tile;
 			item.Tile.Controller = item;
@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (item.Tile != null);
 			
 			item.TitleTile = new TitleTile ();
-			item.TitleTile.IsReadOnly = !item.IsEditionTile;
+			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
 
@@ -527,7 +527,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					case TileDataType.CollectionItem:
 					case TileDataType.EmptyItem:
-						item.TitleTile.ContainsCollectionItemTiles = !item.IsEditionTile;
+						item.TitleTile.ContainsCollectionItemTiles = true;
+						break;
+
+					case TileDataType.EditableItem:
+						item.TitleTile.ContainsCollectionItemTiles = false;
 						break;
 
 					default:

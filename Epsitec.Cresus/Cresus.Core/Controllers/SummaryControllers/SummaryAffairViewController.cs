@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				IconUri		 = "Data.LegalPerson",
 				Title		 = TextFormatter.FormatText ("Toto1"),
 				CompactTitle = TextFormatter.FormatText ("Toto2"),
-				CreateUI     = this.CreateUIToto2,
+				CreateEditionUI     = this.CreateUIToto2,
 			};
 
 			data.Add (tileData);
