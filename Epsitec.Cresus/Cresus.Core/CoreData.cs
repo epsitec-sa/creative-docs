@@ -667,7 +667,7 @@ namespace Epsitec.Cresus.Core
 			return this.DataContext.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
 		}
 
-		public static void CreateEpsitecDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		public static void ImportDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
 			ImportMode importMode = ImportMode.PreserveIds;
 
@@ -702,7 +702,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static void ReloadEpsitecData(System.IO.FileInfo file, DbAccess dbAccess)
+		public static void ImportSharedData(System.IO.FileInfo file, DbAccess dbAccess)
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
@@ -717,7 +717,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static void ExportEpsitecData(System.IO.FileInfo file, DbAccess dbAccess)
+		public static void ExportDatabase(System.IO.FileInfo file, DbAccess dbAccess, bool exportOnlyUserData)
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
@@ -727,7 +727,9 @@ namespace Epsitec.Cresus.Core
 				{
 					dataInfrastructure.OpenConnection ("root");
 
-					dataInfrastructure.ExportEpsitecData(file);
+					ExportMode exportMode = exportOnlyUserData ? ExportMode.UserData : ExportMode.EpsitecAndUserData;
+
+					dataInfrastructure.ExportEpsitecData(file, exportMode);
 				}
 			}
 		}

@@ -143,11 +143,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 
 
-		public void WriteXmlData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, int index)
+		public void WriteXmlData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, int index, bool exportOnlyUserData)
 		{
 			this.WriteXmlStart (xmlWriter, index);
 
-			foreach (IList<string> row in this.ProcessRowsWrite(dbInfrastructure.Converter, this.GetRows (dbInfrastructure)))
+			foreach (IList<string> row in this.ProcessRowsWrite(dbInfrastructure.Converter, this.GetRows (dbInfrastructure, exportOnlyUserData)))
 			{
 				this.WriteXmlRow (xmlWriter, row);
 			}
@@ -178,36 +178,50 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private IEnumerable<IList<object>> GetRows(DbInfrastructure dbInfrastructure)
+		private IEnumerable<IList<object>> GetRows(DbInfrastructure dbInfrastructure, bool exportOnlyUserData)
 		{
 			SqlField tableSqlField = this.CreateTableSqlField ();
 			IList<SqlField> columnSqlFields = this.CreateColumnSqlFields ();
 
-			int startIndex = DbInfrastructure.AutoIncrementStartValue;
+			List<System.Tuple<long, long>> ranges = new List<System.Tuple<long, long>> ();
+
+			if (!exportOnlyUserData)
+			{
+				ranges.Add (System.Tuple.Create ((long) 0, (long) DbInfrastructure.AutoIncrementStartValue - 1));
+			}
+
+			ranges.Add (System.Tuple.Create ((long) DbInfrastructure.AutoIncrementStartValue, long.MaxValue));
+
 			int length = 1000;
 
 			using (DbTransaction transaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				bool done = false;
-
-				for (long i = startIndex; !done; i += length)
+				foreach (var range in ranges)
 				{
-					SqlSelect query = this.CreateQueryForInterval (tableSqlField, columnSqlFields, i, i + length - 1);
+					long rangeStartIndex = range.Item1;
+					long rangeLastIndex = range.Item2;
 
-					transaction.SqlBuilder.SelectData (query);
+					bool done = false;
 
-					DataSet data = dbInfrastructure.ExecuteRetData (transaction);
-					DataRowCollection rows = data.Tables[0].Rows;
-
-					if (rows.Count == 0)
+					for (long i = rangeStartIndex; (i + length - 1 <= rangeLastIndex) && !done; i += length)
 					{
-						done = true;
-					}
-					else
-					{
-						foreach (DataRow row in rows)
+						SqlSelect query = this.CreateQueryForInterval (tableSqlField, columnSqlFields, i, i + length - 1);
+
+						transaction.SqlBuilder.SelectData (query);
+
+						DataSet data = dbInfrastructure.ExecuteRetData (transaction);
+						DataRowCollection rows = data.Tables[0].Rows;
+
+						if (rows.Count == 0)
 						{
-							yield return row.ItemArray.ToList ();
+							done = true;
+						}
+						else
+						{
+							foreach (DataRow row in rows)
+							{
+								yield return row.ItemArray.ToList ();
+							}
 						}
 					}
 				}
@@ -586,8 +600,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					dbTransaction.SqlBuilder.SelectData (query);
 
 					object value = dbInfrastructure.ExecuteScalar (dbTransaction);
+					long startValue = System.Math.Max ((long) value, DbInfrastructure.AutoIncrementStartValue);
 
-					dbInfrastructure.SetColumnAutoIncrementValue (dbTransaction, dbTable, dbColumn, (long) value);
+
+					dbInfrastructure.SetColumnAutoIncrementValue (dbTransaction, dbTable, dbColumn, startValue);
 				}
 
 				dbTransaction.Commit ();
@@ -634,14 +650,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			return internalRawType;
 		}
 
-		public void Clean(DbInfrastructure dbInfrastructure, bool cleanWholeTable)
+		public void Clean(DbInfrastructure dbInfrastructure, bool cleanOnlyEpsitecData)
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				string tableName = this.SqlName;
 				SqlFieldList conditions = new SqlFieldList ();
 
-				if (!cleanWholeTable)
+				if (cleanOnlyEpsitecData)
 				{
 					conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartValue));
 				}
