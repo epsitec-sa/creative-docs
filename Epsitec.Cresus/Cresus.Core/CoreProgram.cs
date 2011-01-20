@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core
 			FileInfo file = new FileInfo (args[1]);
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.CreateEpsitecDatabase (file, dbAccess);
+			CoreData.ImportDatabase (file, dbAccess);
 		}
 
 		private static void ExecuteCreateUserDatabase(string[] args)
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core
 			FileInfo file = new FileInfo (args[1]);
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ReloadEpsitecData (file, dbAccess);
+			CoreData.ImportSharedData (file, dbAccess);
 		}
 
 		private static void ExecuteDatabaseExport(string[] args)
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core
 			FileInfo file = new FileInfo (args[1]);
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ExportEpsitecData  (file, dbAccess);
+			CoreData.ExportDatabase  (file, dbAccess, false);
 		}
 
 		private static void ExecuteCoreProgram()

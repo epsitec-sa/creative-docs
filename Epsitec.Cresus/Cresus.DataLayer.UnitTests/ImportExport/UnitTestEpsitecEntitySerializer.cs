@@ -42,22 +42,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void SimpleExportImport1()
 		{
-			ImportMode mode = ImportMode.DecrementIds;
+			ExportMode exportMode = ExportMode.UserData;
+			ImportMode importMode = ImportMode.DecrementIds;
 
-			this.SimpleExportImport (mode);
+			this.SimpleExportImport (exportMode, importMode);
 		}
 
 
 		[TestMethod]
 		public void SimpleExportImport2()
 		{
-			ImportMode mode = ImportMode.PreserveIds;
+			ExportMode exportMode = ExportMode.UserData;
+			ImportMode importMode = ImportMode.PreserveIds;
 
-			this.SimpleExportImport (mode);
+			this.SimpleExportImport (exportMode, importMode);
 		}
 
 
-		private void SimpleExportImport(ImportMode mode)
+		[TestMethod]
+		public void SimpleExportImport3()
+		{
+			ExportMode exportMode = ExportMode.EpsitecAndUserData;
+			ImportMode importMode = ImportMode.PreserveIds;
+
+			this.SimpleExportImport (exportMode, importMode);
+		}
+
+
+		private void SimpleExportImport(ExportMode exportMode, ImportMode importMode)
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -65,22 +77,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.Export (file, dbInfrastructure, exportMode);
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
+				if (exportMode == ExportMode.EpsitecAndUserData)
+				{
+					EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
+					EpsitecEntitySerializer.Export (file, dbInfrastructure, exportMode);
+				}
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, mode);
+				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, importMode);
+
+				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, importMode);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					bool decrementIds = mode == ImportMode.DecrementIds;
+					bool decrementIds = importMode == ImportMode.DecrementIds;
 
 					NaturalPersonEntity alfred1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 					NaturalPersonEntity hans1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
 
-					if (decrementIds)
+					if (decrementIds || exportMode == ExportMode.EpsitecAndUserData)
 					{
 						Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred1));
 						Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude1));
@@ -131,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
 				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -237,7 +255,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
 
 				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
 
@@ -300,7 +318,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure);
+				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
 
 				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
 

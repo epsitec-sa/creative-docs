@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure)
+		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, ExportMode exportMode)
 		{
 			List<TableDefinition> tableDefinitions = EpsitecEntitySerializer.GetTableDefinitions (dbInfrastructure).ToList ();
 
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				EpsitecEntitySerializer.WriteDocumentStart (xmlWriter);
 				EpsitecEntitySerializer.WriteHeader (xmlWriter, version, idShift);
 				EpsitecEntitySerializer.WriteDefinition (xmlWriter, tableDefinitions);
-				EpsitecEntitySerializer.WriteData (dbInfrastructure, xmlWriter, tableDefinitions);
+				EpsitecEntitySerializer.WriteData (dbInfrastructure, xmlWriter, tableDefinitions, exportMode);
 				EpsitecEntitySerializer.WriteDocumentEnd (xmlWriter);
 			}
 		}
@@ -186,13 +186,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void WriteData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, IList<TableDefinition> tableDefinitions)
+		private static void WriteData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, IList<TableDefinition> tableDefinitions, ExportMode exportMode)
 		{
+			bool exportOnlyUserData = exportMode == ExportMode.UserData;
+
 			xmlWriter.WriteStartElement ("data");
 
 			for (int i = 0; i < tableDefinitions.Count; i++)
 			{
-				tableDefinitions[i].WriteXmlData (dbInfrastructure, xmlWriter, i);
+				tableDefinitions[i].WriteXmlData (dbInfrastructure, xmlWriter, i, exportOnlyUserData);
 			}
 
 			xmlWriter.WriteEndElement ();
@@ -336,11 +338,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static void CleanTables(DbInfrastructure dbInfrastructure, ImportMode importMode, IList<TableDefinition> tableDefinitions)
 		{
-			bool cleanWholeTable = importMode == ImportMode.PreserveIds;
+			bool cleanOnlyEpsitecData = importMode == ImportMode.DecrementIds;
 
 			foreach (TableDefinition tableDefinition in tableDefinitions)
 			{
-				tableDefinition.Clean (dbInfrastructure, cleanWholeTable);
+				tableDefinition.Clean (dbInfrastructure, cleanOnlyEpsitecData);
 			}
 		}
 

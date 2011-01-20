@@ -437,11 +437,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="file">The file in which to write the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
-		public void ExportEpsitecData(FileInfo file)
+		public void ExportEpsitecData(FileInfo file, ExportMode exportMode)
 		{
 			file.ThrowIfNull ("file");
 
-			EpsitecEntitySerializer.Export (file, this.dbInfrastructure);
+			EpsitecEntitySerializer.Export (file, this.dbInfrastructure, exportMode);
 		}
 
 
