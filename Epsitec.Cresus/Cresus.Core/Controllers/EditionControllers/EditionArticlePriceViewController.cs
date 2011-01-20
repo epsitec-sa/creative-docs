@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -80,5 +81,68 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.PriceCalculators));
 		}
+#else
+		protected override void CreateUI()
+		{
+			using (var data = TileContainerController.Setup (this))
+			{
+				this.CreateUIMain (data);
+				this.CreateUIPriceCalculators (data);
+			}
+		}
+
+
+		private void CreateUIMain(TileDataItems data)
+		{
+			var tileData = new TileDataItem
+			{
+				Name            = "ArticlePrice",
+				IconUri	        = "Data.ArticlePrice",
+				Title	        = TextFormatter.FormatText ("Prix"),
+				CompactTitle    = TextFormatter.FormatText ("Prix"),
+				CreateEditionUI = this.CreateEditionUIMain,
+			};
+
+			data.Add (tileData);
+		}
+
+		private void CreateEditionUIMain(EditionTile tile, UIBuilder builder)
+		{			
+			builder.CreateTextField (tile, 150, "Du", Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
+			builder.CreateTextField (tile, 150, "Au", Marshaler.Create (() => this.Entity.EndDate,   x => this.Entity.EndDate   = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
+			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			//	TODO: gérer le HT/TTC selon this.Entity.ValueIncludesTaxes
+			builder.CreateTextField (tile, 150, "Prix HT", Marshaler.Create (() => this.Entity.Value, x => this.Entity.Value = x));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+		}
+
+		private void CreateUIPriceCalculators(TileDataItems data)
+		{
+			data.Add (
+				new TileDataItem
+				{
+					AutoGroup    = true,
+					Name		 = "PriceCalculator",
+					IconUri		 = "Data.PriceCalculator",
+					Title		 = TextFormatter.FormatText ("Calculateurs de prix"),
+					CompactTitle = TextFormatter.FormatText ("Calculateurs de prix"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<PriceCalculatorEntity> ("PriceCalculator", this.BusinessContext);
+
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.PriceCalculators));
+		}
+#endif
 	}
 }
