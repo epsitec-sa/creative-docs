@@ -123,13 +123,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 #endif
 		}
 
-		private void CreateUIComments(TileContainerController.Initializer data)
+		private void CreateUIComments(SummaryDataItems data)
 		{
 			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 
-		private void CreateUIToto(TileContainerController.Initializer data)
+		private void CreateUIToto(SummaryDataItems data)
 		{
 			var summaryData = new SummaryDataItem
 			{
