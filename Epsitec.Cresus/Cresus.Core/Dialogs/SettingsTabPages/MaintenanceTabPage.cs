@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Exporter tout",
 				"Exporte l'ensemble de la base de données dans un fichier.",
+				2, 
 				this.ActionExport
 			);
 
@@ -57,6 +58,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Importer tout",
 				"Importe l'ensemble de la base de données à partir d'un fichier, en écrasant tout.",
+				12,
 				this.ActionImport
 			);
 
@@ -65,6 +67,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Créer",
 				"Crée une nouvelle base de données vide, en important les données modèles.",
+				2,
 				this.ActionCreate
 			);
 
@@ -73,17 +76,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Mettre à jour",
 				"Met à jour toutes les données modèles, en les réimportant.",
+				12,
 				this.ActionUpdate
 			);
 		}
 
-		private void CreateButton(FrameBox parent, string buttonText, string description, System.Action action)
+		private void CreateButton(FrameBox parent, string buttonText, string description, double bottomMargin, System.Action action)
 		{
 			var frame = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
+				Margins = new Margins (0, 0, 0, bottomMargin),
 			};
 
 			var button = new Button
