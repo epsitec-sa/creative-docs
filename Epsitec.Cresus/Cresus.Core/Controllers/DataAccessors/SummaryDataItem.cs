@@ -150,6 +150,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
+		public System.Action<UIBuilder>			CreateUI
+		{
+			get;
+			set;
+		}
+
+
 		/// <summary>
 		/// Gets or sets the associated title tile. The <see cref="SummaryDataItem"/>
 		/// will be inserted into the title tile collection of items.
