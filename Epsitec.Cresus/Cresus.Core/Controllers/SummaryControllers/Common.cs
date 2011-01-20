@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "Comment",
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name		 = "MailContact",
 					IconUri		 = "Data.Mail",
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineCompactText  (x => x.GetCompactSummary ());
 
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineSetupItem    (x => x.UriScheme = businessContext.GetLocalEntity (businessContext.Data.GetAllEntities<UriSchemeEntity> ().Where (y => y.Code == "mailto").FirstOrDefault ()));
 
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "UriContact",

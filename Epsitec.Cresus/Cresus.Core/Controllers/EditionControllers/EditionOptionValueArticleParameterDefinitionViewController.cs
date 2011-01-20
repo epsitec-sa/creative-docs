@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIOptions(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "OptionValue",

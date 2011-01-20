@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// <summary>
 	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
-	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
+	/// <see cref="SummaryDataItem"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
 	public sealed partial class TileContainerController : IClickSimulator, IWidgetUpdater, IIsDisposed
 	{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container   = container;
 			this.parent      = parent ?? this.container;
 			this.dataItems   = new SummaryDataItems (this.controller);
-			this.liveItems = new List<SummaryData> ();
+			this.liveItems = new List<SummaryDataItem> ();
 			this.dataContext = this.controller.DataContext;
 			this.refreshTimer = new Timer ()
 			{
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public SummaryData FindSummaryData(string name)
+		public SummaryDataItem FindSummaryData(string name)
 		{
 			return this.liveItems.Where (x => x.Name == name).FirstOrDefault ();
 		}
@@ -248,8 +248,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private void RefreshLiveItems()
 		{
-			var currentItems  = new List<SummaryData> (this.dataItems);
-			var obsoleteItems = new List<SummaryData> (this.liveItems.Except (currentItems));
+			var currentItems  = new List<SummaryDataItem> (this.dataItems);
+			var obsoleteItems = new List<SummaryDataItem> (this.liveItems.Except (currentItems));
 
 			this.liveItems.Clear ();
 			this.liveItems.AddRange (currentItems);
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.LayoutTiles (this.parent.ActualHeight);
 		}
 
-		private static void DisposeDataItems(IEnumerable<SummaryData> collection)
+		private static void DisposeDataItems(IEnumerable<SummaryDataItem> collection)
 		{
 			foreach (var item in collection)
 			{
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static void DisposeDataItem(SummaryData item)
+		private static void DisposeDataItem(SummaryDataItem item)
 		{
 			var summary = item.SummaryTile;
 			var title   = item.TitleTile;
@@ -335,17 +335,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CreateSummaryTileClickHandler(SummaryData item)
+		private void CreateSummaryTileClickHandler(SummaryDataItem item)
 		{
 			item.SummaryTile.Clicked += (sender, e) => this.HandleTileClicked (item);
 		}
 
-		private void CreateTitleTileClickHandler(SummaryData item, TitleTile tile)
+		private void CreateTitleTileClickHandler(SummaryDataItem item, TitleTile tile)
 		{
 			tile.Clicked += (sender, e) => this.HandleTileClicked (this.liveItems.First (x => x.TitleTile == tile));
 			tile.AddClicked += (sender, e) =>
 				{
-					string itemName = SummaryData.GetNamePrefix (item.Name);
+					string itemName = SummaryDataItem.GetNamePrefix (item.Name);
 
 					this.QueueTasklets ("CreateNewTile",
 						new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		}
 
-		private void HandleTileClicked(SummaryData item)
+		private void HandleTileClicked(SummaryDataItem item)
 		{
 			if (item.DataType == SummaryDataType.EmptyItem)
 			{
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void OpenSubViewForCreatedSummaryTile(SummaryData item, string itemName)
+		private void OpenSubViewForCreatedSummaryTile(SummaryDataItem item, string itemName)
 		{
 			//	Ouvre la vue correspondant à la dernière entité créée dans une collection.
 			this.OpenSubView (item.CreatedIndex, itemName);
@@ -390,11 +390,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void OpenSubView(int index, string itemName)
 		{
 			//	Ouvre une vue correspondant à une entité dans une collection.
-			SummaryData sel = null;
+			SummaryDataItem sel = null;
 
 			foreach (var x in this.liveItems)
 			{
-				if (SummaryData.GetNamePrefix (x.Name) == itemName)
+				if (SummaryDataItem.GetNamePrefix (x.Name) == itemName)
 				{
 					if (index-- == 0)
 					{
@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (sel == null)
 			{
-				var last = this.liveItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
+				var last = this.liveItems.LastOrDefault (x => SummaryDataItem.GetNamePrefix (x.Name) == itemName);
 
 				if (last != null)
 				{
@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CreateSummaryTile(SummaryData item)
+		private void CreateSummaryTile(SummaryDataItem item)
 		{
 			if ((item.DataType == SummaryDataType.CollectionItem) ||
 				(item.DataType == SummaryDataType.EmptyItem))
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.SummaryTile.Controller = item;
 		}
 
-		private TitleTile CreateTitleTile(SummaryData item)
+		private TitleTile CreateTitleTile(SummaryDataItem item)
 		{
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
 			System.Diagnostics.Debug.Assert (item.SummaryTile != null);
@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return item.TitleTile;
 		}
 
-		private void RemoveTitleTile(SummaryData item)
+		private void RemoveTitleTile(SummaryDataItem item)
 		{
 			item.TitleTile = null;
 		}
@@ -527,10 +527,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void ResetAutoGroupTitleTile(SummaryData item, Dictionary<string, TitleTile> tileCache)
+		private void ResetAutoGroupTitleTile(SummaryDataItem item, Dictionary<string, TitleTile> tileCache)
 		{
 			TitleTile other;
-			string prefix = SummaryData.GetNamePrefix (item.Name);
+			string prefix = SummaryDataItem.GetNamePrefix (item.Name);
 
 			if (tileCache.TryGetValue (prefix, out other))
 			{
@@ -547,7 +547,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void ResetStandardTitleTile(SummaryData item, HashSet<long> visualIdCache)
+		private void ResetStandardTitleTile(SummaryDataItem item, HashSet<long> visualIdCache)
 		{
 			if (item.TitleTile == null)
 			{
@@ -573,7 +573,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static void SetTileContent(SummaryData item)
+		private static void SetTileContent(SummaryDataItem item)
 		{
 			if (item.IsCompact)
 			{
@@ -724,7 +724,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly Widget					parent;
 		private readonly TileContainer		container;
 		private readonly SummaryDataItems		dataItems;
-		private readonly List<SummaryData>		liveItems;
+		private readonly List<SummaryDataItem>		liveItems;
 		private readonly DataContext			dataContext;
 		private readonly Timer					refreshTimer;
 

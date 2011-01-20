@@ -20,15 +20,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// <see cref="TitleTile"/> and <see cref="SummaryTile"/>. It is
 	/// built to support asynchronous tile initialization.
 	/// </summary>
-	public class SummaryData : System.IComparable<SummaryData>, ITileController, IGroupedItem
+	public class SummaryDataItem : System.IComparable<SummaryDataItem>, ITileController, IGroupedItem
 	{
-		public SummaryData()
+		public SummaryDataItem()
 		{
 			this.bindings = new HashSet<AccessorBinding> ();
 			this.DefaultMode = ViewControllerMode.Edition;
 		}
 
-		public SummaryData(SummaryData template)
+		public SummaryDataItem(SummaryDataItem template)
 			: this ()
 		{
 			if (template != null)
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return SummaryData.GetGroupingRank (this.Rank);
+				return SummaryDataItem.GetGroupingRank (this.Rank);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return SummaryData.GetLocalRank (this.Rank);
+				return SummaryDataItem.GetLocalRank (this.Rank);
 			}
 		}
 
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 		/// <summary>
-		/// Gets or sets the associated title tile. The <see cref="SummaryData"/>
+		/// Gets or sets the associated title tile. The <see cref="SummaryDataItem"/>
 		/// will be inserted into the title tile collection of items.
 		/// </summary>
 		/// <value>The title tile.</value>
@@ -379,10 +379,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		#region IComparable<SummaryData> Members
 
-		public int CompareTo(SummaryData other)
+		public int CompareTo(SummaryDataItem other)
 		{
-			int groupingRankA = SummaryData.GetGroupingRank (this.Rank);
-			int groupingRankB = SummaryData.GetGroupingRank (other.Rank);
+			int groupingRankA = SummaryDataItem.GetGroupingRank (this.Rank);
+			int groupingRankB = SummaryDataItem.GetGroupingRank (other.Rank);
 
 			if (groupingRankA < groupingRankB)
 			{

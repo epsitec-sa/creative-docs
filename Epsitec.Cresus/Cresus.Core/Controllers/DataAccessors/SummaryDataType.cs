@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	/// <summary>
-	/// The <c>SummaryDataType</c> defines the type of a <see cref="SummaryData"/> object.
+	/// The <c>SummaryDataType</c> defines the type of a <see cref="SummaryDataItem"/> object.
 	/// </summary>
 	public enum SummaryDataType
 	{

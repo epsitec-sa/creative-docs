@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUICategory(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name				= "ArticleCategory",
 					IconUri				= "Data.Category",
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIAccountings(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleAccountingDefinitions",

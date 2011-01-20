@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIContactRoles(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ContactRoles",

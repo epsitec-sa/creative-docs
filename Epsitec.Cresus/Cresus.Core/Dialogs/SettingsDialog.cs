@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupWidgets()
 		{
-			bool admin = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
+			bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var frame = new FrameBox
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Crée l'onglet 'maintenance'.
 			TabPage maintenancePage = null;
 
-			if (admin)
+			if (devel)
 			{
 				maintenancePage = new TabPage
 				{
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			printerSettings.CreateUI (printerPage);
 			this.settingsTabPages.Add (printerSettings);
 
-			if (admin)
+			if (devel)
 			{
 				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
 				maintenanceSettings.CreateUI (maintenancePage);

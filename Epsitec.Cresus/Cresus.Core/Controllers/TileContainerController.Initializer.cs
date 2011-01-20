@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.controller = controller;
 			}
 
-			public void Add(SummaryData item)
+			public void Add(SummaryDataItem item)
 			{
 				this.controller.DataItems.Add (item);
 			}

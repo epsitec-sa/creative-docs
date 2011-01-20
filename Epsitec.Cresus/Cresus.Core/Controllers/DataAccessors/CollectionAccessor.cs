@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			get;
 		}
 
-		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
+		public abstract IEnumerable<SummaryDataItem> Resolve(System.Func<string, int, SummaryDataItem> summaryDataGetter);
 
 
 		#region IReadOnly Members

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				data.Add (
-					new SummaryData
+					new SummaryDataItem
 					{
 						Name				= "ArticleGroup",
 						IconUri				= "Data.Group",

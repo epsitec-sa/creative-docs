@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIImage(SummaryDataItems data)
 		{
 			data.Add (
-				new SummaryData
+				new SummaryDataItem
 				{
 					Name				= "Image",
 					IconUri				= "Data.Image",
