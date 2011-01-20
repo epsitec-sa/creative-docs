@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			this.DbInfrastructure = dbInfrastructure;
 
-			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
+			this.tableDefinitionCache = new Dictionary<string, DbTable> ();
 			this.sourceReferencesCache = new Dictionary<Druid, IList<EntityFieldPath>> ();
 		}
 		
@@ -71,14 +71,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			Druid localEntityId = entityId;
 
-			while(localEntityId.IsValid && !this.IsTableDefinitionInCache (entityId))
+			while (localEntityId.IsValid && !this.IsTableDefinitionInCache (this.GetEntityTableName (localEntityId)))
 			{
-				DbTable tableDefinition = this.GetEntityTableDefinition (entityId);
+				DbTable tableDefinition = this.GetEntityTableDefinition (localEntityId);
 
 				this.LoadRelations (tableDefinition);
 
 				ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
-				StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
+				StructuredType entityType = TypeRosetta.CreateTypeObject (manager, localEntityId) as StructuredType;
 
 				localEntityId = entityType.BaseTypeId;
 			}
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 						string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
 						DbTable relationTableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
 
-						this.AddTableDefinitionToCache (columnDefinition.CaptionId, relationTableDefinition);
+						this.AddTableDefinitionToCache (relationTableName, relationTableDefinition);
 					}
 				}
 
@@ -118,19 +118,21 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The corresponding <see cref="DbTable"/>.</returns>
 		public DbTable GetEntityTableDefinition(Druid entityId)
 		{
-			if (!this.IsTableDefinitionInCache (entityId))
+			string tableName = this.GetEntityTableName (entityId);
+
+			if (!this.IsTableDefinitionInCache (tableName))
 			{
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					DbTable tableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, entityId);
+					DbTable tableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, tableName);
 
 					transaction.Commit ();
 
-					this.AddTableDefinitionToCache (entityId, tableDefinition);
+					this.AddTableDefinitionToCache (tableName, tableDefinition);
 				}
 			}
 
-			return this.GetTableDefinitionFromCache (entityId);
+			return this.GetTableDefinitionFromCache (tableName);
 		}
 
 
@@ -143,54 +145,55 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The corresponding <see cref="DbTable"/>.</returns>
 		public DbTable GetRelationTableDefinition(Druid localEntityId, Druid fieldId)
 		{
-			if (!this.IsTableDefinitionInCache (fieldId))
+			string relationTableName = this.GetRelationTableName (localEntityId, fieldId);
+
+			if (!this.IsTableDefinitionInCache (relationTableName))
 			{
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					string relationTableName = this.GetRelationTableName (localEntityId, fieldId);
 					DbTable tableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
 
 					transaction.Commit ();
 
-					this.AddTableDefinitionToCache (fieldId, tableDefinition);
+					this.AddTableDefinitionToCache (relationTableName, tableDefinition);
 				}
 			}
 
-			return this.GetTableDefinitionFromCache (fieldId);
+			return this.GetTableDefinitionFromCache (relationTableName);
 		}
 
 
 		/// <summary>
 		/// Adds a <see cref="DbTable"/> to the cache.
 		/// </summary>
-		/// <param name="id">The <see cref="Druid"/> that identifies the <see cref="DbTable"/>.</param>
+		/// <param name="tableName">The name that identifies the <see cref="DbTable"/>.</param>
 		/// <param name="table">The <see cref="DbTable"/> to add.</param>
-		private void AddTableDefinitionToCache(Druid id, DbTable table)
+		private void AddTableDefinitionToCache(string tableName, DbTable table)
 		{
-			this.tableDefinitionCache[id] = table;
+			this.tableDefinitionCache[tableName] = table;
 		}
 
 
 		/// <summary>
 		/// Gets a <see cref="DbTable"/> out of the cache.
 		/// </summary>
-		/// <param name="id">The <see cref="Druid"/> that identifies the <see cref="DbTable"/>.</param>
+		/// <param name="tableName">The name that identifies the <see cref="DbTable"/>.</param>
 		/// <returns>The requested <see cref="DbTable"/>.</returns>
-		private DbTable GetTableDefinitionFromCache(Druid id)
+		private DbTable GetTableDefinitionFromCache(string tableName)
 		{
-			return this.tableDefinitionCache[id];
+			return this.tableDefinitionCache[tableName];
 		}
 
 
 		/// <summary>
 		/// Checks if a <see cref="DbTable"/> is in the cache.
 		/// </summary>
-		/// <param name="id">The <see cref="Druid"/> that identifies the <see cref="DbTable"/>.</param>
+		/// <param name="tableName">The name that identifies the <see cref="DbTable"/>.</param>
 		/// <returns><c>true</c> if the <see cref="DbTable"/> is in the cache, <c>false</c> if it is not.</returns>
-		private bool IsTableDefinitionInCache(Druid id)
+		private bool IsTableDefinitionInCache(string tableName)
 		{
-			return this.tableDefinitionCache.ContainsKey (id)
-				&& this.GetTableDefinitionFromCache (id) != null;
+			return this.tableDefinitionCache.ContainsKey (tableName)
+				&& this.GetTableDefinitionFromCache (tableName) != null;
 		}
 
 
@@ -282,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// The cache containing the <see cref="DbTable"/> that have been processed by the current
 		/// instance.
 		/// </summary>
-		private readonly IDictionary<Druid, DbTable> tableDefinitionCache;
+		private readonly IDictionary<string, DbTable> tableDefinitionCache;
 
 		
 		/// <summary>
