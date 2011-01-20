@@ -58,8 +58,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 				};
 
 				HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+				HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
 
-				xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+				xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 			}
 
 			DbInfrastructureHelper.ResetTestDatabase ();
@@ -82,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 
 		[TestMethod]
-		public void TestNotAllExported()
+		public void TestWithExternalEntities()
 		{
 			XDocument xDocument;
 
@@ -104,7 +105,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 						uriScheme,
 					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+					HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 
 					dataContext.DeleteEntity (uriContact);
 
@@ -119,6 +122,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.AreEqual (uriScheme, uriContact.UriScheme);
+					Assert.AreEqual ("nobody@nowhere.com", uriContact.Uri);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void TestWithDiscardedEntities()
+		{
+			XDocument xDocument;
+
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
+					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+
+					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
+					{
+						uriContact,
+					};
+
+					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+
+					HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ()
+					{
+						uriScheme,
+					};
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
+
+					dataContext.DeleteEntity (uriContact);
+
+					dataContext.SaveChanges ();
+				}
+
+				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
+					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+
+					Assert.IsNull (uriContact.UriScheme);
 					Assert.AreEqual ("nobody@nowhere.com", uriContact.Uri);
 				}
 			}
@@ -143,8 +192,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					};
 
 					HashSet<AbstractEntity> externalEntities = new HashSet<AbstractEntity> ();
+					HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 
 					dataContext.DeleteEntity (uriScheme);
 
@@ -200,7 +250,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 						uriScheme,
 					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+					HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 
 					dataContext.DeleteEntity (uriScheme);
 
@@ -248,7 +300,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 						gender,
 					};
 
-					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities);
+					HashSet<AbstractEntity> discardedEntities = new HashSet<AbstractEntity> ();
+
+					xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 
 					dataContext.DeleteEntity (uriContact1);
 
