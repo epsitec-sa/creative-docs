@@ -32,10 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIMain(SummaryDataItems data)
+		private void CreateUIMain(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "BusinessSettings",
 					IconUri				= "Data.BusinessSettings",
@@ -47,10 +47,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIIsrDefinitions(SummaryDataItems data)
+		private void CreateUIIsrDefinitions(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "IsrDefinition",
@@ -68,10 +68,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Finance.IsrDefs));
 		}
 
-		private void CreateUIPaymentReminderDefinitions(SummaryDataItems data)
+		private void CreateUIPaymentReminderDefinitions(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "PaymentReminderDefinition",

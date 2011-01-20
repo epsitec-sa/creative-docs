@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIRelation(SummaryDataItems data)
+		private void CreateUIRelation(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "Customer",
 					IconUri				= "Data.Customer",
@@ -49,26 +49,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIMailContacts(SummaryDataItems data)
+		private void CreateUIMailContacts(TileDataItems data)
 		{
 			Common.CreateUIMailContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
-		private void CreateUITelecomContacts(SummaryDataItems data)
+		private void CreateUITelecomContacts(TileDataItems data)
 		{
 			Common.CreateUITelecomContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
-		private void CreateUIUriContacts(SummaryDataItems data)
+		private void CreateUIUriContacts(TileDataItems data)
 		{
 			Common.CreateUIUriContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
 
-		private void CreateUIAffairs(SummaryDataItems data)
+		private void CreateUIAffairs(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "Affair",

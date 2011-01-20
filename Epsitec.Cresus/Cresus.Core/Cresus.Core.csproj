@@ -482,8 +482,8 @@
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
-    <Compile Include="Controllers\DataAccessors\SummaryDataItem.cs" />
-    <Compile Include="Controllers\DataAccessors\SummaryDataType.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataType.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
@@ -491,7 +491,7 @@
     <Compile Include="Controllers\TileContainerController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
-    <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
     <Compile Include="Repositories\ArticleDefinitionRepository.cs" />
     <Compile Include="Repositories\CurrencyRepository.cs" />

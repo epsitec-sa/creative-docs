@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIAffair(SummaryDataItems data)
+		private void CreateUIAffair(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "Affair",
 					IconUri				= "Data.Affair",
@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIDocuments(SummaryDataItems data)
+		private void CreateUIDocuments(TileDataItems data)
 		{
-			var summaryData = new SummaryDataItem
+			var tileData = new TileDataItem
 			{
 				AutoGroup    = false,
 				Name		 = "DocMetadata",
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				Text		 = CollectionTemplate.DefaultEmptyText
 			};
 
-			data.Add (summaryData);
+			data.Add (tileData);
 
 			var template = new CollectionTemplate<DocumentMetadataEntity> ("DocMetadata", this.BusinessContext);
 
@@ -74,11 +74,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
 		}
 
-		private void CreateUIDocumentWorkflows(SummaryDataItems data)
+		private void CreateUIDocumentWorkflows(TileDataItems data)
 		{
 #if false
-			var summaryData =
-				new SummaryData
+			var tileData =
+				new TileDataItem
 				{
 					AutoGroup    = false,
 					Name		 = "DocWorkflow",
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				};
 
-			summaryData.SetEntityConverter<WorkflowEntity> (x => x.ActiveDocument);
+			tileData.SetEntityConverter<WorkflowEntity> (x => x.ActiveDocument);
 
-			data.Add (summaryData);
+			data.Add (tileData);
 
 			var template = new CollectionTemplate<WorkflowEntity> ("DocWorkflow", this.BusinessContext);
 
@@ -102,11 +102,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 #endif
 		}
 
-		private void CreateUIEvents(SummaryDataItems data)
+		private void CreateUIEvents(TileDataItems data)
 		{
 #if false
 			data.Add (
-				new SummaryData
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "WorkflowEvent",
@@ -125,15 +125,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 #endif
 		}
 
-		private void CreateUIComments(SummaryDataItems data)
+		private void CreateUIComments(TileDataItems data)
 		{
 			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 
-		private void CreateUIToto(SummaryDataItems data)
+		private void CreateUIToto(TileDataItems data)
 		{
-			var summaryData = new SummaryDataItem
+			var tileData = new TileDataItem
 			{
 				Name         = "Toto",
 				IconUri		 = "Data.LegalPerson",
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				CreateUI     = this.CreateUIToto2,
 			};
 
-			data.Add (summaryData);
+			data.Add (tileData);
 		}
 
 		private void CreateUIToto2(EditionTile tile, UIBuilder builder)

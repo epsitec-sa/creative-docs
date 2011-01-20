@@ -16,13 +16,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	internal static class Common
 	{
-		public static void CreateUIComments<T1>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<CommentEntity>> collectionResolver)
+		public static void CreateUIComments<T1>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<CommentEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIComments<T1, CommentEntity, CommentEntity> (businessContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIComments<T1, T2, T3>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIComments<T1, T2, T3>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : CommentEntity, new ()
 			where T3 : CommentEntity, T2, new ()
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "Comment",
@@ -46,13 +46,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIMailContacts<T1>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUIMailContacts<T1>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIMailContacts<T1, AbstractContactEntity, MailContactEntity> (businessContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIMailContacts<T1, T2, T3>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIMailContacts<T1, T2, T3>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : MailContactEntity, T2, new ()
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name		 = "MailContact",
 					IconUri		 = "Data.Mail",
@@ -77,13 +77,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUITelecomContacts<T1>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUITelecomContacts<T1>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUITelecomContacts<T1, AbstractContactEntity, TelecomContactEntity> (businessContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUITelecomContacts<T1, T2, T3>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUITelecomContacts<T1, T2, T3>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : TelecomContactEntity, T2, new ()
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineCompactText  (x => x.GetCompactSummary ());
 
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
@@ -108,13 +108,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIUriContacts<T1>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUIUriContacts<T1>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIUriContacts<T1, AbstractContactEntity, UriContactEntity> (businessContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIUriContacts<T1, T2, T3>(BusinessContext businessContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIUriContacts<T1, T2, T3>(BusinessContext businessContext, TileDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : UriContactEntity, T2, new ()
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineSetupItem    (x => x.UriScheme = businessContext.GetLocalEntity (businessContext.Data.GetAllEntities<UriSchemeEntity> ().Where (y => y.Code == "mailto").FirstOrDefault ()));
 
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "UriContact",

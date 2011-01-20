@@ -51,10 +51,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIMetadata(SummaryDataItems data)
+		private void CreateUIMetadata(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "InvoiceDocument",
 					IconUri				= "Data.InvoiceDocument",

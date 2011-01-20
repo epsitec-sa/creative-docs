@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void CreateUIMail(SummaryDataItems data)
+		private void CreateUIMail(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "MailContact",
 					IconUri				= "Data.Mail",

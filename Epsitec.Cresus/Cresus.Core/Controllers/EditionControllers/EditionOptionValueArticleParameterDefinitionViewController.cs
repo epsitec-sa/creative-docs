@@ -67,10 +67,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (() => this.Entity.Cardinality, x => this.Entity.Cardinality = x), Business.Enumerations.GetAllPossibleValueCardinalities (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
-		private void CreateUIOptions(SummaryDataItems data)
+		private void CreateUIOptions(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "OptionValue",

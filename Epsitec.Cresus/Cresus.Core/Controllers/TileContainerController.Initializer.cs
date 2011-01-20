@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.controller = controller;
 			}
 
-			public void Add(SummaryDataItem item)
+			public void Add(TileDataItem item)
 			{
 				this.controller.DataItems.Add (item);
 			}
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.controller.DataItems.Add (item);
 			}
 
-			public static implicit operator SummaryDataItems(Initializer x)
+			public static implicit operator TileDataItems(Initializer x)
 			{
 				return x.controller.DataItems;
 			}

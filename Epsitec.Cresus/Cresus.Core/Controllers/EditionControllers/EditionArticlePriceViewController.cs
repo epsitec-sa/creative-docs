@@ -60,10 +60,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
-		private void CreateUIPriceCalculators(SummaryDataItems data)
+		private void CreateUIPriceCalculators(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "PriceCalculator",

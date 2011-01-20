@@ -186,23 +186,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public override void BindSummaryData(SummaryDataItem data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor)
+		public override void BindTileData(TileDataItem data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor)
 		{
 			T source = entity as T;
 
 			data.EntityMarshaler = marshaler;
-			data.DataType		 = SummaryDataType.CollectionItem;
+			data.DataType		 = TileDataType.CollectionItem;
 
 			var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (source);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (source)))
 			{
-				this.BindEmptyEntitySummaryData (data, source);
+				this.BindEmptyEntityTileData (data, source);
 			}
 			else
 			{
-				this.BindRealEntitySummaryData (data, source, collectionAccessor);
+				this.BindRealEntityTileData (data, source, collectionAccessor);
 			}
 
 			if (collectionAccessor != null)
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public override void BindCreateItem(SummaryDataItem data, ICollectionAccessor collectionAccessor)
+		public override void BindCreateItem(TileDataItem data, ICollectionAccessor collectionAccessor)
 		{
 			if (this.HasCreateItem && collectionAccessor != null)
 			{
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		private void CreateItem(SummaryDataItem data, ICollectionAccessor collectionAccessor)
+		private void CreateItem(TileDataItem data, ICollectionAccessor collectionAccessor)
 		{
 			//	Crée une nouvelle entité et insère-la au bon endroit.
 			//	Si aucune action CreateGetIndex n'est définie, elle est insérée à la fin.
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		private void DeleteItem(SummaryDataItem data, T item, ICollectionAccessor collectionAccessor)
+		private void DeleteItem(TileDataItem data, T item, ICollectionAccessor collectionAccessor)
 		{
 			collectionAccessor.RemoveItem (item);
 			this.GenericDeleteItem (item);
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return dataContext.CreateEntityAndRegisterAsEmpty<T> ();
 		}
 
-		private void BindEmptyEntitySummaryData(SummaryDataItem data, T source)
+		private void BindEmptyEntityTileData(TileDataItem data, T source)
 		{
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
 		}
 
-		private void BindRealEntitySummaryData(SummaryDataItem data, T source, ICollectionAccessor collectionAccessor)
+		private void BindRealEntityTileData(TileDataItem data, T source, ICollectionAccessor collectionAccessor)
 		{
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);

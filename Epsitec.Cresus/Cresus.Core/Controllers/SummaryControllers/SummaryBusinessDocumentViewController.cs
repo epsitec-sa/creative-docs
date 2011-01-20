@@ -119,10 +119,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			previewController.Update ();
 		}
 
-		private void CreateUIInvoice(SummaryDataItems data)
+		private void CreateUIInvoice(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					Name				= "InvoiceDocument",
 					IconUri				= "Data.InvoiceDocument",
@@ -134,10 +134,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIArticleLines(SummaryDataItems data)
+		private void CreateUIArticleLines(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleLines",
@@ -158,10 +158,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
 
-		private void CreateUIFreightAndTaxLines(SummaryDataItems data)
+		private void CreateUIFreightAndTaxLines(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "FreightAndTaxLines",
@@ -182,10 +182,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
 
-		private void CreateUIVatLines(SummaryDataItems data)
+		private void CreateUIVatLines(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "VatLines",
@@ -212,10 +212,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
 		}
 
-		private void CreateUIBillings(SummaryDataItems data)
+		private void CreateUIBillings(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "BillingDetails",
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
 		}
 
-		private void CreateUIComments(SummaryDataItems data)
+		private void CreateUIComments(TileDataItems data)
 		{
 			//SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}

@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private void CreateUIArticleGroups(SummaryDataItems data)
+		private void CreateUIArticleGroups(TileDataItems data)
 		{
 			data.Add (
-				new SummaryDataItem
+				new TileDataItem
 				{
 					AutoGroup    = true,
 					Name		 = "ArticleGroups",

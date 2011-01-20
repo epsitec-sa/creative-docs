@@ -34,9 +34,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract bool IsCompatible(AbstractEntity entity);
 
-		public abstract void BindSummaryData(SummaryDataItem data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
+		public abstract void BindTileData(TileDataItem data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
 
-		public abstract void BindCreateItem(SummaryDataItem data, ICollectionAccessor collectionAccessor);
+		public abstract void BindCreateItem(TileDataItem data, ICollectionAccessor collectionAccessor);
 
 		public static readonly FormattedText DefaultEmptyText = TextFormatter.FormatText ("<i>vide</i>");
 		public static readonly FormattedText DefaultDefinitionInProgressText = TextFormatter.FormatText ("<i>définition en cours</i>");
