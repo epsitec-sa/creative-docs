@@ -45,8 +45,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 			
 			System.Diagnostics.Debug.Assert (data.DataType == TileDataType.Undefined);
-			
-			if (data.EntityMarshaler == null)
+
+			if (data.CreateEditionUI != null)
+			{
+				data.DataType = TileDataType.EditableItem;
+				this.emptyItems.Add (data);
+			}
+			else if (data.EntityMarshaler == null)
 			{
 				data.DataType = TileDataType.EmptyItem;
 				this.emptyItems.Add (data);
