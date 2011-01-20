@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				return null;
 			}
 
-			MaintenanceTabPage.currentDirectory = dialog.FileName;
+			MaintenanceTabPage.currentDirectory = System.IO.Path.GetDirectoryName (dialog.FileName);
 			return dialog.FileName;
 		}
 
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				return null;
 			}
 
-			MaintenanceTabPage.currentDirectory = dialog.FileName;
+			MaintenanceTabPage.currentDirectory = System.IO.Path.GetDirectoryName (dialog.FileName);
 			return dialog.FileName;
 		}
 

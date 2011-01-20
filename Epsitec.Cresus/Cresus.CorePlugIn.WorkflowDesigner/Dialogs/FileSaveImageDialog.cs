@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		{
 			this.parent = parent;
 
-			this.InitialDirectory = FileSaveImageDialog.initialDirectory;
-			this.InitialFileName  = FileSaveImageDialog.initialFilename;
-			this.FileFilterPattern = "*.png|*.tif|*.bmp|*.jpg";
-			this.enableNavigation = true;
+			this.InitialDirectory        = FileSaveImageDialog.initialDirectory;
+			this.InitialFileName         = FileSaveImageDialog.initialFilename;
+			this.FileFilterPattern       = "*.png|*.tif|*.bmp|*.jpg";
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 		}
 
@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 				}
 			}
 		}
+
 
 		public void PathMemorize()
 		{
@@ -180,7 +181,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 
 		protected void UpdateZoom()
 		{
-			//	Met à jour le mode d'inclusion des polices.
 			if (this.optionsZoom1 != null)
 			{
 				this.optionsZoom1.ActiveState = (FileSaveImageDialog.zoom == 1) ? ActiveState.Yes : ActiveState.No;

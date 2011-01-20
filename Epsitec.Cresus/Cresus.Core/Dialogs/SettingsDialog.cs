@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Fill,
 			};
 
+			//	Crée l'onglet 'printer'.
 			var printerPage = new TabPage
 			{
 				TabTitle = "Unités d'impression",
@@ -95,6 +96,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.tabBook.Items.Add (printerPage);
 
+			//	Crée l'onglet 'maintenance'.
 			TabPage maintenancePage = null;
 
 			if (admin)
