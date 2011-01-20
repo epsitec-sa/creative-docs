@@ -125,20 +125,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIPriceCalculators(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "PriceCalculator",
-					IconUri		 = "Data.PriceCalculator",
-					Title		 = TextFormatter.FormatText ("Calculateurs de prix"),
-					CompactTitle = TextFormatter.FormatText ("Calculateurs de prix"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
+			var tileDataItem = new TileDataItem
+			{
+				AutoGroup    = true,
+				Name		 = "PriceCalculator",
+				IconUri		 = "Data.PriceCalculator",
+				Title		 = TextFormatter.FormatText ("Calculateurs de prix"),
+				CompactTitle = TextFormatter.FormatText ("Calculateurs de prix"),
+				Text		 = CollectionTemplate.DefaultEmptyText,
+			};
+
+			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<PriceCalculatorEntity> ("PriceCalculator", this.BusinessContext);
 
-			template.DefineText (x => x.GetSummary ());
+			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.PriceCalculators));
