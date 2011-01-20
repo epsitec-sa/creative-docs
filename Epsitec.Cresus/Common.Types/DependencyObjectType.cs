@@ -1,4 +1,4 @@
-﻿//	Copyright © 2005-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Types
 				
 				return thisType;
 			}
-			else if (systemType == typeof (System.Object))
+			else if (systemType == typeof (object))
 			{
 				return null;
 			}
@@ -408,9 +408,9 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		[System.ThreadStatic]
-		static int typeStaticConstructorExecuting;
+		private static int typeStaticConstructorExecuting;
 
-		static readonly Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
+		private static readonly Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 
 		
 		private readonly DependencyObjectType			baseType;

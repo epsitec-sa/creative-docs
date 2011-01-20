@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -356,14 +356,14 @@ namespace Epsitec.Common.Types
 				
 				switch (code)
 				{
-					case System.TypeCode.Boolean:	value = ((System.Boolean) obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Decimal:	value = ((System.Decimal) obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Single:	value = ((System.Single)  obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Double:	value = ((System.Double)  obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Byte:		value = ((System.Byte)    obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Int16:		value = ((System.Int16)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Int32:		value = ((System.Int32)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
-					case System.TypeCode.Int64:		value = ((System.Int64)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Boolean:	value = ((bool)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Decimal:	value = ((decimal)obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Single:	value = ((float)  obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Double:	value = ((double) obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Byte:		value = ((byte)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Int16:		value = ((short)  obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Int32:		value = ((int)    obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					case System.TypeCode.Int64:		value = ((long)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					
 					case System.TypeCode.DateTime:
 						value = ((System.DateTime)obj).ToUniversalTime ().ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
@@ -460,19 +460,19 @@ namespace Epsitec.Common.Types
 				
 				switch (code)
 				{
-					case System.TypeCode.Boolean:	value = (decimal) ((System.Boolean) obj ? 1 : 0);	return true;
+					case System.TypeCode.Boolean:	value = (decimal) ((bool) obj ? 1 : 0);	return true;
 					
-					case System.TypeCode.Decimal:	value = (decimal) (System.Decimal) obj;				return true;
+					case System.TypeCode.Decimal:	value = (decimal) (decimal) obj;		return true;
 					
-					case System.TypeCode.Single:	value = (decimal) (System.Single) obj;				return true;
-					case System.TypeCode.Double:	value = (decimal) (System.Double) obj;				return true;
+					case System.TypeCode.Single:	value = (decimal) (float) obj;			return true;
+					case System.TypeCode.Double:	value = (decimal) (double) obj;			return true;
 					
-					case System.TypeCode.Byte:		value = (decimal) (System.Byte) obj;				return true;
-					case System.TypeCode.Int16:		value = (decimal) (System.Int16) obj;				return true;
-					case System.TypeCode.Int32:		value = (decimal) (System.Int32) obj;				return true;
-					case System.TypeCode.Int64:		value = (decimal) (System.Int64) obj;				return true;
+					case System.TypeCode.Byte:		value = (decimal) (byte) obj;			return true;
+					case System.TypeCode.Int16:		value = (decimal) (short) obj;			return true;
+					case System.TypeCode.Int32:		value = (decimal) (int) obj;			return true;
+					case System.TypeCode.Int64:		value = (decimal) (long) obj;			return true;
 					
-					case System.TypeCode.DBNull:	value = 0;											return false;
+					case System.TypeCode.DBNull:	value = 0;								return false;
 				}
 			}
 			

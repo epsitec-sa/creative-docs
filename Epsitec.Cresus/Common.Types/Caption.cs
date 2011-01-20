@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -670,10 +670,10 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			DependencyObject					root;
-			int									level;
-			int									typeCount;
-			bool								requiresRichSerialization;
+			private DependencyObject			root;
+			private int							level;
+			private int							typeCount;
+			private bool						requiresRichSerialization;
 		}
 
 		#endregion

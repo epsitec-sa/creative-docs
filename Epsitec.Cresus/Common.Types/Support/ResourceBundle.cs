@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -1136,7 +1136,7 @@ namespace Epsitec.Common.Support
 			if ((targetBundle != null) &&
 				(targetField  == null))
 			{
-				byte[] data = this.manager.GetBinaryData (targetBundle, level);
+				byte[] data = this.manager.GetBinaryData (targetBundle, this.level);
 				
 				if (data == null)
 				{

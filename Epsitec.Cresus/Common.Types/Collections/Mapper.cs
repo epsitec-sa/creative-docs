@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -94,11 +94,11 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		readonly IEnumerable<T2> mapperEnumerable;
-		readonly IEnumerator<T2> mapperEnumerator;
-		
-		T1 value;
-		bool dispose;
-		bool ready;
+		private readonly IEnumerable<T2> mapperEnumerable;
+		private readonly IEnumerator<T2> mapperEnumerator;
+
+		private T1 value;
+		private bool dispose;
+		private bool ready;
 	}
 }
