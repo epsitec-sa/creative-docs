@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var fileInfo = new System.IO.FileInfo (filename);
 			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.ExportEpsitecData (fileInfo, dbAccess);
+			CoreData.ExportDatabase (fileInfo, dbAccess, false);
 		}
 
 		private void ActionImport()
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var fileInfo = new System.IO.FileInfo (filename);
 			var dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.CreateEpsitecDatabase (fileInfo, dbAccess);
+			CoreData.ImportDatabase (fileInfo, dbAccess);
 		}
 
 		private void ActionCreate()
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Exportation d'une base de données";
 
-			dialog.Filters.Add ("firebird", "Base de données Firebird", "*.FIREBIRD");
+			dialog.Filters.Add ("firebird", "Base de données", "*.FIREBIRD");
 			dialog.Filters.Add ("xml", "Xml", "*.xml");
 			dialog.Filters.Add ("txt", "Texte", "*.txt");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Importation d'une base de données";
 
-			dialog.Filters.Add ("firebird", "Base de données Firebird", "*.FIREBIRD");
+			dialog.Filters.Add ("firebird", "Base de données", "*.FIREBIRD");
 			dialog.Filters.Add ("xml", "Xml", "*.xml");
 			dialog.Filters.Add ("txt", "Texte", "*.txt");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
