@@ -84,11 +84,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Visibility    = false,
 			};
 
-			this.buttonRemove.Clicked +=
-				delegate
-				{
-					this.OnRemoveClicked ();
-				};
+			this.buttonRemove.Clicked += delegate
+			{
+				this.OnRemoveClicked ();
+			};
 		}
 
 		
