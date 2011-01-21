@@ -266,13 +266,23 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void SetButtonVisibility(bool visibility)
 		{
-			if (visibility == true)
+			bool showAdd    = visibility && this.ContainsCollectionItemTiles;
+			bool showRemove = showAdd && this.ContainsFrozenTiles;
+
+			if (showAdd || showRemove)
 			{
 				this.CreateButtons ();
 			}
 
-			this.buttonAdd.Visibility = visibility && this.ContainsCollectionItemTiles;
-			this.buttonRemove.Visibility = this.buttonAdd.Visibility && this.ContainsFrozenTiles;
+			if (this.buttonAdd != null)
+			{
+				this.buttonAdd.Visibility = showAdd;
+			}
+
+			if (this.buttonRemove != null)
+			{
+				this.buttonRemove.Visibility = showRemove;
+			}
 		}
 
 

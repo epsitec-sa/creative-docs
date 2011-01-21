@@ -75,13 +75,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.buttonRemove = new GlyphButton
 			{
-				Parent = this,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
-				GlyphShape = Common.Widgets.GlyphShape.Minus,
-				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
+				Parent        = this,
+				ButtonStyle   = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape    = Common.Widgets.GlyphShape.Minus,
+				Anchor        = AnchorStyles.Right | AnchorStyles.Bottom,
 				PreferredSize = new Size (CollectionItemTile.simpleButtonSize, CollectionItemTile.simpleButtonSize),
-				Margins = this.ContainerPadding,
-				Visibility = false,
+				Margins       = this.ContainerPadding,
+				Visibility    = false,
 			};
 
 			this.buttonRemove.Clicked +=
