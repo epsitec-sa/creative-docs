@@ -707,7 +707,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private void SetDataTilesParent(Widget parent)
 		{
-			foreach (var titleTile in this.GetTitleTiles ())
+			var titleTiles = this.GetTitleTiles ().ToList ();
+
+			if (titleTiles.Any (x => x.Parent == null))
+			{
+				titleTiles.ForEach (x => x.Parent = null);
+			}
+
+			foreach (var titleTile in titleTiles)
 			{
 				titleTile.Parent  = parent;
 				titleTile.Dock    = DockStyle.Top;
