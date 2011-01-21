@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIDocumentWorkflows (data);
 				this.CreateUIEvents            (data);
 				this.CreateUIComments          (data);
-				this.CreateUIToto              (data);
 			}
 		}
 
@@ -128,28 +127,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIComments(TileDataItems data)
 		{
 			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
-		}
-
-
-		private void CreateUIToto(TileDataItems data)
-		{
-			var tileData = new TileDataItem
-			{
-				Name         = "Toto",
-				IconUri		 = "Data.LegalPerson",
-				Title		 = TextFormatter.FormatText ("Toto1"),
-				CompactTitle = TextFormatter.FormatText ("Toto2"),
-				CreateEditionUI = this.CreateUIToto2,
-			};
-
-			data.Add (tileData);
-		}
-
-		private void CreateUIToto2(EditionTile tile, UIBuilder builder)
-		{
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateStaticText (tile, 50, "Toto !");
-			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 	}
 }
