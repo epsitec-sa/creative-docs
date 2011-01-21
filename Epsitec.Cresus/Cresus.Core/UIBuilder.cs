@@ -1723,7 +1723,16 @@ namespace Epsitec.Cresus.Core
 			{
 				if (!this.isDisposed)
 				{
-					UI.SetInitialFocus (this.Container);
+					if (this.Container.ContainsKeyboardFocus)
+					{
+						//	The container already contains the keyboard focus: there is no need to set
+						//	the initial focus; this would only remove the focus from where it already
+						//	is...
+					}
+					else
+					{
+						UI.SetInitialFocus (this.Container);
+					}
 
 					if (this.nextBuilder != null)
 					{
