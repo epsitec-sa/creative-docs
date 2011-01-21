@@ -217,7 +217,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateUI()
 		{
-			this.CreateButtons ();
 		}
 
 		private void CreateButtons()
@@ -228,44 +227,53 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateAddButton()
 		{
-			this.buttonAdd = new GlyphButton
+			if (this.buttonAdd == null)
 			{
-				Parent			= this,
-				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
-				GlyphShape		= Common.Widgets.GlyphShape.Plus,
-				Anchor			= AnchorStyles.TopLeft,
-				PreferredSize	= new Size (TitleTile.iconSize, TitleTile.iconSize),
-				Margins			= new Margins (TitleTile.iconMargins, 0, TitleTile.iconMargins, 0),
-				Visibility		= false,
-			};
+				this.buttonAdd = new GlyphButton
+				{
+					Parent			= this,
+					ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
+					GlyphShape		= Common.Widgets.GlyphShape.Plus,
+					Anchor			= AnchorStyles.TopLeft,
+					PreferredSize	= new Size (TitleTile.iconSize, TitleTile.iconSize),
+					Margins			= new Margins (TitleTile.iconMargins, 0, TitleTile.iconMargins, 0),
+					Visibility		= false,
+				};
 
-			this.buttonAdd.Clicked += (sender, e) => this.OnAddClicked (e);
+				this.buttonAdd.Clicked += (sender, e) => this.OnAddClicked (e);
+			}
 		}
 
 		private void CreateRemoveButton()
 		{
-			this.buttonRemove = new GlyphButton
+			if (this.buttonRemove == null)
 			{
-				Parent			= this,
-				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
-				GlyphShape		= Common.Widgets.GlyphShape.Minus,
-				Anchor			= AnchorStyles.BottomRight,
-				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
-				Margins         = this.ContainerPadding,
-				Visibility		= false,
-			};
+				this.buttonRemove = new GlyphButton
+				{
+					Parent			= this,
+					ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
+					GlyphShape		= Common.Widgets.GlyphShape.Minus,
+					Anchor			= AnchorStyles.BottomRight,
+					PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
+					Margins         = this.ContainerPadding,
+					Visibility		= false,
+				};
 
-			this.buttonRemove.Clicked += (sender, e) => this.OnRemoveClicked (e);
+				this.buttonRemove.Clicked += (sender, e) => this.OnRemoveClicked (e);
+			}
 		}
 
 
 		private void SetButtonVisibility(bool visibility)
 		{
+			if (visibility == true)
+			{
+				this.CreateButtons ();
+			}
+
 			this.buttonAdd.Visibility = visibility && this.ContainsCollectionItemTiles;
 			this.buttonRemove.Visibility = this.buttonAdd.Visibility && this.ContainsFrozenTiles;
 		}
-
-
 
 
 		private TileArrowMode GetArrowMode()
