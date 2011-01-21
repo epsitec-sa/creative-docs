@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.parent.SizeChanged += this.HandleContainerSizeChanged;
 
-			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus  (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
-			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
+			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus  (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic)));
+			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic).Reverse ()));
 
 			this.controller.Disposing += this.HandleControllerDisposing;
 			this.dataContext.EntityChanged += this.HandleEntityChanged;
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.refreshNeeded = false;
 			this.SortLiveItems ();
-			this.CreateMissingSummaryTiles ();
+			this.CreateMissingTiles ();
 			this.RefreshTitleTiles ();
 			this.RefreshTitleTilesFreezeMode ();
 			this.RefreshLayout ();
@@ -295,15 +295,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void DisposeDataItem(TileDataItem item)
 		{
-			var summary = item.Tile;
-			var title   = item.TitleTile;
+			var tile  = item.Tile;
+			var title = item.TitleTile;
 
 			item.TitleTile   = null;
 			item.Tile = null;
 
-			if (summary != null)
+			if (tile != null)
 			{
-				summary.Dispose ();
+				tile.Dispose ();
 			}
 
 			if ((title != null) &&
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.liveItems.Sort ();
 		}
 
-		private void CreateMissingSummaryTiles()
+		private void CreateMissingTiles()
 		{
 			using (var builder = new UIBuilder (this.controller))
 			{
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.QueueTasklets ("CreateNewTile",
 						new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 						new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
-						new TaskletJob (() => this.OpenSubViewForCreatedSummaryTile (item, itemName), TaskletRunMode.After));
+						new TaskletJob (() => this.OpenSubViewForCreatedTile (item, itemName), TaskletRunMode.After));
 				};
 			tile.RemoveClicked += (sender, e) =>
 				{
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.QueueTasklets ("CreateNewTile",
 					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 					new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
-					new TaskletJob (() => this.OpenSubViewForCreatedSummaryTile (item, itemName), TaskletRunMode.After));
+					new TaskletJob (() => this.OpenSubViewForCreatedTile (item, itemName), TaskletRunMode.After));
 			}
 			else
 			{
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void OpenSubViewForCreatedSummaryTile(TileDataItem item, string itemName)
+		private void OpenSubViewForCreatedTile(TileDataItem item, string itemName)
 		{
 			//	Ouvre la vue correspondant à la dernière entité créée dans une collection.
 			this.OpenSubView (item.CreatedIndex, itemName);
@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.Tile.Controller = item;
 		}
 
-		private TitleTile CreateTitleTile(TileDataItem item)
+		private void CreateTitleTile(TileDataItem item)
 		{
 			//	Crée la tuile de titre, parente des SummaryTile et EditionTile.
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
@@ -511,8 +511,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);  // fond bleuté si tuile d'édition
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
-			
-			return item.TitleTile;
 		}
 
 		private void RemoveTitleTile(TileDataItem item)
@@ -667,24 +665,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private IEnumerable<GenericTile> GetSummaryTiles()
+		private IEnumerable<GenericTile> GetGenericTiles()
 		{
 			return this.liveItems.Select (x => x.Tile);
 		}
 
-		private IEnumerable<GenericTile> GetCyclicSummaryTiles(bool cyclic)
+		private IEnumerable<GenericTile> GetCyclicGenericTiles(bool cyclic)
 		{
 			if (cyclic)
 			{
-				return this.GetSummaryTiles ().Concat (this.GetSummaryTiles ());
+				return this.GetGenericTiles ().Concat (this.GetGenericTiles ());
 			}
 			else
 			{
-				return this.GetSummaryTiles ();
+				return this.GetGenericTiles ();
 			}
 		}
 
-		private static GenericTile GetNextLiveSummaryTile(IEnumerable<GenericTile> tiles)
+		private static GenericTile GetNextLiveGenericTile(IEnumerable<GenericTile> tiles)
 		{
 			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
 		}
@@ -735,9 +733,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private bool ActivateNextSummaryTile(IEnumerable<GenericTile> tiles)
+		private bool ActivateNextGenericTile(IEnumerable<GenericTile> tiles)
 		{
-			var tile = TileContainerController.GetNextLiveSummaryTile (tiles);
+			var tile = TileContainerController.GetNextLiveGenericTile (tiles);
 
 			if (tile == null)
 			{

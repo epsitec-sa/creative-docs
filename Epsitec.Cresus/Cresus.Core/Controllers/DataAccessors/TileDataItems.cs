@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public TileDataItems(EntityViewController controller)
 		{
 			this.controller = controller;
-			this.simpleItems = new List<TileDataItem> ();
-			this.emptyItems  = new List<TileDataItem> ();
-			this.collectionItems = new List<TileDataItem> ();
+
+			this.simpleItems         = new List<TileDataItem> ();
+			this.emptyItems          = new List<TileDataItem> ();
+			this.collectionItems     = new List<TileDataItem> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
 		}
 
@@ -49,12 +50,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			if (data.CreateEditionUI != null)
 			{
 				data.DataType = TileDataType.EditableItem;
-				this.emptyItems.Add (data);
+				this.simpleItems.Add (data);
 			}
 			else if (data.CreateCustomizedUI != null)
 			{
 				data.DataType = TileDataType.CustomizedItem;
-				this.emptyItems.Add (data);
+				this.simpleItems.Add (data);
 			}
 			else if (data.EntityMarshaler == null)
 			{
@@ -219,7 +220,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			lock (this.SyncObject)
 			{
 				var itemNames = new HashSet<string> ();
-				return new List<TileDataItem> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
+
+				return new List<TileDataItem>
+				(
+					this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name)))
+					.Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0")))
+					.OrderBy (x => x.Rank)
+				);
 			}
 		}
 
@@ -244,10 +251,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly object exclusion = new object ();
 
-		private readonly EntityViewController controller;
-		private readonly List<TileDataItem> simpleItems;
-		private readonly List<TileDataItem> emptyItems;
-		private readonly List<TileDataItem> collectionItems;
-		private readonly List<CollectionAccessor> collectionAccessors;
+		private readonly EntityViewController			controller;
+		private readonly List<TileDataItem>				simpleItems;
+		private readonly List<TileDataItem>				emptyItems;
+		private readonly List<TileDataItem>				collectionItems;
+		private readonly List<CollectionAccessor>		collectionAccessors;
 	}
 }
