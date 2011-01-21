@@ -22,17 +22,17 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Code, this.Name, "(", this.Informations, ")");
+			return TextFormatter.FormatText (this.Name, "(", this.Informations, ")");
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Code, this.Name);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Code, this.Name.ToSimpleText () };
+			return new string[] { this.Name.ToSimpleText () };
 		}
 
 		public override EntityStatus GetEntityStatus()
