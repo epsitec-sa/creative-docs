@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
@@ -27,125 +28,50 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
-			using (var builder = UIBuilder.Create (this))
+			using (var data = TileContainerController.Setup (this))
 			{
-				using (var data = TileContainerController.Setup (builder))
-				{
-					this.CreateUIInvoice (data);
-					this.CreateUIArticleLines (data);
-					this.CreateUIFreightAndTaxLines (data);
-					this.CreateUIVatLines (data);
-					this.CreateUIBillings (data);
-					this.CreateUIComments (data);
-				}
-				
-				// TODO: faire en sorte que cette tuile viennent après les lignes d'article !
-				this.CreateUITotalSummary (builder);
+				this.CreateUIInvoice (data);
+				this.CreateUIArticleLines (data);
+				this.CreateUIFreightAndTaxLines (data);
+				this.CreateUITotalSummary (data);
+				this.CreateUIVatLines (data);
+				this.CreateUIBillings (data);
+				this.CreateUIComments (data);
 			}
 
 			this.CreateUIPreviewPanel ();
 		}
 
 
-		protected override void AboutToCloseUI()
-		{
-			this.CloseUIPreviewPanel ();
-			base.AboutToCloseUI ();
-		}
-
-		
-		private void CreateUIPreviewPanel()
-		{
-			//	Crée le conteneur.
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
-			var previewFrame = new FrameBox
-			{
-				Dock      = DockStyle.Fill,
-				Padding   = new Margins (5),
-				BackColor = adorner.ColorWindow,
-			};
-
-			var mainViewController = this.Orchestrator.MainViewController;
-			var previewController  = mainViewController.PreviewViewController;
-
-			mainViewController.SetPreviewPanelVisibility (true);
-
-			//	Crée le contrôleur.
-			DocumentMetadataEntity metadoc = this.GetMetadoc ();
-
-			this.previewController = new Printers.ContinuousController (this.Data, metadoc, Printers.DocumentType.InvoiceWithInsideESR);
-			this.previewController.CreateUI (previewFrame);
-
-			previewController.Add (previewFrame);
-			previewController.Updating += this.HandlePreviewPanelUpdating;
-		}
-
-		private DocumentMetadataEntity GetMetadoc()
-		{
-			var metadoc = this.DataContext.GetEntitiesOfType<DocumentMetadataEntity> ().FirstOrDefault ();
-
-			if (metadoc == null)
-			{
-				DocumentMetadataEntity example = new DocumentMetadataEntity ();
-				example.BusinessDocument = this.Entity;
-				example.IsArchive = false;
-
-				return this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
-			}
-			else
-			{
-				return metadoc;
-			}
-		}
-
-		private void CloseUIPreviewPanel()
-		{
-			var mainViewController = this.Orchestrator.MainViewController;
-			var previewController  = mainViewController.PreviewViewController;
-
-			mainViewController.SetPreviewPanelVisibility (false);
-
-			if (this.previewController != null)
-			{
-				this.previewController.CloseUI ();
-				previewController.Clear ();
-				previewController.Updating -= this.HandlePreviewPanelUpdating;
-			}
-		}
-
-		private void HandlePreviewPanelUpdating(object sender)
-		{
-			previewController.Update ();
-		}
-
 		private void CreateUIInvoice(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					Name				= "InvoiceDocument",
-					IconUri				= "Data.InvoiceDocument",
-					Title				= TextFormatter.FormatText ("Document"),
-					CompactTitle		= TextFormatter.FormatText ("Document"),
-					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-					EntityMarshaler		= this.CreateEntityMarshaler (),
-				});
+			var tileDataItem = new TileDataItem
+			{
+				Name				= "InvoiceDocument",
+				IconUri				= "Data.InvoiceDocument",
+				Title				= TextFormatter.FormatText ("Document"),
+				CompactTitle		= TextFormatter.FormatText ("Document"),
+				TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
+				CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
+				EntityMarshaler		= this.CreateEntityMarshaler (),
+			};
+
+			data.Add (tileDataItem);
 		}
 
 		private void CreateUIArticleLines(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "ArticleLines",
-					IconUri		 = "Data.DocumentItems",
-					Title		 = TextFormatter.FormatText ("Lignes"),
-					CompactTitle = TextFormatter.FormatText ("Lignes"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
+			var tileDataItem = new TileDataItem
+			{
+				AutoGroup    = true,
+				Name		 = "ArticleLines",
+				IconUri		 = "Data.ArticleDocumentItem",
+				Title		 = TextFormatter.FormatText ("Lignes"),
+				CompactTitle = TextFormatter.FormatText ("Lignes"),
+				Text		 = CollectionTemplate.DefaultEmptyText,
+			};
+
+			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleLines", data.Controller, this.DataContext);
 
@@ -160,16 +86,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIFreightAndTaxLines(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "FreightAndTaxLines",
-					IconUri		 = "Data.DocumentItems",
-					Title		 = TextFormatter.FormatText ("Port, emballage et taxes"),
-					CompactTitle = TextFormatter.FormatText ("Port, emballage et taxes"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
+			var tileDataItem = new TileDataItem
+			{
+				AutoGroup    = true,
+				Name		 = "FreightAndTaxLines",
+				IconUri		 = "Data.DocumentItems",
+				Title		 = TextFormatter.FormatText ("Port, emballage et taxes"),
+				CompactTitle = TextFormatter.FormatText ("Port, emballage et taxes"),
+				Text		 = CollectionTemplate.DefaultEmptyText,
+			};
+
+			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightAndTaxLines", data.Controller, this.DataContext);
 
@@ -182,18 +109,43 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
 
+		private void CreateUITotalSummary(TileDataItems data)
+		{
+#if false
+			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
+			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
+#else
+			var tileDataItem = new TileDataItem
+			{
+				Name		       = "TotalDocumentItem",
+				IconUri		       = "Data.TotalDocumentItem",
+				Title		       = TextFormatter.FormatText ("Total"),
+				CompactTitle       = TextFormatter.FormatText ("Total"),
+				CreateCustomizedUI = this.CreateCustomizedUITotalSummary,
+			};
+
+			data.Add (tileDataItem);
+#endif
+		}
+
+		private void CreateCustomizedUITotalSummary(EditionTile tile, UIBuilder builder)
+		{
+			builder.CreateStaticText (tile, GetTotalSummary (this.Entity));
+		}
+
 		private void CreateUIVatLines(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "VatLines",
-					IconUri		 = "Data.DocumentItems",
-					Title		 = TextFormatter.FormatText ("Récapitulatif TVA"),
-					CompactTitle = TextFormatter.FormatText ("Récapitulatif TVA"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
+			var tileDataItem = new TileDataItem
+			{
+				AutoGroup    = true,
+				Name		 = "VatLines",
+				IconUri		 = "Data.TaxDocumentItem",
+				Title		 = TextFormatter.FormatText ("Récapitulatif TVA"),
+				CompactTitle = TextFormatter.FormatText ("Récapitulatif TVA"),
+				Text		 = CollectionTemplate.DefaultEmptyText,
+			};
+
+			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("VatLines", data.Controller, this.DataContext);
 
@@ -206,24 +158,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
 
-		private void CreateUITotalSummary(UIBuilder builder)
-		{
-			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
-			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
-		}
-
 		private void CreateUIBillings(TileDataItems data)
 		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "BillingDetails",
-					IconUri		 = "Data.BillingDetails",
-					Title		 = TextFormatter.FormatText ("Facturation"),
-					CompactTitle = TextFormatter.FormatText ("Facturation"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
+			var tileDataItem = new TileDataItem
+			{
+				AutoGroup    = true,
+				Name		 = "BillingDetails",
+				IconUri		 = "Data.BillingDetails",
+				Title		 = TextFormatter.FormatText ("Facturation"),
+				CompactTitle = TextFormatter.FormatText ("Facturation"),
+				Text		 = CollectionTemplate.DefaultEmptyText,
+			};
+
+			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", this.BusinessContext);
 
@@ -343,6 +290,81 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			return TextFormatter.FormatText ("HT~", ht, "~,", "TVA~", vat, "\n", "TTC~", ttc, "arrêté à~", fix);
 		}
+
+
+		#region Preview panel
+		protected override void AboutToCloseUI()
+		{
+			this.CloseUIPreviewPanel ();
+			base.AboutToCloseUI ();
+		}
+
+
+		private void CreateUIPreviewPanel()
+		{
+			//	Crée le conteneur.
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
+			var previewFrame = new FrameBox
+			{
+				Dock      = DockStyle.Fill,
+				Padding   = new Margins (5),
+				BackColor = adorner.ColorWindow,
+			};
+
+			var mainViewController = this.Orchestrator.MainViewController;
+			var previewController  = mainViewController.PreviewViewController;
+
+			mainViewController.SetPreviewPanelVisibility (true);
+
+			//	Crée le contrôleur.
+			DocumentMetadataEntity metadoc = this.GetMetadoc ();
+
+			this.previewController = new Printers.ContinuousController (this.Data, metadoc, Printers.DocumentType.InvoiceWithInsideESR);
+			this.previewController.CreateUI (previewFrame);
+
+			previewController.Add (previewFrame);
+			previewController.Updating += this.HandlePreviewPanelUpdating;
+		}
+
+		private DocumentMetadataEntity GetMetadoc()
+		{
+			var metadoc = this.DataContext.GetEntitiesOfType<DocumentMetadataEntity> ().FirstOrDefault ();
+
+			if (metadoc == null)
+			{
+				DocumentMetadataEntity example = new DocumentMetadataEntity ();
+				example.BusinessDocument = this.Entity;
+				example.IsArchive = false;
+
+				return this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+			}
+			else
+			{
+				return metadoc;
+			}
+		}
+
+		private void CloseUIPreviewPanel()
+		{
+			var mainViewController = this.Orchestrator.MainViewController;
+			var previewController  = mainViewController.PreviewViewController;
+
+			mainViewController.SetPreviewPanelVisibility (false);
+
+			if (this.previewController != null)
+			{
+				this.previewController.CloseUI ();
+				previewController.Clear ();
+				previewController.Updating -= this.HandlePreviewPanelUpdating;
+			}
+		}
+
+		private void HandlePreviewPanelUpdating(object sender)
+		{
+			previewController.Update ();
+		}
+		#endregion
 
 
 		private Printers.ContinuousController		 previewController;
