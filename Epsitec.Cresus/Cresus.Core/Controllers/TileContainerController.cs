@@ -551,7 +551,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in this.liveItems)
 			{
-				if (item.AutoGroup)
+				if ((item.AutoGroup) ||
+					(item.DataType == TileDataType.EditableItem))
 				{
 					item.Tile.SetFrozen (false);
 				}
