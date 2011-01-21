@@ -42,7 +42,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.parentController      = this.orchestrator.GetLeafViewController ();
 			}
 
-			this.businessContext = this.orchestrator.DefaultBusinessContext;
+			//	Make sure we create the default business context :
+			var businessContext = this.BusinessContext;
 		}
 
 
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.businessContext;
+				return this.orchestrator.DefaultBusinessContext;
 			}
 		}
 
@@ -82,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.businessContext.Data;
+				return this.BusinessContext.Data;
 			}
 		}
 
@@ -90,7 +91,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.businessContext == null ? null : this.businessContext.DataContext;
+				var businessContext = this.BusinessContext;
+				return businessContext == null ? null : businessContext.DataContext;
 			}
 		}
 
@@ -214,7 +216,5 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreViewController		parentController;
 		private readonly ViewControllerMode		viewControllerMode;
 		private readonly NavigationPathElement	navigationPathElement;
-
-		private readonly BusinessContext		businessContext;
 	}
 }
