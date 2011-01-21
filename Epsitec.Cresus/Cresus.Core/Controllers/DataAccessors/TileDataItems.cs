@@ -225,7 +225,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				(
 					this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name)))
 					.Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0")))
-					.OrderBy (x => x.Rank)
 				);
 			}
 		}
