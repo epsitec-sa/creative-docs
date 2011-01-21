@@ -174,19 +174,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.titleTile != value)
 				{
-					//	Manage insertion/removal from the title tile items
-					//	collection:
-
-					if ((this.titleTile != null) &&
-						(this.Tile != null))
+					//	Manage insertion/removal from the title tile items collection.
+					if (this.titleTile != null && this.Tile != null)
                     {
 						this.titleTile.Items.Remove (this.Tile);
                     }
 
 					this.titleTile = value;
 
-					if ((this.titleTile != null) &&
-						(this.Tile != null))
+					if (this.titleTile != null && this.Tile != null)
 					{
 						this.titleTile.Items.Add (this.Tile);
 					}

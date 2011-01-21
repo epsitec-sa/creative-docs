@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				foreach (var item in this.liveItems)
 				{
-					if (item.Tile == null)
+					if (item.Tile == null)  // tuile pas encore créée ?
 					{
 						if (item.DataType == TileDataType.EditableItem)
 						{
@@ -477,7 +477,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var tile = new EditionTile ();
 
-			item.CreateEditionUI (tile, builder);
+			item.CreateEditionUI (tile, builder);  // peuple la tuile
 
 			item.Tile = tile;
 			item.Tile.Controller = item;
@@ -485,22 +485,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private TitleTile CreateTitleTile(TileDataItem item)
 		{
+			//	Crée la tuile de titre, parente des SummaryTile et EditionTile.
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
 			System.Diagnostics.Debug.Assert (item.Tile != null);
-			
-			item.TitleTile = new TitleTile ();
-			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);
+
+			item.TitleTile = new TitleTile ();  // item.TitleTile aura item.Tile dans sa collection Items !
+			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
+
+			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);  // fond bleuté si tuile d'édition
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
-
-			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
 			
 			return item.TitleTile;
 		}
 
 		private void RemoveTitleTile(TileDataItem item)
 		{
-			item.TitleTile = null;
+			item.TitleTile = null;  // enlève item.Tile de la collection Items de item.TitleTile
 		}
 
 		private void RefreshTitleTiles()
@@ -770,8 +771,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly NavigationOrchestrator		navigator;
 		private readonly Widget						parent;
 		private readonly TileContainer				container;
-		private readonly TileDataItems			dataItems;
-		private readonly List<TileDataItem>		liveItems;
+		private readonly TileDataItems				dataItems;
+		private readonly List<TileDataItem>			liveItems;
 		private readonly DataContext				dataContext;
 		private readonly Timer						refreshTimer;
 
