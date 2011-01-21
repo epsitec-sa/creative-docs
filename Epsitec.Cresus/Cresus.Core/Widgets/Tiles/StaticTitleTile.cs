@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					this.title = value;
 					this.staticTextTitle.Text = string.Concat ("<b><font size=\"120%\">", this.title, "</font></b>");
+					this.staticTextTitle.Visibility = !string.IsNullOrEmpty (this.title);
 				}
 			}
 		}
@@ -95,9 +96,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.leftPanel = new FrameBox
 			{
-				Parent = this,
+				Parent         = this,
 				PreferredWidth = StaticTitleTile.iconSize + 2*StaticTitleTile.iconMargins,
-				Dock = DockStyle.Left,
+				Dock           = DockStyle.Left,
 			};
 		}
 
@@ -105,10 +106,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.staticTextIcon = new StaticText
 			{
-				Parent = this.leftPanel,
-				Margins = new Margins (StaticTitleTile.iconMargins),
-				PreferredSize = new Size (StaticTitleTile.iconSize, StaticTitleTile.iconSize),
-				Dock = DockStyle.Top,
+				Parent           = this.leftPanel,
+				Margins          = new Margins (StaticTitleTile.iconMargins),
+				PreferredSize    = new Size (StaticTitleTile.iconSize, StaticTitleTile.iconSize),
+				Dock             = DockStyle.Top,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 			};
 		}
@@ -117,9 +118,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.rightPanel = new FrameBox
 			{
-				Parent = this,
+				Parent         = this,
 				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
+				Dock           = DockStyle.Fill,
 			};
 		}
 
@@ -127,13 +128,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.staticTextTitle = new StaticText
 			{
-				Parent = this.rightPanel,
-				PreferredHeight = StaticTitleTile.titleHeight,
-				PreferredWidth = 0,
-				Dock = DockStyle.Top,
-				Margins = this.ContainerPadding + new Margins (GenericTile.leftRightGap, 0, 0, 0),
+				Parent           = this.rightPanel,
+				PreferredHeight  = StaticTitleTile.titleHeight,
+				PreferredWidth   = 0,
+				Dock             = DockStyle.Top,
+				Margins          = this.ContainerPadding + new Margins (GenericTile.leftRightGap, 0, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				TextBreakMode    = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 			};
 		}
 		
@@ -141,9 +142,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.mainPanel = new FrameBox
 			{
-				Parent = this.rightPanel,
+				Parent         = this.rightPanel,
 				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
+				Dock           = DockStyle.Fill,
 			};
 		}
 

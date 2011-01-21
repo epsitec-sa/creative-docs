@@ -489,7 +489,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#endregion
 
+
 		private readonly HashSet<AccessorBinding>	bindings;
+
 		private TitleTile							titleTile;
 	}
 }
