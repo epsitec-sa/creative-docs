@@ -43,23 +43,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public override Size GetBestFitSize()
 		{
-			// TODO: faire cela mieux !
-			var lines = this.Summary.Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.None);
-			var height = lines.Length*16;
-
-			return new Size (this.PreferredWidth, height);
+			return new Size (this.PreferredWidth, Misc.GetEstimatedHeight (this.Summary));
 		}
 
 		private void CreateUI()
 		{
 			this.staticTextSummary = new StaticText
 			{
-				Parent = this,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-				Margins = this.ContainerPadding + new Margins (2, 0, 0, 0),
+				Parent           = this,
+				PreferredWidth   = 0,
+				Dock             = DockStyle.Fill,
+				Margins          = this.ContainerPadding + new Margins (2, 0, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
+				TextBreakMode    = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
 			};
 		}
 

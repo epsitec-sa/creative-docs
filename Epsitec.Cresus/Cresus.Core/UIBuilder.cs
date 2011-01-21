@@ -518,6 +518,24 @@ namespace Epsitec.Cresus.Core
 			return staticText;
 		}
 
+		public StaticText CreateStaticText(EditionTile tile, string text)
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = text,
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,
+				PreferredHeight =  Misc.GetEstimatedHeight (text),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, 0),
+			};
+
+			this.ContentListAdd (staticText);
+
+			return staticText;
+		}
+
 
 		public FrameBox CreateGroup(EditionTile tile, string label = null)
 		{

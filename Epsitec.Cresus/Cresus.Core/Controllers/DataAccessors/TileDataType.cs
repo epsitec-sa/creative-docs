@@ -24,6 +24,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		EditableItem,
 
 		/// <summary>
+		/// Customized item: represents plain vanilla customized of an entity.
+		/// </summary>
+		CustomizedItem,
+
+		/// <summary>
 		/// Empty item: used as a template to create collection items.
 		/// </summary>
 		EmptyItem,

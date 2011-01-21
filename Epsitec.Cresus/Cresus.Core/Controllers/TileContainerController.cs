@@ -330,6 +330,10 @@ namespace Epsitec.Cresus.Core.Controllers
 						{
 							this.CreateEditionTile (item, builder);
 						}
+						else if (item.DataType == TileDataType.CustomizedItem)
+						{
+							this.CreateCustomizedTile (item, builder);
+						}
 						else
 						{
 							this.CreateSummaryTile (item);
@@ -352,7 +356,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateTitleTileClickHandler(TileDataItem item, TitleTile tile)
 		{
-			if (item.DataType == TileDataType.EditableItem)
+			if (item.DataType == TileDataType.EditableItem  ||
+				item.DataType == TileDataType.CustomizedItem)
 			{
 				return;
 			}
@@ -378,7 +383,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(TileDataItem item)
 		{
-			if (item.DataType == TileDataType.EditableItem)
+			if (item.DataType == TileDataType.EditableItem  ||
+				item.DataType == TileDataType.CustomizedItem)
 			{
 				return;
 			}
@@ -483,6 +489,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.Tile.Controller = item;
 		}
 
+		private void CreateCustomizedTile(TileDataItem item, UIBuilder builder)
+		{
+			var tile = new EditionTile ();
+
+			item.CreateCustomizedUI (tile, builder);  // peuple la tuile
+
+			item.Tile = tile;
+			item.Tile.Controller = item;
+		}
+
 		private TitleTile CreateTitleTile(TileDataItem item)
 		{
 			//	Crée la tuile de titre, parente des SummaryTile et EditionTile.
@@ -532,6 +548,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 
 					case TileDataType.EditableItem:
+					case TileDataType.CustomizedItem:
 						item.TitleTile.ContainsCollectionItemTiles = false;
 						break;
 
@@ -552,8 +569,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in this.liveItems)
 			{
-				if ((item.AutoGroup) ||
-					(item.DataType == TileDataType.EditableItem))
+				if (item.AutoGroup || item.DataType == TileDataType.EditableItem)
 				{
 					item.Tile.SetFrozen (false);
 				}
