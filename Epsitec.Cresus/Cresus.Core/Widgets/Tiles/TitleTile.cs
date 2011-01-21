@@ -58,8 +58,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				if ((this.ContainsCollectionItemTiles) &&
-					(this.ContainsFrozenTiles))
+				if (this.ContainsCollectionItemTiles && this.ContainsFrozenTiles)
 				{
 					return this.Items.Select (item => item.Controller).FirstOrDefault ();
 				}

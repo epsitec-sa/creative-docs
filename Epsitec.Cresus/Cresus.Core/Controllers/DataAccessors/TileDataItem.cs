@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.Rank                     = template.Rank;
 				this.IconUri                  = template.IconUri;
 				this.AutoGroup                = template.AutoGroup;
+				this.HideAddAndRemoveButtons  = template.HideAddAndRemoveButtons;
 				this.DataType                 = template.DataType;
 				this.Title                    = template.Title;
 				this.CompactTitle             = template.CompactTitle;
@@ -100,7 +101,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		public TileDataType					DataType
+		public bool								HideAddAndRemoveButtons
+		{
+			get;
+			set;
+		}
+
+		public TileDataType						DataType
 		{
 			get;
 			set;

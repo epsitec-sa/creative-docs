@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightAndTaxLines", data.Controller, this.DataContext);
 
-			template.DefineText (x => x.GetCompactSummary ());
+			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 			template.DefineCreateItem (this.CreateFreightAndTaxDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateFreightAndTaxGetIndex);
@@ -137,19 +137,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var tileDataItem = new TileDataItem
 			{
-				AutoGroup    = true,
-				Name		 = "VatLines",
-				IconUri		 = "Data.TaxDocumentItem",
-				Title		 = TextFormatter.FormatText ("Récapitulatif TVA"),
-				CompactTitle = TextFormatter.FormatText ("Récapitulatif TVA"),
-				Text		 = CollectionTemplate.DefaultEmptyText,
+				AutoGroup               = true,
+				HideAddAndRemoveButtons = true,
+				Name		            = "VatLines",
+				IconUri		            = "Data.TaxDocumentItem",
+				Title		            = TextFormatter.FormatText ("Récapitulatif TVA"),
+				CompactTitle            = TextFormatter.FormatText ("Récapitulatif TVA"),
+				Text		            = CollectionTemplate.DefaultEmptyText,
 			};
 
 			data.Add (tileDataItem);
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("VatLines", data.Controller, this.DataContext);
 
-			template.DefineText (x => x.GetCompactSummary ());
+			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 			template.DefineCreateItem (null);
 			template.DefineDeleteItem (null);
