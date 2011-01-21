@@ -87,16 +87,33 @@ namespace Epsitec.Cresus.Core.Library
 		/// <summary>
 		/// Registers the specified widget with the persistence manager.
 		/// </summary>
-		/// <param name="widget">The widget.</param>
-		public void Register(RibbonBook widget)
+		/// <param name="ribbonBook">The widget.</param>
+		public void Register(RibbonBook ribbonBook)
 		{
 			this.AddBinding (
-				new PersistenceManagerBinding<RibbonBook> (widget)
+				new PersistenceManagerBinding<RibbonBook> (ribbonBook)
 				{
 					RegisterChangeHandler   = w => w.ActivePageChanged += this.NotifyChange,
 					UnregisterChangeHandler = w => w.ActivePageChanged -= this.NotifyChange,
 					SaveXml    = (w, xml) => xml.Add (new XAttribute ("book", InvariantConverter.ToString (w.ActivePageIndex))),
 					RestoreXml = (w, xml) => w.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value),
+				});
+		}
+
+		public void Register<T>(T element, string id,
+			System.Action<EventHandler> registerCallback,
+			System.Action<EventHandler> unregisterCallback,
+			System.Action<XElement> saveXmlCallback,
+			System.Action<XElement> restoreXmlCallback)
+			where T : class
+		{
+			this.AddBinding (
+				new PersistenceManagerBinding<T> (element, id)
+				{
+					RegisterChangeHandler   = x => registerCallback (this.NotifyChange),
+					UnregisterChangeHandler = x => unregisterCallback (this.NotifyChange),
+					SaveXml    = (x, xml) => saveXmlCallback (xml),
+					RestoreXml = (x, xml) => restoreXmlCallback (xml),
 				});
 		}
 
@@ -142,7 +159,7 @@ namespace Epsitec.Cresus.Core.Library
 			
 		private void AddBinding(PersistenceManagerBinding binding)
 		{
-			string path = binding.GetWidget ().FullPathName;
+			string path = binding.GetId ();
 			PersistenceManagerBinding oldBinding;
 
 			if (this.bindings.TryGetValue (path, out oldBinding))

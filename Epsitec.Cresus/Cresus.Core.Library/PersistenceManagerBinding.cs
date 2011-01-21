@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 		}
 
-		public abstract Widget GetWidget();
+		public abstract string GetId();
 		public abstract void ExecuteUnregister();
 		public abstract XElement ExecuteSave(XElement xml);
 		public abstract void ExecuteRestore(XElement xml);
