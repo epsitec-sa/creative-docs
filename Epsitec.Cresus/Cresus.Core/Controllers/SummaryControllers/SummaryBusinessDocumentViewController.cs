@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
 			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
 #else
-			var tileDataItem = new TileDataItem
+			var tileData = new TileDataItem
 			{
 				Name		       = "TotalDocumentItem",
 				IconUri		       = "Data.TotalDocumentItem",
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				CreateCustomizedUI = this.CreateCustomizedUITotalSummary,
 			};
 
-			data.Add (tileDataItem);
+			data.Add (tileData);
 #endif
 		}
 

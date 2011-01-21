@@ -1165,7 +1165,13 @@ namespace Epsitec.Cresus.Core
 			where T2 : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
+			return this.CreateEditionDetailedItemPicker (tile, name, entity, label, controller, cardinality, mode, controllerSubType);
+		}
 
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, Business.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+			where T1 : AbstractEntity
+			where T2 : AbstractEntity, new ()
+		{
 			Button tileButton;
 			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, true, out tileButton);
 
@@ -1191,7 +1197,8 @@ namespace Epsitec.Cresus.Core
 			};
 
 			var rootController = this.GetRootController ();
-			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
+			//?var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
+			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}", name);  // TODO: NE FONCTIONNE PLUS !!!
 			var clickSimulator = new TileButtonClickSimulator (tileButton, this.controller, fullName);
 
 			tile.Controller = new SummaryTileController<T1> (entity, fullName, mode, controllerSubType);
@@ -1239,7 +1246,12 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
+			return this.CreateEditionDetailedItemPicker (tile, label, controller, cardinality);
+		}
 
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(EditionTile tile, string label, SelectionController<T> controller, Business.EnumValueCardinality cardinality)
+			where T : AbstractEntity, new ()
+		{
 			Button tileButton;
 			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, false, out tileButton);
 
@@ -1494,22 +1506,15 @@ namespace Epsitec.Cresus.Core
 		{
 			tile.AllowSelection = true;
 
-			var header = new FrameBox
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
-				TabIndex = ++this.tabIndex,
-			};
-
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
 				{
-					Parent = header,
+					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Fill,
+					Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
+					Dock = DockStyle.Top,
 				};
 
 				this.ContentListAdd (staticText);
@@ -1519,12 +1524,12 @@ namespace Epsitec.Cresus.Core
 			{
 				tileButton = new GlyphButton
 				{
-					Parent = header,
+					Parent = tile.Container,
 					GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
 					PreferredWidth = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
-					Dock = DockStyle.Right,
-					Margins = new Margins (3, 0, 0, 0),
+					Anchor = AnchorStyles.TopRight,
+					Margins = new Margins (0, 3, 0, 0),
 					AutoFocus = false,
 					TabIndex = ++this.tabIndex,
 				};
