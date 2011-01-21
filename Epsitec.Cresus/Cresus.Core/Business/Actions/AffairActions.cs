@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 			documentMetadata.DocumentCategory = businessContext.GetLocalEntity (categorySalesQuote);
 			documentMetadata.BusinessDocument = businessDocument;
+			documentMetadata.Workflow = WorkflowFactory.CreateDefaultWorkflow<DocumentMetadataEntity> (businessContext, "Document/SalesQuote");
 
 			currentAffair.Documents.Add (documentMetadata);
 		}

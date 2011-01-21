@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers;
@@ -20,16 +20,12 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 			var generator = generatorPool.GetGenerator<AffairEntity> ();
 			var nextId    = generator.GetNextId ();
-			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
-			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
+			var workflow  = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 
 			affair.IdA = string.Format ("{0:000000}", nextId);
 			affair.Workflow = workflow;
-
-			workflow.Affair = affair;
-			workflow.Threads.Add (thread);
-
-			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<AffairEntity> ());
+			
+			System.Diagnostics.Debug.Assert (workflow.Affair == affair);
 
 			//	TODO: ...compléter...
 		}

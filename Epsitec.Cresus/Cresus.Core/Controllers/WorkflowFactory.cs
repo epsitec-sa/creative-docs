@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -13,10 +14,17 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public static class WorkflowFactory
 	{
-		public static WorkflowEntity CreateDefaultWorkflow<T>()
+		public static WorkflowEntity CreateDefaultWorkflow<T>(BusinessContext businessContext, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
-			return null;
+			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
+			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
+
+			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (workflowName));
+
+			workflow.Threads.Add (thread);
+			
+			return workflow;
 		}
 
 		/// <summary>
@@ -24,18 +32,23 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// type.
 		/// </summary>
 		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <param name="workflowName">Optional name of the workflow.</param>
 		/// <returns>
 		/// The default workflow definition associated with the specified entity type.
 		/// </returns>
-		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>()
+		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
 			var repository = CoreProgram.Application.Data.GetRepository<WorkflowDefinitionEntity> ();
 			var example = repository.CreateExample ();
 
-			string nakedEntityName = AbstractEntity.GetNakedEntityName<T> ();
+			if (string.IsNullOrEmpty (workflowName))
+			{
+				string nakedEntityName = AbstractEntity.GetNakedEntityName<T> ();
+				workflowName = string.Concat (WorkflowFactory.DefaultWorkflowPrefix, nakedEntityName);
+			}
 			
-			example.WorkflowName = FormattedText.FromSimpleText (WorkflowFactory.DefaultWorkflowPrefix, nakedEntityName);
+			example.WorkflowName = FormattedText.FromSimpleText (workflowName);
 
 			var matches = repository.GetByExample (example);
 
