@@ -18,18 +18,19 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	/// <typeparam name="T">The type of the widget.</typeparam>
 	internal class PersistenceManagerBinding<T> : PersistenceManagerBinding
-		where T : Widget
+		where T : class
 	{
-		public PersistenceManagerBinding(T widget)
+		public PersistenceManagerBinding(T widget, string id = null)
 		{
-			this.widget = new Weak<T> (widget);
+			this.item = new Weak<T> (widget);
+			this.id = id;
 		}
 
-		private T								Widget
+		private T								Item
 		{
 			get
 			{
-				return this.widget.Target;
+				return this.item.Target;
 			}
 		}
 
@@ -42,11 +43,11 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			set
 			{
-				T widget = this.Widget;
+				T item = this.Item;
 						
-				if (widget != null)
+				if (item != null)
 				{
-					value (widget);
+					value (item);
 				}
 			}
 		}
@@ -82,28 +83,38 @@ namespace Epsitec.Cresus.Core.Library
 			set;
 		}
 
-		public override Widget GetWidget()
+		public override string GetId()
 		{
-			return this.Widget;
+			if (string.IsNullOrEmpty (this.id))
+			{
+				Widget widget = this.Item as Widget;
+
+				if (widget != null)
+				{
+					return widget.FullPathName;
+				}
+			}
+
+			return this.id;
 		}
 
 		public override void ExecuteUnregister()
 		{
-			T widget = this.Widget;
+			T item = this.Item;
 
-			if (widget != null)
+			if (item != null)
 			{
-				this.UnregisterChangeHandler (widget);
+				this.UnregisterChangeHandler (item);
 			}
 		}
 
 		public override XElement ExecuteSave(XElement xml)
 		{
-			T widget = this.Widget;
+			T item = this.Item;
 
-			if (widget != null)
+			if (item != null)
 			{
-				this.SaveXml (widget, xml);
+				this.SaveXml (item, xml);
 			}
 					
 			return xml;
@@ -111,14 +122,15 @@ namespace Epsitec.Cresus.Core.Library
 
 		public override void ExecuteRestore(XElement xml)
 		{
-			T widget = this.Widget;
+			T item = this.Item;
 
-			if (widget != null)
+			if (item != null)
 			{
-				this.RestoreXml (widget, xml);
+				this.RestoreXml (item, xml);
 			}
 		}
 
-		private readonly Weak<T> widget;
+		private readonly Weak<T> item;
+		private readonly string id;
 	}
 }

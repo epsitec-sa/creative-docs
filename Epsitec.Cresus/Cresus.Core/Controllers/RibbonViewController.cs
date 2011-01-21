@@ -1,7 +1,8 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
@@ -13,6 +14,7 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -24,6 +26,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreProgram.Application.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
+		
+		public string DatabaseMenuDefaultCommandName
+		{
+			get
+			{
+				return this.databaseMenuDefaultCommandName;
+			}
+			set
+			{
+				if (this.databaseMenuDefaultCommandName != value)
+				{
+					this.databaseMenuDefaultCommandName = value;
+					this.OnDatabaseMenuDefaultCommandNameChanged ();
+				}
+			}
+		}
+
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -59,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
 			}
 
-			this.UdpateDatabaseButtonsForUser ();
+			this.UpdateDatabaseMenu ();
 		}
 
 		
@@ -73,6 +93,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			CoreProgram.Application.PersistanceManager.Register (this.ribbonBook);
+			CoreProgram.Application.PersistanceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
+				x => this.DatabaseMenuDefaultCommandNameChanged += x,
+				x => this.DatabaseMenuDefaultCommandNameChanged -= x,
+				xml => xml.Add (new XAttribute ("name", this.databaseMenuDefaultCommandName)),
+				xml => this.DatabaseMenuDefaultCommandName = xml.Attribute ("name").Value);
 		}
 
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
@@ -248,18 +273,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowDocuments));
 
+			this.CreateRibbonDatabaseSectionMenuButton (section);
+		}
+
+		private void CreateRibbonDatabaseSectionMenuButton(RibbonSection section)
+		{
 			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
 			double buttonWidth = Misc.GetButtonWidth (large: true);
 
 			var group = new FrameBox ()
 			{
+				Parent = section,
 				PreferredSize = new Size (buttonWidth, buttonWidth+11-1),
 				Dock = DockStyle.StackBegin,
 				VerticalAlignment = VerticalAlignment.Top,
 				HorizontalAlignment = HorizontalAlignment.Center,
 			};
 
-			this.databaseMenuButton = new GlyphButton()
+			this.databaseMenuButton = new GlyphButton ()
 			{
 				Parent = group,
 				ButtonStyle = ButtonStyle.ComboItem,
@@ -272,16 +303,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
 
-			this.databaseButton = RibbonViewController.CreateButton (null);
+			this.databaseButton = RibbonViewController.CreateButton ();
 			this.databaseButton.Parent = group;
 			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
 			this.databaseButton.Dock = DockStyle.Fill;
 
-			section.Children.Add (group);
-
+			
 			this.databaseMenuButton.Clicked += delegate
 			{
-				this.ShowDatabasesMenu (this.databaseMenuButton);
+				this.ShowDatabaseSelectionMenu (this.databaseMenuButton);
 			};
 
 			this.databaseMenuButton.Entered += delegate
@@ -294,15 +324,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
 			};
 
-			var databaseCommandHandler = RibbonViewController.DatabaseCommandHandler;
+			var databaseCommandHandler = RibbonViewController.GetDatabaseCommandHandler ();
+
 			databaseCommandHandler.Changed += delegate
 			{
 				this.UpdateDatabaseButton ();
 			};
 
-			this.UdpateDatabaseButtonsForUser ();
+			this.UpdateDatabaseMenu ();
 		}
-
+		
 		private void CreateRibbonStateSection()
 		{
 #if false
@@ -437,33 +468,35 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		#region Databases manager
-		private void UdpateDatabaseButtonsForUser()
+		private void UpdateDatabaseMenu()
 		{
 			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
-			var list = RibbonViewController.MenuDatabaseCommands;
-			int count = list.Count ();
+			var list  = RibbonViewController.GetDatabaseMenuCommands ().ToList ();
+			int count = list.Count;
 
-			this.databaseButton.Visibility = (count > 0);
+			this.databaseButton.Visibility     = (count > 0);
 			this.databaseMenuButton.Visibility = (count > 1);
 
 			if (count > 0)
 			{
-				this.databaseButton.CommandObject = list.First ();
+				this.databaseButton.CommandObject = list[0];
 				this.UpdateDatabaseButton ();
 			}
 		}
 
-		private void ShowDatabasesMenu(Widget parentButton)
+		private void ShowDatabaseSelectionMenu(Widget parentButton)
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
+			var commands = RibbonViewController.GetDatabaseMenuCommands ();
 
-			foreach (var command in RibbonViewController.MenuDatabaseCommands)
+			foreach (var command in commands)
 			{
 				RibbonViewController.AddDatabaseToMenu (menu, command);
 			}
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
 			menu.Host = this.ribbonBook;
 			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
@@ -482,73 +515,64 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateDatabaseButton()
 		{
 			//	Met à jour le bouton qui surplombe le bouton du menu, en fonction de la base sélectionnée.
-			var selectedCommand = RibbonViewController.SelectedDatabaseCommand;
+			var selectedCommand = RibbonViewController.GetSelectedDatabaseCommand ();
 
 			if (selectedCommand != null)
 			{
 				this.databaseButton.CommandObject = selectedCommand;
+				this.DatabaseMenuDefaultCommandName = selectedCommand.Name;
+			}
+			else
+			{
+				this.databaseButton.CommandObject = RibbonViewController.GetDatabaseCommand (this.DatabaseMenuDefaultCommandName);
 			}
 		}
 
-		private static Command SelectedDatabaseCommand
+		private static Command GetSelectedDatabaseCommand()
 		{
-			//	Retourne la commande correspondant à la base sélectionnée.
-			get
-			{
-				var name = RibbonViewController.SelectedDatabaseCommandName;
-				return RibbonViewController.MenuDatabaseCommands.Where (x => x.Name == name).FirstOrDefault ();
-			}
+			var commandHandler = RibbonViewController.GetDatabaseCommandHandler ();
+			var name = commandHandler.SelectedDatabaseCommandName;
+			return RibbonViewController.GetDatabaseCommand (name);
 		}
 
-		private static string SelectedDatabaseCommandName
+		private static Command GetDatabaseCommand(string name)
 		{
-			//	Retourne le nom de la commande correspondant à la base sélectionnée.
-			get
-			{
-				var databaseCommandHandler = RibbonViewController.DatabaseCommandHandler;
-				return databaseCommandHandler.SelectedDatabaseCommandName;
-			}
+			return RibbonViewController.GetDatabaseMenuCommands ().Where (x => x.Name == name).FirstOrDefault ();
 		}
 
-		private static CommandHandlers.DatabaseCommandHandler DatabaseCommandHandler
+		private static CommandHandlers.DatabaseCommandHandler GetDatabaseCommandHandler()
 		{
-			get
-			{
-				return CoreProgram.Application.Commands.CommandHandlers
-					.Where (x => x is CommandHandlers.DatabaseCommandHandler)
-					.FirstOrDefault () as CommandHandlers.DatabaseCommandHandler;
-			}
+			var handlers = CoreProgram.Application.Commands.CommandHandlers.OfType<CommandHandlers.DatabaseCommandHandler> ();
+
+			System.Diagnostics.Debug.Assert (handlers.Count () == 1);
+
+			return handlers.First ();
 		}
 
-		private static IEnumerable<Command> MenuDatabaseCommands
+		private static IEnumerable<Command> GetDatabaseMenuCommands()
 		{
-			//	Liste des commandes des bases de données d'usage peu fréquent accessibles via le menu.
-			//	Cette liste dépend de l'utilisateur identifié. Elle peut très bien être vide.
-			get
+			bool admin = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
+			bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
+			bool power = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);
+
+			if (admin || devel || power)
 			{
-				bool admin = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
-				bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
-				bool power = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);
+				yield return Res.Commands.Base.ShowImages;
+			}
 
-				if (admin || devel || power)
-				{
-					yield return Res.Commands.Base.ShowImages;
-				}
+			if (admin || devel)
+			{
+				yield return Res.Commands.Base.ShowImageBlobs;
+			}
 
-				if (admin || devel)
-				{
-					yield return Res.Commands.Base.ShowImageBlobs;
-				}
+			if (admin || devel)
+			{
+				yield return Res.Commands.Base.ShowBusinessSettings;
+			}
 
-				if (admin || devel)
-				{
-					yield return Res.Commands.Base.ShowBusinessSettings;
-				}
-
-				if (devel)
-				{
-					yield return Res.Commands.Base.ShowWorkflowDefinitions;
-				}
+			if (devel)
+			{
+				yield return Res.Commands.Base.ShowWorkflowDefinitions;
 			}
 		}
 		#endregion
@@ -559,8 +583,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.UpdateAuthenticatedUser ();
 		}
 
+
+		private void OnDatabaseMenuDefaultCommandNameChanged()
+		{
+			var handler = this.DatabaseMenuDefaultCommandNameChanged;
+			
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
 		
-		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
+		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
 		{
 			if (handler != null)
 			{
@@ -617,13 +651,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return button;
 		}
-		
+
+
+		public event EventHandler				DatabaseMenuDefaultCommandNameChanged;
 
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
 
 		private IconButton						databaseButton;
 		private GlyphButton						databaseMenuButton;
+		private string							databaseMenuDefaultCommandName;
 
 		private IconOrImageButton				authenticateUserButton;
 		private StaticText						authenticateUserWidget;
