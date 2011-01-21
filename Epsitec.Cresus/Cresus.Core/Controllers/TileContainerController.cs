@@ -654,6 +654,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<TitleTile> GetTitleTiles()
 		{
+			//	Les tuiles d'un groupe ont un même TitleTile comme parent. Le HashSet sur le VisualSerialId
+			//	évite de prendre plusieurs fois le même.
 			var visualIds  = new HashSet<long> ();
 
 			foreach (var item in this.liveItems)
@@ -707,8 +709,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private void SetDataTilesParent(Widget parent)
 		{
-			var titleTiles = this.GetTitleTiles ().ToList ();
+			var titleTiles = this.GetTitleTiles ();
 
+			//	Si un TitleTile a déjà un parent, il faut tous les remettre à null, afin
+			//	de respecter l'ordre vertical voulu dans Summary/Edition..ViewController !
 			if (titleTiles.Any (x => x.Parent == null))
 			{
 				titleTiles.ForEach (x => x.Parent = null);
