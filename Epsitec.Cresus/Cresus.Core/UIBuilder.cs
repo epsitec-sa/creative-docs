@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Core
 			private readonly ViewControllerMode mode;
 		}
 
-		
+
 
 
 		public TileTabBook<T> CreateTabBook<T>(params TabPageDef<T>[] pageDescriptions)
@@ -327,7 +327,23 @@ namespace Epsitec.Cresus.Core
 			};
 
 			this.tileTabBook = tileTabBook;
-			
+
+			return tileTabBook;
+		}
+
+		public TileTabBook<T> CreateTabBook<T>(EditionTile tile, TabPageDef selectedPage, params TabPageDef<T>[] pageDescriptions)
+		{
+			var tileTabBook = new TileTabBook<T> (pageDescriptions)
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				TabIndex = ++this.tabIndex,
+			};
+
+			tileTabBook.SelectTabPage (selectedPage);
+
 			return tileTabBook;
 		}
 
@@ -1115,7 +1131,12 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
+			return this.CreateAutoCompleteTextField<T>(tile, label, controller);
+		}
 
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, string label, SelectionController<T> controller)
+			where T : AbstractEntity, new ()
+		{
 			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, x => controller.SetValue (x as T), controller.ReferenceController);
 
 			controller.Attach (autoCompleteTextField);

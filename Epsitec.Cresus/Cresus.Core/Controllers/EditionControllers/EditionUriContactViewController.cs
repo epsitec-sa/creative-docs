@@ -71,36 +71,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIMail (data);
 				this.CreateUIRoles (data);
+				this.CreateUIMail (data);
 
 				this.CreateUIComments (data);
 			}
 		}
 
 
-		private void CreateUIMail(TileDataItems data)
-		{
-			var tileData = new TileDataItem
-			{
-				Name            = "UriContactMail",
-				IconUri	        = "Data.Uri",
-				Title	        = TextFormatter.FormatText ("Email"),
-				CompactTitle    = TextFormatter.FormatText ("Email"),
-				CreateEditionUI = (tile, builder) =>
-				{
-					builder.CreateTextField (tile, 0, "Adresse mail", Marshaler.Create (() => this.Entity.Uri, x => this.Entity.Uri = x));
-				}
-			};
-
-			data.Add (tileData);
-		}
-
 		private void CreateUIRoles(TileDataItems data)
 		{
 			var tileData = new TileDataItem
 			{
 				Name            = "UriContactRoles",
+				IconUri	        = "Data.Uri",
+				Title	        = TextFormatter.FormatText ("Email"),
+				CompactTitle    = TextFormatter.FormatText ("Email"),
+				Frameless       = true,
 				CreateEditionUI = (tile, builder) =>
 				{
 					var controller = new SelectionController<Entities.ContactGroupEntity> (this.BusinessContext)
@@ -110,6 +97,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					};
 
 					builder.CreateEditionDetailedItemPicker (tile, "ContactRoles", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+				}
+			};
+
+			data.Add (tileData);
+		}
+
+		private void CreateUIMail(TileDataItems data)
+		{
+			var tileData = new TileDataItem
+			{
+				Name            = "UriContactMail",
+				Frameless       = true,
+				CreateEditionUI = (tile, builder) =>
+				{
+					builder.CreateTextField (tile, 0, "Adresse mail", Marshaler.Create (() => this.Entity.Uri, x => this.Entity.Uri = x));
 				}
 			};
 

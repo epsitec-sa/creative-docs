@@ -86,27 +86,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIPhoneNumber (data);
-				this.CreateUITelecomType (data);
 				this.CreateUIRoles (data);
+				this.CreateUITelecomType (data);
+				this.CreateUIPhoneNumber (data);
 
 				this.CreateUIComments (data);
 			}
 		}
 
 
-		private void CreateUIPhoneNumber(TileDataItems data)
+		private void CreateUIRoles(TileDataItems data)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "TelecomContactNumber",
+				Name            = "TelecomContactRoles",
 				IconUri	        = "Data.Telecom",
 				Title	        = TextFormatter.FormatText ("Téléphone"),
 				CompactTitle    = TextFormatter.FormatText ("Téléphone"),
+				Frameless       = true,
 				CreateEditionUI = (tile, builder) =>
 				{
-					builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
-					builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
+					var controller = new SelectionController<Entities.ContactGroupEntity> (this.BusinessContext)
+					{
+						CollectionValueGetter    = () => this.Entity.ContactGroups,
+						ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+					};
+
+					builder.CreateEditionDetailedItemPicker (tile, "ContactRoles", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
 				}
 			};
 
@@ -118,6 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tileData = new TileDataItem
 			{
 				Name            = "TelecomContactType",
+				Frameless       = true,
 				CreateEditionUI = (tile, builder) =>
 				{
 					var controller = new SelectionController<Entities.TelecomTypeEntity> (this.BusinessContext)
@@ -134,20 +141,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			data.Add (tileData);
 		}
 
-		private void CreateUIRoles(TileDataItems data)
+		private void CreateUIPhoneNumber(TileDataItems data)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "TelecomContactRoles",
+				Name            = "TelecomContactNumber",
+				Frameless       = true,
 				CreateEditionUI = (tile, builder) =>
 				{
-					var controller = new SelectionController<Entities.ContactGroupEntity> (this.BusinessContext)
-					{
-						CollectionValueGetter    = () => this.Entity.ContactGroups,
-						ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-					};
-
-					builder.CreateEditionDetailedItemPicker (tile, "ContactRoles", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+					builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
+					builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
 				}
 			};
 

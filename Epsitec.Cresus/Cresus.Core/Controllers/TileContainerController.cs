@@ -481,22 +481,24 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateEditionTile(TileDataItem item, UIBuilder builder)
 		{
-			var tile = new EditionTile ();
+			var tile = new EditionTile
+			{
+				Controller = item,
+			};
 
 			item.CreateEditionUI (tile, builder);  // peuple la tuile
-
 			item.Tile = tile;
-			item.Tile.Controller = item;
 		}
 
 		private void CreateCustomizedTile(TileDataItem item, UIBuilder builder)
 		{
-			var tile = new EditionTile ();
+			var tile = new EditionTile
+			{
+				Controller = item,
+			};
 
 			item.CreateCustomizedUI (tile, builder);  // peuple la tuile
-
 			item.Tile = tile;
-			item.Tile.Controller = item;
 		}
 
 		private void CreateTitleTile(TileDataItem item)
@@ -509,6 +511,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
 
 			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);  // fond bleuté si tuile d'édition
+			item.TitleTile.Frameless = item.Frameless;
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
 		}
