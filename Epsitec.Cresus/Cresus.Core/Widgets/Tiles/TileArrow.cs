@@ -97,20 +97,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode)
+		public void Paint(Graphics graphics, Rectangle bounds, TileArrowMode mode, bool frameless)
 		{
 			switch (mode)
 			{
 				case TileArrowMode.Normal:
-					this.PaintArrow (graphics, bounds, deflate => this.GetNormalArrowPath (bounds, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetNormalArrowPath (bounds, deflate), frameless);
 					break;
 
 				case TileArrowMode.Selected:
-					this.PaintArrow (graphics, bounds, deflate => this.GetSelectedArrowPath (bounds, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetSelectedArrowPath (bounds, deflate), frameless);
 					break;
 
 				case TileArrowMode.Hilited:
-					this.PaintArrow (graphics, bounds, deflate => this.GetHilitedPath (bounds, deflate));
+					this.PaintArrow (graphics, bounds, deflate => this.GetHilitedPath (bounds, deflate), frameless);
 					break;
 
 				default:
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private void PaintArrow(Graphics graphics, Rectangle bounds, System.Func<double, Path> pathProvider)
+		private void PaintArrow(Graphics graphics, Rectangle bounds, System.Func<double, Path> pathProvider, bool frameless)
 		{
 			if (this.surfaceColors.Count > 0 && this.surfaceColors[0].IsValid)
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				}
 			}
 
-			if (this.outlineColors.Count > 0 && this.outlineColors[0].IsValid)
+			if (this.outlineColors.Count > 0 && this.outlineColors[0].IsValid && !frameless)
 			{
 				using (Path path = pathProvider (0.0))
 				{

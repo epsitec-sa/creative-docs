@@ -62,6 +62,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool Frameless
+		{
+			get;
+			set;
+		}
+
 
 		/// <summary>
 		/// Retourne le rectangle pour le contenu, qui exclu la zone occupée par la flèche.
@@ -153,7 +159,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode);
+			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.Frameless);
 		}
 
 

@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.IconUri                  = template.IconUri;
 				this.AutoGroup                = template.AutoGroup;
 				this.HideAddAndRemoveButtons  = template.HideAddAndRemoveButtons;
+				this.Frameless                = template.Frameless;
 				this.DataType                 = template.DataType;
 				this.Title                    = template.Title;
 				this.CompactTitle             = template.CompactTitle;
@@ -96,6 +97,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		public bool								IsCompact
+		{
+			get;
+			set;
+		}
+
+		public bool								Frameless
 		{
 			get;
 			set;
