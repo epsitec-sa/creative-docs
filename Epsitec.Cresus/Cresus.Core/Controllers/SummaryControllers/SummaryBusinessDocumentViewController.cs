@@ -111,26 +111,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUITotalSummary(TileDataItems data)
 		{
-#if false
-			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
-			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
-#else
 			var tileData = new TileDataItem
 			{
 				Name		       = "TotalDocumentItem",
 				IconUri		       = "Data.TotalDocumentItem",
 				Title		       = TextFormatter.FormatText ("Total"),
 				CompactTitle       = TextFormatter.FormatText ("Total"),
-				CreateCustomizedUI = this.CreateCustomizedUITotalSummary,
+				CreateCustomizedUI = (tile, builder) =>
+				{
+					builder.CreateStaticText (tile, GetTotalSummary (this.Entity));
+				}
 			};
 
 			data.Add (tileData);
-#endif
-		}
-
-		private void CreateCustomizedUITotalSummary(EditionTile tile, UIBuilder builder)
-		{
-			builder.CreateStaticText (tile, GetTotalSummary (this.Entity));
 		}
 
 		private void CreateUIVatLines(TileDataItems data)
