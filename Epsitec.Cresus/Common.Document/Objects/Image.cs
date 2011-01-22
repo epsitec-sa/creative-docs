@@ -172,6 +172,9 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
+			var frame = this.PropertyFrame;
+
+			Path pathRealyUsed = this.PathBuildRealyUsed ();
 			Path pathImage = this.PathBuildImage ();
 			Path pathSurface = this.PathBuildSurface ();
 			Path pathOutline = this.PathBuildOutline ();
@@ -192,18 +195,16 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			//	Image bitmap.
-			{
-				var shape = new Shape ();
-				shape.SetImageObject (this);
+			var imageShape = new Shape ();
+			imageShape.SetImageObject (this);
 
-				shapes.Add (shape);
+			if (frame == null || frame.FrameType == Properties.FrameType.None || pathRealyUsed == null)
+			{
+				shapes.Add (imageShape);
 			}
-
-			//	Cadre.
-			var frame = this.PropertyFrame;
-			if (frame != null && frame.FrameType != Properties.FrameType.None)
+			else
 			{
-				frame.AddShapes (shapes, port, drawingContext, pathImage);
+				frame.AddShapes (shapes, imageShape, port, drawingContext, pathRealyUsed);
 			}
 
 			//	Rectangle complet pour bbox et détection.
@@ -227,6 +228,61 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return shapes.ToArray ();
+		}
+
+		protected Path PathBuildRealyUsed()
+		{
+			//	Crée le chemin correspondant à la partie réelle de l'image, inclue dans le rectangle englobant.
+			ImageCache.Item item = this.Item;
+
+			if (item == null)
+			{
+				return this.PathBuildImage ();
+			}
+
+			Point center;
+			double width, height, angle;
+			this.ImageGeometry (out center, out width, out height, out angle);
+
+			Properties.Image pi = this.PropertyImage;
+			Margins crop = pi.CropMargins;
+
+			Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, item.Size.Width, item.Size.Height);
+			cropRect.Deflate (crop);
+
+			double sx = cropRect.Width/width;
+			double sy = cropRect.Height/height;
+			double scale = System.Math.Max (sx, sy);
+
+			width = cropRect.Width/scale;
+			height = cropRect.Height/scale;
+
+			Point p = new Point ();
+
+			p.X = center.X-width/2;
+			p.Y = center.Y-height/2;
+			Point p1 = Transform.RotatePointDeg (center, angle, p);
+
+			p.X = center.X+width/2;
+			p.Y = center.Y-height/2;
+			Point p2 = Transform.RotatePointDeg (center, angle, p);
+
+			p.X = center.X+width/2;
+			p.Y = center.Y+height/2;
+			Point p3 = Transform.RotatePointDeg (center, angle, p);
+
+			p.X = center.X-width/2;
+			p.Y = center.Y+height/2;
+			Point p4 = Transform.RotatePointDeg (center, angle, p);
+
+			Path path = new Path ();
+			path.MoveTo (p1);
+			path.LineTo (p2);
+			path.LineTo (p3);
+			path.LineTo (p4);
+			path.Close ();
+			return path;
+
 		}
 
 		protected Path PathBuildImage()

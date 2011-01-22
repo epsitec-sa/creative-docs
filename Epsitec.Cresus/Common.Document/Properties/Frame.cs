@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document.Properties
 			this.frameWidth = 0.0;
 			this.marginWidth = 0.0;
 			this.shadowSize = 0.0;
+			this.shadowIntensity = 0.5;
 		}
 
 		public FrameType FrameType
@@ -114,6 +115,27 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public double ShadowIntensity
+		{
+			get
+			{
+				return this.shadowIntensity;
+			}
+
+			set
+			{
+				value = System.Math.Max (value, 0.0);
+				value = System.Math.Min (value, 1.0);
+
+				if (this.shadowIntensity != value)
+				{
+					this.NotifyBefore ();
+					this.shadowIntensity = value;
+					this.NotifyAfter ();
+				}
+			}
+		}
+
 
 		public override string SampleText
 		{
@@ -190,12 +212,13 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize)
+		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize, out double shadowIntensity)
 		{
 			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			frameWidth = 0;
 			marginWidth = 0;
 			shadowSize = 0;
+			shadowIntensity = 0.5;
 
 			switch (type)
 			{
@@ -227,7 +250,7 @@ namespace Epsitec.Common.Document.Properties
 					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
 					{
 						frameWidth = 2.0;  // 0.2mm
-						shadowSize = 20.0;  // 2mm
+						shadowSize = 25.0;  // 2.5mm
 					}
 					else
 					{
@@ -241,7 +264,7 @@ namespace Epsitec.Common.Document.Properties
 					{
 						frameWidth = 2.0;  // 0.2mm
 						marginWidth = 50.0;  // 5mm
-						shadowSize = 20.0;  // 2mm
+						shadowSize = 25.0;  // 2.5mm
 					}
 					else
 					{
@@ -250,7 +273,6 @@ namespace Epsitec.Common.Document.Properties
 						shadowSize = 25.4;  // 0.1in
 					}
 					break;
-
 			}
 		}
 		
@@ -308,6 +330,7 @@ namespace Epsitec.Common.Document.Properties
 			p.frameWidth = this.frameWidth;
 			p.marginWidth = this.marginWidth;
 			p.shadowSize = this.shadowSize;
+			p.shadowIntensity = this.shadowIntensity;
 		}
 
 		public override bool Compare(Abstract property)
@@ -320,6 +343,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.frameWidth != this.frameWidth)  return false;
 			if ( p.marginWidth != this.marginWidth )  return false;
 			if ( p.shadowSize != this.shadowSize )  return false;
+			if ( p.shadowIntensity != this.shadowIntensity)  return false;
 
 			return true;
 		}
@@ -332,28 +356,50 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void AddShapes(List<Shape> shapes, IPaintPort port, DrawingContext drawingContext, Path path)
+		public void AddShapes(List<Shape> shapes, Shape imageShape, IPaintPort port, DrawingContext drawingContext, Path path)
 		{
-			//	Ajoute les éléments qui permettront de dessiner le cadre.
-			if (this.shadowSize > 0)
-			{
-			}
+			Path boldPath = path;
 
 			if (this.marginWidth > 0)
 			{
+				boldPath = new Path ();
+				boldPath.Append (path, 1, this.marginWidth*2);
 			}
 
+			//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
+			if (this.shadowSize > 0)
+			{
+				var shape = new Shape ();
+				shape.Path = boldPath;
+				shape.SetPropertySurface (port, this.PropertyShadowSurface);
+
+				shapes.Add (shape);
+			}
+
+			{
+				var shape = new Shape ();
+				shape.Path = boldPath;
+				shape.SetPropertySurface (port, this.PropertyMarginSurface);
+
+				shapes.Add (shape);
+			}
+
+			//	Ajoute l'image.
+			shapes.Add (imageShape);
+
+			//	Ajoute les éléments qui permettront de dessiner le cadre sur l'image.
 			if (this.frameWidth > 0)
 			{
 				var shape = new Shape ();
-				shape.Path = path;
-				shape.SetPropertyStroke (port, this.PropertyStroke, this.PropertySurface);
+				shape.Path = boldPath;
+				shape.SetPropertyStroke (port, this.PropertyFrameStroke, this.PropertyFrameSurface);
 
 				shapes.Add (shape);
 			}
 		}
 
-		private Properties.Line PropertyStroke
+
+		private Properties.Line PropertyFrameStroke
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
 			get
@@ -368,7 +414,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		private Properties.Gradient PropertySurface
+		private Properties.Gradient PropertyFrameSurface
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
 			get
@@ -376,33 +422,41 @@ namespace Epsitec.Common.Document.Properties
 				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
 
 				surface.IsOnlyForCreation = true;
-				surface.Color1 = RichColor.FromBrightness (0);
+				surface.Color1 = RichColor.FromBrightness (0);  // noir
+
+				return surface;
+			}
+		}
+
+		private Properties.Gradient PropertyMarginSurface
+		{
+			//	Retourne une propriété permettant de dessiner le cadre.
+			get
+			{
+				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+
+				surface.IsOnlyForCreation = true;
+				surface.Color1 = RichColor.FromBrightness (1);  // blanc
+
+				return surface;
+			}
+		}
+
+		private Properties.Gradient PropertyShadowSurface
+		{
+			//	Retourne une propriété permettant de dessiner l'ombre.
+			get
+			{
+				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+
+				surface.IsOnlyForCreation = true;
+				surface.Smooth = this.shadowSize;
+				surface.Color1 = RichColor.FromBrightness (1.0-this.shadowIntensity);  // gris
 
 				return surface;
 			}
 		}
 		
-
-		public void DrawFrame(IPaintPort port, DrawingContext drawingContext, Path path)
-		{
-			if (this.shadowSize > 0)
-			{
-			}
-
-			if (this.marginWidth > 0)
-			{
-				port.Color = Drawing.Color.FromBrightness (1.0);
-				port.PaintSurface (path);
-			}
-
-			if (this.frameWidth > 0)
-			{
-				port.Color = Drawing.Color.FromBrightness (0.0);
-				port.LineWidth = this.frameWidth/drawingContext.ScaleX;
-				port.PaintOutline (path);  // dessine un rectangle
-			}
-		}
-
 
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -414,6 +468,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue ("FrameWidth", this.frameWidth, typeof (double));
 			info.AddValue ("MarginWidth", this.marginWidth, typeof (double));
 			info.AddValue ("ShadowSize", this.shadowSize, typeof (double));
+			info.AddValue ("ShadowIntensity", this.shadowIntensity, typeof (double));
 		}
 
 		protected Frame(SerializationInfo info, StreamingContext context)
@@ -424,6 +479,7 @@ namespace Epsitec.Common.Document.Properties
 			this.frameWidth = (double) info.GetValue ("FrameWidth", typeof (double));
 			this.marginWidth = (double) info.GetValue ("MarginWidth", typeof (double));
 			this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
+			this.shadowIntensity = (double) info.GetValue ("ShadowIntensity", typeof (double));
 		}
 		#endregion
 
@@ -432,5 +488,6 @@ namespace Epsitec.Common.Document.Properties
 		protected double				frameWidth;
 		protected double				marginWidth;
 		protected double				shadowSize;
+		protected double				shadowIntensity;
 	}
 }

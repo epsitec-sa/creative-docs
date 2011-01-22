@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFrameWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.FrameWidth;
 			this.fieldFrameWidth.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldFrameWidth.TextFieldReal.FactorMaxRange = 0.1M;
-			this.fieldFrameWidth.TextFieldReal.FactorStep = 0.1M;
+			this.fieldFrameWidth.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldFrameWidth.TextFieldReal);
 			this.fieldFrameWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldFrameWidth.TabIndex = 2;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.MarginWidth;
 			this.fieldMarginWidth.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldMarginWidth.TextFieldReal.FactorMaxRange = 0.1M;
-			this.fieldMarginWidth.TextFieldReal.FactorStep = 0.1M;
+			this.fieldMarginWidth.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldMarginWidth.TextFieldReal);
 			this.fieldMarginWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldMarginWidth.TabIndex = 3;
@@ -52,12 +52,21 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldShadowSize.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowSize;
 			this.fieldShadowSize.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldShadowSize.TextFieldReal.FactorMaxRange = 0.1M;
-			this.fieldShadowSize.TextFieldReal.FactorStep = 0.1M;
+			this.fieldShadowSize.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldShadowSize.TextFieldReal);
 			this.fieldShadowSize.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldShadowSize.TabIndex = 4;
 			this.fieldShadowSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldShadowSize, Res.Strings.Panel.Frame.Tooltip.ShadowSize);
+
+			this.fieldShadowIntensity = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldShadowIntensity.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowIntensity;
+			this.fieldShadowIntensity.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowIntensity;
+			this.document.Modifier.AdaptTextFieldRealPercent (this.fieldShadowIntensity.TextFieldReal);
+			this.fieldShadowIntensity.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
+			this.fieldShadowIntensity.TabIndex = 5;
+			this.fieldShadowIntensity.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip (this.fieldShadowIntensity, Res.Strings.Panel.Frame.Tooltip.ShadowIntensity);
 
 			this.isNormalAndExtended = true;
 		}
@@ -75,11 +84,13 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldFrameWidth.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 				this.fieldMarginWidth.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 				this.fieldShadowSize.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldShadowIntensity.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 
 				this.grid = null;
 				this.fieldFrameWidth = null;
 				this.fieldMarginWidth = null;
 				this.fieldShadowSize = null;
+				this.fieldShadowIntensity = null;
 			}
 			
 			base.Dispose(disposing);
@@ -95,13 +106,26 @@ namespace Epsitec.Common.Document.Panels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					if ( this.IsLabelProperties )  // étendu/détails ?
+					h += 30;
+
+					if (this.HasFrameWidth)
 					{
-						h += 105;
+						h += 25;
 					}
-					else	// étendu/compact ?
+
+					if (this.HasMarginWidth)
 					{
-						h += 55;
+						h += 25;
+					}
+
+					if (this.HasShadowSize)
+					{
+						h += 25;
+					}
+
+					if (this.HasShadowIntensity)
+					{
+						h += 25;
 					}
 				}
 				else	// panneau réduit ?
@@ -127,6 +151,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) p.FrameWidth;
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) p.MarginWidth;
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) p.ShadowSize;
+			this.fieldShadowIntensity.TextFieldReal.InternalValue = (decimal) p.ShadowIntensity;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -142,11 +167,13 @@ namespace Epsitec.Common.Document.Panels
 			p.FrameWidth = (double) this.fieldFrameWidth.TextFieldReal.InternalValue;
 			p.MarginWidth = (double) this.fieldMarginWidth.TextFieldReal.InternalValue;
 			p.ShadowSize = (double) this.fieldShadowSize.TextFieldReal.InternalValue;
+			p.ShadowIntensity = (double) this.fieldShadowIntensity.TextFieldReal.InternalValue;
 		}
 
 		protected void EnableWidgets()
 		{
 			//	Grise les widgets nécessaires.
+			this.UpdateClientGeometry ();
 		}
 
 
@@ -157,8 +184,6 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.grid == null )  return;
 
-			this.EnableWidgets();
-
 			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
@@ -166,41 +191,100 @@ namespace Epsitec.Common.Document.Panels
 			r.Inflate(1);
 			this.grid.SetManualBounds(r);
 
-			if ( this.isExtendedSize && this.IsLabelProperties )
+			if (this.isExtendedSize)
 			{
 				r.Top = rect.Top-25;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldFrameWidth.SetManualBounds (r);
 
-				r.Top = r.Bottom-5;
-				r.Bottom = r.Top-20;
-				r.Left = rect.Left;
-				r.Right = rect.Right;
-				this.fieldMarginWidth.SetManualBounds (r);
+				if (this.HasFrameWidth)
+				{
+					this.fieldFrameWidth.Visibility = true;
+					this.fieldFrameWidth.SetManualBounds (r);
+					r.Offset (0, -25);
+				}
+				else
+				{
+					this.fieldFrameWidth.Visibility = false;
+				}
 
-				r.Top = r.Bottom-5;
-				r.Bottom = r.Top-20;
-				r.Left = rect.Left;
-				r.Right = rect.Right;
-				this.fieldShadowSize.SetManualBounds (r);
+				if (this.HasMarginWidth)
+				{
+					this.fieldMarginWidth.Visibility = true;
+					this.fieldMarginWidth.SetManualBounds (r);
+					r.Offset (0, -25);
+				}
+				else
+				{
+					this.fieldMarginWidth.Visibility = false;
+				}
+
+				if (this.HasShadowSize)
+				{
+					this.fieldShadowSize.Visibility = true;
+					this.fieldShadowSize.SetManualBounds (r);
+					r.Offset (0, -25);
+				}
+				else
+				{
+					this.fieldShadowSize.Visibility = false;
+				}
+
+				if (this.HasShadowIntensity)
+				{
+					this.fieldShadowIntensity.Visibility = true;
+					this.fieldShadowIntensity.SetManualBounds (r);
+					r.Offset (0, -25);
+				}
+				else
+				{
+					this.fieldShadowIntensity.Visibility = false;
+				}
 			}
 			else
 			{
-				r.Top = rect.Top-25;
-				r.Bottom = r.Top-20;
-				r.Left = rect.Left;
-				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldFrameWidth.SetManualBounds (r);
+				this.fieldFrameWidth.Visibility = false;
+				this.fieldMarginWidth.Visibility = false;
+				this.fieldShadowSize.Visibility = false;
+				this.fieldShadowIntensity.Visibility = false;
+			}
+		}
 
-				r.Left = r.Right;
-				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldMarginWidth.SetManualBounds (r);
 
-				r.Left = r.Right;
-				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldShadowSize.SetManualBounds (r);
+		private bool HasFrameWidth
+		{
+			get
+			{
+				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
+				return type == Properties.FrameType.Simple || type == Properties.FrameType.White || type == Properties.FrameType.WhiteAndSnadow;
+			}
+		}
+
+		private bool HasMarginWidth
+		{
+			get
+			{
+				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
+				return type == Properties.FrameType.White || type == Properties.FrameType.WhiteAndSnadow;
+			}
+		}
+
+		private bool HasShadowSize
+		{
+			get
+			{
+				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
+				return type == Properties.FrameType.Shadow || type == Properties.FrameType.WhiteAndSnadow;
+			}
+		}
+
+		private bool HasShadowIntensity
+		{
+			get
+			{
+				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
+				return type == Properties.FrameType.Shadow || type == Properties.FrameType.WhiteAndSnadow;
 			}
 		}
 
@@ -213,15 +297,17 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			this.EnableWidgets();
+			this.HeightChanged ();
+			this.EnableWidgets ();
 
 			//	Met les valeurs par défaut correspondant au type choisi.
 			Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
-			double frameWidth, marginWidth, shadowSize;
-			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize);
+			double frameWidth, marginWidth, shadowSize, shadowIntensity;
+			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize, out shadowIntensity);
 			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) frameWidth;
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) marginWidth;
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
+			this.fieldShadowIntensity.TextFieldReal.InternalValue = (decimal) shadowIntensity;
 
 			this.OnChanged();
 		}
@@ -238,5 +324,6 @@ namespace Epsitec.Common.Document.Panels
 		protected Widgets.TextFieldLabel	fieldFrameWidth;
 		protected Widgets.TextFieldLabel	fieldMarginWidth;
 		protected Widgets.TextFieldLabel	fieldShadowSize;
+		protected Widgets.TextFieldLabel	fieldShadowIntensity;
 	}
 }
