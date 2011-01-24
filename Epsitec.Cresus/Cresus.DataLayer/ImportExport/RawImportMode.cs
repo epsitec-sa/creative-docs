@@ -2,7 +2,7 @@
 {
 
 
-	public enum ImportMode
+	public enum RawImportMode
 	{
 
 

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 
 	[TestClass]
-	public sealed class UnitTestEpsitecEntitySerializer
+	public sealed class UnitTestRawEntitySerializer
 	{
 
 
@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void SimpleExportImport1()
 		{
-			ExportMode exportMode = ExportMode.UserData;
-			ImportMode importMode = ImportMode.DecrementIds;
+			RawExportMode exportMode = RawExportMode.UserData;
+			RawImportMode importMode = RawImportMode.DecrementIds;
 
 			this.SimpleExportImport (exportMode, importMode);
 		}
@@ -52,8 +52,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void SimpleExportImport2()
 		{
-			ExportMode exportMode = ExportMode.UserData;
-			ImportMode importMode = ImportMode.PreserveIds;
+			RawExportMode exportMode = RawExportMode.UserData;
+			RawImportMode importMode = RawImportMode.PreserveIds;
 
 			this.SimpleExportImport (exportMode, importMode);
 		}
@@ -62,14 +62,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void SimpleExportImport3()
 		{
-			ExportMode exportMode = ExportMode.EpsitecAndUserData;
-			ImportMode importMode = ImportMode.PreserveIds;
+			RawExportMode exportMode = RawExportMode.EpsitecAndUserData;
+			RawImportMode importMode = RawImportMode.PreserveIds;
 
 			this.SimpleExportImport (exportMode, importMode);
 		}
 
 
-		private void SimpleExportImport(ExportMode exportMode, ImportMode importMode)
+		private void SimpleExportImport(RawExportMode exportMode, RawImportMode importMode)
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -77,28 +77,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure, exportMode);
+				RawEntitySerializer.Export (file, dbInfrastructure, exportMode);
 
-				if (exportMode == ExportMode.EpsitecAndUserData)
+				if (exportMode == RawExportMode.EpsitecAndUserData)
 				{
-					EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
-					EpsitecEntitySerializer.Export (file, dbInfrastructure, exportMode);
+					RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
+					RawEntitySerializer.Export (file, dbInfrastructure, exportMode);
 				}
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, importMode);
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, importMode);
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, importMode);
+				RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, importMode);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
-					bool decrementIds = importMode == ImportMode.DecrementIds;
+					bool decrementIds = importMode == RawImportMode.DecrementIds;
 
 					NaturalPersonEntity alfred1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 					NaturalPersonEntity hans1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
 
-					if (decrementIds || exportMode == ExportMode.EpsitecAndUserData)
+					if (decrementIds || exportMode == RawExportMode.EpsitecAndUserData)
 					{
 						Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred1));
 						Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude1));
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void CleanDatabase1()
 		{
-			ImportMode mode = ImportMode.DecrementIds;
+			RawImportMode mode = RawImportMode.DecrementIds;
 
 			this.CleanDatabase (mode);
 		}
@@ -135,13 +135,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 		[TestMethod]
 		public void CleanDatabase2()
 		{
-			ImportMode mode = ImportMode.PreserveIds;
+			RawImportMode mode = RawImportMode.PreserveIds;
 
 			this.CleanDatabase (mode);
 		}
 
 
-		private void CleanDatabase(ImportMode mode)
+		private void CleanDatabase(RawImportMode mode)
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -149,8 +149,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
+				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
+				RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					Assert.IsNotNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))));
 				}
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 					Assert.IsNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1))));
 					Assert.IsNull (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (2))));
 
-					bool isNull = mode == ImportMode.PreserveIds;
+					bool isNull = mode == RawImportMode.PreserveIds;
 					
 					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))));
 					Assert.AreEqual (isNull, null == dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002))));
@@ -255,9 +255,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
+				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
 
 				XDocument xDocument = XDocument.Load (file.FullName);
 
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				xDocument.Save (file.FullName);
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
+				RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -318,9 +318,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				EpsitecEntitySerializer.Export (file, dbInfrastructure, ExportMode.UserData);
+				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
 
-				EpsitecEntitySerializer.CleanDatabase (file, dbInfrastructure, ImportMode.DecrementIds);
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
 
 				XDocument xDocument = XDocument.Load (file.FullName);
 
@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
 
 				xDocument.Save (file.FullName);
 
-				EpsitecEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, ImportMode.DecrementIds);
+				RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

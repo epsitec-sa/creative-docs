@@ -85,7 +85,7 @@
     <Compile Include="Context\UnitTestEntityKey.cs" />
     <Compile Include="Helpers\DataInfrastructureHelper.cs" />
     <Compile Include="Helpers\DbInfrastructureHelper.cs" />
-    <Compile Include="ImportExport\UnitTestEpsitecEntitySerializer.cs" />
+    <Compile Include="ImportExport\UnitTestRawEntitySerializer.cs" />
     <Compile Include="ImportExport\UnitTestImportExportManager.cs" />
     <Compile Include="ImportExport\UnitTestXmlEntitySerializer.cs" />
     <Compile Include="Infrastructure\UnitTestConnectionInformation.cs" />
