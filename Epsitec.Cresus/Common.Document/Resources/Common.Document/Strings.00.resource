@@ -1446,9 +1446,9 @@
   <data name="Panel.Frame.Short.FrameWidth" id="KH">T</data>
   <data name="Panel.Frame.Short.MarginWidth" id="KI">C</data>
   <data name="Panel.Frame.Short.ShadowSize" id="KJ">O</data>
-  <data name="Panel.Frame.Long.FrameWidth" id="KK">Epais. trait</data>
-  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epais. cadre</data>
-  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dim. ombre</data>
+  <data name="Panel.Frame.Long.FrameWidth" id="KK">Trait</data>
+  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epaisseur</data>
+  <data name="Panel.Frame.Long.ShadowSize" id="KM">Portée ombre</data>
   <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
   <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur du cadre</data>
   <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre</data>
@@ -1462,7 +1462,7 @@
   <data name="Panel.Frame.Short.BackgroundColor" id="K11">CF</data>
   <data name="Panel.Frame.Tooltip.FrameColor" id="K21">Couleur du trait</data>
   <data name="Panel.Frame.Tooltip.BackgroundColor" id="K31">Couleur du fond</data>
-  <data name="Panel.Frame.Long.ShadowOffsetX" id="K41">Décal. ombre</data>
+  <data name="Panel.Frame.Long.ShadowOffsetX" id="K41">Décalage</data>
   <data name="Panel.Frame.Long.ShadowOffsetY" id="K51">
   </data>
   <data name="Panel.Frame.Short.ShadowOffsetX" id="K61">X</data>
@@ -1470,4 +1470,7 @@
   <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l&amp;apos;ombre</data>
   <data name="Panel.Frame.Tooltip.ShadowOffsetY" id="K91">Décalage vertical de l&amp;apos;ombre</data>
   <data name="Property.Frame.ShadowAlone" id="KA1">Ombre seule</data>
+  <data name="Panel.Frame.Long.ShadowInflate" id="KB1">Gross. ombre</data>
+  <data name="Panel.Frame.Short.ShadowInflate" id="KC1">G</data>
+  <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement de l&amp;apos;ombre</data>
 </bundle>

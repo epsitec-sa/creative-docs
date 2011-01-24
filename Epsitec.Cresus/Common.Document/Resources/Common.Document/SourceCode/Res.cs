@@ -6803,6 +6803,14 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544351));
 							}
 						}
+						//	designer:str/20KB1
+						public static global::Epsitec.Common.Types.FormattedText ShadowInflate
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544363));
+							}
+						}
 						//	designer:str/20K41
 						public static global::Epsitec.Common.Types.FormattedText ShadowOffsetX
 						{
@@ -6871,6 +6879,14 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544348));
 							}
 						}
+						//	designer:str/20KC1
+						public static global::Epsitec.Common.Types.FormattedText ShadowInflate
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544364));
+							}
+						}
 						//	designer:str/20K61
 						public static global::Epsitec.Common.Types.FormattedText ShadowOffsetX
 						{
@@ -6937,6 +6953,14 @@ namespace Epsitec.Common.Document
 							get
 							{
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544349));
+							}
+						}
+						//	designer:str/20KD1
+						public static global::Epsitec.Common.Types.FormattedText ShadowInflate
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544365));
 							}
 						}
 						//	designer:str/20K81
