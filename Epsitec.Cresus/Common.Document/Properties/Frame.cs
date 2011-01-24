@@ -403,40 +403,47 @@ namespace Epsitec.Common.Document.Properties
 		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Point> points, Properties.Corner corner)
 		{
 			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
-			var pp = Frame.Inflate (points, this.marginWidth);
-			var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
-
-			//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
-			if (this.shadowSize > 0)
+			if (points.Count < 2)
 			{
-				var shape = new Shape ();
-				shape.Path = path;
-				shape.FillMode = FillMode.EvenOdd;
-				shape.SetPropertySurface (port, this.PropertyShadowSurface);
-
-				shapes.Add (shape);
+				shapes.AddRange (objectShapes);
 			}
-
+			else
 			{
-				var shape = new Shape ();
-				shape.Path = path;
-				shape.FillMode = FillMode.EvenOdd;
-				shape.SetPropertySurface (port, this.PropertyBackgroundSurface);
+				var pp = Frame.Inflate (points, this.marginWidth);
+				var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
-				shapes.Add (shape);
-			}
+				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
+				if (this.shadowSize > 0)
+				{
+					var shape = new Shape ();
+					shape.Path = path;
+					shape.FillMode = FillMode.EvenOdd;
+					shape.SetPropertySurface (port, this.PropertyShadowSurface);
 
-			//	Ajoute les éléments qui permettront de dessiner l'objet.
-			shapes.AddRange (objectShapes);
+					shapes.Add (shape);
+				}
 
-			//	Ajoute les éléments qui permettront de dessiner le cadre sur l'image.
-			if (this.frameWidth > 0)
-			{
-				var shape = new Shape ();
-				shape.Path = path;
-				shape.SetPropertyStroke (port, this.PropertyFrameStroke, this.PropertyFrameSurface);
+				{
+					var shape = new Shape ();
+					shape.Path = path;
+					shape.FillMode = FillMode.EvenOdd;
+					shape.SetPropertySurface (port, this.PropertyBackgroundSurface);
 
-				shapes.Add (shape);
+					shapes.Add (shape);
+				}
+
+				//	Ajoute les éléments qui permettront de dessiner l'objet.
+				shapes.AddRange (objectShapes);
+
+				//	Ajoute les éléments qui permettront de dessiner le cadre sur l'image.
+				if (this.frameWidth > 0)
+				{
+					var shape = new Shape ();
+					shape.Path = path;
+					shape.SetPropertyStroke (port, this.PropertyFrameStroke, this.PropertyFrameSurface);
+
+					shapes.Add (shape);
+				}
 			}
 		}
 

@@ -24,6 +24,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.Regular )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			if ( type == Properties.Type.Corner )  return true;
 			return false;
 		}
@@ -158,88 +159,97 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
-			Properties.Regular pr = this.PropertyRegular;
+			var frame = this.PropertyFrame;
+			var pr = this.PropertyRegular;
 
-			int totalShapes = 3;
+			Path path = this.PathBuild (drawingContext, simplify);
 
-			bool support = false;
-			if ( this.IsSelected &&
-				 this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular) &&
-				 (pr.RegularType != Properties.RegularType.Norm) &&
-				 drawingContext != null && drawingContext.IsActive &&
-				 !this.IsGlobalSelected )
-			{
-				support = true;
-				totalShapes ++;
-			}
-			
-			Path path = this.PathBuild(drawingContext, simplify);
-			Shape[] shapes = new Shape[totalShapes];
-			int i = 0;
+			var shapes = new List<Shape> ();
+			var objectShapes = new List<Shape> ();
 
 			//	Forme de la surface.
-			shapes[i] = new Shape();
-			shapes[i].Path = path;
-			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertySurface (port, this.PropertyFillGradient);
+				objectShapes.Add (shape);
+			}
 
 			//	Forme du chemin.
-			shapes[i] = new Shape();
-			shapes[i].Path = path;
-			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-			i ++;
+			{
+				var shape = new Shape ();
+				shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				objectShapes.Add (shape);
+			}
 
-			Point center = this.Handle(0).Position;
-			double radius = Point.Distance(center, this.Handle(1).Position);
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
+			{
+				shapes.AddRange (objectShapes);
+			}
+			else  // cadre ?
+			{
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPoints (), this.PropertyCorner);
+			}
+
+			Point center = this.Handle (0).Position;
+			double radius = Point.Distance (center, this.Handle (1).Position);
 
 			//	Forme des traits de construction.
-			if ( support )
+			if (this.IsSelected &&
+				this.document.Modifier.IsPropertiesExtended (Properties.Type.Regular) &&
+				(pr.RegularType != Properties.RegularType.Norm) &&
+				drawingContext != null && drawingContext.IsActive &&
+				!this.IsGlobalSelected)
 			{
-				Path pathSupport = new Path();
+				Path pathSupport = new Path ();
 
-				pathSupport.AppendCircle(center, radius);
-				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
+				pathSupport.AppendCircle (center, radius);
+				pathSupport.AppendCircle (center, radius*(1.0-pr.Deep.R));
 
 				if (pr.RegularType == Properties.RegularType.Flower1 || pr.RegularType == Properties.RegularType.Flower2)
 				{
 					Point p1, s1, s2, p2;
-					this.ComputeCurve(0, out p1, out s1, out s2, out p2);
-					pathSupport.MoveTo(p1);
-					pathSupport.LineTo(s1);
-					pathSupport.MoveTo(p2);
-					pathSupport.LineTo(s2);
+					this.ComputeCurve (0, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo (p1);
+					pathSupport.LineTo (s1);
+					pathSupport.MoveTo (p2);
+					pathSupport.LineTo (s2);
 				}
 
 				if (pr.RegularType == Properties.RegularType.Flower2)
 				{
 					Point p1, s1, s2, p2;
-					this.ComputeCurve(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
-					pathSupport.MoveTo(p1);
-					pathSupport.LineTo(s1);
-					pathSupport.MoveTo(p2);
-					pathSupport.LineTo(s2);
+					this.ComputeCurve (pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo (p1);
+					pathSupport.LineTo (s1);
+					pathSupport.MoveTo (p2);
+					pathSupport.LineTo (s2);
 				}
 
-				shapes[i] = new Shape();
-				shapes[i].Path = pathSupport;
-				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-				shapes[i].Aspect = Aspect.Support;
-				shapes[i].IsVisible = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathSupport;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				shape.Aspect = Aspect.Support;
+				shape.IsVisible = true;
+				shapes.Add(shape);
 			}
 
 			//	Pour bbox et détection
-			Path pathBbox = new Path();
+			Path pathBbox = new Path ();
 
-			pathBbox.AppendRectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+			pathBbox.AppendRectangle (center.X-radius, center.Y-radius, radius*2, radius*2);
 
-			shapes[i] = new Shape();
-			shapes[i].Path = pathBbox;
-			shapes[i].Type = Type.Surface;
-			shapes[i].Aspect = Aspect.InvisibleBox;
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.Path = pathBbox;
+				shape.Type = Type.Surface;
+				shape.Aspect = Aspect.InvisibleBox;
+				shapes.Add (shape);
+			}
 
-			return shapes;
+			return shapes.ToArray ();
 		}
 
 		public void ComputeCorners(out Point a, out Point b)
@@ -376,6 +386,28 @@ namespace Epsitec.Common.Document.Objects
 			return new Polar(scale, angle);
 		}
 
+		private List<Point> GetPoints()
+		{
+			Properties.Regular reg = this.PropertyRegular;
+			var points = new List<Point> ();
+
+			int total = reg.NbFaces;
+			if (reg.RegularType != Properties.RegularType.Norm)  // étoile ?
+			{
+				total *= 2;
+			}
+
+			for (int i=0; i<total; i++)
+			{
+				Point p1, s1, s2, p2;
+				this.ComputeCurve (i, out p1, out s1, out s2, out p2);
+
+				points.Add (p1);
+			}
+
+			return points;
+		}
+
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			//	Crée le chemin d'un polygone régulier.
@@ -385,7 +417,10 @@ namespace Epsitec.Common.Document.Objects
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
 
 			int total = reg.NbFaces;
-			if (reg.RegularType != Properties.RegularType.Norm)  total *= 2;  // étoile ?
+			if (reg.RegularType != Properties.RegularType.Norm)  // étoile ?
+			{
+				total *= 2;
+			}
 
 			Properties.Corner corner = this.PropertyCorner;
 

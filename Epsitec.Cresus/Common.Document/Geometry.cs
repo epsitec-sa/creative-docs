@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
@@ -7,6 +8,46 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
+		public static List<Point> PathToPoints(Path path)
+		{
+			//	Extrait les points d'un chemin constitué de droites.
+			//	Si le chemin contient une ou plusieurs courbes, la liste de points retournée est vide !
+			var list = new List<Point> ();
+
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements (out elements, out points);
+
+			Point current;
+			int i = 0;
+			while (i < elements.Length)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						current = points[i++];
+						list.Add (current);
+						break;
+
+					case PathElement.LineTo:
+						current = points[i++];
+						list.Add (current);
+						break;
+
+					case PathElement.Curve3:
+					case PathElement.Curve4:
+						list.Clear ();
+						return list;
+
+					default:
+						i ++;
+						break;
+				}
+			}
+
+			return list;
+		}
+
 		public static Path PathExtract(Path path, int rank)
 		{
 			//	Extrait un fragment d'un chemin.

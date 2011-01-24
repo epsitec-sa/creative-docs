@@ -24,6 +24,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.Surface )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			return false;
 		}
 
@@ -166,32 +167,52 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
-			Shape[] shapes = new Shape[2];
+			var frame = this.PropertyFrame;
+
+			Path surface, outline, box;
+			this.PathBuild (null, out surface, out outline, out box);
+
+			var shapes = new List<Shape> ();
+			var objectShapes = new List<Shape> ();
 
 			Properties.SurfaceType type = this.PropertySurface.SurfaceType;
 
 			//	Forme de la surface.
-			shapes[0] = new Shape();
-			shapes[0].Path = surface;
-			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
-
-			if ( type == Properties.SurfaceType.SpiralCCW ||
-				 type == Properties.SurfaceType.SpiralCW  )
 			{
-				shapes[0].FillMode = FillMode.NonZero;
+				var shape = new Shape ();
+				shape.Path = surface;
+				shape.SetPropertySurface (port, this.PropertyFillGradient);
+
+				if (type == Properties.SurfaceType.SpiralCCW ||
+					type == Properties.SurfaceType.SpiralCW)
+				{
+					shape.FillMode = FillMode.NonZero;
+				}
+
+				objectShapes.Add (shape);
 			}
 
 			//	Forme du chemin.
-			shapes[1] = new Shape();
-			shapes[1].Path = outline;
-			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			{
+				var shape = new Shape ();
+				shape.Path = outline;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				objectShapes.Add (shape);
+			}
 
-			return shapes;
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
+			{
+				shapes.AddRange (objectShapes);
+			}
+			else  // cadre ?
+			{
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, Geometry.PathToPoints (box), this.PropertyCorner);
+			}
+
+			return shapes.ToArray ();
 		}
 
-		protected void PathBuild(DrawingContext drawingContext, out Path surface, out Path outline)
+		protected void PathBuild(DrawingContext drawingContext, out Path surface, out Path outline, out Path box)
 		{
 			//	Crée les chemins de l'objet.
 			Point p1 = this.Handle(0).Position;
@@ -212,14 +233,15 @@ namespace Epsitec.Common.Document.Objects
 				p4 = this.Handle(3).Position;
 			}
 
-			this.PathSurface(drawingContext, p1, p2, p3, p4, out surface, out outline);
+			this.PathSurface(drawingContext, p1, p2, p3, p4, out surface, out outline, out box);
 		}
 
-		protected void PathSurface(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, out Path surface, out Path outline)
+		protected void PathSurface(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, out Path surface, out Path outline, out Path box)
 		{
 			//	Crée le chemin d'une surface quelconque.
 			surface = null;
 			outline = null;
+			box     = null;
 
 			switch ( this.PropertySurface.SurfaceType )
 			{
@@ -233,45 +255,55 @@ namespace Epsitec.Common.Document.Objects
 				case Properties.SurfaceType.QuadriX:
 					surface = this.PathQuadri(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 
 				case Properties.SurfaceType.TrapezeT:
 					surface = this.PathTrapezeT(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 				case Properties.SurfaceType.TrapezeB:
 					surface = this.PathTrapezeB(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 				case Properties.SurfaceType.TrapezeL:
 					surface = this.PathTrapezeL(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 				case Properties.SurfaceType.TrapezeR:
 					surface = this.PathTrapezeR(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 
 				case Properties.SurfaceType.Grid:
 					surface = this.PathRectangle(drawingContext, p1, p2, p3, p4);
 					outline = this.PathGrid(drawingContext, p1, p2, p3, p4);
+					box     = surface;
 					break;
 				case Properties.SurfaceType.Pattern:
 					surface = this.PathPattern(drawingContext, p1, p2, p3, p4);
 					outline = this.PathGrid(drawingContext, p1, p2, p3, p4);
+					box     = this.PathRectangle (drawingContext, p1, p2, p3, p4);
 					break;
 
 				case Properties.SurfaceType.Ring:
 					surface = this.PathRing(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 				case Properties.SurfaceType.SpiralCW:
 					surface = this.PathSpiral(drawingContext, p1, p2, p3, p4);
 					outline = surface;
+					box     = surface;
 					break;
 				case Properties.SurfaceType.SpiralCCW:
 					surface = this.PathSpiral(drawingContext, p2, p1, p4, p3);
 					outline = surface;
+					box     = surface;
 					break;
 			}
 		}
@@ -629,8 +661,8 @@ namespace Epsitec.Common.Document.Objects
 		protected override Path GetPath()
 		{
 			//	Retourne le chemin géométrique de l'objet.
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
+			Path surface, outline, box;
+			this.PathBuild (null, out surface, out outline, out box);
 			return outline;
 		}
 
