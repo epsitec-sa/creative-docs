@@ -87,6 +87,19 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldShadowColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldShadowColor, Res.Strings.Panel.Frame.Tooltip.ShadowColor);
 
+			this.fieldShadowInflate = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldShadowInflate.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowInflate;
+			this.fieldShadowInflate.ShortLongLabelLimit = 50;
+			this.fieldShadowInflate.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowInflate;
+			this.fieldShadowInflate.TextFieldReal.FactorMinRange = -0.1M;
+			this.fieldShadowInflate.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldShadowInflate.TextFieldReal.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldShadowInflate.TextFieldReal);
+			this.fieldShadowInflate.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
+			this.fieldShadowInflate.TabIndex = 6;
+			this.fieldShadowInflate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip (this.fieldShadowInflate, Res.Strings.Panel.Frame.Tooltip.ShadowInflate);
+
 			this.fieldShadowOffsetX = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldShadowOffsetX.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowOffsetX;
 			this.fieldShadowOffsetX.ShortLongLabelLimit = 50;
@@ -136,6 +149,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldBackgroundColor.ColorChanged += this.HandleFieldColorChanged;
 
 				this.fieldShadowSize.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldShadowSize.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 				this.fieldShadowColor.Clicked += this.HandleFieldColorClicked;
 				this.fieldShadowColor.ColorChanged += this.HandleFieldColorChanged;
 
@@ -147,6 +161,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldFrameColor = null;
 				this.fieldMarginWidth = null;
 				this.fieldBackgroundColor = null;
+				this.fieldShadowSize = null;
 				this.fieldShadowSize = null;
 				this.fieldShadowColor = null;
 				this.fieldShadowOffsetX = null;
@@ -166,7 +181,7 @@ namespace Epsitec.Common.Document.Panels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 30+25*4;
+					h += 30+25*5;
 				}
 				else	// panneau réduit ?
 				{
@@ -194,10 +209,11 @@ namespace Epsitec.Common.Document.Panels
 			
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) p.MarginWidth;
 			this.fieldBackgroundColor.Color = p.BackgroundColor;
-			
+
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) p.ShadowSize;
 			this.fieldShadowColor.Color = p.ShadowColor;
 
+			this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) p.ShadowInflate;
 			this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) p.ShadowOffsetX;
 			this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) p.ShadowOffsetY;
 
@@ -222,6 +238,7 @@ namespace Epsitec.Common.Document.Panels
 			p.ShadowSize = (double) this.fieldShadowSize.TextFieldReal.InternalValue;
 			p.ShadowColor = this.fieldShadowColor.Color;
 
+			p.ShadowInflate = (double) this.fieldShadowInflate.TextFieldReal.InternalValue;
 			p.ShadowOffsetX = (double) this.fieldShadowOffsetX.TextFieldReal.InternalValue;
 			p.ShadowOffsetY = (double) this.fieldShadowOffsetY.TextFieldReal.InternalValue;
 		}
@@ -313,6 +330,9 @@ namespace Epsitec.Common.Document.Panels
 				Frame.UpdateFieldAndColorGeometry (this.fieldShadowSize, this.fieldShadowColor, r);
 
 				r.Offset (0, -25);
+				Frame.UpdateFieldAndColorGeometry (this.fieldShadowInflate, null, r);
+
+				r.Offset (0, -25);
 				Frame.UpdateFieldAndColorGeometry (this.fieldShadowOffsetX, this.fieldShadowOffsetY, r);
 
 				var type = (Properties.FrameType) this.grid.SelectedValue;
@@ -326,6 +346,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldShadowSize.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
 				this.fieldShadowColor.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
 
+				this.fieldShadowInflate.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
 				this.fieldShadowOffsetX.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
 				this.fieldShadowOffsetY.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
 			}
@@ -340,6 +361,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldShadowSize.Visibility = false;
 				this.fieldShadowColor.Visibility = false;
 
+				this.fieldShadowInflate.Visibility = false;
 				this.fieldShadowOffsetX.Visibility = false;
 				this.fieldShadowOffsetY.Visibility = false;
 			}
@@ -347,15 +369,17 @@ namespace Epsitec.Common.Document.Panels
 
 		private static void UpdateFieldAndColorGeometry(Widget field, Widget sample, Rectangle rect)
 		{
-			field.Visibility = true;
-			sample.Visibility = true;
-
 			rect.Width -= Widgets.TextFieldLabel.DefaultTextWidth+5;
 			field.SetManualBounds (rect);
+			field.Visibility = true;
 
-			rect.Left = rect.Right+5;
-			rect.Width = Widgets.TextFieldLabel.DefaultTextWidth;
-			sample.SetManualBounds (rect);
+			if (sample != null)
+			{
+				rect.Left = rect.Right+5;
+				rect.Width = Widgets.TextFieldLabel.DefaultTextWidth;
+				sample.SetManualBounds (rect);
+				sample.Visibility = true;
+			}
 		}
 
 
@@ -373,12 +397,13 @@ namespace Epsitec.Common.Document.Panels
 			//	Met les valeurs par défaut correspondant au type choisi.
 			var type = (Properties.FrameType) this.grid.SelectedValue;
 
-			double frameWidth, marginWidth, shadowSize, shadowOffsetX, shadowOffsetY;
-			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize, out shadowOffsetX, out shadowOffsetY);
+			double frameWidth, marginWidth, shadowSize, shadowInflate, shadowOffsetX, shadowOffsetY;
+			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize, out shadowInflate, out shadowOffsetX, out shadowOffsetY);
 
 			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) frameWidth;
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) marginWidth;
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
+			this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) shadowInflate;
 			this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) shadowOffsetX;
 			this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) shadowOffsetY;
 
@@ -426,6 +451,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected Widgets.TextFieldLabel	fieldShadowSize;
 		protected ColorSample				fieldShadowColor;
+		protected Widgets.TextFieldLabel	fieldShadowInflate;
 		protected Widgets.TextFieldLabel	fieldShadowOffsetX;
 		protected Widgets.TextFieldLabel	fieldShadowOffsetY;
 

@@ -41,6 +41,7 @@ namespace Epsitec.Common.Document.Properties
 
 			this.shadowSize = 0.0;
 			this.shadowColor = RichColor.FromBrightness (0.5);  // gris
+			this.shadowInflate = 0.0;
 			this.shadowOffsetX = 0.0;
 			this.shadowOffsetY = 0.0;
 		}
@@ -111,8 +112,6 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				value = System.Math.Max(value, 0.0);
-
 				if (this.marginWidth != value)
 				{
 					this.NotifyBefore();
@@ -149,13 +148,31 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				value = System.Math.Max(value, 0.0);
+				value = System.Math.Max (value, 0.0);
 
 				if (this.shadowSize != value)
 				{
-					this.NotifyBefore();
+					this.NotifyBefore ();
 					this.shadowSize = value;
-					this.NotifyAfter();
+					this.NotifyAfter ();
+				}
+			}
+		}
+
+		public double ShadowInflate
+		{
+			get
+			{
+				return this.shadowInflate;
+			}
+
+			set
+			{
+				if (this.shadowInflate != value)
+				{
+					this.NotifyBefore ();
+					this.shadowInflate = value;
+					this.NotifyAfter ();
 				}
 			}
 		}
@@ -292,12 +309,13 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize, out double shadowOffsetX, out double shadowOffsetY)
+		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize, out double shadowInflate, out double shadowOffsetX, out double shadowOffsetY)
 		{
 			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			frameWidth = 0;
 			marginWidth = 0;
 			shadowSize = 0;
+			shadowInflate = 0;
 			shadowOffsetX = 0;
 			shadowOffsetY = 0;
 
@@ -358,15 +376,17 @@ namespace Epsitec.Common.Document.Properties
 				case FrameType.ShadowAlone:
 					if (System.Globalization.RegionInfo.CurrentRegion.IsMetric)
 					{
-						shadowSize = 20.0;  // 2.0mm
-						shadowOffsetX = 20.0;  // 2.0mm
-						shadowOffsetY = -20.0;  // -2.0mm
+						shadowSize = 40.0;  // 4.0mm
+						shadowInflate = -20.0;  // -2.0mm
+						shadowOffsetX = 40.0;  // 4.0mm
+						shadowOffsetY = -40.0;  // -4.0mm
 					}
 					else
 					{
-						shadowSize = 25.4;  // 0.1in
-						shadowOffsetX = 25.4;  // 0.1in
-						shadowOffsetY = -25.4;  // -0.1in
+						shadowSize = 50.8;  // 0.2in
+						shadowInflate = -25.4;  // -0.1mm
+						shadowOffsetX = 50.8;  // 0.2in
+						shadowOffsetY = -50.8;  // -0.2in
 					}
 					break;
 			}
@@ -429,6 +449,7 @@ namespace Epsitec.Common.Document.Properties
 			p.marginWidth = this.marginWidth;
 			p.backgroundColor = this.backgroundColor;
 			p.shadowSize = this.shadowSize;
+			p.shadowInflate = this.shadowInflate;
 			p.shadowOffsetX = this.shadowOffsetX;
 			p.shadowOffsetY = this.shadowOffsetY;
 			p.shadowColor = this.shadowColor;
@@ -447,6 +468,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.marginWidth != this.marginWidth )  return false;
 			if ( p.backgroundColor != this.backgroundColor )  return false;
 			if ( p.shadowSize != this.shadowSize )  return false;
+			if ( p.shadowInflate != this.shadowInflate )  return false;
 			if ( p.shadowOffsetX != this.shadowOffsetX )  return false;
 			if ( p.shadowOffsetY != this.shadowOffsetY )  return false;
 			if ( p.shadowColor != this.shadowColor)  return false;
@@ -474,20 +496,13 @@ namespace Epsitec.Common.Document.Properties
 				var pp = Frame.Inflate (points, this.marginWidth);
 				var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
-				Path shadowPath;
-				if (this.shadowSize == 0 || (this.shadowOffsetX == 0 && this.shadowOffsetY == 0))
-				{
-					shadowPath = path;
-				}
-				else
-				{
-					var m = Frame.Move (pp, this.shadowOffsetX, this.shadowOffsetY);
-					shadowPath = Frame.GetPolygonPathCorner (drawingContext, m, corner, false);
-				}
-
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
+					var pp1 = Frame.Inflate (points, this.marginWidth+this.shadowInflate);
+					var pp2 = Frame.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
+					var shadowPath = Frame.GetPolygonPathCorner (drawingContext, pp2, corner, false);
+
 					var shape = new Shape ();
 					shape.Path = shadowPath;
 					shape.FillMode = FillMode.EvenOdd;
@@ -523,33 +538,47 @@ namespace Epsitec.Common.Document.Properties
 
 		private static List<Point> Move(List<Point> points, double mx, double my)
 		{
-			var pp = new List<Point> ();
-			var move = new Point (mx, my);
-
-			for (int i = 0; i < points.Count; i++)
+			if (mx == 0 && my == 0)
 			{
-				Point p = points[i];
-
-				pp.Add (p+move);
+				return points;
 			}
+			else
+			{
+				var pp = new List<Point> ();
+				var move = new Point (mx, my);
 
-			return pp;
+				for (int i = 0; i < points.Count; i++)
+				{
+					Point p = points[i];
+
+					pp.Add (p+move);
+				}
+
+				return pp;
+			}
 		}
 
 		private static List<Point> Inflate(List<Point> points, double inflate)
 		{
-			var pp = new List<Point> ();
-
-			for (int i = 0; i < points.Count; i++)
+			if (inflate == 0)
 			{
-				Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
-				Point p = points[i];                                  // point courant
-				Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
-
-				pp.Add (Frame.InflateCorner (a, p, b, inflate));
+				return points;
 			}
+			else
+			{
+				var pp = new List<Point> ();
 
-			return pp;
+				for (int i = 0; i < points.Count; i++)
+				{
+					Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
+					Point p = points[i];                                  // point courant
+					Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
+
+					pp.Add (Frame.InflateCorner (a, p, b, inflate));
+				}
+
+				return pp;
+			}
 		}
 
 		private static Point InflateCorner(Point a, Point p, Point b, double inflate)
@@ -719,9 +748,10 @@ namespace Epsitec.Common.Document.Properties
 			
 			info.AddValue ("MarginWidth", this.marginWidth, typeof (double));
 			info.AddValue ("BackgroundColor", this.backgroundColor);
-			
+
 			info.AddValue ("ShadowSize", this.shadowSize, typeof (double));
 			info.AddValue ("ShadowColor", this.shadowColor);
+			info.AddValue ("ShadowInflate", this.shadowInflate, typeof (double));
 			info.AddValue ("ShadowOffsetX", this.shadowOffsetX, typeof (double));
 			info.AddValue ("ShadowOffsetY", this.shadowOffsetY, typeof (double));
 		}
@@ -737,9 +767,10 @@ namespace Epsitec.Common.Document.Properties
 			
 			this.marginWidth = (double) info.GetValue ("MarginWidth", typeof (double));
 			this.backgroundColor = (RichColor) info.GetValue ("BackgroundColor", typeof (RichColor));
-			
+
 			this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
 			this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
+			this.shadowInflate = (double) info.GetValue ("ShadowInflate", typeof (double));
 			this.shadowOffsetX = (double) info.GetValue ("ShadowOffsetX", typeof (double));
 			this.shadowOffsetY = (double) info.GetValue ("ShadowOffsetY", typeof (double));
 		}
@@ -753,9 +784,10 @@ namespace Epsitec.Common.Document.Properties
 		
 		protected double				marginWidth;
 		protected RichColor				backgroundColor;
-		
+
 		protected double				shadowSize;
 		protected RichColor				shadowColor;
+		protected double				shadowInflate;
 		protected double				shadowOffsetX;
 		protected double				shadowOffsetY;
 	}
