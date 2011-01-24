@@ -938,14 +938,22 @@ namespace Epsitec.Common.Document.Objects
 		private List<Polygon> GetPolygons()
 		{
 			var polygons = new List<Polygon> ();
-			var polygon = new Polygon ();
-			polygons.Add (polygon);
+			Polygon polygon = null;
 
 			int total = this.TotalMainHandle;
 			for (int i=0; i<total; i++)
 			{
-				var p = this.Handle (i).Position;
-				polygon.Points.Add (p);
+				if (this.Handle(i).Type == HandleType.Starting)
+				{
+					polygon = new Polygon ();
+					polygons.Add (polygon);
+				}
+
+				if (polygon != null)
+				{
+					var p = this.Handle (i).Position;
+					polygon.Points.Add (p);
+				}
 			}
 
 			return polygons;
