@@ -765,6 +765,7 @@
     <EmbeddedResource Include="Images\FrameThick.icon" />
     <EmbeddedResource Include="Images\FrameThickAndShadow.icon" />
     <EmbeddedResource Include="Images\PropertyFrame.icon" />
+    <EmbeddedResource Include="Images\FrameShadowAlone.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
