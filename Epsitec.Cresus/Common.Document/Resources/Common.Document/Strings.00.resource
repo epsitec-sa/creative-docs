@@ -1445,12 +1445,15 @@
   <data name="Property.Frame.WhiteAndShadow" id="KG">Cadre blanc et ombré</data>
   <data name="Panel.Frame.Short.FrameWidth" id="KH">T</data>
   <data name="Panel.Frame.Short.MarginWidth" id="KI">M</data>
-  <data name="Panel.Frame.Short.ShadowSize" id="KJ">O&lt;br/&gt;</data>
+  <data name="Panel.Frame.Short.ShadowSize" id="KJ">O</data>
   <data name="Panel.Frame.Long.FrameWidth" id="KK">Epaisseur trait</data>
   <data name="Panel.Frame.Long.MarginWidth" id="KL">Epaisseur cadre</data>
-  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dimension ombre&lt;br/&gt;</data>
+  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dimension ombre</data>
   <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
   <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur du cadre</data>
-  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre&lt;br/&gt;</data>
+  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre</data>
   <data name="Property.Abstract.Frame" id="KQ">Cadre</data>
+  <data name="Panel.Frame.Long.ShadowIntensity" id="KR">Intensité ombre</data>
+  <data name="Panel.Frame.Short.ShadowIntensity" id="KS">I</data>
+  <data name="Panel.Frame.Tooltip.ShadowIntensity" id="KT">Intensité de l&amp;apos;ombre (0 = blanc, 100 = noir)</data>
 </bundle>

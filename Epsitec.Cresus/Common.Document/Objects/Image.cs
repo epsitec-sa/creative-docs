@@ -174,12 +174,11 @@ namespace Epsitec.Common.Document.Objects
 			//	Constuit les formes de l'objet.
 			var frame = this.PropertyFrame;
 
-			Path pathRealyUsed = this.PathBuildRealyUsed ();
 			Path pathImage = this.PathBuildImage ();
 			Path pathSurface = this.PathBuildSurface ();
 			Path pathOutline = this.PathBuildOutline ();
 
-			List<Shape> shapes = new List<Shape> ();
+			var shapes = new List<Shape> ();
 
 			//	Trait du rectangle.
 			{
@@ -198,13 +197,16 @@ namespace Epsitec.Common.Document.Objects
 			var imageShape = new Shape ();
 			imageShape.SetImageObject (this);
 
-			if (frame == null || frame.FrameType == Properties.FrameType.None || pathRealyUsed == null)
+			if (frame == null || frame.FrameType == Properties.FrameType.None)
 			{
 				shapes.Add (imageShape);
 			}
 			else
 			{
-				frame.AddShapes (shapes, imageShape, port, drawingContext, pathRealyUsed);
+				var objectShapes = new List<Shape> ();
+				objectShapes.Add (imageShape);
+
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.PathImagePixel ());
 			}
 
 			//	Rectangle complet pour bbox et détection.
@@ -230,7 +232,7 @@ namespace Epsitec.Common.Document.Objects
 			return shapes.ToArray ();
 		}
 
-		protected Path PathBuildRealyUsed()
+		protected Path PathImagePixel()
 		{
 			//	Crée le chemin correspondant à la partie réelle de l'image, inclue dans le rectangle englobant.
 			ImageCache.Item item = this.Item;
