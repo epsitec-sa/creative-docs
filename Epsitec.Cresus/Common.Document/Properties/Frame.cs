@@ -14,6 +14,7 @@ namespace Epsitec.Common.Document.Properties
 		Thick          = 20,		// bord épais
 		Shadow         = 21,		// ombre
 		ThickAndSnadow = 22,		// bord épais et ombre
+		ShadowAlone    = 30,		// ombre seule
 	}
 
 	/// <summary>
@@ -40,6 +41,8 @@ namespace Epsitec.Common.Document.Properties
 
 			this.shadowSize = 0.0;
 			this.shadowColor = RichColor.FromBrightness (0.5);  // gris
+			this.shadowOffsetX = 0.0;
+			this.shadowOffsetY = 0.0;
 		}
 
 		public FrameType FrameType
@@ -157,6 +160,42 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public double ShadowOffsetX
+		{
+			get
+			{
+				return this.shadowOffsetX;
+			}
+
+			set
+			{
+				if (this.shadowOffsetX != value)
+				{
+					this.NotifyBefore ();
+					this.shadowOffsetX = value;
+					this.NotifyAfter ();
+				}
+			}
+		}
+
+		public double ShadowOffsetY
+		{
+			get
+			{
+				return this.shadowOffsetY;
+			}
+
+			set
+			{
+				if (this.shadowOffsetY != value)
+				{
+					this.NotifyBefore ();
+					this.shadowOffsetY = value;
+					this.NotifyAfter ();
+				}
+			}
+		}
+
 		public RichColor ShadowColor
 		{
 			get
@@ -232,6 +271,7 @@ namespace Epsitec.Common.Document.Properties
 				case FrameType.Thick:           name = Res.Strings.Property.Frame.Thick;           break;
 				case FrameType.Shadow:          name = Res.Strings.Property.Frame.Shadow;          break;
 				case FrameType.ThickAndSnadow:  name = Res.Strings.Property.Frame.ThickAndShadow;  break;
+				case FrameType.ShadowAlone:     name = Res.Strings.Property.Frame.ShadowAlone;     break;
 			}
 			return name;
 		}
@@ -246,17 +286,20 @@ namespace Epsitec.Common.Document.Properties
 				case FrameType.Thick:           return "FrameThick";
 				case FrameType.Shadow:          return "FrameShadow";
 				case FrameType.ThickAndSnadow:  return "FrameThickAndShadow";
+				case FrameType.ShadowAlone:     return "FrameShadowAlone";
 			}
 			return "";
 		}
 
 
-		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize)
+		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowSize, out double shadowOffsetX, out double shadowOffsetY)
 		{
 			//	Retourne les valeurs par défaut et les min/max pour un type donné.
 			frameWidth = 0;
 			marginWidth = 0;
 			shadowSize = 0;
+			shadowOffsetX = 0;
+			shadowOffsetY = 0;
 
 			switch (type)
 			{
@@ -293,7 +336,7 @@ namespace Epsitec.Common.Document.Properties
 					else
 					{
 						frameWidth = 2.54;  // 0.01in
-						shadowSize = 25.4;  // 0.1in
+						shadowSize = 20.0;  // 2.0mm
 					}
 					break;
 
@@ -302,13 +345,28 @@ namespace Epsitec.Common.Document.Properties
 					{
 						frameWidth = 2.0;  // 0.2mm
 						marginWidth = 50.0;  // 5mm
-						shadowSize = 25.0;  // 2.5mm
+						shadowSize = 20.0;  // 2.0mm
 					}
 					else
 					{
 						frameWidth = 2.54;  // 0.01in
 						marginWidth = 63.5;  // 0.25in
 						shadowSize = 25.4;  // 0.1in
+					}
+					break;
+
+				case FrameType.ShadowAlone:
+					if (System.Globalization.RegionInfo.CurrentRegion.IsMetric)
+					{
+						shadowSize = 20.0;  // 2.0mm
+						shadowOffsetX = 20.0;  // 2.0mm
+						shadowOffsetY = -20.0;  // -2.0mm
+					}
+					else
+					{
+						shadowSize = 25.4;  // 0.1in
+						shadowOffsetX = 25.4;  // 0.1in
+						shadowOffsetY = -25.4;  // -0.1in
 					}
 					break;
 			}
@@ -371,6 +429,8 @@ namespace Epsitec.Common.Document.Properties
 			p.marginWidth = this.marginWidth;
 			p.backgroundColor = this.backgroundColor;
 			p.shadowSize = this.shadowSize;
+			p.shadowOffsetX = this.shadowOffsetX;
+			p.shadowOffsetY = this.shadowOffsetY;
 			p.shadowColor = this.shadowColor;
 		}
 
@@ -387,6 +447,8 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.marginWidth != this.marginWidth )  return false;
 			if ( p.backgroundColor != this.backgroundColor )  return false;
 			if ( p.shadowSize != this.shadowSize )  return false;
+			if ( p.shadowOffsetX != this.shadowOffsetX )  return false;
+			if ( p.shadowOffsetY != this.shadowOffsetY )  return false;
 			if ( p.shadowColor != this.shadowColor)  return false;
 
 			return true;
@@ -412,17 +474,29 @@ namespace Epsitec.Common.Document.Properties
 				var pp = Frame.Inflate (points, this.marginWidth);
 				var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
+				Path shadowPath;
+				if (this.shadowSize == 0 || (this.shadowOffsetX == 0 && this.shadowOffsetY == 0))
+				{
+					shadowPath = path;
+				}
+				else
+				{
+					var m = Frame.Move (pp, this.shadowOffsetX, this.shadowOffsetY);
+					shadowPath = Frame.GetPolygonPathCorner (drawingContext, m, corner, false);
+				}
+
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
 					var shape = new Shape ();
-					shape.Path = path;
+					shape.Path = shadowPath;
 					shape.FillMode = FillMode.EvenOdd;
 					shape.SetPropertySurface (port, this.PropertyShadowSurface);
 
 					shapes.Add (shape);
 				}
 
+				if (this.FrameType != Properties.FrameType.ShadowAlone)
 				{
 					var shape = new Shape ();
 					shape.Path = path;
@@ -445,6 +519,21 @@ namespace Epsitec.Common.Document.Properties
 					shapes.Add (shape);
 				}
 			}
+		}
+
+		private static List<Point> Move(List<Point> points, double mx, double my)
+		{
+			var pp = new List<Point> ();
+			var move = new Point (mx, my);
+
+			for (int i = 0; i < points.Count; i++)
+			{
+				Point p = points[i];
+
+				pp.Add (p+move);
+			}
+
+			return pp;
 		}
 
 		private static List<Point> Inflate(List<Point> points, double inflate)
@@ -633,6 +722,8 @@ namespace Epsitec.Common.Document.Properties
 			
 			info.AddValue ("ShadowSize", this.shadowSize, typeof (double));
 			info.AddValue ("ShadowColor", this.shadowColor);
+			info.AddValue ("ShadowOffsetX", this.shadowOffsetX, typeof (double));
+			info.AddValue ("ShadowOffsetY", this.shadowOffsetY, typeof (double));
 		}
 
 		protected Frame(SerializationInfo info, StreamingContext context)
@@ -649,6 +740,8 @@ namespace Epsitec.Common.Document.Properties
 			
 			this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
 			this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
+			this.shadowOffsetX = (double) info.GetValue ("ShadowOffsetX", typeof (double));
+			this.shadowOffsetY = (double) info.GetValue ("ShadowOffsetY", typeof (double));
 		}
 		#endregion
 
@@ -663,5 +756,7 @@ namespace Epsitec.Common.Document.Properties
 		
 		protected double				shadowSize;
 		protected RichColor				shadowColor;
+		protected double				shadowOffsetX;
+		protected double				shadowOffsetY;
 	}
 }
