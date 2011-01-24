@@ -493,13 +493,13 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				var pp = Frame.Inflate (points, this.marginWidth);
+				var pp = Geometry.Inflate (points, this.marginWidth);
 				var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
-					var pp1 = Frame.Inflate (points, this.marginWidth+this.shadowInflate);
+					var pp1 = Geometry.Inflate (points, this.marginWidth+this.shadowInflate);
 					var pp2 = Frame.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
 					var shadowPath = Frame.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 
@@ -538,6 +538,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private static List<Point> Move(List<Point> points, double mx, double my)
 		{
+			//	Déplace une liste de points.
 			if (mx == 0 && my == 0)
 			{
 				return points;
@@ -555,42 +556,6 @@ namespace Epsitec.Common.Document.Properties
 				}
 
 				return pp;
-			}
-		}
-
-		private static List<Point> Inflate(List<Point> points, double inflate)
-		{
-			if (inflate == 0)
-			{
-				return points;
-			}
-			else
-			{
-				var pp = new List<Point> ();
-
-				for (int i = 0; i < points.Count; i++)
-				{
-					Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
-					Point p = points[i];                                  // point courant
-					Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
-
-					pp.Add (Frame.InflateCorner (a, p, b, inflate));
-				}
-
-				return pp;
-			}
-		}
-
-		private static Point InflateCorner(Point a, Point p, Point b, double inflate)
-		{
-			if (inflate == 0)
-			{
-				return p;
-			}
-			else
-			{
-				var aa = Point.Move (p, a, -inflate);
-				return Point.Move(aa, b+aa-p, -inflate);
 			}
 		}
 

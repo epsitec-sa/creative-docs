@@ -337,18 +337,19 @@ namespace Epsitec.Common.Document.Panels
 
 				var type = (Properties.FrameType) this.grid.SelectedValue;
 
-				this.fieldFrameWidth.Enable = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
-				this.fieldFrameColor.Enable = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
+				bool frame = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
+				this.fieldFrameWidth.Enable = frame;
+				this.fieldFrameColor.Enable = frame;
 
 				this.fieldMarginWidth.Enable = (type == Properties.FrameType.Thick || type == Properties.FrameType.ThickAndSnadow);
 				this.fieldBackgroundColor.Enable = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
 
-				this.fieldShadowSize.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
-				this.fieldShadowColor.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
-
-				this.fieldShadowInflate.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
-				this.fieldShadowOffsetX.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
-				this.fieldShadowOffsetY.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
+				bool shadow = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
+				this.fieldShadowSize.Enable = shadow;
+				this.fieldShadowColor.Enable = shadow;
+				this.fieldShadowInflate.Enable = shadow;
+				this.fieldShadowOffsetX.Enable = shadow;
+				this.fieldShadowOffsetY.Enable = shadow;
 			}
 			else
 			{
