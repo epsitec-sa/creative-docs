@@ -866,6 +866,8 @@ namespace Epsitec.Cresus.Database
 			relationTable.PrimaryKeys.Add (relationTable.Columns[Tags.ColumnId]);
 			relationTable.AddIndex (relationTable.Columns[Tags.ColumnRefSourceId], relationTable.Columns[Tags.ColumnRefTargetId]);
 
+			relationTable.UpdatePrimaryKeyInfo ();
+
 			return relationTable;
 		}
 		
