@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database.Services
 			DbTable actualTable = this.DbInfrastructure.ResolveDbTable (this.GetDbTableName ());
 			DbTable expectedTable = this.CreateDbTable ();
 
-			if (!DbSchemaChecker.CheckTables (actualTable, expectedTable))
+			if (!DbSchemaChecker.AreDbTablesEqual (actualTable, expectedTable))
 			{
 				throw new System.ArgumentException ("Invalid table!");
 			}
