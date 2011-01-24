@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.type = type;
 			this.isUnitPercent = false;
 			this.marginWidth = TextFieldLabel.DefaultMarginWidth;
+			this.shortLongLabelLimit = 80;
 
 			if ( this.type == Type.TextFieldUnit )
 			{
@@ -136,6 +137,22 @@ namespace Epsitec.Common.Document.Widgets
 		}
 #endif
 
+
+		public double ShortLongLabelLimit
+		{
+			get
+			{
+				return this.shortLongLabelLimit;
+			}
+			set
+			{
+				if (this.shortLongLabelLimit != value)
+				{
+					this.shortLongLabelLimit = value;
+					this.ManualArrange ();
+				}
+			}
+		}
 
 		public bool ButtonUnitEnable
 		{
@@ -380,8 +397,14 @@ namespace Epsitec.Common.Document.Widgets
 				string text = "";
 				if ( this.labelVisibility )
 				{
-					if ( this.label.ActualWidth < 80 )  text = this.labelShortText;
-					else                                text = this.labelLongText+" ";
+					if (this.label.ActualWidth < this.shortLongLabelLimit)
+					{
+						text = this.labelShortText;
+					}
+					else
+					{
+						text = this.labelLongText + " ";
+					}
 				}
 
 				if ( this.label.Text != text )
@@ -403,5 +426,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected TextFieldReal				textFieldReal;
 		protected TextFieldReal				textFieldPercent;
 		protected double					marginWidth;
+		protected double					shortLongLabelLimit;
 	}
 }

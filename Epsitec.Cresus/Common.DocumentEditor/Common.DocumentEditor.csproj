@@ -762,8 +762,9 @@
     <EmbeddedResource Include="Images\FrameNone.icon" />
     <EmbeddedResource Include="Images\FrameShadow.icon" />
     <EmbeddedResource Include="Images\FrameSimple.icon" />
-    <EmbeddedResource Include="Images\FrameWhite.icon" />
-    <EmbeddedResource Include="Images\FrameWhiteAndShadow.icon" />
+    <EmbeddedResource Include="Images\FrameThick.icon" />
+    <EmbeddedResource Include="Images\FrameThickAndShadow.icon" />
+    <EmbeddedResource Include="Images\PropertyFrame.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

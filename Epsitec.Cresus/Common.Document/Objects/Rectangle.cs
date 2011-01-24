@@ -23,6 +23,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineMode )  return true;
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			if ( type == Properties.Type.Corner )  return true;
 			return false;
 		}
@@ -166,97 +167,71 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
-			Path path = this.PathBuild(drawingContext, simplify);
-			Shape[] shapes = new Shape[2];
+			var frame = this.PropertyFrame;
+
+			Path path = this.PathBuild (drawingContext, simplify);
+			var shapes = new List<Shape> ();
+			var objectShapes = new List<Shape> ();
 
 			//	Forme de la surface.
-			shapes[0] = new Shape();
-			shapes[0].Path = path;
-			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertySurface (port, this.PropertyFillGradient);
+				objectShapes.Add (shape);
+			}
 
 			//	Forme du chemin.
-			shapes[1] = new Shape();
-			shapes[1].Path = path;
-			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				objectShapes.Add (shape);
+			}
 
-			return shapes;
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
+			{
+				shapes.AddRange (objectShapes);
+			}
+			else  // cadre ?
+			{
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPoints (), this.PropertyCorner);
+			}
+
+			return shapes.ToArray ();
 		}
 
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			//	Crée le chemin de l'objet.
-			Point p1 = this.Handle(0).Position;
-			Point p2 = new Point();
-			Point p3 = this.Handle(1).Position;
-			Point p4 = new Point();
-
-			if ( this.handles.Count < 4 )
-			{
-				p2.X = p1.X;
-				p2.Y = p3.Y;
-				p4.X = p3.X;
-				p4.Y = p1.Y;
-			}
-			else
-			{
-				p2 = this.Handle(2).Position;
-				p4 = this.Handle(3).Position;
-			}
-
-			Properties.Corner corner = this.PropertyCorner;
-			return this.PathCornerRectangle(drawingContext, p1, p2, p3, p4, corner, simplify);
+			var points = this.GetPoints ();
+			var corner = this.PropertyCorner;
+			return Properties.Frame.GetPolygonPathCorner (drawingContext, points, corner, simplify);
 		}
 
-		protected Path PathCornerRectangle(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, Properties.Corner corner, bool simplify)
+		protected List<Point> GetPoints()
 		{
-			//	Crée le chemin d'un rectangle à coins quelconques.
-			double d12 = Point.Distance(p1, p2);
-			double d23 = Point.Distance(p2, p3);
-			double d34 = Point.Distance(p3, p4);
-			double d41 = Point.Distance(p4, p1);
-			double min = System.Math.Min(System.Math.Min(d12, d23), System.Math.Min(d34, d41));
-			double radius = System.Math.Min(corner.Radius, min/2);
-			if ( simplify )  radius = 0.0;
+			var points = new List<Point> ();
 
-			Path path = new Path();
-			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
-
-			if ( corner.CornerType == Properties.CornerType.Right || radius == 0.0 )
+			if (this.handles.Count < 4)
 			{
-				path.MoveTo(p1);
-				path.LineTo(p2);
-				path.LineTo(p3);
-				path.LineTo(p4);
-				path.Close();
+				var p1 = this.Handle (0).Position;
+				var p3 = this.Handle (1).Position;
+
+				points.Add (p1);
+				points.Add (new Point (p1.X, p3.Y));
+				points.Add (p3);
+				points.Add (new Point (p3.X, p1.Y));
 			}
 			else
 			{
-				Point c1 = new Point();
-				Point c2 = new Point();
-
-				c1 = Point.Move(p1, p4, radius);
-				c2 = Point.Move(p1, p2, radius);
-				path.MoveTo(c1);
-				corner.PathCorner(path, c1, p1, c2, radius);
-
-				c1 = Point.Move(p2, p1, radius);
-				c2 = Point.Move(p2, p3, radius);
-				path.LineTo(c1);
-				corner.PathCorner(path, c1, p2, c2, radius);
-
-				c1 = Point.Move(p3, p2, radius);
-				c2 = Point.Move(p3, p4, radius);
-				path.LineTo(c1);
-				corner.PathCorner(path, c1, p3, c2, radius);
-
-				c1 = Point.Move(p4, p3, radius);
-				c2 = Point.Move(p4, p1, radius);
-				path.LineTo(c1);
-				corner.PathCorner(path, c1, p4, c2, radius);
-
-				path.Close();
+				points.Add (this.Handle (0).Position);
+				points.Add (this.Handle (2).Position);
+				points.Add (this.Handle (1).Position);
+				points.Add (this.Handle (3).Position);
 			}
-			return path;
+
+			return points;
 		}
 
 

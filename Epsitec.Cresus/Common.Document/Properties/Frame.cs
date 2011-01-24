@@ -11,9 +11,9 @@ namespace Epsitec.Common.Document.Properties
 	{
 		None           = 0,			// pas de cadre
 		Simple         = 10,		// simple trait
-		White          = 20,		// bord blanc
+		Thick          = 20,		// bord épais
 		Shadow         = 21,		// ombre
-		WhiteAndSnadow = 22,		// bord blanc et ombre
+		ThickAndSnadow = 22,		// bord épais et ombre
 	}
 
 	/// <summary>
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Properties
 			this.frameColor = RichColor.FromBrightness (0);  // noir
 
 			this.marginWidth = 0.0;
-			this.marginColor = RichColor.FromBrightness (1);  // blanc
+			this.backgroundColor = RichColor.FromBrightness (1);  // blanc
 
 			this.shadowSize = 0.0;
 			this.shadowColor = RichColor.FromBrightness (0.5);  // gris
@@ -119,19 +119,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public RichColor MarginColor
+		public RichColor BackgroundColor
 		{
 			get
 			{
-				return this.marginColor;
+				return this.backgroundColor;
 			}
 
 			set
 			{
-				if (this.marginColor != value)
+				if (this.backgroundColor != value)
 				{
 					this.NotifyBefore ();
-					this.marginColor = value;
+					this.backgroundColor = value;
 					this.NotifyAfter ();
 				}
 			}
@@ -202,9 +202,9 @@ namespace Epsitec.Common.Document.Properties
 			{
 				case  0:  type = FrameType.None;            break;
 				case  1:  type = FrameType.Simple;          break;
-				case  2:  type = FrameType.White;           break;
+				case  2:  type = FrameType.Thick;           break;
 				case  3:  type = FrameType.Shadow;          break;
-				case  4:  type = FrameType.WhiteAndSnadow;  break;
+				case  4:  type = FrameType.ThickAndSnadow;  break;
 			}
 			return type;
 		}
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Document.Properties
 			{
 				case FrameType.None:            name = Res.Strings.Property.Frame.None;            break;
 				case FrameType.Simple:          name = Res.Strings.Property.Frame.Simple;          break;
-				case FrameType.White:           name = Res.Strings.Property.Frame.White;           break;
+				case FrameType.Thick:           name = Res.Strings.Property.Frame.Thick;           break;
 				case FrameType.Shadow:          name = Res.Strings.Property.Frame.Shadow;          break;
-				case FrameType.WhiteAndSnadow:  name = Res.Strings.Property.Frame.WhiteAndShadow;  break;
+				case FrameType.ThickAndSnadow:  name = Res.Strings.Property.Frame.ThickAndShadow;  break;
 			}
 			return name;
 		}
@@ -243,9 +243,9 @@ namespace Epsitec.Common.Document.Properties
 			{
 				case FrameType.None:            return "FrameNone";
 				case FrameType.Simple:          return "FrameSimple";
-				case FrameType.White:           return "FrameWhite";
+				case FrameType.Thick:           return "FrameThick";
 				case FrameType.Shadow:          return "FrameShadow";
-				case FrameType.WhiteAndSnadow:  return "FrameWhiteAndShadow";
+				case FrameType.ThickAndSnadow:  return "FrameThickAndShadow";
 			}
 			return "";
 		}
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Document.Properties
 					}
 					break;
 
-				case FrameType.White:
+				case FrameType.Thick:
 					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
 					{
 						frameWidth = 2.0;  // 0.2mm
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Document.Properties
 					}
 					break;
 
-				case FrameType.WhiteAndSnadow:
+				case FrameType.ThickAndSnadow:
 					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
 					{
 						frameWidth = 2.0;  // 0.2mm
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Document.Properties
 			p.frameWidth = this.frameWidth;
 			p.frameColor = this.frameColor;
 			p.marginWidth = this.marginWidth;
-			p.marginColor = this.marginColor;
+			p.backgroundColor = this.backgroundColor;
 			p.shadowSize = this.shadowSize;
 			p.shadowColor = this.shadowColor;
 		}
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.frameWidth != this.frameWidth)  return false;
 			if ( p.frameColor != this.frameColor)  return false;
 			if ( p.marginWidth != this.marginWidth )  return false;
-			if ( p.marginColor != this.marginColor )  return false;
+			if ( p.backgroundColor != this.backgroundColor )  return false;
 			if ( p.shadowSize != this.shadowSize )  return false;
 			if ( p.shadowColor != this.shadowColor)  return false;
 
@@ -400,22 +400,17 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, Path path)
+		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Point> points, Properties.Corner corner)
 		{
-			Path boldPath = path;
-
-			if (this.marginWidth > 0)
-			{
-				boldPath = new Path ();
-				boldPath.Append (path, 1, this.marginWidth*2);
-				//?boldPath.Append (path, this.marginWidth*2, CapStyle.Round, JoinStyle.MiterRound, 1, 1);
-			}
+			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
+			var pp = Frame.Inflate (points, this.marginWidth);
+			var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 			//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 			if (this.shadowSize > 0)
 			{
 				var shape = new Shape ();
-				shape.Path = boldPath;
+				shape.Path = path;
 				shape.FillMode = FillMode.EvenOdd;
 				shape.SetPropertySurface (port, this.PropertyShadowSurface);
 
@@ -424,9 +419,9 @@ namespace Epsitec.Common.Document.Properties
 
 			{
 				var shape = new Shape ();
-				shape.Path = boldPath;
+				shape.Path = path;
 				shape.FillMode = FillMode.EvenOdd;
-				shape.SetPropertySurface (port, this.PropertyMarginSurface);
+				shape.SetPropertySurface (port, this.PropertyBackgroundSurface);
 
 				shapes.Add (shape);
 			}
@@ -438,11 +433,121 @@ namespace Epsitec.Common.Document.Properties
 			if (this.frameWidth > 0)
 			{
 				var shape = new Shape ();
-				shape.Path = boldPath;
+				shape.Path = path;
 				shape.SetPropertyStroke (port, this.PropertyFrameStroke, this.PropertyFrameSurface);
 
 				shapes.Add (shape);
 			}
+		}
+
+		private static List<Point> Inflate(List<Point> points, double inflate)
+		{
+			var pp = new List<Point> ();
+
+			for (int i = 0; i < points.Count; i++)
+			{
+				Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
+				Point p = points[i];                                  // point courant
+				Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
+
+				pp.Add (Frame.InflateCorner (a, p, b, inflate));
+			}
+
+			return pp;
+		}
+
+		private static Point InflateCorner(Point a, Point p, Point b, double inflate)
+		{
+			if (inflate == 0)
+			{
+				return p;
+			}
+			else
+			{
+				var aa = Point.Move (p, a, -inflate);
+				return Point.Move(aa, b+aa-p, -inflate);
+			}
+		}
+
+		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Point> points, Properties.Corner corner, bool simplify)
+		{
+			//	Crée le chemin d'un polygone à coins quelconques.
+			if (corner == null)
+			{
+				return Frame.GetPolygonPath (points);
+			}
+			else
+			{
+				double min = double.MaxValue;
+
+				for (int i = 0; i < points.Count; i++)
+				{
+					Point p = points[i];                               // point courant
+					Point b = points[(i+1 < points.Count) ? i+1 : 0];  // point suivant
+
+					double d = Point.Distance (p, b);
+					min = System.Math.Min (min, d);
+				}
+
+				double radius = simplify ? 0.0 : System.Math.Min (corner.Radius, min/2);
+
+				if (corner.CornerType == Properties.CornerType.Right || radius == 0.0)
+				{
+					return Frame.GetPolygonPath (points);
+				}
+				else
+				{
+					Path path = new Path ();
+					path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
+
+					for (int i = 0; i < points.Count; i++)
+					{
+						Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
+						Point p = points[i];                                  // point courant
+						Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
+
+						Point c1 = Point.Move (p, a, radius);
+						Point c2 = Point.Move (p, b, radius);
+
+						if (i == 0)
+						{
+							path.MoveTo (c1);
+						}
+						else
+						{
+							path.LineTo (c1);
+						}
+
+						corner.PathCorner (path, c1, p, c2, radius);
+					}
+
+					path.Close ();
+
+					return path;
+				}
+			}
+		}
+
+		public static Path GetPolygonPath(List<Point> points)
+		{
+			//	Crée le chemin d'un polygone à coins droits.
+			var path = new Path ();
+
+			for (int i = 0; i < points.Count; i++)
+			{
+				if (i == 0)
+				{
+					path.MoveTo (points[i]);
+				}
+				else
+				{
+					path.LineTo (points[i]);
+				}
+			}
+
+			path.Close ();
+
+			return path;
 		}
 
 
@@ -475,7 +580,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		private Properties.Gradient PropertyMarginSurface
+		private Properties.Gradient PropertyBackgroundSurface
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
 			get
@@ -483,7 +588,7 @@ namespace Epsitec.Common.Document.Properties
 				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
 
 				surface.IsOnlyForCreation = true;
-				surface.Color1 = this.marginColor;
+				surface.Color1 = this.backgroundColor;
 
 				return surface;
 			}
@@ -517,7 +622,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue ("FrameColor", this.frameColor);
 			
 			info.AddValue ("MarginWidth", this.marginWidth, typeof (double));
-			info.AddValue ("MarginColor", this.marginColor);
+			info.AddValue ("BackgroundColor", this.backgroundColor);
 			
 			info.AddValue ("ShadowSize", this.shadowSize, typeof (double));
 			info.AddValue ("ShadowColor", this.shadowColor);
@@ -533,7 +638,7 @@ namespace Epsitec.Common.Document.Properties
 			this.frameColor = (RichColor) info.GetValue ("FrameColor", typeof (RichColor));
 			
 			this.marginWidth = (double) info.GetValue ("MarginWidth", typeof (double));
-			this.marginColor = (RichColor) info.GetValue ("MarginColor", typeof (RichColor));
+			this.backgroundColor = (RichColor) info.GetValue ("BackgroundColor", typeof (RichColor));
 			
 			this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
 			this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
@@ -547,7 +652,7 @@ namespace Epsitec.Common.Document.Properties
 		protected RichColor				frameColor;
 		
 		protected double				marginWidth;
-		protected RichColor				marginColor;
+		protected RichColor				backgroundColor;
 		
 		protected double				shadowSize;
 		protected RichColor				shadowColor;
