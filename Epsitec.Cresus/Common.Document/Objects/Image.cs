@@ -23,6 +23,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.Name )  return true;
 			if ( type == Properties.Type.Image )  return true;
 			if ( type == Properties.Type.Frame )  return true;
+			if ( type == Properties.Type.Corner )  return true;
 			return false;
 		}
 
@@ -197,16 +198,16 @@ namespace Epsitec.Common.Document.Objects
 			var imageShape = new Shape ();
 			imageShape.SetImageObject (this);
 
-			if (frame == null || frame.FrameType == Properties.FrameType.None)
+			if (frame == null || frame.FrameType == Properties.FrameType.None)  // pas de cadre ?
 			{
 				shapes.Add (imageShape);
 			}
-			else
+			else  // cadre ?
 			{
 				var objectShapes = new List<Shape> ();
 				objectShapes.Add (imageShape);
 
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.PathImagePixel ());
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPoints (), this.PropertyCorner);
 			}
 
 			//	Rectangle complet pour bbox et détection.
@@ -232,93 +233,93 @@ namespace Epsitec.Common.Document.Objects
 			return shapes.ToArray ();
 		}
 
-		protected Path PathImagePixel()
+		protected List<Point> GetImagePixelPoints()
 		{
 			//	Crée le chemin correspondant à la partie réelle de l'image, inclue dans le rectangle englobant.
 			ImageCache.Item item = this.Item;
 
 			if (item == null)
 			{
-				return this.PathBuildImage ();
+				return this.GetImagePoints ();
 			}
+			else
+			{
+				var points = new List<Point> ();
 
-			Point center;
-			double width, height, angle;
-			this.ImageGeometry (out center, out width, out height, out angle);
+				Point center;
+				double width, height, angle;
+				this.ImageGeometry (out center, out width, out height, out angle);
 
-			Properties.Image pi = this.PropertyImage;
-			Margins crop = pi.CropMargins;
+				Properties.Image pi = this.PropertyImage;
+				Margins crop = pi.CropMargins;
 
-			Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, item.Size.Width, item.Size.Height);
-			cropRect.Deflate (crop);
+				Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, item.Size.Width, item.Size.Height);
+				cropRect.Deflate (crop);
 
-			double sx = cropRect.Width/width;
-			double sy = cropRect.Height/height;
-			double scale = System.Math.Max (sx, sy);
+				double sx = cropRect.Width/width;
+				double sy = cropRect.Height/height;
+				double scale = System.Math.Max (sx, sy);
 
-			width = cropRect.Width/scale;
-			height = cropRect.Height/scale;
+				width = cropRect.Width/scale;
+				height = cropRect.Height/scale;
 
-			Point p = new Point ();
+				Point p = new Point ();
 
-			p.X = center.X-width/2;
-			p.Y = center.Y-height/2;
-			Point p1 = Transform.RotatePointDeg (center, angle, p);
+				p.X = center.X-width/2;
+				p.Y = center.Y-height/2;
+				points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			p.X = center.X+width/2;
-			p.Y = center.Y-height/2;
-			Point p2 = Transform.RotatePointDeg (center, angle, p);
+				p.X = center.X+width/2;
+				p.Y = center.Y-height/2;
+				points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			p.X = center.X+width/2;
-			p.Y = center.Y+height/2;
-			Point p3 = Transform.RotatePointDeg (center, angle, p);
+				p.X = center.X+width/2;
+				p.Y = center.Y+height/2;
+				points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			p.X = center.X-width/2;
-			p.Y = center.Y+height/2;
-			Point p4 = Transform.RotatePointDeg (center, angle, p);
+				p.X = center.X-width/2;
+				p.Y = center.Y+height/2;
+				points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			Path path = new Path ();
-			path.MoveTo (p1);
-			path.LineTo (p2);
-			path.LineTo (p3);
-			path.LineTo (p4);
-			path.Close ();
-			return path;
-
+				return points;
+			}
 		}
 
 		protected Path PathBuildImage()
 		{
 			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
+			var points = this.GetImagePoints ();
+			return Properties.Frame.GetPolygonPath (points);
+		}
+
+		protected List<Point> GetImagePoints()
+		{
+			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
+			var points = new List<Point> ();
+
 			Point center;
 			double width, height, angle;
-			this.ImageGeometry(out center, out width, out height, out angle);
+			this.ImageGeometry (out center, out width, out height, out angle);
 
-			Point p = new Point();
+			Point p = new Point ();
 
 			p.X = center.X-width/2;
 			p.Y = center.Y-height/2;
-			Point p1 = Transform.RotatePointDeg(center, angle, p);
+			points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y-height/2;
-			Point p2 = Transform.RotatePointDeg(center, angle, p);
+			points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y+height/2;
-			Point p3 = Transform.RotatePointDeg(center, angle, p);
+			points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X-width/2;
 			p.Y = center.Y+height/2;
-			Point p4 = Transform.RotatePointDeg(center, angle, p);
+			points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			Path path = new Path();
-			path.MoveTo(p1);
-			path.LineTo(p2);
-			path.LineTo(p3);
-			path.LineTo(p4);
-			path.Close();
-			return path;
+			return points;
 		}
 
 		protected Path PathBuildSurface()

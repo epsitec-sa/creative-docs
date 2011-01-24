@@ -119,34 +119,35 @@ namespace Epsitec.Common.Document.Properties
 		static public int SortOrder(Type type)
 		{
 			//	Retourne un numéro d'ordre pour le tri.
+			//	Ceci détermine l'ordre d'empilement vertical dans le panneau des propriétés.
 			switch ( type )
 			{
-				case Type.Name:           return 1;
-				case Type.LineMode:       return 2;
-				case Type.LineDimension:  return 3;
-				case Type.Arrow:          return 4;
-				case Type.DimensionArrow: return 5;
-				case Type.LineColor:      return 6;
-				case Type.FillGradient:   return 7;
-				case Type.FillGradientVT: return 8;
-				case Type.FillGradientVL: return 9;
-				case Type.FillGradientVR: return 10;
-				case Type.BackColor:      return 11;
-				case Type.Shadow:         return 12;
-				case Type.PolyClose:      return 13;
-				case Type.Corner:         return 14;
-				case Type.Regular:        return 15;
-				case Type.Arc:            return 16;
-				case Type.Surface:        return 17;
-				case Type.Volume:         return 18;
-				case Type.TextFont:       return 19;
-				case Type.TextJustif:     return 20;
-				case Type.TextLine:       return 21;
-				case Type.Image:          return 22;
-				case Type.ModColor:       return 23;
-				case Type.Dimension:      return 24;
-				case Type.Tension:        return 25;
-				case Type.Frame:          return 26;
+				case Type.Name:            return 1;
+				case Type.LineMode:        return 2;
+				case Type.LineDimension:   return 3;
+				case Type.Arrow:           return 4;
+				case Type.DimensionArrow:  return 5;
+				case Type.LineColor:       return 6;
+				case Type.FillGradient:    return 7;
+				case Type.FillGradientVT:  return 8;
+				case Type.FillGradientVL:  return 9;
+				case Type.FillGradientVR:  return 10;
+				case Type.BackColor:       return 11;
+				case Type.Shadow:          return 12;
+				case Type.PolyClose:       return 13;
+				case Type.Frame:           return 14;
+				case Type.Corner:          return 15;
+				case Type.Regular:         return 16;
+				case Type.Arc:             return 17;
+				case Type.Surface:         return 18;
+				case Type.Volume:          return 19;
+				case Type.TextFont:        return 20;
+				case Type.TextJustif:      return 21;
+				case Type.TextLine:        return 22;
+				case Type.Image:           return 23;
+				case Type.ModColor:        return 24;
+				case Type.Dimension:       return 25;
+				case Type.Tension:         return 26;
 			}
 			return 0;
 		}
@@ -256,32 +257,32 @@ namespace Epsitec.Common.Document.Properties
 			//	Intensité pour le fond du panneau.
 			switch ( type )
 			{
-				case Type.Name:           return 0.70;
-				case Type.LineColor:      return 0.85;
-				case Type.LineMode:       return 0.85;
-				case Type.LineDimension:  return 0.85;
-				case Type.Arrow:          return 0.85;
-				case Type.DimensionArrow: return 0.85;
-				case Type.Dimension:      return 0.85;
-				case Type.FillGradient:   return 0.95;
-				case Type.FillGradientVT: return 0.95;
-				case Type.FillGradientVL: return 0.95;
-				case Type.FillGradientVR: return 0.95;
-				case Type.BackColor:      return 0.95;
-				case Type.Shadow:         return 0.80;
-				case Type.PolyClose:      return 0.90;
-				case Type.Corner:         return 0.90;
-				case Type.Regular:        return 0.90;
-				case Type.Arc:            return 0.90;
-				case Type.Surface:        return 0.90;
-				case Type.Volume:         return 0.90;
-				case Type.TextFont:       return 0.80;
-				case Type.TextJustif:     return 0.80;
-				case Type.TextLine:       return 0.80;
-				case Type.Image:          return 0.90;
-				case Type.ModColor:       return 0.95;
-				case Type.Tension:        return 0.90;
-				case Type.Frame:          return 0.90;
+				case Type.Name:            return 0.70;
+				case Type.LineColor:       return 0.85;
+				case Type.LineMode:        return 0.85;
+				case Type.LineDimension:   return 0.85;
+				case Type.Arrow:           return 0.85;
+				case Type.DimensionArrow:  return 0.85;
+				case Type.Dimension:       return 0.85;
+				case Type.FillGradient:    return 0.95;
+				case Type.FillGradientVT:  return 0.95;
+				case Type.FillGradientVL:  return 0.95;
+				case Type.FillGradientVR:  return 0.95;
+				case Type.BackColor:       return 0.95;
+				case Type.Shadow:          return 0.80;
+				case Type.PolyClose:       return 0.90;
+				case Type.Corner:          return 0.90;
+				case Type.Regular:         return 0.90;
+				case Type.Arc:             return 0.90;
+				case Type.Surface:         return 0.90;
+				case Type.Volume:          return 0.90;
+				case Type.TextFont:        return 0.80;
+				case Type.TextJustif:      return 0.80;
+				case Type.TextLine:        return 0.80;
+				case Type.Image:           return 0.90;
+				case Type.ModColor:        return 0.95;
+				case Type.Tension:         return 0.90;
+				case Type.Frame:           return 0.90;
 			}
 			return 0.0;
 		}
@@ -291,32 +292,32 @@ namespace Epsitec.Common.Document.Properties
 			//	Nom de la propriété.
 			switch ( type )
 			{
-				case Type.Name:           return Res.Strings.Property.Abstract.Name;
-				case Type.LineColor:      return Res.Strings.Property.Abstract.LineColor;
-				case Type.LineMode:       return Res.Strings.Property.Abstract.LineMode;
-				case Type.LineDimension:  return Res.Strings.Property.Abstract.LineDimension;
-				case Type.FillGradient:   return Res.Strings.Property.Abstract.FillGradient;
-				case Type.FillGradientVT: return Res.Strings.Property.Abstract.FillGradientVT;
-				case Type.FillGradientVL: return Res.Strings.Property.Abstract.FillGradientVL;
-				case Type.FillGradientVR: return Res.Strings.Property.Abstract.FillGradientVR;
-				case Type.Shadow:         return Res.Strings.Property.Abstract.Shadow;
-				case Type.PolyClose:      return Res.Strings.Property.Abstract.PolyClose;
-				case Type.Arrow:          return Res.Strings.Property.Abstract.Arrow;
-				case Type.DimensionArrow: return Res.Strings.Property.Abstract.DimensionArrow;
-				case Type.Dimension:      return Res.Strings.Property.Abstract.Dimension;
-				case Type.Corner:         return Res.Strings.Property.Abstract.Corner;
-				case Type.Regular:        return Res.Strings.Property.Abstract.Regular;
-				case Type.Tension:        return Res.Strings.Property.Abstract.Tension;
-				case Type.Arc:            return Res.Strings.Property.Abstract.Arc;
-				case Type.Surface:        return Res.Strings.Property.Abstract.Surface;
-				case Type.Volume:         return Res.Strings.Property.Abstract.Volume;
-				case Type.BackColor:      return Res.Strings.Property.Abstract.BackColor;
-				case Type.TextFont:       return Res.Strings.Property.Abstract.TextFont;
-				case Type.TextJustif:     return Res.Strings.Property.Abstract.TextJustif;
-				case Type.TextLine:       return Res.Strings.Property.Abstract.TextLine;
-				case Type.Image:          return Res.Strings.Property.Abstract.Image;
-				case Type.ModColor:       return Res.Strings.Property.Abstract.ModColor;
-				case Type.Frame:          return Res.Strings.Property.Abstract.Frame;
+				case Type.Name:            return Res.Strings.Property.Abstract.Name;
+				case Type.LineColor:       return Res.Strings.Property.Abstract.LineColor;
+				case Type.LineMode:        return Res.Strings.Property.Abstract.LineMode;
+				case Type.LineDimension:   return Res.Strings.Property.Abstract.LineDimension;
+				case Type.FillGradient:    return Res.Strings.Property.Abstract.FillGradient;
+				case Type.FillGradientVT:  return Res.Strings.Property.Abstract.FillGradientVT;
+				case Type.FillGradientVL:  return Res.Strings.Property.Abstract.FillGradientVL;
+				case Type.FillGradientVR:  return Res.Strings.Property.Abstract.FillGradientVR;
+				case Type.Shadow:          return Res.Strings.Property.Abstract.Shadow;
+				case Type.PolyClose:       return Res.Strings.Property.Abstract.PolyClose;
+				case Type.Arrow:           return Res.Strings.Property.Abstract.Arrow;
+				case Type.DimensionArrow:  return Res.Strings.Property.Abstract.DimensionArrow;
+				case Type.Dimension:       return Res.Strings.Property.Abstract.Dimension;
+				case Type.Corner:          return Res.Strings.Property.Abstract.Corner;
+				case Type.Regular:         return Res.Strings.Property.Abstract.Regular;
+				case Type.Tension:         return Res.Strings.Property.Abstract.Tension;
+				case Type.Arc:             return Res.Strings.Property.Abstract.Arc;
+				case Type.Surface:         return Res.Strings.Property.Abstract.Surface;
+				case Type.Volume:          return Res.Strings.Property.Abstract.Volume;
+				case Type.BackColor:       return Res.Strings.Property.Abstract.BackColor;
+				case Type.TextFont:        return Res.Strings.Property.Abstract.TextFont;
+				case Type.TextJustif:      return Res.Strings.Property.Abstract.TextJustif;
+				case Type.TextLine:        return Res.Strings.Property.Abstract.TextLine;
+				case Type.Image:           return Res.Strings.Property.Abstract.Image;
+				case Type.ModColor:        return Res.Strings.Property.Abstract.ModColor;
+				case Type.Frame:           return Res.Strings.Property.Abstract.Frame;
 			}
 			return "";
 		}
@@ -326,32 +327,32 @@ namespace Epsitec.Common.Document.Properties
 			//	Nom de l'icône de la propriété.
 			switch ( type )
 			{
-				case Type.Name:           return "PropertyName";
-				case Type.LineColor:      return "PropertyLineColor";
-				case Type.LineMode:       return "PropertyLineMode";
-				case Type.LineDimension:  return "PropertyLineDimension";
-				case Type.FillGradient:   return "PropertyFillGradient";
-				case Type.FillGradientVT: return "PropertyFillGradientVT";
-				case Type.FillGradientVL: return "PropertyFillGradientVL";
-				case Type.FillGradientVR: return "PropertyFillGradientVR";
-				case Type.Shadow:         return "PropertyShadow";
-				case Type.PolyClose:      return "PropertyPolyClose";
-				case Type.Arrow:          return "PropertyArrow";
-				case Type.DimensionArrow: return "PropertyDimensionArrow";
-				case Type.Dimension:      return "PropertyDimension";
-				case Type.Corner:         return "PropertyCorner";
-				case Type.Regular:        return "PropertyRegular";
-				case Type.Tension:        return "PropertyTension";
-				case Type.Arc:            return "PropertyArc";
-				case Type.Surface:        return "PropertySurface";
-				case Type.Volume:         return "PropertyVolume";
-				case Type.BackColor:      return "PropertyBackColor";
-				case Type.TextFont:       return "PropertyTextFont";
-				case Type.TextJustif:     return "PropertyTextJustif";
-				case Type.TextLine:       return "PropertyTextLine";
-				case Type.Image:          return "PropertyImage";
-				case Type.ModColor:       return "PropertyModColor";
-				case Type.Frame:          return "PropertyFrame";
+				case Type.Name:            return "PropertyName";
+				case Type.LineColor:       return "PropertyLineColor";
+				case Type.LineMode:        return "PropertyLineMode";
+				case Type.LineDimension:   return "PropertyLineDimension";
+				case Type.FillGradient:    return "PropertyFillGradient";
+				case Type.FillGradientVT:  return "PropertyFillGradientVT";
+				case Type.FillGradientVL:  return "PropertyFillGradientVL";
+				case Type.FillGradientVR:  return "PropertyFillGradientVR";
+				case Type.Shadow:          return "PropertyShadow";
+				case Type.PolyClose:       return "PropertyPolyClose";
+				case Type.Arrow:           return "PropertyArrow";
+				case Type.DimensionArrow:  return "PropertyDimensionArrow";
+				case Type.Dimension:       return "PropertyDimension";
+				case Type.Corner:          return "PropertyCorner";
+				case Type.Regular:         return "PropertyRegular";
+				case Type.Tension:         return "PropertyTension";
+				case Type.Arc:             return "PropertyArc";
+				case Type.Surface:         return "PropertySurface";
+				case Type.Volume:          return "PropertyVolume";
+				case Type.BackColor:       return "PropertyBackColor";
+				case Type.TextFont:        return "PropertyTextFont";
+				case Type.TextJustif:      return "PropertyTextJustif";
+				case Type.TextLine:        return "PropertyTextLine";
+				case Type.Image:           return "PropertyImage";
+				case Type.ModColor:        return "PropertyModColor";
+				case Type.Frame:           return "PropertyFrame";
 			}
 			return "";
 		}

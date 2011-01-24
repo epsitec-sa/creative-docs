@@ -313,8 +313,8 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ((this.DragSourceFrame) &&
-				(this.ActiveState == ActiveState.Yes))
+			if (this.DragSourceFrame &&
+				this.ActiveState == ActiveState.Yes)
 			{
 				Drawing.Rectangle r = rect;
 				r.Inflate (ColorSample.MarginSource);
@@ -342,17 +342,17 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid (ColorSample.GetHiliteColor (this.Color.Basic));
 				}
 
-				if ((this.IsFocused) &&
-					(this.DragHost == null) &&
-					(this.dragInfo == null))
+				if (this.IsFocused &&
+					this.DragHost == null &&
+					this.dragInfo == null)
 				{
 					graphics.AddRectangle (Drawing.Rectangle.Deflate (rect, 1, 1));
 					graphics.RenderSolid (Drawing.Color.FromBrightness (1));
 					adorner.PaintFocusBox (graphics, Drawing.Rectangle.Deflate (rect, 1, 1));
 				}
 
-				if ((this.dragInfo != null) &&
-					(this.dragInfo.Color.IsValid))
+				if (this.dragInfo != null &&
+					this.dragInfo.Color.IsValid)
 				{
 					//	This sample is either a drop destination or a drag source with
 					//	active source <-> destination swapping. Paint a smaller sample
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Widgets
 			{
 				rect.Deflate (0.5);
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (adorner.ColorBorder);
+				graphics.RenderSolid (adorner.ColorTextFieldBorder (false));
 			}
 		}
 

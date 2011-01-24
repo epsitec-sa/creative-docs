@@ -6763,6 +6763,22 @@ namespace Epsitec.Common.Document
 				{
 					public static class Long
 					{
+						//	designer:str/20KU
+						public static global::Epsitec.Common.Types.FormattedText BackgroundColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544350));
+							}
+						}
+						//	designer:str/20KR
+						public static global::Epsitec.Common.Types.FormattedText FrameColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
+							}
+						}
 						//	designer:str/20KK
 						public static global::Epsitec.Common.Types.FormattedText FrameWidth
 						{
@@ -6779,12 +6795,12 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544341));
 							}
 						}
-						//	designer:str/20KR
-						public static global::Epsitec.Common.Types.FormattedText ShadowIntensity
+						//	designer:str/20KV
+						public static global::Epsitec.Common.Types.FormattedText ShadowColor
 						{
 							get
 							{
-								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544351));
 							}
 						}
 						//	designer:str/20KM
@@ -6799,6 +6815,22 @@ namespace Epsitec.Common.Document
 					
 					public static class Short
 					{
+						//	designer:str/20K11
+						public static global::Epsitec.Common.Types.FormattedText BackgroundColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544353));
+							}
+						}
+						//	designer:str/20K01
+						public static global::Epsitec.Common.Types.FormattedText FrameColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544352));
+							}
+						}
 						//	designer:str/20KH
 						public static global::Epsitec.Common.Types.FormattedText FrameWidth
 						{
@@ -6816,7 +6848,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20KS
-						public static global::Epsitec.Common.Types.FormattedText ShadowIntensity
+						public static global::Epsitec.Common.Types.FormattedText ShadowColor
 						{
 							get
 							{
@@ -6835,6 +6867,22 @@ namespace Epsitec.Common.Document
 					
 					public static class Tooltip
 					{
+						//	designer:str/20K31
+						public static global::Epsitec.Common.Types.FormattedText BackgroundColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544355));
+							}
+						}
+						//	designer:str/20K21
+						public static global::Epsitec.Common.Types.FormattedText FrameColor
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544354));
+							}
+						}
 						//	designer:str/20KN
 						public static global::Epsitec.Common.Types.FormattedText FrameWidth
 						{
@@ -6852,7 +6900,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20KT
-						public static global::Epsitec.Common.Types.FormattedText ShadowIntensity
+						public static global::Epsitec.Common.Types.FormattedText ShadowColor
 						{
 							get
 							{
@@ -9168,7 +9216,7 @@ namespace Epsitec.Common.Document
 						}
 					}
 					//	designer:str/20KE
-					public static global::Epsitec.Common.Types.FormattedText White
+					public static global::Epsitec.Common.Types.FormattedText Thick
 					{
 						get
 						{
@@ -9176,7 +9224,7 @@ namespace Epsitec.Common.Document
 						}
 					}
 					//	designer:str/20KG
-					public static global::Epsitec.Common.Types.FormattedText WhiteAndShadow
+					public static global::Epsitec.Common.Types.FormattedText ThickAndShadow
 					{
 						get
 						{

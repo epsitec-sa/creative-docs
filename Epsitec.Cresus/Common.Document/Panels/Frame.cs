@@ -19,13 +19,14 @@ namespace Epsitec.Common.Document.Panels
 
 			this.AddRadioIcon (Properties.FrameType.None);
 			this.AddRadioIcon (Properties.FrameType.Simple);
-			this.AddRadioIcon (Properties.FrameType.White);
+			this.AddRadioIcon (Properties.FrameType.Thick);
 			this.AddRadioIcon (Properties.FrameType.Shadow);
-			this.AddRadioIcon (Properties.FrameType.WhiteAndSnadow);
+			this.AddRadioIcon (Properties.FrameType.ThickAndSnadow);
 
 			this.fieldFrameWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldFrameWidth.LabelShortText = Res.Strings.Panel.Frame.Short.FrameWidth;
 			this.fieldFrameWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.FrameWidth;
+			this.fieldFrameWidth.ShortLongLabelLimit = 50;
 			this.fieldFrameWidth.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldFrameWidth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldFrameWidth.TextFieldReal.FactorStep = 0.1M;
@@ -41,37 +42,39 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFrameColor.ColorChanged += this.HandleFieldColorChanged;
 			this.fieldFrameColor.TabIndex = 3;
 			this.fieldFrameColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip (this.fieldFrameColor, Res.Strings.Panel.Gradient.Tooltip.Color1);
+			ToolTip.Default.SetToolTip (this.fieldFrameColor, Res.Strings.Panel.Frame.Tooltip.FrameColor);
 
 			this.fieldMarginWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMarginWidth.LabelShortText = Res.Strings.Panel.Frame.Short.MarginWidth;
 			this.fieldMarginWidth.LabelLongText  = Res.Strings.Panel.Frame.Long.MarginWidth;
+			this.fieldMarginWidth.ShortLongLabelLimit = 50;
 			this.fieldMarginWidth.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldMarginWidth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldMarginWidth.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldMarginWidth.TextFieldReal);
 			this.fieldMarginWidth.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
-			this.fieldMarginWidth.TabIndex = 3;
+			this.fieldMarginWidth.TabIndex = 4;
 			this.fieldMarginWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldMarginWidth, Res.Strings.Panel.Frame.Tooltip.MarginWidth);
 
-			this.fieldMarginColor = new ColorSample (this);
-			this.fieldMarginColor.DragSourceFrame = true;
-			this.fieldMarginColor.Clicked += this.HandleFieldColorClicked;
-			this.fieldMarginColor.ColorChanged += this.HandleFieldColorChanged;
-			this.fieldMarginColor.TabIndex = 3;
-			this.fieldMarginColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip (this.fieldMarginColor, Res.Strings.Panel.Gradient.Tooltip.Color1);
+			this.fieldBackgroundColor = new ColorSample (this);
+			this.fieldBackgroundColor.DragSourceFrame = true;
+			this.fieldBackgroundColor.Clicked += this.HandleFieldColorClicked;
+			this.fieldBackgroundColor.ColorChanged += this.HandleFieldColorChanged;
+			this.fieldBackgroundColor.TabIndex = 5;
+			this.fieldBackgroundColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip (this.fieldBackgroundColor, Res.Strings.Panel.Frame.Tooltip.BackgroundColor);
 
 			this.fieldShadowSize = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldShadowSize.LabelShortText = Res.Strings.Panel.Frame.Short.ShadowSize;
+			this.fieldShadowSize.ShortLongLabelLimit = 50;
 			this.fieldShadowSize.LabelLongText  = Res.Strings.Panel.Frame.Long.ShadowSize;
 			this.fieldShadowSize.TextFieldReal.FactorMinRange = 0.0M;
 			this.fieldShadowSize.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldShadowSize.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension (this.fieldShadowSize.TextFieldReal);
 			this.fieldShadowSize.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
-			this.fieldShadowSize.TabIndex = 4;
+			this.fieldShadowSize.TabIndex = 6;
 			this.fieldShadowSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldShadowSize, Res.Strings.Panel.Frame.Tooltip.ShadowSize);
 
@@ -79,9 +82,9 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldShadowColor.DragSourceFrame = true;
 			this.fieldShadowColor.Clicked += this.HandleFieldColorClicked;
 			this.fieldShadowColor.ColorChanged += this.HandleFieldColorChanged;
-			this.fieldShadowColor.TabIndex = 3;
+			this.fieldShadowColor.TabIndex = 7;
 			this.fieldShadowColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip (this.fieldShadowColor, Res.Strings.Panel.Gradient.Tooltip.Color1);
+			ToolTip.Default.SetToolTip (this.fieldShadowColor, Res.Strings.Panel.Frame.Tooltip.ShadowColor);
 
 			this.isNormalAndExtended = true;
 		}
@@ -102,8 +105,8 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldFrameColor.ColorChanged += this.HandleFieldColorChanged;
 
 				this.fieldMarginWidth.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
-				this.fieldMarginColor.Clicked += this.HandleFieldColorClicked;
-				this.fieldMarginColor.ColorChanged += this.HandleFieldColorChanged;
+				this.fieldBackgroundColor.Clicked += this.HandleFieldColorClicked;
+				this.fieldBackgroundColor.ColorChanged += this.HandleFieldColorChanged;
 
 				this.fieldShadowSize.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 				this.fieldShadowColor.Clicked += this.HandleFieldColorClicked;
@@ -113,7 +116,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldFrameWidth = null;
 				this.fieldFrameColor = null;
 				this.fieldMarginWidth = null;
-				this.fieldMarginColor = null;
+				this.fieldBackgroundColor = null;
 				this.fieldShadowSize = null;
 				this.fieldShadowColor = null;
 			}
@@ -131,17 +134,7 @@ namespace Epsitec.Common.Document.Panels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 30;
-
-					if (this.HasFrame)
-					{
-						h += 50;
-					}
-
-					if (this.HasShadow)
-					{
-						h += 25;
-					}
+					h += 30+25*3;
 				}
 				else	// panneau réduit ?
 				{
@@ -168,7 +161,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFrameColor.Color = p.FrameColor;
 			
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) p.MarginWidth;
-			this.fieldMarginColor.Color = p.MarginColor;
+			this.fieldBackgroundColor.Color = p.BackgroundColor;
 			
 			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) p.ShadowSize;
 			this.fieldShadowColor.Color = p.ShadowColor;
@@ -189,7 +182,7 @@ namespace Epsitec.Common.Document.Panels
 			p.FrameColor = this.fieldFrameColor.Color;
 			
 			p.MarginWidth = (double) this.fieldMarginWidth.TextFieldReal.InternalValue;
-			p.MarginColor = this.fieldMarginColor.Color;
+			p.BackgroundColor = this.fieldBackgroundColor.Color;
 
 			p.ShadowSize = (double) this.fieldShadowSize.TextFieldReal.InternalValue;
 			p.ShadowColor = this.fieldShadowColor.Color;
@@ -206,7 +199,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Désélectionne toutes les origines de couleurs possibles.
 			this.fieldFrameColor.ActiveState = ActiveState.No;
-			this.fieldMarginColor.ActiveState = ActiveState.No;
+			this.fieldBackgroundColor.ActiveState = ActiveState.No;
 			this.fieldShadowColor.ActiveState = ActiveState.No;
 		}
 
@@ -217,7 +210,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.originFieldRank = rank;
 				     if ( rank == 0 )  this.originFieldColor = this.fieldFrameColor;
-				else if ( rank == 1 )  this.originFieldColor = this.fieldMarginColor;
+				else if ( rank == 1 )  this.originFieldColor = this.fieldBackgroundColor;
 				else                   this.originFieldColor = this.fieldShadowColor;
 			}
 			if ( this.originFieldColor == null )  return;
@@ -273,32 +266,24 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 
-				if (this.HasFrame)
-				{
-					Frame.UpdateFieldAndColorGeometry (this.fieldFrameWidth, this.fieldFrameColor, r);
-					r.Offset (0, -25);
+				Frame.UpdateFieldAndColorGeometry (this.fieldFrameWidth, this.fieldFrameColor, r);
 
-					Frame.UpdateFieldAndColorGeometry (this.fieldMarginWidth, this.fieldMarginColor, r);
-					r.Offset (0, -25);
-				}
-				else
-				{
-					this.fieldFrameWidth.Visibility = false;
-					this.fieldFrameColor.Visibility = false;
-					this.fieldMarginWidth.Visibility = false;
-					this.fieldMarginColor.Visibility = false;
-				}
+				r.Offset (0, -25);
+				Frame.UpdateFieldAndColorGeometry (this.fieldMarginWidth, this.fieldBackgroundColor, r);
 
-				if (this.HasShadow)
-				{
-					Frame.UpdateFieldAndColorGeometry (this.fieldShadowSize, this.fieldShadowColor, r);
-					r.Offset (0, -25);
-				}
-				else
-				{
-					this.fieldShadowSize.Visibility = false;
-					this.fieldShadowColor.Visibility = false;
-				}
+				r.Offset (0, -25);
+				Frame.UpdateFieldAndColorGeometry (this.fieldShadowSize, this.fieldShadowColor, r);
+
+				var type = (Properties.FrameType) this.grid.SelectedValue;
+
+				this.fieldFrameWidth.Enable = (type != Properties.FrameType.None);
+				this.fieldFrameColor.Enable = (type != Properties.FrameType.None);
+
+				this.fieldMarginWidth.Enable = (type == Properties.FrameType.Thick || type == Properties.FrameType.ThickAndSnadow);
+				this.fieldBackgroundColor.Enable = (type != Properties.FrameType.None);
+
+				this.fieldShadowSize.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow);
+				this.fieldShadowColor.Enable = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow);
 			}
 			else
 			{
@@ -306,7 +291,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldFrameColor.Visibility = false;
 
 				this.fieldMarginWidth.Visibility = false;
-				this.fieldMarginColor.Visibility = false;
+				this.fieldBackgroundColor.Visibility = false;
 
 				this.fieldShadowSize.Visibility = false;
 				this.fieldShadowColor.Visibility = false;
@@ -324,25 +309,6 @@ namespace Epsitec.Common.Document.Panels
 			rect.Left = rect.Right+5;
 			rect.Width = Widgets.TextFieldLabel.DefaultTextWidth;
 			sample.SetManualBounds (rect);
-		}
-
-
-		private bool HasFrame
-		{
-			get
-			{
-				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
-				return type == Properties.FrameType.Simple || type == Properties.FrameType.White || type == Properties.FrameType.WhiteAndSnadow;
-			}
-		}
-
-		private bool HasShadow
-		{
-			get
-			{
-				Properties.FrameType type = (Properties.FrameType) this.grid.SelectedValue;
-				return type == Properties.FrameType.Shadow || type == Properties.FrameType.WhiteAndSnadow;
-			}
 		}
 
 
@@ -381,7 +347,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.originFieldRank = -1;
 			if (this.originFieldColor == this.fieldFrameColor)  this.originFieldRank = 0;
-			if (this.originFieldColor == this.fieldMarginColor)  this.originFieldRank = 1;
+			if (this.originFieldColor == this.fieldBackgroundColor)  this.originFieldRank = 1;
 			if (this.originFieldColor == this.fieldShadowColor)  this.originFieldRank = 2;
 
 			this.OnOriginColorChanged ();
@@ -405,7 +371,7 @@ namespace Epsitec.Common.Document.Panels
 		protected ColorSample				fieldFrameColor;
 
 		protected Widgets.TextFieldLabel	fieldMarginWidth;
-		protected ColorSample				fieldMarginColor;
+		protected ColorSample				fieldBackgroundColor;
 
 		protected Widgets.TextFieldLabel	fieldShadowSize;
 		protected ColorSample				fieldShadowColor;

@@ -1440,20 +1440,26 @@
   <data name="Container.PageMiniatures.Box.Tooltip" id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Property.Frame.None" id="KC">Pas de cadre</data>
   <data name="Property.Frame.Simple" id="KD">Cadre simple</data>
-  <data name="Property.Frame.White" id="KE">Cadre blanc</data>
+  <data name="Property.Frame.Thick" id="KE">Cadre épais</data>
   <data name="Property.Frame.Shadow" id="KF">Cadre ombré</data>
-  <data name="Property.Frame.WhiteAndShadow" id="KG">Cadre blanc et ombré</data>
+  <data name="Property.Frame.ThickAndShadow" id="KG">Cadre épais et ombré</data>
   <data name="Panel.Frame.Short.FrameWidth" id="KH">T</data>
-  <data name="Panel.Frame.Short.MarginWidth" id="KI">M</data>
+  <data name="Panel.Frame.Short.MarginWidth" id="KI">C</data>
   <data name="Panel.Frame.Short.ShadowSize" id="KJ">O</data>
-  <data name="Panel.Frame.Long.FrameWidth" id="KK">Epaisseur trait</data>
-  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epaisseur cadre</data>
-  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dimension ombre</data>
+  <data name="Panel.Frame.Long.FrameWidth" id="KK">Epais. trait</data>
+  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epais. cadre</data>
+  <data name="Panel.Frame.Long.ShadowSize" id="KM">Dim. ombre</data>
   <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
   <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur du cadre</data>
   <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre</data>
   <data name="Property.Abstract.Frame" id="KQ">Cadre</data>
-  <data name="Panel.Frame.Long.ShadowIntensity" id="KR">Intensité ombre</data>
-  <data name="Panel.Frame.Short.ShadowIntensity" id="KS">I</data>
-  <data name="Panel.Frame.Tooltip.ShadowIntensity" id="KT">Intensité de l&amp;apos;ombre (0 = blanc, 100 = noir)</data>
+  <data name="Panel.Frame.Long.FrameColor" id="KR">Couleur trait</data>
+  <data name="Panel.Frame.Short.ShadowColor" id="KS">CO</data>
+  <data name="Panel.Frame.Tooltip.ShadowColor" id="KT">Couleur du fond</data>
+  <data name="Panel.Frame.Long.BackgroundColor" id="KU">Couleur fond</data>
+  <data name="Panel.Frame.Long.ShadowColor" id="KV">Couleur ombre</data>
+  <data name="Panel.Frame.Short.FrameColor" id="K01">CT</data>
+  <data name="Panel.Frame.Short.BackgroundColor" id="K11">CF</data>
+  <data name="Panel.Frame.Tooltip.FrameColor" id="K21">Couleur du trait</data>
+  <data name="Panel.Frame.Tooltip.BackgroundColor" id="K31">Couleur du fond</data>
 </bundle>
