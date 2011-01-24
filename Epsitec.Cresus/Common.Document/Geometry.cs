@@ -8,6 +8,84 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
+		public static List<Point> Inflate(List<Point> points, double inflate)
+		{
+			//	Engraisse/dégraisse un polygone.
+			if (inflate == 0)
+			{
+				return points;
+			}
+			else
+			{
+				var pp = new List<Point> ();
+
+				for (int i = 0; i < points.Count; i++)
+				{
+					Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
+					Point p = points[i];                                  // point courant
+					Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
+
+					Point P = Geometry.InflateCorner (a, p, b, inflate);
+
+					if (!P.IsZero)
+					{
+						pp.Add (P);
+					}
+				}
+
+				return pp;
+			}
+		}
+
+		private static Point InflateCorner(Point a, Point p, Point b, double inflate)
+		{
+			//	Engraisse/dégraisse un coin 'apb'.
+			if (inflate == 0)
+			{
+				return p;
+			}
+			else
+			{
+#if false
+				var aa = Point.Move (p, a, -inflate);
+				return Point.Move(aa, b+aa-p, -inflate);
+#else
+				var pa = Point.Move (p, Geometry.RotateCW (p, a), inflate);
+				var aa = Point.Move (a, Geometry.RotateCCW (a, p), inflate);
+				var pb = Point.Move (p, Geometry.RotateCCW (p, b), inflate);
+				var bb = Point.Move (b, Geometry.RotateCW (b, p), inflate);
+
+				Point[] i = Geometry.Intersect (pa, aa, pb, bb);
+
+				if (i.Length == 1)
+				{
+					return i[0];
+				}
+				else
+				{
+					return Point.Zero;
+				}
+#endif
+			}
+		}
+
+		private static Point RotateCW(Point center, Point a)
+		{
+			double dx = a.X - center.X;
+			double dy = a.Y - center.Y;
+
+			return new Point (center.X + dy, center.Y - dx);
+		}
+
+		private static Point RotateCCW(Point center, Point a)
+		{
+			double dx = a.X - center.X;
+			double dy = a.Y - center.Y;
+
+			return new Point (center.X - dy, center.Y + dx);
+		}
+
+
 		public static List<Point> PathToPoints(Path path)
 		{
 			//	Extrait les points d'un chemin constitué de droites.
