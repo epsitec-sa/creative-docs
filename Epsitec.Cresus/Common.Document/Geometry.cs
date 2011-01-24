@@ -13,14 +13,14 @@ namespace Epsitec.Common.Document
 			//	Extrait les points d'un chemin constitué de droites.
 			//	Si le chemin contient une ou plusieurs courbes, le polygone retourné est vide !
 			var polygons = new List<Polygon> ();
-			var polygon = new Polygon ();
-			polygons.Add (polygon);  // TODO: gérer les trous !
+			Polygon polygon = null;
 
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements (out elements, out points);
 
-			Point current;
+			Point start = Point.Zero;
+			Point current = Point.Zero;
 			int i = 0;
 			while (i < elements.Length)
 			{
@@ -28,12 +28,21 @@ namespace Epsitec.Common.Document
 				{
 					case PathElement.MoveTo:
 						current = points[i++];
+
+						polygon = new Polygon ();
+						polygons.Add (polygon);
+
 						polygon.Points.Add (current);
+						start = current;
 						break;
 
 					case PathElement.LineTo:
 						current = points[i++];
-						polygon.Points.Add (current);
+
+						if (polygon != null)
+						{
+							polygon.Points.Add (current);
+						}
 						break;
 
 					case PathElement.Curve3:
@@ -42,6 +51,13 @@ namespace Epsitec.Common.Document
 						return polygons;
 
 					default:
+						if ((elements[i] & PathElement.FlagClose) != 0)
+						{
+							if (polygon != null && !Point.Equals(current, start))
+							{
+								polygon.Points.Add (current);
+							}
+						}
 						i ++;
 						break;
 				}
