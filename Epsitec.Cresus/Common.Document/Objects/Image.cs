@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Objects
 				var objectShapes = new List<Shape> ();
 				objectShapes.Add (imageShape);
 
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPoints (), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygon (), this.PropertyCorner);
 			}
 
 			//	Rectangle complet pour bbox et détection.
@@ -233,18 +233,18 @@ namespace Epsitec.Common.Document.Objects
 			return shapes.ToArray ();
 		}
 
-		protected List<Point> GetImagePixelPoints()
+		protected Polygon GetImagePixelPolygon()
 		{
 			//	Crée le chemin correspondant à la partie réelle de l'image, inclue dans le rectangle englobant.
 			ImageCache.Item item = this.Item;
 
 			if (item == null)
 			{
-				return this.GetImagePoints ();
+				return this.GetImagePolygon ();
 			}
 			else
 			{
-				var points = new List<Point> ();
+				var polygon = new Polygon ();
 
 				Point center;
 				double width, height, angle;
@@ -267,35 +267,35 @@ namespace Epsitec.Common.Document.Objects
 
 				p.X = center.X-width/2;
 				p.Y = center.Y-height/2;
-				points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X+width/2;
 				p.Y = center.Y-height/2;
-				points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X+width/2;
 				p.Y = center.Y+height/2;
-				points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X-width/2;
 				p.Y = center.Y+height/2;
-				points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
-				return points;
+				return polygon;
 			}
 		}
 
 		protected Path PathBuildImage()
 		{
 			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
-			var points = this.GetImagePoints ();
-			return Properties.Frame.GetPolygonPath (points);
+			var polygon = this.GetImagePolygon ();
+			return Polygon.GetPolygonPath (polygon);
 		}
 
-		protected List<Point> GetImagePoints()
+		protected Polygon GetImagePolygon()
 		{
 			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
-			var points = new List<Point> ();
+			var polygon = new Polygon ();
 
 			Point center;
 			double width, height, angle;
@@ -305,21 +305,21 @@ namespace Epsitec.Common.Document.Objects
 
 			p.X = center.X-width/2;
 			p.Y = center.Y-height/2;
-			points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y-height/2;
-			points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y+height/2;
-			points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X-width/2;
 			p.Y = center.Y+height/2;
-			points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			return points;
+			return polygon;
 		}
 
 		protected Path PathBuildSurface()
