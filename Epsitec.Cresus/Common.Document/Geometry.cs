@@ -8,11 +8,13 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
-		public static Polygon PathToPolygon(Path path)
+		public static List<Polygon> PathToPolygons(Path path)
 		{
 			//	Extrait les points d'un chemin constitué de droites.
-			//	Si le chemin contient une ou plusieurs courbes, la liste de points retournée est vide !
+			//	Si le chemin contient une ou plusieurs courbes, le polygone retourné est vide !
+			var polygons = new List<Polygon> ();
 			var polygon = new Polygon ();
+			polygons.Add (polygon);  // TODO: gérer les trous !
 
 			PathElement[] elements;
 			Point[] points;
@@ -36,8 +38,8 @@ namespace Epsitec.Common.Document
 
 					case PathElement.Curve3:
 					case PathElement.Curve4:
-						polygon.Points.Clear ();
-						return polygon;
+						polygons.Clear ();
+						return polygons;
 
 					default:
 						i ++;
@@ -45,7 +47,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			return polygon;
+			return polygons;
 		}
 
 		public static Path PathExtract(Path path, int rank)

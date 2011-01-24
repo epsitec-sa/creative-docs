@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else  // cadre ?
 			{
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygon (), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygons (), this.PropertyCorner);
 			}
 
 			return shapes.ToArray ();
@@ -204,14 +204,16 @@ namespace Epsitec.Common.Document.Objects
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			//	Crée le chemin de l'objet.
-			var polygon = this.GetPolygon ();
+			var polygons = this.GetPolygons ();
 			var corner = this.PropertyCorner;
-			return Polygon.GetPolygonPathCorner (drawingContext, polygon, corner, simplify);
+			return Polygon.GetPolygonPathCorner (drawingContext, polygons, corner, simplify);
 		}
 
-		protected Polygon GetPolygon()
+		protected List<Polygon> GetPolygons()
 		{
+			var polygons = new List<Polygon> ();
 			var polygon = new Polygon ();
+			polygons.Add (polygon);
 
 			if (this.handles.Count < 4)
 			{
@@ -231,7 +233,7 @@ namespace Epsitec.Common.Document.Objects
 				polygon.Points.Add (this.Handle (3).Position);
 			}
 
-			return polygon;
+			return polygons;
 		}
 
 

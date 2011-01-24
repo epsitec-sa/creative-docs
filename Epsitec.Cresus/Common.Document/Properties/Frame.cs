@@ -484,22 +484,22 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, Polygon polygon, Properties.Corner corner)
+		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner)
 		{
 			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
-			if (polygon.Points.Count < 2)
+			if (polygons == null || polygons.Count == 0 || polygons[0].Points.Count < 2)
 			{
 				shapes.AddRange (objectShapes);
 			}
 			else
 			{
-				var pp = Polygon.Inflate (polygon, this.marginWidth);
+				var pp = Polygon.Inflate (polygons, this.marginWidth);
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
-					var pp1 = Polygon.Inflate (polygon, this.marginWidth+this.shadowInflate);
+					var pp1 = Polygon.Inflate (polygons, this.marginWidth+this.shadowInflate);
 					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
 					var shadowPath = Polygon.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 

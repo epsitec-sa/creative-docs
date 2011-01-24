@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Objects
 				var objectShapes = new List<Shape> ();
 				objectShapes.Add (imageShape);
 
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygon (), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygons (), this.PropertyCorner);
 			}
 
 			//	Rectangle complet pour bbox et détection.
@@ -233,18 +233,20 @@ namespace Epsitec.Common.Document.Objects
 			return shapes.ToArray ();
 		}
 
-		protected Polygon GetImagePixelPolygon()
+		protected List<Polygon> GetImagePixelPolygons()
 		{
 			//	Crée le chemin correspondant à la partie réelle de l'image, inclue dans le rectangle englobant.
 			ImageCache.Item item = this.Item;
 
 			if (item == null)
 			{
-				return this.GetImagePolygon ();
+				return this.GetImagePolygons ();
 			}
 			else
 			{
+				var polygons = new List<Polygon> ();
 				var polygon = new Polygon ();
+				polygons.Add (polygon);
 
 				Point center;
 				double width, height, angle;
@@ -281,21 +283,23 @@ namespace Epsitec.Common.Document.Objects
 				p.Y = center.Y+height/2;
 				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
-				return polygon;
+				return polygons;
 			}
 		}
 
 		protected Path PathBuildImage()
 		{
 			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
-			var polygon = this.GetImagePolygon ();
-			return Polygon.GetPolygonPath (polygon);
+			var polygons = this.GetImagePolygons ();
+			return Polygon.GetPolygonPath (polygons);
 		}
 
-		protected Polygon GetImagePolygon()
+		protected List<Polygon> GetImagePolygons()
 		{
 			//	Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
+			var polygons = new List<Polygon> ();
 			var polygon = new Polygon ();
+			polygons.Add (polygon);
 
 			Point center;
 			double width, height, angle;
@@ -319,7 +323,7 @@ namespace Epsitec.Common.Document.Objects
 			p.Y = center.Y+height/2;
 			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
 
-			return polygon;
+			return polygons;
 		}
 
 		protected Path PathBuildSurface()
