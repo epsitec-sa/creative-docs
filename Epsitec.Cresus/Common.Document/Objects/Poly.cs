@@ -743,7 +743,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else  // cadre ?
 			{
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygon (), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygons (), this.PropertyCorner);
 			}
 
 			//	Forme de la ligne temporaire.
@@ -935,9 +935,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		private Polygon GetPolygon()
+		private List<Polygon> GetPolygons()
 		{
+			var polygons = new List<Polygon> ();
 			var polygon = new Polygon ();
+			polygons.Add (polygon);
 
 			int total = this.TotalMainHandle;
 			for (int i=0; i<total; i++)
@@ -946,7 +948,7 @@ namespace Epsitec.Common.Document.Objects
 				polygon.Points.Add (p);
 			}
 
-			return polygon;
+			return polygons;
 		}
 
 		protected int PrevRank(int rank)

@@ -35,70 +35,83 @@ namespace Epsitec.Common.Document
 
 
 		#region Polygon to Path
-		public static Path GetPolygonPathCorner(DrawingContext drawingContext, Polygon polygon, Properties.Corner corner, bool simplify)
+		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
 			//	Crée le chemin d'un polygone à coins quelconques.
 			if (corner == null)
 			{
-				return Polygon.GetPolygonPath (polygon);
+				return Polygon.GetPolygonPath (polygons);
 			}
 			else
 			{
+				Path path = new Path ();
 				double min = double.MaxValue;
 
-				for (int i = 0; i < polygon.Points.Count; i++)
+				foreach (var polygon in polygons)
 				{
-					Point p = polygon.GetPoint (i);    // point courant
-					Point b = polygon.GetPoint (i+1);  // point suivant
-
-					double d = Point.Distance (p, b);
-					min = System.Math.Min (min, d);
-				}
-
-				double radius = simplify ? 0.0 : System.Math.Min (corner.Radius, min/2);
-
-				if (corner.CornerType == Properties.CornerType.Right || radius == 0.0)
-				{
-					return Polygon.GetPolygonPath (polygon);
-				}
-				else
-				{
-					Path path = new Path ();
-					path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
-
 					for (int i = 0; i < polygon.Points.Count; i++)
 					{
-						Point a = polygon.GetPoint (i-1);  // point précédent
 						Point p = polygon.GetPoint (i);    // point courant
 						Point b = polygon.GetPoint (i+1);  // point suivant
 
-						Point c1 = Point.Move (p, a, radius);
-						Point c2 = Point.Move (p, b, radius);
-
-						if (i == 0)
-						{
-							path.MoveTo (c1);
-						}
-						else
-						{
-							path.LineTo (c1);
-						}
-
-						corner.PathCorner (path, c1, p, c2, radius);
+						double d = Point.Distance (p, b);
+						min = System.Math.Min (min, d);
 					}
 
-					path.Close ();
+					double radius = simplify ? 0.0 : System.Math.Min (corner.Radius, min/2);
 
-					return path;
+					if (corner.CornerType == Properties.CornerType.Right || radius == 0.0)
+					{
+						Polygon.AddPolygonPath (path, polygon);
+					}
+					else
+					{
+						path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
+
+						for (int i = 0; i < polygon.Points.Count; i++)
+						{
+							Point a = polygon.GetPoint (i-1);  // point précédent
+							Point p = polygon.GetPoint (i);    // point courant
+							Point b = polygon.GetPoint (i+1);  // point suivant
+
+							Point c1 = Point.Move (p, a, radius);
+							Point c2 = Point.Move (p, b, radius);
+
+							if (i == 0)
+							{
+								path.MoveTo (c1);
+							}
+							else
+							{
+								path.LineTo (c1);
+							}
+
+							corner.PathCorner (path, c1, p, c2, radius);
+						}
+
+						path.Close ();
+					}
 				}
+
+				return path;
 			}
 		}
 
-		public static Path GetPolygonPath(Polygon polygon)
+		public static Path GetPolygonPath(List<Polygon> polygons)
 		{
 			//	Crée le chemin d'un polygone à coins droits.
 			var path = new Path ();
 
+			foreach (var polygon in polygons)
+			{
+				Polygon.AddPolygonPath (path, polygon);
+			}
+
+			return path;
+		}
+
+		private static void AddPolygonPath(Path path, Polygon polygon)
+		{
 			for (int i = 0; i < polygon.Points.Count; i++)
 			{
 				if (i == 0)
@@ -112,14 +125,31 @@ namespace Epsitec.Common.Document
 			}
 
 			path.Close ();
-
-			return path;
 		}
 		#endregion
 
 
 		#region Polygon geometry
-		public static Polygon Move(Polygon polygon, double mx, double my)
+		public static List<Polygon> Move(List<Polygon> polygons, double mx, double my)
+		{
+			if (mx == 0 && my == 0)
+			{
+				return polygons;
+			}
+			else
+			{
+				var pp = new List<Polygon> ();
+
+				foreach (var polygon in polygons)
+				{
+					pp.Add (Polygon.Move (polygon, mx, my));
+				}
+
+				return pp;
+			}
+		}
+
+		private static Polygon Move(Polygon polygon, double mx, double my)
 		{
 			//	Déplace une liste de points.
 			if (mx == 0 && my == 0)
@@ -142,7 +172,26 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static Polygon Inflate(Polygon polygon, double inflate)
+		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
+		{
+			if (inflate == 0)
+			{
+				return polygons;
+			}
+			else
+			{
+				var pp = new List<Polygon> ();
+
+				foreach (var polygon in polygons)
+				{
+					pp.Add (Polygon.Inflate (polygon, inflate));
+				}
+
+				return pp;
+			}
+		}
+
+		private static Polygon Inflate(Polygon polygon, double inflate)
 		{
 			//	Engraisse/dégraisse un polygone.
 			if (inflate == 0)
