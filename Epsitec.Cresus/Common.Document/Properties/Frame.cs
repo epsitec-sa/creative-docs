@@ -484,24 +484,24 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Point> points, Properties.Corner corner)
+		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, Polygon polygon, Properties.Corner corner)
 		{
 			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
-			if (points.Count < 2)
+			if (polygon.Points.Count < 2)
 			{
 				shapes.AddRange (objectShapes);
 			}
 			else
 			{
-				var pp = Geometry.Inflate (points, this.marginWidth);
-				var path = Frame.GetPolygonPathCorner (drawingContext, pp, corner, false);
+				var pp = Polygon.Inflate (polygon, this.marginWidth);
+				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
-					var pp1 = Geometry.Inflate (points, this.marginWidth+this.shadowInflate);
-					var pp2 = Frame.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
-					var shadowPath = Frame.GetPolygonPathCorner (drawingContext, pp2, corner, false);
+					var pp1 = Polygon.Inflate (polygon, this.marginWidth+this.shadowInflate);
+					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
+					var shadowPath = Polygon.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 
 					var shape = new Shape ();
 					shape.Path = shadowPath;
@@ -534,110 +534,6 @@ namespace Epsitec.Common.Document.Properties
 					shapes.Add (shape);
 				}
 			}
-		}
-
-		private static List<Point> Move(List<Point> points, double mx, double my)
-		{
-			//	Déplace une liste de points.
-			if (mx == 0 && my == 0)
-			{
-				return points;
-			}
-			else
-			{
-				var pp = new List<Point> ();
-				var move = new Point (mx, my);
-
-				for (int i = 0; i < points.Count; i++)
-				{
-					Point p = points[i];
-
-					pp.Add (p+move);
-				}
-
-				return pp;
-			}
-		}
-
-		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Point> points, Properties.Corner corner, bool simplify)
-		{
-			//	Crée le chemin d'un polygone à coins quelconques.
-			if (corner == null)
-			{
-				return Frame.GetPolygonPath (points);
-			}
-			else
-			{
-				double min = double.MaxValue;
-
-				for (int i = 0; i < points.Count; i++)
-				{
-					Point p = points[i];                               // point courant
-					Point b = points[(i+1 < points.Count) ? i+1 : 0];  // point suivant
-
-					double d = Point.Distance (p, b);
-					min = System.Math.Min (min, d);
-				}
-
-				double radius = simplify ? 0.0 : System.Math.Min (corner.Radius, min/2);
-
-				if (corner.CornerType == Properties.CornerType.Right || radius == 0.0)
-				{
-					return Frame.GetPolygonPath (points);
-				}
-				else
-				{
-					Path path = new Path ();
-					path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
-
-					for (int i = 0; i < points.Count; i++)
-					{
-						Point a = points[(i-1 >= 0) ? i-1 : points.Count-1];  // point précédent
-						Point p = points[i];                                  // point courant
-						Point b = points[(i+1 < points.Count) ? i+1 : 0];     // point suivant
-
-						Point c1 = Point.Move (p, a, radius);
-						Point c2 = Point.Move (p, b, radius);
-
-						if (i == 0)
-						{
-							path.MoveTo (c1);
-						}
-						else
-						{
-							path.LineTo (c1);
-						}
-
-						corner.PathCorner (path, c1, p, c2, radius);
-					}
-
-					path.Close ();
-
-					return path;
-				}
-			}
-		}
-
-		public static Path GetPolygonPath(List<Point> points)
-		{
-			//	Crée le chemin d'un polygone à coins droits.
-			var path = new Path ();
-
-			for (int i = 0; i < points.Count; i++)
-			{
-				if (i == 0)
-				{
-					path.MoveTo (points[i]);
-				}
-				else
-				{
-					path.LineTo (points[i]);
-				}
-			}
-
-			path.Close ();
-
-			return path;
 		}
 
 

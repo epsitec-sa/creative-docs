@@ -206,7 +206,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else  // cadre ?
 			{
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, Geometry.PathToPoints (box), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, Geometry.PathToPolygon (box), this.PropertyCorner);
 			}
 
 			return shapes.ToArray ();

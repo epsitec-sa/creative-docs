@@ -190,7 +190,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else  // cadre ?
 			{
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPoints (), this.PropertyCorner);
+				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygon (), this.PropertyCorner);
 			}
 
 			Point center = this.Handle (0).Position;
@@ -386,10 +386,10 @@ namespace Epsitec.Common.Document.Objects
 			return new Polar(scale, angle);
 		}
 
-		private List<Point> GetPoints()
+		private Polygon GetPolygon()
 		{
 			Properties.Regular reg = this.PropertyRegular;
-			var points = new List<Point> ();
+			var polygon = new Polygon ();
 
 			int total = reg.NbFaces;
 			if (reg.RegularType != Properties.RegularType.Norm)  // étoile ?
@@ -402,10 +402,10 @@ namespace Epsitec.Common.Document.Objects
 				Point p1, s1, s2, p2;
 				this.ComputeCurve (i, out p1, out s1, out s2, out p2);
 
-				points.Add (p1);
+				polygon.Points.Add (p1);
 			}
 
-			return points;
+			return polygon;
 		}
 
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
