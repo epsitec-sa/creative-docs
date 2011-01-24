@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable dbTable2 = infrastructure.ResolveDbTable ("table");
 				DbTable dbTableRelation2 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn));
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable1, dbTable2));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable1, dbTable2));
 				Assert.IsNotNull (dbTableRelation2);
 			}
 		}
@@ -402,8 +402,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable dbTableRelation3 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
 				DbTable dbTableRelation4 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable1, dbTable3));
-				Assert.IsTrue (DbSchemaChecker.CheckTables (dbTable2, dbTable4));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable1, dbTable3));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable2, dbTable4));
 				Assert.IsNotNull (dbTableRelation3);
 				Assert.IsNotNull (dbTableRelation4);
 			}
@@ -548,7 +548,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				DbTable result = infrastructure.ResolveDbTable ("table");
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (result, table2));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
 			}
 		}
 
@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable resulta = infrastructure.ResolveDbTable ("table");
 				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (resulta, dbTable2));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (resulta, dbTable2));
 				Assert.IsNotNull (resultb);
 			}
 		}
@@ -682,7 +682,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				DbTable result = infrastructure.ResolveDbTable ("table");
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (result, table2));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
 			}
 		}
 
@@ -710,7 +710,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable resulta = infrastructure.ResolveDbTable ("table");
 				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (resulta, dbTable2));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (resulta, dbTable2));
 				Assert.IsNull (resultb);
 			}
 		}

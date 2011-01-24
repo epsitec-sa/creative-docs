@@ -38,9 +38,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 		[TestMethod]
 		public void NullTest()
 		{
-			Assert.IsTrue (DbSchemaChecker.CheckTables (null, null));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (new DbTable (), null));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (null, new DbTable ()));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (null, null));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (new DbTable (), null));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (null, new DbTable ()));
 		}
 
 
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				foreach (DbTable table in this.GetSampleTablesDatabase (dbInfrastructure))
 				{
-					Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+					Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table, table));
 				}
 			}
 		}
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 			{
 				foreach (DbTable table in this.GetSampleTablesMemory (dbInfrastructure))
 				{
-					Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
+					Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table, table));
 				}
 			}
 		}
@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.DefineDisplayName ("name1");
 			table3.DefineDisplayName ("name2");
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -97,8 +97,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.DefineCategory (DbElementCat.Internal);
 			table3.DefineCategory (DbElementCat.ManagedUserData);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -113,8 +113,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Comment = "comment1";
 			table3.Comment = "comment3";
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -129,8 +129,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.DefineCaptionId (Druid.FromLong (1));
 			table3.DefineCaptionId (Druid.FromLong (2));
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -154,8 +154,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.AddIndex (table2.Columns[0], table2.Columns[1]);
 			table3.AddIndex (table3.Columns[1], table3.Columns[0]);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 
 			table1 = new DbTable ();
 			table2 = new DbTable ();
@@ -176,8 +176,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.AddIndex (table2.Columns[1]);
 			table3.AddIndex (table3.Columns[0]);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 
 			table1 = new DbTable ();
 			table2 = new DbTable ();
@@ -191,8 +191,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.AddIndex (SqlSortOrder.Ascending, table2.Columns[0]);
 			table3.AddIndex (SqlSortOrder.Descending, table3.Columns[0]);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -218,8 +218,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.PrimaryKeys.Add (table2.Columns[0]);
 			table3.PrimaryKeys.Add (table3.Columns[0]);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -241,9 +241,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 					table3.Columns.Add (DbTable.CreateRefColumn (transaction, dbInfrastructure, "c1", "t1", DbNullability.No));
 				}
 			}
-			
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -257,8 +257,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table1.DefineKey (new DbKey (new DbId (1)));
 			table2.DefineKey (new DbKey (new DbId (2)));
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -287,8 +287,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource2, columnSource2);
 				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource3, columnSource3);
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
-				Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable2));
+				Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable3));
 			}		
 		}
 
@@ -318,8 +318,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource2);
 				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource3);
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
-				Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable2));
+				Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable3));
 			}
 		}
 
@@ -339,8 +339,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineCaptionId (Druid.FromLong (1));
 			table3.Columns[0].DefineCaptionId (Druid.FromLong (2));
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -357,10 +357,10 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 			table1.Columns[0].DefineCardinality (DbCardinality.Collection);
 			table2.Columns[0].DefineCardinality (DbCardinality.Collection);
-			table3.Columns[0].DefineCardinality (DbCardinality.Reference);			
+			table3.Columns[0].DefineCardinality (DbCardinality.Reference);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -379,8 +379,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineCategory (DbElementCat.ManagedUserData);
 			table3.Columns[0].DefineCategory (DbElementCat.Internal);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -399,8 +399,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineColumnClass (DbColumnClass.Data);
 			table3.Columns[0].DefineColumnClass (DbColumnClass.KeyId);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -419,8 +419,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].Comment = "comment1";
 			table3.Columns[0].Comment = "comment2";
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -439,8 +439,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].IsAutoIncremented = true;
 			table3.Columns[0].IsAutoIncremented = false;
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -459,8 +459,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].IsAutoTimeStampOnInsert = true;
 			table3.Columns[0].IsAutoTimeStampOnInsert = false;
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -479,8 +479,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].IsAutoTimeStampOnUpdate = true;
 			table3.Columns[0].IsAutoTimeStampOnUpdate = false;
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -499,8 +499,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineDisplayName ("name1");
 			table3.Columns[0].DefineDisplayName ("name2");
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -523,8 +523,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineTable (table2);
 			table3.Columns[0].DefineTable (table3);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -550,11 +550,11 @@ namespace Epsitec.Cresus.Database.UnitTests
 				tables3.Add (table3);
 			}
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
 
 			foreach (DbTable table3 in tables3)
 			{
-				Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+				Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 			}
 		}
 
@@ -574,8 +574,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefineTargetTableName ("name1");
 			table3.Columns[0].DefineTargetTableName ("name2");
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -594,8 +594,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 			table2.Columns[0].DefinePrimaryKey (true);
 			table3.Columns[0].DefinePrimaryKey (false);
 
-			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
 		}
 
 
@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 
 				DbTable table3 = dbInfrastructure.ResolveDbTable (table1.Name);
 
-				Assert.IsTrue (DbSchemaChecker.CheckTables (table2, table3));
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table2, table3));
 			}
 		}
 
@@ -710,6 +710,61 @@ namespace Epsitec.Cresus.Database.UnitTests
 				}
 
 				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables1));
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckSchema4()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = dbInfrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, true);
+				DbTable table2 = dbInfrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, true);
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Collection);
+				relationColumn.DefineDisplayName ("relationColumn");
+
+				table1.Columns.Add (relationColumn);
+
+				List<DbTable> tables = new List<DbTable> () { table1, table2 };
+
+				dbInfrastructure.AddTables (tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
+
+				DbTable tableRelation = dbInfrastructure.ResolveDbTable (table1.GetRelationTableName (relationColumn));
+				DbColumn newColumn = new DbColumn ("newColumn", dbInfrastructure.FindDbTypes ().First (), DbColumnClass.Data, DbElementCat.ManagedUserData);
+				
+				dbInfrastructure.AddColumnToTable (tableRelation, newColumn);
+
+				Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckSchema5()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = dbInfrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, true);
+				DbTable table2 = dbInfrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, true);
+				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Collection);
+				relationColumn.DefineDisplayName ("relationColumn");
+
+				table1.Columns.Add (relationColumn);
+
+				List<DbTable> tables = new List<DbTable> () { table1, table2 };
+
+				dbInfrastructure.AddTables (tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
+
+				DbTable tableRelation = dbInfrastructure.ResolveDbTable (table1.GetRelationTableName (relationColumn));
+				
+				dbInfrastructure.RemoveTable (tableRelation);
+
+				Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
 			}
 		}
 

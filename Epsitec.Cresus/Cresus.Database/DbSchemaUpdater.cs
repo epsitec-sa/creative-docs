@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Database
 		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithDifference(IList<DbTable> dbTablesIn, IList<DbTable> dbTablesOut)
 		{
 			return DbSchemaUpdater.JoinOnName (dbTablesIn, dbTablesOut)
-				.Where (t => !DbSchemaChecker.CheckTables (t.Item1, t.Item2));
+				.Where (t => !DbSchemaChecker.AreDbTablesEqual (t.Item1, t.Item2));
 		}
 
 
