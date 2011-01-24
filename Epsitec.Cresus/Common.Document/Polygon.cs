@@ -18,26 +18,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Point GetPoint(int cyclingIndex)
-		{
-			while (cyclingIndex < 0)
-			{
-				cyclingIndex += this.points.Count;
-			}
-
-			while (cyclingIndex >= this.points.Count)
-			{
-				cyclingIndex -= this.points.Count;
-			}
-
-			return this.points[cyclingIndex];
-		}
-
 
 		#region Polygon to Path
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
-			//	Crée le chemin d'un polygone à coins quelconques.
+			//	Crée le chemin de polygones à coins quelconques.
 			if (corner == null)
 			{
 				return Polygon.GetPolygonPath (polygons);
@@ -51,8 +36,8 @@ namespace Epsitec.Common.Document
 				{
 					for (int i = 0; i < polygon.Points.Count; i++)
 					{
-						Point p = polygon.GetPoint (i);    // point courant
-						Point b = polygon.GetPoint (i+1);  // point suivant
+						Point p = polygon.GetCyclingPoint (i);    // point courant
+						Point b = polygon.GetCyclingPoint (i+1);  // point suivant
 
 						double d = Point.Distance (p, b);
 						min = System.Math.Min (min, d);
@@ -70,9 +55,9 @@ namespace Epsitec.Common.Document
 
 						for (int i = 0; i < polygon.Points.Count; i++)
 						{
-							Point a = polygon.GetPoint (i-1);  // point précédent
-							Point p = polygon.GetPoint (i);    // point courant
-							Point b = polygon.GetPoint (i+1);  // point suivant
+							Point a = polygon.GetCyclingPoint (i-1);  // point précédent
+							Point p = polygon.GetCyclingPoint (i);    // point courant
+							Point b = polygon.GetCyclingPoint (i+1);  // point suivant
 
 							Point c1 = Point.Move (p, a, radius);
 							Point c2 = Point.Move (p, b, radius);
@@ -99,7 +84,7 @@ namespace Epsitec.Common.Document
 
 		public static Path GetPolygonPath(List<Polygon> polygons)
 		{
-			//	Crée le chemin d'un polygone à coins droits.
+			//	Crée le chemin de polygones à coins droits.
 			var path = new Path ();
 
 			foreach (var polygon in polygons)
@@ -132,6 +117,7 @@ namespace Epsitec.Common.Document
 		#region Polygon geometry
 		public static List<Polygon> Move(List<Polygon> polygons, double mx, double my)
 		{
+			//	Déplace des polygones.
 			if (mx == 0 && my == 0)
 			{
 				return polygons;
@@ -151,7 +137,7 @@ namespace Epsitec.Common.Document
 
 		private static Polygon Move(Polygon polygon, double mx, double my)
 		{
-			//	Déplace une liste de points.
+			//	Déplace un polygone.
 			if (mx == 0 && my == 0)
 			{
 				return polygon;
@@ -172,8 +158,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+
 		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
 		{
+			//	Engraisse/dégraisse des polygones.
 			if (inflate == 0)
 			{
 				return polygons;
@@ -204,9 +192,9 @@ namespace Epsitec.Common.Document
 
 				for (int i = 0; i < polygon.Points.Count; i++)
 				{
-					Point a = polygon.GetPoint (i-1);  // point précédent
-					Point p = polygon.GetPoint (i);    // point courant
-					Point b = polygon.GetPoint (i+1);  // point suivant
+					Point a = polygon.GetCyclingPoint (i-1);  // point précédent
+					Point p = polygon.GetCyclingPoint (i);    // point courant
+					Point b = polygon.GetCyclingPoint (i+1);  // point suivant
 
 					Point c = Polygon.InflateCorner (a, p, b, inflate);
 
@@ -268,6 +256,23 @@ namespace Epsitec.Common.Document
 			return new Point (center.X - dy, center.Y + dx);
 		}
 		#endregion
+
+
+		private Point GetCyclingPoint(int cyclingIndex)
+		{
+			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			while (cyclingIndex < 0)
+			{
+				cyclingIndex += this.points.Count;
+			}
+
+			while (cyclingIndex >= this.points.Count)
+			{
+				cyclingIndex -= this.points.Count;
+			}
+
+			return this.points[cyclingIndex];
+		}
 
 
 		private readonly List<Point>	points;
