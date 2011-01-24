@@ -198,7 +198,7 @@ namespace Epsitec.Common.Document.Objects
 			var imageShape = new Shape ();
 			imageShape.SetImageObject (this);
 
-			if (frame == null || frame.FrameType == Properties.FrameType.None)  // pas de cadre ?
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
 			{
 				shapes.Add (imageShape);
 			}
