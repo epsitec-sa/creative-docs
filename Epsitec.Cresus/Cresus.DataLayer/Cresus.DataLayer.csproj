@@ -163,11 +163,11 @@
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
     <Compile Include="ImportExport\ColumnDefinition.cs" />
-    <Compile Include="ImportExport\ExportMode.cs" />
-    <Compile Include="ImportExport\EpsitecEntitySerializer.cs" />
+    <Compile Include="ImportExport\RawExportMode.cs" />
+    <Compile Include="ImportExport\RawEntitySerializer.cs" />
     <Compile Include="ImportExport\ExportationMode.cs" />
     <Compile Include="ImportExport\ImportExportManager.cs" />
-    <Compile Include="ImportExport\ImportMode.cs" />
+    <Compile Include="ImportExport\RawImportMode.cs" />
     <Compile Include="ImportExport\TableCategory.cs" />
     <Compile Include="ImportExport\TableDefinition.cs" />
     <Compile Include="ImportExport\XmlEntitySerializer.cs" />

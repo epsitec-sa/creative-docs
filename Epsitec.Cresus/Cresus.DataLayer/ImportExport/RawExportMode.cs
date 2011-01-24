@@ -2,7 +2,7 @@
 {
 
 
-	public enum ExportMode
+	public enum RawExportMode
 	{
 
 

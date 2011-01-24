@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	// Marc
 
 
-	internal static class EpsitecEntitySerializer
+	internal static class RawEntitySerializer
 	{
 
 
-		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, ExportMode exportMode)
+		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, RawExportMode exportMode)
 		{
-			List<TableDefinition> tableDefinitions = EpsitecEntitySerializer.GetTableDefinitions (dbInfrastructure).ToList ();
+			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (dbInfrastructure).ToList ();
 
 			XmlWriterSettings settings = new XmlWriterSettings ()
 			{
@@ -38,19 +38,19 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
-				EpsitecEntitySerializer.WriteDocumentStart (xmlWriter);
-				EpsitecEntitySerializer.WriteHeader (xmlWriter, version, idShift);
-				EpsitecEntitySerializer.WriteDefinition (xmlWriter, tableDefinitions);
-				EpsitecEntitySerializer.WriteData (dbInfrastructure, xmlWriter, tableDefinitions, exportMode);
-				EpsitecEntitySerializer.WriteDocumentEnd (xmlWriter);
+				RawEntitySerializer.WriteDocumentStart (xmlWriter);
+				RawEntitySerializer.WriteHeader (xmlWriter, version, idShift);
+				RawEntitySerializer.WriteDefinition (xmlWriter, tableDefinitions);
+				RawEntitySerializer.WriteData (dbInfrastructure, xmlWriter, tableDefinitions, exportMode);
+				RawEntitySerializer.WriteDocumentEnd (xmlWriter);
 			}
 		}
 
 
 		private static IEnumerable<TableDefinition> GetTableDefinitions(DbInfrastructure dbInfrastructure)
 		{
-			var dataTableDefinitions = EpsitecEntitySerializer.GetValueTableDefinitions (dbInfrastructure);
-			var relationTableDefitions = EpsitecEntitySerializer.GetRelationTableDefinitions (dbInfrastructure);
+			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (dbInfrastructure);
+			var relationTableDefitions = RawEntitySerializer.GetRelationTableDefinitions (dbInfrastructure);
 
 			return dataTableDefinitions.Concat (relationTableDefitions);
 		}
@@ -58,15 +58,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static IEnumerable<TableDefinition> GetValueTableDefinitions(DbInfrastructure dbInfrastructure)
 		{
-			return from dbTable in EpsitecEntitySerializer.GetValueTables (dbInfrastructure)
-				   select EpsitecEntitySerializer.GetValueTableDefinition (dbTable);
+			return from dbTable in RawEntitySerializer.GetValueTables (dbInfrastructure)
+				   select RawEntitySerializer.GetValueTableDefinition (dbTable);
 		}
 
 
 		private static IEnumerable<TableDefinition> GetRelationTableDefinitions(DbInfrastructure dbInfrastructure)
 		{
-			return from dbTable in EpsitecEntitySerializer.GetRelationTables (dbInfrastructure)
-				   select EpsitecEntitySerializer.GetRelationTableDefinition (dbTable);
+			return from dbTable in RawEntitySerializer.GetRelationTables (dbInfrastructure)
+				   select RawEntitySerializer.GetRelationTableDefinition (dbTable);
 		}
 
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		        .Where (c => c.Cardinality == DbCardinality.None)
 		        .ToList ();
 
-			return EpsitecEntitySerializer.GetTableDefitition (dbTable, TableCategory.Data, idDbColumns, regularDbColumns);
+			return RawEntitySerializer.GetTableDefitition (dbTable, TableCategory.Data, idDbColumns, regularDbColumns);
 		}
 
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		        dbTable.Columns[Tags.ColumnRefRank],
 		    };
 
-			return EpsitecEntitySerializer.GetTableDefitition (dbTable, TableCategory.Relation, idDbColumns, regularDbColumns);
+			return RawEntitySerializer.GetTableDefitition (dbTable, TableCategory.Relation, idDbColumns, regularDbColumns);
 		}
 
 
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			string dbName = dbTable.Name;
 			string sqlName = dbTable.GetSqlName ();
 
-			IEnumerable<ColumnDefinition> idColumns = EpsitecEntitySerializer.GetColumnDefinitions (idDbColumns, true);
-			IEnumerable<ColumnDefinition> regularColumns = EpsitecEntitySerializer.GetColumnDefinitions (regularDbColumns, false);
+			IEnumerable<ColumnDefinition> idColumns = RawEntitySerializer.GetColumnDefinitions (idDbColumns, true);
+			IEnumerable<ColumnDefinition> regularColumns = RawEntitySerializer.GetColumnDefinitions (regularDbColumns, false);
 
 			bool containsLogColumn = dbTable.Columns.Any (c => c.Name == Tags.ColumnRefLog);
 
@@ -186,9 +186,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void WriteData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, IList<TableDefinition> tableDefinitions, ExportMode exportMode)
+		private static void WriteData(DbInfrastructure dbInfrastructure, XmlWriter xmlWriter, IList<TableDefinition> tableDefinitions, RawExportMode exportMode)
 		{
-			bool exportOnlyUserData = exportMode == ExportMode.UserData;
+			bool exportOnlyUserData = exportMode == RawExportMode.UserData;
 
 			xmlWriter.WriteStartElement ("data");
 
@@ -208,15 +208,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, ImportMode importMode)
+		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, RawImportMode importMode)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
-				EpsitecEntitySerializer.ReadDocumentStart (xmlReader);
-				EpsitecEntitySerializer.ReadHeader (xmlReader);
-				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
-				EpsitecEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions, importMode);
-				EpsitecEntitySerializer.ReadDocumentEnd (xmlReader);
+				RawEntitySerializer.ReadDocumentStart (xmlReader);
+				RawEntitySerializer.ReadHeader (xmlReader);
+				var tableDefinitions = RawEntitySerializer.ReadDefinition(xmlReader);
+				RawEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions, importMode);
+				RawEntitySerializer.ReadDocumentEnd (xmlReader);
 			}
 		}
 
@@ -285,10 +285,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions, ImportMode importMode)
+		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions, RawImportMode importMode)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
-			bool decrementIds = importMode == ImportMode.DecrementIds;
+			bool decrementIds = importMode == RawImportMode.DecrementIds;
 			
 			xmlReader.ReadStartElement ("data");
 
@@ -322,23 +322,23 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void CleanDatabase(FileInfo file, DbInfrastructure dbInfrastructure, ImportMode importMode)
+		public static void CleanDatabase(FileInfo file, DbInfrastructure dbInfrastructure, RawImportMode importMode)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
-				EpsitecEntitySerializer.ReadDocumentStart (xmlReader);
-				EpsitecEntitySerializer.ReadHeader (xmlReader);
+				RawEntitySerializer.ReadDocumentStart (xmlReader);
+				RawEntitySerializer.ReadHeader (xmlReader);
 
-				var tableDefinitions = EpsitecEntitySerializer.ReadDefinition(xmlReader);
+				var tableDefinitions = RawEntitySerializer.ReadDefinition(xmlReader);
 
-				EpsitecEntitySerializer.CleanTables (dbInfrastructure, importMode, tableDefinitions);
+				RawEntitySerializer.CleanTables (dbInfrastructure, importMode, tableDefinitions);
 			}
 		}
 
 
-		private static void CleanTables(DbInfrastructure dbInfrastructure, ImportMode importMode, IList<TableDefinition> tableDefinitions)
+		private static void CleanTables(DbInfrastructure dbInfrastructure, RawImportMode importMode, IList<TableDefinition> tableDefinitions)
 		{
-			bool cleanOnlyEpsitecData = importMode == ImportMode.DecrementIds;
+			bool cleanOnlyEpsitecData = importMode == RawImportMode.DecrementIds;
 
 			foreach (TableDefinition tableDefinition in tableDefinitions)
 			{

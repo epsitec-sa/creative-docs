@@ -439,11 +439,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="file">The file in which to write the data.</param>
 		/// <param name="exportMode">The mode used to export the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
-		public void ExportEpsitecData(FileInfo file, ExportMode exportMode)
+		public void ExportEpsitecData(FileInfo file, RawExportMode exportMode)
 		{
 			file.ThrowIfNull ("file");
 
-			EpsitecEntitySerializer.Export (file, this.dbInfrastructure, exportMode);
+			RawEntitySerializer.Export (file, this.dbInfrastructure, exportMode);
 		}
 
 
@@ -453,15 +453,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="file">The file from which to read the data.</param>
 		/// <param name="importMode">The mode used to import the data.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="file"/> is <c>null</c>.</exception>
-		public void ImportEpsitecData(FileInfo file, ImportMode importMode)
+		public void ImportEpsitecData(FileInfo file, RawImportMode importMode)
 		{
 			file.ThrowIfNull ("file");
 
 			DbId connectionId = new DbId (this.ConnectionInformation.ConnectionId);
 			DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
 
-			EpsitecEntitySerializer.CleanDatabase (file, this.dbInfrastructure, importMode);
-			EpsitecEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry, importMode);
+			RawEntitySerializer.CleanDatabase (file, this.dbInfrastructure, importMode);
+			RawEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry, importMode);
 		}
 
 		

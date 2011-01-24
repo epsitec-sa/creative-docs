@@ -669,33 +669,33 @@ namespace Epsitec.Cresus.Core
 
 		public void ImportDatabase(System.IO.FileInfo file)
 		{
-			ImportMode importMode = ImportMode.PreserveIds;
+			RawImportMode importMode = RawImportMode.PreserveIds;
 
 			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
 		}
 
 		public static void ImportDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
-			ImportMode importMode = ImportMode.PreserveIds;
+			RawImportMode importMode = RawImportMode.PreserveIds;
 
 			CoreData.CreateDatabase (file, dbAccess, importMode);
 		}
 
 		public static void CreateUserDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
-			ImportMode importMode = ImportMode.DecrementIds;
+			RawImportMode importMode = RawImportMode.DecrementIds;
 
 			CoreData.CreateDatabase (file, dbAccess, importMode);
 		}
 
 		public void CreateUserDatabase(System.IO.FileInfo file)
 		{
-			ImportMode importMode = ImportMode.DecrementIds;
+			RawImportMode importMode = RawImportMode.DecrementIds;
 
 			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
 		}
 
-		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, ImportMode importMode)
+		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, RawImportMode importMode)
 		{
 			if (CoreData.CheckDatabaseEsistence (dbAccess))
 			{
@@ -717,7 +717,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static void ImportDatabase(System.IO.FileInfo file, DataInfrastructure dataInfrastructure, ImportMode importMode)
+		private static void ImportDatabase(System.IO.FileInfo file, DataInfrastructure dataInfrastructure, RawImportMode importMode)
 		{
 			dataInfrastructure.ImportEpsitecData (file, importMode);
 		}
@@ -744,7 +744,7 @@ namespace Epsitec.Cresus.Core
 		
 		private static void ImportSharedData(System.IO.FileInfo file, DataInfrastructure dataInfrastructure)
 		{
-			dataInfrastructure.ImportEpsitecData (file, ImportMode.DecrementIds);
+			dataInfrastructure.ImportEpsitecData (file, RawImportMode.DecrementIds);
 		}
 
 		public void ExportDatabase(System.IO.FileInfo file, bool exportOnlyUserData)
@@ -769,7 +769,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExportDatabase(System.IO.FileInfo file, DataInfrastructure dataInfrastructure, bool exportOnlyUserData)
 		{
-			ExportMode exportMode = exportOnlyUserData ? ExportMode.UserData : ExportMode.EpsitecAndUserData;
+			RawExportMode exportMode = exportOnlyUserData ? RawExportMode.UserData : RawExportMode.EpsitecAndUserData;
 
 			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
