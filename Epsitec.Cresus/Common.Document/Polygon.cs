@@ -23,6 +23,23 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public Point Center
+		{
+			get
+			{
+				double px = 0;
+				double py = 0;
+
+				foreach (var point in this.points)
+				{
+					px += point.X;
+					py += point.Y;
+				}
+
+				return new Point (px/this.points.Count, py/this.points.Count);
+			}
+		}
+
 
 		#region Polygons to Path
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
@@ -306,7 +323,7 @@ namespace Epsitec.Common.Document
 			return surface.IsInside ();
 		}
 
-		private Point GetCyclingPoint(int cyclingIndex)
+		public Point GetCyclingPoint(int cyclingIndex)
 		{
 			//	Retourne un point à partir d'un index donné dans un 'torre'.
 			while (cyclingIndex < 0)

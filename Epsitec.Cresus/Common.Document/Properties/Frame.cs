@@ -408,7 +408,7 @@ namespace Epsitec.Common.Document.Properties
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
-			return 4;
+			return 3;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
@@ -419,13 +419,69 @@ namespace Epsitec.Common.Document.Properties
 				return false;
 			}
 
+			if (this.frameType == Properties.FrameType.None)
+			{
+				return false;
+			}
+
+			if (rank == 0)
+			{
+				if (this.frameType == Properties.FrameType.Thick ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+				{
+					return true;
+				}
+			}
+
+			if (rank == 1 || rank == 2)
+			{
+				if (this.frameType == Properties.FrameType.Shadow ||
+					this.frameType == Properties.FrameType.ShadowAlone ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+				{
+					return true;
+				}
+			}
+
 			return false;
 		}
-		
+
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
 			//	Retourne la position d'une poignée.
-			Point pos = new Point(0,0);
+			Point pos = new Point ();
+			var polygon = obj.PropertyHandleSupport;
+
+			if (rank == 0)
+			{
+				if (this.frameType == Properties.FrameType.Thick ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+				{
+					pos = Point.Scale (polygon.GetCyclingPoint (0), polygon.GetCyclingPoint (1), 0.5);
+				}
+			}
+
+			if (rank == 1)
+			{
+				if (this.frameType == Properties.FrameType.Shadow ||
+					this.frameType == Properties.FrameType.ShadowAlone ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+				{
+					var p = polygon.GetCyclingPoint (0);
+					pos = p;
+				}
+			}
+
+			if (rank == 2)
+			{
+				if (this.frameType == Properties.FrameType.Shadow ||
+					this.frameType == Properties.FrameType.ShadowAlone ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+				{
+					var center = polygon.Center;
+					pos = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
+				}
+			}
 
 			return pos;
 		}
@@ -433,6 +489,23 @@ namespace Epsitec.Common.Document.Properties
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
 			//	Modifie la position d'une poignée.
+			var polygon = obj.PropertyHandleSupport;
+
+			if (rank == 0)
+			{
+			}
+
+			if (rank == 1)
+			{
+			}
+
+			if (rank == 2)
+			{
+				var center = polygon.Center;
+				this.ShadowOffsetX = pos.X-center.X;
+				this.ShadowOffsetY = pos.Y-center.Y;
+			}
+
 			base.SetHandlePosition(obj, rank, pos);
 		}
 		

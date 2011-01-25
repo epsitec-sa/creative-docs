@@ -253,6 +253,16 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		public virtual Polygon PropertyHandleSupport
+		{
+			//	Retourne le polygone de support pour les poignées des propriétés.
+			get
+			{
+				return null;
+			}
+		}
+
+
 		public int TotalHandle
 		{
 			//	Nombre total de poignées, avec celles des propriétés.
