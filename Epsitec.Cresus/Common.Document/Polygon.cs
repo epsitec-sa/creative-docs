@@ -160,7 +160,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
+		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate, bool exact)
 		{
 			//	Engraisse/dégraisse des polygones.
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Document
 						Point p = polygon.GetCyclingPoint (0);   // point courant
 						Point b = polygon.GetCyclingPoint (1);   // point suivant
 
-						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
+						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw, exact);
 						if (Polygon.IsInside (polygons, c))
 						{
 							ccw = true;
@@ -195,14 +195,14 @@ namespace Epsitec.Common.Document
 						ccw = !ccw;
 					}
 
-					pp.Add (polygon.Inflate (inflate, ccw));
+					pp.Add (polygon.Inflate (inflate, ccw, exact));
 				}
 
 				return pp;
 			}
 		}
 
-		private Polygon Inflate(double inflate, bool ccw)
+		private Polygon Inflate(double inflate, bool ccw, bool exact)
 		{
 			//	Engraisse/dégraisse un polygone.
 			if (inflate == 0)
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Document
 					Point p = this.GetCyclingPoint (i);    // point courant
 					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
-					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
+					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw, exact);
 
 					if (!c.IsZero)
 					{
@@ -231,9 +231,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw, bool exact = true)
+		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw, bool exact)
 		{
 			//	Engraisse/dégraisse un coin 'apb'.
+			//	Le mode exact = true garanti une épaisseur constante entre le polygon original et le polygon engraissé/dégraissé.
+			//	Le mode exact = false s'apparante à un mode 3d.
 			if (inflate == 0)
 			{
 				return p;
@@ -297,9 +299,9 @@ namespace Epsitec.Common.Document
 
 			foreach (var polygon in polygons)
 			{
-				for (int i = 0; i < polygon.points.Count-1; i++)
+				for (int i = 0; i < polygon.points.Count; i++)
 				{
-					surface.AddLine (polygon.points[i], polygon.points[i+1]);
+					surface.AddLine (polygon.GetCyclingPoint (i), polygon.GetCyclingPoint (i+1));
 				}
 			}
 
