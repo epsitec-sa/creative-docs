@@ -5,6 +5,11 @@ namespace Epsitec.Common.Document
 {
 	public class Polygon
 	{
+		/// <summary>
+		/// Un polygone est une forme fermée constituée de segments de droites, simplement définis
+		/// par une liste de points. Pour obtenir une forme plus complexe (par exemple une forme
+		/// trouée), il faut utiliser une liste de polygones.
+		/// </summary>
 		public Polygon()
 		{
 			this.points = new List<Point> ();
@@ -19,7 +24,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		#region Polygon to Path
+		#region Polygons to Path
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
 			//	Crée le chemin de plusieurs polygones en injectant des coins quelconques.
@@ -115,7 +120,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region Polygon geometry
+		#region Polygons geometry
 		public static List<Polygon> Move(List<Polygon> polygons, double mx, double my)
 		{
 			//	Déplace des polygones.
@@ -167,6 +172,7 @@ namespace Epsitec.Common.Document
 			//	Les polygones obtenus ont toujours le même nombre de sommets.
 			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
 			//	Idem dès que le dégraissement produit des parties vides.
+			//	TODO: Améliorer...
 			if (inflate == 0)
 			{
 				return polygons;
@@ -184,7 +190,7 @@ namespace Epsitec.Common.Document
 						Point p = polygon.GetCyclingPoint (0);   // point courant
 						Point b = polygon.GetCyclingPoint (1);   // point suivant
 
-						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
+						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);  // calcule un point intérieur/extérieur au hasard
 						if (Polygon.IsInside (polygons, c))  // point obtenu à l'intérieur du polygone ?
 						{
 							ccw = true;  // on inverse la méthode

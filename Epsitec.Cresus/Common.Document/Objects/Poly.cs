@@ -743,7 +743,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else  // cadre ?
 			{
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetPolygons (), this.PropertyCorner);
+				frame.AddShapes (this, shapes, objectShapes, port, drawingContext, this.GetPolygons (), this.PropertyCorner);
 			}
 
 			//	Forme de la ligne temporaire.

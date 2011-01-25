@@ -1823,6 +1823,26 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.Frame) as Properties.Frame; }
 		}
 
+		public Properties.Line PropertyFrameStroke
+		{
+			get { return this.Property(Properties.Type.FrameStroke) as Properties.Line; }
+		}
+
+		public Properties.Gradient PropertyFrameSurface
+		{
+			get { return this.Property(Properties.Type.FrameSurface) as Properties.Gradient; }
+		}
+
+		public Properties.Gradient PropertyFrameBackground
+		{
+			get { return this.Property(Properties.Type.FrameBackground) as Properties.Gradient; }
+		}
+
+		public Properties.Gradient PropertyFrameShadow
+		{
+			get { return this.Property(Properties.Type.FrameShadow) as Properties.Gradient; }
+		}
+
 		public Properties.Color PropertyBackColor
 		{
 			get { return this.Property(Properties.Type.BackColor) as Properties.Color; }

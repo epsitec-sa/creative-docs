@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Properties
 			this.backgroundColor = RichColor.FromBrightness (1);  // blanc
 
 			this.shadowSize = 0.0;
-			this.shadowColor = RichColor.FromBrightness (0.5);  // gris
+			this.shadowColor = RichColor.FromBrightness (0.6);  // gris clair
 			this.shadowInflate = 0.0;
 			this.shadowOffsetX = 0.0;
 			this.shadowOffsetY = 0.0;
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void AddShapes(List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner)
+		public void AddShapes(Objects.Abstract obj, List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner)
 		{
 			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
 			if (polygons == null || polygons.Count == 0 || polygons[0].Points.Count < 2)
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document.Properties
 
 					var shape = new Shape ();
 					shape.Path = shadowPath;
-					shape.SetPropertySurface (port, this.PropertyShadowSurface);
+					shape.SetPropertySurface (port, this.GetPropertyFrameShadow (obj));
 
 					shapes.Add (shape);
 				}
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Document.Properties
 				{
 					var shape = new Shape ();
 					shape.Path = path;
-					shape.SetPropertySurface (port, this.PropertyBackgroundSurface);
+					shape.SetPropertySurface (port, this.GetPropertyFrameBackground (obj));
 
 					shapes.Add (shape);
 				}
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Document.Properties
 				{
 					var shape = new Shape ();
 					shape.Path = path;
-					shape.SetPropertyStroke (port, this.PropertyFrameStroke, this.PropertyFrameSurface);
+					shape.SetPropertyStroke (port, this.GetPropertyFrameStroke (obj), this.GetPropertyFrameSurface (obj));
 
 					shapes.Add (shape);
 				}
@@ -535,62 +535,50 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		private Properties.Line PropertyFrameStroke
+		private Properties.Line GetPropertyFrameStroke (Objects.Abstract obj)
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
-			get
-			{
-				var line = Properties.Abstract.NewProperty (this.document, Properties.Type.LineMode) as Properties.Line;
+			var line = obj.PropertyFrameStroke;
 
-				line.IsOnlyForCreation = true;
-				line.Width = this.frameWidth;
-				line.Cap = CapStyle.Round;
+			line.IsOnlyForCreation = true;
+			line.Width = this.frameWidth;
+			line.Cap = CapStyle.Round;
 
-				return line;
-			}
+			return line;
 		}
 
-		private Properties.Gradient PropertyFrameSurface
+		private Properties.Gradient GetPropertyFrameSurface (Objects.Abstract obj)
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
-			get
-			{
-				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+			var surface = obj.PropertyFrameSurface;
 
-				surface.IsOnlyForCreation = true;
-				surface.Color1 = this.frameColor;
+			surface.IsOnlyForCreation = true;
+			surface.Color1 = this.frameColor;
 
-				return surface;
-			}
+			return surface;
 		}
 
-		private Properties.Gradient PropertyBackgroundSurface
+		private Properties.Gradient GetPropertyFrameBackground (Objects.Abstract obj)
 		{
 			//	Retourne une propriété permettant de dessiner le cadre.
-			get
-			{
-				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+			var surface = obj.PropertyFrameBackground;
 
-				surface.IsOnlyForCreation = true;
-				surface.Color1 = this.backgroundColor;
+			surface.IsOnlyForCreation = true;
+			surface.Color1 = this.backgroundColor;
 
-				return surface;
-			}
+			return surface;
 		}
 
-		private Properties.Gradient PropertyShadowSurface
+		private Properties.Gradient GetPropertyFrameShadow (Objects.Abstract obj)
 		{
 			//	Retourne une propriété permettant de dessiner l'ombre.
-			get
-			{
-				var surface = Properties.Abstract.NewProperty (this.document, Properties.Type.FillGradient) as Properties.Gradient;
+			var surface = obj.PropertyFrameShadow;
 
-				surface.IsOnlyForCreation = true;
-				surface.Smooth = this.shadowSize;
-				surface.Color1 = this.shadowColor;
+			surface.IsOnlyForCreation = true;
+			surface.Smooth = this.shadowSize;
+			surface.Color1 = this.shadowColor;
 
-				return surface;
-			}
+			return surface;
 		}
 		
 

@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Objects
 				var objectShapes = new List<Shape> ();
 				objectShapes.Add (imageShape);
 
-				frame.AddShapes (shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygons (), this.PropertyCorner);
+				frame.AddShapes (this, shapes, objectShapes, port, drawingContext, this.GetImagePixelPolygons (), this.PropertyCorner);
 			}
 
 			//	Rectangle complet pour bbox et détection.

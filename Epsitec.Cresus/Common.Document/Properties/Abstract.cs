@@ -9,33 +9,37 @@ namespace Epsitec.Common.Document.Properties
 	//	sous peine de plantée lors de la désérialisation.
 	public enum Type
 	{
-		None           = 0,		// aucune
-		Name           = 1,		// nom de l'objet
-		LineColor      = 2,		// couleur du trait
-		LineMode       = 3,		// mode du trait
-		Arrow          = 4,		// extrémité des segments
-		FillGradient   = 5,		// dégradé de remplissage
-		BackColor      = 6,		// texte: couleur de fond (plus utilisé)
-		Shadow         = 7,		// ombre sous l'objet
-		PolyClose      = 8,		// mode de fermeture des polygones
-		Corner         = 9,		// coins des rectangles
-		Regular        = 10,	// définitions du polygone régulier
-		Arc            = 11,	// arc de cercle ou d'ellipse
-		TextFont       = 12,	// texte: police
-		TextJustif     = 13,	// texte: justification
-		TextLine       = 14,	// texte: justification
-		Image          = 15,	// nom de l'image bitmap
-		ModColor       = 16,	// modification de couleur
-		Surface        = 17,	// surface 2d
-		Volume         = 18,	// volume 3d
-		FillGradientVT = 19,	// dégradé de remplissage volume top
-		FillGradientVL = 20,	// dégradé de remplissage volume left
-		FillGradientVR = 21,	// dégradé de remplissage volume right
-		DimensionArrow = 22,	// extrémité des cotes
-		Dimension      = 23,	// cotes
-		LineDimension  = 24,	// lignes secondaires d'une cote
-		Tension        = 25,	// tension d'un trait à main levée
-		Frame          = 26,	// cadre
+		None            = 0,		// aucune
+		Name            = 1,		// nom de l'objet
+		LineColor       = 2,		// couleur du trait
+		LineMode        = 3,		// mode du trait
+		Arrow           = 4,		// extrémité des segments
+		FillGradient    = 5,		// dégradé de remplissage
+		BackColor       = 6,		// texte: couleur de fond (plus utilisé)
+		Shadow          = 7,		// ombre sous l'objet
+		PolyClose       = 8,		// mode de fermeture des polygones
+		Corner          = 9,		// coins des rectangles
+		Regular         = 10,		// définitions du polygone régulier
+		Arc             = 11,		// arc de cercle ou d'ellipse
+		TextFont        = 12,		// texte: police
+		TextJustif      = 13,		// texte: justification
+		TextLine        = 14,		// texte: justification
+		Image           = 15,		// nom de l'image bitmap
+		ModColor        = 16,		// modification de couleur
+		Surface         = 17,		// surface 2d
+		Volume          = 18,		// volume 3d
+		FillGradientVT  = 19,		// dégradé de remplissage volume top
+		FillGradientVL  = 20,		// dégradé de remplissage volume left
+		FillGradientVR  = 21,		// dégradé de remplissage volume right
+		DimensionArrow  = 22,		// extrémité des cotes
+		Dimension       = 23,		// cotes
+		LineDimension   = 24,		// lignes secondaires d'une cote
+		Tension         = 25,		// tension d'un trait à main levée
+		Frame           = 26,		// cadre
+		FrameStroke     = 27,		// trait du cadre
+		FrameSurface    = 28,		// surface du cadre
+		FrameBackground = 29,		// fond du cadre
+		FrameShadow     = 30,		// ombre du cadre
 	}
 
 	/// <summary>
@@ -62,32 +66,36 @@ namespace Epsitec.Common.Document.Properties
 			Abstract property = null;
 			switch ( type )
 			{
-				case Type.Name:           property = new Name(document, type);      break;
-				case Type.LineColor:      property = new Gradient(document, type);  break;
-				case Type.LineMode:       property = new Line(document, type);      break;
-				case Type.LineDimension:  property = new Line(document, type);      break;
-				case Type.Arrow:          property = new Arrow(document, type);     break;
-				case Type.DimensionArrow: property = new Arrow(document, type);     break;
-				case Type.Dimension:      property = new Dimension(document, type); break;
-				case Type.FillGradient:   property = new Gradient(document, type);  break;
-				case Type.FillGradientVT: property = new Gradient(document, type);  break;
-				case Type.FillGradientVL: property = new Gradient(document, type);  break;
-				case Type.FillGradientVR: property = new Gradient(document, type);  break;
-				case Type.BackColor:      property = new Color(document, type);     break;
-				case Type.Shadow:         property = new Shadow(document, type);    break;
-				case Type.PolyClose:      property = new Bool(document, type);      break;
-				case Type.Corner:         property = new Corner(document, type);    break;
-				case Type.Regular:        property = new Regular(document, type);   break;
-				case Type.Tension:        property = new Tension(document, type);   break;
-				case Type.Arc:            property = new Arc(document, type);       break;
-				case Type.Surface:        property = new Surface(document, type);   break;
-				case Type.Volume:         property = new Volume(document, type);    break;
-				case Type.Frame:          property = new Frame(document, type);     break;
-				case Type.TextFont:       property = new Font(document, type);      break;
-				case Type.TextJustif:     property = new Justif(document, type);    break;
-				case Type.TextLine:       property = new TextLine(document, type);  break;
-				case Type.Image:          property = new Image(document, type);     break;
-				case Type.ModColor:       property = new ModColor(document, type);  break;
+				case Type.Name:             property = new Name(document, type);      break;
+				case Type.LineColor:        property = new Gradient(document, type);  break;
+				case Type.LineMode:         property = new Line(document, type);      break;
+				case Type.LineDimension:    property = new Line(document, type);      break;
+				case Type.Arrow:            property = new Arrow(document, type);     break;
+				case Type.DimensionArrow:   property = new Arrow(document, type);     break;
+				case Type.Dimension:        property = new Dimension(document, type); break;
+				case Type.FillGradient:     property = new Gradient(document, type);  break;
+				case Type.FillGradientVT:   property = new Gradient(document, type);  break;
+				case Type.FillGradientVL:   property = new Gradient(document, type);  break;
+				case Type.FillGradientVR:   property = new Gradient(document, type);  break;
+				case Type.BackColor:        property = new Color(document, type);     break;
+				case Type.Shadow:           property = new Shadow(document, type);    break;
+				case Type.PolyClose:        property = new Bool(document, type);      break;
+				case Type.Corner:           property = new Corner(document, type);    break;
+				case Type.Regular:          property = new Regular(document, type);   break;
+				case Type.Tension:          property = new Tension(document, type);   break;
+				case Type.Arc:              property = new Arc(document, type);       break;
+				case Type.Surface:          property = new Surface(document, type);   break;
+				case Type.Volume:           property = new Volume(document, type);    break;
+				case Type.Frame:            property = new Frame(document, type);     break;
+				case Type.FrameStroke:      property = new Line(document, type);      break;
+				case Type.FrameSurface:     property = new Gradient(document, type);  break;
+				case Type.FrameBackground:  property = new Gradient(document, type);  break;
+				case Type.FrameShadow:      property = new Gradient(document, type);  break;
+				case Type.TextFont:         property = new Font(document, type);      break;
+				case Type.TextJustif:       property = new Justif(document, type);    break;
+				case Type.TextLine:         property = new TextLine(document, type);  break;
+				case Type.Image:            property = new Image(document, type);     break;
+				case Type.ModColor:         property = new ModColor(document, type);  break;
 			}
 			return property;
 		}
