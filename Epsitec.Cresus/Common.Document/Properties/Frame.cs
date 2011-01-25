@@ -505,7 +505,6 @@ namespace Epsitec.Common.Document.Properties
 
 					var shape = new Shape ();
 					shape.Path = shadowPath;
-					shape.FillMode = FillMode.EvenOdd;
 					shape.SetPropertySurface (port, this.PropertyShadowSurface);
 
 					shapes.Add (shape);
@@ -515,7 +514,6 @@ namespace Epsitec.Common.Document.Properties
 				{
 					var shape = new Shape ();
 					shape.Path = path;
-					shape.FillMode = FillMode.EvenOdd;
 					shape.SetPropertySurface (port, this.PropertyBackgroundSurface);
 
 					shapes.Add (shape);
