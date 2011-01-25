@@ -390,7 +390,10 @@ namespace Epsitec.Common.Document
 					default:
 						if ( (elements[i] & PathElement.FlagClose) != 0 )
 						{
-							surf.AddLine(current, start);
+							if (current != start)
+							{
+								surf.AddLine (current, start);
+							}
 							closed = true;
 						}
 						i ++;
