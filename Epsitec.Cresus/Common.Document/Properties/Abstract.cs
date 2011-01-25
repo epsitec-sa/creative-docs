@@ -36,10 +36,13 @@ namespace Epsitec.Common.Document.Properties
 		LineDimension   = 24,		// lignes secondaires d'une cote
 		Tension         = 25,		// tension d'un trait à main levée
 		Frame           = 26,		// cadre
-		FrameStroke     = 27,		// trait du cadre
-		FrameSurface    = 28,		// surface du cadre
-		FrameBackground = 29,		// fond du cadre
-		FrameShadow     = 30,		// ombre du cadre
+
+		//	Les propriétés additionnelles ne sont jamais sérialisées.
+		//	Elles sont créées à la volée en cas de besoin, et jamais détruites.
+		FrameStroke     = 100,		// propriété additionnelle: trait du cadre
+		FrameSurface    = 101,		// propriété additionnelle: surface du cadre
+		FrameBackground = 102,		// propriété additionnelle: fond du cadre
+		FrameShadow     = 103,		// propriété additionnelle: ombre du cadre
 	}
 
 	/// <summary>
