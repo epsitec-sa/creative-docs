@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Line GetPropertyFrameStroke (Objects.Abstract obj)
 		{
-			//	Retourne une propriété permettant de dessiner le cadre.
+			//	Retourne une propriété additionnelle permettant de dessiner le trait du cadre.
 			var line = obj.AdditionnalPropertyFrameStroke;
 
 			line.IsOnlyForCreation = true;
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameSurface (Objects.Abstract obj)
 		{
-			//	Retourne une propriété permettant de dessiner le cadre.
+			//	Retourne une propriété additionnelle permettant de dessiner la surface du cadre.
 			var surface = obj.AdditionnalPropertyFrameSurface;
 
 			surface.IsOnlyForCreation = true;
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameBackground (Objects.Abstract obj)
 		{
-			//	Retourne une propriété permettant de dessiner le cadre.
+			//	Retourne une propriété additionnelle permettant de dessiner le fond du cadre.
 			var surface = obj.AdditionnalPropertyFrameBackground;
 
 			surface.IsOnlyForCreation = true;
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Document.Properties
 
 		private Properties.Gradient GetPropertyFrameShadow (Objects.Abstract obj)
 		{
-			//	Retourne une propriété permettant de dessiner l'ombre.
+			//	Retourne une propriété additionnelle permettant de dessiner l'ombre du cadre.
 			var surface = obj.AdditionnalPropertyFrameShadow;
 
 			surface.IsOnlyForCreation = true;

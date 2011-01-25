@@ -1889,9 +1889,19 @@ namespace Epsitec.Common.Document.Objects
 
 		private Properties.Abstract GetAdditionnalProperty(Properties.Type type)
 		{
-			//	Retourne une propriété additionnel. Si elle n'existe pas, elle est créée.
+			//	Retourne une propriété additionnelle. Si elle n'existe pas, elle est créée.
 			//	Les propriétés additionnelles ne sont jamais sérialisées.
 			//	Elles sont créées à la volée en cas de besoin, et jamais détruites.
+			//	Cela n'est pas un problème, dans la mesure où la quantité de mémoire utilisée
+			//	est petite. Imaginons un exemple:
+			//		1.	Un objet Rectangle utilise un cadre (les propriétés additionnelles
+			//			sont créées).
+			//		2.	L'objet n'utilise plus de cadre (les propriétés additionnelles
+			//			continuent d'exister pour des prunes).
+			//		3.	Le document est sérialisé (les propriétés additionnelles ne sont
+			//			pas sérialisées).
+			//		4.	A la désérialisation, les propriétés additionnelles n'existent plus.
+
 			if (this.additionnalProperties == null)
 			{
 				//	Crée la liste une fois pour toutes, si elle n'existe pas.
@@ -1903,7 +1913,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if (property.Type == type)
 				{
-					return property;
+					return property;  // bingo, la propriété existe
 				}
 			}
 
