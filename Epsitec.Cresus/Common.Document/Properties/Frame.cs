@@ -493,15 +493,13 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				bool exact = true;
-
-				var pp = Polygon.Inflate (polygons, this.marginWidth, exact);
+				var pp = Polygon.Inflate (polygons, this.marginWidth);
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.shadowSize > 0)
 				{
-					var pp1 = Polygon.Inflate (polygons, this.marginWidth+this.shadowInflate, exact);
+					var pp1 = Polygon.Inflate (polygons, this.marginWidth+this.shadowInflate);
 					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
 					var shadowPath = Polygon.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 

@@ -160,7 +160,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate, bool exact)
+		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
 		{
 			//	Engraisse/dégraisse des polygones.
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Document
 						Point p = polygon.GetCyclingPoint (0);   // point courant
 						Point b = polygon.GetCyclingPoint (1);   // point suivant
 
-						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw, exact);
+						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
 						if (Polygon.IsInside (polygons, c))
 						{
 							ccw = true;
@@ -195,14 +195,14 @@ namespace Epsitec.Common.Document
 						ccw = !ccw;
 					}
 
-					pp.Add (polygon.Inflate (inflate, ccw, exact));
+					pp.Add (polygon.Inflate (inflate, ccw));
 				}
 
 				return pp;
 			}
 		}
 
-		private Polygon Inflate(double inflate, bool ccw, bool exact)
+		private Polygon Inflate(double inflate, bool ccw)
 		{
 			//	Engraisse/dégraisse un polygone.
 			if (inflate == 0)
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Document
 					Point p = this.GetCyclingPoint (i);    // point courant
 					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
-					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw, exact);
+					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
 
 					if (!c.IsZero)
 					{
@@ -231,39 +231,29 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw, bool exact)
+		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw)
 		{
 			//	Engraisse/dégraisse un coin 'apb'.
-			//	Le mode exact = true garanti une épaisseur constante entre le polygon original et le polygon engraissé/dégraissé.
-			//	Le mode exact = false s'apparante à un mode 3d.
 			if (inflate == 0)
 			{
 				return p;
 			}
 			else
 			{
-				if (exact)
+				var pa = Point.Move (p, Polygon.RotateCW (p, a, !ccw), inflate);
+				var aa = Point.Move (a, Polygon.RotateCW (a, p,  ccw), inflate);
+				var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
+				var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
+
+				Point[] i = Geometry.Intersect (pa, aa, pb, bb);
+
+				if (i != null && i.Length == 1)
 				{
-					var pa = Point.Move (p, Polygon.RotateCW (p, a, !ccw), inflate);
-					var aa = Point.Move (a, Polygon.RotateCW (a, p, ccw), inflate);
-					var pb = Point.Move (p, Polygon.RotateCW (p, b, ccw), inflate);
-					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
-
-					Point[] i = Geometry.Intersect (pa, aa, pb, bb);
-
-					if (i != null && i.Length == 1)
-					{
-						return i[0];
-					}
-					else
-					{
-						return Point.Zero;
-					}
+					return i[0];
 				}
 				else
 				{
-					var aa = Point.Move (p, a, -inflate);
-					return Point.Move (aa, b+aa-p, -inflate);
+					return Point.Zero;
 				}
 			}
 		}
