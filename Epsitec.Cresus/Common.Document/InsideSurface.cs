@@ -1,4 +1,4 @@
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class InsideSurface
 	{
-		public InsideSurface(Drawing.Point p, int max)
+		public InsideSurface(Point p, int max)
 		{
 			//	Constructeur. Il faut donner le point dont on désire savoir s'il est
 			//	dans la surface, ainsi que le nombre maximum de lignes qui seront
@@ -18,11 +18,11 @@ namespace Epsitec.Common.Document
 			this.list = new double[max+10];
 		}
 
-		public void AddLine(Drawing.Point a, Drawing.Point b)
+		public void AddLine(Point a, Point b)
 		{
 			//	Ajoute un segment de droite.
-			Drawing.Point i;
-			if ( Drawing.Point.IntersectsWithHorizontal(a,b, this.p.Y, out i) )
+			Point i;
+			if ( Point.IntersectsWithHorizontal(a,b, this.p.Y, out i) )
 			{
 				if ( a.Y == b.Y )  return;  // ligne horizontale ?
 				if ( this.total < this.list.Length )
@@ -32,14 +32,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void AddBezier(Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
+		public void AddBezier(Point p1, Point s1, Point s2, Point p2)
 		{
 			//	Ajoute un segment de Bézier.
-			Drawing.Point a = p1;
+			Point a = p1;
 			double step = 1.0/InsideSurface.bezierStep;
 			for ( double t=step ; t<1.0 ; t+=step )
 			{
-				Drawing.Point b = Drawing.Point.FromBezier(p1, s1, s2, p2, t);
+				Point b = Point.FromBezier(p1, s1, s2, p2, t);
 				this.AddLine(a, b);
 				a = b;
 			}
@@ -58,9 +58,10 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected Drawing.Point			p;
-		protected int					total;
-		protected double[]				list;
 		public static readonly int		bezierStep = 10;
+
+		private Point					p;
+		private int						total;
+		private double[]				list;
 	}
 }
