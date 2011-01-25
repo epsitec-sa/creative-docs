@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Properties
 			this.backgroundColor = RichColor.FromBrightness (1);  // blanc
 
 			this.shadowSize = 0.0;
-			this.shadowColor = RichColor.FromBrightness (0.6);  // gris clair
+			this.shadowColor = RichColor.FromAGray (60.0/255.0, 0);  // noir très transparent (alpha = 60)
 			this.shadowInflate = 0.0;
 			this.shadowOffsetX = 0.0;
 			this.shadowOffsetY = 0.0;
