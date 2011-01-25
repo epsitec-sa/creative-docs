@@ -309,7 +309,16 @@ namespace Epsitec.Common.Document.Properties
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
-			if ( obj is Objects.Rectangle )  return 8;
+			if (obj is Objects.Rectangle)
+			{
+				return 8;
+			}
+
+			if (obj is Objects.Image)
+			{
+				return obj.PropertyHandleSupport.Points.Count * 2;
+			}
+
 			return 2;
 		}
 
@@ -351,7 +360,15 @@ namespace Epsitec.Common.Document.Properties
 				pos = Point.Move(obj.Handle(r1).Position, obj.Handle(r2).Position, this.radius);
 			}
 
-			if ( obj is Objects.Poly )
+			if (obj is Objects.Image)
+			{
+				var polygon = obj.PropertyHandleSupport;
+				var p1 = polygon.GetCyclingPoint (rank/2);
+				var p2 = polygon.GetCyclingPoint ((rank%2 == 0) ? rank/2-1 : rank/2+1);
+				pos = Point.Move (p1, p2, this.radius);
+			}
+
+			if (obj is Objects.Poly)
 			{
 				int r1=0, r2=0;
 				if ( rank == 0 )
@@ -389,27 +406,34 @@ namespace Epsitec.Common.Document.Properties
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
 			//	Modifie la position d'une poignée.
-			if ( obj is Objects.Rectangle )
+			if (obj is Objects.Rectangle)
 			{
-				if ( rank == 0 || rank == 1 )
+				if (rank == 0 || rank == 1)
 				{
-					this.Radius = Point.Distance(obj.Handle(0).Position, pos);
+					this.Radius = Point.Distance (obj.Handle (0).Position, pos);
 				}
-				else if ( rank == 2 || rank == 3 )
+				else if (rank == 2 || rank == 3)
 				{
-					this.Radius = Point.Distance(obj.Handle(2).Position, pos);
+					this.Radius = Point.Distance (obj.Handle (2).Position, pos);
 				}
-				else if ( rank == 4 || rank == 5 )
+				else if (rank == 4 || rank == 5)
 				{
-					this.Radius = Point.Distance(obj.Handle(1).Position, pos);
+					this.Radius = Point.Distance (obj.Handle (1).Position, pos);
 				}
-				else if ( rank == 6 || rank == 7 )
+				else if (rank == 6 || rank == 7)
 				{
-					this.Radius = Point.Distance(obj.Handle(3).Position, pos);
+					this.Radius = Point.Distance (obj.Handle (3).Position, pos);
 				}
 			}
 
-			if ( obj is Objects.Poly )
+			if (obj is Objects.Image)
+			{
+				var polygon = obj.PropertyHandleSupport;
+				var p1 = polygon.GetCyclingPoint (rank/2);
+				this.Radius = Point.Distance (p1, pos);
+			}
+
+			if (obj is Objects.Poly)
 			{
 				this.Radius = Point.Distance(obj.Handle(1).Position, pos);
 			}
