@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document
 		#region Polygon to Path
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
-			//	Crée le chemin de polygones à coins quelconques.
+			//	Crée le chemin de plusieurs polygones en injectant des coins quelconques.
 			if (corner == null)
 			{
 				return Polygon.GetPolygonPath (polygons);
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document
 
 		public static Path GetPolygonPath(List<Polygon> polygons)
 		{
-			//	Crée le chemin de polygones à coins droits.
+			//	Crée le chemin de plusieurs polygones à coins droits.
 			var path = new Path ();
 
 			foreach (var polygon in polygons)
@@ -97,6 +97,7 @@ namespace Epsitec.Common.Document
 
 		private static void AddPolygonPath(Path path, Polygon polygon)
 		{
+			//	Ajoute à un chemin un polygone à coins droits.
 			for (int i = 0; i < polygon.Points.Count; i++)
 			{
 				if (i == 0)
@@ -128,28 +129,28 @@ namespace Epsitec.Common.Document
 
 				foreach (var polygon in polygons)
 				{
-					pp.Add (Polygon.Move (polygon, mx, my));
+					pp.Add (polygon.Move (mx, my));
 				}
 
 				return pp;
 			}
 		}
 
-		private static Polygon Move(Polygon polygon, double mx, double my)
+		private Polygon Move(double mx, double my)
 		{
 			//	Déplace un polygone.
 			if (mx == 0 && my == 0)
 			{
-				return polygon;
+				return this;
 			}
 			else
 			{
 				var pp = new Polygon ();
 				var move = new Point (mx, my);
 
-				for (int i = 0; i < polygon.Points.Count; i++)
+				for (int i = 0; i < this.Points.Count; i++)
 				{
-					Point p = polygon.Points[i];
+					Point p = this.Points[i];
 
 					pp.Points.Add (p+move);
 				}
@@ -162,6 +163,9 @@ namespace Epsitec.Common.Document
 		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
 		{
 			//	Engraisse/dégraisse des polygones.
+			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
+			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
+			//	Idem dès que le dégraissement produit des parties vides.
 			if (inflate == 0)
 			{
 				return polygons;
@@ -172,31 +176,50 @@ namespace Epsitec.Common.Document
 
 				foreach (var polygon in polygons)
 				{
-					pp.Add (Polygon.Inflate (polygon, inflate));
+					//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
+					bool ccw = false;
+					{
+						Point a = polygon.GetCyclingPoint (-1);  // point précédent
+						Point p = polygon.GetCyclingPoint (0);   // point courant
+						Point b = polygon.GetCyclingPoint (1);   // point suivant
+
+						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
+						if (Polygon.IsInside (polygons, c))
+						{
+							ccw = true;
+						}
+					}
+
+					if (inflate < 0)
+					{
+						ccw = !ccw;
+					}
+
+					pp.Add (polygon.Inflate (inflate, ccw));
 				}
 
 				return pp;
 			}
 		}
 
-		private static Polygon Inflate(Polygon polygon, double inflate)
+		private Polygon Inflate(double inflate, bool ccw)
 		{
 			//	Engraisse/dégraisse un polygone.
 			if (inflate == 0)
 			{
-				return polygon;
+				return this;
 			}
 			else
 			{
 				var pp = new Polygon ();
 
-				for (int i = 0; i < polygon.Points.Count; i++)
+				for (int i = 0; i < this.Points.Count; i++)
 				{
-					Point a = polygon.GetCyclingPoint (i-1);  // point précédent
-					Point p = polygon.GetCyclingPoint (i);    // point courant
-					Point b = polygon.GetCyclingPoint (i+1);  // point suivant
+					Point a = this.GetCyclingPoint (i-1);  // point précédent
+					Point p = this.GetCyclingPoint (i);    // point courant
+					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
-					Point c = Polygon.InflateCorner (a, p, b, inflate);
+					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
 
 					if (!c.IsZero)
 					{
@@ -208,7 +231,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private static Point InflateCorner(Point a, Point p, Point b, double inflate)
+		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw, bool exact = true)
 		{
 			//	Engraisse/dégraisse un coin 'apb'.
 			if (inflate == 0)
@@ -217,46 +240,71 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-#if false
-				var aa = Point.Move (p, a, -inflate);
-				return Point.Move(aa, b+aa-p, -inflate);
-#else
-				var pa = Point.Move (p, Polygon.RotateCW (p, a), inflate);
-				var aa = Point.Move (a, Polygon.RotateCCW (a, p), inflate);
-				var pb = Point.Move (p, Polygon.RotateCCW (p, b), inflate);
-				var bb = Point.Move (b, Polygon.RotateCW (b, p), inflate);
-
-				Point[] i = Geometry.Intersect (pa, aa, pb, bb);
-
-				if (i != null && i.Length == 1)
+				if (exact)
 				{
-					return i[0];
+					var pa = Point.Move (p, Polygon.RotateCW (p, a, !ccw), inflate);
+					var aa = Point.Move (a, Polygon.RotateCW (a, p, ccw), inflate);
+					var pb = Point.Move (p, Polygon.RotateCW (p, b, ccw), inflate);
+					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
+
+					Point[] i = Geometry.Intersect (pa, aa, pb, bb);
+
+					if (i != null && i.Length == 1)
+					{
+						return i[0];
+					}
+					else
+					{
+						return Point.Zero;
+					}
 				}
 				else
 				{
-					return Point.Zero;
+					var aa = Point.Move (p, a, -inflate);
+					return Point.Move (aa, b+aa-p, -inflate);
 				}
-#endif
 			}
 		}
 
-		private static Point RotateCW(Point center, Point a)
+		private static Point RotateCW(Point center, Point a, bool ccw)
 		{
 			double dx = a.X - center.X;
 			double dy = a.Y - center.Y;
 
-			return new Point (center.X + dy, center.Y - dx);
-		}
-
-		private static Point RotateCCW(Point center, Point a)
-		{
-			double dx = a.X - center.X;
-			double dy = a.Y - center.Y;
-
-			return new Point (center.X - dy, center.Y + dx);
+			if (ccw)
+			{
+				return new Point (center.X - dy, center.Y + dx);
+			}
+			else
+			{
+				return new Point (center.X + dy, center.Y - dx);
+			}
 		}
 		#endregion
 
+
+		private static bool IsInside(List<Polygon> polygons, Point p)
+		{
+			//	Il faut faire le test sur l'ensemble des polygones, car il peut y
+			//	avoir des trous.
+			int count = 0;
+			foreach (var polygon in polygons)
+			{
+				count += polygon.points.Count;
+			}
+
+			var surface = new InsideSurface (p, count);
+
+			foreach (var polygon in polygons)
+			{
+				for (int i = 0; i < polygon.points.Count-1; i++)
+				{
+					surface.AddLine (polygon.points[i], polygon.points[i+1]);
+				}
+			}
+
+			return surface.IsInside ();
+		}
 
 		private Point GetCyclingPoint(int cyclingIndex)
 		{
