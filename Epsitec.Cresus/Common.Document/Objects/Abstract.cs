@@ -1894,9 +1894,11 @@ namespace Epsitec.Common.Document.Objects
 			//	Elles sont créées à la volée en cas de besoin, et jamais détruites.
 			if (this.additionnalProperties == null)
 			{
+				//	Crée la liste une fois pour toutes, si elle n'existe pas.
 				this.additionnalProperties = new List<Properties.Abstract> ();
 			}
 
+			//	Cherche si la propriété existe.
 			foreach (var property in this.additionnalProperties)
 			{
 				if (property.Type == type)
@@ -1905,6 +1907,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
+			//	Crée la propriété une fois pour toutes.
 			var np = Properties.Abstract.NewProperty (this.document, type);
 			this.additionnalProperties.Add (np);
 			return np;
@@ -1993,10 +1996,25 @@ namespace Epsitec.Common.Document.Objects
 			//	Indique si une impression complexe est nécessaire.
 			get
 			{
-				foreach ( Properties.Abstract property in this.properties )
+				foreach (Properties.Abstract property in this.properties)
 				{
-					if ( property.IsComplexPrinting )  return true;
+					if (property.IsComplexPrinting)
+					{
+						return true;
+					}
 				}
+
+				if (this.additionnalProperties != null)
+				{
+					foreach (Properties.Abstract property in this.additionnalProperties)
+					{
+						if (property.IsComplexPrinting)
+						{
+							return true;
+						}
+					}
+				}
+
 				return false;
 			}
 		}
