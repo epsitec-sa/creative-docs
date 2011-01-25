@@ -1723,6 +1723,7 @@ namespace Epsitec.Common.Document.Objects
 			return list;
 		}
 
+
 		public Properties.Name PropertyName
 		{
 			get { return this.Property(Properties.Type.Name) as Properties.Name; }
@@ -1823,26 +1824,6 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.Frame) as Properties.Frame; }
 		}
 
-		public Properties.Line PropertyFrameStroke
-		{
-			get { return this.Property(Properties.Type.FrameStroke) as Properties.Line; }
-		}
-
-		public Properties.Gradient PropertyFrameSurface
-		{
-			get { return this.Property(Properties.Type.FrameSurface) as Properties.Gradient; }
-		}
-
-		public Properties.Gradient PropertyFrameBackground
-		{
-			get { return this.Property(Properties.Type.FrameBackground) as Properties.Gradient; }
-		}
-
-		public Properties.Gradient PropertyFrameShadow
-		{
-			get { return this.Property(Properties.Type.FrameShadow) as Properties.Gradient; }
-		}
-
 		public Properties.Color PropertyBackColor
 		{
 			get { return this.Property(Properties.Type.BackColor) as Properties.Color; }
@@ -1872,6 +1853,63 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get { return this.Property(Properties.Type.ModColor) as Properties.ModColor; }
 		}
+
+
+		public Properties.Line AdditionnalPropertyFrameStroke
+		{
+			get
+			{
+				return this.GetAdditionnalProperty (Properties.Type.FrameStroke) as Properties.Line;
+			}
+		}
+
+		public Properties.Gradient AdditionnalPropertyFrameSurface
+		{
+			get
+			{
+				return this.GetAdditionnalProperty (Properties.Type.FrameSurface) as Properties.Gradient;
+			}
+		}
+
+		public Properties.Gradient AdditionnalPropertyFrameBackground
+		{
+			get
+			{
+				return this.GetAdditionnalProperty (Properties.Type.FrameBackground) as Properties.Gradient;
+			}
+		}
+
+		public Properties.Gradient AdditionnalPropertyFrameShadow
+		{
+			get
+			{
+				return this.GetAdditionnalProperty (Properties.Type.FrameShadow) as Properties.Gradient;
+			}
+		}
+
+		private Properties.Abstract GetAdditionnalProperty(Properties.Type type)
+		{
+			//	Retourne une propriété additionnel. Si elle n'existe pas, elle est créée.
+			//	Les propriétés additionnelles ne sont jamais sérialisées.
+			//	Elles sont créées à la volée en cas de besoin, et jamais détruites.
+			if (this.additionnalProperties == null)
+			{
+				this.additionnalProperties = new List<Properties.Abstract> ();
+			}
+
+			foreach (var property in this.additionnalProperties)
+			{
+				if (property.Type == type)
+				{
+					return property;
+				}
+			}
+
+			var np = Properties.Abstract.NewProperty (this.document, type);
+			this.additionnalProperties.Add (np);
+			return np;
+		}
+
 
 		protected static int PropertySearch(System.Collections.ArrayList list, Properties.Type type)
 		{
@@ -2916,25 +2954,39 @@ namespace Epsitec.Common.Document.Objects
 			//	Donne la liste des propriétés qui utilisent des surfaces complexes.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			foreach ( Properties.Abstract property in this.properties )
+			foreach (Properties.Abstract property in this.properties)
 			{
-				for ( int i=0 ; i<2 ; i++ )
+				this.GetComplexSurfacePDF (port, property, list);
+			}
+
+			if (this.additionnalProperties != null)
+			{
+				foreach (Properties.Abstract property in this.additionnalProperties)
 				{
-					Properties.Abstract surface = null;
-					if ( i == 0 )  surface = property as Properties.Gradient;
-					if ( i == 1 )  surface = property as Properties.Font;
-					if ( surface == null )  continue;
-
-					PDF.Type type = surface.TypeComplexSurfacePDF(port);
-					bool isSmooth = surface.IsSmoothSurfacePDF(port);
-
-					if ( type == PDF.Type.None )  continue;
-					if ( type == PDF.Type.OpaqueRegular && !isSmooth )  continue;
-
-					list.Add(surface);
+					this.GetComplexSurfacePDF (port, property, list);
 				}
 			}
+
 			return list;
+		}
+
+		private void GetComplexSurfacePDF(IPaintPort port, Properties.Abstract property, System.Collections.ArrayList list)
+		{
+			for ( int i=0 ; i<2 ; i++ )
+			{
+				Properties.Abstract surface = null;
+				if ( i == 0 )  surface = property as Properties.Gradient;
+				if ( i == 1 )  surface = property as Properties.Font;
+				if ( surface == null )  continue;
+
+				PDF.Type type = surface.TypeComplexSurfacePDF(port);
+				bool isSmooth = surface.IsSmoothSurfacePDF(port);
+
+				if ( type == PDF.Type.None )  continue;
+				if ( type == PDF.Type.OpaqueRegular && !isSmooth )  continue;
+
+				list.Add(surface);
+			}
 		}
 
 
@@ -3780,6 +3832,7 @@ namespace Epsitec.Common.Document.Objects
 
 		protected string						name = "";
 		protected UndoableList					properties;
+		protected List<Properties.Abstract>		additionnalProperties;
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 		protected UndoableList					selectedSegments = null;
 		protected UndoableList					objects = null;

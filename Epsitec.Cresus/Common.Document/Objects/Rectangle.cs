@@ -24,10 +24,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.Frame )  return true;
-			if ( type == Properties.Type.FrameStroke )  return true;
-			if ( type == Properties.Type.FrameSurface )  return true;
-			if ( type == Properties.Type.FrameBackground )  return true;
-			if ( type == Properties.Type.FrameShadow )  return true;
 			if ( type == Properties.Type.Corner )  return true;
 			return false;
 		}
