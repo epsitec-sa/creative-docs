@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document
 		public static Path GetPolygonPathCorner(DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner, bool simplify)
 		{
 			//	Crée le chemin de plusieurs polygones en injectant des coins quelconques.
-			if (corner == null)
+			if (corner == null || corner.CornerType == Properties.CornerType.None)
 			{
 				return Polygon.GetPolygonPath (polygons);
 			}
@@ -164,6 +164,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Engraisse/dégraisse des polygones.
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
+			//	Les polygones obtenus ont toujours le même nombre de sommets.
 			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
 			//	Idem dès que le dégraissement produit des parties vides.
 			if (inflate == 0)
@@ -184,15 +185,15 @@ namespace Epsitec.Common.Document
 						Point b = polygon.GetCyclingPoint (1);   // point suivant
 
 						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
-						if (Polygon.IsInside (polygons, c))
+						if (Polygon.IsInside (polygons, c))  // point obtenu à l'intérieur du polygone ?
 						{
-							ccw = true;
+							ccw = true;  // on inverse la méthode
 						}
 					}
 
-					if (inflate < 0)
+					if (inflate < 0)  // dégraisse ?
 					{
-						ccw = !ccw;
+						ccw = !ccw;  // on inverse la méthode
 					}
 
 					pp.Add (polygon.Inflate (inflate, ccw));
@@ -233,7 +234,7 @@ namespace Epsitec.Common.Document
 
 		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw)
 		{
-			//	Engraisse/dégraisse un coin 'apb'.
+			//	Engraisse/dégraisse un coin 'a-p-b'.
 			if (inflate == 0)
 			{
 				return p;
@@ -260,6 +261,7 @@ namespace Epsitec.Common.Document
 
 		private static Point RotateCW(Point center, Point a, bool ccw)
 		{
+			//	Retourne le point 'a' tourné de +/-90 degrés autour de 'center'.
 			double dx = a.X - center.X;
 			double dy = a.Y - center.Y;
 
