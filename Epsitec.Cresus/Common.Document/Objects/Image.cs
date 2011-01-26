@@ -280,19 +280,19 @@ namespace Epsitec.Common.Document.Objects
 
 				p.X = center.X-width/2;
 				p.Y = center.Y-height/2;
-				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X+width/2;
 				p.Y = center.Y-height/2;
-				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X+width/2;
 				p.Y = center.Y+height/2;
-				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 				p.X = center.X-width/2;
 				p.Y = center.Y+height/2;
-				polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+				polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 				return polygons;
 			}
@@ -320,19 +320,19 @@ namespace Epsitec.Common.Document.Objects
 
 			p.X = center.X-width/2;
 			p.Y = center.Y-height/2;
-			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y-height/2;
-			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X+width/2;
 			p.Y = center.Y+height/2;
-			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 			p.X = center.X-width/2;
 			p.Y = center.Y+height/2;
-			polygon.Points.Add (Transform.RotatePointDeg (center, angle, p));
+			polygon.Add (Transform.RotatePointDeg (center, angle, p));
 
 			return polygons;
 		}

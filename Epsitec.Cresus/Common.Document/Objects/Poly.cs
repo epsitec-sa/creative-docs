@@ -952,7 +952,7 @@ namespace Epsitec.Common.Document.Objects
 				if (polygon != null)
 				{
 					var p = this.Handle (i).Position;
-					polygon.Points.Add (p);
+					polygon.Add (p);
 				}
 			}
 

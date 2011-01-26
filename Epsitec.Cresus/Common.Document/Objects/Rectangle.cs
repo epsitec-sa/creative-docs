@@ -231,17 +231,17 @@ namespace Epsitec.Common.Document.Objects
 				var p1 = this.Handle (0).Position;
 				var p3 = this.Handle (1).Position;
 
-				polygon.Points.Add (p1);
-				polygon.Points.Add (new Point (p1.X, p3.Y));
-				polygon.Points.Add (p3);
-				polygon.Points.Add (new Point (p3.X, p1.Y));
+				polygon.Add (p1);
+				polygon.Add (new Point (p1.X, p3.Y));
+				polygon.Add (p3);
+				polygon.Add (new Point (p3.X, p1.Y));
 			}
 			else
 			{
-				polygon.Points.Add (this.Handle (0).Position);
-				polygon.Points.Add (this.Handle (2).Position);
-				polygon.Points.Add (this.Handle (1).Position);
-				polygon.Points.Add (this.Handle (3).Position);
+				polygon.Add (this.Handle (0).Position);
+				polygon.Add (this.Handle (2).Position);
+				polygon.Add (this.Handle (1).Position);
+				polygon.Add (this.Handle (3).Position);
 			}
 
 			return polygons;
