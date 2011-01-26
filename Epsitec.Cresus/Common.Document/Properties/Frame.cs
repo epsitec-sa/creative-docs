@@ -452,34 +452,37 @@ namespace Epsitec.Common.Document.Properties
 			Point pos = new Point ();
 			var polygon = obj.PropertyHandleSupport;
 
-			if (rank == 0)  // margin width ?
+			if (polygon != null)
 			{
-				if (this.frameType == Properties.FrameType.Thick ||
-					this.frameType == Properties.FrameType.ThickAndSnadow)
+				if (rank == 0)  // margin width ?
 				{
-					polygon = polygon.Inflate (this.marginWidth);
-					pos = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
+					if (this.frameType == Properties.FrameType.Thick ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
+					{
+						polygon = polygon.Inflate (this.marginWidth);
+						pos = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
+					}
 				}
-			}
 
-			if (rank == 1)  // shadow inflate ?
-			{
-				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-				polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-				return polygon.Points[0];
-			}
+				if (rank == 1)  // shadow inflate ?
+				{
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
+					return polygon.Points[0];
+				}
 
-			if (rank == 2)  // shadow size ?
-			{
-				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-				polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
-				return polygon.Points[0];
-			}
-			
-			if (rank == 3)  // shadow offset ?
-			{
-				var center = polygon.Center;
-				pos = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
+				if (rank == 2)  // shadow size ?
+				{
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
+					return polygon.Points[0];
+				}
+
+				if (rank == 3)  // shadow offset ?
+				{
+					var center = polygon.Center;
+					pos = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
+				}
 			}
 
 			return pos;
@@ -490,35 +493,38 @@ namespace Epsitec.Common.Document.Properties
 			//	Modifie la position d'une poignée.
 			var polygon = obj.PropertyHandleSupport;
 
-			if (rank == 0)  // margin width ?
+			if (polygon != null)
 			{
-				var p = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
-				this.MarginWidth = Point.Distance (p, pos);
-			}
+				if (rank == 0)  // margin width ?
+				{
+					var p = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
+					this.MarginWidth = Point.Distance (p, pos);
+				}
 
-			if (rank == 1)  // shadow inflate ?
-			{
-				var center = polygon.Center;
-				double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
-				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-				polygon = polygon.Inflate (this.marginWidth);
-				this.ShadowInflate = (pos.X-polygon.Points[0].X)*fx;
-			}
+				if (rank == 1)  // shadow inflate ?
+				{
+					var center = polygon.Center;
+					double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+					polygon = polygon.Inflate (this.marginWidth);
+					this.ShadowInflate = (pos.X-polygon.Points[0].X)*fx;
+				}
 
-			if (rank == 2)  // shadow size ?
-			{
-				var center = polygon.Center;
-				double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
-				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-				polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-				this.ShadowSize = (pos.X-polygon.Points[0].X)*fx;
-			}
+				if (rank == 2)  // shadow size ?
+				{
+					var center = polygon.Center;
+					double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
+					this.ShadowSize = (pos.X-polygon.Points[0].X)*fx;
+				}
 
-			if (rank == 3)  // shadow offset ?
-			{
-				var center = polygon.Center;
-				this.ShadowOffsetX = pos.X-center.X;
-				this.ShadowOffsetY = pos.Y-center.Y;
+				if (rank == 3)  // shadow offset ?
+				{
+					var center = polygon.Center;
+					this.ShadowOffsetX = pos.X-center.X;
+					this.ShadowOffsetY = pos.Y-center.Y;
+				}
 			}
 
 			base.SetHandlePosition (obj, rank, pos);
@@ -569,12 +575,12 @@ namespace Epsitec.Common.Document.Properties
 				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
 				polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-				Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 8.0, color);
+				Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 
 				if (this.shadowSize > 0)
 				{
 					polygon = polygon.Inflate (this.shadowSize);
-					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 8.0, color);
+					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 				}
 			}
 		}
