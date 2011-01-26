@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document
 
 		public void Add(Point p)
 		{
-			//	Ajoute un point au polygone, sanf s'il est identique au dernier ajouté.
+			//	Ajoute un point au polygone, sauf s'il est identique au dernier ajouté.
 			if (this.points.Count == 0 || this.points[this.points.Count-1] != p)
 			{
 				this.points.Add (p);

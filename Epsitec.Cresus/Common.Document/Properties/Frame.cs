@@ -405,6 +405,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Ajuste les paramètres selon le type.
 		}
 
+
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
@@ -659,7 +660,17 @@ namespace Epsitec.Common.Document.Properties
 					var shape = new Shape ();
 					shape.Path = shadowPath;
 					shape.SetPropertySurface (port, this.GetPropertyFrameShadow (obj));
+					shapes.Add (shape);
 
+					//	Ajoute ce qu'il faut pour inclure les traits de construction (DrawEdit).
+					var polygon = obj.PropertyHandleSupport;
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
+
+					shape = new Shape ();
+					shape.Path = polygon.PolygonPath;
+					shape.Type = Common.Document.Type.Surface;
+					shape.Aspect = Aspect.InvisibleBox;
 					shapes.Add (shape);
 				}
 
@@ -668,7 +679,6 @@ namespace Epsitec.Common.Document.Properties
 					var shape = new Shape ();
 					shape.Path = path;
 					shape.SetPropertySurface (port, this.GetPropertyFrameBackground (obj));
-
 					shapes.Add (shape);
 				}
 
@@ -681,7 +691,6 @@ namespace Epsitec.Common.Document.Properties
 					var shape = new Shape ();
 					shape.Path = path;
 					shape.SetPropertyStroke (port, this.GetPropertyFrameStroke (obj), this.GetPropertyFrameSurface (obj));
-
 					shapes.Add (shape);
 				}
 			}

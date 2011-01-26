@@ -1338,7 +1338,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( shape.Type == Type.Stroke && shape.PropertySurface != null )
 					{
 						this.surfaceAnchor.LineUse = true;
-						shape.PropertySurface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+						shape.PropertySurface.InflateBoundingBox (this.surfaceAnchor, ref this.bboxFull);
 					}
 
 					this.surfaceAnchor.LineUse = initialLineUse;
