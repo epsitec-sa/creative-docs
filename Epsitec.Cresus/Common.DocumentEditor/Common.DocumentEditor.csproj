@@ -760,12 +760,10 @@
     <Content Include="Resources\Common.DocumentEditor\Strings.00.resource" />
     <Content Include="Resources\Common.DocumentEditor\Strings.en.resource" />
     <EmbeddedResource Include="Images\FrameNone.icon" />
-    <EmbeddedResource Include="Images\FrameShadow.icon" />
-    <EmbeddedResource Include="Images\FrameSimple.icon" />
-    <EmbeddedResource Include="Images\FrameThick.icon" />
-    <EmbeddedResource Include="Images\FrameThickAndShadow.icon" />
     <EmbeddedResource Include="Images\PropertyFrame.icon" />
-    <EmbeddedResource Include="Images\FrameShadowAlone.icon" />
+    <EmbeddedResource Include="Images\FrameFrameAndShadow.icon" />
+    <EmbeddedResource Include="Images\FrameOnlyFrame.icon" />
+    <EmbeddedResource Include="Images\FrameOnlyShadow.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

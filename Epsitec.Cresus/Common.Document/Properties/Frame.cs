@@ -9,12 +9,10 @@ namespace Epsitec.Common.Document.Properties
 	//	sous peine de plantée lors de la désérialisation.
 	public enum FrameType
 	{
-		None           = 0,			// pas de cadre
-		Simple         = 10,		// simple trait
-		Thick          = 20,		// bord épais
-		Shadow         = 21,		// ombre
-		ThickAndSnadow = 22,		// bord épais et ombre
-		ShadowAlone    = 30,		// ombre seule
+		None           = 0,		// ni cadre ni ombre
+		OnlyFrame      = 1,		// cadre
+		OnlyShadow     = 2,		// ombre
+		FrameAndShadow = 3,		// cadre et ombre
 	}
 
 	/// <summary>
@@ -257,10 +255,9 @@ namespace Epsitec.Common.Document.Properties
 			switch ( index )
 			{
 				case  0:  type = FrameType.None;            break;
-				case  1:  type = FrameType.Simple;          break;
-				case  2:  type = FrameType.Thick;           break;
-				case  3:  type = FrameType.Shadow;          break;
-				case  4:  type = FrameType.ThickAndSnadow;  break;
+				case  1:  type = FrameType.OnlyFrame;       break;
+				case  2:  type = FrameType.FrameAndShadow;  break;
+				case  3:  type = FrameType.OnlyShadow;      break;
 			}
 			return type;
 		}
@@ -283,12 +280,10 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-				case FrameType.None:            name = Res.Strings.Property.Frame.None;            break;
-				case FrameType.Simple:          name = Res.Strings.Property.Frame.Simple;          break;
-				case FrameType.Thick:           name = Res.Strings.Property.Frame.Thick;           break;
-				case FrameType.Shadow:          name = Res.Strings.Property.Frame.Shadow;          break;
-				case FrameType.ThickAndSnadow:  name = Res.Strings.Property.Frame.ThickAndShadow;  break;
-				case FrameType.ShadowAlone:     name = Res.Strings.Property.Frame.ShadowAlone;     break;
+				case FrameType.None:           name = Res.Strings.Property.Frame.None;            break;
+				case FrameType.OnlyFrame:      name = Res.Strings.Property.Frame.OnlyFrame;       break;
+				case FrameType.FrameAndShadow: name = Res.Strings.Property.Frame.FrameAndShadow;  break;
+				case FrameType.OnlyShadow:     name = Res.Strings.Property.Frame.OnlyShadow;      break;
 			}
 			return name;
 		}
@@ -299,100 +294,14 @@ namespace Epsitec.Common.Document.Properties
 			switch ( type )
 			{
 				case FrameType.None:            return "FrameNone";
-				case FrameType.Simple:          return "FrameSimple";
-				case FrameType.Thick:           return "FrameThick";
-				case FrameType.Shadow:          return "FrameShadow";
-				case FrameType.ThickAndSnadow:  return "FrameThickAndShadow";
-				case FrameType.ShadowAlone:     return "FrameShadowAlone";
+				case FrameType.OnlyFrame:       return "FrameOnlyFrame";
+				case FrameType.FrameAndShadow:  return "FrameFrameAndShadow";
+				case FrameType.OnlyShadow:      return "FrameOnlyShadow";
 			}
 			return "";
 		}
 
 
-		public static void GetFieldsParam(FrameType type, out double frameWidth, out double marginWidth, out double shadowInflate, out double shadowSize, out double shadowOffsetX, out double shadowOffsetY)
-		{
-			//	Retourne les valeurs par défaut et les min/max pour un type donné.
-			frameWidth = 0;
-			marginWidth = 0;
-			shadowInflate = 0;
-			shadowSize = 0;
-			shadowOffsetX = 0;
-			shadowOffsetY = 0;
-
-			switch (type)
-			{
-				case FrameType.Simple:
-					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-					{
-						frameWidth = 2.0;  // 0.2mm
-					}
-					else
-					{
-						frameWidth = 2.54;  // 0.01in
-					}
-					break;
-
-				case FrameType.Thick:
-					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-					{
-						frameWidth = 2.0;  // 0.2mm
-						marginWidth = 50.0;  // 5mm
-					}
-					else
-					{
-						frameWidth = 2.54;  // 0.01in
-						marginWidth = 63.5;  // 0.25in
-					}
-					break;
-
-				case FrameType.Shadow:
-					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-					{
-						frameWidth = 2.0;  // 0.2mm
-						shadowSize = 25.0;  // 2.5mm
-					}
-					else
-					{
-						frameWidth = 2.54;  // 0.01in
-						shadowSize = 20.0;  // 2.0mm
-					}
-					break;
-
-				case FrameType.ThickAndSnadow:
-					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
-					{
-						frameWidth = 2.0;  // 0.2mm
-						marginWidth = 50.0;  // 5mm
-						shadowSize = 20.0;  // 2.0mm
-					}
-					else
-					{
-						frameWidth = 2.54;  // 0.01in
-						marginWidth = 63.5;  // 0.25in
-						shadowSize = 25.4;  // 0.1in
-					}
-					break;
-
-				case FrameType.ShadowAlone:
-					if (System.Globalization.RegionInfo.CurrentRegion.IsMetric)
-					{
-						shadowInflate = -20.0;  // -2.0mm
-						shadowSize = 40.0;  // 4.0mm
-						shadowOffsetX = 40.0;  // 4.0mm
-						shadowOffsetY = -40.0;  // -4.0mm
-					}
-					else
-					{
-						shadowInflate = -25.4;  // -0.1mm
-						shadowSize = 50.8;  // 0.2in
-						shadowOffsetX = 50.8;  // 0.2in
-						shadowOffsetY = -50.8;  // -0.2in
-					}
-					break;
-			}
-		}
-		
-		
 		public override bool AlterBoundingBox
 		{
 			//	Indique si un changement de cette propriété modifie la bbox de l'objet.
@@ -427,8 +336,8 @@ namespace Epsitec.Common.Document.Properties
 
 			if (rank == 0)  // margin width ?
 			{
-				if (this.frameType == Properties.FrameType.Thick ||
-					this.frameType == Properties.FrameType.ThickAndSnadow)
+				if (this.frameType == Properties.FrameType.OnlyFrame ||
+					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
 					return true;
 				}
@@ -436,9 +345,8 @@ namespace Epsitec.Common.Document.Properties
 
 			if (rank == 1 || rank == 2 || rank == 3)  // shadow inflate/size/offset ?
 			{
-				if (this.frameType == Properties.FrameType.Shadow ||
-					this.frameType == Properties.FrameType.ShadowAlone ||
-					this.frameType == Properties.FrameType.ThickAndSnadow)
+				if (this.frameType == Properties.FrameType.OnlyShadow ||
+					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
 					return true;
 				}
@@ -568,9 +476,8 @@ namespace Epsitec.Common.Document.Properties
 				graphics.RenderSolid (color);
 				graphics.LineWidth = initialWidth;
 
-				if (this.frameType == Properties.FrameType.Shadow ||
-					this.frameType == Properties.FrameType.ShadowAlone ||
-					this.frameType == Properties.FrameType.ThickAndSnadow)
+				if (this.frameType == Properties.FrameType.OnlyShadow ||
+					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
@@ -647,7 +554,8 @@ namespace Epsitec.Common.Document.Properties
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
-				if (this.shadowSize > 0)
+				if (this.frameType == Properties.FrameType.OnlyShadow ||
+					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
 					var pp1 = Polygon.Inflate (polygons, this.marginWidth+this.shadowInflate);
 					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
@@ -670,7 +578,8 @@ namespace Epsitec.Common.Document.Properties
 					shapes.Add (shape);
 				}
 
-				if (this.FrameType != Properties.FrameType.ShadowAlone)
+				if (this.FrameType == Properties.FrameType.OnlyFrame ||
+					this.FrameType == Properties.FrameType.FrameAndShadow)
 				{
 					var shape = new Shape ();
 					shape.Path = path;
@@ -682,12 +591,16 @@ namespace Epsitec.Common.Document.Properties
 				shapes.AddRange (objectShapes);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sur l'image.
-				if (this.frameWidth > 0)
+				if (this.FrameType == Properties.FrameType.OnlyFrame ||
+					this.FrameType == Properties.FrameType.FrameAndShadow)
 				{
-					var shape = new Shape ();
-					shape.Path = path;
-					shape.SetPropertyStroke (port, this.GetPropertyFrameStroke (obj), this.GetPropertyFrameSurface (obj));
-					shapes.Add (shape);
+					if (this.frameWidth > 0)
+					{
+						var shape = new Shape ();
+						shape.Path = path;
+						shape.SetPropertyStroke (port, this.GetPropertyFrameStroke (obj), this.GetPropertyFrameSurface (obj));
+						shapes.Add (shape);
+					}
 				}
 			}
 		}
