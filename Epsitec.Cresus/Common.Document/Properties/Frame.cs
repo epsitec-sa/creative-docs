@@ -542,45 +542,49 @@ namespace Epsitec.Common.Document.Properties
 				return;
 			}
 
-			double initialWidth = graphics.LineWidth;
-			graphics.LineWidth = 1.0/drawingContext.ScaleX;
-
 			var polygon = obj.PropertyHandleSupport;
-			var color = Drawing.Color.FromBrightness (0.6);
 
-			if (this.shadowOffsetX != 0 && this.shadowOffsetY != 0)
+			if (polygon != null)
 			{
-				var center = polygon.Center;
-				var pa = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
+				var color = Drawing.Color.FromBrightness (0.6);
 
-				double radius = 3.0/drawingContext.ScaleX;
-				graphics.AddCircle (center, radius);
+				double initialWidth = graphics.LineWidth;
+				graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
-				if (Point.Distance (center, pa) > radius)
+				if (this.shadowOffsetX != 0 && this.shadowOffsetY != 0)
 				{
-					center = Point.Move (center, pa, radius);
-					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
-					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
-					graphics.AddLine (center, pa);
+					var center = polygon.Center;
+					var pa = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
+
+					double radius = 3.0/drawingContext.ScaleX;
+					graphics.AddCircle (center, radius);
+
+					if (Point.Distance (center, pa) > radius)
+					{
+						center = Point.Move (center, pa, radius);
+						graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
+						graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
+						graphics.AddLine (center, pa);
+					}
 				}
-			}
 
-			graphics.RenderSolid (color);
-			graphics.LineWidth = initialWidth;
+				graphics.RenderSolid (color);
+				graphics.LineWidth = initialWidth;
 
-			if (this.frameType == Properties.FrameType.Shadow ||
-				this.frameType == Properties.FrameType.ShadowAlone ||
-				this.frameType == Properties.FrameType.ThickAndSnadow)
-			{
-				polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-
-				polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-				Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
-
-				if (this.shadowSize > 0)
+				if (this.frameType == Properties.FrameType.Shadow ||
+					this.frameType == Properties.FrameType.ShadowAlone ||
+					this.frameType == Properties.FrameType.ThickAndSnadow)
 				{
-					polygon = polygon.Inflate (this.shadowSize);
+					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+
+					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
 					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
+
+					if (this.shadowSize > 0)
+					{
+						polygon = polygon.Inflate (this.shadowSize);
+						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
+					}
 				}
 			}
 		}
