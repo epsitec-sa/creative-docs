@@ -150,7 +150,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.HandlePropertiesCreate ();
+			this.HandlePropertiesUpdate ();
+			this.document.Notifier.NotifyArea (this.BoundingBox);
 		}
 
 		public override bool CreateIsExist(DrawingContext drawingContext)

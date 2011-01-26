@@ -1445,11 +1445,11 @@
   <data name="Panel.Frame.Short.MarginWidth" id="KI">C</data>
   <data name="Panel.Frame.Short.ShadowSize" id="KJ">O</data>
   <data name="Panel.Frame.Long.FrameWidth" id="KK">Trait</data>
-  <data name="Panel.Frame.Long.MarginWidth" id="KL">Epaisseur</data>
+  <data name="Panel.Frame.Long.MarginWidth" id="KL">Bordure</data>
   <data name="Panel.Frame.Long.ShadowSize" id="KM">Portée ombre</data>
   <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
-  <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur du cadre</data>
-  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Dimension de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur de la bordure</data>
+  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Portée de l&amp;apos;ombre, qui va en décrescendo</data>
   <data name="Property.Abstract.Frame" id="KQ">Cadre</data>
   <data name="Panel.Frame.Long.FrameColor" id="KR">Couleur trait</data>
   <data name="Panel.Frame.Short.ShadowColor" id="KS">CO</data>
@@ -1465,21 +1465,21 @@
   </data>
   <data name="Panel.Frame.Short.ShadowOffsetX" id="K61">X</data>
   <data name="Panel.Frame.Short.ShadowOffsetY" id="K71">Y</data>
-  <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l&amp;apos;ombre</data>
-  <data name="Panel.Frame.Tooltip.ShadowOffsetY" id="K91">Décalage vertical de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l&amp;apos;ombre (à droite si positif)</data>
+  <data name="Panel.Frame.Tooltip.ShadowOffsetY" id="K91">Décalage vertical de l&amp;apos;ombre (en haut si positif)</data>
   <data name="Property.Frame.FrameAndShadow" id="KA1">Cadre et ombre</data>
   <data name="Panel.Frame.Long.ShadowInflate" id="KB1">Gross. ombre</data>
   <data name="Panel.Frame.Short.ShadowInflate" id="KC1">G</data>
-  <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement ou réduction de l&amp;apos;ombre</data>
   <data name="Panel.Frame.Sample01" id="KE1">Pas de cadre</data>
-  <data name="Panel.Frame.Sample02" id="KF1">Cadre fin sans bords</data>
-  <data name="Panel.Frame.Sample03" id="KG1">Cadre épais sans bords</data>
-  <data name="Panel.Frame.Sample04" id="KH1">Cadre fin avec bords</data>
-  <data name="Panel.Frame.Sample05" id="KI1">Cadre épais avec bords</data>
-  <data name="Panel.Frame.Sample06" id="KJ1">Cadre fin sans bords avec ombre</data>
-  <data name="Panel.Frame.Sample07" id="KK1">Cadre épais sans bords avec ombre</data>
-  <data name="Panel.Frame.Sample08" id="KL1">Cadre fin avec bords et ombre</data>
-  <data name="Panel.Frame.Sample09" id="KM1">Cadre épais avec bords et ombre</data>
+  <data name="Panel.Frame.Sample02" id="KF1">Cadre fin sans bordure</data>
+  <data name="Panel.Frame.Sample03" id="KG1">Cadre épais sans bordure</data>
+  <data name="Panel.Frame.Sample04" id="KH1">Cadre fin avec bordure</data>
+  <data name="Panel.Frame.Sample05" id="KI1">Cadre épais avec bordure</data>
+  <data name="Panel.Frame.Sample06" id="KJ1">Cadre fin sans bordure avec ombre</data>
+  <data name="Panel.Frame.Sample07" id="KK1">Cadre épais sans bordure avec ombre</data>
+  <data name="Panel.Frame.Sample08" id="KL1">Cadre fin avec bordure et ombre</data>
+  <data name="Panel.Frame.Sample09" id="KM1">Cadre épais avec bordure et ombre</data>
   <data name="Panel.Frame.Sample10" id="KN1">Ombre seule centrée</data>
   <data name="Panel.Frame.Sample11" id="KO1">Ombre seule en bas à droite</data>
   <data name="Panel.Frame.Sample12" id="KP1">Ombre seule en bas à gauche</data>
