@@ -482,12 +482,12 @@ namespace Epsitec.Common.Document.Properties
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
 					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
+					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 0.0, 4.0, color);
 
 					if (this.shadowSize > 0)
 					{
 						polygon = polygon.Inflate (this.shadowSize);
-						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
+						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 0.0, 4.0, color);
 					}
 				}
 			}
