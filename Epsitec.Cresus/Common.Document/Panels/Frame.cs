@@ -398,13 +398,13 @@ namespace Epsitec.Common.Document.Panels
 			//	Met les valeurs par défaut correspondant au type choisi.
 			var type = (Properties.FrameType) this.grid.SelectedValue;
 
-			double frameWidth, marginWidth, shadowSize, shadowInflate, shadowOffsetX, shadowOffsetY;
-			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowSize, out shadowInflate, out shadowOffsetX, out shadowOffsetY);
+			double frameWidth, marginWidth, shadowInflate, shadowSize, shadowOffsetX, shadowOffsetY;
+			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowInflate, out shadowSize, out shadowOffsetX, out shadowOffsetY);
 
 			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) frameWidth;
 			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) marginWidth;
-			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
 			this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) shadowInflate;
+			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
 			this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) shadowOffsetX;
 			this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) shadowOffsetY;
 

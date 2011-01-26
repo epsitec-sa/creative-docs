@@ -363,6 +363,13 @@ namespace Epsitec.Common.Document.Properties
 			if (obj is Objects.Image)
 			{
 				var polygon = obj.PropertyHandleSupport;
+
+				var frame = obj.PropertyFrame;
+				if (frame != null)
+				{
+					polygon = polygon.Inflate (frame.MarginWidth);
+				}
+
 				var p1 = polygon.GetCyclingPoint (rank/2);
 				var p2 = polygon.GetCyclingPoint ((rank%2 == 0) ? rank/2-1 : rank/2+1);
 				pos = Point.Move (p1, p2, this.radius);
@@ -429,6 +436,13 @@ namespace Epsitec.Common.Document.Properties
 			if (obj is Objects.Image)
 			{
 				var polygon = obj.PropertyHandleSupport;
+
+				var frame = obj.PropertyFrame;
+				if (frame != null)
+				{
+					polygon = polygon.Inflate (frame.MarginWidth);
+				}
+
 				var p1 = polygon.GetCyclingPoint (rank/2);
 				this.Radius = Point.Distance (p1, pos);
 			}

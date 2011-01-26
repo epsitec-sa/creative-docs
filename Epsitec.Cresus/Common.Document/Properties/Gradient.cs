@@ -679,10 +679,10 @@ namespace Epsitec.Common.Document.Properties
 			{
 				bboxFull.MergeWith(p1);
 				bboxFull.MergeWith(p3);
-				bboxFull.MergeWith(this.ComputeExtremity(p3, p1, 0.0, 0.2, 0));
-				bboxFull.MergeWith(this.ComputeExtremity(p3, p1, 0.0, 0.2, 1));
-				bboxFull.MergeWith(this.ComputeExtremity(p1, p3, 0.0, 0.2, 0));
-				bboxFull.MergeWith(this.ComputeExtremity(p1, p3, 0.0, 0.2, 1));
+				bboxFull.MergeWith (Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 0));
+				bboxFull.MergeWith (Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 1));
+				bboxFull.MergeWith (Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 0));
+				bboxFull.MergeWith (Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 1));
 			}
 			else
 			{
@@ -900,17 +900,6 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
-		protected Point ComputeExtremity(Point p1, Point p2, double para, double perp, int rank)
-		{
-			//	Calcule l'extrémité gauche ou droite de la flèche.
-			double distPara = Point.Distance(p1, p2)*para;
-			double distPerp = Point.Distance(p1, p2)*perp;
-			Point c = Point.Move(p2, p1, distPara);
-			Point p = Point.Move(c, Point.Symmetry(p2, p1), distPerp);
-			double angle = (rank==0) ? 90 : -90;
-			return Transform.RotatePointDeg(c, angle, p);
-		}
-
 		public override void DrawEdit(Graphics graphics, DrawingContext drawingContext, Objects.Abstract obj)
 		{
 			//	Dessine les traits de construction avant les poignées.
@@ -932,11 +921,11 @@ namespace Epsitec.Common.Document.Properties
 			if ( this.fillType == GradientFillType.Linear )
 			{
 				graphics.AddLine(p3, p1);
-				graphics.AddLine(p1, this.ComputeExtremity(p3, p1, 0.2, 0.1, 0));
-				graphics.AddLine(p1, this.ComputeExtremity(p3, p1, 0.2, 0.1, 1));  // flèche
+				graphics.AddLine (p1, Geometry.ComputeArrowExtremity (p3, p1, 0.2, 0.1, 0));
+				graphics.AddLine (p1, Geometry.ComputeArrowExtremity (p3, p1, 0.2, 0.1, 1));  // flèche
 
-				graphics.AddLine(this.ComputeExtremity(p3, p1, 0.0, 0.2, 0), this.ComputeExtremity(p3, p1, 0.0, 0.2, 1));
-				graphics.AddLine(this.ComputeExtremity(p1, p3, 0.0, 0.2, 0), this.ComputeExtremity(p1, p3, 0.0, 0.2, 1));
+				graphics.AddLine (Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 0), Geometry.ComputeArrowExtremity (p3, p1, 0.0, 0.2, 1));
+				graphics.AddLine (Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 0), Geometry.ComputeArrowExtremity (p1, p3, 0.0, 0.2, 1));
 			}
 			else if ( this.fillType == GradientFillType.Hatch   ||
 					  this.fillType == GradientFillType.Dots    ||
@@ -945,8 +934,8 @@ namespace Epsitec.Common.Document.Properties
 				center = sa.Center;
 				double radius = System.Math.Min(sa.Width, sa.Height)*0.5;
 				Point pa = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0], new Point(0, radius*0.9));
-				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
-				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
+				graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
+				graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
 				graphics.AddLine(center, pa);
 
 				Point pb = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]+90, new Point(0, radius));
@@ -982,8 +971,8 @@ namespace Epsitec.Common.Document.Properties
 				{
 					double radius = System.Math.Min(System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
 					Point pa = center+Transform.RotatePointDeg(sa.Direction+this.angle, new Point(0, radius));
-					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
-					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
+					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 0));
+					graphics.AddLine (pa, Geometry.ComputeArrowExtremity (center, pa, 0.4, 0.2, 1));  // flèche
 					graphics.AddLine(center, pa);
 				}
 			}
