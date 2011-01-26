@@ -453,16 +453,12 @@ namespace Epsitec.Common.Document.Properties
 			Point pos = new Point ();
 			var polygon = obj.PropertyHandleSupport;
 
-			if (polygon != null)
+			if (polygon != null && polygon.Points.Count >= 2)
 			{
 				if (rank == 0)  // margin width ?
 				{
-					if (this.frameType == Properties.FrameType.Thick ||
-					this.frameType == Properties.FrameType.ThickAndSnadow)
-					{
-						polygon = polygon.Inflate (this.marginWidth);
-						pos = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
-					}
+					polygon = polygon.Inflate (this.marginWidth);
+					pos = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
 				}
 
 				if (rank == 1)  // shadow inflate ?
