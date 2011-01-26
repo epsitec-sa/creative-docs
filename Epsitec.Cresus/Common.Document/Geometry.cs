@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 						polygon = new Polygon ();
 						polygons.Add (polygon);
 
-						polygon.Points.Add (current);
+						polygon.Add (current);
 						start = current;
 						break;
 
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document
 
 						if (polygon != null)
 						{
-							polygon.Points.Add (current);
+							polygon.Add (current);
 						}
 						break;
 
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document
 						{
 							if (polygon != null && !Point.Equals(current, start))
 							{
-								polygon.Points.Add (current);
+								polygon.Add (current);
 							}
 						}
 						i ++;

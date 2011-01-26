@@ -415,7 +415,7 @@ namespace Epsitec.Common.Document.Objects
 				Point p1, s1, s2, p2;
 				this.ComputeCurve (i, out p1, out s1, out s2, out p2);
 
-				polygon.Points.Add (p1);
+				polygon.Add (p1);
 			}
 
 			return polygons;
