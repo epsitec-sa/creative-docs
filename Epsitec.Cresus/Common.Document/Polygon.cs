@@ -7,8 +7,9 @@ namespace Epsitec.Common.Document
 	{
 		/// <summary>
 		/// Un polygone est une forme fermée constituée de segments de droites, simplement définis
-		/// par une liste de points. Pour obtenir une forme plus complexe (par exemple une forme
-		/// trouée), il faut utiliser une liste de polygones.
+		/// par une liste de points. Un polygone est obligatoirement fermé.
+		/// Pour obtenir une forme plus complexe (par exemple une forme trouée), il faut utiliser
+		/// une liste de polygones.
 		/// </summary>
 		public Polygon()
 		{
@@ -17,6 +18,7 @@ namespace Epsitec.Common.Document
 
 		public List<Point> Points
 		{
+			//	Retourne la liste des poitns d'un polygone.
 			get
 			{
 				return this.points;
@@ -25,6 +27,7 @@ namespace Epsitec.Common.Document
 
 		public Point Center
 		{
+			//	Retourne le cdg d'un polygone.
 			get
 			{
 				double px = 0;
@@ -104,6 +107,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public Path PolygonPath
+		{
+			//	Crée le chemin d'un polygone à coins droits.
+			get
+			{
+				var path = new Path ();
+				Polygon.AddPolygonPath (path, this);
+				return path;
+			}
+		}
+
 		public static Path GetPolygonPath(List<Polygon> polygons)
 		{
 			//	Crée le chemin de plusieurs polygones à coins droits.
@@ -158,7 +172,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private Polygon Move(double mx, double my)
+		public Polygon Move(double mx, double my)
 		{
 			//	Déplace un polygone.
 			if (mx == 0 && my == 0)
@@ -181,6 +195,38 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+
+		public Polygon Inflate(double inflate)
+		{
+			//	Engraisse/dégraisse un polygone.
+			if (inflate == 0)
+			{
+				return this;
+			}
+			else
+			{
+				//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
+				bool ccw = false;
+				{
+					Point a = this.GetCyclingPoint (-1);  // point précédent
+					Point p = this.GetCyclingPoint (0);   // point courant
+					Point b = this.GetCyclingPoint (1);   // point suivant
+
+					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);  // calcule un point intérieur/extérieur au hasard
+					if (this.IsInside (c))  // point obtenu à l'intérieur du polygone ?
+					{
+						ccw = true;  // on inverse la méthode
+					}
+				}
+
+				if (inflate < 0)  // dégraisse ?
+				{
+					ccw = !ccw;  // on inverse la méthode
+				}
+
+				return this.Inflate (inflate, ccw);
+			}
+		}
 
 		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
 		{
@@ -299,6 +345,18 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+
+		private bool IsInside(Point p)
+		{
+			var surface = new InsideSurface (p, this.points.Count);
+
+			for (int i = 0; i < this.points.Count; i++)
+			{
+				surface.AddLine (this.GetCyclingPoint (i), this.GetCyclingPoint (i+1));
+			}
+
+			return surface.IsInside ();
+		}
 
 		private static bool IsInside(List<Polygon> polygons, Point p)
 		{

@@ -50,14 +50,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne le polygone de support pour les poignées des propriétés.
 			get
 			{
-				var frame = this.PropertyFrame;
 				var polygons = this.GetImagePixelPolygons ();
-
-				if (frame != null && frame.FrameType != Properties.FrameType.None)
-				{
-					polygons = Polygon.Inflate (polygons, frame.MarginWidth);
-				}
-
 				return polygons[0];
 			}
 		}
@@ -93,7 +86,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Déplace une poignée.
-			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			if ( rank >= 4 )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;

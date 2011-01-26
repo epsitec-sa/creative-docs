@@ -8,6 +8,20 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
+		public static Point ComputeArrowExtremity(Point p1, Point p2, double para, double perp, int rank)
+		{
+			//	Calcule l'extrémité gauche ou droite d'une flèche.
+			double distPara = Point.Distance (p1, p2)*para;
+			double distPerp = Point.Distance (p1, p2)*perp;
+
+			Point c = Point.Move (p2, p1, distPara);
+			Point p = Point.Move (c, Point.Symmetry (p2, p1), distPerp);
+
+			double angle = (rank == 0) ? 90 : -90;
+			return Transform.RotatePointDeg (c, angle, p);
+		}
+
+	
 		public static List<Polygon> PathToPolygons(Path path)
 		{
 			//	Extrait les points d'un chemin constitué de droites.

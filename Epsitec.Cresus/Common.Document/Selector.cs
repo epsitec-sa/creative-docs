@@ -802,8 +802,8 @@ namespace Epsitec.Common.Document
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 					graphics.AddCircle(c, this.finalData.Radius);
 					graphics.AddLine(c, p);
-					graphics.AddLine(p, this.ComputeExtremity(c,p, 0.4, 0.2, 0));
-					graphics.AddLine(p, this.ComputeExtremity(c,p, 0.4, 0.2, 1));  // flèche
+					graphics.AddLine (p, Geometry.ComputeArrowExtremity (c, p, 0.4, 0.2, 0));
+					graphics.AddLine (p, Geometry.ComputeArrowExtremity (c, p, 0.4, 0.2, 1));  // flèche
 					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 				}
 
@@ -869,17 +869,6 @@ namespace Epsitec.Common.Document
 			path.MoveTo(p1);
 			path.LineTo(p2);
 			Drawer.DrawPathDash(graphics, drawingContext, path, 1.0, 5.0, 5.0, drawingContext.HiliteOutlineColor);
-		}
-
-		protected Point ComputeExtremity(Point p1, Point p2, double para, double perp, int rank)
-		{
-			//	Calcule l'extrémité gauche ou droite de la flèche.
-			double distPara = Point.Distance(p1, p2)*para;
-			double distPerp = Point.Distance(p1, p2)*perp;
-			Point c = Point.Move(p2, p1, distPara);
-			Point p = Point.Move(c, Point.Symmetry(p2, p1), distPerp);
-			double angle = (rank==0) ? 90 : -90;
-			return Transform.RotatePointDeg(c, angle, p);
 		}
 
 		protected bool IsCorrectGeometry()
