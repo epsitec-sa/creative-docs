@@ -299,11 +299,7 @@ namespace Epsitec.Common.Document
 					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
 					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
-
-					if (!c.IsZero)
-					{
-						pp.Points.Add (c);
-					}
+					pp.Points.Add (c);
 				}
 
 				return pp;
@@ -328,11 +324,25 @@ namespace Epsitec.Common.Document
 
 				if (i != null && i.Length == 1)
 				{
-					return i[0];
+					var pp = i[0];  // p' <-- intersection
+
+					//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
+					//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
+					double limit = 10;
+					double d = Point.Distance (p, pp);
+					if (d > System.Math.Abs (inflate)*limit)
+					{
+						aa = Point.Move (p, a, inflate*limit);
+						bb = Point.Move (p, b, inflate*limit);
+						pp = Point.Scale (aa, bb, 0.5);
+						pp = Transform.RotatePointDeg (p, 180, pp);
+					}
+
+					return pp;
 				}
 				else
 				{
-					return Point.Zero;
+					return p;  // sans intersection, on ne peut pas faire mieux que de redonner p !
 				}
 			}
 		}
