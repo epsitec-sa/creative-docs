@@ -453,26 +453,26 @@ namespace Epsitec.Common.Document.Properties
 			Point pos = new Point ();
 			var polygon = obj.PropertyHandleSupport;
 
-			if (polygon != null && polygon.Points.Count >= 2)
+			if (polygon != null && polygon.Count >= 2)
 			{
 				if (rank == 0)  // margin width ?
 				{
 					polygon = polygon.Inflate (this.marginWidth);
-					pos = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
+					pos = Point.Scale (polygon.GetPoint (0), polygon.GetPoint (1), 0.5);
 				}
 
 				if (rank == 1)  // shadow inflate ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-					return polygon.Points[0];
+					return polygon.GetPoint (0);
 				}
 
 				if (rank == 2)  // shadow size ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
-					return polygon.Points[0];
+					return polygon.GetPoint (0);
 				}
 
 				if (rank == 3)  // shadow offset ?
@@ -494,26 +494,26 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if (rank == 0)  // margin width ?
 				{
-					var p = Point.Scale (polygon.Points[0], polygon.Points[1], 0.5);
+					var p = Point.Scale (polygon.GetPoint (0), polygon.GetPoint (1), 0.5);
 					this.MarginWidth = Point.Distance (p, pos);
 				}
 
 				if (rank == 1)  // shadow inflate ?
 				{
 					var center = polygon.Center;
-					double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
+					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 					polygon = polygon.Inflate (this.marginWidth);
-					this.ShadowInflate = (pos.X-polygon.Points[0].X)*fx;
+					this.ShadowInflate = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
 				if (rank == 2)  // shadow size ?
 				{
 					var center = polygon.Center;
-					double fx = (polygon.Points[0].X < center.X) ? -1 : 1;
+					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-					this.ShadowSize = (pos.X-polygon.Points[0].X)*fx;
+					this.ShadowSize = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
 				if (rank == 3)  // shadow offset ?
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Document.Properties
 		public void AddShapes(Objects.Abstract obj, List<Shape> shapes, List<Shape> objectShapes, IPaintPort port, DrawingContext drawingContext, List<Polygon> polygons, Properties.Corner corner)
 		{
 			//	Ajoute les éléments pour dessiner l'objet avec son cadre.
-			if (polygons == null || polygons.Count == 0 || polygons[0].Points.Count < 2)
+			if (polygons == null || polygons.Count == 0 || polygons[0].Count < 2)
 			{
 				shapes.AddRange (objectShapes);
 			}

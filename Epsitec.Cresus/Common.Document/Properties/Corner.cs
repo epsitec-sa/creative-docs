@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Properties
 			if (obj is Objects.Rectangle ||
 				obj is Objects.Image)
 			{
-				return obj.PropertyHandleSupport.Points.Count * 2;
+				return obj.PropertyHandleSupport.Count * 2;
 			}
 
 			return 2;
