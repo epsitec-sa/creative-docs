@@ -315,34 +315,40 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				var pa = Point.Move (p, Polygon.RotateCW (p, a, !ccw), inflate);
-				var aa = Point.Move (a, Polygon.RotateCW (a, p,  ccw), inflate);
-				var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
-				var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
-
-				Point[] i = Geometry.Intersect (pa, aa, pb, bb);
-
-				if (i != null && i.Length == 1)
+				if (a == b)  // cas dégénéré ?
 				{
-					var pp = i[0];  // p' <-- intersection
-
-					//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
-					//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
-					double limit = 10;
-					double d = Point.Distance (p, pp);
-					if (d > System.Math.Abs (inflate)*limit)
-					{
-						aa = Point.Move (p, a, inflate*limit);
-						bb = Point.Move (p, b, inflate*limit);
-						pp = Point.Scale (aa, bb, 0.5);
-						pp = Transform.RotatePointDeg (p, 180, pp);
-					}
-
-					return pp;
+					return Point.Move (p, a, -inflate);
 				}
 				else
 				{
-					return p;  // sans intersection, on ne peut pas faire mieux que de redonner p !
+					var pa = Point.Move (p, Polygon.RotateCW (p, a, !ccw), inflate);
+					var aa = Point.Move (a, Polygon.RotateCW (a, p,  ccw), inflate);
+					var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
+					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
+
+					Point[] i = Geometry.Intersect (pa, aa, pb, bb);
+
+					if (i != null && i.Length == 1)
+					{
+						var pp = i[0];  // p' <-- intersection
+
+						//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
+						//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
+						double d = Point.Distance (p, pp);
+						if (d > System.Math.Abs (inflate)*Polygon.miterLimit)
+						{
+							aa = Point.Move (p, a, inflate*Polygon.miterLimit);
+							bb = Point.Move (p, b, inflate*Polygon.miterLimit);
+							pp = Point.Scale (aa, bb, 0.5);
+							pp = Transform.RotatePointDeg (p, 180, pp);
+						}
+
+						return pp;
+					}
+					else
+					{
+						return p;  // sans intersection, on ne peut pas faire mieux que de redonner p !
+					}
 				}
 			}
 		}
@@ -416,6 +422,8 @@ namespace Epsitec.Common.Document
 			return this.points[cyclingIndex];
 		}
 
+
+		private static readonly double miterLimit = 10;
 
 		private readonly List<Point>	points;
 	}
