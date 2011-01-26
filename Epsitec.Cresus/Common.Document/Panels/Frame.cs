@@ -12,17 +12,24 @@ namespace Epsitec.Common.Document.Panels
 		public Frame(Document document)
 			: base (document)
 		{
-			this.grid = new RadioIconGrid(this);
+			this.fieldSamples = new TextFieldCombo (this);
+			this.fieldSamples.IsReadOnly = true;
+			foreach (Sample sample in Frame.Samples)
+			{
+				this.fieldSamples.Items.Add (sample.Text);
+			}
+			this.fieldSamples.TextChanged += this.HandleFieldSamplesTextChanged;
+			this.fieldSamples.TabIndex = 0;
+
+			this.grid = new RadioIconGrid (this);
 			this.grid.SelectionChanged += this.HandleTypeChanged;
-			this.grid.TabIndex = 0;
+			this.grid.TabIndex = 1;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon (Properties.FrameType.None);
-			this.AddRadioIcon (Properties.FrameType.Simple);
-			this.AddRadioIcon (Properties.FrameType.Thick);
-			this.AddRadioIcon (Properties.FrameType.Shadow);
-			this.AddRadioIcon (Properties.FrameType.ThickAndSnadow);
-			this.AddRadioIcon (Properties.FrameType.ShadowAlone);
+			this.AddRadioIcon (Properties.FrameType.OnlyFrame);
+			this.AddRadioIcon (Properties.FrameType.FrameAndShadow);
+			this.AddRadioIcon (Properties.FrameType.OnlyShadow);
 
 			this.fieldFrameWidth = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldFrameWidth.LabelShortText = Res.Strings.Panel.Frame.Short.FrameWidth;
@@ -181,7 +188,7 @@ namespace Epsitec.Common.Document.Panels
 
 				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					h += 30+25*5;
+					h += 30+25*6;
 				}
 				else	// panneau réduit ?
 				{
@@ -217,6 +224,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) p.ShadowOffsetX;
 			this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) p.ShadowOffsetY;
 
+			this.UpdateFieldSample ();
+
 			this.EnableWidgets ();
 			this.ignoreChanged = false;
 		}
@@ -241,6 +250,8 @@ namespace Epsitec.Common.Document.Panels
 			p.ShadowInflate = (double) this.fieldShadowInflate.TextFieldReal.InternalValue;
 			p.ShadowOffsetX = (double) this.fieldShadowOffsetX.TextFieldReal.InternalValue;
 			p.ShadowOffsetY = (double) this.fieldShadowOffsetY.TextFieldReal.InternalValue;
+
+			this.UpdateFieldSample ();
 		}
 
 		protected void EnableWidgets()
@@ -299,7 +310,26 @@ namespace Epsitec.Common.Document.Panels
 			return this.originFieldColor.Color;
 		}
 
-		
+
+		protected void UpdateFieldSample()
+		{
+			var frame = this.property as Properties.Frame;
+
+			string text = Res.Strings.Panel.Frame.Custom;
+			foreach (Sample sample in Frame.Samples)
+			{
+				if (sample.Compare (frame))
+				{
+					text = sample.Text;
+					break;
+				}
+			}
+
+			this.ignoreChanged = true;
+			this.fieldSamples.Text = text;
+			this.ignoreChanged = false;
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -311,8 +341,16 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Inflate(1);
-			this.grid.SetManualBounds(r);
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.fieldSamples.SetManualBounds (r);
+
+			rect.Top = r.Bottom-5;
+			rect.Bottom = rect.Top-20;
+			r = rect;
+			r.Width = 22*4;
+			r.Inflate (1);
+			this.grid.SetManualBounds (r);
 
 			if (this.isExtendedSize)
 			{
@@ -337,14 +375,13 @@ namespace Epsitec.Common.Document.Panels
 
 				var type = (Properties.FrameType) this.grid.SelectedValue;
 
-				bool frame = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
+				bool frame = (type == Properties.FrameType.OnlyFrame || type == Properties.FrameType.FrameAndShadow);
 				this.fieldFrameWidth.Enable = frame;
 				this.fieldFrameColor.Enable = frame;
+				this.fieldMarginWidth.Enable = frame;
+				this.fieldBackgroundColor.Enable = frame;
 
-				this.fieldMarginWidth.Enable = (type == Properties.FrameType.Thick || type == Properties.FrameType.ThickAndSnadow);
-				this.fieldBackgroundColor.Enable = (type != Properties.FrameType.None && type != Properties.FrameType.ShadowAlone);
-
-				bool shadow = (type == Properties.FrameType.Shadow || type == Properties.FrameType.ThickAndSnadow || type == Properties.FrameType.ShadowAlone);
+				bool shadow = (type == Properties.FrameType.OnlyShadow || type == Properties.FrameType.FrameAndShadow);
 				this.fieldShadowSize.Enable = shadow;
 				this.fieldShadowColor.Enable = shadow;
 				this.fieldShadowInflate.Enable = shadow;
@@ -392,23 +429,28 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			this.HeightChanged ();
+			var frame = this.property as Properties.Frame;
+
+			if (frame.FrameType == Properties.FrameType.OnlyFrame ||
+				frame.FrameType == Properties.FrameType.FrameAndShadow)
+			{
+				if (frame.FrameWidth == 0)
+				{
+					this.fieldFrameWidth.TextFieldReal.InternalValue = 2.0M;
+				}
+			}
+
+			if (frame.FrameType == Properties.FrameType.OnlyShadow ||
+				frame.FrameType == Properties.FrameType.FrameAndShadow)
+			{
+				if (frame.ShadowSize == 0)
+				{
+					this.fieldShadowSize.TextFieldReal.InternalValue = 40.0M;
+				}
+			}
+
 			this.EnableWidgets ();
-
-			//	Met les valeurs par défaut correspondant au type choisi.
-			var type = (Properties.FrameType) this.grid.SelectedValue;
-
-			double frameWidth, marginWidth, shadowInflate, shadowSize, shadowOffsetX, shadowOffsetY;
-			Properties.Frame.GetFieldsParam (type, out frameWidth, out marginWidth, out shadowInflate, out shadowSize, out shadowOffsetX, out shadowOffsetY);
-
-			this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) frameWidth;
-			this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) marginWidth;
-			this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) shadowInflate;
-			this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) shadowSize;
-			this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) shadowOffsetX;
-			this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) shadowOffsetY;
-
-			this.OnChanged();
+			this.OnChanged ();
 		}
 
 		private void HandleFieldChanged(object sender)
@@ -418,6 +460,32 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		private void HandleFieldSamplesTextChanged(object sender)
+		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			TextFieldCombo field = sender as TextFieldCombo;
+			foreach (Sample sample in Frame.Samples)
+			{
+				if (field.Text == sample.Text)
+				{
+					this.grid.SelectedValue = (int) sample.FrameType;
+
+					this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) sample.FrameWidth;
+					this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) sample.MarginWidth;
+					this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) sample.ShadowInflate;
+					this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) sample.ShadowSize;
+					this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetX;
+					this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetY;
+
+					this.OnChanged ();
+					return;
+				}
+			}
+		}
 		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
 			this.originFieldColor = sender as ColorSample;
@@ -442,6 +510,72 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
+		#region Sample
+		/// <summary>
+		/// La structure Sample permet de décrire un exemple de cadre.
+		/// </summary>
+		private struct Sample
+		{
+			//	Constructeur d'un exemple.
+			public Sample(string text, Properties.FrameType frameType, double frameWidth, double marginWidth, double shadowInflate, double shadowSize, double shadowOffsetX, double shadowOffsetY)
+			{
+				this.Text          = text;
+				this.FrameType     = frameType;
+				this.FrameWidth    = frameWidth;
+				this.MarginWidth   = marginWidth;
+				this.ShadowInflate = shadowInflate;
+				this.ShadowSize    = shadowSize;
+				this.ShadowOffsetX = shadowOffsetX;
+				this.ShadowOffsetY = shadowOffsetY;
+			}
+
+			public bool Compare(Properties.Frame frame)
+			{
+				//	Compare un exemple avec une propriété.
+				return (frame.FrameType     == this.FrameType     &&
+						frame.FrameWidth    == this.FrameWidth    &&
+						frame.MarginWidth   == this.MarginWidth   &&
+						frame.ShadowInflate == this.ShadowInflate &&
+						frame.ShadowSize    == this.ShadowSize    &&
+						frame.ShadowOffsetX == this.ShadowOffsetX &&
+						frame.ShadowOffsetY == this.ShadowOffsetY);
+			}
+
+			public string					Text;
+			public Properties.FrameType		FrameType;
+			public double					FrameWidth;
+			public double					MarginWidth;
+			public double					ShadowInflate;
+			public double					ShadowSize;
+			public double					ShadowOffsetX;
+			public double					ShadowOffsetY;
+		}
+
+		//	Liste des exemples accessibles avec la liste déroulante.
+		static private Sample[] Samples =
+		{
+			new Sample(Res.Strings.Panel.Frame.Sample01, Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+
+			new Sample(Res.Strings.Panel.Frame.Sample02, Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample03, Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample04, Properties.FrameType.OnlyFrame,        2.0,  50.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample05, Properties.FrameType.OnlyFrame,       10.0,  50.0,   0.0,   0.0,   0.0,   0.0),
+			
+			new Sample(Res.Strings.Panel.Frame.Sample06, Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,  20.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample07, Properties.FrameType.FrameAndShadow,  10.0,   0.0,   0.0,  20.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample08, Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,  20.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample09, Properties.FrameType.FrameAndShadow,  10.0,  50.0,   0.0,  20.0,   0.0,   0.0),
+			
+			new Sample(Res.Strings.Panel.Frame.Sample10, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,   0.0,   0.0),
+			new Sample(Res.Strings.Panel.Frame.Sample11, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  40.0, -40.0),
+			new Sample(Res.Strings.Panel.Frame.Sample12, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0, -40.0, -40.0),
+			new Sample(Res.Strings.Panel.Frame.Sample13, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  40.0,  40.0),
+			new Sample(Res.Strings.Panel.Frame.Sample14, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0, -40.0,  40.0),
+		};
+		#endregion
+
+
+		protected TextFieldCombo			fieldSamples;
 		protected RadioIconGrid				grid;
 
 		protected Widgets.TextFieldLabel	fieldFrameWidth;

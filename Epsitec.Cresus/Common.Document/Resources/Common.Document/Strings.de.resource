@@ -1440,11 +1440,7 @@
   </data>
   <data id="KD">
   </data>
-  <data id="KE">
-  </data>
   <data id="KF">
-  </data>
-  <data id="KG">
   </data>
   <data id="KH">
   </data>
@@ -1504,4 +1500,33 @@
   </data>
   <data id="KD1">
   </data>
+  <data id="KE1">
+  </data>
+  <data id="KF1">
+  </data>
+  <data id="KG1">
+  </data>
+  <data id="KH1">
+  </data>
+  <data id="KI1">
+  </data>
+  <data id="KJ1">
+  </data>
+  <data id="KK1">
+  </data>
+  <data id="KL1">
+  </data>
+  <data id="KM1">
+  </data>
+  <data id="KN1">
+  </data>
+  <data id="KO1">
+  </data>
+  <data id="KP1">
+  </data>
+  <data id="KQ1">
+  </data>
+  <data id="KR1">
+  </data>
+  <data id="KS1">Angepasst</data>
 </bundle>

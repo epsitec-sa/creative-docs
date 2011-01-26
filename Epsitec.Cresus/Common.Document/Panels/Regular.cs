@@ -374,7 +374,7 @@ namespace Epsitec.Common.Document.Panels
 		/// <summary>
 		/// La structure Sample permet de décrire un exemple de forme.
 		/// </summary>
-		protected struct Sample
+		private struct Sample
 		{
 			//	Constructeur d'un exemple.
 			public Sample(string text, Properties.RegularType regularType, int nbFaces, Polar deep, Polar i1, Polar i2, Polar e1, Polar e2)
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		//	Liste des exemples accessibles avec la liste déroulante.
-		static protected Sample[] Samples =
+		static private Sample[] Samples =
 		{
 			new Sample(Res.Strings.Panel.Regular.Sample01, Properties.RegularType.Norm,     3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
 			new Sample(Res.Strings.Panel.Regular.Sample02, Properties.RegularType.Norm,     4, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
