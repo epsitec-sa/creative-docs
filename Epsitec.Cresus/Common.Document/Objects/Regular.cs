@@ -47,6 +47,17 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public override Polygon PropertyHandleSupport
+		{
+			//	Retourne le polygone de support pour les poignées des propriétés.
+			get
+			{
+				var polygons = this.GetPolygons ();
+				return polygons[0];
+			}
+		}
+
+
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement une poignée.
