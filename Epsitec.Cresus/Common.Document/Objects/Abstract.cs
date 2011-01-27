@@ -308,7 +308,7 @@ namespace Epsitec.Common.Document.Objects
 				for ( int i=0 ; i<total ; i++ )
 				{
 					Handle handle = new Handle(this.document);
-					handle.Type = HandleType.Property;
+					handle.Type = property.GetHandleType (i);
 					handle.PropertyType = property.Type;
 					handle.PropertyRank = i;
 					this.handles.Add(handle);

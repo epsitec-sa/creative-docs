@@ -568,14 +568,14 @@ namespace Epsitec.Common.Document.Panels
 		//	Liste des exemples accessibles avec la liste déroulante.
 		static private Sample[] Samples =
 		{
-			new Sample (Res.Strings.Panel.Frame.Sample01, Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample (Res.Strings.Panel.Frame.Sample02, Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample (Res.Strings.Panel.Frame.Sample03, Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,  20.0,   0.0,   0.0),
-			new Sample (Res.Strings.Panel.Frame.Sample04, Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample (Res.Strings.Panel.Frame.Sample05, Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,  20.0,   0.0,   0.0),
-			new Sample (Res.Strings.Panel.Frame.Sample06, Properties.FrameType.FrameAndShadow,   2.0,  50.0, -20.0,  40.0,  20.0, -20.0),
-			new Sample (Res.Strings.Panel.Frame.Sample07, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  20.0, -20.0),
-			new Sample (Res.Strings.Panel.Frame.Sample08, Properties.FrameType.OnlyShadow,       0.0,   0.0, -40.0,  80.0,  40.0, -40.0),
+			new Sample (Res.Strings.Panel.Frame.Sample01, Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // pas de cadre
+			new Sample (Res.Strings.Panel.Frame.Sample02, Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre fin sans bordure
+			new Sample (Res.Strings.Panel.Frame.Sample03, Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,  20.0,   0.0,   0.0),  // cadre fin sans bordure avec halo
+			new Sample (Res.Strings.Panel.Frame.Sample04, Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre épais sans bordure
+			new Sample (Res.Strings.Panel.Frame.Sample05, Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,  20.0,   0.0,   0.0),  // cadre avec bordure et halo
+			new Sample (Res.Strings.Panel.Frame.Sample06, Properties.FrameType.FrameAndShadow,   2.0,  50.0, -20.0,  40.0,  20.0, -20.0),  // cadre avec bordure et ombre
+			new Sample (Res.Strings.Panel.Frame.Sample07, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  20.0, -20.0),  // petite ombre
+			new Sample (Res.Strings.Panel.Frame.Sample08, Properties.FrameType.OnlyShadow,       0.0,   0.0, -40.0,  80.0,  40.0, -40.0),  // grande ombre
 		};
 		#endregion
 

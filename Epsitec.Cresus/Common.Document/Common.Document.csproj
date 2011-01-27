@@ -239,6 +239,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Containers\PageMiniatures.cs" />
+    <Compile Include="Logic\CropLogic.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="GlobalImageCache.Item.cs" />
     <Compile Include="Panels\Frame.cs" />
