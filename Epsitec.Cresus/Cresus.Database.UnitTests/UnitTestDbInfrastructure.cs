@@ -1023,6 +1023,67 @@ namespace Epsitec.Cresus.Database.UnitTests
 		}
 
 
+		[TestMethod]
+		public void BackupAndRestoreSmallDatabase()
+		{
+			if (DbInfrastructureHelper.CheckDatabaseExistence ())
+			{
+				DbInfrastructureHelper.DeleteTestDatabase ();
+			}
+
+			System.IO.FileInfo backup1 = new System.IO.FileInfo (@"Resources\employee.gbak");
+			System.IO.FileInfo backup2 = new System.IO.FileInfo (@"test.gbak");
+
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+			dbAccess.IgnoreInitialConnectionErrors = false;
+			dbAccess.CheckConnection = false;
+
+			if (backup2.Exists)
+			{
+				backup2.Delete ();
+			}
+
+			DbInfrastructure.RestoreDatabase (dbAccess, backup1);
+			
+			DbInfrastructure.BackupDatabase (dbAccess, backup2);
+			
+			DbInfrastructureHelper.DeleteTestDatabase ();
+
+			DbInfrastructure.RestoreDatabase (dbAccess, backup2);
+			
+		}
+
+
+		[TestMethod]
+		public void BackupAndRestoreLargeDatabase()
+		{
+			if (DbInfrastructureHelper.CheckDatabaseExistence ())
+			{
+				DbInfrastructureHelper.DeleteTestDatabase ();
+			}
+
+			System.IO.FileInfo backup1 = new System.IO.FileInfo (@"Resources\large.gbak");
+			System.IO.FileInfo backup2 = new System.IO.FileInfo (@"test.gbak");
+
+			if (backup2.Exists)
+			{
+				backup2.Delete ();
+			}
+
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
+			dbAccess.IgnoreInitialConnectionErrors = false;
+			dbAccess.CheckConnection = false;
+
+			DbInfrastructure.RestoreDatabase (dbAccess, backup1);
+						
+			DbInfrastructure.BackupDatabase (dbAccess, backup2);
+			
+			DbInfrastructureHelper.DeleteTestDatabase ();
+
+			DbInfrastructure.RestoreDatabase (dbAccess, backup2);
+		}
+
+
 	}
 
 
