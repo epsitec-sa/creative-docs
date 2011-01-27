@@ -485,12 +485,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		#region Popup interface
 		public override void UpdatePopupInterface(Objects.Abstract obj)
 		{
 			if (this.isSelected)
 			{
 				if (this.widgetInterface == null)
 				{
+					this.UpdateCropLogic (obj);
+
 					var viewer = this.document.Modifier.ActiveViewer;
 
 					this.widgetInterface = this.CreatePopupInterface ();
@@ -558,15 +561,56 @@ namespace Epsitec.Common.Document.Properties
 			var slider = new HSlider
 			{
 				Parent = frame,
+				MinValue = 0.0M,
+				MaxValue = 1.0M,
+				Resolution = 0.0000001M,
+				SmallChange = 0.1M,
+				LargeChange = 0.5M,
+				Value = (decimal) this.cropLogic.RelativeZoom,
 				PreferredHeight = buttonSize-4-4,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 0, 4, 4),
 			};
 
+			importButton.Clicked += delegate
+			{
+				this.PopupInterfaceImport (importButton);
+			};
+
+			fillButton.Clicked += delegate
+			{
+				this.PopupInterfaceSwapFill ();
+			};
+
+			slider.ValueChanged += delegate
+			{
+				this.PopupInterfaceChangeZoom ((double) slider.Value);
+			};
+
 			return frame;
 		}
 
-	
+		private void PopupInterfaceImport(Widget button)
+		{
+			var filename = Panels.Image.OpenImageDialog (this.document, button, this.FileName);
+
+			if (filename != null)
+			{
+				this.FileName = filename;
+			}
+		}
+
+		private void PopupInterfaceSwapFill()
+		{
+		}
+
+		private void PopupInterfaceChangeZoom(double zoom)
+		{
+			this.cropLogic.RelativeZoom = zoom;
+		}
+		#endregion
+
+
 		public override void CopyTo(Abstract property)
 		{
 			//	Effectue une copie de la propriété.
