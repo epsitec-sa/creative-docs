@@ -8,16 +8,18 @@ namespace Epsitec.Common.Document.Objects
 	//	sous peine de plantée lors de la désérialisation.
 	public enum HandleType
 	{
-		Primary   = 0,		// poignée principale
-		Secondary = 1,		// poignée secondaire
-		Bezier    = 2,		// poignée secondaire pour courbe de Bézier
-		Starting  = 3,		// poignée de départ
-		Ending    = 4,		// poignée d'arrivée
-		Hide      = 5,		// poignée invisible
-		Property  = 6,		// poignée d'une propriété
-		Center    = 7,		// poignée du centre de rotation
-		Rotate    = 8,		// poignée de l'angle de rotation
-		Add       = 9,		// poignée à ajouter
+		Primary      = 0,		// poignée principale
+		Secondary    = 1,		// poignée secondaire
+		Bezier       = 2,		// poignée secondaire pour courbe de Bézier
+		Starting     = 3,		// poignée de départ
+		Ending       = 4,		// poignée d'arrivée
+		Hide         = 5,		// poignée invisible
+		Property     = 6,		// poignée d'une propriété
+		Center       = 7,		// poignée du centre de rotation
+		Rotate       = 8,		// poignée de l'angle de rotation
+		Add          = 9,		// poignée à ajouter
+		PropertyZoom = 10,		// poignée d'une propriété pour le zoom
+		PropertyMove = 11,		// poignée d'une propriété pour déplacer
 	}
 
 	public enum HandleConstrainType
@@ -306,9 +308,14 @@ namespace Epsitec.Common.Document.Objects
 				handleSize -= 4.0/scaleX;
 			}
 
-			if ( this.type == HandleType.Property )
+			if (this.type == HandleType.Property)
 			{
 				handleSize -= 2.0/scaleX;
+			}
+
+			if (this.type == HandleType.PropertyMove)
+			{
+				handleSize += 2.0/scaleX;
 			}
 
 			handleSize += 1.0/scaleX;
@@ -412,10 +419,12 @@ namespace Epsitec.Common.Document.Objects
 					{
 						switch ( this.type )
 						{
-							case HandleType.Starting:  color = DrawingContext.ColorHandleStart;     break;
-							case HandleType.Ending:    color = DrawingContext.ColorHandleStart;     break;
-							case HandleType.Property:  color = DrawingContext.ColorHandleProperty;  break;
-							default:                   color = DrawingContext.ColorHandleMain;      break;
+							case HandleType.Starting:      color = DrawingContext.ColorHandleStart;     break;
+							case HandleType.Ending:        color = DrawingContext.ColorHandleStart;     break;
+							case HandleType.Property:
+							case HandleType.PropertyZoom:
+							case HandleType.PropertyMove:  color = DrawingContext.ColorHandleProperty;  break;
+							default:                       color = DrawingContext.ColorHandleMain;      break;
 						}
 					}
 				}
@@ -525,6 +534,22 @@ namespace Epsitec.Common.Document.Objects
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
 					graphics.RenderSolid(this.Adapt(color, context));
+				}
+
+				if (this.type == HandleType.PropertyZoom)
+				{
+					rect.Inflate (0.5/scaleX, 0.5/scaleY);
+					this.PaintCircle (graphics, rect, DrawingContext.ColorHandleOutline, context);
+					rect.Deflate (1.0/scaleX, 1.0/scaleY);
+					this.PaintCircle (graphics, rect, color, context);
+				}
+
+				if (this.type == HandleType.PropertyMove)
+				{
+					rect.Inflate (2.5/scaleX, 2.5/scaleY);
+					this.PaintCircle (graphics, rect, DrawingContext.ColorHandleOutline, context);
+					rect.Deflate (1.0/scaleX, 1.0/scaleY);
+					this.PaintCircle (graphics, rect, color, context);
 				}
 			}
 

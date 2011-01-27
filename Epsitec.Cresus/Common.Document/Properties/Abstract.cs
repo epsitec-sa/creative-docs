@@ -194,6 +194,11 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public virtual Objects.HandleType GetHandleType(int rank)
+		{
+			return Objects.HandleType.Property;
+		}
+
 		public bool IsStrokingGradient
 		{
 			//	Indique s'il s'agit d'une propriété de surface pour un trait.
