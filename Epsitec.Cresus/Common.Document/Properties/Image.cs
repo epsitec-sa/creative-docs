@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			var viewer = this.document.Modifier.ActiveViewer;
 
-			if (obj.IsSelected)  // objet sélectionné ?
+			if (obj.IsSelected && !obj.IsGlobalSelected)  // objet sélectionné ?
 			{
 				if (viewer.PopupInterfaceFrame == null)
 				{
