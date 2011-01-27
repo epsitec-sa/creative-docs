@@ -18,8 +18,7 @@ namespace Epsitec.Common.Document.Objects
 		Center       = 7,		// poignée du centre de rotation
 		Rotate       = 8,		// poignée de l'angle de rotation
 		Add          = 9,		// poignée à ajouter
-		PropertyZoom = 10,		// poignée d'une propriété pour le zoom
-		PropertyMove = 11,		// poignée d'une propriété pour déplacer
+		PropertyMove = 10,		// poignée d'une propriété pour déplacer
 	}
 
 	public enum HandleConstrainType
@@ -417,7 +416,6 @@ namespace Epsitec.Common.Document.Objects
 							case HandleType.Starting:      color = DrawingContext.ColorHandleStart;     break;
 							case HandleType.Ending:        color = DrawingContext.ColorHandleStart;     break;
 							case HandleType.Property:
-							case HandleType.PropertyZoom:
 							case HandleType.PropertyMove:  color = DrawingContext.ColorHandleProperty;  break;
 							default:                       color = DrawingContext.ColorHandleMain;      break;
 						}
@@ -529,14 +527,6 @@ namespace Epsitec.Common.Document.Objects
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
 					graphics.RenderSolid(Handle.Adapt(color, context));
-				}
-
-				if (this.type == HandleType.PropertyZoom)
-				{
-					rect.Inflate (1.5/scaleX, 1.5/scaleY);
-					this.PaintCircle (graphics, rect, DrawingContext.ColorHandleOutline, context);
-					rect.Deflate (1.0/scaleX, 1.0/scaleY);
-					this.PaintCircle (graphics, rect, color, context);
 				}
 
 				if (this.type == HandleType.PropertyMove)
