@@ -1473,17 +1473,11 @@
   <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement ou réduction de l&amp;apos;ombre</data>
   <data name="Panel.Frame.Sample01" id="KE1">Pas de cadre</data>
   <data name="Panel.Frame.Sample02" id="KF1">Cadre fin sans bordure</data>
-  <data name="Panel.Frame.Sample03" id="KG1">Cadre épais sans bordure</data>
-  <data name="Panel.Frame.Sample04" id="KH1">Cadre fin avec bordure</data>
-  <data name="Panel.Frame.Sample05" id="KI1">Cadre épais avec bordure</data>
-  <data name="Panel.Frame.Sample06" id="KJ1">Cadre fin sans bordure avec ombre</data>
-  <data name="Panel.Frame.Sample07" id="KK1">Cadre épais sans bordure avec ombre</data>
-  <data name="Panel.Frame.Sample08" id="KL1">Cadre fin avec bordure et ombre</data>
-  <data name="Panel.Frame.Sample09" id="KM1">Cadre épais avec bordure et ombre</data>
-  <data name="Panel.Frame.Sample10" id="KN1">Ombre seule centrée</data>
-  <data name="Panel.Frame.Sample11" id="KO1">Ombre seule en bas à droite</data>
-  <data name="Panel.Frame.Sample12" id="KP1">Ombre seule en bas à gauche</data>
-  <data name="Panel.Frame.Sample13" id="KQ1">Ombre seule en haut à droite</data>
-  <data name="Panel.Frame.Sample14" id="KR1">Ombre seule en haut à gauche</data>
+  <data name="Panel.Frame.Sample03" id="KG1">Cadre fin sans bordure avec halo</data>
+  <data name="Panel.Frame.Sample04" id="KH1">Cadre épais sans bordure</data>
+  <data name="Panel.Frame.Sample05" id="KI1">Cadre avec bordure et halo</data>
+  <data name="Panel.Frame.Sample06" id="KJ1">Cadre avec bordure et ombre</data>
+  <data name="Panel.Frame.Sample07" id="KL1">Petite ombre</data>
+  <data name="Panel.Frame.Sample08" id="KM1">Grande ombre</data>
   <data name="Panel.Frame.Custom" id="KS1">Personnalisé</data>
 </bundle>
