@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
@@ -400,16 +402,47 @@ namespace Epsitec.Common.Document.Properties
 
 		private void GetZoomSliderStarting(Objects.Abstract obj, out Point starting, out Point ending)
 		{
-			var p0 = obj.Handle (0).Position;
-			var p1 = obj.Handle (1).Position;
-			var p2 = obj.Handle (2).Position;
-			var p3 = obj.Handle (3).Position;
+			var list = new List<Point> ();
 
-			var a = Point.Scale (p2, p1, 0.1);
-			var b = Point.Scale (p0, p3, 0.1);
+			list.Add (obj.Handle (0).Position);
+			list.Add (obj.Handle (1).Position);
+			list.Add (obj.Handle (2).Position);
+			list.Add (obj.Handle (3).Position);
 
-			starting = Point.Scale (a, b, 0.1);
-			ending   = Point.Scale (b, a, 0.1);
+			list.Sort ((a, b) => Image.ComparePoints (a, b));
+
+			var s = Point.Scale (list[0], list[1], 0.1);
+			var e = Point.Scale (list[2], list[3], 0.1);
+
+			starting = Point.Scale (s, e, 0.1);
+			ending   = Point.Scale (e, s, 0.1);
+		}
+
+		private static int ComparePoints(Point a, Point b)
+		{
+			if (a.Y < b.Y)
+			{
+				return -1;
+			}
+			else if (a.Y > b.Y)
+			{
+				return 1;
+			}
+			else
+			{
+				if (a.X < b.X)
+				{
+					return -1;
+				}
+				else if (a.X > b.X)
+				{
+					return 1;
+				}
+				else
+				{
+					return 0;
+				}
+			}
 		}
 
 		private void GetPositionCenter(Objects.Abstract obj, out Point center, out double radius)
