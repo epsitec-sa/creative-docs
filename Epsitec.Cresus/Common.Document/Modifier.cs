@@ -6814,7 +6814,8 @@ namespace Epsitec.Common.Document
 					 cmd == "ChangeDocSize"       ||
 					 cmd == "SpecialPageSize"     ||
 					 cmd == "SpecialPageLanguage" ||
-					 cmd == "SpecialPageStyle"    )
+					 cmd == "SpecialPageStyle"    ||
+					 cmd == "ChangeImageZoom"     )
 				{
 					this.opletSkip = true;
 					return null;

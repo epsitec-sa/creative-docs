@@ -1480,4 +1480,7 @@
   <data name="Panel.Frame.Sample07" id="KL1">Petite ombre</data>
   <data name="Panel.Frame.Sample08" id="KM1">Grande ombre</data>
   <data name="Panel.Frame.Custom" id="KS1">Personnalisé</data>
+  <data name="Action.ImageFilename" id="KT1">Nom de fichier pour l&amp;apos;image</data>
+  <data name="Action.ImageZoom" id="KU1">Zoom de l&amp;apos;image</data>
+  <data name="Action.ImageFillMode" id="KV1">Mode de replissage de l&amp;apos;image</data>
 </bundle>

@@ -32,9 +32,6 @@ namespace Epsitec.Common.Document.Properties
 			switch (rank)
             {
 				case 0:
-					return Objects.HandleType.PropertyZoom;
-
-				case 1:
 					return Objects.HandleType.PropertyMove;
 
 				default:
@@ -283,7 +280,7 @@ namespace Epsitec.Common.Document.Properties
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
-			return 2;
+			return 1;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
@@ -298,16 +295,7 @@ namespace Epsitec.Common.Document.Properties
 			this.UpdateCropLogic (obj);
 			Point pos = new Point ();
 
-			if (rank == 0)  // zoom ?
-			{
-				Point starting, ending;
-				this.GetZoomSliderStarting (obj, out starting, out ending);
-
-				double zoom = this.cropLogic.RelativeZoom;
-				pos = Point.Scale (starting, ending, zoom);
-			}
-
-			if (rank == 1)  // position ?
+			if (rank == 0)  // position ?
 			{
 				Point center;
 				double radius;
@@ -325,15 +313,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Modifie la position d'une poignée.
 			this.UpdateCropLogic (obj);
 
-			if (rank == 0)  // zoom ?
-			{
-				Point starting, ending;
-				this.GetZoomSliderStarting (obj, out starting, out ending);
-
-				this.cropLogic.RelativeZoom = Geometry.GetSliderPosition (starting, ending, pos);
-			}
-
-			if (rank == 1)  // position ?
+			if (rank == 0)  // position ?
 			{
 				Point center;
 				double radius;
@@ -346,115 +326,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			base.SetHandlePosition (obj, rank, pos);
-		}
-
-
-		public override void DrawEdit(Graphics graphics, DrawingContext drawingContext, Objects.Abstract obj)
-		{
-			//	Dessine les traits de construction avant les poignées.
-			if (!obj.IsSelected ||
-				 obj.IsGlobalSelected ||
-				 obj.IsEdited ||
-				 !this.IsHandleVisible (obj, 0))
-			{
-				return;
-			}
-
-			Point starting, ending;
-			this.GetZoomSliderStarting (obj, out starting, out ending);
-			Image.DrawZoomSlider (graphics, drawingContext, starting, ending);
-		}
-
-		private static void DrawZoomSlider(IPaintPort port, DrawingContext drawingContext, Point starting, Point ending)
-		{
-			var p1 = starting;
-			var p2 = ending;
-
-			double thickness = 1.5/drawingContext.ScaleX;
-
-			var pp1 = Point.Move (p1, p2, -thickness);
-			var pp2 = Point.Move (p2, p1, -thickness);
-
-			var p1a = Transform.RotatePointDeg (p1,  90, pp1);
-			var p1b = Transform.RotatePointDeg (p1, -90, pp1);
-			var p2a = Transform.RotatePointDeg (p2, -90, pp2);
-			var p2b = Transform.RotatePointDeg (p2,  90, pp2);
-
-			var pp1a = Transform.RotatePointDeg (pp1, -90, p1);
-			var pp1b = Transform.RotatePointDeg (pp1,  90, p1);
-			var pp2a = Transform.RotatePointDeg (pp2,  90, p2);
-			var pp2b = Transform.RotatePointDeg (pp2, -90, p2);
-
-			var path = new Path ();
-
-			path.MoveTo (p1a);
-			path.ArcTo (pp1a, pp1);
-			path.ArcTo (pp1b, p1b);
-			path.LineTo (p2b);
-			path.ArcTo (pp2b, pp2);
-			path.ArcTo (pp2a, p2a);
-			path.Close ();
-
-			var c1 = Drawing.Color.FromAlphaRgb (0.8, 0.9, 1.0, 1.0);  // cyan très clair
-			var c2 = Drawing.Color.FromAlphaRgb (1.0, 0.0, 0.0, 0.0);  // noir
-
-			port.Color = Objects.Handle.Adapt (c1, drawingContext);
-			port.PaintSurface (path);
-
-			port.Color = Objects.Handle.Adapt (c2, drawingContext);
-			port.LineWidth = 1.0/drawingContext.ScaleX;
-			port.PaintOutline (path);
-		}
-
-		private void GetZoomSliderStarting(Objects.Abstract obj, out Point starting, out Point ending)
-		{
-			var list = new List<Point> ();
-
-			list.Add (obj.Handle (0).Position);
-			list.Add (obj.Handle (1).Position);
-			list.Add (obj.Handle (2).Position);
-			list.Add (obj.Handle (3).Position);
-
-			list.Sort ((a, b) => Image.ComparePoints (a, b));
-
-			// [2] o---------o [3]
-			//     | x       |
-			//     | |       |
-			//     | x       |
-			// [0] o---------o [1]
-
-			var s = Point.Scale (list[0], list[1], 0.1);
-			var e = Point.Scale (list[2], list[3], 0.1);
-
-			starting = Point.Scale (s, e, 0.1);
-			ending   = Point.Scale (e, s, 0.1);
-		}
-
-		private static int ComparePoints(Point a, Point b)
-		{
-			if (a.Y < b.Y)
-			{
-				return -1;
-			}
-			else if (a.Y > b.Y)
-			{
-				return 1;
-			}
-			else
-			{
-				if (a.X < b.X)
-				{
-					return -1;
-				}
-				else if (a.X > b.X)
-				{
-					return 1;
-				}
-				else
-				{
-					return 0;
-				}
-			}
 		}
 
 		private void GetPositionCenter(Objects.Abstract obj, out Point center, out double radius)
@@ -567,9 +438,9 @@ namespace Epsitec.Common.Document.Properties
 				SmallChange = 0.1M,
 				LargeChange = 0.5M,
 				Value = (decimal) this.cropLogic.RelativeZoom,
-				PreferredHeight = buttonSize-4-4,
+				PreferredHeight = buttonSize-3-3,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 0, 4, 4),
+				Margins = new Margins (10, 0, 3, 3),
 			};
 
 			importButton.Clicked += delegate
@@ -596,7 +467,12 @@ namespace Epsitec.Common.Document.Properties
 
 			if (filename != null)
 			{
-				this.FileName = filename;
+				using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageFilename, "ChangeImageFilename"))
+				{
+					this.FileName = filename;
+					this.FileDate = this.document.ImageCache.LoadFromFile (this.FileName);
+					this.document.Modifier.OpletQueueValidateAction ();
+				}
 			}
 		}
 
@@ -606,7 +482,11 @@ namespace Epsitec.Common.Document.Properties
 
 		private void PopupInterfaceChangeZoom(double zoom)
 		{
-			this.cropLogic.RelativeZoom = zoom;
+			using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageZoom, "ChangeImageZoom"))
+			{
+				this.cropLogic.RelativeZoom = zoom;
+				this.document.Modifier.OpletQueueValidateAction ();
+			}
 		}
 		#endregion
 
