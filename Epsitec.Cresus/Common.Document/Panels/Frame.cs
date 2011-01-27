@@ -474,12 +474,26 @@ namespace Epsitec.Common.Document.Panels
 				{
 					this.grid.SelectedValue = (int) sample.FrameType;
 
-					this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) sample.FrameWidth;
-					this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) sample.MarginWidth;
-					this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) sample.ShadowInflate;
-					this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) sample.ShadowSize;
-					this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetX;
-					this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetY;
+					decimal factor = 1.0M;
+
+					if (this.document.Type == DocumentType.Pictogram)
+					{
+						factor = 0.2M;
+					}
+					else
+					{
+						if (!System.Globalization.RegionInfo.CurrentRegion.IsMetric)
+						{
+							factor = 1.27M;  // en inch
+						}
+					}
+
+					this.fieldFrameWidth.TextFieldReal.InternalValue = (decimal) sample.FrameWidth*factor;
+					this.fieldMarginWidth.TextFieldReal.InternalValue = (decimal) sample.MarginWidth*factor;
+					this.fieldShadowInflate.TextFieldReal.InternalValue = (decimal) sample.ShadowInflate*factor;
+					this.fieldShadowSize.TextFieldReal.InternalValue = (decimal) sample.ShadowSize*factor;
+					this.fieldShadowOffsetX.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetX*factor;
+					this.fieldShadowOffsetY.TextFieldReal.InternalValue = (decimal) sample.ShadowOffsetY*factor;
 
 					this.OnChanged ();
 					return;
@@ -554,23 +568,14 @@ namespace Epsitec.Common.Document.Panels
 		//	Liste des exemples accessibles avec la liste déroulante.
 		static private Sample[] Samples =
 		{
-			new Sample(Res.Strings.Panel.Frame.Sample01, Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-
-			new Sample(Res.Strings.Panel.Frame.Sample02, Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample03, Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample04, Properties.FrameType.OnlyFrame,        2.0,  50.0,   0.0,   0.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample05, Properties.FrameType.OnlyFrame,       10.0,  50.0,   0.0,   0.0,   0.0,   0.0),
-			
-			new Sample(Res.Strings.Panel.Frame.Sample06, Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,  20.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample07, Properties.FrameType.FrameAndShadow,  10.0,   0.0,   0.0,  20.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample08, Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,  20.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample09, Properties.FrameType.FrameAndShadow,  10.0,  50.0,   0.0,  20.0,   0.0,   0.0),
-			
-			new Sample(Res.Strings.Panel.Frame.Sample10, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,   0.0,   0.0),
-			new Sample(Res.Strings.Panel.Frame.Sample11, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  40.0, -40.0),
-			new Sample(Res.Strings.Panel.Frame.Sample12, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0, -40.0, -40.0),
-			new Sample(Res.Strings.Panel.Frame.Sample13, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  40.0,  40.0),
-			new Sample(Res.Strings.Panel.Frame.Sample14, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0, -40.0,  40.0),
+			new Sample (Res.Strings.Panel.Frame.Sample01, Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample (Res.Strings.Panel.Frame.Sample02, Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample (Res.Strings.Panel.Frame.Sample03, Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,  20.0,   0.0,   0.0),
+			new Sample (Res.Strings.Panel.Frame.Sample04, Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0),
+			new Sample (Res.Strings.Panel.Frame.Sample05, Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,  20.0,   0.0,   0.0),
+			new Sample (Res.Strings.Panel.Frame.Sample06, Properties.FrameType.FrameAndShadow,   2.0,  50.0, -20.0,  40.0,  20.0, -20.0),
+			new Sample (Res.Strings.Panel.Frame.Sample07, Properties.FrameType.OnlyShadow,       0.0,   0.0, -20.0,  40.0,  20.0, -20.0),
+			new Sample (Res.Strings.Panel.Frame.Sample08, Properties.FrameType.OnlyShadow,       0.0,   0.0, -40.0,  80.0,  40.0, -40.0),
 		};
 		#endregion
 

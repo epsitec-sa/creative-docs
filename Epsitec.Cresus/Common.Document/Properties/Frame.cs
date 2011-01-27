@@ -451,7 +451,7 @@ namespace Epsitec.Common.Document.Properties
 
 			if (polygon != null)
 			{
-				var color = Drawing.Color.FromBrightness (0.6);
+				var color = Drawing.Color.FromRgb (0.0, 0.6, 1.0);  // cyan
 
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/drawingContext.ScaleX;
@@ -482,12 +482,12 @@ namespace Epsitec.Common.Document.Properties
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
 					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate);
-					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 0.0, 4.0, color);
+					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 
 					if (this.shadowSize > 0)
 					{
 						polygon = polygon.Inflate (this.shadowSize);
-						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 0.0, 4.0, color);
+						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 					}
 				}
 			}
