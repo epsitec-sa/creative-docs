@@ -2759,6 +2759,7 @@ namespace Epsitec.Common.Document
 			frame.Parent = this.popupInterfaceWindow.Root;
 			frame.Dock = DockStyle.Fill;
 
+			this.popupInterfaceFrame = frame;
 			this.popupInterfaceObject = obj;
 			this.popupInterfaceGetPosition = getPosition;
 
@@ -2780,9 +2781,29 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
+			this.popupInterfaceFrame.Dispose ();
+			this.popupInterfaceFrame = null;
+			this.popupInterfaceObject = null;
+
 			this.popupInterfaceWindow.Close ();
 			this.popupInterfaceWindow.AsyncDispose ();
 			this.popupInterfaceWindow = null;
+		}
+
+		public Objects.Abstract PopupInterfaceObject
+		{
+			get
+			{
+				return this.popupInterfaceObject;
+			}
+		}
+
+		public Widget PopupInterfaceFrame
+		{
+			get
+			{
+				return this.popupInterfaceFrame;
+			}
 		}
 		#endregion
 
@@ -5157,6 +5178,7 @@ namespace Epsitec.Common.Document
 		protected Window						popupInterfaceWindow;
 		protected System.Func<Viewer, Objects.Abstract, Point> popupInterfaceGetPosition;
 		protected Objects.Abstract				popupInterfaceObject;
+		protected Widget						popupInterfaceFrame;
 
 		protected MouseCursorType				mouseCursorType = MouseCursorType.Unknown;
 		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknown;

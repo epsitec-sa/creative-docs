@@ -595,7 +595,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public virtual void UpdatePopupInterface(Objects.Abstract obj)
+		public virtual void OpenOrClosePopupInterface(Objects.Abstract obj)
 		{
 		}
 
