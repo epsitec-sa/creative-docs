@@ -313,11 +313,6 @@ namespace Epsitec.Common.Document.Objects
 				handleSize -= 2.0/scaleX;
 			}
 
-			if (this.type == HandleType.PropertyMove)
-			{
-				handleSize += 2.0/scaleX;
-			}
-
 			handleSize += 1.0/scaleX;
 
 			return Handle.Detect(pos, this.position, handleSize);
@@ -546,7 +541,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if (this.type == HandleType.PropertyMove)
 				{
-					rect.Inflate (2.5/scaleX, 2.5/scaleY);
+					rect.Inflate (0.5/scaleX, 0.5/scaleY);
 					this.PaintCircle (graphics, rect, DrawingContext.ColorHandleOutline, context);
 					rect.Deflate (1.0/scaleX, 1.0/scaleY);
 					this.PaintCircle (graphics, rect, color, context);

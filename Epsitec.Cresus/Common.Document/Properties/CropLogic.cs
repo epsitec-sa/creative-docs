@@ -51,7 +51,8 @@ namespace Epsitec.Common.Document.Properties
 			}
 			set
 			{
-				this.SetCropMargins (value, this.RelativePosition);
+				//?this.SetCropMargins (value, this.RelativePosition, keepRatio: false);
+				this.SetCropZoom (value);
 			}
 		}
 
@@ -71,11 +72,47 @@ namespace Epsitec.Common.Document.Properties
 			}
 			set
 			{
-				this.SetCropMargins (this.RelativeZoom, value);
+				this.SetCropMargins (this.RelativeZoom, value, keepRatio: true);
 			}
 		}
 
-		private void SetCropMargins(double relativeZoom, Point relativePosition)
+		private void SetCropZoom(double zoom)
+		{
+			zoom = 1+(zoom*3);  // [0..1] -> [1..4]
+
+			Size size = this.imageSize;  // taille de l'image sélectionnée
+			Margins crop = this.CropMargins;  // crop avant de commencer à zoomer
+
+			Rectangle rect = new Rectangle (Point.Zero, size);
+			rect.Deflate (crop);  // rectangle effectif actuel
+
+			double zoomx = size.Width/rect.Width;  // zoom horizontal actuel
+			double zoomy = size.Height/rect.Height;  // zoom vertical actuel
+
+			double w, h;
+
+			if (zoomx < zoomy)
+			{
+				w = size.Width/zoom;  // nouvelle largeur
+				h = w*rect.Height/rect.Width;  // garde les mêmes proportions
+			}
+			else
+			{
+				h = size.Height/zoom;  // nouvelle hauteur
+				w = h*rect.Width/rect.Height;  // garde les mêmes proportions
+			}
+
+			Margins newCrop = Margins.Zero;
+			newCrop.Left   = rect.Center.X-w/2;
+			newCrop.Right  = size.Width-(rect.Center.X+w/2);
+			newCrop.Bottom = rect.Center.Y-h/2;
+			newCrop.Top    = size.Height-(rect.Center.Y+h/2);
+			newCrop = CropLogic.CropAdjust (newCrop);
+
+			this.CropMargins = newCrop;
+		}
+
+		private void SetCropMargins(double relativeZoom, Point relativePosition, bool keepRatio)
 		{
 			relativeZoom = System.Math.Max (0.0, relativeZoom);
 			relativeZoom = System.Math.Min (1.0, relativeZoom);
@@ -83,6 +120,16 @@ namespace Epsitec.Common.Document.Properties
 
 			double dx = this.imageSize.Width  / zoom;
 			double dy = this.imageSize.Height / zoom;
+
+			if (keepRatio)
+			{
+				var initialCrop = this.CropMargins;
+				double initialDx = this.imageSize.Width - initialCrop.Left - initialCrop.Right;
+				double initialDy = this.imageSize.Height - initialCrop.Bottom - initialCrop.Top;
+
+				dx = System.Math.Min (dx, initialDx);
+				dy = System.Math.Min (dy, initialDy);
+			}
 
 			double cx = this.imageSize.Width  * (-relativePosition.X+1)/2;
 			double cy = this.imageSize.Height * (-relativePosition.Y+1)/2;
