@@ -360,6 +360,25 @@ namespace Epsitec.Cresus.Database
 			return databaseExists;
 		}
 
+
+		public static void BackupDatabase(DbAccess dbAccess, System.IO.FileInfo file)
+		{
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			{
+				idbAbstraction.ServiceTools.Backup (file.FullName);
+			}
+		}
+
+
+		public static void RestoreDatabase(DbAccess dbAccess, System.IO.FileInfo file)
+		{
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			{
+				idbAbstraction.ServiceTools.Restore (file.FullName);
+			}
+		}
+
+
 		/// <summary>
 		/// Creates the database access.
 		/// </summary>
