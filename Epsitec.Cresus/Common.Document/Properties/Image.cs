@@ -392,10 +392,13 @@ namespace Epsitec.Common.Document.Properties
 			path.ArcTo (pp2a, p2a);
 			path.Close ();
 
-			port.Color = Drawing.Color.FromAlphaRgb (0.8, 0.9, 1.0, 1.0);  // cyan très clair
+			var c1 = Drawing.Color.FromAlphaRgb (0.8, 0.9, 1.0, 1.0);  // cyan très clair
+			var c2 = Drawing.Color.FromAlphaRgb (1.0, 0.0, 0.0, 0.0);  // noir
+
+			port.Color = Objects.Handle.Adapt (c1, drawingContext);
 			port.PaintSurface (path);
 
-			port.Color = Drawing.Color.FromAlphaRgb (1.0, 0.0, 0.0, 0.0);  // noir
+			port.Color = Objects.Handle.Adapt (c2, drawingContext);
 			port.LineWidth = 1.0/drawingContext.ScaleX;
 			port.PaintOutline (path);
 		}
@@ -410,6 +413,12 @@ namespace Epsitec.Common.Document.Properties
 			list.Add (obj.Handle (3).Position);
 
 			list.Sort ((a, b) => Image.ComparePoints (a, b));
+
+			// [2] o---------o [3]
+			//     | x       |
+			//     | |       |
+			//     | x       |
+			// [0] o---------o [1]
 
 			var s = Point.Scale (list[0], list[1], 0.1);
 			var e = Point.Scale (list[2], list[3], 0.1);
