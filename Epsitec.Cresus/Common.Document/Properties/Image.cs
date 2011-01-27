@@ -357,19 +357,30 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region Popup interface
-		public override void UpdatePopupInterface(Objects.Abstract obj)
+		public override void OpenOrClosePopupInterface(Objects.Abstract obj)
 		{
-			if (this.isSelected)
+			var viewer = this.document.Modifier.ActiveViewer;
+
+			if (obj.IsSelected)  // objet sélectionné ?
 			{
-				if (this.widgetInterface == null)
+				if (viewer.PopupInterfaceFrame == null)
 				{
+					//	Crée l'interface popup.
 					this.UpdateCropLogic (obj);
 
-					var viewer = this.document.Modifier.ActiveViewer;
 
-					this.widgetInterface = this.CreatePopupInterface ();
-					viewer.OpenPopupInterface (this.widgetInterface, obj, this.GetPopupInterfacePosition);
+					var i = this.CreatePopupInterface ();
+					viewer.OpenPopupInterface (i, obj, this.GetPopupInterfacePosition);
 					viewer.MovePopupInterface ();
+				}
+
+				//	Met à jour le slider.
+				var value = (decimal) this.cropLogic.RelativeZoom;
+
+				if (this.popupInterfaceSlider.Value != value)
+				{
+					this.popupInterfaceSlider.Value = value;
+					this.popupInterfaceSlider.Invalidate ();  // TODO: devrait être inutile
 				}
 			}
 			else
@@ -380,14 +391,11 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void ClosePopupInterface(Objects.Abstract obj)
 		{
-			if (this.widgetInterface != null)
+			var viewer = this.document.Modifier.ActiveViewer;
+
+			if (viewer.PopupInterfaceFrame != null)
 			{
-				var viewer = this.document.Modifier.ActiveViewer;
-
 				viewer.ClosePopupInterface ();
-
-				this.widgetInterface.Dispose ();
-				this.widgetInterface = null;
 			}
 		}
 
@@ -419,7 +427,7 @@ namespace Epsitec.Common.Document.Properties
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var fillButton = new IconButton
+			this.popupInterfaceFillModeButton = new IconButton
 			{
 				Parent = frame,
 				PreferredSize = new Size (buttonSize, buttonSize),
@@ -429,7 +437,7 @@ namespace Epsitec.Common.Document.Properties
 				Margins = new Margins (-1, 0, 0, 0),
 			};
 
-			var slider = new HSlider
+			this.popupInterfaceSlider = new HSlider
 			{
 				Parent = frame,
 				MinValue = 0.0M,
@@ -448,14 +456,14 @@ namespace Epsitec.Common.Document.Properties
 				this.PopupInterfaceImport (importButton);
 			};
 
-			fillButton.Clicked += delegate
+			this.popupInterfaceFillModeButton.Clicked += delegate
 			{
 				this.PopupInterfaceSwapFill ();
 			};
 
-			slider.ValueChanged += delegate
+			this.popupInterfaceSlider.ValueChanged += delegate
 			{
-				this.PopupInterfaceChangeZoom ((double) slider.Value);
+				this.PopupInterfaceChangeZoom ((double) this.popupInterfaceSlider.Value);
 			};
 
 			return frame;
@@ -507,7 +515,6 @@ namespace Epsitec.Common.Document.Properties
 			p.homo            = this.homo;
 			p.filterCategory  = this.filterCategory;
 			p.cropMargins     = this.cropMargins;
-			p.widgetInterface = this.widgetInterface;
 		}
 
 		public override bool Compare(Abstract property)
@@ -751,6 +758,7 @@ namespace Epsitec.Common.Document.Properties
 		private int						filterCategory;
 		private Margins					cropMargins;
 		private CropLogic				cropLogic;
-		private Widget					widgetInterface;
+		private IconButton				popupInterfaceFillModeButton;
+		private HSlider					popupInterfaceSlider;
 	}
 }

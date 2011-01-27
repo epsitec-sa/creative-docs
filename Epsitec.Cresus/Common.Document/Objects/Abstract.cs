@@ -339,9 +339,17 @@ namespace Epsitec.Common.Document.Objects
 
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
 					this.SetDirtyBbox();
-
-					property.UpdatePopupInterface (this);
 				}
+			}
+
+			this.UpdatePopupInterface ();
+		}
+
+		private void UpdatePopupInterface()
+		{
+			foreach (Properties.Abstract property in this.properties)
+			{
+				property.OpenOrClosePopupInterface (this);
 			}
 		}
 
@@ -3561,16 +3569,21 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
 
-				Misc.Swap(ref this.isHide,         ref host.isHide        );
-				Misc.Swap(ref this.selected,       ref host.selected      );
-				Misc.Swap(ref this.globalSelected, ref host.globalSelected);
-				Misc.Swap(ref this.allSelected,    ref host.allSelected   );
+				Misc.Swap(ref this.isHide,         ref this.host.isHide        );
+				Misc.Swap(ref this.globalSelected, ref this.host.globalSelected);
+				Misc.Swap(ref this.allSelected,    ref this.host.allSelected   );
 
-				if ( this.edited != host.edited )
+				if (this.edited != this.host.edited)
 				{
 					bool ed = this.edited;
-					this.edited = host.edited;
-					host.SetEdited(ed);
+					this.edited = this.host.edited;
+					this.host.SetEdited (ed);
+				}
+
+				if (this.selected != this.host.selected)
+				{
+					Misc.Swap (ref this.selected, ref this.host.selected);
+					this.host.UpdatePopupInterface ();
 				}
 
 				if ( this.list.Count == this.host.handles.Count )
