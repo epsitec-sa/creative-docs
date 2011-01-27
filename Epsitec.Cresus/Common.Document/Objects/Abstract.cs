@@ -42,6 +42,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
+				property.ClosePopupInterface (this);
 				property.Owners.Remove(this);
 
 				if ( !property.IsStyle &&
@@ -338,6 +339,8 @@ namespace Epsitec.Common.Document.Objects
 
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
 					this.SetDirtyBbox();
+
+					property.UpdatePopupInterface (this);
 				}
 			}
 		}
@@ -1265,7 +1268,7 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		protected void UpdateBoundingBox()
+		private void UpdateBoundingBox()
 		{
 			//	Calcule le rectangle englobant l'objet. Chaque objet se charge de
 			//	ce calcul, selon sa géométrie, l'épaisseur de son trait, etc.

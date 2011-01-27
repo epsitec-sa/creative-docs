@@ -87,7 +87,10 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				this.date = value;
+				if (this.date != value)
+				{
+					this.date = value;
+				}
 			}
 		}
 
@@ -286,7 +289,7 @@ namespace Epsitec.Common.Document.Properties
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
 			//	Indique si une poignée est visible.
-			return obj.IsSelected;
+			return obj.IsSelected && !string.IsNullOrEmpty (this.filename);
 		}
 
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
@@ -358,7 +361,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			Point starting, ending;
-			this.GetZoomSliderStarting(obj, out starting, out ending);
+			this.GetZoomSliderStarting (obj, out starting, out ending);
 			Image.DrawZoomSlider (graphics, drawingContext, starting, ending);
 		}
 
@@ -367,7 +370,7 @@ namespace Epsitec.Common.Document.Properties
 			var p1 = starting;
 			var p2 = ending;
 
-			double thickness = 6.5/drawingContext.ScaleX;
+			double thickness = 1.5/drawingContext.ScaleX;
 
 			var pp1 = Point.Move (p1, p2, -thickness);
 			var pp2 = Point.Move (p2, p1, -thickness);
@@ -481,23 +484,106 @@ namespace Epsitec.Common.Document.Properties
 			this.cropLogic.UpdateImge ();
 		}
 
+
+		public override void UpdatePopupInterface(Objects.Abstract obj)
+		{
+			if (this.isSelected)
+			{
+				if (this.widgetInterface == null)
+				{
+					var viewer = this.document.Modifier.ActiveViewer;
+
+					this.widgetInterface = this.CreatePopupInterface ();
+					viewer.OpenPopupInterface (this.widgetInterface, obj, this.GetPopupInterfacePosition);
+					viewer.MovePopupInterface ();
+				}
+			}
+			else
+			{
+				this.ClosePopupInterface (obj);
+			}
+		}
+
+		public override void ClosePopupInterface(Objects.Abstract obj)
+		{
+			if (this.widgetInterface != null)
+			{
+				var viewer = this.document.Modifier.ActiveViewer;
+
+				viewer.ClosePopupInterface ();
+
+				this.widgetInterface.Dispose ();
+				this.widgetInterface = null;
+			}
+		}
+
+		private Point GetPopupInterfacePosition(Viewer viewer, Objects.Abstract obj)
+		{
+			var pos = viewer.InternalToScreen (obj.BoundingBoxThin.BottomLeft);
+			return new Point (pos.X+5, pos.Y+5);
+		}
+
+		private Widget CreatePopupInterface()
+		{
+			double buttonSize = 23;
+
+			var frame = new FrameBox ()
+			{
+				PreferredSize = new Size (200, 5+buttonSize+5),
+				DrawFullFrame = true,
+				BackColor = Drawing.Color.FromAlphaRgb (0.9, 0.8, 0.8, 0.8),
+				Padding = new Margins (5),
+			};
+
+			var importButton = new IconButton
+			{
+				Parent = frame,
+				PreferredSize = new Size (buttonSize, buttonSize),
+				ButtonStyle = ButtonStyle.ActivableIcon,
+				IconUri = Misc.Icon ("Import"),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			var fillButton = new IconButton
+			{
+				Parent = frame,
+				PreferredSize = new Size (buttonSize, buttonSize),
+				ButtonStyle = ButtonStyle.ActivableIcon,
+				IconUri = Misc.Icon ("ActiveYes"),
+				Dock = DockStyle.Left,
+				Margins = new Margins (-1, 0, 0, 0),
+			};
+
+			var slider = new HSlider
+			{
+				Parent = frame,
+				PreferredHeight = buttonSize-4-4,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 0, 4, 4),
+			};
+
+			return frame;
+		}
+
 	
 		public override void CopyTo(Abstract property)
 		{
 			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Image p = property as Image;
-			p.filename       = this.filename;
-			p.date           = this.date;
-			p.shortName      = this.shortName;
-			p.insideDoc      = this.insideDoc;
-			p.fromClipboard  = this.fromClipboard;
-			p.rotation       = this.rotation;
-			p.mirrorH        = this.mirrorH;
-			p.mirrorV        = this.mirrorV;
-			p.homo           = this.homo;
-			p.filterCategory = this.filterCategory;
-			p.cropMargins    = this.cropMargins;
+			p.filename        = this.filename;
+			p.date            = this.date;
+			p.shortName       = this.shortName;
+			p.insideDoc       = this.insideDoc;
+			p.fromClipboard   = this.fromClipboard;
+			p.rotation        = this.rotation;
+			p.mirrorH         = this.mirrorH;
+			p.mirrorV         = this.mirrorV;
+			p.homo            = this.homo;
+			p.filterCategory  = this.filterCategory;
+			p.cropMargins     = this.cropMargins;
+			p.widgetInterface = this.widgetInterface;
 		}
 
 		public override bool Compare(Abstract property)
@@ -741,5 +827,6 @@ namespace Epsitec.Common.Document.Properties
 		private int						filterCategory;
 		private Margins					cropMargins;
 		private CropLogic				cropLogic;
+		private Widget					widgetInterface;
 	}
 }

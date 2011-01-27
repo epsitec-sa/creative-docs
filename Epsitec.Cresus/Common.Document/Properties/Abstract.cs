@@ -595,6 +595,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public virtual void UpdatePopupInterface(Objects.Abstract obj)
+		{
+		}
+
+		public virtual void ClosePopupInterface(Objects.Abstract obj)
+		{
+		}
+
+
 		static public double DefaultZoom(DrawingContext drawingContext)
 		{
 			//	Initialise le zoom par défaut d'un chemin.

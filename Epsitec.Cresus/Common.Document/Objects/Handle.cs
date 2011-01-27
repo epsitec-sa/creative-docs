@@ -285,10 +285,10 @@ namespace Epsitec.Common.Document.Objects
 		public void SwapSelection(Handle h)
 		{
 			//	Permute les informations de sélections entre 2 poignées.
-			Misc.Swap(ref this.isVisible,          ref h.isVisible         );
-			Misc.Swap(ref this.isGlobalSelected,   ref h.isGlobalSelected  );
-			Misc.Swap(ref this.isManySelected,     ref h.isManySelected    );
-			Misc.Swap(ref this.isShaperDeselected, ref h.isShaperDeselected);
+			Misc.Swap (ref this.isVisible,          ref h.isVisible         );
+			Misc.Swap (ref this.isGlobalSelected,   ref h.isGlobalSelected  );
+			Misc.Swap (ref this.isManySelected,     ref h.isManySelected    );
+			Misc.Swap (ref this.isShaperDeselected, ref h.isShaperDeselected);
 		}
 
 
@@ -533,7 +533,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if (this.type == HandleType.PropertyZoom)
 				{
-					rect.Inflate (0.5/scaleX, 0.5/scaleY);
+					rect.Inflate (1.5/scaleX, 1.5/scaleY);
 					this.PaintCircle (graphics, rect, DrawingContext.ColorHandleOutline, context);
 					rect.Deflate (1.0/scaleX, 1.0/scaleY);
 					this.PaintCircle (graphics, rect, color, context);
@@ -541,6 +541,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if (this.type == HandleType.PropertyMove)
 				{
+					rect.Inflate (1.0/scaleX, 1.0/scaleY);
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (Handle.Adapt (color, context));
 

@@ -115,6 +115,7 @@ namespace Epsitec.Common.Document
 
 		private void HandleIsVisibleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
+			this.ClosePopupInterface();
 			this.CloseMiniBar(false);  // ferme la mini-palette si le viewer devient invisible
 		}
 
@@ -2740,6 +2741,52 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region Popup interface
+		public void OpenPopupInterface(Widget frame, Objects.Abstract obj, System.Func<Viewer, Objects.Abstract, Point> getPosition)
+		{
+			this.ClosePopupInterface ();
+
+			this.popupInterfaceWindow = new Window ();
+			this.popupInterfaceWindow.MakeFramelessWindow ();
+			this.popupInterfaceWindow.MakeFloatingWindow ();
+			this.popupInterfaceWindow.DisableMouseActivation ();
+			this.popupInterfaceWindow.MakeLayeredWindow (true);
+			this.popupInterfaceWindow.Root.SyncPaint = true;
+			this.popupInterfaceWindow.WindowSize = frame.PreferredSize;
+			this.popupInterfaceWindow.Root.BackColor = Color.FromAlphaRgb (0, 1, 1, 1);
+			this.popupInterfaceWindow.Owner = this.Window;
+
+			frame.Parent = this.popupInterfaceWindow.Root;
+			frame.Dock = DockStyle.Fill;
+
+			this.popupInterfaceObject = obj;
+			this.popupInterfaceGetPosition = getPosition;
+
+			this.popupInterfaceWindow.Show ();
+		}
+
+		public void MovePopupInterface()
+		{
+			if (this.popupInterfaceWindow != null)
+			{
+				this.popupInterfaceWindow.WindowLocation = this.MapClientToScreen (this.popupInterfaceGetPosition (this, this.popupInterfaceObject));
+			}
+		}
+
+		public void ClosePopupInterface()
+		{
+			if (this.popupInterfaceWindow == null)
+			{
+				return;
+			}
+
+			this.popupInterfaceWindow.Close ();
+			this.popupInterfaceWindow.AsyncDispose ();
+			this.popupInterfaceWindow = null;
+		}
+		#endregion
+
+
 		#region MiniBar
 		public void OpenMiniBar(Point mouse, MiniBarDelayed delayed, bool noSelected, bool hot, double distance)
 		{
@@ -4641,6 +4688,8 @@ namespace Epsitec.Common.Document
 				graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.2, 0.2, 0.0));  // beurk !
 				this.debugDirty = false;
 			}
+
+			this.MovePopupInterface ();
 		}
 
 		public override void InvalidateRectangle(Rectangle rect, bool sync)
@@ -5105,6 +5154,9 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				contextMenuObject;
 		protected Point							contextMenuPos;
 		protected int							contextMenuRank;
+		protected Window						popupInterfaceWindow;
+		protected System.Func<Viewer, Objects.Abstract, Point> popupInterfaceGetPosition;
+		protected Objects.Abstract				popupInterfaceObject;
 
 		protected MouseCursorType				mouseCursorType = MouseCursorType.Unknown;
 		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknown;
