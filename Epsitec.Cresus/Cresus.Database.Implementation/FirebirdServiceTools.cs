@@ -75,6 +75,40 @@ namespace Epsitec.Cresus.Database.Implementation
 				System.Diagnostics.Debug.WriteLine ("Restore: done.");
 			}
 		}
+
+		public bool CheckExistence()
+		{
+			// TODO This method is not very reliable, as it could tell that the database does not
+			// exists when the database exists but the login information is not valid. This might
+			// be improved, but it doesn't seem to be an easy way to ask Firebird if a database
+			// does exist or not.
+			// Marc
+
+			DbAccess dbAccess = this.fb.DbAccess;
+			string path = this.fb.GetDbFilePath ();
+			FbServerType serverType = this.fb.ServerType;
+
+			string connectionString = FirebirdAbstraction.MakeConnectionString (dbAccess, path, serverType);
+			
+			bool databaseExists;
+
+			try
+			{
+				using (FbConnection fbConnection = new FbConnection(connectionString))
+				{
+					fbConnection.Open ();
+					fbConnection.Close ();
+				}
+
+				databaseExists = true;
+			}
+			catch
+			{
+				databaseExists = false;
+			}
+
+			return databaseExists;
+		}
 		
 		public string GetDatabasePath()
 		{

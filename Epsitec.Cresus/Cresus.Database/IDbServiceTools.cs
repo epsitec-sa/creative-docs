@@ -22,6 +22,12 @@ namespace Epsitec.Cresus.Database
 		void Restore(string path);
 
 		/// <summary>
+		/// Checks that the database exists.
+		/// </summary>
+		/// <returns><c>true</c> if the database exits, <c>false</c> if it doesn't.</returns>
+		bool CheckExistence();
+
+		/// <summary>
 		/// Gets the path for the associated database files.
 		/// </summary>
 		/// <returns>The path to the database files.</returns>

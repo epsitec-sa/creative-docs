@@ -334,30 +334,23 @@ namespace Epsitec.Cresus.Database
 
 		public static bool CheckDatabaseExistence(DbAccess dbAccess)
 		{
-			// TODO This method is not very reliable, as it could tell that the database does not
-			// exists when the database exists but the login information is not valid. This might
-			// be improved, but it doesn't seem to be an easy way to ask Firebird if a database
-			// does exist or not.
-			// Marc
+			string provider = dbAccess.Provider;
+			string database = dbAccess.Database;
+			string server = dbAccess.Server;
+			string user = dbAccess.LoginName;
+			string password = dbAccess.LoginPassword;
 
-			bool databaseExists;
-
-			try
+			DbAccess testDbAccess = new DbAccess (provider, database, server, user, password, false)
 			{
-				using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
-				{
-					idbAbstraction.Connection.Open ();
-					idbAbstraction.Connection.Close ();
-				}
+				CheckConnection = false,
+				CreateDatabase = false,
+				IgnoreInitialConnectionErrors = true,
+			};
 
-				databaseExists = true;
-			}
-			catch
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (testDbAccess))
 			{
-				databaseExists = false;
+				return idbAbstraction.ServiceTools.CheckExistence ();
 			}
-
-			return databaseExists;
 		}
 
 
