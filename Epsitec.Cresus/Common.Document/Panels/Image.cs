@@ -409,26 +409,13 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
 #else
 			Button button = sender as Button;
-			Dialogs.FileOpenImage dlg = new Dialogs.FileOpenImage(this.document, button.Window);
+			var filename = Image.OpenImageDialog (this.document, button, this.fieldFilename.Text);
 
-			if (string.IsNullOrEmpty(this.fieldFilename.Text))
+			if (filename != null)
 			{
-				dlg.InitialDirectory = this.document.GlobalSettings.InitialDirectory;
-				dlg.InitialFileName = "";
-			}
-			else
-			{
-				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
-				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
-			}
-
-			dlg.ShowDialog();  // choix d'un fichier image...
-
-			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
-			{
-				this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dlg.FileName);
+				this.fieldFilename.Text = filename;
 				this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
-				this.UpdateWidgets();
+				this.UpdateWidgets ();
 			}
 #endif
 		}
@@ -520,9 +507,35 @@ namespace Epsitec.Common.Document.Panels
 #endif
 		}
 
-		void HandleCropChanged(object sender)
+		private void HandleCropChanged(object sender)
 		{
 			this.OnChanged();
+		}
+
+
+		public static string OpenImageDialog(Document document, Widget parent, string filename)
+		{
+			Dialogs.FileOpenImage dlg = new Dialogs.FileOpenImage (document, parent.Window);
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				dlg.InitialDirectory = document.GlobalSettings.InitialDirectory;
+				dlg.InitialFileName = "";
+			}
+			else
+			{
+				dlg.InitialDirectory = System.IO.Path.GetDirectoryName (filename);
+				dlg.InitialFileName = System.IO.Path.GetFileName (filename);
+			}
+
+			dlg.ShowDialog ();  // choix d'un fichier image...
+
+			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
+			{
+				return TextLayout.ConvertToTaggedText (dlg.FileName);
+			}
+
+			return null;
 		}
 
 
