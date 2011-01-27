@@ -1,6 +1,6 @@
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Document.Logic
+namespace Epsitec.Common.Document.Properties
 {
 	public class CropLogic
 	{

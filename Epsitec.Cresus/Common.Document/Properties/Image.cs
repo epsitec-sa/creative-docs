@@ -436,7 +436,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if (this.cropLogic == null)
 			{
-				this.cropLogic = new Logic.CropLogic (this.document, obj as Objects.Image);
+				this.cropLogic = new CropLogic (this.document, obj as Objects.Image);
 			}
 
 			this.cropLogic.UpdateImge ();
@@ -701,6 +701,6 @@ namespace Epsitec.Common.Document.Properties
 		private bool					homo;
 		private int						filterCategory;
 		private Margins					cropMargins;
-		private Logic.CropLogic			cropLogic;
+		private CropLogic				cropLogic;
 	}
 }
