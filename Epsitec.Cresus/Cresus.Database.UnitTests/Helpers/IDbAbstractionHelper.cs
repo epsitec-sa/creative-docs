@@ -70,16 +70,24 @@
 		}
 
 
-		public static void CloneDatabase(string backupPath)
+		public static void RestoreDatabase(System.IO.FileInfo file)
 		{
-			// TODO Improve this method, because now it assumes that the database is a local one.
-			// Marc
+			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
-			string name = TestHelper.GetDbAccessForTestDatabase ().Database;
+			if (IDbAbstractionHelper.CheckDatabaseExistence ())
+			{
+				IDbAbstractionHelper.DeleteTestDatabase ();
+			}
 
-			DbTools.RestoreDatabase (name, backupPath);
+			dbAccess.CheckConnection = false;
+			dbAccess.IgnoreInitialConnectionErrors = false;
 
-			System.Threading.Thread.Sleep (1000);
+			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
+			{
+				idbAbstraction.ServiceTools.Restore (file.FullName);
+
+				System.Threading.Thread.Sleep (1000);
+			}
 		}
 
 

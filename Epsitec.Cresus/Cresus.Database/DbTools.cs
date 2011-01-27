@@ -527,61 +527,6 @@ namespace Epsitec.Cresus.Database
 
 			return deserializer (xmlReader);
 		}
-
-		/// <summary>
-		/// Deletes the database files on disk. This works for Firebird.
-		/// </summary>
-		/// <param name="name">The database name.</param>
-		public static void DeleteDatabase(string name)
-		{
-			DbAccess access = DbInfrastructure.CreateDatabaseAccess (name);
-			DbTools.DeleteDatabase (access);
-		}
-
-		/// <summary>
-		/// Deletes the database files on disk. This works for Firebird.
-		/// </summary>
-		/// <param name="access">The database access.</param>
-		public static void DeleteDatabase(DbAccess access)
-		{
-			string path = Epsitec.Common.Types.Collection.GetFirst (DbFactory.GetDatabaseFilePaths (access));
-
-			try
-			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-				}
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ()));
-				System.Threading.Thread.Sleep (5000);
-
-				try
-				{
-					System.IO.File.Delete (path);
-				}
-				catch
-				{
-				}
-			}
-		}
-
-		public static void RestoreDatabase(string name, string backupPath)
-		{
-			DbTools.DeleteDatabase (name);
-
-			DbAccess access = DbInfrastructure.CreateDatabaseAccess (name);
-			access.CreateDatabase = true;
-
-			IDbServiceTools tools  = DbFactory.CreateDatabaseAbstraction (access).ServiceTools;
-			string          path   = tools.GetDatabasePath ();
-
-			DbTools.DeleteDatabase (name);
-
-			tools.Restore (backupPath);
-		}
 		
 		#region Private Methods
 
