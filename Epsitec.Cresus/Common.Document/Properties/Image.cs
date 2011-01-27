@@ -325,10 +325,7 @@ namespace Epsitec.Common.Document.Properties
 				Point starting, ending;
 				this.GetZoomSliderStarting (obj, out starting, out ending);
 
-				pos = Point.Projection (starting, ending, pos);
-				double zoom = Point.Distance (starting, pos) / Point.Distance (starting, ending);
-
-				this.cropLogic.RelativeZoom = zoom;
+				this.cropLogic.RelativeZoom = Geometry.GetSliderPosition (starting, ending, pos);
 			}
 
 			if (rank == 1)  // position ?

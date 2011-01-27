@@ -8,6 +8,33 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Geometry
 	{
+		public static double GetSliderPosition(Point sliderStarting, Point sliderEnding, Point pos)
+		{
+			pos = Point.Projection (sliderStarting, sliderEnding, pos);
+
+			double minX = System.Math.Min (sliderStarting.X, sliderEnding.X);
+			double maxX = System.Math.Max (sliderStarting.X, sliderEnding.X);
+			double minY = System.Math.Min (sliderStarting.Y, sliderEnding.Y);
+			double maxY = System.Math.Max (sliderStarting.Y, sliderEnding.Y);
+
+			if (pos.X >= minX && pos.X <= maxX && pos.Y >= minY && pos.Y <= maxY)
+			{
+				return Point.Distance (sliderStarting, pos) / Point.Distance (sliderStarting, sliderEnding);
+			}
+			else
+			{
+				if (Point.Distance (pos, sliderStarting) < Point.Distance (pos, sliderEnding))
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+
+
 		public static Point ComputeArrowExtremity(Point p1, Point p2, double para, double perp, int rank)
 		{
 			//	Calcule l'extrémité gauche ou droite d'une flèche.
