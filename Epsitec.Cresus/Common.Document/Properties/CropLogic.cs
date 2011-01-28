@@ -27,6 +27,24 @@ namespace Epsitec.Common.Document.Properties
 			this.objectSize = this.image.ImageBitmapMaxFill;
 		}
 
+		public bool IsFillMode
+		{
+			get
+			{
+				var rect = new Rectangle (Point.Zero, this.imageSize);
+				rect.Deflate (this.CropMargins);
+				double r1 = rect.Height / rect.Width;
+
+				double r2 = this.objectSize.Height / this.objectSize.Width;
+
+				return System.Math.Abs (r1-r2) < 0.01;
+			}
+		}
+
+		public void FillAll()
+		{
+			this.CropMargins = CropLogic.CropFillObject (this.CropMargins, this.objectSize, this.imageSize);
+		}
 
 		public double RelativeZoom
 		{
@@ -51,7 +69,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 			set
 			{
-				//?this.SetCropMargins (value, this.RelativePosition, keepRatio: false);
 				this.SetCropZoom (value);
 			}
 		}
@@ -158,6 +175,43 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+
+		private static Margins CropFillObject(Margins crop, Size objectSize, Size imageSize)
+		{
+			Rectangle rect = new Rectangle (Point.Zero, imageSize);
+			rect.Deflate (crop);
+			double w = rect.Width;
+			double h = rect.Height;
+
+			if (rect.Width/rect.Height > objectSize.Width/objectSize.Height)
+			{
+				h = w/(objectSize.Width/objectSize.Height);
+
+				if (h > imageSize.Height)
+				{
+					w /= h/imageSize.Height;
+					h = imageSize.Height;
+				}
+			}
+			else if (rect.Width/rect.Height < objectSize.Width/objectSize.Height)
+			{
+				w = h*(objectSize.Width/objectSize.Height);
+
+				if (w > imageSize.Width)
+				{
+					h /= w/imageSize.Width;
+					w = imageSize.Width;
+				}
+			}
+
+			crop.Left   = rect.Center.X-w/2;
+			crop.Right  = imageSize.Width-(rect.Center.X+w/2);
+			crop.Bottom = rect.Center.Y-h/2;
+			crop.Top    = imageSize.Height-(rect.Center.Y+h/2);
+			crop = CropLogic.CropAdjust (crop);
+
+			return crop;
+		}
 
 		private static Margins CropAdjust(Margins crop)
 		{

@@ -368,20 +368,12 @@ namespace Epsitec.Common.Document.Properties
 					//	Crée l'interface popup.
 					this.UpdateCropLogic (obj);
 
-
-					var i = this.CreatePopupInterface ();
+					var i = this.CreatePopupInterface (obj);
 					viewer.OpenPopupInterface (i, obj, this.GetPopupInterfacePosition);
 					viewer.MovePopupInterface ();
 				}
 
-				//	Met à jour le slider.
-				var value = (decimal) this.cropLogic.RelativeZoom;
-
-				if (this.popupInterfaceSlider.Value != value)
-				{
-					this.popupInterfaceSlider.Value = value;
-					this.popupInterfaceSlider.Invalidate ();  // TODO: devrait être inutile
-				}
+				this.UpdatePopupInterface (obj);
 			}
 			else
 			{
@@ -405,13 +397,45 @@ namespace Epsitec.Common.Document.Properties
 			return new Point (pos.X+5, pos.Y+5);
 		}
 
-		private Widget CreatePopupInterface()
+		private void UpdatePopupInterface(Objects.Abstract obj)
+		{
+			this.UpdateCropLogic (obj);
+
+			bool hasImage = !string.IsNullOrEmpty (this.FileName);
+
+			this.popupInterfaceFillModeButton.Enable = hasImage;
+			this.popupInterfaceRotateButton.Enable = hasImage;
+			this.popupInterfaceSlider.Enable = hasImage;
+
+			//	Met à jour le bouton 'fill'.
+			if (this.cropLogic.IsFillMode)
+			{
+				this.popupInterfaceFillModeButton.IconUri = Misc.Icon ("ImageShowAll");
+				ToolTip.Default.SetToolTip (this.popupInterfaceFillModeButton, Res.Strings.Action.ImageShowAll);
+			}
+			else
+			{
+				this.popupInterfaceFillModeButton.IconUri = Misc.Icon ("ImageFillFrame");
+				ToolTip.Default.SetToolTip (this.popupInterfaceFillModeButton, Res.Strings.Action.ImageFillMode);
+			}
+
+			//	Met à jour le slider.
+			var value = (decimal) this.cropLogic.RelativeZoom;
+
+			if (this.popupInterfaceSlider.Value != value)
+			{
+				this.popupInterfaceSlider.Value = value;
+				this.popupInterfaceSlider.Invalidate ();  // TODO: devrait être inutile
+			}
+		}
+
+		private Widget CreatePopupInterface(Objects.Abstract obj)
 		{
 			double buttonSize = 23;
 
 			var frame = new FrameBox ()
 			{
-				PreferredSize = new Size (200, 5+buttonSize+5),
+				PreferredSize = new Size (220, 5+buttonSize+5),
 				DrawFullFrame = true,
 				BackColor = Drawing.Color.FromAlphaRgb (0.9, 0.8, 0.8, 0.8),
 				Padding = new Margins (5),
@@ -432,7 +456,16 @@ namespace Epsitec.Common.Document.Properties
 				Parent = frame,
 				PreferredSize = new Size (buttonSize, buttonSize),
 				ButtonStyle = ButtonStyle.ActivableIcon,
-				IconUri = Misc.Icon ("ActiveYes"),
+				Dock = DockStyle.Left,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+
+			this.popupInterfaceRotateButton = new IconButton
+			{
+				Parent = frame,
+				PreferredSize = new Size (buttonSize, buttonSize),
+				ButtonStyle = ButtonStyle.ActivableIcon,
+				IconUri = Misc.Icon ("ImageRotation90"),
 				Dock = DockStyle.Left,
 				Margins = new Margins (-1, 0, 0, 0),
 			};
@@ -451,6 +484,10 @@ namespace Epsitec.Common.Document.Properties
 				Margins = new Margins (10, 0, 3, 3),
 			};
 
+			ToolTip.Default.SetToolTip (importButton, Res.Strings.Action.ImageImport);
+			ToolTip.Default.SetToolTip (this.popupInterfaceRotateButton, Res.Strings.Action.ImageRotate);
+			ToolTip.Default.SetToolTip (this.popupInterfaceSlider, Res.Strings.Action.ImageZoom);
+
 			importButton.Clicked += delegate
 			{
 				this.PopupInterfaceImport (importButton);
@@ -458,12 +495,17 @@ namespace Epsitec.Common.Document.Properties
 
 			this.popupInterfaceFillModeButton.Clicked += delegate
 			{
-				this.PopupInterfaceSwapFill ();
+				this.PopupInterfaceSwapFill (obj);
+			};
+
+			this.popupInterfaceRotateButton.Clicked += delegate
+			{
+				this.PopupInterfaceRotate(obj);
 			};
 
 			this.popupInterfaceSlider.ValueChanged += delegate
 			{
-				this.PopupInterfaceChangeZoom ((double) this.popupInterfaceSlider.Value);
+				this.PopupInterfaceChangeZoom (obj, (double) this.popupInterfaceSlider.Value);
 			};
 
 			return frame;
@@ -475,7 +517,7 @@ namespace Epsitec.Common.Document.Properties
 
 			if (filename != null)
 			{
-				using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageFilename, "ChangeImageFilename"))
+				using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageImport, "ChangeImageFilename"))
 				{
 					this.FileName = filename;
 					this.FileDate = this.document.ImageCache.LoadFromFile (this.FileName);
@@ -484,11 +526,56 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		private void PopupInterfaceSwapFill()
+		private void PopupInterfaceSwapFill(Objects.Abstract obj)
 		{
+			this.UpdateCropLogic (obj);
+			bool isFill = this.cropLogic.IsFillMode;
+
+			using (this.document.Modifier.OpletQueueBeginAction (isFill ? Res.Strings.Action.ImageShowAll : Res.Strings.Action.ImageFillMode, "ChangeImageZoom"))
+			{
+				if (isFill)
+				{
+					this.CropMargins = Margins.Zero;
+				}
+				else
+				{
+					this.cropLogic.FillAll ();
+				}
+
+				this.document.Modifier.OpletQueueValidateAction ();
+			}
 		}
 
-		private void PopupInterfaceChangeZoom(double zoom)
+		private void PopupInterfaceRotate(Objects.Abstract obj)
+		{
+			this.UpdateCropLogic (obj);
+
+			using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageZoom, "ChangeImageRotation"))
+			{
+				switch (this.RotationMode)
+				{
+					case Rotation.Angle0:
+						this.RotationMode = Rotation.Angle90;
+						break;
+
+					case Rotation.Angle90:
+						this.RotationMode = Rotation.Angle180;
+						break;
+
+					case Rotation.Angle180:
+						this.RotationMode = Rotation.Angle270;
+						break;
+
+					case Rotation.Angle270:
+						this.RotationMode = Rotation.Angle0;
+						break;
+				}
+
+				this.document.Modifier.OpletQueueValidateAction ();
+			}
+		}
+
+		private void PopupInterfaceChangeZoom(Objects.Abstract obj, double zoom)
 		{
 			using (this.document.Modifier.OpletQueueBeginAction (Res.Strings.Action.ImageZoom, "ChangeImageZoom"))
 			{
@@ -759,6 +846,7 @@ namespace Epsitec.Common.Document.Properties
 		private Margins					cropMargins;
 		private CropLogic				cropLogic;
 		private IconButton				popupInterfaceFillModeButton;
+		private IconButton				popupInterfaceRotateButton;
 		private HSlider					popupInterfaceSlider;
 	}
 }
