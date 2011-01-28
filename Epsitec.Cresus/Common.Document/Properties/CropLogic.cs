@@ -85,12 +85,35 @@ namespace Epsitec.Common.Document.Properties
 				used.Deflate (this.CropMargins);
 				var u = used.Center;
 
-				return new Point ((c.X-u.X)/(rect.Width/2), (c.Y-u.Y)/(rect.Height/2));
+				var pos = new Point ((c.X-u.X)/(rect.Width/2), (c.Y-u.Y)/(rect.Height/2));
+
+				return this.Rotate (pos, false);
 			}
 			set
 			{
+				value = this.Rotate (value, true);
 				this.SetCropMargins (this.RelativeZoom, value, keepRatio: true);
 			}
+		}
+
+		private Point Rotate(Point pos, bool inverted)
+		{
+			var pi = this.image.PropertyImage;
+			double factor = inverted ? -1 : 1;
+
+			switch (pi.RotationMode)
+			{
+				case Image.Rotation.Angle90:
+					return Transform.RotatePointDeg (90*factor, pos);
+
+				case Image.Rotation.Angle180:
+					return Transform.RotatePointDeg (180*factor, pos);
+
+				case Image.Rotation.Angle270:
+					return Transform.RotatePointDeg (270*factor, pos);
+			}
+
+			return pos;
 		}
 
 		private void SetCropZoom(double zoom)

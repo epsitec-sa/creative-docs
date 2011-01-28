@@ -2770,7 +2770,10 @@ namespace Epsitec.Common.Document
 		{
 			if (this.popupInterfaceWindow != null)
 			{
-				this.popupInterfaceWindow.WindowLocation = this.MapClientToScreen (this.popupInterfaceGetPosition (this, this.popupInterfaceObject));
+				var pos = this.popupInterfaceGetPosition (this, this.popupInterfaceObject);
+				pos = new Point (pos.X, pos.Y-this.popupInterfaceFrame.PreferredHeight);
+
+				this.popupInterfaceWindow.WindowLocation = this.MapClientToScreen (pos);
 			}
 		}
 
