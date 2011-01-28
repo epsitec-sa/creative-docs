@@ -115,8 +115,8 @@ namespace Epsitec.Common.Document
 
 		private void HandleIsVisibleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			this.ClosePopupInterface();
-			this.CloseMiniBar(false);  // ferme la mini-palette si le viewer devient invisible
+			this.ClosePopupInterface (this.popupInterfaceObject);
+			this.CloseMiniBar (false);  // ferme la mini-palette si le viewer devient invisible
 		}
 
 
@@ -2744,7 +2744,7 @@ namespace Epsitec.Common.Document
 		#region Popup interface
 		public void OpenPopupInterface(Widget frame, Objects.Abstract obj, System.Func<Viewer, Objects.Abstract, Point> getPosition)
 		{
-			this.ClosePopupInterface ();
+			this.ClosePopupInterface (obj);
 
 			this.popupInterfaceWindow = new Window ();
 			this.popupInterfaceWindow.MakeFramelessWindow ();
@@ -2777,36 +2777,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void ClosePopupInterface()
+		public void ClosePopupInterface(Objects.Abstract obj)
 		{
-			if (this.popupInterfaceWindow == null)
+			if (this.popupInterfaceWindow == null || this.popupInterfaceObject != obj)
 			{
 				return;
 			}
 
-			this.popupInterfaceFrame.Dispose ();
-			this.popupInterfaceFrame = null;
 			this.popupInterfaceObject = null;
 
 			this.popupInterfaceWindow.Close ();
 			this.popupInterfaceWindow.AsyncDispose ();
 			this.popupInterfaceWindow = null;
-		}
-
-		public Objects.Abstract PopupInterfaceObject
-		{
-			get
-			{
-				return this.popupInterfaceObject;
-			}
-		}
-
-		public Widget PopupInterfaceFrame
-		{
-			get
-			{
-				return this.popupInterfaceFrame;
-			}
 		}
 		#endregion
 

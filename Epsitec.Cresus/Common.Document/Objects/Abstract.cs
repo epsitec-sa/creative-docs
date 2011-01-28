@@ -117,7 +117,20 @@ namespace Epsitec.Common.Document.Objects
 			return obj;
 		}
 
-		
+
+
+		public Widget PopupInterfaceFrame
+		{
+			get
+			{
+				return this.popupInterfaceFrame;
+			}
+			set
+			{
+				this.popupInterfaceFrame = value;
+			}
+		}
+
 		public System.Collections.ArrayList Handles
 		{
 			get { return this.handles; }
@@ -2660,6 +2673,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isDirtyPageAndLayerNumbers = src.isDirtyPageAndLayerNumbers;
 			this.pageNumber          = src.pageNumber;
 			this.layerNumber         = src.layerNumber;
+			this.popupInterfaceFrame = src.popupInterfaceFrame;
 
 			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();
@@ -3905,5 +3919,6 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Size					cacheBitmapSize;
 		
 		private static int						nextDebugId = 1;
+		private Widget							popupInterfaceFrame;
 	}
 }

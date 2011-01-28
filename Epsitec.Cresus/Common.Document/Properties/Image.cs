@@ -359,17 +359,17 @@ namespace Epsitec.Common.Document.Properties
 		#region Popup interface
 		public override void OpenOrClosePopupInterface(Objects.Abstract obj)
 		{
-			var viewer = this.document.Modifier.ActiveViewer;
-
 			if (obj.IsSelected && !obj.IsGlobalSelected)  // objet sélectionné ?
 			{
-				if (viewer.PopupInterfaceFrame == null)
+				var viewer = this.document.Modifier.ActiveViewer;
+
+				if (obj.PopupInterfaceFrame == null)
 				{
 					//	Crée l'interface popup.
 					this.UpdateCropLogic (obj);
 
-					var i = this.CreatePopupInterface (obj);
-					viewer.OpenPopupInterface (i, obj, this.GetPopupInterfacePosition);
+					obj.PopupInterfaceFrame = this.CreatePopupInterface (obj);
+					viewer.OpenPopupInterface (obj.PopupInterfaceFrame, obj, this.GetPopupInterfacePosition);
 					viewer.MovePopupInterface ();
 				}
 
@@ -383,11 +383,14 @@ namespace Epsitec.Common.Document.Properties
 
 		public override void ClosePopupInterface(Objects.Abstract obj)
 		{
-			var viewer = this.document.Modifier.ActiveViewer;
-
-			if (viewer.PopupInterfaceFrame != null)
+			if (obj.PopupInterfaceFrame != null)
 			{
-				viewer.ClosePopupInterface ();
+				var viewer = this.document.Modifier.ActiveViewer;
+
+				viewer.ClosePopupInterface (obj);
+
+				obj.PopupInterfaceFrame.Dispose ();
+				obj.PopupInterfaceFrame = null;
 			}
 		}
 
@@ -438,7 +441,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				PreferredSize = new Size (240, margin+buttonSize+margin),
 				DrawFullFrame = true,
-				BackColor = Drawing.Color.FromAlphaRgb (0.8, 0.8, 0.8, 0.8),  // gris clair pas trop transparent
+				BackColor = Drawing.Color.FromAlphaRgb (0.8, 0.9, 0.9, 0.9),  // gris clair pas trop transparent
 				Padding = new Margins (margin),
 			};
 
@@ -447,7 +450,6 @@ namespace Epsitec.Common.Document.Properties
 				Parent = frame,
 				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				ButtonStyle = ButtonStyle.ActivableIcon,
 				IconUri = Misc.Icon ("ImportImage"),
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
@@ -458,9 +460,8 @@ namespace Epsitec.Common.Document.Properties
 				Parent = frame,
 				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				ButtonStyle = ButtonStyle.ActivableIcon,
 				Dock = DockStyle.Left,
-				Margins = new Margins (margin, 0, 0, 0),
+				Margins = new Margins (10, 0, 0, 0),
 			};
 
 			this.popupInterfaceRotateButton = new IconButton
@@ -468,7 +469,6 @@ namespace Epsitec.Common.Document.Properties
 				Parent = frame,
 				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				ButtonStyle = ButtonStyle.ActivableIcon,
 				IconUri = Misc.Icon ("ImageRotateLeft"),
 				Dock = DockStyle.Left,
 				Margins = new Margins (-1, 0, 0, 0),
