@@ -2772,8 +2772,33 @@ namespace Epsitec.Common.Document
 			{
 				var pos = this.popupInterfaceGetPosition (this, this.popupInterfaceObject);
 				pos = new Point (pos.X, pos.Y-this.popupInterfaceFrame.PreferredHeight);
+				var rect = new Rectangle (pos, this.popupInterfaceFrame.PreferredSize);
 
-				this.popupInterfaceWindow.WindowLocation = this.MapClientToScreen (pos);
+				//	Empêche la fenêtre de l'interface de dépasser de la vue du Viewer.
+				var view = this.Client.Bounds;
+				view.Deflate (2);  // pour ne pas toucher le bord
+
+				if (rect.Left < view.Left)
+				{
+					rect.Offset (view.Left-rect.Left, 0);
+				}
+
+				if (rect.Right > view.Right)
+				{
+					rect.Offset (view.Right-rect.Right, 0);
+				}
+
+				if (rect.Bottom < view.Bottom)
+				{
+					rect.Offset (0, view.Bottom-rect.Bottom);
+				}
+
+				if (rect.Top > view.Top)
+				{
+					rect.Offset (0, view.Top-rect.Top);
+				}
+
+				this.popupInterfaceWindow.WindowLocation = this.MapClientToScreen (rect.BottomLeft);
 			}
 		}
 
