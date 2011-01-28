@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Properties
 		private Point GetPopupInterfacePosition(Viewer viewer, Objects.Abstract obj)
 		{
 			var pos = viewer.InternalToScreen (obj.BoundingBoxThin.BottomLeft);
-			return new Point (pos.X+4, pos.Y+4);
+			return new Point (pos.X-4, pos.Y-5);
 		}
 
 		private void UpdatePopupInterface(Objects.Abstract obj)
