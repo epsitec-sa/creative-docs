@@ -768,6 +768,14 @@
     <EmbeddedResource Include="Images\ImageShowAll.icon" />
     <EmbeddedResource Include="Images\ImageRotateLeft.icon" />
     <EmbeddedResource Include="Images\ImportImage.icon" />
+    <EmbeddedResource Include="Images\FrameSample01.icon" />
+    <EmbeddedResource Include="Images\FrameSample02.icon" />
+    <EmbeddedResource Include="Images\FrameSample03.icon" />
+    <EmbeddedResource Include="Images\FrameSample04.icon" />
+    <EmbeddedResource Include="Images\FrameSample05.icon" />
+    <EmbeddedResource Include="Images\FrameSample06.icon" />
+    <EmbeddedResource Include="Images\FrameSample07.icon" />
+    <EmbeddedResource Include="Images\FrameSample08.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
