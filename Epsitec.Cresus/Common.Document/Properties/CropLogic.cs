@@ -99,18 +99,23 @@ namespace Epsitec.Common.Document.Properties
 		private Point Rotate(Point pos, bool inverted)
 		{
 			var pi = this.image.PropertyImage;
+
+			double offset = this.image.Direction;
 			double factor = inverted ? -1 : 1;
 
 			switch (pi.RotationMode)
 			{
+				case Image.Rotation.Angle0:
+					return Transform.RotatePointDeg ((offset+0)*factor, pos);
+
 				case Image.Rotation.Angle90:
-					return Transform.RotatePointDeg (90*factor, pos);
+					return Transform.RotatePointDeg ((offset+90)*factor, pos);
 
 				case Image.Rotation.Angle180:
-					return Transform.RotatePointDeg (180*factor, pos);
+					return Transform.RotatePointDeg ((offset+180)*factor, pos);
 
 				case Image.Rotation.Angle270:
-					return Transform.RotatePointDeg (270*factor, pos);
+					return Transform.RotatePointDeg ((offset+270)*factor, pos);
 			}
 
 			return pos;
