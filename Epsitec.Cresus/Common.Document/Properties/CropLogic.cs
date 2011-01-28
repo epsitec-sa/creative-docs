@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Properties
 
 				double r2 = this.objectSize.Height / this.objectSize.Width;
 
-				return System.Math.Abs (r1-r2) < 0.01;
+				return System.Math.Abs (r1-r2) < 0.01;  // accepte 1% d'erreur
 			}
 		}
 

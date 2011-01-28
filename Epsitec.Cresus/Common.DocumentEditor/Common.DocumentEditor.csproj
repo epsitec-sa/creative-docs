@@ -766,6 +766,8 @@
     <EmbeddedResource Include="Images\FrameOnlyShadow.icon" />
     <EmbeddedResource Include="Images\ImageFillFrame.icon" />
     <EmbeddedResource Include="Images\ImageShowAll.icon" />
+    <EmbeddedResource Include="Images\ImageRotateLeft.icon" />
+    <EmbeddedResource Include="Images\ImportImage.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

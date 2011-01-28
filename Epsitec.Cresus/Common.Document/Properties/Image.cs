@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Properties
 		private Point GetPopupInterfacePosition(Viewer viewer, Objects.Abstract obj)
 		{
 			var pos = viewer.InternalToScreen (obj.BoundingBoxThin.BottomLeft);
-			return new Point (pos.X+5, pos.Y+5);
+			return new Point (pos.X+4, pos.Y+4);
 		}
 
 		private void UpdatePopupInterface(Objects.Abstract obj)
@@ -431,22 +431,24 @@ namespace Epsitec.Common.Document.Properties
 
 		private Widget CreatePopupInterface(Objects.Abstract obj)
 		{
-			double buttonSize = 23;
+			double buttonSize = 22;
+			double margin = 3;
 
 			var frame = new FrameBox ()
 			{
-				PreferredSize = new Size (220, 5+buttonSize+5),
+				PreferredSize = new Size (240, margin+buttonSize+margin),
 				DrawFullFrame = true,
-				BackColor = Drawing.Color.FromAlphaRgb (0.9, 0.8, 0.8, 0.8),
-				Padding = new Margins (5),
+				BackColor = Drawing.Color.FromAlphaRgb (0.8, 0.8, 0.8, 0.8),  // gris clair pas trop transparent
+				Padding = new Margins (margin),
 			};
 
 			var importButton = new IconButton
 			{
 				Parent = frame,
+				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
 				ButtonStyle = ButtonStyle.ActivableIcon,
-				IconUri = Misc.Icon ("Import"),
+				IconUri = Misc.Icon ("ImportImage"),
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -454,18 +456,20 @@ namespace Epsitec.Common.Document.Properties
 			this.popupInterfaceFillModeButton = new IconButton
 			{
 				Parent = frame,
+				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
 				ButtonStyle = ButtonStyle.ActivableIcon,
 				Dock = DockStyle.Left,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (margin, 0, 0, 0),
 			};
 
 			this.popupInterfaceRotateButton = new IconButton
 			{
 				Parent = frame,
+				AutoFocus = false,
 				PreferredSize = new Size (buttonSize, buttonSize),
 				ButtonStyle = ButtonStyle.ActivableIcon,
-				IconUri = Misc.Icon ("ImageRotation90"),
+				IconUri = Misc.Icon ("ImageRotateLeft"),
 				Dock = DockStyle.Left,
 				Margins = new Margins (-1, 0, 0, 0),
 			};
@@ -473,19 +477,30 @@ namespace Epsitec.Common.Document.Properties
 			this.popupInterfaceSlider = new HSlider
 			{
 				Parent = frame,
+				AutoFocus = false,
 				MinValue = 0.0M,
 				MaxValue = 1.0M,
 				Resolution = 0.0000001M,
-				SmallChange = 0.1M,
-				LargeChange = 0.5M,
+				SmallChange = 0.01M,  //  1%
+				LargeChange = 0.1M,   // 10%
 				Value = (decimal) this.cropLogic.RelativeZoom,
 				PreferredHeight = buttonSize-3-3,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 0, 3, 3),
+				Margins = new Margins (5, 2+14, 3, 3),
+			};
+
+			var closeButton = new GlyphButton
+			{
+				Parent = frame,
+				AutoFocus = false,
+				GlyphShape = Common.Widgets.GlyphShape.Close,
+				PreferredSize = new Size (14, 14),
+				Anchor = AnchorStyles.TopRight,
+				Margins = new Margins (0, -margin, -margin, 0),
 			};
 
 			ToolTip.Default.SetToolTip (importButton, Res.Strings.Action.ImageImport);
-			ToolTip.Default.SetToolTip (this.popupInterfaceRotateButton, Res.Strings.Action.ImageRotate);
+			ToolTip.Default.SetToolTip (this.popupInterfaceRotateButton, Res.Strings.Action.ImageRotateLeft);
 			ToolTip.Default.SetToolTip (this.popupInterfaceSlider, Res.Strings.Action.ImageZoom);
 
 			importButton.Clicked += delegate
@@ -506,6 +521,11 @@ namespace Epsitec.Common.Document.Properties
 			this.popupInterfaceSlider.ValueChanged += delegate
 			{
 				this.PopupInterfaceChangeZoom (obj, (double) this.popupInterfaceSlider.Value);
+			};
+
+			closeButton.Clicked += delegate
+			{
+				this.ClosePopupInterface (obj);
 			};
 
 			return frame;

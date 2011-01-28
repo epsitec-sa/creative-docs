@@ -966,7 +966,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 				//	designer:str/20K22
-				public static global::Epsitec.Common.Types.FormattedText ImageRotate
+				public static global::Epsitec.Common.Types.FormattedText ImageRotateLeft
 				{
 					get
 					{

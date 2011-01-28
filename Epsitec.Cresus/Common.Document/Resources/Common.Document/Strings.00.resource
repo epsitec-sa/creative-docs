@@ -1484,5 +1484,5 @@
   <data name="Action.ImageFillMode" id="KV1">Recadre l&amp;apos;image pour qu&amp;apos;elle remplisse toute la surface</data>
   <data name="Action.ImageImport" id="K02">Importe un fichier image</data>
   <data name="Action.ImageShowAll" id="K12">Recadre l&amp;apos;image pour qu&amp;apos;elle soit entièrement visible</data>
-  <data name="Action.ImageRotate" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
+  <data name="Action.ImageRotateLeft" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
 </bundle>
