@@ -286,7 +286,17 @@ namespace Epsitec.Common.Document.Properties
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
 			//	Indique si une poignée est visible.
-			return obj.IsSelected && !string.IsNullOrEmpty (this.filename);
+			if (obj.IsSelected && !string.IsNullOrEmpty (this.filename))
+			{
+				double sum = this.cropMargins.Left + this.cropMargins.Right + this.cropMargins.Bottom + this.cropMargins.Top;
+
+				if (System.Math.Abs (sum) > 0.001)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
