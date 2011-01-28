@@ -949,20 +949,36 @@ namespace Epsitec.Common.Document
 						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (934));
 					}
 				}
-				//	designer:str/20KT1
-				public static global::Epsitec.Common.Types.FormattedText ImageFilename
-				{
-					get
-					{
-						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
-					}
-				}
 				//	designer:str/20KV1
 				public static global::Epsitec.Common.Types.FormattedText ImageFillMode
 				{
 					get
 					{
 						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544383));
+					}
+				}
+				//	designer:str/20K02
+				public static global::Epsitec.Common.Types.FormattedText ImageImport
+				{
+					get
+					{
+						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544384));
+					}
+				}
+				//	designer:str/20K22
+				public static global::Epsitec.Common.Types.FormattedText ImageRotate
+				{
+					get
+					{
+						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386));
+					}
+				}
+				//	designer:str/20K12
+				public static global::Epsitec.Common.Types.FormattedText ImageShowAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544385));
 					}
 				}
 				//	designer:str/20KU1

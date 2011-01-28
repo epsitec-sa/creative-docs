@@ -1480,7 +1480,9 @@
   <data name="Panel.Frame.Sample07" id="KL1">Petite ombre</data>
   <data name="Panel.Frame.Sample08" id="KM1">Grande ombre</data>
   <data name="Panel.Frame.Custom" id="KS1">Personnalisé</data>
-  <data name="Action.ImageFilename" id="KT1">Nom de fichier pour l&amp;apos;image</data>
   <data name="Action.ImageZoom" id="KU1">Zoom de l&amp;apos;image</data>
-  <data name="Action.ImageFillMode" id="KV1">Mode de replissage de l&amp;apos;image</data>
+  <data name="Action.ImageFillMode" id="KV1">Recadre l&amp;apos;image pour qu&amp;apos;elle remplisse toute la surface</data>
+  <data name="Action.ImageImport" id="K02">Importe un fichier image</data>
+  <data name="Action.ImageShowAll" id="K12">Recadre l&amp;apos;image pour qu&amp;apos;elle soit entièrement visible</data>
+  <data name="Action.ImageRotate" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
 </bundle>
