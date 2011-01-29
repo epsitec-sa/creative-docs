@@ -3,6 +3,13 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
+	public enum PointType
+	{
+		None,
+		Primary,
+		Secondary,
+	}
+
 	public class Polygon
 	{
 		/// <summary>
@@ -13,50 +20,75 @@ namespace Epsitec.Common.Document
 		/// </summary>
 		public Polygon()
 		{
-			this.points = new List<Point> ();
+			this.typedPoints = new List<TypedPoint> ();
 		}
 
 		public int Count
 		{
 			get
 			{
-				return this.points.Count;
+				return this.typedPoints.Count;
 			}
 		}
 
 		public Point GetPoint(int index)
 		{
 			//	Retourne un point à partir d'un index donné.
-			if (index < 0 || index > this.points.Count-1)
+			if (index < 0 || index > this.typedPoints.Count-1)
 			{
 				return Point.Zero;
 			}
 
-			return this.points[index];
+			return this.typedPoints[index].Point;
+		}
+
+		public PointType GetPointType(int index)
+		{
+			//	Retourne un point à partir d'un index donné.
+			if (index < 0 || index > this.typedPoints.Count-1)
+			{
+				return PointType.None;
+			}
+
+			return this.typedPoints[index].PointType;
 		}
 
 		public Point GetCyclingPoint(int cyclingIndex)
 		{
 			//	Retourne un point à partir d'un index donné dans un 'torre'.
-			while (cyclingIndex < 0)
-			{
-				cyclingIndex += this.points.Count;
-			}
-
-			while (cyclingIndex >= this.points.Count)
-			{
-				cyclingIndex -= this.points.Count;
-			}
-
-			return this.points[cyclingIndex];
+			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
+			return this.typedPoints[cyclingIndex].Point;
 		}
 
-		public void Add(Point p)
+		public PointType GetCyclingPointType(int cyclingIndex)
+		{
+			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
+			return this.typedPoints[cyclingIndex].PointType;
+		}
+
+		public int GetCyclingIndex(int cyclingIndex)
+		{
+			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			while (cyclingIndex < 0)
+			{
+				cyclingIndex += this.typedPoints.Count;
+			}
+
+			while (cyclingIndex >= this.typedPoints.Count)
+			{
+				cyclingIndex -= this.typedPoints.Count;
+			}
+
+			return cyclingIndex;
+		}
+
+		public void Add(Point p, PointType pointType = PointType.Primary)
 		{
 			//	Ajoute un point au polygone, sauf s'il est identique au dernier ajouté.
-			if (this.points.Count == 0 || this.points[this.points.Count-1] != p)
+			if (this.typedPoints.Count == 0 || this.typedPoints[this.typedPoints.Count-1].Point != p)
 			{
-				this.points.Add (p);
+				this.typedPoints.Add (new TypedPoint (p, pointType));
 			}
 		}
 
@@ -68,13 +100,13 @@ namespace Epsitec.Common.Document
 				double px = 0;
 				double py = 0;
 
-				foreach (var point in this.points)
+				foreach (var typedPoint in this.typedPoints)
 				{
-					px += point.X;
-					py += point.Y;
+					px += typedPoint.Point.X;
+					py += typedPoint.Point.Y;
 				}
 
-				return new Point (px/this.points.Count, py/this.points.Count);
+				return new Point (px/this.typedPoints.Count, py/this.typedPoints.Count);
 			}
 		}
 
@@ -94,7 +126,7 @@ namespace Epsitec.Common.Document
 
 				foreach (var polygon in polygons)
 				{
-					for (int i = 0; i < polygon.points.Count; i++)
+					for (int i = 0; i < polygon.typedPoints.Count; i++)
 					{
 						Point p = polygon.GetCyclingPoint (i);    // point courant
 						Point b = polygon.GetCyclingPoint (i+1);  // point suivant
@@ -113,7 +145,7 @@ namespace Epsitec.Common.Document
 					{
 						path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
 
-						for (int i = 0; i < polygon.points.Count; i++)
+						for (int i = 0; i < polygon.typedPoints.Count; i++)
 						{
 							Point a = polygon.GetCyclingPoint (i-1);  // point précédent
 							Point p = polygon.GetCyclingPoint (i);    // point courant
@@ -169,15 +201,15 @@ namespace Epsitec.Common.Document
 		private static void AddPolygonPath(Path path, Polygon polygon)
 		{
 			//	Ajoute à un chemin un polygone à coins droits.
-			for (int i = 0; i < polygon.points.Count; i++)
+			for (int i = 0; i < polygon.typedPoints.Count; i++)
 			{
 				if (i == 0)
 				{
-					path.MoveTo (polygon.points[i]);
+					path.MoveTo (polygon.typedPoints[i].Point);
 				}
 				else
 				{
-					path.LineTo (polygon.points[i]);
+					path.LineTo (polygon.typedPoints[i].Point);
 				}
 			}
 
@@ -219,11 +251,11 @@ namespace Epsitec.Common.Document
 				var pp = new Polygon ();
 				var move = new Point (mx, my);
 
-				for (int i = 0; i < this.points.Count; i++)
+				for (int i = 0; i < this.typedPoints.Count; i++)
 				{
-					Point p = this.points[i];
+					var p = this.typedPoints[i];
 
-					pp.points.Add (p+move);
+					pp.typedPoints.Add (new TypedPoint (p.Point+move, p.PointType));
 				}
 
 				return pp;
@@ -318,14 +350,14 @@ namespace Epsitec.Common.Document
 			{
 				var pp = new Polygon ();
 
-				for (int i = 0; i < this.points.Count; i++)
+				for (int i = 0; i < this.typedPoints.Count; i++)
 				{
 					Point a = this.GetCyclingPoint (i-1);  // point précédent
 					Point p = this.GetCyclingPoint (i);    // point courant
 					Point b = this.GetCyclingPoint (i+1);  // point suivant
 
 					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);
-					pp.points.Add (c);
+					pp.typedPoints.Add (new TypedPoint (c, this.typedPoints[i].PointType));
 				}
 
 				return pp;
@@ -398,9 +430,9 @@ namespace Epsitec.Common.Document
 
 		private bool IsInside(Point p)
 		{
-			var surface = new InsideSurface (p, this.points.Count);
+			var surface = new InsideSurface (p, this.typedPoints.Count);
 
-			for (int i = 0; i < this.points.Count; i++)
+			for (int i = 0; i < this.typedPoints.Count; i++)
 			{
 				surface.AddLine (this.GetCyclingPoint (i), this.GetCyclingPoint (i+1));
 			}
@@ -415,14 +447,14 @@ namespace Epsitec.Common.Document
 			int count = 0;
 			foreach (var polygon in polygons)
 			{
-				count += polygon.points.Count;
+				count += polygon.typedPoints.Count;
 			}
 
 			var surface = new InsideSurface (p, count);
 
 			foreach (var polygon in polygons)
 			{
-				for (int i = 0; i < polygon.points.Count; i++)
+				for (int i = 0; i < polygon.typedPoints.Count; i++)
 				{
 					surface.AddLine (polygon.GetCyclingPoint (i), polygon.GetCyclingPoint (i+1));
 				}
@@ -434,6 +466,19 @@ namespace Epsitec.Common.Document
 
 		private static readonly double miterLimit = 10;
 
-		private readonly List<Point>	points;
+		private readonly List<TypedPoint>	typedPoints;
+
+
+		private struct TypedPoint
+		{
+			public TypedPoint(Point point, PointType pointType)
+			{
+				this.Point     = point;
+				this.PointType = pointType;
+			}
+
+			public Point			Point;
+			public PointType		PointType;
+		}
 	}
 }
