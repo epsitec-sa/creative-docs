@@ -86,10 +86,17 @@ namespace Epsitec.Common.Document
 		public void Add(Point p, PointType pointType = PointType.Primary)
 		{
 			//	Ajoute un point au polygone, sauf s'il est identique au dernier ajouté.
-			if (this.typedPoints.Count == 0 || this.typedPoints[this.typedPoints.Count-1].Point != p)
+			if (this.typedPoints.Count > 0 && pointType == PointType.Primary)
 			{
-				this.typedPoints.Add (new TypedPoint (p, pointType));
+				var last = this.typedPoints[this.typedPoints.Count-1];
+
+				if (last.PointType == PointType.Primary && p == last.Point)
+				{
+					return;
+				}
 			}
+
+			this.typedPoints.Add (new TypedPoint (p, pointType));
 		}
 
 		public Point Center
@@ -113,11 +120,56 @@ namespace Epsitec.Common.Document
 
 		public void Simplify()
 		{
-			//	Si le dernier point d'un polygone est identique au premier, supprime-le.
-			if (this.typedPoints.Count >= 2 &&
-				Geometry.Compare (this.typedPoints[0].Point, this.typedPoints[this.typedPoints.Count-1].Point))
+			int i = 0;
+			while (i < this.typedPoints.Count)
 			{
-				this.typedPoints.RemoveAt (this.typedPoints.Count-1);
+				if (i < this.typedPoints.Count-1)
+				{
+					var p0 = this.typedPoints[i];
+					var p1 = this.typedPoints[i+1];
+
+					if (p0.PointType == PointType.Primary &&
+						p1.PointType == PointType.Primary &&
+						Geometry.Compare (p0.Point, p1.Point))
+					{
+						this.typedPoints.RemoveAt (i+1);
+						continue;
+					}
+				}
+
+				if (i < this.typedPoints.Count-2)
+				{
+					var p0 = this.typedPoints[i];
+					var p1 = this.typedPoints[i+1];
+					var p2 = this.typedPoints[i+2];
+
+					if (p0.PointType == PointType.Primary &&
+						p1.PointType == PointType.Secondary &&
+						p2.PointType == PointType.Secondary &&
+						Geometry.Compare (p0.Point, p1.Point) &&
+						Geometry.Compare (p0.Point, p2.Point))
+					{
+						this.typedPoints.RemoveAt (i+1);
+						this.typedPoints.RemoveAt (i+1);
+						continue;
+					}
+				}
+
+				i++;
+			}
+
+			//	Si le dernier point d'un polygone est identique au premier, supprime-le.
+			if (this.typedPoints.Count >= 2)
+			{
+				var p0 = this.typedPoints[0];
+				var p1 = this.typedPoints[this.typedPoints.Count-1];
+
+				if (p0.PointType == PointType.Primary &&
+					p1.PointType == PointType.Primary &&
+					Geometry.Compare (p0.Point, p1.Point))
+				{
+					this.typedPoints.RemoveAt (this.typedPoints.Count-1);
+				}
 			}
 		}
 
@@ -223,26 +275,39 @@ namespace Epsitec.Common.Document
 			int i = 0;
 			while (i < polygon.typedPoints.Count)
 			{
-				var typedPoint = polygon.typedPoints[i++];
+				var p1 = polygon.typedPoints[i++];
 
-				if (i == 1)
+				if (i == 1)  // premier point ?
 				{
-					path.MoveTo (typedPoint.Point);
+					path.MoveTo (p1.Point);
 				}
 				else
 				{
-					if (typedPoint.PointType == PointType.Secondary)
+					if (p1.PointType == PointType.Secondary)
 					{
-						var typedPoint2 = polygon.typedPoints[i++];
-						var typedPoint3 = polygon.typedPoints[(i < polygon.typedPoints.Count) ? i++ : 0];
-						System.Diagnostics.Debug.Assert (typedPoint2.PointType == PointType.Secondary);
-						System.Diagnostics.Debug.Assert (typedPoint3.PointType == PointType.Primary);
+						if (i >= polygon.typedPoints.Count)
+						{
+							break;
+						}
+						System.Diagnostics.Debug.Assert (i < polygon.typedPoints.Count);
+						var p2 = polygon.typedPoints[i++];
+						var p3 = polygon.typedPoints[(i < polygon.typedPoints.Count) ? i++ : 0];
+						if (p2.PointType != PointType.Secondary)
+						{
+							break;
+						}
+						if (p3.PointType != PointType.Primary)
+						{
+							break;
+						}
+						System.Diagnostics.Debug.Assert (p2.PointType == PointType.Secondary);
+						System.Diagnostics.Debug.Assert (p3.PointType == PointType.Primary);
 
-						path.CurveTo (typedPoint.Point, typedPoint2.Point, typedPoint3.Point);
+						path.CurveTo (p1.Point, p2.Point, p3.Point);
 					}
 					else
 					{
-						path.LineTo (typedPoint.Point);
+						path.LineTo (p1.Point);
 					}
 				}
 			}
@@ -520,6 +585,11 @@ namespace Epsitec.Common.Document
 
 			public Point			Point;
 			public PointType		PointType;
+
+			public override string ToString()
+			{
+				return string.Format ("x:{0} y:{1} type:{2}", Point.X, Point.Y, PointType);
+			}
 		}
 	}
 }

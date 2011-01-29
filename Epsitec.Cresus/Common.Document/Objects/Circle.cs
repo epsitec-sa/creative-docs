@@ -24,6 +24,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.LineColor )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.Arc )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			return false;
 		}
 
@@ -157,20 +158,39 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
-			Path path = this.PathBuild(drawingContext);
-			Shape[] shapes = new Shape[2];
+			var frame = this.PropertyFrame;
+
+			Path path = this.PathBuild (drawingContext);
+			var shapes = new List<Shape> ();
+			var objectShapes = new List<Shape> ();
 
 			//	Forme de la surface.
-			shapes[0] = new Shape();
-			shapes[0].Path = path;
-			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertySurface (port, this.PropertyFillGradient);
+				objectShapes.Add (shape);
+			}
 
 			//	Forme du chemin.
-			shapes[1] = new Shape();
-			shapes[1].Path = path;
-			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			{
+				var shape = new Shape ();
+				shape.Path = path;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				objectShapes.Add (shape);
+			}
 
-			return shapes;
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
+			{
+				shapes.AddRange (objectShapes);
+			}
+			else  // cadre ?
+			{
+				var polygons = Geometry.PathToPolygons (path);
+				frame.AddShapes (this, shapes, objectShapes, port, drawingContext, polygons, null);
+			}
+
+			return shapes.ToArray ();
 		}
 
 		protected void ComputeGeometry(out Point center, out double radius, out double angle)
