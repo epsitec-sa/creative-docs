@@ -118,8 +118,20 @@ namespace Epsitec.Common.Document
 		}
 
 
+		public static void Simplify(List<Polygon> polygons)
+		{
+			//	Simplifie une liste de polygones.
+			foreach (var polygon in polygons)
+			{
+				polygon.Simplify ();
+			}
+		}
+
 		public void Simplify()
 		{
+			//	Simplifie un polygone.
+			//	Lorsqu'un polygone est généré à partir d'un chemin Path (Geometry.PathToPolygons),
+			//	beaucoup d'incohérences et de redondances peuvent être rencontrées !
 			int i = 0;
 			while (i < this.typedPoints.Count)
 			{
@@ -170,14 +182,6 @@ namespace Epsitec.Common.Document
 				{
 					this.typedPoints.RemoveAt (this.typedPoints.Count-1);
 				}
-			}
-		}
-
-		public static void Simplify(List<Polygon> polygons)
-		{
-			foreach (var polygon in polygons)
-			{
-				polygon.Simplify ();
 			}
 		}
 
@@ -285,21 +289,9 @@ namespace Epsitec.Common.Document
 				{
 					if (p1.PointType == PointType.Secondary)
 					{
-						if (i >= polygon.typedPoints.Count)
-						{
-							break;
-						}
 						System.Diagnostics.Debug.Assert (i < polygon.typedPoints.Count);
 						var p2 = polygon.typedPoints[i++];
 						var p3 = polygon.typedPoints[(i < polygon.typedPoints.Count) ? i++ : 0];
-						if (p2.PointType != PointType.Secondary)
-						{
-							break;
-						}
-						if (p3.PointType != PointType.Primary)
-						{
-							break;
-						}
 						System.Diagnostics.Debug.Assert (p2.PointType == PointType.Secondary);
 						System.Diagnostics.Debug.Assert (p3.PointType == PointType.Primary);
 
