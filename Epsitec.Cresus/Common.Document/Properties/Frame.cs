@@ -568,14 +568,17 @@ namespace Epsitec.Common.Document.Properties
 
 					//	Ajoute ce qu'il faut pour inclure les traits de construction (DrawEdit).
 					var polygon = obj.PropertyHandleSupport;
-					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
+					if (polygon != null)
+					{
+						polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
+						polygon = polygon.Inflate (this.marginWidth+this.shadowInflate+this.shadowSize);
 
-					shape = new Shape ();
-					shape.Path = polygon.PolygonPath;
-					shape.Type = Common.Document.Type.Surface;
-					shape.Aspect = Aspect.InvisibleBox;
-					shapes.Add (shape);
+						shape = new Shape ();
+						shape.Path = polygon.PolygonPath;
+						shape.Type = Common.Document.Type.Surface;
+						shape.Aspect = Aspect.InvisibleBox;
+						shapes.Add (shape);
+					}
 				}
 
 				if (this.FrameType == Properties.FrameType.OnlyFrame ||

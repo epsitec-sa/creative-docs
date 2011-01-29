@@ -62,14 +62,14 @@ namespace Epsitec.Common.Document
 
 		public PointType GetCyclingPointType(int cyclingIndex)
 		{
-			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			//	Retourne un type de point à partir d'un index donné dans un 'torre'.
 			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
 			return this.typedPoints[cyclingIndex].PointType;
 		}
 
 		public int GetCyclingIndex(int cyclingIndex)
 		{
-			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			//	Retourne un index à partir d'un index donné dans un 'torre'.
 			while (cyclingIndex < 0)
 			{
 				cyclingIndex += this.typedPoints.Count;
@@ -107,6 +107,25 @@ namespace Epsitec.Common.Document
 				}
 
 				return new Point (px/this.typedPoints.Count, py/this.typedPoints.Count);
+			}
+		}
+
+
+		public void Simplify()
+		{
+			//	Si le dernier point d'un polygone est identique au premier, supprime-le.
+			if (this.typedPoints.Count >= 2 &&
+				Geometry.Compare (this.typedPoints[0].Point, this.typedPoints[this.typedPoints.Count-1].Point))
+			{
+				this.typedPoints.RemoveAt (this.typedPoints.Count-1);
+			}
+		}
+
+		public static void Simplify(List<Polygon> polygons)
+		{
+			foreach (var polygon in polygons)
+			{
+				polygon.Simplify ();
 			}
 		}
 
@@ -206,7 +225,7 @@ namespace Epsitec.Common.Document
 			{
 				var typedPoint = polygon.typedPoints[i++];
 
-				if (i == 0)
+				if (i == 1)
 				{
 					path.MoveTo (typedPoint.Point);
 				}
@@ -214,9 +233,8 @@ namespace Epsitec.Common.Document
 				{
 					if (typedPoint.PointType == PointType.Secondary)
 					{
-						System.Diagnostics.Debug.Assert (i < polygon.typedPoints.Count-1);
 						var typedPoint2 = polygon.typedPoints[i++];
-						var typedPoint3 = polygon.typedPoints[i++];
+						var typedPoint3 = polygon.typedPoints[(i < polygon.typedPoints.Count) ? i++ : 0];
 						System.Diagnostics.Debug.Assert (typedPoint2.PointType == PointType.Secondary);
 						System.Diagnostics.Debug.Assert (typedPoint3.PointType == PointType.Primary);
 
@@ -400,27 +418,34 @@ namespace Epsitec.Common.Document
 					var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
 					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
 
-					Point[] i = Geometry.Intersect (pa, aa, pb, bb);
-
-					if (i != null && i.Length == 1)
+					if (Geometry.Compare (pa, pb))
 					{
-						var pp = i[0];  // p' <-- intersection
-
-						//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
-						//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
-						double d = Point.Distance (p, pp);
-						if (d > System.Math.Abs (inflate)*Polygon.miterLimit)
-						{
-							aa = Point.Move (p, a, -inflate*Polygon.miterLimit);
-							bb = Point.Move (p, b, -inflate*Polygon.miterLimit);
-							pp = Point.Scale (aa, bb, 0.5);
-						}
-
-						return pp;
+						return pa;
 					}
 					else
 					{
-						return p;  // sans intersection, on ne peut pas faire mieux que de redonner p !
+						Point[] i = Geometry.Intersect (pa, aa, pb, bb);
+
+						if (i != null && i.Length == 1)
+						{
+							var pp = i[0];  // p' <-- intersection
+
+							//	Garde-fou (un peu comme MiterLimit en PostScript), si l'intersection gicle trop loin !
+							//	Sauf qu'ici, on ne peut donner qu'un seul point pour l'extrémité.
+							double d = Point.Distance (p, pp);
+							if (d > System.Math.Abs (inflate)*Polygon.miterLimit)
+							{
+								aa = Point.Move (p, a, -inflate*Polygon.miterLimit);
+								bb = Point.Move (p, b, -inflate*Polygon.miterLimit);
+								pp = Point.Scale (aa, bb, 0.5);
+							}
+
+							return pp;
+						}
+						else
+						{
+							return p;  // sans intersection, on ne peut pas faire mieux que de redonner p !
+						}
 					}
 				}
 			}
