@@ -201,15 +201,31 @@ namespace Epsitec.Common.Document
 		private static void AddPolygonPath(Path path, Polygon polygon)
 		{
 			//	Ajoute à un chemin un polygone à coins droits.
-			for (int i = 0; i < polygon.typedPoints.Count; i++)
+			int i = 0;
+			while (i < polygon.typedPoints.Count)
 			{
+				var typedPoint = polygon.typedPoints[i++];
+
 				if (i == 0)
 				{
-					path.MoveTo (polygon.typedPoints[i].Point);
+					path.MoveTo (typedPoint.Point);
 				}
 				else
 				{
-					path.LineTo (polygon.typedPoints[i].Point);
+					if (typedPoint.PointType == PointType.Secondary)
+					{
+						System.Diagnostics.Debug.Assert (i < polygon.typedPoints.Count-1);
+						var typedPoint2 = polygon.typedPoints[i++];
+						var typedPoint3 = polygon.typedPoints[i++];
+						System.Diagnostics.Debug.Assert (typedPoint2.PointType == PointType.Secondary);
+						System.Diagnostics.Debug.Assert (typedPoint3.PointType == PointType.Primary);
+
+						path.CurveTo (typedPoint.Point, typedPoint2.Point, typedPoint3.Point);
+					}
+					else
+					{
+						path.LineTo (typedPoint.Point);
+					}
 				}
 			}
 
