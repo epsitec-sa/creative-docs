@@ -51,8 +51,7 @@ namespace Epsitec.Common.Document
 	
 		public static List<Polygon> PathToPolygons(Path path)
 		{
-			//	Extrait les points d'un chemin constitué de droites.
-			//	Si le chemin contient une ou plusieurs courbes, le polygone retourné est vide !
+			//	Extrait les points d'un chemin quelconque.
 			var polygons = new List<Polygon> ();
 			Polygon polygon = null;
 
@@ -62,6 +61,9 @@ namespace Epsitec.Common.Document
 
 			Point start = Point.Zero;
 			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
 			int i = 0;
 			while (i < elements.Length)
 			{
@@ -73,7 +75,7 @@ namespace Epsitec.Common.Document
 						polygon = new Polygon ();
 						polygons.Add (polygon);
 
-						polygon.Add (current);
+						polygon.Add (current, PointType.Primary);
 						start = current;
 						break;
 
@@ -82,21 +84,44 @@ namespace Epsitec.Common.Document
 
 						if (polygon != null)
 						{
-							polygon.Add (current);
+							polygon.Add (current, PointType.Primary);
 						}
 						break;
 
 					case PathElement.Curve3:
+						p1 = points[i];
+						p2 = points[i++];
+						p3 = points[i++];
+
+						if (polygon != null)
+						{
+							polygon.Add (p1, PointType.Secondary);
+							polygon.Add (p2, PointType.Secondary);
+							polygon.Add (p3, PointType.Primary);
+						}
+						current = p3;
+						break;
+
 					case PathElement.Curve4:
-						polygons.Clear ();
-						return polygons;
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+
+						if (polygon != null)
+						{
+							polygon.Add (p1, PointType.Secondary);
+							polygon.Add (p2, PointType.Secondary);
+							polygon.Add (p3, PointType.Primary);
+						}
+						current = p3;
+						break;
 
 					default:
 						if ((elements[i] & PathElement.FlagClose) != 0)
 						{
 							if (polygon != null && !Point.Equals(current, start))
 							{
-								polygon.Add (current);
+								polygon.Add (current, PointType.Primary);
 							}
 						}
 						i ++;
