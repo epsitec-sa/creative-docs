@@ -25,6 +25,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.Arrow )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.PolyClose )  return true;
+			if ( type == Properties.Type.Frame )  return true;
 			return false;
 		}
 
@@ -1375,106 +1376,113 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
+			var frame = this.PropertyFrame;
+
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
-			this.PathBuild(drawingContext,
+			this.PathBuild (drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathEnd, out outlineEnd, out surfaceEnd,
 						   out pathLine, simplify, false);
 
-			int totalShapes = 2;
-			if ( surfaceStart )  totalShapes ++;
-			if ( surfaceEnd   )  totalShapes ++;
-			if ( outlineStart )  totalShapes ++;
-			if ( outlineEnd   )  totalShapes ++;
-			
-			bool support = false;
-			if ( (this.IsSelected || this.isCreating) &&
-				 drawingContext != null && drawingContext.IsActive &&
-				 !this.IsGlobalSelected )
+			var shapes = new List<Shape> ();
+			var objectShapes = new List<Shape> ();
+
+			//	Forme de la surface principale.
 			{
-				support = true;
-				totalShapes ++;
+				var shape = new Shape ();
+				shape.Path = pathLine;
+				shape.SetPropertySurface (port, this.PropertyFillGradient);
+				objectShapes.Add (shape);
 			}
 
-			Shape[] shapes = new Shape[totalShapes];
-			int i = 0;
-			
-			//	Forme de la surface principale.
-			shapes[i] = new Shape();
-			shapes[i].Path = pathLine;
-			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
-			i ++;
-
 			//	Forme du chemin principal.
-			shapes[i] = new Shape();
-			shapes[i].Path = pathLine;
-			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-			i ++;
+			{
+				var shape = new Shape ();
+				shape.Path = pathLine;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				objectShapes.Add (shape);
+			}
 
 			//	Forme de la surface de départ.
-			if ( surfaceStart )
+			if (surfaceStart)
 			{
-				shapes[i] = new Shape();
-				shapes[i].Path = pathStart;
-				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
-				shapes[i].IsMisc = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathStart;
+				shape.SetPropertySurface (port, this.PropertyLineColor);
+				shape.IsMisc = true;
+				objectShapes.Add (shape);
 			}
 
 			//	Forme de la surface d'arrivée.
-			if ( surfaceEnd )
+			if (surfaceEnd)
 			{
-				shapes[i] = new Shape();
-				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
-				shapes[i].IsMisc = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathEnd;
+				shape.SetPropertySurface (port, this.PropertyLineColor);
+				shape.IsMisc = true;
+				objectShapes.Add (shape);
 			}
 
 			//	Forme du chemin de départ.
-			if ( outlineStart )
+			if (outlineStart)
 			{
-				shapes[i] = new Shape();
-				shapes[i].Path = pathStart;
-				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-				shapes[i].IsMisc = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathStart;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				shape.IsMisc = true;
+				objectShapes.Add (shape);
 			}
 
 			//	Forme du chemin d'arrivée.
-			if ( outlineEnd )
+			if (outlineEnd)
 			{
-				shapes[i] = new Shape();
-				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-				shapes[i].IsMisc = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathEnd;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				shape.IsMisc = true;
+				objectShapes.Add (shape);
+			}
+
+			if (!simplify && (frame == null || frame.FrameType == Properties.FrameType.None))  // pas de cadre ?
+			{
+				shapes.AddRange (objectShapes);
+			}
+			else  // cadre ?
+			{
+				var polygons = Geometry.PathToPolygons (pathLine);
+				frame.AddShapes (this, shapes, objectShapes, port, drawingContext, polygons, null);
 			}
 
 			//	Forme des traits de support pour les poignées secondaires.
-			if ( support )
+			if ((this.IsSelected || this.isCreating) &&
+				 drawingContext != null && drawingContext.IsActive &&
+				 !this.IsGlobalSelected)
 			{
-				Path pathSupport = new Path();
+				Path pathSupport = new Path ();
 				int total = this.TotalMainHandle;
-				for ( int j=0 ; j<total ; j+=3 )
+				for (int j=0; j<total; j+=3)
 				{
-					if ( !this.Handle(j+1).IsVisible )  continue;
-					pathSupport.MoveTo(this.Handle(j+1).Position);
-					pathSupport.LineTo(this.Handle(j+0).Position);
-					pathSupport.MoveTo(this.Handle(j+1).Position);
-					pathSupport.LineTo(this.Handle(j+2).Position);
+					if (!this.Handle (j+1).IsVisible)
+					{
+						continue;
+					}
+
+					pathSupport.MoveTo (this.Handle (j+1).Position);
+					pathSupport.LineTo (this.Handle (j+0).Position);
+					pathSupport.MoveTo (this.Handle (j+1).Position);
+					pathSupport.LineTo (this.Handle (j+2).Position);
 				}
 
-				shapes[i] = new Shape();
-				shapes[i].Path = pathSupport;
-				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-				shapes[i].Aspect = Aspect.Support;
-				shapes[i].IsVisible = true;
-				i ++;
+				var shape = new Shape ();
+				shape.Path = pathSupport;
+				shape.SetPropertyStroke (port, this.PropertyLineMode, this.PropertyLineColor);
+				shape.Aspect = Aspect.Support;
+				shape.IsVisible = true;
+				shapes.Add (shape);
 			}
 
-			return shapes;
+			return shapes.ToArray ();
 		}
 
 		public void ComputeExtremity(bool start, out Point a, out Point b)

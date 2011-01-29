@@ -129,6 +129,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			Polygon.Simplify (polygons);
 			return polygons;
 		}
 
