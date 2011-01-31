@@ -390,9 +390,13 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public Polygon InflateAndConcave(double inflate, double concave)
+		public Polygon InflateAndMakeConcave(double inflate, double concave)
 		{
-			//	Engraisse/dégraisse un polygone.
+			//	Engraisse/dégraisse et rend concave/convexe un polygone.
+			//	inflate > 0  --> engraisse
+			//	inflate < 0  --> dégraisse
+			//	concave > 0  --> rend concave
+			//	concave < 0  --> rend convexe
 			if (inflate == 0 && concave == 0)
 			{
 				return this;
@@ -400,13 +404,17 @@ namespace Epsitec.Common.Document
 			else
 			{
 				bool ccw = this.GetCCW ();
-				return this.InflateAndConcave (inflate, concave, ccw);
+				return this.InflateAndMakeConcave (inflate, concave, ccw);
 			}
 		}
 
-		public static List<Polygon> InflateAndConcave(List<Polygon> polygons, double inflate, double concave)
+		public static List<Polygon> InflateAndMakeConcave(List<Polygon> polygons, double inflate, double concave)
 		{
-			//	Engraisse/dégraisse des polygones.
+			//	Engraisse/dégraisse et rend concave/convexe des polygones.
+			//	inflate > 0  --> engraisse
+			//	inflate < 0  --> dégraisse
+			//	concave > 0  --> rend concave
+			//	concave < 0  --> rend convexe
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
 			//	Les polygones obtenus ont toujours le même nombre de sommets.
 			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
@@ -423,7 +431,7 @@ namespace Epsitec.Common.Document
 				foreach (var polygon in polygons)
 				{
 					bool ccw = Polygon.GetCCW (polygons, polygon);
-					pp.Add (polygon.InflateAndConcave (inflate, concave, ccw));
+					pp.Add (polygon.InflateAndMakeConcave (inflate, concave, ccw));
 				}
 
 				return pp;
@@ -452,10 +460,10 @@ namespace Epsitec.Common.Document
 			return this.IsInside (c);  // point obtenu à l'intérieur du polygone ?
 		}
 
-		private Polygon InflateAndConcave(double inflate, double concave, bool ccw)
+		private Polygon InflateAndMakeConcave(double inflate, double concave, bool ccw)
 		{
 			var pp = this.Inflate (inflate, ccw);
-			return pp.Concave (concave, ccw);
+			return pp.MakeConcave (concave, ccw);
 		}
 
 		private Polygon Inflate(double inflate, bool ccw)
@@ -536,9 +544,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private Polygon Concave(double concave, bool ccw)
+		private Polygon MakeConcave(double concave, bool ccw)
 		{
-			//	Rend un polygone concave ou convexe.
+			//	Rend un polygone concave (> 0) ou convexe (< 0).
 			//	Seuls les segments de droite sont concernés. Ils sont transformés en segments
 			//	de courbes de Bézier.
 			if (concave == 0)

@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document.Properties
 				var frame = obj.PropertyFrame;
 				if (frame != null)
 				{
-					polygon = polygon.InflateAndConcave (frame.MarginWidth, 0);
+					polygon = polygon.InflateAndMakeConcave (frame.MarginWidth, 0);
 				}
 
 				var p1 = polygon.GetCyclingPoint (rank/2);
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Document.Properties
 				var frame = obj.PropertyFrame;
 				if (frame != null)
 				{
-					polygon = polygon.InflateAndConcave (frame.MarginWidth, 0);
+					polygon = polygon.InflateAndMakeConcave (frame.MarginWidth, 0);
 				}
 
 				var p1 = polygon.GetCyclingPoint (rank/2);
