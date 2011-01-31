@@ -67,6 +67,13 @@ namespace Epsitec.Common.Document
 			return this.typedPoints[cyclingIndex].PointType;
 		}
 
+		private TypedPoint GetCyclingTypedPoint(int cyclingIndex)
+		{
+			//	Retourne un point à partir d'un index donné dans un 'torre'.
+			cyclingIndex = this.GetCyclingIndex (cyclingIndex);
+			return this.typedPoints[cyclingIndex];
+		}
+
 		public int GetCyclingIndex(int cyclingIndex)
 		{
 			//	Retourne un index à partir d'un index donné dans un 'torre'.
@@ -220,25 +227,54 @@ namespace Epsitec.Common.Document
 					{
 						path.DefaultZoom = Properties.Abstract.DefaultZoom (drawingContext);
 
-						for (int i = 0; i < polygon.typedPoints.Count; i++)
+						if (polygon.typedPoints.Count >= 3 &&
+							polygon.typedPoints.Count%3 == 0 &&
+							polygon.typedPoints[1].PointType == PointType.Secondary &&
+							polygon.typedPoints[2].PointType == PointType.Secondary)
 						{
-							Point a = polygon.GetCyclingPoint (i-1);  // point précédent
-							Point p = polygon.GetCyclingPoint (i);    // point courant
-							Point b = polygon.GetCyclingPoint (i+1);  // point suivant
-
-							Point c1 = Point.Move (p, a, radius);
-							Point c2 = Point.Move (p, b, radius);
-
-							if (i == 0)
+							for (int i = 0; i < polygon.typedPoints.Count; i+=3)
 							{
-								path.MoveTo (c1);
-							}
-							else
-							{
-								path.LineTo (c1);
-							}
+								Point a = polygon.GetCyclingPoint (i-1);  // point précédent (secondaire)
+								Point p = polygon.GetCyclingPoint (i);    // point courant (principal)
+								Point b = polygon.GetCyclingPoint (i+1);  // point suivant (secondaire)
+								Point c = polygon.GetCyclingPoint (i+2);  // point suivant (secondaire)
+								Point d = polygon.GetCyclingPoint (i+3);  // point suivant (principal)
 
-							corner.PathCorner (path, c1, p, c2, radius);
+								Point c1 = Point.Move (p, a, radius);
+								Point c2 = Point.Move (p, b, radius);
+								Point c3 = Point.Move (d, c, radius);
+
+								if (i == 0)
+								{
+									path.MoveTo (c1);
+								}
+
+								corner.PathCorner (path, c1, p, c2, radius);
+								path.CurveTo (b, c, c3);
+							}
+						}
+						else
+						{
+							for (int i = 0; i < polygon.typedPoints.Count; i++)
+							{
+								Point a = polygon.GetCyclingPoint (i-1);  // point précédent
+								Point p = polygon.GetCyclingPoint (i);    // point courant
+								Point b = polygon.GetCyclingPoint (i+1);  // point suivant
+
+								Point c1 = Point.Move (p, a, radius);
+								Point c2 = Point.Move (p, b, radius);
+
+								if (i == 0)
+								{
+									path.MoveTo (c1);
+								}
+								else
+								{
+									path.LineTo (c1);
+								}
+
+								corner.PathCorner (path, c1, p, c2, radius);
+							}
 						}
 
 						path.Close ();
@@ -354,10 +390,10 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public Polygon Inflate(double inflate)
+		public Polygon InflateAndConcave(double inflate, double concave)
 		{
 			//	Engraisse/dégraisse un polygone.
-			if (inflate == 0)
+			if (inflate == 0 && concave == 0)
 			{
 				return this;
 			}
@@ -382,11 +418,11 @@ namespace Epsitec.Common.Document
 					ccw = !ccw;  // on inverse la méthode
 				}
 
-				return this.Inflate (inflate, ccw);
+				return this.InflateAndConcave (inflate, concave, ccw);
 			}
 		}
 
-		public static List<Polygon> Inflate(List<Polygon> polygons, double inflate)
+		public static List<Polygon> InflateAndConcave(List<Polygon> polygons, double inflate, double concave)
 		{
 			//	Engraisse/dégraisse des polygones.
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
@@ -394,7 +430,7 @@ namespace Epsitec.Common.Document
 			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
 			//	Idem dès que le dégraissement produit des parties vides.
 			//	TODO: Améliorer...
-			if (inflate == 0)
+			if (inflate == 0 && concave == 0)
 			{
 				return polygons;
 			}
@@ -423,11 +459,17 @@ namespace Epsitec.Common.Document
 						ccw = !ccw;  // on inverse la méthode
 					}
 
-					pp.Add (polygon.Inflate (inflate, ccw));
+					pp.Add (polygon.InflateAndConcave (inflate, concave, ccw));
 				}
 
 				return pp;
 			}
+		}
+
+		private Polygon InflateAndConcave(double inflate, double concave, bool ccw)
+		{
+			var pp = this.Inflate (inflate, ccw);
+			return pp.Concave (concave, ccw);
 		}
 
 		private Polygon Inflate(double inflate, bool ccw)
@@ -506,6 +548,73 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
+		}
+
+		private Polygon Concave(double concave, bool ccw, bool curve = true)
+		{
+			//	Rend un polygone concave ou convexe.
+			if (concave == 0)
+			{
+				return this;
+			}
+			else
+			{
+				var pp = new Polygon ();
+
+				for (int i = 0; i < this.typedPoints.Count; i++)
+				{
+					TypedPoint a = this.GetCyclingTypedPoint (i);    // point courant
+					TypedPoint b = this.GetCyclingTypedPoint (i+1);  // point suivant
+
+					if (a.PointType == PointType.Primary && b.PointType == PointType.Primary)
+					{
+						if (curve)
+						{
+#if true
+							var a1 = Point.Scale (a.Point, b.Point, 1.0/3.0);
+							var b1 = Point.Scale (b.Point, a.Point, 1.0/3.0);
+
+							var a2 = Point.Move (a1, b.Point, concave);
+							var b2 = Point.Move (b1, a.Point, concave);
+
+							var a3 = Polygon.RotateCW (a1, a2,  ccw);
+							var b3 = Polygon.RotateCW (b1, b2, !ccw);
+
+							pp.typedPoints.Add (a);
+							pp.typedPoints.Add (new TypedPoint (a3, PointType.Secondary));
+							pp.typedPoints.Add (new TypedPoint (b3, PointType.Secondary));
+#else
+							var p = Polygon.ConcaveSegment (a.Point, b.Point, concave, ccw);
+
+							pp.typedPoints.Add (a);
+							pp.typedPoints.Add (new TypedPoint (p, PointType.Secondary));
+							pp.typedPoints.Add (new TypedPoint (p, PointType.Secondary));
+#endif
+						}
+						else
+						{
+							var p = Polygon.ConcaveSegment (a.Point, b.Point, concave, ccw);
+
+							pp.typedPoints.Add (a);
+							pp.typedPoints.Add (new TypedPoint (p, PointType.Primary));
+						}
+					}
+					else
+					{
+						pp.typedPoints.Add (a);
+					}
+				}
+
+				return pp;
+			}
+		}
+
+		private static Point ConcaveSegment(Point a, Point b, double concave, bool ccw)
+		{
+			var c = Point.Scale (a, b, 0.5);
+			var p = Point.Move (c, b, concave);
+
+			return Polygon.RotateCW (c, p, ccw);
 		}
 
 		private static Point RotateCW(Point center, Point a, bool ccw)

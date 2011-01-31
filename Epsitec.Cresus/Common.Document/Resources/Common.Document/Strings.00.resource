@@ -1485,4 +1485,10 @@
   <data name="Action.ImageImport" id="K02">Importe un fichier image</data>
   <data name="Action.ImageShowAll" id="K12">Recadre l&amp;apos;image pour qu&amp;apos;elle soit entièrement visible</data>
   <data name="Action.ImageRotateLeft" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
+  <data name="Panel.Frame.Long.ShadowConcavity" id="K32">Concavité</data>
+  <data name="Panel.Frame.Short.ShadowConcavity" id="K42">X</data>
+  <data name="Panel.Frame.Tooltip.ShadowConcavity" id="K52">Concavité ou convexité de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Long.MarginConcavity" id="K62">Concavité</data>
+  <data name="Panel.Frame.Short.MarginConcavity" id="K72">X</data>
+  <data name="Panel.Frame.Tooltip.MarginConcavity" id="K82">Concavité ou convexité de la bordure</data>
 </bundle>
