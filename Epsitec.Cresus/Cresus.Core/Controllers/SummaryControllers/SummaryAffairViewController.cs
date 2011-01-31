@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
@@ -59,7 +59,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				IconUri		 = "Data.Document",
 				Title		 = TextFormatter.FormatText ("Document lié"),
 				CompactTitle = TextFormatter.FormatText ("Documents liés"),
-				Text		 = CollectionTemplate.DefaultEmptyText
+				Text		 = CollectionTemplate.DefaultEmptyText,
+				HideAddAndRemoveButtons = true,
 			};
 
 			data.Add (tileData);
