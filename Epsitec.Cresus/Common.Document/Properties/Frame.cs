@@ -403,21 +403,21 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if (rank == 0)  // margin width ?
 				{
-					polygon = polygon.InflateAndConcave (this.marginWidth, 0);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth, 0);
 					pos = Point.Scale (polygon.GetPoint (0), polygon.GetPoint (1), 0.5);
 				}
 
 				if (rank == 1)  // shadow inflate ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndConcave (this.marginWidth+this.shadowInflate, 0);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, 0);
 					return polygon.GetPoint (0);
 				}
 
 				if (rank == 2)  // shadow size ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndConcave (this.marginWidth+this.shadowInflate+this.shadowSize, 0);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate+this.shadowSize, 0);
 					return polygon.GetPoint (0);
 				}
 
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Document.Properties
 					var center = polygon.Center;
 					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndConcave (this.marginWidth, 0);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth, 0);
 					this.ShadowInflate = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Document.Properties
 					var center = polygon.Center;
 					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndConcave (this.marginWidth+this.shadowInflate, 0);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, 0);
 					this.ShadowSize = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
@@ -519,12 +519,12 @@ namespace Epsitec.Common.Document.Properties
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
-					polygon = polygon.InflateAndConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
+					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
 					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 
 					if (this.shadowSize > 0)
 					{
-						polygon = polygon.InflateAndConcave (this.shadowSize, 0);
+						polygon = polygon.InflateAndMakeConcave (this.shadowSize, 0);
 						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 					}
 				}
@@ -592,14 +592,14 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				var pp = Polygon.InflateAndConcave (polygons, this.marginWidth, this.marginConcavity);
+				var pp = Polygon.InflateAndMakeConcave (polygons, this.marginWidth, this.marginConcavity);
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.frameType == Properties.FrameType.OnlyShadow ||
 					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
-					var pp1 = Polygon.InflateAndConcave (polygons, this.marginWidth+this.shadowInflate, this.shadowConcavity);
+					var pp1 = Polygon.InflateAndMakeConcave (polygons, this.marginWidth+this.shadowInflate, this.shadowConcavity);
 					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
 					var shadowPath = Polygon.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 
@@ -613,8 +613,8 @@ namespace Epsitec.Common.Document.Properties
 					if (polygon != null)
 					{
 						polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-						polygon = polygon.InflateAndConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
-						polygon = polygon.InflateAndConcave (this.shadowSize, 0);
+						polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
+						polygon = polygon.InflateAndMakeConcave (this.shadowSize, 0);
 
 						shape = new Shape ();
 						shape.Path = polygon.PolygonPath;
