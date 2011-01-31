@@ -399,25 +399,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
-				bool ccw = false;
-				{
-					Point a = this.GetCyclingPoint (-1);  // point précédent
-					Point p = this.GetCyclingPoint (0);   // point courant
-					Point b = this.GetCyclingPoint (1);   // point suivant
-
-					Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);  // calcule un point intérieur/extérieur au hasard
-					if (this.IsInside (c))  // point obtenu à l'intérieur du polygone ?
-					{
-						ccw = true;  // on inverse la méthode
-					}
-				}
-
-				if (inflate < 0)  // dégraisse ?
-				{
-					ccw = !ccw;  // on inverse la méthode
-				}
-
+				bool ccw = this.GetCCW ();
 				return this.InflateAndConcave (inflate, concave, ccw);
 			}
 		}
@@ -440,30 +422,34 @@ namespace Epsitec.Common.Document
 
 				foreach (var polygon in polygons)
 				{
-					//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
-					bool ccw = false;
-					{
-						Point a = polygon.GetCyclingPoint (-1);  // point précédent
-						Point p = polygon.GetCyclingPoint (0);   // point courant
-						Point b = polygon.GetCyclingPoint (1);   // point suivant
-
-						Point c = Polygon.InflateCorner (a, p, b, inflate, ccw);  // calcule un point intérieur/extérieur au hasard
-						if (Polygon.IsInside (polygons, c))  // point obtenu à l'intérieur du polygone ?
-						{
-							ccw = true;  // on inverse la méthode
-						}
-					}
-
-					if (inflate < 0)  // dégraisse ?
-					{
-						ccw = !ccw;  // on inverse la méthode
-					}
-
+					bool ccw = Polygon.GetCCW (polygons, polygon);
 					pp.Add (polygon.InflateAndConcave (inflate, concave, ccw));
 				}
 
 				return pp;
 			}
+		}
+
+		private static bool GetCCW(List<Polygon> polygons, Polygon polygon)
+		{
+			//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
+			Point a = polygon.GetCyclingPoint (-1);  // point précédent
+			Point p = polygon.GetCyclingPoint (0);   // point courant
+			Point b = polygon.GetCyclingPoint (1);   // point suivant
+
+			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intérieur/extérieur au hasard
+			return Polygon.IsInside (polygons, c);  // point obtenu à l'intérieur du polygone ?
+		}
+
+		private bool GetCCW()
+		{
+			//	Détermine s'il faut mettre les points à l'intérieur ou à l'extérieur.
+			Point a = this.GetCyclingPoint (-1);  // point précédent
+			Point p = this.GetCyclingPoint (0);   // point courant
+			Point b = this.GetCyclingPoint (1);   // point suivant
+
+			Point c = Polygon.InflateCorner (a, p, b, 1.0, false);  // calcule un point intérieur/extérieur au hasard
+			return this.IsInside (c);  // point obtenu à l'intérieur du polygone ?
 		}
 
 		private Polygon InflateAndConcave(double inflate, double concave, bool ccw)
@@ -550,9 +536,11 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private Polygon Concave(double concave, bool ccw, bool curve = true)
+		private Polygon Concave(double concave, bool ccw)
 		{
 			//	Rend un polygone concave ou convexe.
+			//	Seuls les segments de droite sont concernés. Ils sont transformés en segments
+			//	de courbes de Bézier.
 			if (concave == 0)
 			{
 				return this;
@@ -568,36 +556,18 @@ namespace Epsitec.Common.Document
 
 					if (a.PointType == PointType.Primary && b.PointType == PointType.Primary)
 					{
-						if (curve)
-						{
-#if true
-							var a1 = Point.Scale (a.Point, b.Point, 1.0/3.0);
-							var b1 = Point.Scale (b.Point, a.Point, 1.0/3.0);
+						var a1 = Point.Scale (a.Point, b.Point, 1.0/3.0);
+						var b1 = Point.Scale (b.Point, a.Point, 1.0/3.0);
 
-							var a2 = Point.Move (a1, b.Point, concave);
-							var b2 = Point.Move (b1, a.Point, concave);
+						var a2 = Point.Move (a1, b.Point, concave);
+						var b2 = Point.Move (b1, a.Point, concave);
 
-							var a3 = Polygon.RotateCW (a1, a2,  ccw);
-							var b3 = Polygon.RotateCW (b1, b2, !ccw);
+						var a3 = Polygon.RotateCW (a1, a2,  ccw);
+						var b3 = Polygon.RotateCW (b1, b2, !ccw);
 
-							pp.typedPoints.Add (a);
-							pp.typedPoints.Add (new TypedPoint (a3, PointType.Secondary));
-							pp.typedPoints.Add (new TypedPoint (b3, PointType.Secondary));
-#else
-							var p = Polygon.ConcaveSegment (a.Point, b.Point, concave, ccw);
-
-							pp.typedPoints.Add (a);
-							pp.typedPoints.Add (new TypedPoint (p, PointType.Secondary));
-							pp.typedPoints.Add (new TypedPoint (p, PointType.Secondary));
-#endif
-						}
-						else
-						{
-							var p = Polygon.ConcaveSegment (a.Point, b.Point, concave, ccw);
-
-							pp.typedPoints.Add (a);
-							pp.typedPoints.Add (new TypedPoint (p, PointType.Primary));
-						}
+						pp.typedPoints.Add (a);
+						pp.typedPoints.Add (new TypedPoint (a3, PointType.Secondary));
+						pp.typedPoints.Add (new TypedPoint (b3, PointType.Secondary));
 					}
 					else
 					{
@@ -607,14 +577,6 @@ namespace Epsitec.Common.Document
 
 				return pp;
 			}
-		}
-
-		private static Point ConcaveSegment(Point a, Point b, double concave, bool ccw)
-		{
-			var c = Point.Scale (a, b, 0.5);
-			var p = Point.Move (c, b, concave);
-
-			return Polygon.RotateCW (c, p, ccw);
 		}
 
 		private static Point RotateCW(Point center, Point a, bool ccw)

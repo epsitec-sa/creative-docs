@@ -74,6 +74,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldBackgroundColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldBackgroundColor, Res.Strings.Panel.Frame.Tooltip.BackgroundColor);
 
+			this.separator = new Separator (this);
+
 			this.fieldMarginConcavity = new Widgets.TextFieldLabel (this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldMarginConcavity.LabelShortText = Res.Strings.Panel.Frame.Short.MarginConcavity;
 			this.fieldMarginConcavity.LabelLongText  = Res.Strings.Panel.Frame.Long.MarginConcavity;
@@ -400,6 +402,12 @@ namespace Epsitec.Common.Document.Panels
 				r.Offset (0, -25);
 				Frame.UpdateFieldAndColorGeometry (this.fieldMarginConcavity, null, r);
 
+				rect = r;
+				rect.Bottom -= 7;
+				rect.Height = 1;
+				this.separator.SetManualBounds (rect);
+				this.separator.Visibility = true;
+
 				r.Offset (0, -25-10);
 				Frame.UpdateFieldAndColorGeometry (this.fieldShadowInflate, this.fieldShadowColor, r);
 
@@ -433,16 +441,16 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.fieldFrameWidth.Visibility = false;
 				this.fieldFrameColor.Visibility = false;
-
 				this.fieldMarginWidth.Visibility = false;
 				this.fieldMarginConcavity.Visibility = false;
 				this.fieldBackgroundColor.Visibility = false;
+
+				this.separator.Visibility = false;
 
 				this.fieldShadowInflate.Visibility = false;
 				this.fieldShadowConcavity.Visibility = false;
 				this.fieldShadowSize.Visibility = false;
 				this.fieldShadowColor.Visibility = false;
-
 				this.fieldShadowOffsetX.Visibility = false;
 				this.fieldShadowOffsetY.Visibility = false;
 			}
@@ -621,10 +629,10 @@ namespace Epsitec.Common.Document.Panels
 			//																									<-------frame------> <------------shadow-------------->
 			new Sample (Res.Strings.Panel.Frame.Sample01, "FrameSample01", Properties.FrameType.None,             0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // pas de cadre
 			new Sample (Res.Strings.Panel.Frame.Sample02, "FrameSample02", Properties.FrameType.OnlyFrame,        2.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre fin sans bordure
-			new Sample (Res.Strings.Panel.Frame.Sample03, "FrameSample03", Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,   0.0, -10.0,  20.0,   0.0,   0.0),  // cadre fin sans bordure avec halo
+			new Sample (Res.Strings.Panel.Frame.Sample03, "FrameSample03", Properties.FrameType.FrameAndShadow,   2.0,   0.0,   0.0,   0.0,   0.0,  20.0,   0.0,   0.0),  // cadre fin sans bordure avec halo
 			new Sample (Res.Strings.Panel.Frame.Sample04, "FrameSample04", Properties.FrameType.OnlyFrame,       10.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0),  // cadre épais sans bordure
 			new Sample (Res.Strings.Panel.Frame.Sample05, "FrameSample05", Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0,   0.0, -10.0,  20.0,   0.0,   0.0),  // cadre avec bordure et halo
-			new Sample (Res.Strings.Panel.Frame.Sample06, "FrameSample06", Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0, -20.0,   0.0,  40.0,  20.0, -20.0),  // cadre avec bordure et ombre
+			new Sample (Res.Strings.Panel.Frame.Sample06, "FrameSample06", Properties.FrameType.FrameAndShadow,   2.0,  50.0,   0.0, -20.0, -10.0,  40.0,  20.0, -20.0),  // cadre avec bordure et ombre
 			new Sample (Res.Strings.Panel.Frame.Sample07, "FrameSample07", Properties.FrameType.OnlyShadow,       0.0,   0.0,   0.0, -20.0,   0.0,  40.0,  20.0, -20.0),  // petite ombre
 			new Sample (Res.Strings.Panel.Frame.Sample08, "FrameSample08", Properties.FrameType.OnlyShadow,       0.0,   0.0,   0.0, -40.0,   0.0,  80.0,  40.0, -40.0),  // grande ombre
 		};
@@ -640,6 +648,8 @@ namespace Epsitec.Common.Document.Panels
 		protected Widgets.TextFieldLabel	fieldMarginWidth;
 		protected Widgets.TextFieldLabel	fieldMarginConcavity;
 		protected ColorSample				fieldBackgroundColor;
+
+		protected Separator					separator;
 
 		protected Widgets.TextFieldLabel	fieldShadowInflate;
 		protected Widgets.TextFieldLabel	fieldShadowConcavity;
