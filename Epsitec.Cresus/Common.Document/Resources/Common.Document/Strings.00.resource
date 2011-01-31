@@ -1485,10 +1485,10 @@
   <data name="Action.ImageImport" id="K02">Importe un fichier image</data>
   <data name="Action.ImageShowAll" id="K12">Recadre l&amp;apos;image pour qu&amp;apos;elle soit entièrement visible</data>
   <data name="Action.ImageRotateLeft" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
-  <data name="Panel.Frame.Long.ShadowConcavity" id="K32">Concavité</data>
-  <data name="Panel.Frame.Short.ShadowConcavity" id="K42">X</data>
-  <data name="Panel.Frame.Tooltip.ShadowConcavity" id="K52">Concavité ou convexité de l&amp;apos;ombre</data>
-  <data name="Panel.Frame.Long.MarginConcavity" id="K62">Concavité</data>
-  <data name="Panel.Frame.Short.MarginConcavity" id="K72">X</data>
-  <data name="Panel.Frame.Tooltip.MarginConcavity" id="K82">Concavité ou convexité de la bordure</data>
+  <data name="Panel.Frame.Long.ShadowConvexity" id="K32">Convexité</data>
+  <data name="Panel.Frame.Short.MarginConvexity" id="K42">X</data>
+  <data name="Panel.Frame.Tooltip.ShadowConvexity" id="K52">Convexité ou concavité de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Long.MarginConvexity" id="K62">Convexité</data>
+  <data name="Panel.Frame.Short.ShadowConvexity" id="K72">X</data>
+  <data name="Panel.Frame.Tooltip.MarginConvexity" id="K82">Convexité ou concavité de la bordure</data>
 </bundle>

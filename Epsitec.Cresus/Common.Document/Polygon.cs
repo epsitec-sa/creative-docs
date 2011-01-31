@@ -233,12 +233,13 @@ namespace Epsitec.Common.Document
 							polygon.typedPoints[1].PointType == PointType.Secondary &&
 							polygon.typedPoints[2].PointType == PointType.Secondary)
 						{
-							//	Lorsqu'un polygone constitué de segments de droites a été concavifié/convexifié,
+							//	Lorsqu'un polygone constitué de segments de droites a été convexifié/concavifié,
 							//	il devient une suite de courbes de Bézier. Cette suite régulière (principal,
 							//	secondaire, secondaire, principal, secondaire, secondaire, etc.) peut être
 							//	traitée ici pour y ajouter les coins. Mais il doit absolument s'agir d'une
 							//	suite régulière. S'il y a un mélange de droites et de courbes, cela donnera
 							//	des résultats imprévisibles !
+
 							for (int i = 0; i < polygon.typedPoints.Count; i+=3)
 							{
 								Point a = polygon.GetCyclingPoint (i-1);  // point précédent (secondaire)
@@ -257,7 +258,18 @@ namespace Epsitec.Common.Document
 								}
 
 								corner.PathCorner (path, c1, p, c2, radius);
+
+#if false
+								double len = Point.Distance (p, d);
+								len = radius * ((len-radius*2) / len);
+
+								var bb = Point.Move (c2, b, len);
+								var cc = Point.Move (c3, c, len);
+
+								path.CurveTo (bb, cc, c3);
+#else
 								path.CurveTo (b, c, c3);
+#endif
 							}
 						}
 						else
@@ -397,37 +409,37 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public Polygon InflateAndMakeConcave(double inflate, double concave)
+		public Polygon InflateAndMakeConvexe(double inflate, double convexe)
 		{
-			//	Engraisse/dégraisse et rend concave/convexe un polygone.
+			//	Engraisse/dégraisse et rend convexe/concave un polygone.
 			//	inflate > 0  --> engraisse
 			//	inflate < 0  --> dégraisse
-			//	concave > 0  --> rend concave
-			//	concave < 0  --> rend convexe
-			if (inflate == 0 && concave == 0)
+			//	convexe > 0  --> rend convexe
+			//	convexe < 0  --> rend concave
+			if (inflate == 0 && convexe == 0)
 			{
 				return this;
 			}
 			else
 			{
 				bool ccw = this.GetCCW ();
-				return this.InflateAndMakeConcave (inflate, concave, ccw);
+				return this.InflateAndMakeConvexe (inflate, convexe, ccw);
 			}
 		}
 
-		public static List<Polygon> InflateAndMakeConcave(List<Polygon> polygons, double inflate, double concave)
+		public static List<Polygon> InflateAndMakeConvexe(List<Polygon> polygons, double inflate, double convexe)
 		{
-			//	Engraisse/dégraisse et rend concave/convexe des polygones.
+			//	Engraisse/dégraisse et rend convexe/concave des polygones.
 			//	inflate > 0  --> engraisse
 			//	inflate < 0  --> dégraisse
-			//	concave > 0  --> rend concave
-			//	concave < 0  --> rend convexe
+			//	convexe > 0  --> rend convexe
+			//	convexe < 0  --> rend concave
 			//	Cette procédure ne fonctionne que dans des cas simples, sans dégénérescence.
 			//	Les polygones obtenus ont toujours le même nombre de sommets.
 			//	Dès que l'engraissement produit des parties qui se touchent, le résultat est étrange.
 			//	Idem dès que le dégraissement produit des parties vides.
 			//	TODO: Améliorer...
-			if (inflate == 0 && concave == 0)
+			if (inflate == 0 && convexe == 0)
 			{
 				return polygons;
 			}
@@ -438,7 +450,7 @@ namespace Epsitec.Common.Document
 				foreach (var polygon in polygons)
 				{
 					bool ccw = Polygon.GetCCW (polygons, polygon);
-					pp.Add (polygon.InflateAndMakeConcave (inflate, concave, ccw));
+					pp.Add (polygon.InflateAndMakeConvexe (inflate, convexe, ccw));
 				}
 
 				return pp;
@@ -467,10 +479,10 @@ namespace Epsitec.Common.Document
 			return this.IsInside (c);  // point obtenu à l'intérieur du polygone ?
 		}
 
-		private Polygon InflateAndMakeConcave(double inflate, double concave, bool ccw)
+		private Polygon InflateAndMakeConvexe(double inflate, double convexe, bool ccw)
 		{
 			var pp = this.Inflate (inflate, ccw);
-			return pp.MakeConcave (concave, ccw);
+			return pp.MakeConvexe (convexe, ccw);
 		}
 
 		private Polygon Inflate(double inflate, bool ccw)
@@ -570,12 +582,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private Polygon MakeConcave(double concave, bool ccw)
+		private Polygon MakeConvexe(double convexe, bool ccw)
 		{
-			//	Rend un polygone concave (> 0) ou convexe (< 0).
+			//	Rend un polygone convexe (> 0) ou concave (< 0).
 			//	Seuls les segments de droite sont concernés. Ils sont transformés en segments
 			//	de courbes de Bézier.
-			if (concave == 0)
+			if (convexe == 0)
 			{
 				return this;
 			}
@@ -593,8 +605,8 @@ namespace Epsitec.Common.Document
 						var a1 = Point.Scale (a.Point, b.Point, 1.0/3.0);
 						var b1 = Point.Scale (b.Point, a.Point, 1.0/3.0);
 
-						var a2 = Point.Move (a1, b.Point, concave);
-						var b2 = Point.Move (b1, a.Point, concave);
+						var a2 = Point.Move (a1, b.Point, convexe);
+						var b2 = Point.Move (b1, a.Point, convexe);
 
 						var a3 = Polygon.RotateCW (a1, a2,  ccw);
 						var b3 = Polygon.RotateCW (b1, b2, !ccw);
