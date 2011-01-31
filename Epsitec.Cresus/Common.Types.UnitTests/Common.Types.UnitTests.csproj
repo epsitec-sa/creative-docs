@@ -45,6 +45,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
     <Compile Include="UnitTestINameComparer.cs" />
