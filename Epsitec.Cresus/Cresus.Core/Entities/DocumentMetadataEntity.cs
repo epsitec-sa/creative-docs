@@ -13,9 +13,21 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class DocumentMetadataEntity
 	{
-		public override FormattedText GetCompactSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText ("Document n°", this.IdA);
+		}
+
+		public override FormattedText GetCompactSummary()
+		{
+			if (this.DocumentCategory.IsNull ())
+			{
+				return TextFormatter.FormatText ("Document");
+			}
+			else
+			{
+				return TextFormatter.FormatText (this.DocumentCategory.Name);
+			}
 		}
 
 		public override EntityStatus GetEntityStatus()
