@@ -25,7 +25,19 @@ namespace Epsitec.Cresus.Core.Resolvers
 				throw new System.Exception (string.Format ("No repository found for entity of type {0}", entityType.Name));
 			}
 		}
-		
+
+		public static T Resolve<T>(CoreData data, DataContext dataContext)
+			where T : Repository
+		{
+			return System.Activator.CreateInstance (typeof (T), new object[] { data, dataContext }) as T;
+		}
+
+		public static Repository Clone(Repository repository)
+		{
+			return System.Activator.CreateInstance (repository.GetType (), new object[] { repository.Data, repository.DataContext }) as Repository;
+		}
+
+
 		private static IEnumerable<System.Type> FindRepositorySystemTypes(System.Type entityType)
 		{
 			const string baseTypeName = "Repository`1";

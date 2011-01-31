@@ -349,6 +349,12 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public T GetSpecificRepository<T>(DataContext dataContext = null)
+			where T : Repositories.Repository
+		{
+			return Resolvers.RepositoryResolver.Resolve<T> (this, dataContext);
+		}
+
 		public Repositories.Repository<T> GetRepository<T>(DataContext dataContext = null)
 			where T : AbstractEntity, new ()
 		{

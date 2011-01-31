@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Context;
 
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Core.Repositories
 			example.IsArchive    = false;
 			example.DocumentType = type;
 
-			return this.GetByExample (example);
+			return this.GetByExample (example).OrderBy (x => x.Rank);
 		}
 	}
 }

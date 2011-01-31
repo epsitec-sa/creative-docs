@@ -1,13 +1,12 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Resolvers;
 
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -26,11 +25,56 @@ namespace Epsitec.Cresus.Core.Repositories
 		}
 
 
+		internal CoreData						Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+		internal DataContext					DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+		}
+
+		internal bool							HasMapper
+		{
+			get
+			{
+				return this.mapper != null;
+			}
+		}
+
+
+		public Repository DefineMapper(System.Func<AbstractEntity, AbstractEntity> mapper)
+		{
+			if (this.mapper == null)
+			{
+				this.mapper = mapper;
+				return this;
+			}
+
+			var copy = RepositoryResolver.Clone (this) as Repository;
+			return copy.DefineMapper (mapper);
+		}
+		
 		public abstract Druid GetEntityType();
 
 
+
+		protected T Map<T>(T entity)
+			where T : AbstractEntity
+		{
+			return this.mapper (entity) as T;
+		}
+
 		private readonly DataLifetimeExpectancy lifetimeExpectancy;
-		protected readonly CoreData data;
-		protected readonly DataContext dataContext;
+		protected readonly CoreData				data;
+		protected readonly DataContext			dataContext;
+		private System.Func<AbstractEntity, AbstractEntity> mapper;
 	}
 }
