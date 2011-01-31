@@ -453,6 +453,33 @@ namespace Epsitec.Cresus.Core.Business
 			return this.dataContext.GetLocalEntity (entity);
 		}
 
+		/// <summary>
+		/// Gets the specified repository. The entities returned by the repository will
+		/// automatically be mapped to the current context.
+		/// </summary>
+		/// <typeparam name="T">The repository type.</typeparam>
+		/// <returns>The repository.</returns>
+		public T GetSpecificRepository<T>()
+			where T : Repositories.Repository
+		{
+			var repository = this.Data.GetSpecificRepository<T> ();
+			return repository.DefineMapper (x => this.GetLocalEntity (x)) as T;
+		}
+
+		/// <summary>
+		/// Gets the repository for the specified entity type. The entities returned by the
+		/// repository will automatically be mapped to the current context.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <returns>The repository.</returns>
+		public Repositories.Repository<T> GetRepository<T>()
+			where T : AbstractEntity, new ()
+		{
+			var repository = this.Data.GetRepository<T> ();
+			return repository.DefineMapper (x => this.GetLocalEntity (x)) as Repositories.Repository<T>;
+		}
+		
+
 
 		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
 		{

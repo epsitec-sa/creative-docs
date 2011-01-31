@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Repositories
 			: base (data, context, lifetimeExpectancy)
 		{
 		}
+
 
 		public override Common.Support.Druid GetEntityType()
 		{
@@ -47,12 +48,26 @@ namespace Epsitec.Cresus.Core.Repositories
 
 		public IEnumerable<T> GetByExample(T example)
 		{
-			return this.dataContext.GetByExample<T> (example);
+			if (this.HasMapper)
+			{
+				return this.dataContext.GetByExample<T> (example).Select (x => this.Map (x));
+			}
+			else
+			{
+				return this.dataContext.GetByExample<T> (example);
+			}
 		}
 
 		public IEnumerable<T> GetByRequest(Request request)
 		{
-			return this.dataContext.GetByRequest<T> (request);
+			if (this.HasMapper)
+			{
+				return this.dataContext.GetByRequest<T> (request).Select (x => this.Map (x));
+			}
+			else
+			{
+				return this.dataContext.GetByRequest<T> (request);
+			}
 		}
 
 		public T CreateExample()

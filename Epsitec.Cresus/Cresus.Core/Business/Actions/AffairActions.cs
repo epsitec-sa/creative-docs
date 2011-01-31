@@ -17,16 +17,15 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.Transition.BusinessContext;
-			var categoryRepo    = businessContext.Data.GetRepository<DocumentCategoryEntity> () as DocumentCategoryRepository;
+			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 
 			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-			var categorySalesQuote = categoryRepo.Find (DocumentType.SalesQuote).OrderBy (x => x.Rank).FirstOrDefault ();
-
 			var businessDocument = businessContext.CreateEntity<BusinessDocumentEntity> ();
 
-			documentMetadata.DocumentCategory = businessContext.GetLocalEntity (categorySalesQuote);
+			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
 			documentMetadata.BusinessDocument = businessDocument;
+			
 			documentMetadata.Workflow = WorkflowFactory.CreateDefaultWorkflow<DocumentMetadataEntity> (businessContext, "Document/SalesQuote");
 
 			currentAffair.Documents.Add (documentMetadata);
