@@ -6899,6 +6899,14 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544340));
 							}
 						}
+						//	designer:str/20K62
+						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544390));
+							}
+						}
 						//	designer:str/20KL
 						public static global::Epsitec.Common.Types.FormattedText MarginWidth
 						{
@@ -6913,6 +6921,14 @@ namespace Epsitec.Common.Document
 							get
 							{
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544351));
+							}
+						}
+						//	designer:str/20K32
+						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544387));
 							}
 						}
 						//	designer:str/20KB1
@@ -6975,6 +6991,14 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544337));
 							}
 						}
+						//	designer:str/20K72
+						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391));
+							}
+						}
 						//	designer:str/20KI
 						public static global::Epsitec.Common.Types.FormattedText MarginWidth
 						{
@@ -6989,6 +7013,14 @@ namespace Epsitec.Common.Document
 							get
 							{
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544348));
+							}
+						}
+						//	designer:str/20K42
+						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
 							}
 						}
 						//	designer:str/20KC1
@@ -7051,6 +7083,14 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343));
 							}
 						}
+						//	designer:str/20K82
+						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544392));
+							}
+						}
 						//	designer:str/20KO
 						public static global::Epsitec.Common.Types.FormattedText MarginWidth
 						{
@@ -7065,6 +7105,14 @@ namespace Epsitec.Common.Document
 							get
 							{
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544349));
+							}
+						}
+						//	designer:str/20K52
+						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
 							}
 						}
 						//	designer:str/20KD1

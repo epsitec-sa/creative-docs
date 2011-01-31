@@ -1616,6 +1616,11 @@ namespace Epsitec.Common.Document.Objects
 			//	Une propriété flottante n'est référencée par personne et elle n'est pas
 			//	dans la liste des propriétés du document. ObjectPoly crée un ObjectLine
 			//	avec des propriétés flottantes, pendant la création.
+			if (this.document.Type == DocumentType.Pictogram && type == Properties.Type.Frame)
+			{
+				return;
+			}
+
 			if ( model != null )
 			{
 				Properties.Abstract original = model.Property(type);
