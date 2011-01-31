@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.Exceptions;
+using Epsitec.Cresus.Database.Logging;
 using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace Epsitec.Cresus.Database
 		
 		public DbInfrastructure()
 		{
+			this.queryLog = null;
+
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 
@@ -138,6 +141,14 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.serviceManager;
+			}
+		}
+
+		public AbstractLog QueryLog
+		{
+			get
+			{
+				return this.queryLog;
 			}
 		}
 		
@@ -1925,15 +1936,39 @@ namespace Epsitec.Cresus.Database
 			{
 				return 0;
 			}
-			
+
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
-				int result;
-				this.sqlEngine.Execute (command, DbCommandType.Silent, count, out result);
-				return result;
+				int data;
+
+				if (this.queryLog == null)
+				{
+					data = this.ExecuteSilent (count, command);
+				}
+				else
+				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					System.DateTime startTime = System.DateTime.Now;
+					
+					watch.Start ();
+					data = this.ExecuteSilent (count, command);
+					watch.Stop ();
+
+					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+				}
+
+				return data;
 			}
 		}
+		
+		private int ExecuteSilent(int count, System.Data.IDbCommand command)
+		{
+			int result;
 
+			this.sqlEngine.Execute (command, DbCommandType.Silent, count, out result);
+
+			return result;
+		}
 
 		/// <summary>
 		/// Executes the command attached to the transaction.
@@ -1966,11 +2001,34 @@ namespace Epsitec.Cresus.Database
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
-				
-				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
-				
+
+				if (this.queryLog == null)
+				{
+					data = this.ExecuteScalar (count, command);
+				}
+				else
+				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					System.DateTime startTime = System.DateTime.Now;
+
+					watch.Start ();
+					data = this.ExecuteScalar (count, command);
+					watch.Stop ();
+
+					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+				}
+
 				return data;
 			}
+		}
+
+		private object ExecuteScalar(int count, System.Data.IDbCommand command)
+		{
+			object data;
+
+			this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
+
+			return data;
 		}
 
 		/// <summary>
@@ -2004,11 +2062,34 @@ namespace Epsitec.Cresus.Database
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
-				
-				this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
-				
+
+				if (this.queryLog == null)
+				{
+					data = ExecuteNonQuery (count, command);
+				}
+				else
+				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					System.DateTime startTime = System.DateTime.Now;
+
+					watch.Start ();
+					data = ExecuteNonQuery (count, command);
+					watch.Stop ();
+
+					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+				}
+
 				return data;
 			}
+		}
+		
+		private object ExecuteNonQuery(int count, System.Data.IDbCommand command)
+		{
+			object data;
+
+			this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
+
+			return data;
 		}
 
 		/// <summary>
@@ -2043,10 +2124,33 @@ namespace Epsitec.Cresus.Database
 			{
 				IList<object> data;
 
-				this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
+				if (this.queryLog == null)
+				{
+					data = this.ExecuteOutputParameters (count, command);
+				}
+				else
+				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					System.DateTime startTime = System.DateTime.Now;
+
+					watch.Start ();
+					data = this.ExecuteOutputParameters (count, command);
+					watch.Stop ();
+
+					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+				}
 
 				return data;
 			}
+		}
+		
+		private IList<object> ExecuteOutputParameters(int count, System.Data.IDbCommand command)
+		{
+			IList<object> data;
+
+			this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
+
+			return data;
 		}
 
 		/// <summary>
@@ -2080,11 +2184,34 @@ namespace Epsitec.Cresus.Database
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				System.Data.DataSet data;
-				
-				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
-				
+
+				if (this.queryLog == null)
+				{
+					data = this.ExecuteRetData (count, command);
+				}
+				else
+				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					System.DateTime startTime = System.DateTime.Now;
+
+					watch.Start ();
+					data = this.ExecuteRetData (count, command);
+					watch.Stop ();
+
+					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+				}
+
 				return data;
 			}
+		}
+		
+		private System.Data.DataSet ExecuteRetData(int count, System.Data.IDbCommand command)
+		{
+			System.Data.DataSet data;
+
+			this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
+
+			return data;
 		}
 
 		/// <summary>
@@ -2135,8 +2262,7 @@ namespace Epsitec.Cresus.Database
 			
 			return dataTable;
 		}
-
-
+		
 		public System.DateTime GetDatabaseTime()
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
@@ -2150,7 +2276,17 @@ namespace Epsitec.Cresus.Database
 				return (System.DateTime) databaseTime;
 			}
 		}
+		
+		public void DisableLogging()
+		{
+			this.queryLog = null;
+		}
 
+		public void EnableLogging()
+		{
+			this.queryLog = new MemoryLog (500);
+		}
+		
 		/// <summary>
 		/// Finds the key for the specified table.
 		/// </summary>
@@ -3358,6 +3494,8 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 		private DbServiceManager				serviceManager;
+
+		private AbstractLog						queryLog;
 
 		private DbTableList						internalTables = new DbTableList ();
 		private DbTypeDefList					internalTypes = new DbTypeDefList ();
