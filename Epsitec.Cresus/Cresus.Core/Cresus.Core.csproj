@@ -94,6 +94,7 @@
     <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\Actions\AffairActions.cs" />
+    <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
     <Compile Include="Business\ActionVerb.cs" />
     <Compile Include="Business\BusinessContext.cs" />

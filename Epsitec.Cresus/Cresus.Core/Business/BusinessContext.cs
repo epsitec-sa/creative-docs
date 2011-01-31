@@ -341,26 +341,40 @@ namespace Epsitec.Cresus.Core.Business
 		public T GetMasterEntity<T>()
 			where T : AbstractEntity, new ()
 		{
-			var entities = this.DataContext.GetEntitiesOfType<T> ();
-			T   master   = this.masterEntities.OfType<T> ().LastOrDefault ();
+			//	Either use the most recent entity on which the business logic is currently
+			//	operating, or the freshest entity defined as a master entity.
+			
+			T master;
+
+			if (Logic.Current == null)
+			{
+				master = null;
+			}
+			else
+			{
+				master = Logic.Current.Find<T> ().FirstOrDefault ();
+			}
 
 			if (master == null)
 			{
-				master = Logic.Current.Find<T> ().FirstOrDefault ();
+				master = this.masterEntities.OfType<T> ().LastOrDefault ();
+			}
 
-				if (master == null)
+			if (master == null)
+			{
+				//	There is no defined master entity in the current context; try to derive it
+				//	from the active entities.
+				
+				var entities = this.DataContext.GetEntitiesOfType<T> ();
+				
+				foreach (var entity in entities)
 				{
-					//	There is no defined master entity in the current context; try to derive it
-					//	from the active entities.
-					foreach (var entity in entities)
+					if (master != null)
 					{
-						if (master != null)
-						{
-							throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
-						}
-
-						master = entity;
+						throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
 					}
+
+					master = entity;
 				}
 			}
 
