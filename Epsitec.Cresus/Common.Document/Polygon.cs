@@ -229,9 +229,16 @@ namespace Epsitec.Common.Document
 
 						if (polygon.typedPoints.Count >= 3 &&
 							polygon.typedPoints.Count%3 == 0 &&
+							polygon.typedPoints[0].PointType == PointType.Primary &&
 							polygon.typedPoints[1].PointType == PointType.Secondary &&
 							polygon.typedPoints[2].PointType == PointType.Secondary)
 						{
+							//	Lorsqu'un polygone constitué de segments de droites a été concavifié/convexifié,
+							//	il devient une suite de courbes de Bézier. Cette suite régulière (principal,
+							//	secondaire, secondaire, principal, secondaire, secondaire, etc.) peut être
+							//	traitée ici pour y ajouter les coins. Mais il doit absolument s'agir d'une
+							//	suite régulière. S'il y a un mélange de droites et de courbes, cela donnera
+							//	des résultats imprévisibles !
 							for (int i = 0; i < polygon.typedPoints.Count; i+=3)
 							{
 								Point a = polygon.GetCyclingPoint (i-1);  // point précédent (secondaire)
@@ -494,6 +501,25 @@ namespace Epsitec.Common.Document
 		private static Point InflateCorner(Point a, Point p, Point b, double inflate, bool ccw)
 		{
 			//	Engraisse/dégraisse un coin 'a-p-b'.
+			//
+			//	L'angle formé par les segments p-a et p-b peut être quelconque (aïgu ou obtu)
+			//	Le segment aa-a est perpendiculaire à p-a
+			//	Le segment pa-p est perpendiculaire à p-a
+			//	Le segment bb-b est perpendiculaire à p-b
+			//	Le segment pb-p est perpendiculaire à p-b
+			//	La distance a-aa, p-pa, p-pb et b-bb vaut inflate
+			//	i est l'insersection des segments pa-aa et pb-bb
+			//	
+			//         pb
+			//	  i o--o-------o bb
+			//	    |  |       |
+			//	 pa o--o-------o b
+			//	    |  | p
+			//	    |  |
+			//	    |  |
+			//	 aa o--o a
+			//	  ->|--|<-- inflate
+
 			if (inflate == 0)
 			{
 				return p;
@@ -511,7 +537,7 @@ namespace Epsitec.Common.Document
 					var pb = Point.Move (p, Polygon.RotateCW (p, b,  ccw), inflate);
 					var bb = Point.Move (b, Polygon.RotateCW (b, p, !ccw), inflate);
 
-					if (Geometry.Compare (pa, pb))
+					if (Geometry.Compare (pa, pb))  // droite p-a parallèle à p-b ?
 					{
 						return pa;
 					}
