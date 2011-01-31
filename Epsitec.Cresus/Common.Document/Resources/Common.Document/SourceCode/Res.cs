@@ -6900,7 +6900,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20K62
-						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						public static global::Epsitec.Common.Types.FormattedText MarginConvexity
 						{
 							get
 							{
@@ -6924,7 +6924,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20K32
-						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						public static global::Epsitec.Common.Types.FormattedText ShadowConvexity
 						{
 							get
 							{
@@ -6991,12 +6991,12 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544337));
 							}
 						}
-						//	designer:str/20K72
-						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						//	designer:str/20K42
+						public static global::Epsitec.Common.Types.FormattedText MarginConvexity
 						{
 							get
 							{
-								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391));
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
 							}
 						}
 						//	designer:str/20KI
@@ -7015,12 +7015,12 @@ namespace Epsitec.Common.Document
 								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544348));
 							}
 						}
-						//	designer:str/20K42
-						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						//	designer:str/20K72
+						public static global::Epsitec.Common.Types.FormattedText ShadowConvexity
 						{
 							get
 							{
-								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
+								return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391));
 							}
 						}
 						//	designer:str/20KC1
@@ -7084,7 +7084,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20K82
-						public static global::Epsitec.Common.Types.FormattedText MarginConcavity
+						public static global::Epsitec.Common.Types.FormattedText MarginConvexity
 						{
 							get
 							{
@@ -7108,7 +7108,7 @@ namespace Epsitec.Common.Document
 							}
 						}
 						//	designer:str/20K52
-						public static global::Epsitec.Common.Types.FormattedText ShadowConcavity
+						public static global::Epsitec.Common.Types.FormattedText ShadowConvexity
 						{
 							get
 							{

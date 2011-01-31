@@ -35,11 +35,11 @@ namespace Epsitec.Common.Document.Properties
 			this.frameColor = RichColor.FromBrightness (0);  // noir
 
 			this.marginWidth = 0.0;
-			this.marginConcavity = 0.0;
+			this.marginConvexity = 0.0;
 			this.backgroundColor = RichColor.FromBrightness (1);  // blanc
 
 			this.shadowInflate = 0.0;
-			this.shadowConcavity = 0.0;
+			this.shadowConvexity = 0.0;
 			this.shadowSize = 0.0;
 			this.shadowColor = RichColor.FromAGray (60.0/255.0, 0);  // noir très transparent (alpha = 60)
 			this.shadowOffsetX = 0.0;
@@ -121,19 +121,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public double MarginConcavity
+		public double MarginConvexity
 		{
 			get
 			{
-				return this.marginConcavity;
+				return this.marginConvexity;
 			}
 
 			set
 			{
-				if (this.marginConcavity != value)
+				if (this.marginConvexity != value)
 				{
 					this.NotifyBefore ();
-					this.marginConcavity = value;
+					this.marginConvexity = value;
 					this.NotifyAfter ();
 				}
 			}
@@ -175,19 +175,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public double ShadowConcavity
+		public double ShadowConvexity
 		{
 			get
 			{
-				return this.shadowConcavity;
+				return this.shadowConvexity;
 			}
 
 			set
 			{
-				if (this.shadowConcavity != value)
+				if (this.shadowConvexity != value)
 				{
 					this.NotifyBefore ();
-					this.shadowConcavity = value;
+					this.shadowConvexity = value;
 					this.NotifyAfter ();
 				}
 			}
@@ -403,21 +403,21 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if (rank == 0)  // margin width ?
 				{
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth, 0);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth, 0);
 					pos = Point.Scale (polygon.GetPoint (0), polygon.GetPoint (1), 0.5);
 				}
 
 				if (rank == 1)  // shadow inflate ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, 0);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth+this.shadowInflate, 0);
 					return polygon.GetPoint (0);
 				}
 
 				if (rank == 2)  // shadow size ?
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate+this.shadowSize, 0);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth+this.shadowInflate+this.shadowSize, 0);
 					return polygon.GetPoint (0);
 				}
 
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Document.Properties
 					var center = polygon.Center;
 					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth, 0);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth, 0);
 					this.ShadowInflate = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Document.Properties
 					var center = polygon.Center;
 					double fx = (polygon.GetPoint (0).X < center.X) ? -1 : 1;
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, 0);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth+this.shadowInflate, 0);
 					this.ShadowSize = (pos.X-polygon.GetPoint (0).X)*fx;
 				}
 
@@ -494,7 +494,8 @@ namespace Epsitec.Common.Document.Properties
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
-				if (this.shadowOffsetX != 0 && this.shadowOffsetY != 0)
+				if ((this.frameType == Properties.FrameType.FrameAndShadow || this.frameType == Properties.FrameType.OnlyShadow) &&
+					this.shadowOffsetX != 0 && this.shadowOffsetY != 0)
 				{
 					var center = polygon.Center;
 					var pa = new Point (center.X+this.shadowOffsetX, center.Y+this.shadowOffsetY);
@@ -519,12 +520,12 @@ namespace Epsitec.Common.Document.Properties
 				{
 					polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
 
-					polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
+					polygon = polygon.InflateAndMakeConvexe (this.marginWidth+this.shadowInflate, this.shadowConvexity);
 					Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 
 					if (this.shadowSize > 0)
 					{
-						polygon = polygon.InflateAndMakeConcave (this.shadowSize, 0);
+						polygon = polygon.InflateAndMakeConvexe (this.shadowSize, 0);
 						Drawer.DrawPathDash (graphics, drawingContext, polygon.PolygonPath, 1.0, 4.0, 6.0, color);
 					}
 				}
@@ -542,10 +543,10 @@ namespace Epsitec.Common.Document.Properties
 			p.frameWidth = this.frameWidth;
 			p.frameColor = this.frameColor;
 			p.marginWidth = this.marginWidth;
-			p.marginConcavity = this.marginConcavity;
+			p.marginConvexity = this.marginConvexity;
 			p.backgroundColor = this.backgroundColor;
 			p.shadowInflate = this.shadowInflate;
-			p.shadowConcavity = this.shadowConcavity;
+			p.shadowConvexity = this.shadowConvexity;
 			p.shadowSize = this.shadowSize;
 			p.shadowOffsetX = this.shadowOffsetX;
 			p.shadowOffsetY = this.shadowOffsetY;
@@ -563,10 +564,10 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.frameWidth != this.frameWidth)  return false;
 			if ( p.frameColor != this.frameColor)  return false;
 			if ( p.marginWidth != this.marginWidth )  return false;
-			if ( p.marginConcavity != this.marginConcavity )  return false;
+			if ( p.marginConvexity != this.marginConvexity )  return false;
 			if ( p.backgroundColor != this.backgroundColor )  return false;
 			if ( p.shadowInflate != this.shadowInflate )  return false;
-			if ( p.shadowConcavity != this.shadowConcavity )  return false;
+			if ( p.shadowConvexity != this.shadowConvexity )  return false;
 			if ( p.shadowSize != this.shadowSize )  return false;
 			if ( p.shadowOffsetX != this.shadowOffsetX )  return false;
 			if ( p.shadowOffsetY != this.shadowOffsetY )  return false;
@@ -592,14 +593,14 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				var pp = Polygon.InflateAndMakeConcave (polygons, this.marginWidth, this.marginConcavity);
+				var pp = Polygon.InflateAndMakeConvexe (polygons, this.marginWidth, this.marginConvexity);
 				var path = Polygon.GetPolygonPathCorner (drawingContext, pp, corner, false);
 
 				//	Ajoute les éléments qui permettront de dessiner le cadre sous l'image.
 				if (this.frameType == Properties.FrameType.OnlyShadow ||
 					this.frameType == Properties.FrameType.FrameAndShadow)
 				{
-					var pp1 = Polygon.InflateAndMakeConcave (polygons, this.marginWidth+this.shadowInflate, this.shadowConcavity);
+					var pp1 = Polygon.InflateAndMakeConvexe (polygons, this.marginWidth+this.shadowInflate, this.shadowConvexity);
 					var pp2 = Polygon.Move (pp1, this.shadowOffsetX, this.shadowOffsetY);
 					var shadowPath = Polygon.GetPolygonPathCorner (drawingContext, pp2, corner, false);
 
@@ -613,8 +614,8 @@ namespace Epsitec.Common.Document.Properties
 					if (polygon != null)
 					{
 						polygon = polygon.Move (this.shadowOffsetX, this.shadowOffsetY);
-						polygon = polygon.InflateAndMakeConcave (this.marginWidth+this.shadowInflate, this.shadowConcavity);
-						polygon = polygon.InflateAndMakeConcave (this.shadowSize, 0);
+						polygon = polygon.InflateAndMakeConvexe (this.marginWidth+this.shadowInflate, this.shadowConvexity);
+						polygon = polygon.InflateAndMakeConvexe (this.shadowSize, 0);
 
 						shape = new Shape ();
 						shape.Path = polygon.PolygonPath;
@@ -711,11 +712,11 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue ("FrameColor", this.frameColor);
 
 			info.AddValue ("MarginWidth", this.marginWidth, typeof (double));
-			info.AddValue ("MarginConcavity", this.marginConcavity, typeof (double));
+			info.AddValue ("MarginConvexity", this.marginConvexity, typeof (double));
 			info.AddValue ("BackgroundColor", this.backgroundColor);
 
 			info.AddValue ("ShadowInflate", this.shadowInflate, typeof (double));
-			info.AddValue ("ShadowConcavity", this.shadowConcavity, typeof (double));
+			info.AddValue ("ShadowConvexity", this.shadowConvexity, typeof (double));
 			info.AddValue ("ShadowSize", this.shadowSize, typeof (double));
 			info.AddValue ("ShadowColor", this.shadowColor);
 			info.AddValue ("ShadowOffsetX", this.shadowOffsetX, typeof (double));
@@ -728,21 +729,27 @@ namespace Epsitec.Common.Document.Properties
 			//	Constructeur qui désérialise la propriété.
 			if (this.document.IsRevisionGreaterOrEqual (3, 0, 4))
 			{
-				this.frameType = (FrameType) info.GetValue ("FrameType", typeof (FrameType));
+				try
+				{
+					this.frameType = (FrameType) info.GetValue ("FrameType", typeof (FrameType));
 
-				this.frameWidth = (double) info.GetValue ("FrameWidth", typeof (double));
-				this.frameColor = (RichColor) info.GetValue ("FrameColor", typeof (RichColor));
+					this.frameWidth = (double) info.GetValue ("FrameWidth", typeof (double));
+					this.frameColor = (RichColor) info.GetValue ("FrameColor", typeof (RichColor));
 
-				this.marginWidth = (double) info.GetValue ("MarginWidth", typeof (double));
-				this.marginConcavity = (double) info.GetValue ("MarginConcavity", typeof (double));
-				this.backgroundColor = (RichColor) info.GetValue ("BackgroundColor", typeof (RichColor));
+					this.marginWidth = (double) info.GetValue ("MarginWidth", typeof (double));
+					this.marginConvexity = (double) info.GetValue ("MarginConvexity", typeof (double));
+					this.backgroundColor = (RichColor) info.GetValue ("BackgroundColor", typeof (RichColor));
 
-				this.shadowInflate = (double) info.GetValue ("ShadowInflate", typeof (double));
-				this.shadowConcavity = (double) info.GetValue ("ShadowConcavity", typeof (double));
-				this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
-				this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
-				this.shadowOffsetX = (double) info.GetValue ("ShadowOffsetX", typeof (double));
-				this.shadowOffsetY = (double) info.GetValue ("ShadowOffsetY", typeof (double));
+					this.shadowInflate = (double) info.GetValue ("ShadowInflate", typeof (double));
+					this.shadowConvexity = (double) info.GetValue ("ShadowConvexity", typeof (double));
+					this.shadowSize = (double) info.GetValue ("ShadowSize", typeof (double));
+					this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
+					this.shadowOffsetX = (double) info.GetValue ("ShadowOffsetX", typeof (double));
+					this.shadowOffsetY = (double) info.GetValue ("ShadowOffsetY", typeof (double));
+				}
+				catch
+				{
+				}
 			}
 		}
 		#endregion
@@ -754,11 +761,11 @@ namespace Epsitec.Common.Document.Properties
 		protected RichColor				frameColor;
 
 		protected double				marginWidth;
-		protected double				marginConcavity;
+		protected double				marginConvexity;
 		protected RichColor				backgroundColor;
 
 		protected double				shadowInflate;
-		protected double				shadowConcavity;
+		protected double				shadowConvexity;
 		protected double				shadowSize;
 		protected RichColor				shadowColor;
 		protected double				shadowOffsetX;
