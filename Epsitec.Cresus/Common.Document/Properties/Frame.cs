@@ -726,7 +726,7 @@ namespace Epsitec.Common.Document.Properties
 			: base (info, context)
 		{
 			//	Constructeur qui désérialise la propriété.
-			try
+			if (this.document.IsRevisionGreaterOrEqual (3, 0, 4))
 			{
 				this.frameType = (FrameType) info.GetValue ("FrameType", typeof (FrameType));
 
@@ -743,9 +743,6 @@ namespace Epsitec.Common.Document.Properties
 				this.shadowColor = (RichColor) info.GetValue ("ShadowColor", typeof (RichColor));
 				this.shadowOffsetX = (double) info.GetValue ("ShadowOffsetX", typeof (double));
 				this.shadowOffsetY = (double) info.GetValue ("ShadowOffsetY", typeof (double));
-			}
-			catch
-			{
 			}
 		}
 		#endregion
