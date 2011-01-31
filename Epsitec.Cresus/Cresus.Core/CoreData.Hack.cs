@@ -881,6 +881,8 @@ namespace Epsitec.Cresus.Core
 			cat.Name = TextFormatter.FormatText ("Offre");
 			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client.");
 			cat.DocumentType = DocumentType.SalesQuote;
+			cat.DocumentSource        = DocumentSource.Generated;
+			cat.DocumentFlowDirection = DocumentFlowDirection.Outgoing;
 			
 			yield return cat;
 
@@ -890,6 +892,8 @@ namespace Epsitec.Cresus.Core
 			cat.Name = TextFormatter.FormatText ("Bon pour commande");
 			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client. Le client retourne en principe le bon pour commande signé, indiquant ainsi qu'il passe la commande de manière ferme.");
 			cat.DocumentType = DocumentType.OrderBooking;
+			cat.DocumentSource        = DocumentSource.Generated;
+			cat.DocumentFlowDirection = DocumentFlowDirection.Outgoing;
 
 			yield return cat;
 
@@ -899,6 +903,8 @@ namespace Epsitec.Cresus.Core
 			cat.Name = TextFormatter.FormatText ("Confirmation de commande");
 			cat.Description = TextFormatter.FormatText ("Ce document commercial est destiné au client. La confirmation de commande indique au client que sa commande a été acceptée.");
 			cat.DocumentType = DocumentType.OrderConfirmation;
+			cat.DocumentSource        = DocumentSource.Generated;
+			cat.DocumentFlowDirection = DocumentFlowDirection.Outgoing;
 
 			yield return cat;
 		}
@@ -915,8 +921,6 @@ namespace Epsitec.Cresus.Core
 
 			metadocA.IdA = "1000-00";
 			metadocA.BusinessDocument = invoiceA;
-//-			metadocA.DocumentCategory = DocumentType.Invoice;
-			metadocA.DocumentSource = DocumentSource.Generated;
 			metadocA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
 			metadocA.Description = "Facture de test #1000";
 

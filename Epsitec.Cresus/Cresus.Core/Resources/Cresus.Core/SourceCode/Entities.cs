@@ -2693,50 +2693,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>DocumentSource</c> field.
-		///	designer:fld/L0AO2/L0AP3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AP3]")]
-		public global::Epsitec.Cresus.Core.Business.DocumentSource DocumentSource
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[L0AP3]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.DocumentSource oldValue = this.DocumentSource;
-				if (oldValue != value)
-				{
-					this.OnDocumentSourceChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[L0AP3]", oldValue, value);
-					this.OnDocumentSourceChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DocumentFlowDirection</c> field.
-		///	designer:fld/L0AO2/L0A9I
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A9I]")]
-		public global::Epsitec.Cresus.Core.Business.DocumentFlowDirection DocumentFlowDirection
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0A9I]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue = this.DocumentFlowDirection;
-				if (oldValue != value)
-				{
-					this.OnDocumentFlowDirectionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0A9I]", oldValue, value);
-					this.OnDocumentFlowDirectionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>DocumentTitle</c> field.
 		///	designer:fld/L0AO2/L0A6E
 		///	</summary>
@@ -2815,10 +2771,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
-		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
-		partial void OnDocumentFlowDirectionChanging(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
-		partial void OnDocumentFlowDirectionChanged(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
 		partial void OnDocumentTitleChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDocumentTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDocumentCategoryChanging(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
@@ -10019,9 +9971,57 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DocumentFlowDirection</c> field.
+		///	designer:fld/L0AFH/L0AOO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AOO]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentFlowDirection DocumentFlowDirection
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0AOO]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue = this.DocumentFlowDirection;
+				if (oldValue != value)
+				{
+					this.OnDocumentFlowDirectionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0AOO]", oldValue, value);
+					this.OnDocumentFlowDirectionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DocumentSource</c> field.
+		///	designer:fld/L0AFH/L0APO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APO]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentSource DocumentSource
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[L0APO]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentSource oldValue = this.DocumentSource;
+				if (oldValue != value)
+				{
+					this.OnDocumentSourceChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[L0APO]", oldValue, value);
+					this.OnDocumentSourceChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDocumentTypeChanging(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
 		partial void OnDocumentTypeChanged(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
+		partial void OnDocumentFlowDirectionChanging(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
+		partial void OnDocumentFlowDirectionChanged(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
+		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
+		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
