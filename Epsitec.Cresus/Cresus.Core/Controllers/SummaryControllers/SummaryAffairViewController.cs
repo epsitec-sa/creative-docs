@@ -54,13 +54,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var tileData = new TileDataItem
 			{
-				AutoGroup    = false,
-				Name		 = "DocMetadata",
-				IconUri		 = "Data.Document",
-				Title		 = TextFormatter.FormatText ("Document lié"),
-				CompactTitle = TextFormatter.FormatText ("Documents liés"),
-				Text		 = CollectionTemplate.DefaultEmptyText,
-				HideAddAndRemoveButtons = true,
+				AutoGroup        = false,
+				Name		     = "DocMetadata",
+				IconUri		     = "Data.Document",
+				Title		     = TextFormatter.FormatText ("Document lié"),
+				CompactTitle     = TextFormatter.FormatText ("Documents liés"),
+				Text		     = CollectionTemplate.DefaultEmptyText,
+				HideAddButton    = true,
+				HideRemoveButton = true,
 			};
 
 			data.Add (tileData);
