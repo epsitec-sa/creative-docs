@@ -14,13 +14,17 @@ namespace Epsitec.Common.Designer.ModuleSupport
 	{
 		public static CodeFormatter GenerateResFile(ResourceManager resourceManager, ResourceModuleInfo moduleInfo)
 		{
-			return ResGenerator.GenerateResFile (resourceManager, moduleInfo.SourceNamespace, moduleInfo.FullId.Name);
+			string sourceNamespace = moduleInfo.SourceNamespace;
+			string moduleName = moduleInfo.FullId.Name;
+			ResourceTextMode textMode = moduleInfo.TextMode;
+
+			return ResGenerator.GenerateResFile (resourceManager, sourceNamespace, moduleName, textMode);
 		}
 		
 		/// <summary>
 		/// Generates the <c>"Res.cs"</c> file for a given module.
 		/// </summary>
-		public static CodeFormatter GenerateResFile(ResourceManager manager, string defaultNamespace, string moduleName)
+		public static CodeFormatter GenerateResFile(ResourceManager manager, string defaultNamespace, string moduleName, ResourceTextMode textMode)
 		{
 			CodeFormatter formatter = new CodeFormatter ();
 			ResGenerator.commandsGenerated = false;
@@ -58,7 +62,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				switch (bundleType)
 				{
 					case Resources.StringTypeName:
-						ResGenerator.GenerateStrings (manager, formatter, defaultNamespace, bundleId, bundle);
+						ResGenerator.GenerateStrings (manager, formatter, defaultNamespace, textMode, bundleId, bundle);
 						addLine = true;
 						break;
 					
@@ -817,7 +821,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 #endif
 		}
 
-		static void GenerateStrings(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle)
+		static void GenerateStrings(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, ResourceTextMode textMode, string bundleId, ResourceBundle bundle)
 		{
 			formatter.WriteCodeLine ();
 
@@ -921,9 +925,25 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				}
 				
 				formatter.WriteCodeLine ("//\tdesigner:str/", moduleDruid.ToString ().Trim ('[', ']'));
-				formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat ("global::Epsitec.Common.Types.FormattedText ", delta));
-				formatter.WriteBeginGetter (CodeAttributes.Default);
-				formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", bundleId, ".GetText (", id.ToString (), ");");
+
+				switch (textMode)
+				{
+					case ResourceTextMode.String:
+						formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat ("global::System.String ", delta));
+						formatter.WriteBeginGetter (CodeAttributes.Default);
+						formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", bundleId, ".GetString (", id.ToString (), ");");
+						break;
+
+					case ResourceTextMode.FormattedText:
+						formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat ("global::Epsitec.Common.Types.FormattedText ", delta));
+						formatter.WriteBeginGetter (CodeAttributes.Default);
+						formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", bundleId, ".GetText (", id.ToString (), ");");
+						break;
+
+					default:
+						throw new System.NotImplementedException ();
+				}
+								
 				formatter.WriteEndGetter ();
 				formatter.WriteEndProperty ();
 			}
@@ -946,20 +966,36 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
 			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
 			formatter.WriteEndMethod ();
+
+			formatter.WriteCodeLine ();
+
+			formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "global::System.String GetString(params string[] path)");
+			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
+			formatter.WriteCodeLine (@"return _stringsBundle[field].AsString;");
+			formatter.WriteEndMethod ();
 			
 			formatter.WriteCodeLine ();
 
 			formatter.WriteCodeLine ("#region Internal Support Code");
 			formatter.WriteCodeLine ();
 			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)");
-			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
-			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
+			formatter.WriteCodeLine ("return new global::Epsitec.Common.Types.FormattedText (global::", defaultNamespace, ".Res.", bundleId, ".GetString (", "bundle, path", "));");
 			formatter.WriteEndMethod ();
 			formatter.WriteCodeLine ();
 			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)");
-			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);");
+			formatter.WriteCodeLine ("return new global::Epsitec.Common.Types.FormattedText (global::", defaultNamespace, ".Res.", bundleId, ".GetString (", "druid", "));");
 			formatter.WriteEndMethod ();
 			formatter.WriteCodeLine ();
+			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::System.String GetString(string bundle, params string[] path)");
+			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
+			formatter.WriteCodeLine (@"return _stringsBundle[field].AsString;");
+			formatter.WriteEndMethod ();
+			formatter.WriteCodeLine ();
+			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::System.String GetString(global::Epsitec.Common.Support.Druid druid)");
+			formatter.WriteCodeLine (@"return _stringsBundle[druid].AsString;");
+			formatter.WriteEndMethod ();
+			formatter.WriteCodeLine ();
+			
 			formatter.WriteField (CodeHelper.PrivateStaticReadOnlyFieldAttributes,
 				@"global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""",
 				bundleId, @""");");

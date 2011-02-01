@@ -90,6 +90,23 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets the text mode used when generating associated code.
+		/// </summary>
+		/// <value>The text mode.</value>
+		public ResourceTextMode TextMode
+		{
+			get
+			{
+				return this.textMode;
+			}
+			set
+			{
+				this.VerifyWritable ("TextMode");
+				this.textMode = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets the versions for this module information.
 		/// </summary>
 		/// <value>A list of versions. The collection might be read only
@@ -254,6 +271,7 @@ namespace Epsitec.Common.Support
 		private ResourceModuleId				fullId;
 		private string							referenceModulePath;
 		private string							sourceNamespace;
+		private ResourceTextMode				textMode;
 		private List<ResourceModuleVersion>		versions;
 		private int								patchDepth;
 	}

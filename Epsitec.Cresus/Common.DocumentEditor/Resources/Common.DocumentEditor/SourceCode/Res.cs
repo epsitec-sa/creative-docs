@@ -17,51 +17,51 @@ namespace Epsitec.Common.DocumentEditor
 			public static class Application
 			{
 				//	designer:str/43
-				public static global::Epsitec.Common.Types.FormattedText SoftName
+				public static global::System.String SoftName
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (0));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (0));
 					}
 				}
 				//	designer:str/4301
-				public static global::Epsitec.Common.Types.FormattedText TitleDoc
+				public static global::System.String TitleDoc
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (1));
 					}
 				}
 				//	designer:str/4302
-				public static global::Epsitec.Common.Types.FormattedText TitlePic
+				public static global::System.String TitlePic
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (2));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (2));
 					}
 				}
 				//	designer:str/4304
-				public static global::Epsitec.Common.Types.FormattedText TitleShort
+				public static global::System.String TitleShort
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (4));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (4));
 					}
 				}
 				//	designer:str/4303
-				public static global::Epsitec.Common.Types.FormattedText TitleTxt
+				public static global::System.String TitleTxt
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (3));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (3));
 					}
 				}
 				//	designer:str/4305
-				public static global::Epsitec.Common.Types.FormattedText Type
+				public static global::System.String Type
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (5));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (5));
 					}
 				}
 			}
@@ -69,117 +69,117 @@ namespace Epsitec.Common.DocumentEditor
 			public static class Dialog
 			{
 				//	designer:str/430Q1
-				public static global::Epsitec.Common.Types.FormattedText FileCol
+				public static global::System.String FileCol
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (58));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (58));
 					}
 				}
 				//	designer:str/430N1
-				public static global::Epsitec.Common.Types.FormattedText FileDoc
+				public static global::System.String FileDoc
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (55));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (55));
 					}
 				}
 				//	designer:str/430O1
-				public static global::Epsitec.Common.Types.FormattedText FileMod
+				public static global::System.String FileMod
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (56));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (56));
 					}
 				}
 				//	designer:str/430P1
-				public static global::Epsitec.Common.Types.FormattedText FilePic
+				public static global::System.String FilePic
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (57));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (57));
 					}
 				}
 				public static class About
 				{
 					//	designer:str/43022
-					public static global::Epsitec.Common.Types.FormattedText Copyright
+					public static global::System.String Copyright
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (66));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (66));
 						}
 					}
 					//	designer:str/43032
-					public static global::Epsitec.Common.Types.FormattedText Demo
+					public static global::System.String Demo
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (67));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (67));
 						}
 					}
 					//	designer:str/43042
-					public static global::Epsitec.Common.Types.FormattedText Expired
+					public static global::System.String Expired
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (68));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (68));
 						}
 					}
 					//	designer:str/43052
-					public static global::Epsitec.Common.Types.FormattedText Freeware
+					public static global::System.String Freeware
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (69));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (69));
 						}
 					}
 					//	designer:str/43012
-					public static global::Epsitec.Common.Types.FormattedText Key
+					public static global::System.String Key
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (65));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (65));
 						}
 					}
 					//	designer:str/43002
-					public static global::Epsitec.Common.Types.FormattedText Language
+					public static global::System.String Language
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (64));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (64));
 						}
 					}
 					//	designer:str/430T1
-					public static global::Epsitec.Common.Types.FormattedText Link
+					public static global::System.String Link
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (61));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (61));
 						}
 					}
 					//	designer:str/430S1
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (60));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (60));
 						}
 					}
 					//	designer:str/430V1
-					public static global::Epsitec.Common.Types.FormattedText Version
+					public static global::System.String Version
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (63));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (63));
 						}
 					}
 					//	designer:str/430U1
-					public static global::Epsitec.Common.Types.FormattedText Web
+					public static global::System.String Web
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (62));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (62));
 						}
 					}
 				}
@@ -187,35 +187,35 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Button
 				{
 					//	designer:str/43051
-					public static global::Epsitec.Common.Types.FormattedText Cancel
+					public static global::System.String Cancel
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (37));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (37));
 						}
 					}
 					//	designer:str/43031
-					public static global::Epsitec.Common.Types.FormattedText Close
+					public static global::System.String Close
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (35));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (35));
 						}
 					}
 					//	designer:str/43061
-					public static global::Epsitec.Common.Types.FormattedText Help
+					public static global::System.String Help
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (38));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (38));
 						}
 					}
 					//	designer:str/43041
-					public static global::Epsitec.Common.Types.FormattedText OK
+					public static global::System.String OK
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (36));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (36));
 						}
 					}
 				}
@@ -223,51 +223,51 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Download
 				{
 					//	designer:str/43092
-					public static global::Epsitec.Common.Types.FormattedText Actual
+					public static global::System.String Actual
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (73));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (73));
 						}
 					}
 					//	designer:str/43082
-					public static global::Epsitec.Common.Types.FormattedText Available
+					public static global::System.String Available
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (72));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (72));
 						}
 					}
 					//	designer:str/430A2
-					public static global::Epsitec.Common.Types.FormattedText Link
+					public static global::System.String Link
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (74));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (74));
 						}
 					}
 					//	designer:str/430B2
-					public static global::Epsitec.Common.Types.FormattedText Nothing
+					public static global::System.String Nothing
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (75));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (75));
 						}
 					}
 					//	designer:str/43062
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (70));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (70));
 						}
 					}
 					//	designer:str/43072
-					public static global::Epsitec.Common.Types.FormattedText UpToDate
+					public static global::System.String UpToDate
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (71));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (71));
 						}
 					}
 				}
@@ -275,53 +275,53 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Export
 				{
 					//	designer:str/430V8
-					public static global::Epsitec.Common.Types.FormattedText FormatDescription
+					public static global::System.String FormatDescription
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (287));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (287));
 						}
 					}
 					//	designer:str/430R1
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (59));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (59));
 						}
 					}
 					//	designer:str/430C2
-					public static global::Epsitec.Common.Types.FormattedText Title1
+					public static global::System.String Title1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (76));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (76));
 						}
 					}
 					//	designer:str/430D2
-					public static global::Epsitec.Common.Types.FormattedText Title2
+					public static global::System.String Title2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (77));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (77));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/430F2
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (79));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (79));
 							}
 						}
 						//	designer:str/430E2
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (78));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (78));
 							}
 						}
 					}
@@ -331,67 +331,67 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Type
 						{
 							//	designer:str/430N8
-							public static global::Epsitec.Common.Types.FormattedText BMP
+							public static global::System.String BMP
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (279));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (279));
 								}
 							}
 							//	designer:str/430O8
-							public static global::Epsitec.Common.Types.FormattedText GIF
+							public static global::System.String GIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (280));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (280));
 								}
 							}
 							//	designer:str/430P8
-							public static global::Epsitec.Common.Types.FormattedText ICO
+							public static global::System.String ICO
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (281));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (281));
 								}
 							}
 							//	designer:str/430Q8
-							public static global::Epsitec.Common.Types.FormattedText JPG
+							public static global::System.String JPG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (282));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (282));
 								}
 							}
 							//	designer:str/430R8
-							public static global::Epsitec.Common.Types.FormattedText PDF
+							public static global::System.String PDF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (283));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (283));
 								}
 							}
 							//	designer:str/430S8
-							public static global::Epsitec.Common.Types.FormattedText PNG
+							public static global::System.String PNG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (284));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (284));
 								}
 							}
 							//	designer:str/430T8
-							public static global::Epsitec.Common.Types.FormattedText TIF
+							public static global::System.String TIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (285));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (285));
 								}
 							}
 							//	designer:str/430U8
-							public static global::Epsitec.Common.Types.FormattedText WMF
+							public static global::System.String WMF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (286));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (286));
 								}
 							}
 						}
@@ -402,67 +402,67 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Type
 						{
 							//	designer:str/430E8
-							public static global::Epsitec.Common.Types.FormattedText BMP
+							public static global::System.String BMP
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (270));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (270));
 								}
 							}
 							//	designer:str/430F8
-							public static global::Epsitec.Common.Types.FormattedText GIF
+							public static global::System.String GIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (271));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (271));
 								}
 							}
 							//	designer:str/430G8
-							public static global::Epsitec.Common.Types.FormattedText ICO
+							public static global::System.String ICO
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (272));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (272));
 								}
 							}
 							//	designer:str/430H8
-							public static global::Epsitec.Common.Types.FormattedText JPG
+							public static global::System.String JPG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (273));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (273));
 								}
 							}
 							//	designer:str/430I8
-							public static global::Epsitec.Common.Types.FormattedText PDF
+							public static global::System.String PDF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (274));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (274));
 								}
 							}
 							//	designer:str/430J8
-							public static global::Epsitec.Common.Types.FormattedText PNG
+							public static global::System.String PNG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (275));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (275));
 								}
 							}
 							//	designer:str/430K8
-							public static global::Epsitec.Common.Types.FormattedText TIF
+							public static global::System.String TIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (276));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (276));
 								}
 							}
 							//	designer:str/430L8
-							public static global::Epsitec.Common.Types.FormattedText WMF
+							public static global::System.String WMF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (277));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (277));
 								}
 							}
 						}
@@ -473,67 +473,67 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Type
 						{
 							//	designer:str/43068
-							public static global::Epsitec.Common.Types.FormattedText BMP
+							public static global::System.String BMP
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (262));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (262));
 								}
 							}
 							//	designer:str/430C8
-							public static global::Epsitec.Common.Types.FormattedText GIF
+							public static global::System.String GIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (268));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (268));
 								}
 							}
 							//	designer:str/430B8
-							public static global::Epsitec.Common.Types.FormattedText ICO
+							public static global::System.String ICO
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (267));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (267));
 								}
 							}
 							//	designer:str/43088
-							public static global::Epsitec.Common.Types.FormattedText JPG
+							public static global::System.String JPG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (264));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (264));
 								}
 							}
 							//	designer:str/43078
-							public static global::Epsitec.Common.Types.FormattedText PDF
+							public static global::System.String PDF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (263));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (263));
 								}
 							}
 							//	designer:str/43098
-							public static global::Epsitec.Common.Types.FormattedText PNG
+							public static global::System.String PNG
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (265));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (265));
 								}
 							}
 							//	designer:str/430A8
-							public static global::Epsitec.Common.Types.FormattedText TIF
+							public static global::System.String TIF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (266));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (266));
 								}
 							}
 							//	designer:str/430D8
-							public static global::Epsitec.Common.Types.FormattedText WMF
+							public static global::System.String WMF
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (269));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (269));
 								}
 							}
 						}
@@ -542,27 +542,27 @@ namespace Epsitec.Common.DocumentEditor
 					public static class TabPage
 					{
 						//	designer:str/43049
-						public static global::Epsitec.Common.Types.FormattedText Filter
+						public static global::System.String Filter
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (292));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (292));
 							}
 						}
 						//	designer:str/43039
-						public static global::Epsitec.Common.Types.FormattedText Format
+						public static global::System.String Format
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (291));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (291));
 							}
 						}
 						//	designer:str/43029
-						public static global::Epsitec.Common.Types.FormattedText Generic
+						public static global::System.String Generic
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (290));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (290));
 							}
 						}
 					}
@@ -570,19 +570,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/430H2
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (81));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (81));
 							}
 						}
 						//	designer:str/430G2
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (80));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (80));
 							}
 						}
 					}
@@ -590,11 +590,11 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Type
 					{
 						//	designer:str/430M8
-						public static global::Epsitec.Common.Types.FormattedText Title
+						public static global::System.String Title
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (278));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (278));
 							}
 						}
 					}
@@ -603,29 +603,29 @@ namespace Epsitec.Common.DocumentEditor
 				public static class ExportICO
 				{
 					//	designer:str/43058
-					public static global::Epsitec.Common.Types.FormattedText Title2
+					public static global::System.String Title2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (261));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (261));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/43038
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (259));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (259));
 							}
 						}
 						//	designer:str/43018
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (257));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (257));
 							}
 						}
 					}
@@ -633,19 +633,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/43048
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (260));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (260));
 							}
 						}
 						//	designer:str/43028
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (258));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (258));
 							}
 						}
 					}
@@ -654,37 +654,37 @@ namespace Epsitec.Common.DocumentEditor
 				public static class ExportPDF
 				{
 					//	designer:str/430I2
-					public static global::Epsitec.Common.Types.FormattedText Title1
+					public static global::System.String Title1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (82));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (82));
 						}
 					}
 					//	designer:str/430J2
-					public static global::Epsitec.Common.Types.FormattedText Title2
+					public static global::System.String Title2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (83));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (83));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/430L2
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (85));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (85));
 							}
 						}
 						//	designer:str/430K2
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (84));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (84));
 							}
 						}
 					}
@@ -692,35 +692,35 @@ namespace Epsitec.Common.DocumentEditor
 					public static class TabPage
 					{
 						//	designer:str/430P2
-						public static global::Epsitec.Common.Types.FormattedText Color
+						public static global::System.String Color
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (89));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (89));
 							}
 						}
 						//	designer:str/430O2
-						public static global::Epsitec.Common.Types.FormattedText Generic
+						public static global::System.String Generic
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (88));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (88));
 							}
 						}
 						//	designer:str/430Q2
-						public static global::Epsitec.Common.Types.FormattedText Image
+						public static global::System.String Image
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (90));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (90));
 							}
 						}
 						//	designer:str/430R2
-						public static global::Epsitec.Common.Types.FormattedText Publisher
+						public static global::System.String Publisher
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (91));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (91));
 							}
 						}
 					}
@@ -728,19 +728,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/430N2
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (87));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (87));
 							}
 						}
 						//	designer:str/430M2
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (86));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (86));
 							}
 						}
 					}
@@ -749,85 +749,85 @@ namespace Epsitec.Common.DocumentEditor
 				public static class File
 				{
 					//	designer:str/430U6
-					public static global::Epsitec.Common.Types.FormattedText Directory
+					public static global::System.String Directory
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (222));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (222));
 						}
 					}
 					//	designer:str/43007
-					public static global::Epsitec.Common.Types.FormattedText Document
+					public static global::System.String Document
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (224));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (224));
 						}
 					}
 					//	designer:str/430V6
-					public static global::Epsitec.Common.Types.FormattedText LabelDoc
+					public static global::System.String LabelDoc
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (223));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (223));
 						}
 					}
 					//	designer:str/430C7
-					public static global::Epsitec.Common.Types.FormattedText LabelMod
+					public static global::System.String LabelMod
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (236));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (236));
 						}
 					}
 					//	designer:str/430D7
-					public static global::Epsitec.Common.Types.FormattedText Model
+					public static global::System.String Model
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (237));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (237));
 						}
 					}
 					//	designer:str/43037
-					public static global::Epsitec.Common.Types.FormattedText NewDirectoryName
+					public static global::System.String NewDirectoryName
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (227));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (227));
 						}
 					}
 					//	designer:str/43047
-					public static global::Epsitec.Common.Types.FormattedText Statistics
+					public static global::System.String Statistics
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (228));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (228));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/430F7
-						public static global::Epsitec.Common.Types.FormattedText New
+						public static global::System.String New
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (239));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (239));
 							}
 						}
 						//	designer:str/430M6
-						public static global::Epsitec.Common.Types.FormattedText Open
+						public static global::System.String Open
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (214));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (214));
 							}
 						}
 						//	designer:str/430A7
-						public static global::Epsitec.Common.Types.FormattedText Save
+						public static global::System.String Save
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (234));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (234));
 							}
 						}
 					}
@@ -835,43 +835,43 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Header
 					{
 						//	designer:str/430V7
-						public static global::Epsitec.Common.Types.FormattedText Date
+						public static global::System.String Date
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (255));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (255));
 							}
 						}
 						//	designer:str/430O6
-						public static global::Epsitec.Common.Types.FormattedText Description
+						public static global::System.String Description
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (216));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (216));
 							}
 						}
 						//	designer:str/430P6
-						public static global::Epsitec.Common.Types.FormattedText FileName
+						public static global::System.String FileName
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (217));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (217));
 							}
 						}
 						//	designer:str/430N6
-						public static global::Epsitec.Common.Types.FormattedText Preview
+						public static global::System.String Preview
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (215));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (215));
 							}
 						}
 						//	designer:str/430Q6
-						public static global::Epsitec.Common.Types.FormattedText Size
+						public static global::System.String Size
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (218));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (218));
 							}
 						}
 					}
@@ -879,19 +879,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class LabelPath
 					{
 						//	designer:str/43017
-						public static global::Epsitec.Common.Types.FormattedText Open
+						public static global::System.String Open
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (225));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (225));
 							}
 						}
 						//	designer:str/430T7
-						public static global::Epsitec.Common.Types.FormattedText Save
+						public static global::System.String Save
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (253));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (253));
 							}
 						}
 					}
@@ -899,27 +899,27 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Size
 					{
 						//	designer:str/430J7
-						public static global::Epsitec.Common.Types.FormattedText Giga
+						public static global::System.String Giga
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (243));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (243));
 							}
 						}
 						//	designer:str/430S6
-						public static global::Epsitec.Common.Types.FormattedText Kilo
+						public static global::System.String Kilo
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (220));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (220));
 							}
 						}
 						//	designer:str/430I7
-						public static global::Epsitec.Common.Types.FormattedText Mega
+						public static global::System.String Mega
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (242));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (242));
 							}
 						}
 					}
@@ -927,35 +927,35 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/430L7
-						public static global::Epsitec.Common.Types.FormattedText ExtendInclude
+						public static global::System.String ExtendInclude
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (245));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (245));
 							}
 						}
 						//	designer:str/430G7
-						public static global::Epsitec.Common.Types.FormattedText ExtendToolbar
+						public static global::System.String ExtendToolbar
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (240));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (240));
 							}
 						}
 						//	designer:str/430R6
-						public static global::Epsitec.Common.Types.FormattedText PreviewSize
+						public static global::System.String PreviewSize
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (219));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (219));
 							}
 						}
 						//	designer:str/430U7
-						public static global::Epsitec.Common.Types.FormattedText VisitedMenu
+						public static global::System.String VisitedMenu
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (254));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (254));
 							}
 						}
 					}
@@ -964,11 +964,11 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Fonts
 				{
 					//	designer:str/430S2
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (92));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (92));
 						}
 					}
 				}
@@ -976,37 +976,37 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Glyphs
 				{
 					//	designer:str/43053
-					public static global::Epsitec.Common.Types.FormattedText FontFace
+					public static global::System.String FontFace
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (101));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (101));
 						}
 					}
 					//	designer:str/43063
-					public static global::Epsitec.Common.Types.FormattedText FontStyle
+					public static global::System.String FontStyle
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (102));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (102));
 						}
 					}
 					//	designer:str/430T2
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (93));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (93));
 						}
 					}
 					public static class Alternates
 					{
 						//	designer:str/430M3
-						public static global::Epsitec.Common.Types.FormattedText Help
+						public static global::System.String Help
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (118));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (118));
 							}
 						}
 					}
@@ -1014,11 +1014,11 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Button
 					{
 						//	designer:str/43013
-						public static global::Epsitec.Common.Types.FormattedText Insert
+						public static global::System.String Insert
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (97));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (97));
 							}
 						}
 					}
@@ -1026,75 +1026,75 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Family
 					{
 						//	designer:str/430A3
-						public static global::Epsitec.Common.Types.FormattedText Business
+						public static global::System.String Business
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (106));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (106));
 							}
 						}
 						//	designer:str/430C3
-						public static global::Epsitec.Common.Types.FormattedText GreekLower
+						public static global::System.String GreekLower
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (108));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (108));
 							}
 						}
 						//	designer:str/430D3
-						public static global::Epsitec.Common.Types.FormattedText GreekUpper
+						public static global::System.String GreekUpper
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (109));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (109));
 							}
 						}
 						//	designer:str/43073
-						public static global::Epsitec.Common.Types.FormattedText List
+						public static global::System.String List
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (103));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (103));
 							}
 						}
 						//	designer:str/430B3
-						public static global::Epsitec.Common.Types.FormattedText Math
+						public static global::System.String Math
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (107));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (107));
 							}
 						}
 						//	designer:str/43093
-						public static global::Epsitec.Common.Types.FormattedText Space
+						public static global::System.String Space
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (105));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (105));
 							}
 						}
 						//	designer:str/430F3
-						public static global::Epsitec.Common.Types.FormattedText Substitute
+						public static global::System.String Substitute
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (111));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (111));
 							}
 						}
 						//	designer:str/430E3
-						public static global::Epsitec.Common.Types.FormattedText Symbol
+						public static global::System.String Symbol
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (110));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (110));
 							}
 						}
 						//	designer:str/43083
-						public static global::Epsitec.Common.Types.FormattedText Typo
+						public static global::System.String Typo
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (104));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (104));
 							}
 						}
 					}
@@ -1104,27 +1104,27 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Text
 						{
 							//	designer:str/430L3
-							public static global::Epsitec.Common.Types.FormattedText English
+							public static global::System.String English
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (117));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (117));
 								}
 							}
 							//	designer:str/430K3
-							public static global::Epsitec.Common.Types.FormattedText French
+							public static global::System.String French
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (116));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (116));
 								}
 							}
 							//	designer:str/430J3
-							public static global::Epsitec.Common.Types.FormattedText Latin
+							public static global::System.String Latin
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (115));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (115));
 								}
 							}
 						}
@@ -1132,27 +1132,27 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Title
 						{
 							//	designer:str/430I3
-							public static global::Epsitec.Common.Types.FormattedText English
+							public static global::System.String English
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (114));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (114));
 								}
 							}
 							//	designer:str/430H3
-							public static global::Epsitec.Common.Types.FormattedText French
+							public static global::System.String French
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (113));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (113));
 								}
 							}
 							//	designer:str/430G3
-							public static global::Epsitec.Common.Types.FormattedText Latin
+							public static global::System.String Latin
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (112));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (112));
 								}
 							}
 						}
@@ -1161,27 +1161,27 @@ namespace Epsitec.Common.DocumentEditor
 					public static class TabPage
 					{
 						//	designer:str/43003
-						public static global::Epsitec.Common.Types.FormattedText Alternates
+						public static global::System.String Alternates
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (96));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (96));
 							}
 						}
 						//	designer:str/430V2
-						public static global::Epsitec.Common.Types.FormattedText Array
+						public static global::System.String Array
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (95));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (95));
 							}
 						}
 						//	designer:str/430U2
-						public static global::Epsitec.Common.Types.FormattedText List
+						public static global::System.String List
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (94));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (94));
 							}
 						}
 					}
@@ -1189,27 +1189,27 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/43033
-						public static global::Epsitec.Common.Types.FormattedText ArraySize
+						public static global::System.String ArraySize
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (99));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (99));
 							}
 						}
 						//	designer:str/43043
-						public static global::Epsitec.Common.Types.FormattedText CurrentFont
+						public static global::System.String CurrentFont
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (100));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (100));
 							}
 						}
 						//	designer:str/43023
-						public static global::Epsitec.Common.Types.FormattedText Insert
+						public static global::System.String Insert
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (98));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (98));
 							}
 						}
 					}
@@ -1218,11 +1218,11 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Infos
 				{
 					//	designer:str/430N3
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (119));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (119));
 						}
 					}
 				}
@@ -1230,51 +1230,51 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Key
 				{
 					//	designer:str/430T3
-					public static global::Epsitec.Common.Types.FormattedText Expired
+					public static global::System.String Expired
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (125));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (125));
 						}
 					}
 					//	designer:str/430P3
-					public static global::Epsitec.Common.Types.FormattedText Label
+					public static global::System.String Label
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (121));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (121));
 						}
 					}
 					//	designer:str/430S3
-					public static global::Epsitec.Common.Types.FormattedText Number
+					public static global::System.String Number
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (124));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (124));
 						}
 					}
 					//	designer:str/430Q3
-					public static global::Epsitec.Common.Types.FormattedText RadioDemo
+					public static global::System.String RadioDemo
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (122));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (122));
 						}
 					}
 					//	designer:str/430R3
-					public static global::Epsitec.Common.Types.FormattedText RadioFull
+					public static global::System.String RadioFull
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (123));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (123));
 						}
 					}
 					//	designer:str/430O3
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (120));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (120));
 						}
 					}
 				}
@@ -1282,19 +1282,19 @@ namespace Epsitec.Common.DocumentEditor
 				public static class New
 				{
 					//	designer:str/430T6
-					public static global::Epsitec.Common.Types.FormattedText EmptyDocument
+					public static global::System.String EmptyDocument
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (221));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (221));
 						}
 					}
 					//	designer:str/430L6
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (213));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (213));
 						}
 					}
 				}
@@ -1302,35 +1302,35 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Open
 				{
 					//	designer:str/430I1
-					public static global::Epsitec.Common.Types.FormattedText TitleCol
+					public static global::System.String TitleCol
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (50));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (50));
 						}
 					}
 					//	designer:str/430F1
-					public static global::Epsitec.Common.Types.FormattedText TitleDoc
+					public static global::System.String TitleDoc
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (47));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (47));
 						}
 					}
 					//	designer:str/430G1
-					public static global::Epsitec.Common.Types.FormattedText TitleMod
+					public static global::System.String TitleMod
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (48));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (48));
 						}
 					}
 					//	designer:str/430H1
-					public static global::Epsitec.Common.Types.FormattedText TitlePic
+					public static global::System.String TitlePic
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (49));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (49));
 						}
 					}
 				}
@@ -1338,77 +1338,77 @@ namespace Epsitec.Common.DocumentEditor
 				public static class PageStack
 				{
 					//	designer:str/430V3
-					public static global::Epsitec.Common.Types.FormattedText Help1
+					public static global::System.String Help1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (127));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (127));
 						}
 					}
 					//	designer:str/43004
-					public static global::Epsitec.Common.Types.FormattedText Help2
+					public static global::System.String Help2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (128));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (128));
 						}
 					}
 					//	designer:str/43014
-					public static global::Epsitec.Common.Types.FormattedText Help3
+					public static global::System.String Help3
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (129));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (129));
 						}
 					}
 					//	designer:str/43024
-					public static global::Epsitec.Common.Types.FormattedText Help4
+					public static global::System.String Help4
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (130));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (130));
 						}
 					}
 					//	designer:str/43034
-					public static global::Epsitec.Common.Types.FormattedText Help5
+					public static global::System.String Help5
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (131));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (131));
 						}
 					}
 					//	designer:str/43074
-					public static global::Epsitec.Common.Types.FormattedText Layer
+					public static global::System.String Layer
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (135));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (135));
 						}
 					}
 					//	designer:str/43064
-					public static global::Epsitec.Common.Types.FormattedText Page
+					public static global::System.String Page
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (134));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (134));
 						}
 					}
 					//	designer:str/430U3
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (126));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (126));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/43044
-						public static global::Epsitec.Common.Types.FormattedText Current
+						public static global::System.String Current
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (132));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (132));
 							}
 						}
 					}
@@ -1416,11 +1416,11 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/43054
-						public static global::Epsitec.Common.Types.FormattedText Current
+						public static global::System.String Current
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (133));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (133));
 							}
 						}
 					}
@@ -1429,29 +1429,29 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Print
 				{
 					//	designer:str/43084
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (136));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (136));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/430E4
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (142));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (142));
 							}
 						}
 						//	designer:str/430C4
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (140));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (140));
 							}
 						}
 					}
@@ -1459,35 +1459,35 @@ namespace Epsitec.Common.DocumentEditor
 					public static class TabPage
 					{
 						//	designer:str/43008
-						public static global::Epsitec.Common.Types.FormattedText Image
+						public static global::System.String Image
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (256));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (256));
 							}
 						}
 						//	designer:str/430A4
-						public static global::Epsitec.Common.Types.FormattedText Param
+						public static global::System.String Param
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (138));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (138));
 							}
 						}
 						//	designer:str/43094
-						public static global::Epsitec.Common.Types.FormattedText Printer
+						public static global::System.String Printer
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (137));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (137));
 							}
 						}
 						//	designer:str/430B4
-						public static global::Epsitec.Common.Types.FormattedText Publisher
+						public static global::System.String Publisher
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (139));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (139));
 							}
 						}
 					}
@@ -1495,19 +1495,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Tooltip
 					{
 						//	designer:str/430F4
-						public static global::Epsitec.Common.Types.FormattedText Cancel
+						public static global::System.String Cancel
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (143));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (143));
 							}
 						}
 						//	designer:str/430D4
-						public static global::Epsitec.Common.Types.FormattedText OK
+						public static global::System.String OK
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (141));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (141));
 							}
 						}
 					}
@@ -1518,11 +1518,11 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Open
 					{
 						//	designer:str/430E7
-						public static global::Epsitec.Common.Types.FormattedText File
+						public static global::System.String File
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (238));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (238));
 							}
 						}
 					}
@@ -1530,27 +1530,27 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Save
 					{
 						//	designer:str/430B7
-						public static global::Epsitec.Common.Types.FormattedText File
+						public static global::System.String File
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (235));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (235));
 							}
 						}
 						//	designer:str/430A1
-						public static global::Epsitec.Common.Types.FormattedText Part1
+						public static global::System.String Part1
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (42));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (42));
 							}
 						}
 						//	designer:str/430B1
-						public static global::Epsitec.Common.Types.FormattedText Part2
+						public static global::System.String Part2
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (43));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (43));
 							}
 						}
 					}
@@ -1559,69 +1559,69 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Replace
 				{
 					//	designer:str/430G4
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (144));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (144));
 						}
 					}
 					public static class Button
 					{
 						//	designer:str/430K4
-						public static global::Epsitec.Common.Types.FormattedText EqualAccent
+						public static global::System.String EqualAccent
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (148));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (148));
 							}
 						}
 						//	designer:str/430J4
-						public static global::Epsitec.Common.Types.FormattedText EqualMaj
+						public static global::System.String EqualMaj
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (147));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (147));
 							}
 						}
 						//	designer:str/430H4
-						public static global::Epsitec.Common.Types.FormattedText Find
+						public static global::System.String Find
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (145));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (145));
 							}
 						}
 						//	designer:str/430N4
-						public static global::Epsitec.Common.Types.FormattedText Normal
+						public static global::System.String Normal
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (151));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (151));
 							}
 						}
 						//	designer:str/430I4
-						public static global::Epsitec.Common.Types.FormattedText Replace
+						public static global::System.String Replace
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (146));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (146));
 							}
 						}
 						//	designer:str/430M4
-						public static global::Epsitec.Common.Types.FormattedText Reverse
+						public static global::System.String Reverse
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (150));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (150));
 							}
 						}
 						//	designer:str/430L4
-						public static global::Epsitec.Common.Types.FormattedText WholeWord
+						public static global::System.String WholeWord
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (149));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (149));
 							}
 						}
 					}
@@ -1629,19 +1629,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Label
 					{
 						//	designer:str/430O4
-						public static global::Epsitec.Common.Types.FormattedText Find
+						public static global::System.String Find
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (152));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (152));
 							}
 						}
 						//	designer:str/430P4
-						public static global::Epsitec.Common.Types.FormattedText Replace
+						public static global::System.String Replace
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (153));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (153));
 							}
 						}
 					}
@@ -1650,35 +1650,35 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Save
 				{
 					//	designer:str/430M1
-					public static global::Epsitec.Common.Types.FormattedText TitleCol
+					public static global::System.String TitleCol
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (54));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (54));
 						}
 					}
 					//	designer:str/430J1
-					public static global::Epsitec.Common.Types.FormattedText TitleDoc
+					public static global::System.String TitleDoc
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (51));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (51));
 						}
 					}
 					//	designer:str/430K1
-					public static global::Epsitec.Common.Types.FormattedText TitleMod
+					public static global::System.String TitleMod
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (52));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (52));
 						}
 					}
 					//	designer:str/430L1
-					public static global::Epsitec.Common.Types.FormattedText TitlePic
+					public static global::System.String TitlePic
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (53));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (53));
 						}
 					}
 					public static class Include
@@ -1686,35 +1686,35 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Font
 						{
 							//	designer:str/430O7
-							public static global::Epsitec.Common.Types.FormattedText All
+							public static global::System.String All
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (248));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (248));
 								}
 							}
 							//	designer:str/430M7
-							public static global::Epsitec.Common.Types.FormattedText None
+							public static global::System.String None
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (246));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (246));
 								}
 							}
 							//	designer:str/430K7
-							public static global::Epsitec.Common.Types.FormattedText Title
+							public static global::System.String Title
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (244));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (244));
 								}
 							}
 							//	designer:str/430N7
-							public static global::Epsitec.Common.Types.FormattedText Used
+							public static global::System.String Used
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (247));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (247));
 								}
 							}
 						}
@@ -1722,35 +1722,35 @@ namespace Epsitec.Common.DocumentEditor
 						public static class Image
 						{
 							//	designer:str/430S7
-							public static global::Epsitec.Common.Types.FormattedText All
+							public static global::System.String All
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (252));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (252));
 								}
 							}
 							//	designer:str/430R7
-							public static global::Epsitec.Common.Types.FormattedText Defined
+							public static global::System.String Defined
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (251));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (251));
 								}
 							}
 							//	designer:str/430Q7
-							public static global::Epsitec.Common.Types.FormattedText None
+							public static global::System.String None
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (250));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (250));
 								}
 							}
 							//	designer:str/430P7
-							public static global::Epsitec.Common.Types.FormattedText Title
+							public static global::System.String Title
 							{
 								get
 								{
-									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (249));
+									return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (249));
 								}
 							}
 						}
@@ -1760,309 +1760,309 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Settings
 				{
 					//	designer:str/430D5
-					public static global::Epsitec.Common.Types.FormattedText Adorner
+					public static global::System.String Adorner
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (173));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (173));
 						}
 					}
 					//	designer:str/430G5
-					public static global::Epsitec.Common.Types.FormattedText AutoChecker
+					public static global::System.String AutoChecker
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (176));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (176));
 						}
 					}
 					//	designer:str/430F5
-					public static global::Epsitec.Common.Types.FormattedText AutoUpdate
+					public static global::System.String AutoUpdate
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (175));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (175));
 						}
 					}
 					//	designer:str/430C5
-					public static global::Epsitec.Common.Types.FormattedText FineCursor
+					public static global::System.String FineCursor
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (172));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (172));
 						}
 					}
 					//	designer:str/430Q5
-					public static global::Epsitec.Common.Types.FormattedText FontsClear
+					public static global::System.String FontsClear
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (186));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (186));
 						}
 					}
 					//	designer:str/430P5
-					public static global::Epsitec.Common.Types.FormattedText FontsDefault
+					public static global::System.String FontsDefault
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (185));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (185));
 						}
 					}
 					//	designer:str/430I5
-					public static global::Epsitec.Common.Types.FormattedText LabelProperties
+					public static global::System.String LabelProperties
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (178));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (178));
 						}
 					}
 					//	designer:str/43075
-					public static global::Epsitec.Common.Types.FormattedText Mouse
+					public static global::System.String Mouse
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167));
 						}
 					}
 					//	designer:str/430A5
-					public static global::Epsitec.Common.Types.FormattedText MouseWheel
+					public static global::System.String MouseWheel
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (170));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (170));
 						}
 					}
 					//	designer:str/430B5
-					public static global::Epsitec.Common.Types.FormattedText MouseZoom
+					public static global::System.String MouseZoom
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (171));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (171));
 						}
 					}
 					//	designer:str/43055
-					public static global::Epsitec.Common.Types.FormattedText New
+					public static global::System.String New
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (165));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (165));
 						}
 					}
 					//	designer:str/43065
-					public static global::Epsitec.Common.Types.FormattedText NewDocument
+					public static global::System.String NewDocument
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (166));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (166));
 						}
 					}
 					//	designer:str/430H5
-					public static global::Epsitec.Common.Types.FormattedText PanelProperties
+					public static global::System.String PanelProperties
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (177));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (177));
 						}
 					}
 					//	designer:str/430O5
-					public static global::Epsitec.Common.Types.FormattedText QuickClear
+					public static global::System.String QuickClear
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (184));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (184));
 						}
 					}
 					//	designer:str/430N5
-					public static global::Epsitec.Common.Types.FormattedText QuickDefault
+					public static global::System.String QuickDefault
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (183));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (183));
 						}
 					}
 					//	designer:str/430L5
-					public static global::Epsitec.Common.Types.FormattedText QuickDown
+					public static global::System.String QuickDown
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (181));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (181));
 						}
 					}
 					//	designer:str/430J5
-					public static global::Epsitec.Common.Types.FormattedText QuickFirst
+					public static global::System.String QuickFirst
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (179));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (179));
 						}
 					}
 					//	designer:str/430M5
-					public static global::Epsitec.Common.Types.FormattedText QuickLast
+					public static global::System.String QuickLast
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (182));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (182));
 						}
 					}
 					//	designer:str/430K5
-					public static global::Epsitec.Common.Types.FormattedText QuickUp
+					public static global::System.String QuickUp
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (180));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (180));
 						}
 					}
 					//	designer:str/430S4
-					public static global::Epsitec.Common.Types.FormattedText RadioDocument
+					public static global::System.String RadioDocument
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (156));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (156));
 						}
 					}
 					//	designer:str/430R4
-					public static global::Epsitec.Common.Types.FormattedText RadioGlobal
+					public static global::System.String RadioGlobal
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (155));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (155));
 						}
 					}
 					//	designer:str/43085
-					public static global::Epsitec.Common.Types.FormattedText Screen
+					public static global::System.String Screen
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (168));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (168));
 						}
 					}
 					//	designer:str/430E5
-					public static global::Epsitec.Common.Types.FormattedText ScreenDpi
+					public static global::System.String ScreenDpi
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (174));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (174));
 						}
 					}
 					//	designer:str/43095
-					public static global::Epsitec.Common.Types.FormattedText SplashScreen
+					public static global::System.String SplashScreen
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (169));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (169));
 						}
 					}
 					//	designer:str/43035
-					public static global::Epsitec.Common.Types.FormattedText Startup
+					public static global::System.String Startup
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (163));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (163));
 						}
 					}
 					//	designer:str/43045
-					public static global::Epsitec.Common.Types.FormattedText StartupAction
+					public static global::System.String StartupAction
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (164));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (164));
 						}
 					}
 					//	designer:str/430Q4
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (154));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (154));
 						}
 					}
 					public static class TabPage
 					{
 						//	designer:str/43015
-						public static global::Epsitec.Common.Types.FormattedText Fonts
+						public static global::System.String Fonts
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (161));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (161));
 							}
 						}
 						//	designer:str/43025
-						public static global::Epsitec.Common.Types.FormattedText FontsHelp
+						public static global::System.String FontsHelp
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (162));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (162));
 							}
 						}
 						//	designer:str/430R5
-						public static global::Epsitec.Common.Types.FormattedText Format
+						public static global::System.String Format
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (187));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (187));
 							}
 						}
 						//	designer:str/430T4
-						public static global::Epsitec.Common.Types.FormattedText General
+						public static global::System.String General
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (157));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (157));
 							}
 						}
 						//	designer:str/430S5
-						public static global::Epsitec.Common.Types.FormattedText Grid
+						public static global::System.String Grid
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (188));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (188));
 							}
 						}
 						//	designer:str/430T5
-						public static global::Epsitec.Common.Types.FormattedText Guides
+						public static global::System.String Guides
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (189));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (189));
 							}
 						}
 						//	designer:str/430V5
-						public static global::Epsitec.Common.Types.FormattedText Misc
+						public static global::System.String Misc
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (191));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (191));
 							}
 						}
 						//	designer:str/430U5
-						public static global::Epsitec.Common.Types.FormattedText Move
+						public static global::System.String Move
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (190));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (190));
 							}
 						}
 						//	designer:str/430U4
-						public static global::Epsitec.Common.Types.FormattedText Periph
+						public static global::System.String Periph
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (158));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (158));
 							}
 						}
 						//	designer:str/430V4
-						public static global::Epsitec.Common.Types.FormattedText Quick
+						public static global::System.String Quick
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (159));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (159));
 							}
 						}
 						//	designer:str/43005
-						public static global::Epsitec.Common.Types.FormattedText QuickHelp
+						public static global::System.String QuickHelp
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (160));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (160));
 							}
 						}
 					}
@@ -2071,11 +2071,11 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Splash
 				{
 					//	designer:str/43006
-					public static global::Epsitec.Common.Types.FormattedText WorkInProgress
+					public static global::System.String WorkInProgress
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (192));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (192));
 						}
 					}
 				}
@@ -2083,27 +2083,27 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Tooltip
 				{
 					//	designer:str/43071
-					public static global::Epsitec.Common.Types.FormattedText Close
+					public static global::System.String Close
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (39));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (39));
 						}
 					}
 					//	designer:str/43081
-					public static global::Epsitec.Common.Types.FormattedText Help
+					public static global::System.String Help
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (40));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (40));
 						}
 					}
 					//	designer:str/43091
-					public static global::Epsitec.Common.Types.FormattedText Resize
+					public static global::System.String Resize
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (41));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (41));
 						}
 					}
 				}
@@ -2111,147 +2111,147 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Update
 				{
 					//	designer:str/430F6
-					public static global::Epsitec.Common.Types.FormattedText Address1
+					public static global::System.String Address1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (207));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (207));
 						}
 					}
 					//	designer:str/430G6
-					public static global::Epsitec.Common.Types.FormattedText Address2
+					public static global::System.String Address2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (208));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (208));
 						}
 					}
 					//	designer:str/43056
-					public static global::Epsitec.Common.Types.FormattedText BuyDemo
+					public static global::System.String BuyDemo
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (197));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (197));
 						}
 					}
 					//	designer:str/43076
-					public static global::Epsitec.Common.Types.FormattedText BuyFreeware
+					public static global::System.String BuyFreeware
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (199));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (199));
 						}
 					}
 					//	designer:str/43066
-					public static global::Epsitec.Common.Types.FormattedText BuyFull
+					public static global::System.String BuyFull
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (198));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (198));
 						}
 					}
 					//	designer:str/43036
-					public static global::Epsitec.Common.Types.FormattedText Limit
+					public static global::System.String Limit
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (195));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (195));
 						}
 					}
 					//	designer:str/430C6
-					public static global::Epsitec.Common.Types.FormattedText Mail1
+					public static global::System.String Mail1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (204));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (204));
 						}
 					}
 					//	designer:str/430D6
-					public static global::Epsitec.Common.Types.FormattedText Mail2
+					public static global::System.String Mail2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (205));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (205));
 						}
 					}
 					//	designer:str/430E6
-					public static global::Epsitec.Common.Types.FormattedText Mail3
+					public static global::System.String Mail3
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (206));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (206));
 						}
 					}
 					//	designer:str/43046
-					public static global::Epsitec.Common.Types.FormattedText Over
+					public static global::System.String Over
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (196));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (196));
 						}
 					}
 					//	designer:str/430H6
-					public static global::Epsitec.Common.Types.FormattedText Phone1
+					public static global::System.String Phone1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (209));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (209));
 						}
 					}
 					//	designer:str/430I6
-					public static global::Epsitec.Common.Types.FormattedText Phone2
+					public static global::System.String Phone2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (210));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (210));
 						}
 					}
 					//	designer:str/43016
-					public static global::Epsitec.Common.Types.FormattedText Title
+					public static global::System.String Title
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (193));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (193));
 						}
 					}
 					//	designer:str/43026
-					public static global::Epsitec.Common.Types.FormattedText Version
+					public static global::System.String Version
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (194));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (194));
 						}
 					}
 					//	designer:str/43086
-					public static global::Epsitec.Common.Types.FormattedText Web1
+					public static global::System.String Web1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (200));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (200));
 						}
 					}
 					//	designer:str/43096
-					public static global::Epsitec.Common.Types.FormattedText Web2
+					public static global::System.String Web2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (201));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (201));
 						}
 					}
 					//	designer:str/430A6
-					public static global::Epsitec.Common.Types.FormattedText Web3
+					public static global::System.String Web3
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (202));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (202));
 						}
 					}
 					//	designer:str/430B6
-					public static global::Epsitec.Common.Types.FormattedText Web4
+					public static global::System.String Web4
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (203));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (203));
 						}
 					}
 				}
@@ -2259,35 +2259,35 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Warning
 				{
 					//	designer:str/430H7
-					public static global::Epsitec.Common.Types.FormattedText Redirection
+					public static global::System.String Redirection
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (241));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (241));
 						}
 					}
 					//	designer:str/430C1
-					public static global::Epsitec.Common.Types.FormattedText Text1
+					public static global::System.String Text1
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (44));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (44));
 						}
 					}
 					//	designer:str/430D1
-					public static global::Epsitec.Common.Types.FormattedText Text2
+					public static global::System.String Text2
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (45));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (45));
 						}
 					}
 					//	designer:str/430E1
-					public static global::Epsitec.Common.Types.FormattedText Text3
+					public static global::System.String Text3
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (46));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (46));
 						}
 					}
 				}
@@ -2300,19 +2300,19 @@ namespace Epsitec.Common.DocumentEditor
 					public static class Progress
 					{
 						//	designer:str/43019
-						public static global::Epsitec.Common.Types.FormattedText Operation
+						public static global::System.String Operation
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (289));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (289));
 							}
 						}
 						//	designer:str/43009
-						public static global::Epsitec.Common.Types.FormattedText Title
+						public static global::System.String Title
 						{
 							get
 							{
-								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (288));
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (288));
 							}
 						}
 					}
@@ -2322,11 +2322,11 @@ namespace Epsitec.Common.DocumentEditor
 			public static class LastFiles
 			{
 				//	designer:str/430L
-				public static global::Epsitec.Common.Types.FormattedText None
+				public static global::System.String None
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (21));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (21));
 					}
 				}
 			}
@@ -2336,27 +2336,27 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Help
 				{
 					//	designer:str/430K
-					public static global::Epsitec.Common.Types.FormattedText About
+					public static global::System.String About
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (20));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (20));
 						}
 					}
 					//	designer:str/430I
-					public static global::Epsitec.Common.Types.FormattedText Key
+					public static global::System.String Key
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (18));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (18));
 						}
 					}
 					//	designer:str/430J
-					public static global::Epsitec.Common.Types.FormattedText Update
+					public static global::System.String Update
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (19));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (19));
 						}
 					}
 				}
@@ -2364,67 +2364,67 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Main
 				{
 					//	designer:str/430E
-					public static global::Epsitec.Common.Types.FormattedText Array
+					public static global::System.String Array
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (14));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (14));
 						}
 					}
 					//	designer:str/430G
-					public static global::Epsitec.Common.Types.FormattedText Debug
+					public static global::System.String Debug
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (16));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (16));
 						}
 					}
 					//	designer:str/430F
-					public static global::Epsitec.Common.Types.FormattedText Document
+					public static global::System.String Document
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (15));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (15));
 						}
 					}
 					//	designer:str/430B
-					public static global::Epsitec.Common.Types.FormattedText Edit
+					public static global::System.String Edit
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (11));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (11));
 						}
 					}
 					//	designer:str/430A
-					public static global::Epsitec.Common.Types.FormattedText File
+					public static global::System.String File
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (10));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (10));
 						}
 					}
 					//	designer:str/430H
-					public static global::Epsitec.Common.Types.FormattedText Help
+					public static global::System.String Help
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (17));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (17));
 						}
 					}
 					//	designer:str/430C
-					public static global::Epsitec.Common.Types.FormattedText Objects
+					public static global::System.String Objects
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (12));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (12));
 						}
 					}
 					//	designer:str/430D
-					public static global::Epsitec.Common.Types.FormattedText Show
+					public static global::System.String Show
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (13));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (13));
 						}
 					}
 				}
@@ -2433,35 +2433,35 @@ namespace Epsitec.Common.DocumentEditor
 			public static class Ribbon
 			{
 				//	designer:str/4308
-				public static global::Epsitec.Common.Types.FormattedText Geom
+				public static global::System.String Geom
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (8));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (8));
 					}
 				}
 				//	designer:str/4306
-				public static global::Epsitec.Common.Types.FormattedText Main
+				public static global::System.String Main
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (6));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (6));
 					}
 				}
 				//	designer:str/4307
-				public static global::Epsitec.Common.Types.FormattedText Oper
+				public static global::System.String Oper
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (7));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (7));
 					}
 				}
 				//	designer:str/4309
-				public static global::Epsitec.Common.Types.FormattedText Text
+				public static global::System.String Text
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (9));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (9));
 					}
 				}
 			}
@@ -2471,11 +2471,11 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Modif
 				{
 					//	designer:str/430V
-					public static global::Epsitec.Common.Types.FormattedText Default
+					public static global::System.String Default
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (31));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (31));
 						}
 					}
 				}
@@ -2483,19 +2483,19 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Objects
 				{
 					//	designer:str/430U
-					public static global::Epsitec.Common.Types.FormattedText Level
+					public static global::System.String Level
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (30));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (30));
 						}
 					}
 					//	designer:str/430T
-					public static global::Epsitec.Common.Types.FormattedText Select
+					public static global::System.String Select
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (29));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (29));
 						}
 					}
 				}
@@ -2503,27 +2503,27 @@ namespace Epsitec.Common.DocumentEditor
 				public static class Zoom
 				{
 					//	designer:str/43011
-					public static global::Epsitec.Common.Types.FormattedText Menu
+					public static global::System.String Menu
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33));
 						}
 					}
 					//	designer:str/43021
-					public static global::Epsitec.Common.Types.FormattedText Slider
+					public static global::System.String Slider
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (34));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (34));
 						}
 					}
 					//	designer:str/43001
-					public static global::Epsitec.Common.Types.FormattedText Value
+					public static global::System.String Value
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (32));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (32));
 						}
 					}
 				}
@@ -2532,51 +2532,51 @@ namespace Epsitec.Common.DocumentEditor
 			public static class TabPage
 			{
 				//	designer:str/430P
-				public static global::Epsitec.Common.Types.FormattedText Autos
+				public static global::System.String Autos
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (25));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (25));
 					}
 				}
 				//	designer:str/430R
-				public static global::Epsitec.Common.Types.FormattedText Layers
+				public static global::System.String Layers
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (27));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (27));
 					}
 				}
 				//	designer:str/430S
-				public static global::Epsitec.Common.Types.FormattedText Operations
+				public static global::System.String Operations
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (28));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (28));
 					}
 				}
 				//	designer:str/430Q
-				public static global::Epsitec.Common.Types.FormattedText Pages
+				public static global::System.String Pages
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (26));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (26));
 					}
 				}
 				//	designer:str/430N
-				public static global::Epsitec.Common.Types.FormattedText Principal
+				public static global::System.String Principal
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (23));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (23));
 					}
 				}
 				//	designer:str/430O
-				public static global::Epsitec.Common.Types.FormattedText Styles
+				public static global::System.String Styles
 				{
 					get
 					{
-						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (24));
+						return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (24));
 					}
 				}
 			}
@@ -2586,11 +2586,11 @@ namespace Epsitec.Common.DocumentEditor
 				public static class TabBook
 				{
 					//	designer:str/430M
-					public static global::Epsitec.Common.Types.FormattedText Close
+					public static global::System.String Close
 					{
 						get
 						{
-							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (22));
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (22));
 						}
 					}
 				}
@@ -2602,17 +2602,33 @@ namespace Epsitec.Common.DocumentEditor
 				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
+			public static global::System.String GetString(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
 			#region Internal Support Code
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				string field = string.Join (".", path);
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (druid));
+			}
+			
+			private static global::System.String GetString(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
+			private static global::System.String GetString(global::Epsitec.Common.Support.Druid druid)
+			{
+				return _stringsBundle[druid].AsString;
 			}
 			
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");

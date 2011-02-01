@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="102" name="Demo5juin" layer="A" namespace="Demo.Demo5juin">
+<ModuleInfo id="102" name="Demo5juin" layer="A" namespace="Demo.Demo5juin" textMode="FormattedText">
   <Versions>
     <Version id="1" build="20" date="2008-02-09T15:41:28.9498750Z" />
   </Versions>

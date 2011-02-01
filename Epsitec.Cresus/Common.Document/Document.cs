@@ -3202,7 +3202,7 @@ namespace Epsitec.Common.Document
 		public static string GetRes(string name)
 		{
 			//	Retourne une ressource string d'après son nom.
-			return Res.Strings.GetText(name);
+			return Res.Strings.GetString (name);
 		}
 		#endregion
 

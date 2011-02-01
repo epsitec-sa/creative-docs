@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="0" name="Common.Widgets" layer="s" namespace="Epsitec.Common.Widgets">
+<ModuleInfo id="0" name="Common.Widgets" layer="s" namespace="Epsitec.Common.Widgets" textMode="FormattedText">
   <Versions>
     <Version id="1" build="3" date="2010-09-07T12:20:00.3703975Z" />
     <Version id="2" build="7" date="2010-11-02T13:45:20.4503281Z" />

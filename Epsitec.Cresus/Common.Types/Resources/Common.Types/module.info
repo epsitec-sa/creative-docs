@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1" name="Common.Types" layer="s">
+<ModuleInfo id="1" name="Common.Types" layer="s" textMode="FormattedText">
   <Versions>
     <Version id="1" build="22" date="2010-10-25T09:25:52.5520000Z" />
   </Versions>

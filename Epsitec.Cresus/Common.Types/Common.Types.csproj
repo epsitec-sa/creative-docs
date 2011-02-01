@@ -187,6 +187,7 @@
     <Compile Include="Support\Extensions\StackExtensions.cs" />
     <Compile Include="MultilingualText.cs" />
     <Compile Include="Support\Extensions\StringExtensions.cs" />
+    <Compile Include="Support\ResourceTextMode.cs" />
     <Compile Include="TextComparison.cs" />
     <Compile Include="INotifyCurrentChanged.cs" />
     <Compile Include="DataSource.cs" />

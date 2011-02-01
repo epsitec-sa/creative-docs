@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="6" name="Common.Dialogs" layer="s" namespace="Epsitec.Common.Dialogs">
+<ModuleInfo id="6" name="Common.Dialogs" layer="s" namespace="Epsitec.Common.Dialogs" textMode="FormattedText">
   <Versions>
     <Version id="1" build="17" date="2009-10-21T09:45:11.1631990Z" />
   </Versions>

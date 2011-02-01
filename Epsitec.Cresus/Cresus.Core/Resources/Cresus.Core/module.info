@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="21" name="Cresus.Core" layer="s" namespace="Epsitec.Cresus.Core">
+<ModuleInfo id="21" name="Cresus.Core" layer="s" namespace="Epsitec.Cresus.Core" textMode="FormattedText">
   <Versions>
     <Version id="2" build="39" date="2011-01-18T06:41:11.2627996Z" />
     <Version id="1" build="592" date="2011-01-31T05:12:22.0404960Z" />
