@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.table.SetArraySize (4, count);
 			this.table.SetWidthColumn (0, 120);
-			this.table.SetWidthColumn (1, 100);
+			this.table.SetWidthColumn (1,  80);
 			this.table.SetWidthColumn (2, 100);
 			this.table.SetWidthColumn (3, 400);
 
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var text = new StaticText
 				{
-					ContentAlignment = ContentAlignment.MiddleLeft,
+					ContentAlignment = ContentAlignment.MiddleRight,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (4, 4, 0, 0),
 				};
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			text.FormattedText = query.StartTime.ToString ();
 
 			text = this.table[1, row].Children[0] as StaticText;
-			text.FormattedText = query.Duration.ToString ();
+			text.FormattedText = LoggingTabPage.GetDuration (query.Duration);
 
 			// TODO: remplir les autres colonnes
 		}
@@ -256,6 +256,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdateTable ();
 		}
 
+
+		private static string GetDuration(System.TimeSpan duration)
+		{
+			// Un Tick vaut 100 nanosecondes.
+			return string.Concat ((duration.Ticks/10).ToString (), " us");
+		}
 
 
 		private Button			fullEnableButton;
