@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<count; row++)
 			{
-				var values = LoggingTabPage.GetQueryValues (db.QueryLog.GetEntry (row), row);
+				var values = LoggingTabPage.GetQueryStrings (db.QueryLog.GetEntry (row), row);
 
 				LoggingTabPage.TableFillRow (this.table, row, alignments);
 				LoggingTabPage.TableUpdateRow (this.table, row, values);
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.queryField.Visibility = true;
 				this.queryField.Text = LoggingTabPage.GetQuery (query);
 
-				var parameters = this.GetCellTableForParameters (query.Parameters);
+				var parameters = this.CreateParametersShower (query.Parameters);
 				parameters.Parent = this.detailsBox;
 				parameters.Dock = DockStyle.Left;
 				parameters.Margins = new Margins (0, 10, 0, 0);
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					foreach (var table in query.Result.Tables)
 					{
-						var cellTable = this.GetCellTableForResultsTable (table);
+						var cellTable = this.CreateTableResultsShower (table);
 						cellTable.Parent = this.detailsBox;
 						cellTable.Dock = DockStyle.Fill;
 						cellTable.Margins = new Margins (0, 10, 0, 0);
@@ -386,8 +386,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		#region CellTable makers
-		private Widget GetCellTableForParameters(ReadOnlyCollection<Parameter> parameters)
+		#region Create shower
+		private Widget CreateParametersShower(ReadOnlyCollection<Parameter> parameters)
 		{
 			//	Retourne le widget permettant de représenter les paramètres.
 			var frame = new FrameBox
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<parameters.Count; row++)
 			{
-				var values = LoggingTabPage.GetParameterValues (parameters[row]);
+				var values = LoggingTabPage.GetParameterStrings (parameters[row]);
 
 				LoggingTabPage.TableFillRow (cellTable, row, alignments);
 				LoggingTabPage.TableUpdateRow (cellTable, row, values);
@@ -433,9 +433,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return frame;
 		}
 
-		private Widget GetCellTableForResultsTable(Table table)
+		private Widget CreateTableResultsShower(Table table)
 		{
-			//	Retourne le widget permettant de représenter les résultats contenus dans une table.
+			//	Retourne le widget permettant de représenter les résultats d'une table.
 			var frame = new FrameBox
 			{
 				PreferredWidth = 300,
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<rowsCount; row++)
 			{
-				var values = LoggingTabPage.GetResultsTableValues (table.Rows[row].Values);
+				var values = LoggingTabPage.GetTableResultsStrings (table.Rows[row].Values);
 
 				LoggingTabPage.TableFillRow (cellTable, row, alignments.ToArray ());
 				LoggingTabPage.TableUpdateRow (cellTable, row, values);
@@ -554,7 +554,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 
 		#region Query reader
-		private static string[] GetQueryValues(Query query, int row)
+		private static string[] GetQueryStrings(Query query, int row)
 		{
 			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
 			var values = new List<string> ();
@@ -607,7 +607,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return string.Join (", ", list);
 		}
 
-		private static string[] GetParameterValues(Parameter parameter)
+		private static string[] GetParameterStrings(Parameter parameter)
 		{
 			//	Retourne les textes pour peupler une ligne du tableau des paramètres.
 			var values = new List<string> ();
@@ -618,7 +618,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return values.ToArray ();
 		}
 
-		private static string[] GetResultsTableValues(ReadOnlyCollection<object> objects)
+		private static string[] GetTableResultsStrings(ReadOnlyCollection<object> objects)
 		{
 			//	Retourne les textes pour peupler une ligne du tableau des résultats.
 			var values = new List<string> ();
