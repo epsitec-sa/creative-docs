@@ -196,6 +196,7 @@
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Dialogs\SettingsDialog.cs" />
     <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />
+    <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />

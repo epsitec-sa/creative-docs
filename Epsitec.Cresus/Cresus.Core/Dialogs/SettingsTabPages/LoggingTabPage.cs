@@ -44,12 +44,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (10),
 			};
 
-			var bottomFrame = new FrameBox
+			this.detailsFrame = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 200,
+				PreferredHeight = 220,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 0, 10, 10),
+				Visibility = false,
 			};
 
 			this.splitter = new HSplitter
@@ -58,93 +59,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Dock = DockStyle.Bottom,
 			};
 
-			{
-				var header = new FrameBox
-				{
-					Parent = topFrame,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 10),
-				};
-
-				this.extendedButton = new RadioButton
-				{
-					Parent = header,
-					Text = "Trace complète",
-					PreferredWidth = 100,
-					AutoToggle = false,
-					Dock = DockStyle.Left,
-				};
-
-				this.basicButton = new RadioButton
-				{
-					Parent = header,
-					Text = "Trace réduite",
-					PreferredWidth = 90,
-					AutoToggle = false,
-					Dock = DockStyle.Left,
-				};
-
-				this.offButton = new RadioButton
-				{
-					Parent = header,
-					Text = "Pas de trace",
-					PreferredWidth = 80,
-					AutoToggle = false,
-					Dock = DockStyle.Left,
-				};
-
-				this.importButton = new Button
-				{
-					Parent = header,
-					Text = "Importer...",
-					PreferredWidth = 70,
-					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
-				};
-
-				this.exportButton = new Button
-				{
-					Parent = header,
-					Text = "Exporter...",
-					PreferredWidth = 70,
-					Dock = DockStyle.Right,
-					Margins = new Margins (10, 0, 0, 0),
-				};
-
-				this.clearButton = new Button
-				{
-					Parent = header,
-					Text = "Vider",
-					PreferredWidth = 50,
-					Dock = DockStyle.Right,
-					Margins = new Margins (10, 0, 0, 0),
-				};
-
-				this.nextButton = new Button
-				{
-					Parent = header,
-					Text = "Suivant",
-					PreferredWidth = 60,
-					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
-				};
-
-				this.prevButton = new Button
-				{
-					Parent = header,
-					Text = "Précédent",
-					PreferredWidth = 60,
-					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
-				};
-
-				this.searchField = new TextField
-				{
-					Parent = header,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (10, 0, 0, 0),
-				};
-			}
+			this.CreateUIMainToolbar (topFrame);
+			this.CreateUISecondaryToolbar (topFrame);
 
 			this.table = new CellTable
 			{
@@ -154,23 +70,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Dock = DockStyle.Fill,
 			};
 
-			{
-				this.queryField = new TextFieldMulti
-				{
-					Parent = bottomFrame,
-					IsReadOnly = true,
-					PreferredHeight = 66,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 10, 0, 10),
-				};
-
-				this.detailsBox = new FrameBox
-				{
-					Parent = bottomFrame,
-					PreferredHeight = 100,
-					Dock = DockStyle.Fill,
-				};
-			}
+			this.CreateUIDetails (this.detailsFrame);
 
 			//	Connection des événements.
 			this.extendedButton.Clicked += delegate
@@ -188,6 +88,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.LogMode = Database.Logging.LogMode.Off;
 			};
 
+			this.secondaryButton.Clicked += delegate
+			{
+				this.secondaryToolbar.Visibility = !this.secondaryToolbar.Visibility;
+				this.secondaryButton.GlyphShape = this.secondaryToolbar.Visibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+			};
+
 			this.searchField.TextChanged += delegate
 			{
 				this.UpdateWidgets ();
@@ -195,12 +101,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.prevButton.Clicked += delegate
 			{
-				this.Search (-1);
+				this.Search (-1, this.caseButton.ActiveState == ActiveState.Yes);
 			};
 
 			this.nextButton.Clicked += delegate
 			{
-				this.Search (1);
+				this.Search (1, this.caseButton.ActiveState == ActiveState.Yes);
 			};
 
 			this.clearButton.Clicked += delegate
@@ -223,10 +129,197 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateDetails ();
 			};
 
+			this.substituteButton.ActiveStateChanged += delegate
+			{
+				this.UpdateDetails ();
+			};
+
 			this.UpdateRadio ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
 			this.UpdateWidgets ();
+		}
+
+		private void CreateUIMainToolbar(Widget parent)
+		{
+			var header = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			this.extendedButton = new RadioButton
+			{
+				Parent = header,
+				Text = "Trace complète",
+				PreferredWidth = 110,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.basicButton = new RadioButton
+			{
+				Parent = header,
+				Text = "Trace réduite",
+				PreferredWidth = 100,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.offButton = new RadioButton
+			{
+				Parent = header,
+				Text = "Pas de trace",
+				PreferredWidth = 90,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.secondaryButton = new GlyphButton
+			{
+				Parent = header,
+				ButtonStyle = ButtonStyle.Slider,
+				GlyphShape = Common.Widgets.GlyphShape.TriangleDown,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 3, 3),
+			};
+
+			this.clearButton = new Button
+			{
+				Parent = header,
+				Text = "Vider",
+				PreferredWidth = 70,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
+			};
+		}
+
+		private void CreateUISecondaryToolbar(Widget parent)
+		{
+			this.secondaryToolbar = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+				Visibility = false,
+			};
+
+			new Separator
+			{
+				Parent = this.secondaryToolbar,
+				PreferredHeight = 1,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			var box = new FrameBox
+			{
+				Parent = this.secondaryToolbar,
+				Dock = DockStyle.Fill,
+			};
+
+			var label = new StaticText
+			{
+				Parent = box,
+				Text = "Rechercher",
+				PreferredWidth = 64,
+				Dock = DockStyle.Left,
+			};
+
+			this.searchField = new TextField
+			{
+				Parent = box,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.importButton = new Button
+			{
+				Parent = box,
+				Text = "Importer...",
+				PreferredWidth = 70,
+				Dock = DockStyle.Right,
+				Margins = new Margins (1, 0, 0, 0),
+			};
+
+			this.exportButton = new Button
+			{
+				Parent = box,
+				Text = "Exporter...",
+				PreferredWidth = 70,
+				Dock = DockStyle.Right,
+				Margins = new Margins (20, 0, 0, 0),
+			};
+
+			this.caseButton = new CheckButton
+			{
+				Parent = box,
+				Text = "Respecter la casse",
+				PreferredWidth = 130,
+				ActiveState = Common.Widgets.ActiveState.Yes,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+
+			this.nextButton = new Button
+			{
+				Parent = box,
+				Text = "Suivant",
+				PreferredWidth = 60,
+				Dock = DockStyle.Right,
+				Margins = new Margins (1, 0, 0, 0),
+			};
+
+			this.prevButton = new Button
+			{
+				Parent = box,
+				Text = "Précédent",
+				PreferredWidth = 60,
+				Dock = DockStyle.Right,
+				Margins = new Margins (1, 0, 0, 0),
+			};
+		}
+
+		private void CreateUIDetails(Widget parent)
+		{
+			this.CreateUIQueryToolbar (parent);
+
+			this.queryField = new TextFieldMulti
+			{
+				Parent = parent,
+				IsReadOnly = true,
+				PreferredHeight = 66,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 10),
+			};
+
+			this.detailsBox = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 100,
+				Dock = DockStyle.Fill,
+			};
+		}
+
+		private void CreateUIQueryToolbar(Widget parent)
+		{
+			var toolbar = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+			};
+
+			this.substituteButton = new CheckButton
+			{
+				Parent = toolbar,
+				Text = "Substituer les paramètres",
+				PreferredWidth = 150,
+				ActiveState = Common.Widgets.ActiveState.Yes,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
 		}
 
 
@@ -272,7 +365,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<count; row++)
 			{
-				var values = LoggingTabPage.GetQueryStrings (db.QueryLog.GetEntry (row), row);
+				var query = db.QueryLog.GetEntry (row);
+				var values = query.GetStrings (row);
 
 				LoggingTabPage.TableFillRow (this.table, row, alignments);
 				LoggingTabPage.TableUpdateRow (this.table, row, values);
@@ -287,16 +381,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel == -1)
 			{
-				this.queryField.Visibility = false;
-				this.queryField.Text = null;
+				this.detailsFrame.Visibility = false;
 			}
 			else
 			{
+				this.detailsFrame.Visibility = true;
+
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 				var query = db.QueryLog.GetEntry (sel);
 
-				this.queryField.Visibility = true;
-				this.queryField.FormattedText = LoggingTabPage.GetQuery (query);
+				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
+				this.queryField.Text = query.GetQuery (substitute);
 
 				var parameters = this.CreateParametersShower (query.Parameters);
 				parameters.Parent = this.detailsBox;
@@ -329,7 +424,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private void Search(int direction)
+		private void Search(int direction, bool caseSensitive)
 		{
 			int count = this.table.Rows;
 			int sel = this.table.SelectedRow;
@@ -337,6 +432,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			if (sel == -1)
 			{
 				sel = 0;
+			}
+
+			string search = this.searchField.Text;
+
+			if (!caseSensitive)
+			{
+				search = Misc.RemoveAccentsToLower (search);
 			}
 
 			for (int i = 0; i < count; i++)  // une boucle complète
@@ -353,7 +455,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					sel = 0;  // fin -> début
 				}
 
-				if (this.ContainsString (sel, this.searchField.Text))
+				if (this.ContainsString (sel, search, caseSensitive))
 				{
 					this.table.DeselectAll ();
 					this.table.SelectRow (sel, true);
@@ -414,6 +516,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 
 			cellTable.SetArraySize (2, parameters.Count);
+
 			cellTable.SetWidthColumn (0, 80);
 			cellTable.SetWidthColumn (1, 80);
 
@@ -424,7 +527,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<parameters.Count; row++)
 			{
-				var values = LoggingTabPage.GetParameterStrings (parameters[row]);
+				var values = QueryAccessor.GetParameterStrings (parameters[row]);
 
 				LoggingTabPage.TableFillRow (cellTable, row, alignments);
 				LoggingTabPage.TableUpdateRow (cellTable, row, values);
@@ -475,7 +578,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<rowsCount; row++)
 			{
-				var values = LoggingTabPage.GetTableResultsStrings (table.Rows[row].Values);
+				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
 
 				LoggingTabPage.TableFillRow (cellTable, row, alignments.ToArray ());
 				LoggingTabPage.TableUpdateRow (cellTable, row, values);
@@ -522,11 +625,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 
 		#region Search engine
-		private bool ContainsString(int row, string search)
+		private bool ContainsString(int row, string search, bool caseSensitive)
 		{
 			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
-			foreach (var text in this.GetSearchableStrings (row))
+			foreach (var t in this.GetSearchableStrings (row))
 			{
+				string text = t;
+
+				if (!caseSensitive)
+				{
+					text = Misc.RemoveAccentsToLower (t);
+				}
+
 				if (text.Contains (search))
 				{
 					return true;
@@ -546,118 +656,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (row);
 
 				yield return query.SourceCode;
-				yield return LoggingTabPage.GetCompactQueryParameters (query);
-				yield return LoggingTabPage.GetCompactQueryResults (query);
+				yield return query.GetCompactParameters ();
+				yield return query.GetCompactResults ();
 			}
-		}
-		#endregion
-
-
-		#region Query reader
-		private static string[] GetQueryStrings(Query query, int row)
-		{
-			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
-			var values = new List<string> ();
-
-			values.Add ((row+1).ToString ());
-			values.Add (query.StartTime.ToString ());
-			values.Add (LoggingTabPage.GetNiceDuration (query.Duration));
-			values.Add (LoggingTabPage.GetQuery (query).ToString ());
-			values.Add (LoggingTabPage.GetCompactQueryParameters (query));
-			values.Add (LoggingTabPage.GetCompactQueryResults (query));
-
-			return values.ToArray ();
-		}
-
-		private static string GetCompactQueryParameters(Query query)
-		{
-			//	Retourne tous les paramètres sous une forme compacte.
-			return string.Join (", ", query.Parameters.Select (x => x.Value));
-		}
-
-		private static string GetCompactQueryResults(Query query)
-		{
-			//	Retourne tous les réaultats sous une forme compacte.
-			if (query.Result == null)
-			{
-				return "";
-			}
-
-			var list = new List<string> ();
-
-			foreach (var table in query.Result.Tables)
-			{
-				foreach (var row in table.Rows)
-				{
-					foreach (var value in row.Values)
-					{
-						if (value != null)
-						{
-							string s = value.ToString ();
-
-							if (!string.IsNullOrWhiteSpace (s))
-							{
-								list.Add (s);
-							}
-						}
-					}
-				}
-			}
-
-			return string.Join (", ", list);
-		}
-
-		private static string[] GetParameterStrings(Parameter parameter)
-		{
-			//	Retourne les textes pour peupler une ligne du tableau des paramètres.
-			var values = new List<string> ();
-
-			values.Add (parameter.Name);
-			values.Add (parameter.Value.ToString ());
-
-			return values.ToArray ();
-		}
-
-		private static string[] GetTableResultsStrings(ReadOnlyCollection<object> objects)
-		{
-			//	Retourne les textes pour peupler une ligne du tableau des résultats.
-			var values = new List<string> ();
-
-			foreach (var obj in objects)
-			{
-				values.Add (obj.ToString ());
-			}
-
-			return values.ToArray ();
-		}
-
-
-		private static FormattedText GetQuery(Query query, bool substitution = true)
-		{
-			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres.
-			var text = query.SourceCode.Replace ("\n", "");
-
-			if (substitution)
-			{
-				foreach (var parameter in query.Parameters)
-				{
-					var value = parameter.Value.ToString ();
-
-					if (!string.IsNullOrEmpty (value))
-					{
-						text = text.Replace (parameter.Name, Misc.Bold (value).ToString ());
-					}
-				}
-			}
-
-			return text;
-		}
-
-
-		private static string GetNiceDuration(System.TimeSpan duration)
-		{
-			//	Retourne une durée sous une jolie forme.
-			return string.Concat ((duration.Ticks/10).ToString (), " μs");  // un Tick vaut 100 nanosecondes
 		}
 		#endregion
 
@@ -698,14 +699,22 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private RadioButton			extendedButton;
 		private RadioButton			basicButton;
 		private RadioButton			offButton;
+		private Button				clearButton;
+		private GlyphButton			secondaryButton;
+
+		private FrameBox			secondaryToolbar;
 		private TextField			searchField;
 		private Button				prevButton;
 		private Button				nextButton;
-		private Button				clearButton;
+		private CheckButton			caseButton;
 		private Button				exportButton;
 		private Button				importButton;
+
 		private CellTable			table;
 		private HSplitter			splitter;
+
+		private FrameBox			detailsFrame;
+		private CheckButton			substituteButton;
 		private TextFieldMulti		queryField;
 		private FrameBox			detailsBox;
 	}
