@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<count; row++)
 			{
 				var query = db.QueryLog.GetEntry (row);
-				var values = query.GetStrings (row);
+				var values = query.GetMainStrings (row);
 
 				this.table.FillRow (row, alignments);
 				this.table.UpdateRow (row, values);

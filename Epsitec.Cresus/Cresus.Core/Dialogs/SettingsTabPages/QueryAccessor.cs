@@ -52,14 +52,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		public static string[] GetStrings(this Query query, int row)
+		public static string[] GetMainStrings(this Query query, int row)
 		{
-			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
+			//	Retourne les textes pour peupler les 6 colonnes d'une ligne du tableau principal.
 			var values = new List<string> ();
 
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
-			values.Add (QueryAccessor.GetNiceDuration (query.Duration));
+			values.Add (query.GetNiceDuration ());
 			values.Add (query.GetQuery ());
 			values.Add (query.GetCompactParameters ());
 			values.Add (query.GetCompactResults ());
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static string[] GetParameterStrings(Parameter parameter)
 		{
-			//	Retourne les textes pour peupler une ligne du tableau des paramètres.
+			//	Retourne les textes pour peupler les 2 colonnes d'une ligne du tableau des paramètres.
 			var values = new List<string> ();
 
 			values.Add (parameter.Name);
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static string[] GetTableResultsStrings(ReadOnlyCollection<object> objects)
 		{
-			//	Retourne les textes pour peupler une ligne du tableau des résultats.
+			//	Retourne les textes pour peupler les colonnes d'une ligne du tableau des résultats.
 			var values = new List<string> ();
 
 			foreach (var obj in objects)
@@ -152,10 +152,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static string GetNiceDuration(System.TimeSpan duration)
+		private static string GetNiceDuration(this Query query)
 		{
-			//	Retourne une durée sous une jolie forme.
-			return string.Concat ((duration.Ticks/10).ToString (), " µs");  // un Tick vaut 100 nanosecondes
+			//	Retourne la durée sous une jolie forme.
+			return string.Concat ((query.Duration.Ticks/10).ToString (), " µs");  // un Tick vaut 100 nanosecondes
 		}
 	}
 }
