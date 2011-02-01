@@ -426,6 +426,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void Search(int direction, bool caseSensitive)
 		{
+			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+			if (db.QueryLog == null)
+			{
+				return;
+			}
+
 			int count = this.table.Rows;
 			int sel = this.table.SelectedRow;
 
@@ -455,7 +462,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					sel = 0;  // fin -> début
 				}
 
-				if (this.ContainsString (sel, search, caseSensitive))
+				var query = db.QueryLog.GetEntry (sel);
+
+				if (query.ContainsString (search, caseSensitive))
 				{
 					this.table.DeselectAll ();
 					this.table.SelectRow (sel, true);
@@ -622,45 +631,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateRadio ();
 			}
 		}
-
-
-		#region Search engine
-		private bool ContainsString(int row, string search, bool caseSensitive)
-		{
-			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
-			foreach (var t in this.GetSearchableStrings (row))
-			{
-				string text = t;
-
-				if (!caseSensitive)
-				{
-					text = Misc.RemoveAccentsToLower (t);
-				}
-
-				if (text.Contains (search))
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private IEnumerable<string> GetSearchableStrings(int row)
-		{
-			//	Retourne tous les textes où chercher pour une ligne donnée.
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			if (db.QueryLog != null)
-			{
-				var query = db.QueryLog.GetEntry (row);
-
-				yield return query.SourceCode;
-				yield return query.GetCompactParameters ();
-				yield return query.GetCompactResults ();
-			}
-		}
-		#endregion
 
 
 		#region CellTable helpers
