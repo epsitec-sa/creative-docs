@@ -61,9 +61,45 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 
 			for (int i = 0; i < 100; i++)
 			{
-				List<int> shuffled = sequence.Shuffle ().ToList ();
+				List<int> shuffledSequence = sequence.Shuffle ().ToList ();
 
-				CollectionAssert.AreNotEqual (sequence, shuffled);
+				CollectionAssert.AreNotEqual (sequence, shuffledSequence);
+				CollectionAssert.IsSubsetOf (sequence, shuffledSequence);
+				CollectionAssert.IsSubsetOf (shuffledSequence, sequence);
+			}
+		}
+
+
+		[TestMethod]
+		public void ShuffleDistributionTest()
+		{
+			int sequenceLength = 100;
+			int nbSequences = 10000;
+
+			List<int> sequence = Enumerable.Range (0, sequenceLength).ToList ();
+
+			List<List<int>> shuffledSequences = new List<List<int>> ();
+
+			for (int i = 0; i < nbSequences; i++)
+			{
+				List<int> shuffledSequence = sequence.Shuffle ().ToList ();
+
+				shuffledSequences.Add (shuffledSequence);
+			}
+
+			for (int i = 0; i < sequenceLength; i++)
+			{
+				double sum = 0;
+
+				for (int j = 0; j < nbSequences; j++)
+				{
+					sum += shuffledSequences[j][i];
+				}
+
+				double expected = sequence.Average();
+				double average = (sum / nbSequences);
+
+				Assert.IsTrue (System.Math.Abs (expected - average) < 1);
 			}
 		}
 
