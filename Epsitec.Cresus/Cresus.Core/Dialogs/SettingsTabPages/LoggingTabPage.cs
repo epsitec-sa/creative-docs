@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Dock = DockStyle.Left,
 				};
 
-				this.fullEnableButton = new RadioButton
+				this.extendedButton = new RadioButton
 				{
 					Parent = group,
 					Text = "Trace complète",
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Dock = DockStyle.Top,
 				};
 
-				this.shortEnableButton = new RadioButton
+				this.basicButton = new RadioButton
 				{
 					Parent = group,
 					Text = "Trace réduite",
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Dock = DockStyle.Top,
 				};
 
-				this.disableButton = new RadioButton
+				this.stoppedButton = new RadioButton
 				{
 					Parent = group,
 					Text = "Plus de trace",
@@ -103,19 +103,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 
 			//	Connection des événements.
-			this.fullEnableButton.Clicked += delegate
+			this.extendedButton.Clicked += delegate
 			{
-				this.FullEnable ();
+				this.LogMode = Database.Logging.LogMode.Extended;
 			};
 
-			this.shortEnableButton.Clicked += delegate
+			this.basicButton.Clicked += delegate
 			{
-				this.ShortEnable ();
+				this.LogMode = Database.Logging.LogMode.Basic;
 			};
 
-			this.disableButton.Clicked += delegate
+			this.stoppedButton.Clicked += delegate
 			{
-				this.Disable ();
+				this.LogMode = Database.Logging.LogMode.Stopped;
 			};
 
 			this.clearButton.Clicked += delegate
@@ -128,29 +128,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private void FullEnable()
-		{
-			this.LogMode = Database.Logging.LogMode.Extended;
-			this.UpdateRadio ();
-		}
-
-		private void ShortEnable()
-		{
-			this.LogMode = Database.Logging.LogMode.Basic;
-			this.UpdateRadio ();
-		}
-
-		private void Disable()
-		{
-			this.LogMode = Database.Logging.LogMode.Stopped;
-			this.UpdateRadio ();
-		}
-
 		private void UpdateRadio()
 		{
-			this.fullEnableButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
-			this.shortEnableButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.disableButton.ActiveState     = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
+			this.extendedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
+			this.basicButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
+			this.stoppedButton.ActiveState     = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -287,13 +269,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					db.EnableLogging ();
 					db.QueryLog.Mode = value;
 				}
+
+				this.UpdateRadio ();
 			}
 		}
 
 
-		private RadioButton			fullEnableButton;
-		private RadioButton			shortEnableButton;
-		private RadioButton			disableButton;
+		private RadioButton			extendedButton;
+		private RadioButton			basicButton;
+		private RadioButton			stoppedButton;
 		private Button				clearButton;
 		private CellTable			table;
 	}
