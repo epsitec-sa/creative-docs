@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (sel);
 
 				this.queryField.Visibility = true;
-				this.queryField.Text = query.SourceCode.Replace ("\n", "");
+				this.queryField.Text = LoggingTabPage.GetQuery (query);
 
 				var parameters = this.GetCellTableForParameters (query.Parameters);
 				parameters.Parent = this.detailsBox;
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					foreach (var table in query.Result.Tables)
 					{
-						var cellTable = this.GetCellTableForTable (table);
+						var cellTable = this.GetCellTableForResultsTable (table);
 						cellTable.Parent = this.detailsBox;
 						cellTable.Dock = DockStyle.Fill;
 						cellTable.Margins = new Margins (0, 10, 0, 0);
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.prevButton.Enable = enable;
 			this.nextButton.Enable = enable;
 
-			this.clearButton.Enable = !empty;
+			this.clearButton.Enable  = !empty;
 			this.exportButton.Enable = !empty;
 		}
 
@@ -339,21 +339,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				sel = 0;
 			}
 
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < count; i++)  // une boucle complète
 			{
-				sel += direction;
+				sel += direction;  // suivant ou précédent
 
 				if (sel < 0)
 				{
-					sel = count-1;
+					sel = count-1;  // début -> fin
 				}
 
 				if (sel >= count)
 				{
-					sel = 0;
+					sel = 0;  // fin -> début
 				}
 
-				if (this.SearchString (sel, this.searchField.Text))
+				if (this.ContainsString (sel, this.searchField.Text))
 				{
 					this.table.DeselectAll ();
 					this.table.SelectRow (sel, true);
@@ -386,8 +386,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		#region CellTable makers
 		private Widget GetCellTableForParameters(ReadOnlyCollection<Parameter> parameters)
 		{
+			//	Retourne le widget permettant de représenter les paramètres.
 			var frame = new FrameBox
 			{
 				PreferredWidth = 80+80+20,
@@ -431,8 +433,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return frame;
 		}
 
-		private Widget GetCellTableForTable(Table table)
+		private Widget GetCellTableForResultsTable(Table table)
 		{
+			//	Retourne le widget permettant de représenter les résultats contenus dans une table.
 			var frame = new FrameBox
 			{
 				PreferredWidth = 300,
@@ -472,7 +475,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<rowsCount; row++)
 			{
-				var values = LoggingTabPage.GetTableValues (table.Rows[row].Values);
+				var values = LoggingTabPage.GetResultsTableValues (table.Rows[row].Values);
 
 				LoggingTabPage.TableFillRow (cellTable, row, alignments.ToArray ());
 				LoggingTabPage.TableUpdateRow (cellTable, row, values);
@@ -480,10 +483,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			return frame;
 		}
+		#endregion
 
 
 		private LogMode LogMode
 		{
+			//	Mode de trace.
 			get
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
@@ -516,8 +521,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private bool SearchString(int row, string search)
+		#region Search engine
+		private bool ContainsString(int row, string search)
 		{
+			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
 			foreach (var text in this.GetSearchableStrings (row))
 			{
 				if (text.Contains (search))
@@ -531,6 +538,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private IEnumerable<string> GetSearchableStrings(int row)
 		{
+			//	Retourne tous les textes où chercher pour une ligne donnée.
 			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
 			if (db.QueryLog != null)
@@ -538,33 +546,38 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (row);
 
 				yield return query.SourceCode;
-				yield return LoggingTabPage.GetQueryParameters (query);
-				yield return LoggingTabPage.GetQueryResults (query);
+				yield return LoggingTabPage.GetCompactQueryParameters (query);
+				yield return LoggingTabPage.GetCompactQueryResults (query);
 			}
 		}
+		#endregion
 
 
+		#region Query reader
 		private static string[] GetQueryValues(Query query, int row)
 		{
+			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
 			var values = new List<string> ();
 
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
-			values.Add (LoggingTabPage.GetDuration (query.Duration));
-			values.Add (query.SourceCode.Replace ("\n", ""));
-			values.Add (LoggingTabPage.GetQueryParameters (query));
-			values.Add (LoggingTabPage.GetQueryResults (query));
+			values.Add (LoggingTabPage.GetNiceDuration (query.Duration));
+			values.Add (LoggingTabPage.GetQuery (query));
+			values.Add (LoggingTabPage.GetCompactQueryParameters (query));
+			values.Add (LoggingTabPage.GetCompactQueryResults (query));
 
 			return values.ToArray ();
 		}
 
-		private static string GetQueryParameters(Query query)
+		private static string GetCompactQueryParameters(Query query)
 		{
+			//	Retourne tous les paramètres sous une forme compacte.
 			return string.Join (", ", query.Parameters.Select (x => x.Value));
 		}
 
-		private static string GetQueryResults(Query query)
+		private static string GetCompactQueryResults(Query query)
 		{
+			//	Retourne tous les réaultats sous une forme compacte.
 			if (query.Result == null)
 			{
 				return "";
@@ -596,6 +609,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static string[] GetParameterValues(Parameter parameter)
 		{
+			//	Retourne les textes pour peupler une ligne du tableau des paramètres.
 			var values = new List<string> ();
 
 			values.Add (parameter.Name);
@@ -604,8 +618,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return values.ToArray ();
 		}
 
-		private static string[] GetTableValues(ReadOnlyCollection<object> objects)
+		private static string[] GetResultsTableValues(ReadOnlyCollection<object> objects)
 		{
+			//	Retourne les textes pour peupler une ligne du tableau des résultats.
 			var values = new List<string> ();
 
 			foreach (var obj in objects)
@@ -617,9 +632,40 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private static FormattedText GetQuery(Query query, bool substitution = true)
+		{
+			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres.
+			var text = query.SourceCode.Replace ("\n", "");
+
+			if (substitution)
+			{
+				foreach (var parameter in query.Parameters)
+				{
+					var value = parameter.Value.ToString ();
+
+					if (!string.IsNullOrEmpty (value))
+					{
+						text = text.Replace (parameter.Name, Misc.Bold (value));
+					}
+				}
+			}
+
+			return text;
+		}
+
+
+		private static string GetNiceDuration(System.TimeSpan duration)
+		{
+			//	Retourne une durée sous une jolie forme.
+			return string.Concat ((duration.Ticks/10).ToString (), " μs");  // un Tick vaut 100 nanosecondes
+		}
+		#endregion
+
+
+		#region CellTable helpers
 		private static void TableFillRow(CellTable table, int row, params ContentAlignment[] alignments)
 		{
-			//	Peuple une ligne de la table, si nécessaire.
+			//	Peuple une ligne d'une table, si nécessaire.
 			for (int column = 0; column < alignments.Count (); column++)
 			{
 				if (table[column, row].IsEmpty)
@@ -639,20 +685,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static void TableUpdateRow(CellTable table, int row, params string[] values)
 		{
-			//	Met à jour le contenu d'une ligne de la table.
+			//	Met à jour le contenu d'une ligne d'une table.
 			for (int column = 0; column < values.Count (); column++)
 			{
 				var text = table[column, row].Children[0] as StaticText;
 				text.Text = values[column];
 			}
 		}
-
-
-		private static string GetDuration(System.TimeSpan duration)
-		{
-			// Un Tick vaut 100 nanosecondes.
-			return string.Concat ((duration.Ticks/10).ToString (), " μs");
-		}
+		#endregion
 
 
 		private RadioButton			extendedButton;
