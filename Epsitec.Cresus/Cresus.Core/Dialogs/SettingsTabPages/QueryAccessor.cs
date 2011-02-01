@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			yield return query.GetCompactResults ();
 		}
 
-	
+
 		public static string[] GetStrings(this Query query, int row)
 		{
 			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private static string GetNiceDuration(System.TimeSpan duration)
 		{
 			//	Retourne une durée sous une jolie forme.
-			return string.Concat ((duration.Ticks/10).ToString (), " μs");  // un Tick vaut 100 nanosecondes
+			return string.Concat ((duration.Ticks/10).ToString (), " µs");  // un Tick vaut 100 nanosecondes
 		}
 	}
 }
