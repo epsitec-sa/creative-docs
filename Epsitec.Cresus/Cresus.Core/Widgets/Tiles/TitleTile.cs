@@ -32,7 +32,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public bool ContainsCollectionItemTiles
+		public bool ContainsAddedCollectionItemTiles
+		{
+			get;
+			set;
+		}
+
+		public bool ContainsRemovedCollectionItemTiles
 		{
 			get;
 			set;
@@ -58,7 +64,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				if (this.ContainsCollectionItemTiles && this.ContainsFrozenTiles)
+				if ((this.ContainsAddedCollectionItemTiles || this.ContainsRemovedCollectionItemTiles) && this.ContainsFrozenTiles)
 				{
 					return this.Items.Select (item => item.Controller).FirstOrDefault ();
 				}
@@ -265,8 +271,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void SetButtonVisibility(bool visibility)
 		{
-			bool showAdd    = visibility && this.ContainsCollectionItemTiles;
-			bool showRemove = showAdd && this.ContainsFrozenTiles;
+			bool showAdd    = visibility && this.ContainsAddedCollectionItemTiles;
+			bool showRemove = visibility && this.ContainsRemovedCollectionItemTiles && this.ContainsFrozenTiles;
 
 			if (showAdd || showRemove)
 			{

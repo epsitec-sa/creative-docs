@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				tile.EnableRemoveButtons = (item.DataType == TileDataType.CollectionItem && item.AutoGroup && !item.HideAddAndRemoveButtons);
+				tile.EnableRemoveButtons = (item.DataType == TileDataType.CollectionItem && item.AutoGroup && !item.HideRemoveButton);
 				item.Tile = tile;
 
 				if (item.AutoGroup)
@@ -545,16 +545,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					case TileDataType.CollectionItem:
 					case TileDataType.EmptyItem:
-						item.TitleTile.ContainsCollectionItemTiles = !item.HideAddAndRemoveButtons;
+						item.TitleTile.ContainsAddedCollectionItemTiles   = !item.HideAddButton;
+						item.TitleTile.ContainsRemovedCollectionItemTiles = !item.HideRemoveButton;
 						break;
 
 					case TileDataType.EditableItem:
 					case TileDataType.CustomizedItem:
-						item.TitleTile.ContainsCollectionItemTiles = false;
+						item.TitleTile.ContainsAddedCollectionItemTiles   = false;
+						item.TitleTile.ContainsRemovedCollectionItemTiles = false;
 						break;
 
 					default:
-						item.TitleTile.ContainsCollectionItemTiles = false;
+						item.TitleTile.ContainsAddedCollectionItemTiles   = false;
+						item.TitleTile.ContainsRemovedCollectionItemTiles = false;
 						isItemPartOfCollection = false;
 						break;
 				}

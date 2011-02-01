@@ -130,13 +130,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var tileDataItem = new TileDataItem
 			{
-				AutoGroup               = true,
-				HideAddAndRemoveButtons = true,
-				Name		            = "VatLines",
-				IconUri		            = "Data.TaxDocumentItem",
-				Title		            = TextFormatter.FormatText ("Récapitulatif TVA"),
-				CompactTitle            = TextFormatter.FormatText ("Récapitulatif TVA"),
-				Text		            = CollectionTemplate.DefaultEmptyText,
+				AutoGroup        = true,
+				HideAddButton    = true,
+				HideRemoveButton = true,
+				Name		     = "VatLines",
+				IconUri		     = "Data.TaxDocumentItem",
+				Title		     = TextFormatter.FormatText ("Récapitulatif TVA"),
+				CompactTitle     = TextFormatter.FormatText ("Récapitulatif TVA"),
+				Text		     = CollectionTemplate.DefaultEmptyText,
 			};
 
 			data.Add (tileDataItem);
