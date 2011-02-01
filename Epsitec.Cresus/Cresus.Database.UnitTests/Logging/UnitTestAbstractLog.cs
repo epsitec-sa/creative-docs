@@ -43,6 +43,9 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			testLog.Mode = LogMode.Extended;
 			Assert.AreEqual (LogMode.Extended, testLog.Mode);
 
+			testLog.Mode = LogMode.Off;
+			Assert.AreEqual (LogMode.Off, testLog.Mode);
+
 			testLog.Mode = LogMode.Basic;
 			Assert.AreEqual (LogMode.Basic, testLog.Mode);
 		}
@@ -84,23 +87,41 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
 			
-			foreach (var mode in new List<LogMode> () { LogMode.Basic, LogMode.Extended })
+			foreach (var mode in new List<LogMode> () { LogMode.Off, LogMode.Basic, LogMode.Extended })
 			{
 				testLog.Clear ();
 				testLog.Mode = mode;
 				testLog.AddEntry (command, startTime, duration);
 
-				Assert.AreEqual (1, testLog.GetNbEntries ());
+				switch (mode)
+				{
+					case LogMode.Off:
 
-				Query entry = testLog.GetEntry (0);
+						Assert.AreEqual (0, testLog.GetNbEntries ());
 
-				Assert.AreEqual (command.CommandText, entry.SourceCode);
-				Assert.AreEqual (startTime, entry.StartTime);
-				Assert.AreEqual (duration, entry.Duration);
-				Assert.AreEqual (1, entry.Parameters.Count);
-				Assert.AreEqual ("name", entry.Parameters[0].Name);
-				Assert.AreEqual ("value", entry.Parameters[0].Value);
-				Assert.IsNull (entry.Result);
+						break;
+
+					case LogMode.Basic:
+					case LogMode.Extended:
+
+						Assert.AreEqual (1, testLog.GetNbEntries ());
+
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
+						Assert.IsNull (entry.Result);
+
+						break;
+
+					default:
+						Assert.Fail ();
+						break;
+				}
 			}
 		}
 
@@ -115,31 +136,48 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			TimeSpan duration = TimeSpan.FromSeconds (123);
 			object data = new object ();
 
-			foreach (var mode in new List<LogMode> () { LogMode.Basic, LogMode.Extended })
+			foreach (var mode in new List<LogMode> () { LogMode.Off, LogMode.Basic, LogMode.Extended })
 			{
 				testLog.Clear ();
 				testLog.Mode = mode;
 				testLog.AddEntry (command, startTime, duration, data);
 
-				Assert.AreEqual (1, testLog.GetNbEntries ());
-
-				Query entry = testLog.GetEntry (0);
-
-				Assert.AreEqual (command.CommandText, entry.SourceCode);
-				Assert.AreEqual (startTime, entry.StartTime);
-				Assert.AreEqual (duration, entry.Duration);
-				Assert.AreEqual (1, entry.Parameters.Count);
-				Assert.AreEqual ("name", entry.Parameters[0].Name);
-				Assert.AreEqual ("value", entry.Parameters[0].Value);
-
 				switch (mode)
 				{
-					case LogMode.Basic:
-						Assert.IsNull (entry.Result);
+					case LogMode.Off:
+
+						Assert.AreEqual (0, testLog.GetNbEntries ());
+
 						break;
 
-					case LogMode.Extended:
+					case LogMode.Basic:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
 
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
+						Assert.IsNull (entry.Result);
+
+						break;
+					}
+					case LogMode.Extended:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
+
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
 						Assert.IsNotNull (entry.Result);
 						Assert.AreEqual (1, entry.Result.Tables.Count);
 						Assert.AreEqual ("result", entry.Result.Tables[0].Name);
@@ -150,6 +188,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 						Assert.AreEqual (data, entry.Result.Tables[0].Rows[0].Values[0]);
 
 						break;
+					}
 
 					default:
 						Assert.Fail ();
@@ -175,31 +214,49 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 				System.TimeSpan.FromDays(3),
 			};
 
-			foreach (var mode in new List<LogMode> () { LogMode.Basic, LogMode.Extended })
+			foreach (var mode in new List<LogMode> () { LogMode.Off, LogMode.Basic, LogMode.Extended })
 			{
 				testLog.Clear ();
 				testLog.Mode = mode;
 				testLog.AddEntry (command, startTime, duration, data);
-
-				Assert.AreEqual (1, testLog.GetNbEntries ());
-
-				Query entry = testLog.GetEntry (0);
-
-				Assert.AreEqual (command.CommandText, entry.SourceCode);
-				Assert.AreEqual (startTime, entry.StartTime);
-				Assert.AreEqual (duration, entry.Duration);
-				Assert.AreEqual (1, entry.Parameters.Count);
-				Assert.AreEqual ("name", entry.Parameters[0].Name);
-				Assert.AreEqual ("value", entry.Parameters[0].Value);
-				
+								
 				switch (mode)
 				{
-					case LogMode.Basic:
-						Assert.IsNull (entry.Result);
+					case LogMode.Off:
+
+						Assert.AreEqual (0, testLog.GetNbEntries ());
+
 						break;
 
-					case LogMode.Extended:
+					case LogMode.Basic:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
 
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
+						Assert.IsNull (entry.Result);
+
+						break;
+					}
+
+					case LogMode.Extended:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
+
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
 						Assert.IsNotNull (entry.Result);
 						Assert.AreEqual (1, entry.Result.Tables.Count);
 						Assert.AreEqual ("result", entry.Result.Tables[0].Name);
@@ -214,6 +271,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 						CollectionAssert.AreEqual (data, entry.Result.Tables[0].Rows[0].Values);
 
 						break;
+					}
 
 					default:
 						Assert.Fail ();
@@ -250,31 +308,48 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			DataSet data = new DataSet ();
 			data.Tables.Add (table);
 
-			foreach (var mode in new List<LogMode> () { LogMode.Basic, LogMode.Extended })
+			foreach (var mode in new List<LogMode> () { LogMode.Off, LogMode.Basic, LogMode.Extended })
 			{
 				testLog.Clear ();
 				testLog.Mode = mode;
 				testLog.AddEntry (command, startTime, duration, data);
-
-				Assert.AreEqual (1, testLog.GetNbEntries ());
-
-				Query entry = testLog.GetEntry (0);
-
-				Assert.AreEqual (command.CommandText, entry.SourceCode);
-				Assert.AreEqual (startTime, entry.StartTime);
-				Assert.AreEqual (duration, entry.Duration);
-				Assert.AreEqual (1, entry.Parameters.Count);
-				Assert.AreEqual ("name", entry.Parameters[0].Name);
-				Assert.AreEqual ("value", entry.Parameters[0].Value);
-
+				
 				switch (mode)
 				{
-					case LogMode.Basic:
-						Assert.IsNull (entry.Result);
+					case LogMode.Off:
+
+						Assert.AreEqual (0, testLog.GetNbEntries ());
+
 						break;
 
-					case LogMode.Extended:
+					case LogMode.Basic:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
 
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
+						Assert.IsNull (entry.Result);
+
+						break;
+					}
+					case LogMode.Extended:
+					{
+						Assert.AreEqual (1, testLog.GetNbEntries ());
+
+						Query entry = testLog.GetEntry (0);
+
+						Assert.AreEqual (command.CommandText, entry.SourceCode);
+						Assert.AreEqual (startTime, entry.StartTime);
+						Assert.AreEqual (duration, entry.Duration);
+						Assert.AreEqual (1, entry.Parameters.Count);
+						Assert.AreEqual ("name", entry.Parameters[0].Name);
+						Assert.AreEqual ("value", entry.Parameters[0].Value);
 						Assert.IsNotNull (entry.Result);
 						Assert.AreEqual (1, entry.Result.Tables.Count);
 						Assert.AreEqual ("table", entry.Result.Tables[0].Name);
@@ -286,6 +361,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 						CollectionAssert.AreEqual (table.Rows[1].ItemArray.ToList (), entry.Result.Tables[0].Rows[1].Values);
 
 						break;
+					}
 
 					default:
 						Assert.Fail ();

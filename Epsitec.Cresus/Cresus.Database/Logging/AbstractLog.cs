@@ -50,10 +50,13 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			Result result = null;
-			Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+			if (!this.DiscardEntry ())
+			{
+				Result result = null;
+				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
 
-			this.AddEntry (query);
+				this.AddEntry (query);
+			}
 		}
 
 
@@ -61,10 +64,13 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data); 
-			Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+			if (!this.DiscardEntry ())
+			{
+				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
+				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
 
-			this.AddEntry (query);
+				this.AddEntry (query);
+			}
 		}
 
 
@@ -72,10 +78,13 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			Result result = this.DiscardResult () ? null : AbstractLog.GetResult (command, data);
-			Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+			if (!this.DiscardEntry ())
+			{
+				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (command, data);
+				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
 
-			this.AddEntry (query);
+				this.AddEntry (query);
+			}
 		}
 
 
@@ -83,10 +92,19 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
-			Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+			if (!this.DiscardEntry ())
+			{
+				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
+				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
 
-			this.AddEntry (query);
+				this.AddEntry (query);
+			}
+		}
+
+
+		private bool DiscardEntry()
+		{
+			return this.Mode == LogMode.Off;
 		}
 
 
