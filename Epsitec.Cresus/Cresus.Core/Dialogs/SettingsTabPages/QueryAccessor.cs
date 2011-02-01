@@ -22,6 +22,36 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public static class QueryAccessor
 	{
+		public static bool ContainsString(this Query query, string search, bool caseSensitive)
+		{
+			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
+			foreach (var t in query.GetSearchableStrings ())
+			{
+				string text = t;
+
+				if (!caseSensitive)
+				{
+					text = Misc.RemoveAccentsToLower (t);
+				}
+
+				if (text.Contains (search))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private static IEnumerable<string> GetSearchableStrings(this Query query)
+		{
+			//	Retourne tous les textes où chercher pour une ligne donnée.
+			yield return query.SourceCode;
+			yield return query.GetCompactParameters ();
+			yield return query.GetCompactResults ();
+		}
+
+	
 		public static string[] GetStrings(this Query query, int row)
 		{
 			//	Retourne les textes pour peupler une ligne du tableau supérieur principal.
