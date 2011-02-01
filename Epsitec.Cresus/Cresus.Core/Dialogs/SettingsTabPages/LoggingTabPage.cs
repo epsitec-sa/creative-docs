@@ -51,40 +51,37 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, 10),
 				};
 
-				this.fullEnableButton = new Button
+				var group = new FrameBox
 				{
 					Parent = header,
+					Dock = DockStyle.Left,
+				};
+
+				this.fullEnableButton = new RadioButton
+				{
+					Parent = group,
 					Text = "Trace complète",
 					PreferredWidth = 120,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 1, 0, 0),
+					AutoToggle = false,
+					Dock = DockStyle.Top,
 				};
 
-				this.shortEnableButton = new Button
+				this.shortEnableButton = new RadioButton
 				{
-					Parent = header,
+					Parent = group,
 					Text = "Trace réduite",
 					PreferredWidth = 120,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 10, 0, 0),
+					AutoToggle = false,
+					Dock = DockStyle.Top,
 				};
 
-				this.disableButton = new Button
+				this.disableButton = new RadioButton
 				{
-					Parent = header,
+					Parent = group,
 					Text = "Plus de trace",
 					PreferredWidth = 120,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 50, 0, 0),
-				};
-
-				this.updateButton = new Button
-				{
-					Parent = header,
-					Text = "Met à jour la table",
-					PreferredWidth = 120,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 1, 0, 0),
+					AutoToggle = false,
+					Dock = DockStyle.Top,
 				};
 
 				this.clearButton = new Button
@@ -121,42 +118,41 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.Disable ();
 			};
 
-			this.updateButton.Clicked += delegate
-			{
-				this.UpdateTable ();
-			};
-
 			this.clearButton.Clicked += delegate
 			{
 				this.ClearTable ();
 			};
 
+			this.UpdateRadio ();
 			this.UpdateTable ();
 		}
 
 
 		private void FullEnable()
 		{
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			db.EnableLogging ();
-			db.QueryLog.Mode = Database.Logging.LogMode.Extended;
+			this.LogMode = Database.Logging.LogMode.Extended;
+			this.UpdateRadio ();
 		}
 
 		private void ShortEnable()
 		{
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			db.EnableLogging ();
-			db.QueryLog.Mode = Database.Logging.LogMode.Basic;
+			this.LogMode = Database.Logging.LogMode.Basic;
+			this.UpdateRadio ();
 		}
 
 		private void Disable()
 		{
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			db.DisableLogging ();
+			this.LogMode = Database.Logging.LogMode.Stopped;
+			this.UpdateRadio ();
 		}
+
+		private void UpdateRadio()
+		{
+			this.fullEnableButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
+			this.shortEnableButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
+			this.disableButton.ActiveState     = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
+		}
+
 
 		private void UpdateTable()
 		{
@@ -263,12 +259,42 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return string.Concat ((duration.Ticks/10).ToString (), " us");
 		}
 
+		private LogMode LogMode
+		{
+			get
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
-		private Button			fullEnableButton;
-		private Button			shortEnableButton;
-		private Button			disableButton;
-		private Button			updateButton;
-		private Button			clearButton;
-		private CellTable		table;
+				if (db.QueryLog == null)
+				{
+					return Database.Logging.LogMode.Stopped;
+				}
+				else
+				{
+					return db.QueryLog.Mode;
+				}
+			}
+			set
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (value == Database.Logging.LogMode.Stopped)
+				{
+					db.DisableLogging ();
+				}
+				else
+				{
+					db.EnableLogging ();
+					db.QueryLog.Mode = value;
+				}
+			}
+		}
+
+
+		private RadioButton			fullEnableButton;
+		private RadioButton			shortEnableButton;
+		private RadioButton			disableButton;
+		private Button				clearButton;
+		private CellTable			table;
 	}
 }
