@@ -8,14 +8,9 @@
 
 	public enum LogMode
 	{
-
-
+		Stopped,
 		Basic,
-
-
 		Extended,
-
-
 	}
 
 
