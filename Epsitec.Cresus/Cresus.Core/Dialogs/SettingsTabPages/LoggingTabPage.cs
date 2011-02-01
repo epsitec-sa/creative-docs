@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = header,
 					Text = "Trace complète",
-					PreferredWidth = 110,
+					PreferredWidth = 100,
 					AutoToggle = false,
 					Dock = DockStyle.Left,
 				};
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = header,
 					Text = "Trace réduite",
-					PreferredWidth = 110,
+					PreferredWidth = 90,
 					AutoToggle = false,
 					Dock = DockStyle.Left,
 				};
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = header,
 					Text = "Pas de trace",
-					PreferredWidth = 110,
+					PreferredWidth = 80,
 					AutoToggle = false,
 					Dock = DockStyle.Left,
 				};
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = header,
 					Text = "Importer...",
-					PreferredWidth = 80,
+					PreferredWidth = 70,
 					Dock = DockStyle.Right,
 					Margins = new Margins (1, 0, 0, 0),
 				};
@@ -106,18 +106,43 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = header,
 					Text = "Exporter...",
-					PreferredWidth = 80,
+					PreferredWidth = 70,
 					Dock = DockStyle.Right,
-					Margins = new Margins (20, 0, 0, 0),
+					Margins = new Margins (10, 0, 0, 0),
 				};
 
 				this.clearButton = new Button
 				{
 					Parent = header,
-					Text = "Vider la table",
-					PreferredWidth = 120,
+					Text = "Vider",
+					PreferredWidth = 50,
 					Dock = DockStyle.Right,
-					Margins = new Margins (20, 0, 0, 0),
+					Margins = new Margins (10, 0, 0, 0),
+				};
+
+				this.nextButton = new Button
+				{
+					Parent = header,
+					Text = "Suivant",
+					PreferredWidth = 60,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				this.prevButton = new Button
+				{
+					Parent = header,
+					Text = "Précédent",
+					PreferredWidth = 60,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				this.searchField = new TextField
+				{
+					Parent = header,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (10, 0, 0, 0),
 				};
 			}
 
@@ -163,6 +188,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.LogMode = Database.Logging.LogMode.Off;
 			};
 
+			this.searchField.TextChanged += delegate
+			{
+				this.UpdateWidgets ();
+			};
+
+			this.prevButton.Clicked += delegate
+			{
+				this.Search (-1);
+			};
+
+			this.nextButton.Clicked += delegate
+			{
+				this.Search (1);
+			};
+
 			this.clearButton.Clicked += delegate
 			{
 				this.ClearTable ();
@@ -186,6 +226,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdateRadio ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
+			this.UpdateWidgets ();
 		}
 
 
@@ -255,7 +296,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (sel);
 
 				this.queryField.Visibility = true;
-				this.queryField.Text = query.SourceCode;
+				this.queryField.Text = query.SourceCode.Replace ("\n", "");
 
 				var parameters = this.GetCellTableForParameters (query.Parameters);
 				parameters.Parent = this.detailsBox;
@@ -275,14 +316,62 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
+		private void UpdateWidgets()
+		{
+			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
+			bool empty = this.table.Rows == 0;
+
+			this.prevButton.Enable = enable;
+			this.nextButton.Enable = enable;
+
+			this.clearButton.Enable = !empty;
+			this.exportButton.Enable = !empty;
+		}
+
+
+		private void Search(int direction)
+		{
+			int count = this.table.Rows;
+			int sel = this.table.SelectedRow;
+
+			if (sel == -1)
+			{
+				sel = 0;
+			}
+
+			for (int i = 0; i < count; i++)
+			{
+				sel += direction;
+
+				if (sel < 0)
+				{
+					sel = count-1;
+				}
+
+				if (sel >= count)
+				{
+					sel = 0;
+				}
+
+				if (this.SearchString (sel, this.searchField.Text))
+				{
+					this.table.DeselectAll ();
+					this.table.SelectRow (sel, true);
+					this.table.ShowSelect ();
+					this.UpdateDetails ();
+					return;
+				}
+			}
+		}
 
 		private void ClearTable()
 		{
 			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
 			db.QueryLog.Clear ();
+
 			this.UpdateTable ();
 			this.UpdateDetails ();
+			this.UpdateWidgets ();
 		}
 
 
@@ -427,6 +516,34 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private bool SearchString(int row, string search)
+		{
+			foreach (var text in this.GetSearchableStrings (row))
+			{
+				if (text.Contains (search))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private IEnumerable<string> GetSearchableStrings(int row)
+		{
+			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+			if (db.QueryLog != null)
+			{
+				var query = db.QueryLog.GetEntry (row);
+
+				yield return query.SourceCode;
+				yield return LoggingTabPage.GetQueryParameters (query);
+				yield return LoggingTabPage.GetQueryResults (query);
+			}
+		}
+
+
 		private static string[] GetQueryValues(Query query, int row)
 		{
 			var values = new List<string> ();
@@ -434,7 +551,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
 			values.Add (LoggingTabPage.GetDuration (query.Duration));
-			values.Add (query.SourceCode);
+			values.Add (query.SourceCode.Replace ("\n", ""));
 			values.Add (LoggingTabPage.GetQueryParameters (query));
 			values.Add (LoggingTabPage.GetQueryResults (query));
 
@@ -510,6 +627,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					var text = new StaticText
 					{
 						ContentAlignment = alignments[column],
+						TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 						Dock = DockStyle.Fill,
 						Margins = new Margins (4, 4, 0, 0),
 					};
@@ -533,13 +651,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private static string GetDuration(System.TimeSpan duration)
 		{
 			// Un Tick vaut 100 nanosecondes.
-			return string.Concat ((duration.Ticks/10).ToString (), " us");
+			return string.Concat ((duration.Ticks/10).ToString (), " μs");
 		}
 
 
 		private RadioButton			extendedButton;
 		private RadioButton			basicButton;
 		private RadioButton			offButton;
+		private TextField			searchField;
+		private Button				prevButton;
+		private Button				nextButton;
 		private Button				clearButton;
 		private Button				exportButton;
 		private Button				importButton;
