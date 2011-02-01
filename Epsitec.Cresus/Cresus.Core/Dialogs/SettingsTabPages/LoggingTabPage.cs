@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database.Logging;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
@@ -36,52 +37,60 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public override void CreateUI(Widget parent)
 		{
-			var frame = new FrameBox
+			var topFrame = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10),
 			};
 
+			var bottomFrame = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 100,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (10, 0, 10, 10),
+			};
+
+			this.splitter = new HSplitter
+			{
+				Parent = parent,
+				Dock = DockStyle.Bottom,
+			};
+
 			{
 				var header = new FrameBox
 				{
-					Parent = frame,
+					Parent = topFrame,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 10),
 				};
 
-				var group = new FrameBox
-				{
-					Parent = header,
-					Dock = DockStyle.Left,
-				};
-
 				this.extendedButton = new RadioButton
 				{
-					Parent = group,
+					Parent = header,
 					Text = "Trace complète",
-					PreferredWidth = 120,
+					PreferredWidth = 110,
 					AutoToggle = false,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Left,
 				};
 
 				this.basicButton = new RadioButton
 				{
-					Parent = group,
+					Parent = header,
 					Text = "Trace réduite",
-					PreferredWidth = 120,
+					PreferredWidth = 110,
 					AutoToggle = false,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Left,
 				};
 
-				this.stoppedButton = new RadioButton
+				this.offButton = new RadioButton
 				{
-					Parent = group,
-					Text = "Plus de trace",
-					PreferredWidth = 120,
+					Parent = header,
+					Text = "Pas de trace",
+					PreferredWidth = 110,
 					AutoToggle = false,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Left,
 				};
 
 				this.clearButton = new Button
@@ -89,18 +98,36 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Parent = header,
 					Text = "Vide la table",
 					PreferredWidth = 120,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 10, 0, 0),
+					Dock = DockStyle.Right,
+					Margins = new Margins (20, 0, 0, 0),
 				};
 			}
 
 			this.table = new CellTable
 			{
-				Parent = frame,
+				Parent = topFrame,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile,
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 				Dock = DockStyle.Fill,
 			};
+
+			{
+				this.queryField = new TextFieldMulti
+				{
+					Parent = bottomFrame,
+					IsReadOnly = true,
+					PreferredHeight = 68,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 10, 0, 10),
+				};
+
+				this.detailsBox = new FrameBox
+				{
+					Parent = bottomFrame,
+					PreferredHeight = 100,
+					Dock = DockStyle.Fill,
+				};
+			}
 
 			//	Connection des événements.
 			this.extendedButton.Clicked += delegate
@@ -113,7 +140,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.LogMode = Database.Logging.LogMode.Basic;
 			};
 
-			this.stoppedButton.Clicked += delegate
+			this.offButton.Clicked += delegate
 			{
 				this.LogMode = Database.Logging.LogMode.Off;
 			};
@@ -123,8 +150,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.ClearTable ();
 			};
 
+			this.table.SelectionChanged += delegate
+			{
+				this.UpdateDetails ();
+			};
+
 			this.UpdateRadio ();
 			this.UpdateTable ();
+			this.UpdateDetails ();
 		}
 
 
@@ -132,7 +165,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.extendedButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
 			this.basicButton.ActiveState    = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.stoppedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Off ) ? ActiveState.Yes : ActiveState.No;
+			this.offButton.ActiveState      = (this.LogMode == Database.Logging.LogMode.Off     ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -142,92 +175,62 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int count = (db.QueryLog == null) ? 0 : db.QueryLog.GetNbEntries ();
 
-			this.table.SetArraySize (4, count);
-			this.table.SetWidthColumn (0, 120);
+			this.table.SetArraySize (5, count);
+			this.table.SetWidthColumn (0, 110);
 			this.table.SetWidthColumn (1,  70);
-			this.table.SetWidthColumn (2, 500);
-			this.table.SetWidthColumn (3, 100);
+			this.table.SetWidthColumn (2, 390);
+			this.table.SetWidthColumn (3, 110);
+			this.table.SetWidthColumn (4, 110);
 
 			this.table.SetHeaderTextH (0, "Début");
 			this.table.SetHeaderTextH (1, "Durée");
 			this.table.SetHeaderTextH (2, "Requête");
-			this.table.SetHeaderTextH (3, "Résultat");
+			this.table.SetHeaderTextH (3, "Paramètres");
+			this.table.SetHeaderTextH (4, "Résultats");
+
+			ContentAlignment[] alignments = { ContentAlignment.MiddleLeft, ContentAlignment.MiddleRight, ContentAlignment.MiddleLeft, ContentAlignment.MiddleLeft, ContentAlignment.MiddleLeft };
 
 			for (int row=0; row<count; row++)
 			{
-				this.TableFillRow (row);
-				this.TableUpdateRow (row, db.QueryLog.GetEntry (row));
+				var values = LoggingTabPage.GetQueryValues (db.QueryLog.GetEntry (row));
+
+				LoggingTabPage.TableFillRow (this.table, row, alignments);
+				LoggingTabPage.TableUpdateRow (this.table, row, values);
 			}
 		}
 
-		private void TableFillRow(int row)
+		private void UpdateDetails()
 		{
-			//	Peuple une ligne de la table, si nécessaire.
-			if (this.table[0, row].IsEmpty)
-			{
-				var text = new StaticText
-				{
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 0, 0),
-				};
+			this.detailsBox.Children.Clear ();
 
-				this.table[0, row].Insert (text);
+			int sel = this.table.SelectedRow;
+
+			if (sel == -1)
+			{
+				this.queryField.Text = null;
 			}
-
-			if (this.table[1, row].IsEmpty)
+			else
 			{
-				var text = new StaticText
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+				var query = db.QueryLog.GetEntry (sel);
+
+				this.queryField.Text = query.SourceCode;
+
+				var parameters = this.GetCellTableForParameters (query.Parameters);
+				parameters.Parent = this.detailsBox;
+				parameters.Dock = DockStyle.Left;
+				parameters.Margins = new Margins (0, 10, 0, 0);
+
+				foreach (var table in query.Result.Tables)
 				{
-					ContentAlignment = ContentAlignment.MiddleRight,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 0, 0),
-				};
-
-				this.table[1, row].Insert (text);
-			}
-
-			if (this.table[2, row].IsEmpty)
-			{
-				var text = new StaticText
-				{
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 0, 0),
-				};
-
-				this.table[2, row].Insert (text);
-			}
-
-			if (this.table[3, row].IsEmpty)
-			{
-				var text = new StaticText
-				{
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 0, 0),
-				};
-
-				this.table[3, row].Insert (text);
+					var cellTable = this.GetCellTableForTable (table);
+					cellTable.Parent = this.detailsBox;
+					cellTable.Dock = DockStyle.Fill;
+					cellTable.Margins = new Margins (0, 10, 0, 0);
+				}
 			}
 		}
 
-		private void TableUpdateRow(int row, Query query)
-		{
-			//	Met à jour le contenu d'une ligne de la table.
-			StaticText text;
-
-			text = this.table[0, row].Children[0] as StaticText;
-			text.FormattedText = query.StartTime.ToString ();
-
-			text = this.table[1, row].Children[0] as StaticText;
-			text.FormattedText = LoggingTabPage.GetDuration (query.Duration);
-
-			text = this.table[2, row].Children[0] as StaticText;
-			text.FormattedText = query.SourceCode;
-
-			// TODO: remplir les autres colonnes
-		}
 
 		private void ClearTable()
 		{
@@ -235,14 +238,105 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			db.QueryLog.Clear ();
 			this.UpdateTable ();
+			this.UpdateDetails ();
 		}
 
 
-		private static string GetDuration(System.TimeSpan duration)
+		private Widget GetCellTableForParameters(ReadOnlyCollection<Parameter> parameters)
 		{
-			// Un Tick vaut 100 nanosecondes.
-			return string.Concat ((duration.Ticks/10).ToString (), " us");
+			var frame = new FrameBox
+			{
+				PreferredWidth = 80+80+20,
+				DrawFullFrame = true,
+				Padding = new Margins (2),
+			};
+
+			var title = new StaticText
+			{
+				Parent = frame,
+				Text = Misc.Bold ("Paramètres"),
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Top,
+			};
+
+			var cellTable = new CellTable
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile,
+				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
+			};
+
+			cellTable.SetArraySize (2, parameters.Count);
+			cellTable.SetWidthColumn (0, 80);
+			cellTable.SetWidthColumn (1, 80);
+
+			cellTable.SetHeaderTextH (0, "Nom");
+			cellTable.SetHeaderTextH (1, "Valeur");
+
+			ContentAlignment[] alignments = { ContentAlignment.MiddleLeft, ContentAlignment.MiddleRight };
+
+			for (int row=0; row<parameters.Count; row++)
+			{
+				var values = LoggingTabPage.GetParameterValues (parameters[row]);
+
+				LoggingTabPage.TableFillRow (cellTable, row, alignments);
+				LoggingTabPage.TableUpdateRow (cellTable, row, values);
+			}
+
+			return frame;
 		}
+
+		private Widget GetCellTableForTable(Table table)
+		{
+			var frame = new FrameBox
+			{
+				PreferredWidth = 300,
+				DrawFullFrame = true,
+				Padding = new Margins (2),
+			};
+
+			var title = new StaticText
+			{
+				Parent = frame,
+				Text = Misc.Bold (table.Name),
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Top,
+			};
+
+			var cellTable = new CellTable
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile,
+				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
+			};
+
+			int columnsCount = table.Columns.Count;
+			int rowsCount = table.Rows.Count;
+
+			cellTable.SetArraySize (columnsCount, rowsCount);
+
+			var alignments = new List<ContentAlignment> ();
+
+			for (int column = 0; column < columnsCount; column++)
+			{
+				cellTable.SetWidthColumn (column, 100);
+				cellTable.SetHeaderTextH (column, table.Columns[column].Name);
+				alignments.Add (ContentAlignment.MiddleLeft);
+			}
+
+			for (int row=0; row<rowsCount; row++)
+			{
+				var values = LoggingTabPage.GetTableValues (table.Rows[row].Values);
+
+				LoggingTabPage.TableFillRow (cellTable, row, alignments.ToArray ());
+				LoggingTabPage.TableUpdateRow (cellTable, row, values);
+			}
+
+			return frame;
+		}
+
 
 		private LogMode LogMode
 		{
@@ -278,10 +372,117 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private static string[] GetQueryValues(Query query)
+		{
+			var values = new List<string> ();
+
+			values.Add (query.StartTime.ToString ());
+			values.Add (LoggingTabPage.GetDuration (query.Duration));
+			values.Add (query.SourceCode);
+			values.Add (LoggingTabPage.GetQueryParameters (query));
+			values.Add (LoggingTabPage.GetQueryResults (query));
+
+			return values.ToArray ();
+		}
+
+		private static string GetQueryParameters(Query query)
+		{
+			return string.Join (", ", query.Parameters.Select (x => x.Value));
+		}
+
+		private static string GetQueryResults(Query query)
+		{
+			var list = new List<string> ();
+
+			foreach (var table in query.Result.Tables)
+			{
+				foreach (var row in table.Rows)
+				{
+					foreach (var value in row.Values)
+					{
+						if (value != null)
+						{
+							string s = value.ToString ();
+
+							if (!string.IsNullOrWhiteSpace (s))
+							{
+								list.Add (s);
+							}
+						}
+					}
+				}
+			}
+
+			return string.Join (", ", list);
+		}
+
+		private static string[] GetParameterValues(Parameter parameter)
+		{
+			var values = new List<string> ();
+
+			values.Add (parameter.Name);
+			values.Add (parameter.Value.ToString ());
+
+			return values.ToArray ();
+		}
+
+		private static string[] GetTableValues(ReadOnlyCollection<object> objects)
+		{
+			var values = new List<string> ();
+
+			foreach (var obj in objects)
+			{
+				values.Add (obj.ToString ());
+			}
+
+			return values.ToArray ();
+		}
+
+
+		private static void TableFillRow(CellTable table, int row, params ContentAlignment[] alignments)
+		{
+			//	Peuple une ligne de la table, si nécessaire.
+			for (int column = 0; column < alignments.Count (); column++)
+			{
+				if (table[column, row].IsEmpty)
+				{
+					var text = new StaticText
+					{
+						ContentAlignment = alignments[column],
+						Dock = DockStyle.Fill,
+						Margins = new Margins (4, 4, 0, 0),
+					};
+
+					table[column, row].Insert (text);
+				}
+			}
+		}
+
+		private static void TableUpdateRow(CellTable table, int row, params string[] values)
+		{
+			//	Met à jour le contenu d'une ligne de la table.
+			for (int column = 0; column < values.Count (); column++)
+			{
+				var text = table[column, row].Children[0] as StaticText;
+				text.Text = values[column];
+			}
+		}
+
+
+		private static string GetDuration(System.TimeSpan duration)
+		{
+			// Un Tick vaut 100 nanosecondes.
+			return string.Concat ((duration.Ticks/10).ToString (), " us");
+		}
+
+
 		private RadioButton			extendedButton;
 		private RadioButton			basicButton;
-		private RadioButton			stoppedButton;
+		private RadioButton			offButton;
 		private Button				clearButton;
 		private CellTable			table;
+		private HSplitter			splitter;
+		private TextFieldMulti		queryField;
+		private FrameBox			detailsBox;
 	}
 }
