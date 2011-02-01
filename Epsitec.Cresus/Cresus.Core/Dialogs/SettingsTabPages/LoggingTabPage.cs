@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.clearButton = new Button
 				{
 					Parent = header,
-					Text = "Vide la table",
+					Text = "Vider la table",
 					PreferredWidth = 120,
 					Dock = DockStyle.Right,
 					Margins = new Margins (20, 0, 0, 0),
@@ -262,12 +262,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				parameters.Dock = DockStyle.Left;
 				parameters.Margins = new Margins (0, 10, 0, 0);
 
-				foreach (var table in query.Result.Tables)
+				if (query.Result != null)
 				{
-					var cellTable = this.GetCellTableForTable (table);
-					cellTable.Parent = this.detailsBox;
-					cellTable.Dock = DockStyle.Fill;
-					cellTable.Margins = new Margins (0, 10, 0, 0);
+					foreach (var table in query.Result.Tables)
+					{
+						var cellTable = this.GetCellTableForTable (table);
+						cellTable.Parent = this.detailsBox;
+						cellTable.Dock = DockStyle.Fill;
+						cellTable.Margins = new Margins (0, 10, 0, 0);
+					}
 				}
 			}
 		}
@@ -445,6 +448,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static string GetQueryResults(Query query)
 		{
+			if (query.Result == null)
+			{
+				return "";
+			}
+
 			var list = new List<string> ();
 
 			foreach (var table in query.Result.Tables)
