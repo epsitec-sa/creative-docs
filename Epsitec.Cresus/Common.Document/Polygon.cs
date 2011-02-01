@@ -597,31 +597,54 @@ namespace Epsitec.Common.Document
 
 				for (int i = 0; i < this.typedPoints.Count; i++)
 				{
-					TypedPoint a = this.GetCyclingTypedPoint (i);    // point courant
+					TypedPoint a = this.GetCyclingTypedPoint (i-1);  // point précédent
+					TypedPoint p = this.GetCyclingTypedPoint (i);    // point courant
 					TypedPoint b = this.GetCyclingTypedPoint (i+1);  // point suivant
 
-					if (a.PointType == PointType.Primary && b.PointType == PointType.Primary)
+					if (p.PointType == PointType.Secondary)
 					{
-						var a1 = Point.Scale (a.Point, b.Point, 1.0/3.0);
-						var b1 = Point.Scale (b.Point, a.Point, 1.0/3.0);
+						if (a.PointType == PointType.Primary)
+						{
+							p.Point = Point.Move (p.Point, a.Point, -convexe);
+						}
+						else if (b.PointType == PointType.Primary)
+						{
+							p.Point = Point.Move (p.Point, b.Point, -convexe);
+						}
+					}
 
-						var a2 = Point.Move (a1, b.Point, convexe);
-						var b2 = Point.Move (b1, a.Point, convexe);
+					pp.typedPoints.Add (p);
+				}
 
-						var a3 = Polygon.RotateCW (a1, a2,  ccw);
+				var ppp = new Polygon ();
+
+				for (int i = 0; i < pp.typedPoints.Count; i++)
+				{
+					TypedPoint p = pp.GetCyclingTypedPoint (i);    // point courant
+					TypedPoint b = pp.GetCyclingTypedPoint (i+1);  // point suivant
+
+					if (p.PointType == PointType.Primary && b.PointType == PointType.Primary)
+					{
+						var p1 = Point.Scale (p.Point, b.Point, 1.0/3.0);
+						var b1 = Point.Scale (b.Point, p.Point, 1.0/3.0);
+
+						var p2 = Point.Move (p1, b.Point, convexe);
+						var b2 = Point.Move (b1, p.Point, convexe);
+
+						var p3 = Polygon.RotateCW (p1, p2, ccw);
 						var b3 = Polygon.RotateCW (b1, b2, !ccw);
 
-						pp.typedPoints.Add (a);
-						pp.typedPoints.Add (new TypedPoint (a3, PointType.Secondary));
-						pp.typedPoints.Add (new TypedPoint (b3, PointType.Secondary));
+						ppp.typedPoints.Add (p);
+						ppp.typedPoints.Add (new TypedPoint (p3, PointType.Secondary));
+						ppp.typedPoints.Add (new TypedPoint (b3, PointType.Secondary));
 					}
 					else
 					{
-						pp.typedPoints.Add (a);
+						ppp.typedPoints.Add (p);
 					}
 				}
 
-				return pp;
+				return ppp;
 			}
 		}
 
