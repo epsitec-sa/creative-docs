@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database.Logging;
+using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -368,8 +369,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (row);
 				var values = query.GetStrings (row);
 
-				LoggingTabPage.TableFillRow (this.table, row, alignments);
-				LoggingTabPage.TableUpdateRow (this.table, row, values);
+				this.table.FillRow (row, alignments);
+				this.table.UpdateRow (row, values);
 			}
 		}
 
@@ -497,7 +498,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		#region Create shower
+		#region Create showers
 		private Widget CreateParametersShower(ReadOnlyCollection<Parameter> parameters)
 		{
 			//	Retourne le widget permettant de représenter les paramètres.
@@ -538,8 +539,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var values = QueryAccessor.GetParameterStrings (parameters[row]);
 
-				LoggingTabPage.TableFillRow (cellTable, row, alignments);
-				LoggingTabPage.TableUpdateRow (cellTable, row, values);
+				cellTable.FillRow (row, alignments);
+				cellTable.UpdateRow (row, values);
 			}
 
 			return frame;
@@ -589,8 +590,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
 
-				LoggingTabPage.TableFillRow (cellTable, row, alignments.ToArray ());
-				LoggingTabPage.TableUpdateRow (cellTable, row, values);
+				cellTable.FillRow (row, alignments.ToArray ());
+				cellTable.UpdateRow (row, values);
 			}
 
 			return frame;
@@ -631,39 +632,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateRadio ();
 			}
 		}
-
-
-		#region CellTable helpers
-		private static void TableFillRow(CellTable table, int row, params ContentAlignment[] alignments)
-		{
-			//	Peuple une ligne d'une table, si nécessaire.
-			for (int column = 0; column < alignments.Count (); column++)
-			{
-				if (table[column, row].IsEmpty)
-				{
-					var text = new StaticText
-					{
-						ContentAlignment = alignments[column],
-						TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-						Dock = DockStyle.Fill,
-						Margins = new Margins (4, 4, 0, 0),
-					};
-
-					table[column, row].Insert (text);
-				}
-			}
-		}
-
-		private static void TableUpdateRow(CellTable table, int row, params string[] values)
-		{
-			//	Met à jour le contenu d'une ligne d'une table.
-			for (int column = 0; column < values.Count (); column++)
-			{
-				var text = table[column, row].Children[0] as StaticText;
-				text.Text = values[column];
-			}
-		}
-		#endregion
 
 
 		private RadioButton			extendedButton;
