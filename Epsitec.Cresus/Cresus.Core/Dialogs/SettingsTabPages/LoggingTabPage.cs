@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.table = new CellTable
 			{
 				Parent = frame,
-				StyleH = CellArrayStyles.Separator | CellArrayStyles.Header,
+				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile,
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 				Dock = DockStyle.Fill,
 			};
@@ -130,9 +130,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateRadio()
 		{
-			this.extendedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
-			this.basicButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.stoppedButton.ActiveState     = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
+			this.extendedButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
+			this.basicButton.ActiveState    = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
+			this.stoppedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -144,14 +144,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.table.SetArraySize (4, count);
 			this.table.SetWidthColumn (0, 120);
-			this.table.SetWidthColumn (1,  80);
-			this.table.SetWidthColumn (2, 100);
-			this.table.SetWidthColumn (3, 400);
+			this.table.SetWidthColumn (1,  70);
+			this.table.SetWidthColumn (2, 500);
+			this.table.SetWidthColumn (3, 100);
 
 			this.table.SetHeaderTextH (0, "Début");
 			this.table.SetHeaderTextH (1, "Durée");
-			this.table.SetHeaderTextH (2, "Opération");
-			this.table.SetHeaderTextH (3, "Détails");
+			this.table.SetHeaderTextH (2, "Requête");
+			this.table.SetHeaderTextH (3, "Résultat");
 
 			for (int row=0; row<count; row++)
 			{
@@ -222,6 +222,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			text = this.table[1, row].Children[0] as StaticText;
 			text.FormattedText = LoggingTabPage.GetDuration (query.Duration);
+
+			text = this.table[2, row].Children[0] as StaticText;
+			text.FormattedText = query.SourceCode;
 
 			// TODO: remplir les autres colonnes
 		}
