@@ -56,12 +56,14 @@ namespace Epsitec.Common.Support
 							int                 moduleId    = -1;
 							ResourceModuleLayer moduleLayer = ResourceModuleLayer.Undefined;
 							string              moduleName  = null;
+							ResourceTextMode	textMode	= ResourceTextMode.String;
 
 							//	The module.info file contains a root node <ModuleInfo>
 							//	which defines following attributes :
 							//	- id, the numeric identifier for the module
 							//	- name, the textual identifier for the module
 							//	- layer, the code for the resource module layer
+							//  - textMode, the mode used for the textual resources (string / formatted text).
 							//	Optionally :
 							//	- namespace, the namespace used when generating associated code
 
@@ -69,6 +71,7 @@ namespace Epsitec.Common.Support
 							string layerAttribute     = root.GetAttribute (ResourceModule.XmlAttributeLayer);
 							string nameAttribute      = root.GetAttribute (ResourceModule.XmlAttributeName);
 							string namespaceAttribute = root.GetAttribute (ResourceModule.XmlAttributeNamespace);
+							string textModeAttribute  = root.GetAttribute (ResourceModule.XmlAttributeTextMode);
 
 							if (string.IsNullOrEmpty (idAttribute))
 							{
@@ -82,10 +85,15 @@ namespace Epsitec.Common.Support
 							{
 								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeName, modulePath));
 							}
+							if (string.IsNullOrEmpty (textModeAttribute))
+							{
+								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeTextMode, modulePath));
+							}
 
 							int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId);
 							moduleLayer = ResourceModuleId.ConvertPrefixToLayer (layerAttribute);
 							moduleName  = nameAttribute;
+							textMode = (ResourceTextMode) System.Enum.Parse (typeof (ResourceTextMode), textModeAttribute);
 
 							ResourceModuleInfo info = new ResourceModuleInfo ();
 
@@ -141,6 +149,7 @@ namespace Epsitec.Common.Support
 							
 							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
 							info.SourceNamespace = namespaceAttribute ?? "";
+							info.TextMode = textMode;
 							info.Freeze ();
 
 							return info;
@@ -174,7 +183,7 @@ namespace Epsitec.Common.Support
 			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 
 			System.IO.Directory.CreateDirectory (modulePath);
-
+			
 			System.Xml.XmlDocument xml = ResourceModule.CreateXmlManifest (info, comment);
 			
 			xml.Save (moduleInfoPath);
@@ -188,6 +197,7 @@ namespace Epsitec.Common.Support
 			root.SetAttribute (ResourceModule.XmlAttributeId, InvariantConverter.ToString (info.FullId.Id));
 			root.SetAttribute (ResourceModule.XmlAttributeName, info.FullId.Name);
 			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
+			root.SetAttribute (ResourceModule.XmlAttributeTextMode, System.Enum.GetName (typeof (ResourceTextMode), info.TextMode));
 
 			if (!string.IsNullOrEmpty (info.SourceNamespace))
 			{
@@ -345,6 +355,7 @@ namespace Epsitec.Common.Support
 		internal const string XmlAttributeLayer		= "layer";
 		internal const string XmlAttributeName		= "name";
 		internal const string XmlAttributeNamespace = "namespace";
+		internal const string XmlAttributeTextMode	= "textMode";
 
 		#endregion
 	}

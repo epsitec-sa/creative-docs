@@ -52,14 +52,6 @@ namespace Epsitec.Common.Types
 			return new FormattedText (formattedTextSource);
 		}
 
-#if true
-		// TODO: provisoire
-		public static implicit operator string(FormattedText formattedText)
-		{
-			return formattedText.ToString ();
-		}
-#endif
-
 		/// <summary>
 		/// Gets a value indicating whether this instance represents a null
 		/// text.

@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (sel);
 
 				this.queryField.Visibility = true;
-				this.queryField.Text = LoggingTabPage.GetQuery (query);
+				this.queryField.FormattedText = LoggingTabPage.GetQuery (query);
 
 				var parameters = this.CreateParametersShower (query.Parameters);
 				parameters.Parent = this.detailsBox;
@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var title = new StaticText
 			{
 				Parent = frame,
-				Text = Misc.Bold ("Paramètres"),
+				FormattedText = Misc.Bold ("Paramètres"),
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Top,
 			};
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var title = new StaticText
 			{
 				Parent = frame,
-				Text = Misc.Bold (table.Name),
+				FormattedText = Misc.Bold (table.Name),
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Top,
 			};
@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
 			values.Add (LoggingTabPage.GetNiceDuration (query.Duration));
-			values.Add (LoggingTabPage.GetQuery (query));
+			values.Add (LoggingTabPage.GetQuery (query).ToString ());
 			values.Add (LoggingTabPage.GetCompactQueryParameters (query));
 			values.Add (LoggingTabPage.GetCompactQueryResults (query));
 
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 					if (!string.IsNullOrEmpty (value))
 					{
-						text = text.Replace (parameter.Name, Misc.Bold (value));
+						text = text.Replace (parameter.Name, Misc.Bold (value).ToString ());
 					}
 				}
 			}

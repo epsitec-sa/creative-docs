@@ -497,7 +497,7 @@ namespace Epsitec.Common.Document
 		static public string GetFeatureText(string feature)
 		{
 			//	Donne le texte descriptif pour une "feature" OpenType.
-			string text = Res.Strings.GetText("Text", string.Format("Features_{0}", feature));
+			string text = Res.Strings.GetString ("Text", string.Format ("Features_{0}", feature));
 			if ( text != null )  return text;
 
 			return string.Format(Res.Strings.Text.FeaturesUnknow, feature.ToUpper());

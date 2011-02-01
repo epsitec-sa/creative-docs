@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				CompactTitle       = TextFormatter.FormatText ("Total"),
 				CreateCustomizedUI = (tile, builder) =>
 				{
-					builder.CreateStaticText (tile, GetTotalSummary (this.Entity));
+					builder.CreateStaticText (tile, GetTotalSummary (this.Entity).ToString ());
 				}
 			};
 
