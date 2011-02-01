@@ -87,7 +87,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// order.
 		/// </summary>
 		/// <remarks>This linq method use deferred execution but will buffer the input sequence and
-		/// has a complexity of O(n log n) where n is the length of the sequence. 
+		/// has a complexity of O(n) where n is the length of the sequence. 
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="sequence">The sequence to shuffle.</param>
 		/// <returns>The shuffled sequence.</returns>
@@ -111,7 +111,20 @@ namespace Epsitec.Common.Support.Extensions
 		/// <returns>The shuffled sequence.</returns>
 		private static IEnumerable<T> ShuffleInternal<T>(IEnumerable<T> sequence)
 		{
-			return sequence.OrderBy (e => EnumerableExtensions.Dice.NextDouble ());
+			List<T> elements = sequence.ToList ();
+
+			for (int i = elements.Count - 1; i > 0; i--)
+			{
+				int j = EnumerableExtensions.Dice.Next (0, i + 1);
+
+				T element1 = elements[i];
+				T element2 = elements[j];
+
+				elements[i] = element2;
+				elements[j] = element1;
+			}
+
+			return elements;
 		}
 
 		/// <summary>
@@ -154,7 +167,7 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		[System.ThreadStatic]
-		private static System.Random	dice;
+		private static System.Random dice;
         
 	}
 }
