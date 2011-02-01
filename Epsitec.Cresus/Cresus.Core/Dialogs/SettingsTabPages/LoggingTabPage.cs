@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.stoppedButton.Clicked += delegate
 			{
-				this.LogMode = Database.Logging.LogMode.Stopped;
+				this.LogMode = Database.Logging.LogMode.Off;
 			};
 
 			this.clearButton.Clicked += delegate
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.extendedButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
 			this.basicButton.ActiveState    = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.stoppedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Stopped ) ? ActiveState.Yes : ActiveState.No;
+			this.stoppedButton.ActiveState  = (this.LogMode == Database.Logging.LogMode.Off ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (db.QueryLog == null)
 				{
-					return Database.Logging.LogMode.Stopped;
+					return Database.Logging.LogMode.Off;
 				}
 				else
 				{
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
-				if (value == Database.Logging.LogMode.Stopped)
+				if (value == Database.Logging.LogMode.Off)
 				{
 					db.DisableLogging ();
 				}
