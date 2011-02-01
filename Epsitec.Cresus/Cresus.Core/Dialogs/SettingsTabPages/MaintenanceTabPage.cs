@@ -21,7 +21,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 {
 	/// <summary>
-	/// Onglet de SettingsDialog pour effecture la maintenance de la base de données.
+	/// Onglet de SettingsDialog pour effectuer la maintenance de la base de données.
 	/// </summary>
 	public class MaintenanceTabPage : AbstractSettingsTabPage
 	{

@@ -110,6 +110,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.tabBook.Items.Add (maintenancePage);
 			}
 
+			//	Crée l'onglet 'trace'.
+			TabPage loggingPage = null;
+
+			if (devel)
+			{
+				loggingPage = new TabPage
+				{
+					TabTitle = "Trace",
+					Name = "logging",
+				};
+
+				this.tabBook.Items.Add (loggingPage);
+			}
+
 			this.ActiveLastPage ();
 
 			//	Crée le pied de page.
@@ -150,6 +164,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
 				maintenanceSettings.CreateUI (maintenancePage);
 				this.settingsTabPages.Add (maintenanceSettings);
+			}
+
+			if (devel)
+			{
+				var loggingSettings = new SettingsTabPages.LoggingTabPage (this.application);
+				loggingSettings.CreateUI (loggingPage);
+				this.settingsTabPages.Add (loggingSettings);
 			}
 
 			foreach (var tab in this.settingsTabPages)
