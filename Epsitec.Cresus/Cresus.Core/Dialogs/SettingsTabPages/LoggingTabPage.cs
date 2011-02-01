@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var bottomFrame = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 100,
+				PreferredHeight = 200,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 0, 10, 10),
 			};
@@ -93,6 +93,24 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Dock = DockStyle.Left,
 				};
 
+				this.importButton = new Button
+				{
+					Parent = header,
+					Text = "Importer...",
+					PreferredWidth = 80,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				this.exportButton = new Button
+				{
+					Parent = header,
+					Text = "Exporter...",
+					PreferredWidth = 80,
+					Dock = DockStyle.Right,
+					Margins = new Margins (20, 0, 0, 0),
+				};
+
 				this.clearButton = new Button
 				{
 					Parent = header,
@@ -116,7 +134,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					Parent = bottomFrame,
 					IsReadOnly = true,
-					PreferredHeight = 68,
+					PreferredHeight = 66,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 10, 0, 10),
 				};
@@ -150,6 +168,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.ClearTable ();
 			};
 
+			this.exportButton.Clicked += delegate
+			{
+				this.Export ();
+			};
+
+			this.importButton.Clicked += delegate
+			{
+				this.Import ();
+			};
+
 			this.table.SelectionChanged += delegate
 			{
 				this.UpdateDetails ();
@@ -175,24 +203,35 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int count = (db.QueryLog == null) ? 0 : db.QueryLog.GetNbEntries ();
 
-			this.table.SetArraySize (5, count);
-			this.table.SetWidthColumn (0, 110);
-			this.table.SetWidthColumn (1,  70);
-			this.table.SetWidthColumn (2, 390);
-			this.table.SetWidthColumn (3, 110);
+			this.table.SetArraySize (6, count);
+
+			this.table.SetWidthColumn (0,  40);
+			this.table.SetWidthColumn (1, 110);
+			this.table.SetWidthColumn (2,  70);
+			this.table.SetWidthColumn (3, 350);
 			this.table.SetWidthColumn (4, 110);
+			this.table.SetWidthColumn (5, 110);
 
-			this.table.SetHeaderTextH (0, "Début");
-			this.table.SetHeaderTextH (1, "Durée");
-			this.table.SetHeaderTextH (2, "Requête");
-			this.table.SetHeaderTextH (3, "Paramètres");
-			this.table.SetHeaderTextH (4, "Résultats");
+			this.table.SetHeaderTextH (0, "N°");
+			this.table.SetHeaderTextH (1, "Début");
+			this.table.SetHeaderTextH (2, "Durée");
+			this.table.SetHeaderTextH (3, "Requête");
+			this.table.SetHeaderTextH (4, "Paramètres");
+			this.table.SetHeaderTextH (5, "Résultats");
 
-			ContentAlignment[] alignments = { ContentAlignment.MiddleLeft, ContentAlignment.MiddleRight, ContentAlignment.MiddleLeft, ContentAlignment.MiddleLeft, ContentAlignment.MiddleLeft };
+			ContentAlignment[] alignments =
+			{
+				ContentAlignment.MiddleRight,
+				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleRight,
+				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleLeft
+			};
 
 			for (int row=0; row<count; row++)
 			{
-				var values = LoggingTabPage.GetQueryValues (db.QueryLog.GetEntry (row));
+				var values = LoggingTabPage.GetQueryValues (db.QueryLog.GetEntry (row), row);
 
 				LoggingTabPage.TableFillRow (this.table, row, alignments);
 				LoggingTabPage.TableUpdateRow (this.table, row, values);
@@ -207,6 +246,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel == -1)
 			{
+				this.queryField.Visibility = false;
 				this.queryField.Text = null;
 			}
 			else
@@ -214,6 +254,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 				var query = db.QueryLog.GetEntry (sel);
 
+				this.queryField.Visibility = true;
 				this.queryField.Text = query.SourceCode;
 
 				var parameters = this.GetCellTableForParameters (query.Parameters);
@@ -239,6 +280,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			db.QueryLog.Clear ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
+		}
+
+
+		private void Export()
+		{
+			//	TODO: ...
+		}
+
+		private void Import()
+		{
+			//	TODO: ...
 		}
 
 
@@ -372,10 +424,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static string[] GetQueryValues(Query query)
+		private static string[] GetQueryValues(Query query, int row)
 		{
 			var values = new List<string> ();
 
+			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
 			values.Add (LoggingTabPage.GetDuration (query.Duration));
 			values.Add (query.SourceCode);
@@ -480,6 +533,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private RadioButton			basicButton;
 		private RadioButton			offButton;
 		private Button				clearButton;
+		private Button				exportButton;
+		private Button				importButton;
 		private CellTable			table;
 		private HSplitter			splitter;
 		private TextFieldMulti		queryField;

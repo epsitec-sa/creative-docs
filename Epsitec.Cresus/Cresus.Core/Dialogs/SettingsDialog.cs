@@ -52,7 +52,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Réglages globaux";
-			this.window.MakeFixedSizeWindow ();
 			this.window.ClientSize = new Size (850, 600);
 
 			this.window.WindowCloseClicked += delegate
