@@ -223,7 +223,7 @@ namespace Epsitec.Common.Types
 
 		public static int     ParseInt(string value)
 		{
-			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 		}
 		public static long    ParseLong(string value)
 		{
