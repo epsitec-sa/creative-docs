@@ -136,26 +136,29 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres.
 			var text = query.SourceCode.Replace ("\n", "");
 
-			foreach (var parameter in query.Parameters)
+			if (substitution || syntaxColorized)
 			{
-				if (substitution)
+				foreach (var parameter in query.Parameters)
 				{
-					var value = parameter.Value.ToString ();
-
-					if (!string.IsNullOrEmpty (value))
+					if (substitution)
 					{
-						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Red")).ToString ());
+						var value = parameter.Value.ToString ();
+
+						if (!string.IsNullOrEmpty (value))
+						{
+							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Red")).ToString ());
+						}
+					}
+					else
+					{
+						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Red")).ToString ());
 					}
 				}
-				else
-				{
-					text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Red")).ToString ());
-				}
-			}
 
-			if (syntaxColorized)
-			{
-				text = QueryAccessor.GetSyntaxColorizedText (text);
+				if (syntaxColorized)
+				{
+					text = QueryAccessor.GetSyntaxColorizedText (text);
+				}
 			}
 
 			return text;
