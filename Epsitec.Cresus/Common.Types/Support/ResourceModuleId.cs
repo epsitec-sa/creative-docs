@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -195,24 +195,25 @@ namespace Epsitec.Common.Support
 			{
 				case ResourceModuleLayer.Application:
 					return "A";
-				
+
 				case ResourceModuleLayer.Customization1:
 					return "C";
-				
+
 				case ResourceModuleLayer.Customization2:
 					return "D";
-				
+
 				case ResourceModuleLayer.Customization3:
 					return "E";
-				
+
 				case ResourceModuleLayer.User:
 					return "U";
 
 				case ResourceModuleLayer.System:
 					return "s";
-			}
 
-			throw new System.ArgumentOutOfRangeException ("layer");
+				default:
+					throw new System.ArgumentOutOfRangeException ("layer");
+			}
 		}
 
 		/// <summary>
@@ -242,9 +243,10 @@ namespace Epsitec.Common.Support
 
 				case "s":
 					return ResourceModuleLayer.System;
-			}
 
-			throw new System.ArgumentException ();
+				default:
+					throw new System.ArgumentException ();
+			}
 		}
 
 		#region IEquatable<ResourceModuleId> Members

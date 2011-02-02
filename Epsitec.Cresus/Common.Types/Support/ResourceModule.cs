@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -63,8 +63,8 @@ namespace Epsitec.Common.Support
 							//	- id, the numeric identifier for the module
 							//	- name, the textual identifier for the module
 							//	- layer, the code for the resource module layer
-							//  - textMode, the mode used for the textual resources (string / formatted text).
 							//	Optionally :
+							//  - textMode, the mode used for the textual resources (string / formatted text).
 							//	- namespace, the namespace used when generating associated code
 
 							string idAttribute        = root.GetAttribute (ResourceModule.XmlAttributeId);
@@ -85,16 +85,12 @@ namespace Epsitec.Common.Support
 							{
 								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeName, modulePath));
 							}
-							if (string.IsNullOrEmpty (textModeAttribute))
-							{
-								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeTextMode, modulePath));
-							}
 
 							int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId);
 							moduleLayer = ResourceModuleId.ConvertPrefixToLayer (layerAttribute);
 							moduleName  = nameAttribute;
-							textMode = (ResourceTextMode) System.Enum.Parse (typeof (ResourceTextMode), textModeAttribute);
-
+							textMode = InvariantConverter.ToEnum<ResourceTextMode> (textModeAttribute, ResourceTextMode.String);
+							
 							ResourceModuleInfo info = new ResourceModuleInfo ();
 
 							System.Xml.XmlNodeList nodes = root.GetElementsByTagName (ResourceModule.XmlReferenceModulePath);
@@ -119,7 +115,7 @@ namespace Epsitec.Common.Support
 							{
 								if (!string.IsNullOrEmpty (node.InnerText))
 								{
-									info.PatchDepth = int.Parse (node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture);
+									info.PatchDepth = InvariantConverter.ParseInt (node.InnerText);
 								}
 							}
 							else if (nodes.Count > 1)
