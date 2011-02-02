@@ -133,7 +133,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static FormattedText GetQuery(this Query query, bool substitution = false, bool syntaxColorized = false)
 		{
-			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres.
+			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres (en bleu)
+			//	et coloriage syntaxique (en rouge).
 			var text = query.SourceCode.Replace ("\n", "");
 
 			if (substitution || syntaxColorized)
@@ -146,27 +147,29 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Red")).ToString ());
+							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Blue")).ToString ());
 						}
 					}
 					else
 					{
-						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Red")).ToString ());
+						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Blue")).ToString ());
 					}
 				}
 
 				if (syntaxColorized)
 				{
-					text = QueryAccessor.GetSyntaxColorizedText (text);
+					text = QueryAccessor.GetSqlSyntaxColorizedText (text);
 				}
 			}
 
 			return text;
 		}
 
-		private static string GetSyntaxColorizedText(string text)
+		private static string GetSqlSyntaxColorizedText(string text)
 		{
-			foreach (var word in QueryAccessor.SyntaxWords)
+			//	Colorie en rouge tous les mots-clés SQL dans le texte d'une requête.
+			//	Ils doivent être en majuscule !
+			foreach (var word in QueryAccessor.SyntaxSqlWords)
 			{
 				int index = 0;
 				while (index < text.Length)
@@ -178,11 +181,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						break;
 					}
 
-					if (QueryAccessor.IsWordSeparator (text, index-1) &&
-						QueryAccessor.IsWordSeparator (text, index+word.Length))
+					if (QueryAccessor.IsSqlWordSeparator (text, index-1) &&
+						QueryAccessor.IsSqlWordSeparator (text, index+word.Length))
 					{
-						string subst = Misc.Colorize (Misc.Bold (word), Color.FromName ("Blue")).ToString ();
-						//?string subst = Misc.Bold (word).ToString ();
+						string subst = Misc.Colorize (Misc.Bold (word), Color.FromName ("Red")).ToString ();
 
 						text = text.Remove (index, word.Length);
 						text = text.Insert (index, subst);
@@ -199,22 +201,22 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return text;
 		}
 
-		private static bool IsWordSeparator(string text, int index)
+		private static bool IsSqlWordSeparator(string text, int index)
 		{
 			if (index < 0 || index >= text.Length)
 			{
 				return true;
 			}
 
-			return !QueryAccessor.IsWordCharacter (text[index]);
+			return !QueryAccessor.IsSqlWordCharacter (text[index]);
 		}
 
-		private static bool IsWordCharacter(char c)
+		private static bool IsSqlWordCharacter(char c)
 		{
 			return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
 		}
 
-		private static IEnumerable<string> SyntaxWords
+		private static IEnumerable<string> SyntaxSqlWords
 		{
 			//	Retourne la liste de tous les mots-clés réservés pour SQL Server 2000.
 			//	Source: http://msdn.microsoft.com/en-us/library/aa238507(v=sql.80).aspx
