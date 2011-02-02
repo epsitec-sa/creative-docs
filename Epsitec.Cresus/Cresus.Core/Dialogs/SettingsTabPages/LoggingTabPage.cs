@@ -412,9 +412,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SetArraySize (6, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
-			this.mainTable.SetWidthColumn (1, 110);
+			this.mainTable.SetWidthColumn (1,  80);
 			this.mainTable.SetWidthColumn (2,  70);
-			this.mainTable.SetWidthColumn (3, 350);
+			this.mainTable.SetWidthColumn (3, 380);
 			this.mainTable.SetWidthColumn (4, 110);
 			this.mainTable.SetWidthColumn (5, 110);
 
