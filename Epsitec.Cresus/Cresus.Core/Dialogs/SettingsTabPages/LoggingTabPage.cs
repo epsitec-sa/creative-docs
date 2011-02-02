@@ -412,11 +412,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SetArraySize (6, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
-			this.mainTable.SetWidthColumn (1,  80);
-			this.mainTable.SetWidthColumn (2,  70);
+			this.mainTable.SetWidthColumn (1,  70);
+			this.mainTable.SetWidthColumn (2,  60);
 			this.mainTable.SetWidthColumn (3, 380);
-			this.mainTable.SetWidthColumn (4, 110);
-			this.mainTable.SetWidthColumn (5, 110);
+			this.mainTable.SetWidthColumn (4, 120);
+			this.mainTable.SetWidthColumn (5, 120);
 
 			this.mainTable.SetHeaderTextH (0, "N°");
 			this.mainTable.SetHeaderTextH (1, "Début");
@@ -435,6 +435,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				ContentAlignment.MiddleLeft
 			};
 
+			string search = this.searchField.Text;
+			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
+
+			if (!caseSensitive)
+			{
+				search = Misc.RemoveAccentsToLower (search);
+			}
+
 			int counter = 0;
 			int lines = 0;
 
@@ -442,9 +450,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var query = db.QueryLog.GetEntry (row);
 				var values = query.GetMainStrings (row);
-				int n = 0;
-				this.ColorizeSearchingString (values, ref n);
+				this.ColorizeSearchingString (values);
 
+				int n = query.Count (search, caseSensitive);
 				if (n > 0)
 				{
 					counter += n;
@@ -513,8 +521,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				bool substitute = LoggingTabPage.globalSubstitute;
 				bool colorize   = LoggingTabPage.globalColorize;
 				string content = query.GetQuery (substitute, colorize).ToString ();
-				int counter = 0;
-				content = this.ColorizeSearchingString (content, ref counter);
+				content = this.ColorizeSearchingString (content);
 
 				if (content.Length >= this.queryField.MaxLength)
 				{
@@ -700,8 +707,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<parameters.Count; row++)
 			{
 				var values = QueryAccessor.GetParameterStrings (parameters[row]);
-				int counter = 0;
-				this.ColorizeSearchingString (values, ref counter);
+				this.ColorizeSearchingString (values);
 
 				cellTable.FillRow (row, alignments);
 				cellTable.UpdateRow (row, values);
@@ -753,8 +759,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rowsCount; row++)
 			{
 				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
-				int counter = 0;
-				this.ColorizeSearchingString (values, ref counter);
+				this.ColorizeSearchingString (values);
 
 				cellTable.FillRow (row, alignments.ToArray ());
 				cellTable.UpdateRow (row, values);
@@ -765,15 +770,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		#endregion
 
 
-		private void ColorizeSearchingString(string[] values, ref int counter)
+		private void ColorizeSearchingString(string[] values)
 		{
 			for (int i = 0; i < values.Length; i++)
 			{
-				values[i] = this.ColorizeSearchingString (values[i], ref counter);
+				values[i] = this.ColorizeSearchingString (values[i]);
 			}
 		}
 
-		private string ColorizeSearchingString(string text, ref int counter)
+		private string ColorizeSearchingString(string text)
 		{
 			string searching = this.searchField.Text;
 			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
@@ -809,8 +814,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 					index += tag1.Length;
 					index += tag2.Length;
-
-					counter++;
 				}
 
 				return text;
@@ -837,8 +840,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 					index += tag1.Length;
 					index += tag2.Length;
-
-					counter++;
 				}
 
 				return text;

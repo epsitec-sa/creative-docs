@@ -23,6 +23,30 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public static class QueryAccessor
 	{
+		public static int Count(this Query query, string search, bool caseSensitive)
+		{
+			if (string.IsNullOrEmpty (search))
+			{
+				return 0;
+			}
+
+			int count = 0;
+
+			foreach (var t in query.GetSearchableStrings ())
+			{
+				string text = t;
+
+				if (!caseSensitive)
+				{
+					text = Misc.RemoveAccentsToLower (t);
+				}
+
+				count += text.Count (search);
+			}
+
+			return count;
+		}
+
 		public static bool ContainsString(this Query query, string search, bool caseSensitive)
 		{
 			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
@@ -676,6 +700,34 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "YEAR";
 				yield return "ZONE";
 			}
+		}
+
+
+		private static int Count(this string text, string pattern)
+		{
+			//	Retourne le nombre d'occurences de pattern dans text.
+			if (string.IsNullOrEmpty (pattern))
+			{
+				return 0;
+			}
+
+			int count = 0;
+			int index = 0;
+
+			while (index < text.Length)
+			{
+				index = text.IndexOf (pattern, index);
+
+				if (index == -1)
+				{
+					break;
+				}
+
+				count++;
+				index += pattern.Length;
+			}
+
+			return count;
 		}
 
 
