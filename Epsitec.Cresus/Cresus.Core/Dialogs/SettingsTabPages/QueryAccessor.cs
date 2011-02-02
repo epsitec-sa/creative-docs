@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
 			values.Add (query.GetNiceDuration ());
-			values.Add (query.GetQuery ().ToString ());
+			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());
 			values.Add (query.GetCompactResults ());
 
@@ -130,6 +130,66 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return values.ToArray ();
 		}
 
+
+		public static FormattedText GetQuerySummary(this Query query)
+		{
+			//	Retourne le texte de la requête sql, avec seulement les mots clés sql.
+			var text = query.SourceCode.Replace ("\n", "");
+
+			foreach (var word in QueryAccessor.SyntaxSqlWords)
+			{
+				int index = 0;
+				while (index < text.Length)
+				{
+					index = text.IndexOf (word, index);
+
+					if (index == -1)
+					{
+						break;
+					}
+
+					if (QueryAccessor.IsSqlWordSeparator (text, index-1) &&
+						QueryAccessor.IsSqlWordSeparator (text, index+word.Length))
+					{
+						string subst = string.Concat ("∆", word, "∆");
+
+						text = text.Remove (index, word.Length);
+						text = text.Insert (index, subst);
+
+						index += subst.Length;
+					}
+					else
+					{
+						index++;
+					}
+				}
+			}
+
+			var builder = new System.Text.StringBuilder ();
+
+			int i = 0;
+			foreach (var c in text)
+			{
+				if (c == '∆')
+				{
+					if (i%2 != 0)
+					{
+						builder.Append (' ');
+					}
+
+					i++;
+				}
+				else
+				{
+					if (i%2 != 0)
+					{
+						builder.Append (c);
+					}
+				}
+			}
+
+			return builder.ToString ();
+		}
 
 		public static FormattedText GetQuery(this Query query, bool substitution = false, bool syntaxColorized = false)
 		{
@@ -258,7 +318,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "BROWSE";
 				yield return "BULK";
 				yield return "BY";
-				yield return "BY";
 				yield return "CALL";
 				yield return "CASCADE";
 				yield return "CASCADED";
@@ -275,7 +334,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "CLOB";
 				yield return "CLOSE";
 				yield return "CLUSTERED";
-				yield return "COALESCE";
 				yield return "COALESCE";
 				yield return "COLLATE";
 				yield return "COLLATION";
@@ -549,7 +607,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "SPECIFIC";
 				yield return "SPECIFICTYPE";
 				yield return "SQL";
-				yield return "SQL";
 				yield return "SQLCA";
 				yield return "SQLCODE";
 				yield return "SQLERROR";
@@ -616,7 +673,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "WORK";
 				yield return "WRITE";
 				yield return "WRITETEXT";
-				yield return "YEAR";
 				yield return "YEAR";
 				yield return "ZONE";
 			}

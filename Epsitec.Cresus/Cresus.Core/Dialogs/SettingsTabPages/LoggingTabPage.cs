@@ -100,8 +100,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.searchClearButton.Clicked += delegate
 			{
-				this.searchField.Text = null;
-				this.UpdateTable();
+				this.ClearSearch ();
 			};
 
 			this.searchPrevButton.Clicked += delegate
@@ -140,14 +139,25 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateDetails ();
 			};
 
-			this.substituteButton.ActiveStateChanged += delegate
+			this.caseSensitiveButton.Clicked += delegate
 			{
-				this.UpdateDetails ();
+				LoggingTabPage.globalCaseSensitive = !LoggingTabPage.globalCaseSensitive;
+				this.Search (0);
+				this.UpdateWidgets ();
 			};
 
-			this.colorizeButton.ActiveStateChanged += delegate
+			this.substituteButton.Clicked += delegate
 			{
+				LoggingTabPage.globalSubstitute = !LoggingTabPage.globalSubstitute;
 				this.UpdateDetails ();
+				this.UpdateWidgets ();
+			};
+
+			this.colorizeButton.Clicked += delegate
+			{
+				LoggingTabPage.globalColorize = !LoggingTabPage.globalColorize;
+				this.UpdateDetails ();
+				this.UpdateWidgets ();
 			};
 
 			this.UpdateRadio ();
@@ -243,6 +253,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Dock = DockStyle.Fill,
 			};
 
+			this.searchClearButton = new GlyphButton
+			{
+				Parent = box,
+				GlyphShape = Common.Widgets.GlyphShape.Close,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 10, 2, 2),
+			};
+
 			var label = new StaticText
 			{
 				Parent = box,
@@ -273,15 +291,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Text = "Exporter...",
 				PreferredWidth = 70,
 				Dock = DockStyle.Right,
-				Margins = new Margins (20, 0, 0, 0),
+				Margins = new Margins (10, 0, 0, 0),
 			};
 
-			this.caseButton = new CheckButton
+			this.caseSensitiveButton = new CheckButton
 			{
 				Parent = box,
 				Text = "Respecter la casse",
-				PreferredWidth = 130,
-				ActiveState = Common.Widgets.ActiveState.Yes,
+				PreferredWidth = 120,
+				AutoToggle = false,
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
 			};
@@ -289,17 +307,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.searchCounterInfo = new StaticText
 			{
 				Parent = box,
-				PreferredWidth = 100,
+				PreferredWidth = 150,
 				Dock = DockStyle.Right,
 				Margins = new Margins (15, 0, 0, 0),
-			};
-
-			this.searchClearButton = new GlyphButton
-			{
-				Parent = box,
-				GlyphShape = Common.Widgets.GlyphShape.Close,
-				Dock = DockStyle.Right,
-				Margins = new Margins (1, 0, 0, 0),
 			};
 
 			this.searchNextButton = new Button
@@ -357,7 +367,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = toolbar,
 				Text = "Substituer les paramètres",
 				PreferredWidth = 150,
-				ActiveState = Common.Widgets.ActiveState.Yes,
+				AutoToggle = false,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -367,7 +377,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = toolbar,
 				Text = "Coloriage syntaxique",
 				PreferredWidth = 150,
-				ActiveState = Common.Widgets.ActiveState.Yes,
+				AutoToggle = false,
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 0, 0, 0),
 			};
@@ -376,12 +386,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void SecondarySwap()
 		{
-			LoggingTabPage.secondaryVisibility = !LoggingTabPage.secondaryVisibility;
+			LoggingTabPage.globalSecondaryVisibility = !LoggingTabPage.globalSecondaryVisibility;
 
-			if (!LoggingTabPage.secondaryVisibility && !string.IsNullOrEmpty (this.searchField.Text))
+			if (!LoggingTabPage.globalSecondaryVisibility && !string.IsNullOrEmpty (this.searchField.Text))
 			{
-				this.searchField.Text = null;
-				this.UpdateTable ();
+				this.ClearSearch ();
 			}
 
 			this.UpdateWidgets ();
@@ -427,20 +436,29 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 
 			int counter = 0;
+			int lines = 0;
+
 			for (int row=0; row<rows; row++)
 			{
 				var query = db.QueryLog.GetEntry (row);
 				var values = query.GetMainStrings (row);
-				this.ColorizeSearchingString (values, ref counter);
+				int n = 0;
+				this.ColorizeSearchingString (values, ref n);
+
+				if (n > 0)
+				{
+					counter += n;
+					lines++;
+				}
 
 				this.mainTable.FillRow (row, alignments);
 				this.mainTable.UpdateRow (row, values);
 			}
 
-			this.UpdateSearchCounter (counter);
+			this.UpdateSearchCounter (counter, lines);
 		}
 
-		private void UpdateSearchCounter(int counter)
+		private void UpdateSearchCounter(int counter, int lines)
 		{
 			if (counter == 0)
 			{
@@ -459,7 +477,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			else
 			{
-				this.searchCounterInfo.Text = string.Format ("{0} résultats", counter.ToString ());
+				if (counter == lines)
+				{
+					this.searchCounterInfo.Text = string.Format ("{0} résultats", counter.ToString ());
+				}
+				else
+				{
+					if (lines == 1)
+					{
+						this.searchCounterInfo.Text = string.Format ("{0} résultats dans 1 ligne", counter.ToString ());
+					}
+					else
+					{
+						this.searchCounterInfo.Text = string.Format ("{0} résultats dans {1} lignes", counter.ToString (), lines.ToString ());
+					}
+				}
 			}
 		}
 
@@ -478,8 +510,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 				var query = db.QueryLog.GetEntry (sel);
 
-				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
-				bool colorize   = this.colorizeButton.ActiveState   == ActiveState.Yes;
+				bool substitute = LoggingTabPage.globalSubstitute;
+				bool colorize   = LoggingTabPage.globalColorize;
 				string content = query.GetQuery (substitute, colorize).ToString ();
 				int counter = 0;
 				content = this.ColorizeSearchingString (content, ref counter);
@@ -523,10 +555,24 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.clearButton.Enable  = !empty;
 			this.exportButton.Enable = !empty;
 
-			this.secondaryToolbar.Visibility = LoggingTabPage.secondaryVisibility;
-			this.secondaryButton.GlyphShape = LoggingTabPage.secondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+			this.secondaryToolbar.Visibility = LoggingTabPage.globalSecondaryVisibility;
+			this.secondaryButton.GlyphShape = LoggingTabPage.globalSecondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+
+			this.caseSensitiveButton.ActiveState       = LoggingTabPage.globalCaseSensitive ? ActiveState.Yes : ActiveState.No;
+			this.substituteButton.ActiveState = LoggingTabPage.globalSubstitute    ? ActiveState.Yes : ActiveState.No;
+			this.colorizeButton.ActiveState   = LoggingTabPage.globalColorize      ? ActiveState.Yes : ActiveState.No;
 		}
 
+
+		private void ClearSearch()
+		{
+			//	Annule la recherche en cours.
+			this.searchField.Text = null;
+			this.lastSearching = null;
+
+			this.UpdateTable ();
+			this.UpdateDetails ();
+		}
 
 		private void Search(int direction)
 		{
@@ -538,7 +584,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			string search = this.searchField.Text;
-			bool caseSensitive = this.caseButton.ActiveState == ActiveState.Yes;
+			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
 
 			if (this.lastSearching != search || this.lastCaseSensitive != caseSensitive)
 			{
@@ -549,42 +595,45 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateDetails ();
 			}
 
-			int count = this.mainTable.Rows;
-			int sel = this.mainTable.SelectedRow;
-
-			if (sel == -1)
+			if (direction != 0)
 			{
-				sel = 0;
-			}
+				int count = this.mainTable.Rows;
+				int sel = this.mainTable.SelectedRow;
 
-			if (!caseSensitive)
-			{
-				search = Misc.RemoveAccentsToLower (search);
-			}
-
-			for (int i = 0; i < count; i++)  // une boucle complète
-			{
-				sel += direction;  // suivant ou précédent
-
-				if (sel < 0)
+				if (sel == -1)
 				{
-					sel = count-1;  // début -> fin
+					sel = 0;
 				}
 
-				if (sel >= count)
+				if (!caseSensitive)
 				{
-					sel = 0;  // fin -> début
+					search = Misc.RemoveAccentsToLower (search);
 				}
 
-				var query = db.QueryLog.GetEntry (sel);
-
-				if (query.ContainsString (search, caseSensitive))
+				for (int i = 0; i < count; i++)  // une boucle complète
 				{
-					this.mainTable.DeselectAll ();
-					this.mainTable.SelectRow (sel, true);
-					this.mainTable.ShowSelect ();
-					this.UpdateDetails ();
-					return;
+					sel += direction;  // suivant ou précédent
+
+					if (sel < 0)
+					{
+						sel = count-1;  // début -> fin
+					}
+
+					if (sel >= count)
+					{
+						sel = 0;  // fin -> début
+					}
+
+					var query = db.QueryLog.GetEntry (sel);
+
+					if (query.ContainsString (search, caseSensitive))
+					{
+						this.mainTable.DeselectAll ();
+						this.mainTable.SelectRow (sel, true);
+						this.mainTable.ShowSelect ();
+						this.UpdateDetails ();
+						return;
+					}
 				}
 			}
 		}
@@ -727,7 +776,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private string ColorizeSearchingString(string text, ref int counter)
 		{
 			string searching = this.searchField.Text;
-			bool caseSensitive = this.caseButton.ActiveState == ActiveState.Yes;
+			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
 
 			if (string.IsNullOrEmpty (searching))
 			{
@@ -832,7 +881,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static bool			secondaryVisibility;
+		private static bool			globalSecondaryVisibility = false;
+		private static bool			globalCaseSensitive       = true;
+		private static bool			globalSubstitute          = true;
+		private static bool			globalColorize            = true;
 
 		private RadioButton			extendedButton;
 		private RadioButton			basicButton;
@@ -842,12 +894,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private GlyphButton			secondaryButton;
 
 		private FrameBox			secondaryToolbar;
+		private GlyphButton			searchClearButton;
 		private TextField			searchField;
 		private Button				searchPrevButton;
 		private Button				searchNextButton;
-		private GlyphButton			searchClearButton;
 		private StaticText			searchCounterInfo;
-		private CheckButton			caseButton;
+		private CheckButton			caseSensitiveButton;
 		private Button				exportButton;
 		private Button				importButton;
 
