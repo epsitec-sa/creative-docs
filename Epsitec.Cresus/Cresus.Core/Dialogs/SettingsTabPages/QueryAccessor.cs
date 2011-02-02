@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			values.Add ((row+1).ToString ());
 			values.Add (query.StartTime.ToString ());
 			values.Add (query.GetNiceDuration ());
-			values.Add (query.GetQuery ());
+			values.Add (query.GetQuery ().ToString ());
 			values.Add (query.GetCompactParameters ());
 			values.Add (query.GetCompactResults ());
 
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		public static string GetQuery(this Query query, bool substitution = false)
+		public static FormattedText GetQuery(this Query query, bool substitution = false, bool colorize = false)
 		{
 			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres.
 			var text = query.SourceCode.Replace ("\n", "");
