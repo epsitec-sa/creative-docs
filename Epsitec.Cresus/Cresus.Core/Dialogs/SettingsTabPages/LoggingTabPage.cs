@@ -90,8 +90,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.secondaryButton.Clicked += delegate
 			{
-				this.secondaryToolbar.Visibility = !this.secondaryToolbar.Visibility;
-				this.secondaryButton.GlyphShape = this.secondaryToolbar.Visibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+				this.SecondarySwap ();
 			};
 
 			this.searchField.TextChanged += delegate
@@ -99,14 +98,26 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateWidgets ();
 			};
 
-			this.prevButton.Clicked += delegate
+			this.searchClearButton.Clicked += delegate
 			{
-				this.Search (-1, this.caseButton.ActiveState == ActiveState.Yes);
+				this.searchField.Text = null;
+				this.UpdateTable();
 			};
 
-			this.nextButton.Clicked += delegate
+			this.searchPrevButton.Clicked += delegate
 			{
-				this.Search (1, this.caseButton.ActiveState == ActiveState.Yes);
+				this.Search (-1);
+			};
+
+			this.searchNextButton.Clicked += delegate
+			{
+				this.Search (1);
+			};
+
+			this.updateButton.Clicked += delegate
+			{
+				this.UpdateTable ();
+				this.UpdateDetails ();
 			};
 
 			this.clearButton.Clicked += delegate
@@ -185,7 +196,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = header,
 				ButtonStyle = ButtonStyle.Slider,
-				GlyphShape = Common.Widgets.GlyphShape.TriangleDown,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 3, 3),
 			};
@@ -194,7 +204,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = header,
 				Text = "Vider",
-				PreferredWidth = 70,
+				PreferredWidth = 100,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			this.updateButton = new Button
+			{
+				Parent = header,
+				Text = "Mettre à jour",
+				PreferredWidth = 100,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 			};
@@ -267,7 +286,23 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (5, 0, 0, 0),
 			};
 
-			this.nextButton = new Button
+			this.searchCounterInfo = new StaticText
+			{
+				Parent = box,
+				PreferredWidth = 100,
+				Dock = DockStyle.Right,
+				Margins = new Margins (15, 0, 0, 0),
+			};
+
+			this.searchClearButton = new GlyphButton
+			{
+				Parent = box,
+				GlyphShape = Common.Widgets.GlyphShape.Close,
+				Dock = DockStyle.Right,
+				Margins = new Margins (1, 0, 0, 0),
+			};
+
+			this.searchNextButton = new Button
 			{
 				Parent = box,
 				Text = "Suivant",
@@ -276,7 +311,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (1, 0, 0, 0),
 			};
 
-			this.prevButton = new Button
+			this.searchPrevButton = new Button
 			{
 				Parent = box,
 				Text = "Précédent",
@@ -339,6 +374,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private void SecondarySwap()
+		{
+			LoggingTabPage.secondaryVisibility = !LoggingTabPage.secondaryVisibility;
+
+			if (!LoggingTabPage.secondaryVisibility && !string.IsNullOrEmpty (this.searchField.Text))
+			{
+				this.searchField.Text = null;
+				this.UpdateTable ();
+			}
+
+			this.UpdateWidgets ();
+		}
+
 		private void UpdateRadio()
 		{
 			this.extendedButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
@@ -350,10 +398,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdateTable()
 		{
 			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+			int rows = (db.QueryLog == null) ? 0 : db.QueryLog.GetNbEntries ();
 
-			int count = (db.QueryLog == null) ? 0 : db.QueryLog.GetNbEntries ();
-
-			this.mainTable.SetArraySize (6, count);
+			this.mainTable.SetArraySize (6, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
 			this.mainTable.SetWidthColumn (1, 110);
@@ -379,13 +426,40 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				ContentAlignment.MiddleLeft
 			};
 
-			for (int row=0; row<count; row++)
+			int counter = 0;
+			for (int row=0; row<rows; row++)
 			{
 				var query = db.QueryLog.GetEntry (row);
 				var values = query.GetMainStrings (row);
+				this.ColorizeSearchingString (values, ref counter);
 
 				this.mainTable.FillRow (row, alignments);
 				this.mainTable.UpdateRow (row, values);
+			}
+
+			this.UpdateSearchCounter (counter);
+		}
+
+		private void UpdateSearchCounter(int counter)
+		{
+			if (counter == 0)
+			{
+				if (string.IsNullOrEmpty (this.searchField.Text))
+				{
+					this.searchCounterInfo.Text = null;
+				}
+				else
+				{
+					this.searchCounterInfo.Text = "pas trouvé";
+				}
+			}
+			else if (counter == 1)
+			{
+				this.searchCounterInfo.Text = "1 résultat";
+			}
+			else
+			{
+				this.searchCounterInfo.Text = string.Format ("{0} résultats", counter.ToString ());
 			}
 		}
 
@@ -407,6 +481,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
 				bool colorize   = this.colorizeButton.ActiveState   == ActiveState.Yes;
 				string content = query.GetQuery (substitute, colorize).ToString ();
+				int counter = 0;
+				content = this.ColorizeSearchingString (content, ref counter);
 
 				if (content.Length >= this.queryField.MaxLength)
 				{
@@ -440,21 +516,37 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
 			bool empty = this.mainTable.Rows == 0;
 
-			this.prevButton.Enable = enable;
-			this.nextButton.Enable = enable;
+			this.searchClearButton.Enable = enable;
+			this.searchPrevButton.Enable  = enable;
+			this.searchNextButton.Enable  = enable;
 
 			this.clearButton.Enable  = !empty;
 			this.exportButton.Enable = !empty;
+
+			this.secondaryToolbar.Visibility = LoggingTabPage.secondaryVisibility;
+			this.secondaryButton.GlyphShape = LoggingTabPage.secondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
 		}
 
 
-		private void Search(int direction, bool caseSensitive)
+		private void Search(int direction)
 		{
 			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
 			if (db.QueryLog == null)
 			{
 				return;
+			}
+
+			string search = this.searchField.Text;
+			bool caseSensitive = this.caseButton.ActiveState == ActiveState.Yes;
+
+			if (this.lastSearching != search || this.lastCaseSensitive != caseSensitive)
+			{
+				this.lastSearching = search;
+				this.lastCaseSensitive = caseSensitive;
+
+				this.UpdateTable ();
+				this.UpdateDetails ();
 			}
 
 			int count = this.mainTable.Rows;
@@ -464,8 +556,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				sel = 0;
 			}
-
-			string search = this.searchField.Text;
 
 			if (!caseSensitive)
 			{
@@ -561,6 +651,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<parameters.Count; row++)
 			{
 				var values = QueryAccessor.GetParameterStrings (parameters[row]);
+				int counter = 0;
+				this.ColorizeSearchingString (values, ref counter);
 
 				cellTable.FillRow (row, alignments);
 				cellTable.UpdateRow (row, values);
@@ -612,6 +704,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rowsCount; row++)
 			{
 				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
+				int counter = 0;
+				this.ColorizeSearchingString (values, ref counter);
 
 				cellTable.FillRow (row, alignments.ToArray ());
 				cellTable.UpdateRow (row, values);
@@ -620,6 +714,87 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return frame;
 		}
 		#endregion
+
+
+		private void ColorizeSearchingString(string[] values, ref int counter)
+		{
+			for (int i = 0; i < values.Length; i++)
+			{
+				values[i] = this.ColorizeSearchingString (values[i], ref counter);
+			}
+		}
+
+		private string ColorizeSearchingString(string text, ref int counter)
+		{
+			string searching = this.searchField.Text;
+			bool caseSensitive = this.caseButton.ActiveState == ActiveState.Yes;
+
+			if (string.IsNullOrEmpty (searching))
+			{
+				return text;
+			}
+
+			if (!caseSensitive)
+			{
+				searching = Misc.RemoveAccentsToLower (searching);
+			}
+
+			var color = Color.FromName ("Green");
+			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
+			var tag2 = "</b></font>";
+
+			if (caseSensitive)
+			{
+				int index = 0;
+				while (index < text.Length)
+				{
+					index = text.IndexOf (searching, index);
+
+					if (index == -1)
+					{
+						break;
+					}
+
+					text = text.Insert (index+searching.Length, tag2);
+					text = text.Insert (index, tag1);
+
+					index += tag1.Length;
+					index += tag2.Length;
+
+					counter++;
+				}
+
+				return text;
+			}
+			else
+			{
+				var lowerText = Misc.RemoveAccentsToLower (text);
+
+				int index = 0;
+				while (index < text.Length)
+				{
+					index = lowerText.IndexOf (searching, index);
+
+					if (index == -1)
+					{
+						break;
+					}
+
+					text = text.Insert (index+searching.Length, tag2);
+					text = text.Insert (index, tag1);
+
+					lowerText = lowerText.Insert (index+searching.Length, tag2);
+					lowerText = lowerText.Insert (index, tag1);
+
+					index += tag1.Length;
+					index += tag2.Length;
+
+					counter++;
+				}
+
+				return text;
+			}
+		}
 
 
 		private LogMode LogMode
@@ -657,16 +832,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private static bool			secondaryVisibility;
+
 		private RadioButton			extendedButton;
 		private RadioButton			basicButton;
 		private RadioButton			offButton;
+		private Button				updateButton;
 		private Button				clearButton;
 		private GlyphButton			secondaryButton;
 
 		private FrameBox			secondaryToolbar;
 		private TextField			searchField;
-		private Button				prevButton;
-		private Button				nextButton;
+		private Button				searchPrevButton;
+		private Button				searchNextButton;
+		private GlyphButton			searchClearButton;
+		private StaticText			searchCounterInfo;
 		private CheckButton			caseButton;
 		private Button				exportButton;
 		private Button				importButton;
@@ -679,5 +859,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private CheckButton			colorizeButton;
 		private TextFieldMulti		queryField;
 		private FrameBox			detailsBox;
+
+		private string				lastSearching;
+		private bool				lastCaseSensitive;
 	}
 }
