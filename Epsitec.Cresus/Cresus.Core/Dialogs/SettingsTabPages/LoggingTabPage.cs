@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.CreateUIMainToolbar (topFrame);
 			this.CreateUISecondaryToolbar (topFrame);
 
-			this.table = new CellTable
+			this.mainTable = new CellTable
 			{
 				Parent = topFrame,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile,
@@ -125,12 +125,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.Import ();
 			};
 
-			this.table.SelectionChanged += delegate
+			this.mainTable.SelectionChanged += delegate
 			{
 				this.UpdateDetails ();
 			};
 
 			this.substituteButton.ActiveStateChanged += delegate
+			{
+				this.UpdateDetails ();
+			};
+
+			this.colorizeButton.ActiveStateChanged += delegate
 			{
 				this.UpdateDetails ();
 			};
@@ -321,6 +326,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
+
+			this.colorizeButton = new CheckButton
+			{
+				Parent = toolbar,
+				Text = "Coloration syntaxique",
+				PreferredWidth = 150,
+				ActiveState = Common.Widgets.ActiveState.Yes,
+				Dock = DockStyle.Left,
+				Margins = new Margins (10, 0, 0, 0),
+			};
 		}
 
 
@@ -338,21 +353,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int count = (db.QueryLog == null) ? 0 : db.QueryLog.GetNbEntries ();
 
-			this.table.SetArraySize (6, count);
+			this.mainTable.SetArraySize (6, count);
 
-			this.table.SetWidthColumn (0,  40);
-			this.table.SetWidthColumn (1, 110);
-			this.table.SetWidthColumn (2,  70);
-			this.table.SetWidthColumn (3, 350);
-			this.table.SetWidthColumn (4, 110);
-			this.table.SetWidthColumn (5, 110);
+			this.mainTable.SetWidthColumn (0,  40);
+			this.mainTable.SetWidthColumn (1, 110);
+			this.mainTable.SetWidthColumn (2,  70);
+			this.mainTable.SetWidthColumn (3, 350);
+			this.mainTable.SetWidthColumn (4, 110);
+			this.mainTable.SetWidthColumn (5, 110);
 
-			this.table.SetHeaderTextH (0, "N°");
-			this.table.SetHeaderTextH (1, "Début");
-			this.table.SetHeaderTextH (2, "Durée");
-			this.table.SetHeaderTextH (3, "Requête");
-			this.table.SetHeaderTextH (4, "Paramètres");
-			this.table.SetHeaderTextH (5, "Résultats");
+			this.mainTable.SetHeaderTextH (0, "N°");
+			this.mainTable.SetHeaderTextH (1, "Début");
+			this.mainTable.SetHeaderTextH (2, "Durée");
+			this.mainTable.SetHeaderTextH (3, "Requête");
+			this.mainTable.SetHeaderTextH (4, "Paramètres");
+			this.mainTable.SetHeaderTextH (5, "Résultats");
 
 			ContentAlignment[] alignments =
 			{
@@ -369,8 +384,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (row);
 				var values = query.GetMainStrings (row);
 
-				this.table.FillRow (row, alignments);
-				this.table.UpdateRow (row, values);
+				this.mainTable.FillRow (row, alignments);
+				this.mainTable.UpdateRow (row, values);
 			}
 		}
 
@@ -378,7 +393,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.detailsBox.Children.Clear ();
 
-			int sel = this.table.SelectedRow;
+			int sel = this.mainTable.SelectedRow;
 
 			if (sel == -1)
 			{
@@ -392,7 +407,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				var query = db.QueryLog.GetEntry (sel);
 
 				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
-				this.queryField.Text = query.GetQuery (substitute);
+				bool colorize   = this.colorizeButton.ActiveState == ActiveState.Yes;
+				this.queryField.FormattedText = query.GetQuery (substitute, colorize);
 
 				var parameters = this.CreateParametersShower (query.Parameters);
 				parameters.Parent = this.detailsBox;
@@ -415,7 +431,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdateWidgets()
 		{
 			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
-			bool empty = this.table.Rows == 0;
+			bool empty = this.mainTable.Rows == 0;
 
 			this.prevButton.Enable = enable;
 			this.nextButton.Enable = enable;
@@ -434,8 +450,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				return;
 			}
 
-			int count = this.table.Rows;
-			int sel = this.table.SelectedRow;
+			int count = this.mainTable.Rows;
+			int sel = this.mainTable.SelectedRow;
 
 			if (sel == -1)
 			{
@@ -467,9 +483,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (query.ContainsString (search, caseSensitive))
 				{
-					this.table.DeselectAll ();
-					this.table.SelectRow (sel, true);
-					this.table.ShowSelect ();
+					this.mainTable.DeselectAll ();
+					this.mainTable.SelectRow (sel, true);
+					this.mainTable.ShowSelect ();
 					this.UpdateDetails ();
 					return;
 				}
@@ -648,11 +664,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private Button				exportButton;
 		private Button				importButton;
 
-		private CellTable			table;
+		private CellTable			mainTable;
 		private HSplitter			splitter;
 
 		private FrameBox			detailsFrame;
 		private CheckButton			substituteButton;
+		private CheckButton			colorizeButton;
 		private TextFieldMulti		queryField;
 		private FrameBox			detailsBox;
 	}
