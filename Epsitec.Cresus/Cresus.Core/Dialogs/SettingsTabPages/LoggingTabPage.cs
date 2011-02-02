@@ -95,6 +95,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.SecondarySwap ();
 			};
 
+			this.queryOptionsButton.Clicked += delegate
+			{
+				this.QueryOptionsSwap ();
+			};
+
 			this.searchField.TextChanged += delegate
 			{
 				this.UpdateWidgets ();
@@ -336,16 +341,44 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void CreateUIDetails(Widget parent)
 		{
-			this.CreateUIQueryToolbar (parent);
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 10),
+			};
+
+			var leftBox = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Fill,
+			};
+
+			var rightBox = new FrameBox
+			{
+				Parent = box,
+				PreferredWidth = 18,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+
+			this.CreateUIQueryOptionsToolbar (leftBox);
 
 			this.queryField = new TextFieldMulti
 			{
-				Parent = parent,
+				Parent = leftBox,
 				MaxLength = 100000,
 				IsReadOnly = true,
 				PreferredHeight = 66,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 10),
+			};
+
+			this.queryOptionsButton = new GlyphButton
+			{
+				Parent = rightBox,
+				PreferredSize = new Size (18, 18),
+				ButtonStyle = ButtonStyle.Slider,
+				Dock = DockStyle.Top,
 			};
 
 			this.detailsBox = new FrameBox
@@ -356,9 +389,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 		}
 
-		private void CreateUIQueryToolbar(Widget parent)
+		private void CreateUIQueryOptionsToolbar(Widget parent)
 		{
-			var toolbar = new FrameBox
+			this.queryOptionsToolbar = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
@@ -367,7 +400,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.substituteButton = new CheckButton
 			{
-				Parent = toolbar,
+				Parent = this.queryOptionsToolbar,
 				Text = "Substituer les paramètres",
 				PreferredWidth = 150,
 				AutoToggle = false,
@@ -377,7 +410,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.colorizeButton = new CheckButton
 			{
-				Parent = toolbar,
+				Parent = this.queryOptionsToolbar,
 				Text = "Coloriage syntaxique",
 				PreferredWidth = 150,
 				AutoToggle = false,
@@ -416,6 +449,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.ClearSearch ();
 			}
 
+			this.UpdateWidgets ();
+		}
+
+		private void QueryOptionsSwap()
+		{
+			LoggingTabPage.globalQueryOptionsVisibility = !LoggingTabPage.globalQueryOptionsVisibility;
 			this.UpdateWidgets ();
 		}
 
@@ -581,7 +620,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.exportButton.Enable = !empty;
 
 			this.secondaryToolbar.Visibility = LoggingTabPage.globalSecondaryVisibility;
-			this.secondaryButton.GlyphShape = LoggingTabPage.globalSecondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+			this.secondaryButton.GlyphShape  = LoggingTabPage.globalSecondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
+
+			this.queryOptionsToolbar.Visibility = LoggingTabPage.globalQueryOptionsVisibility;
+			this.queryOptionsButton.GlyphShape  = LoggingTabPage.globalQueryOptionsVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
 
 			this.caseSensitiveButton.ActiveState = LoggingTabPage.globalCaseSensitive ? ActiveState.Yes : ActiveState.No;
 			this.substituteButton.ActiveState    = LoggingTabPage.globalSubstitute    ? ActiveState.Yes : ActiveState.No;
@@ -904,10 +946,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static bool				globalSecondaryVisibility = false;
-		private static bool				globalCaseSensitive       = true;
-		private static bool				globalSubstitute          = true;
-		private static bool				globalColorize            = true;
+		private static bool				globalSecondaryVisibility    = false;
+		private static bool				globalQueryOptionsVisibility = false;
+		private static bool				globalCaseSensitive          = true;
+		private static bool				globalSubstitute             = true;
+		private static bool				globalColorize               = true;
 
 		private readonly List<Query>	queries;
 
@@ -932,6 +975,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private HSplitter				splitter;
 
 		private FrameBox				detailsFrame;
+		private GlyphButton				queryOptionsButton;
+		private FrameBox				queryOptionsToolbar;
 		private CheckButton				substituteButton;
 		private CheckButton				colorizeButton;
 		private TextFieldMulti			queryField;
