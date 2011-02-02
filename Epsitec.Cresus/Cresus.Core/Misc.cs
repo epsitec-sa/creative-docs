@@ -423,6 +423,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static FormattedText Colorize(FormattedText text, Color color)
+		{
+			return FormattedText.Concat ("<font color=\"#", Color.ToHexa (color), "\">", TextFormatter.FormatText (text), "</font>");
+		}
+
 		public static FormattedText Bold(FormattedText text)
 		{
 			return Misc.Tagged (text, "b");

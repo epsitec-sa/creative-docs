@@ -132,11 +132,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.substituteButton.ActiveStateChanged += delegate
 			{
+				this.UpdateTable ();
 				this.UpdateDetails ();
 			};
 
 			this.colorizeButton.ActiveStateChanged += delegate
 			{
+				this.UpdateTable ();
 				this.UpdateDetails ();
 			};
 
@@ -294,6 +296,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.queryField = new TextFieldMulti
 			{
 				Parent = parent,
+				MaxLength = 100000,
 				IsReadOnly = true,
 				PreferredHeight = 66,
 				Dock = DockStyle.Top,
@@ -330,7 +333,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.colorizeButton = new CheckButton
 			{
 				Parent = toolbar,
-				Text = "Coloration syntaxique",
+				Text = "Coloriage syntaxique",
 				PreferredWidth = 150,
 				ActiveState = Common.Widgets.ActiveState.Yes,
 				Dock = DockStyle.Left,
@@ -408,7 +411,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
 				bool colorize   = this.colorizeButton.ActiveState == ActiveState.Yes;
-				this.queryField.FormattedText = query.GetQuery (substitute, colorize);
+				string content = query.GetQuery (substitute, colorize).ToString ();
+
+				if (content.Length >= this.queryField.MaxLength)
+				{
+					this.queryField.FormattedText = "Trop long...";
+				}
+				else
+				{
+					this.queryField.FormattedText = content;
+				}
 
 				var parameters = this.CreateParametersShower (query.Parameters);
 				parameters.Parent = this.detailsBox;
