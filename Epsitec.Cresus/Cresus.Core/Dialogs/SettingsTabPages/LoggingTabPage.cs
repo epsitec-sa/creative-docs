@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				PreferredHeight = 220,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 0, 10, 10),
-				Visibility = false,
 			};
 
 			this.splitter = new HSplitter
@@ -132,13 +131,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.substituteButton.ActiveStateChanged += delegate
 			{
-				this.UpdateTable ();
 				this.UpdateDetails ();
 			};
 
 			this.colorizeButton.ActiveStateChanged += delegate
 			{
-				this.UpdateTable ();
 				this.UpdateDetails ();
 			};
 
@@ -400,17 +397,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel == -1)
 			{
-				this.detailsFrame.Visibility = false;
+				this.queryField.FormattedText = null;
 			}
 			else
 			{
-				this.detailsFrame.Visibility = true;
-
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 				var query = db.QueryLog.GetEntry (sel);
 
 				bool substitute = this.substituteButton.ActiveState == ActiveState.Yes;
-				bool colorize   = this.colorizeButton.ActiveState == ActiveState.Yes;
+				bool colorize   = this.colorizeButton.ActiveState   == ActiveState.Yes;
 				string content = query.GetQuery (substitute, colorize).ToString ();
 
 				if (content.Length >= this.queryField.MaxLength)
