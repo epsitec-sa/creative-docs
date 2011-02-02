@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var values = new List<string> ();
 
 			values.Add ((row+1).ToString ());
-			values.Add (query.StartTime.ToString ());
+			values.Add (query.GetNiceStartTime ());
 			values.Add (query.GetNiceDuration ());
 			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static FormattedText GetQuerySummary(this Query query)
 		{
-			//	Retourne le texte de la requête sql, avec seulement les mots clés sql.
+			//	Retourne le texte résumé de la requête SQL, avec seulement les mots-clés.
 			var text = query.SourceCode.Replace ("\n", "");
 
 			foreach (var word in QueryAccessor.SyntaxSqlWords)
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static FormattedText GetQuery(this Query query, bool substitution = false, bool syntaxColorized = false)
 		{
-			//	Retourne le texte de la requête sql, avec ou sans substitution des paramètres (en bleu)
+			//	Retourne le texte de la requête SQL, avec ou sans substitution des paramètres (en bleu)
 			//	et coloriage syntaxique (en rouge).
 			var text = query.SourceCode.Replace ("\n", "");
 
@@ -678,6 +678,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
+
+		private static string GetNiceStartTime(this Query query)
+		{
+			//	Retourne le temps sous une jolie forme.
+			return query.StartTime.ToString ("HH:mm:ss fff");
+		}
 
 		private static string GetNiceDuration(this Query query)
 		{
