@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public static string GetCompactParameters(this Query query)
 		{
 			//	Retourne tous les paramètres sous une forme compacte.
-			return string.Join (", ", query.Parameters.Select (x => x.Value));
+			return string.Join (", ", query.Parameters.Select (x => QueryAccessor.GetString (x.Value)));
 		}
 
 		public static string GetCompactResults(this Query query)
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					{
 						if (value != null)
 						{
-							string s = value.ToString ();
+							string s = QueryAccessor.GetString (value);
 
 							if (!string.IsNullOrWhiteSpace (s))
 							{
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var values = new List<string> ();
 
 			values.Add (parameter.Name);
-			values.Add (parameter.Value.ToString ());
+			values.Add (QueryAccessor.GetString (parameter.Value));
 
 			return values.ToArray ();
 		}
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			foreach (var obj in objects)
 			{
-				values.Add (obj.ToString ());
+				values.Add (QueryAccessor.GetString (obj));
 			}
 
 			return values.ToArray ();
@@ -220,6 +220,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Retourne le texte de la requête SQL, avec ou sans substitution des paramètres (en bleu)
 			//	et coloriage syntaxique (en rouge).
 			var text = query.SourceCode.Replace ("\n", "");
+			text = TextLayout.ConvertToTaggedText (text);
 
 			if (substitution || syntaxColorized)
 			{
@@ -730,6 +731,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return count;
 		}
 
+
+		private static string GetString(object value)
+		{
+			if (value is string)
+			{
+				return TextLayout.ConvertToTaggedText (value as string);
+			}
+			else
+			{
+				return value.ToString ();
+			}
+		}
 
 		private static string GetNiceStartTime(this Query query)
 		{
