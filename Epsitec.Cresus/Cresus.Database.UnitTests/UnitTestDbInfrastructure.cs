@@ -1100,25 +1100,27 @@ namespace Epsitec.Cresus.Database.UnitTests
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToUpdate = new SqlFieldList ()
-					{
-						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "newKey"),
-						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "newValue"),
-					};
+		            {
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "newKey"),
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "newValue"),
+		            };
 
 					SqlFieldList conditions = new SqlFieldList ()
-					{
-						new SqlFunction
-						(
-							SqlFunctionCode.CompareEqual,
-							SqlField.CreateName (tableName, Tags.ColumnKey),
-							SqlField.CreateConstant ("key", DbRawType.String)
-						),
-					};
+		            {
+		                new SqlFunction
+		                (
+		                    SqlFunctionCode.CompareEqual,
+		                    SqlField.CreateName (tableName, Tags.ColumnKey),
+		                    SqlField.CreateConstant ("key", DbRawType.String)
+		                ),
+		            };
 
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
 					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.Mode = LogMode.Extended;
+					infrastructure.QueryLog.LogResult = true;
+					infrastructure.QueryLog.LogThreadName = true;
+					infrastructure.QueryLog.LogStackTrace = true;
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1153,6 +1155,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
+					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+
+					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
+
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1184,7 +1192,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 					transaction.SqlBuilder.SelectData (query);
 
 					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.Mode = LogMode.Extended;
+					infrastructure.QueryLog.LogResult = true;
+					infrastructure.QueryLog.LogThreadName = true;
+					infrastructure.QueryLog.LogStackTrace = true;
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1213,6 +1223,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (14, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
+					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+
+					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
+
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1248,7 +1264,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
 					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.Mode = LogMode.Extended;
+					infrastructure.QueryLog.LogResult = true;
+					infrastructure.QueryLog.LogThreadName = true;
+					infrastructure.QueryLog.LogStackTrace = true;
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1281,6 +1299,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
+					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+
+					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
+
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1299,22 +1323,24 @@ namespace Epsitec.Cresus.Database.UnitTests
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToInsert = new SqlFieldList ()
-					{
-						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "key"),
-						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "value"),
-					};
+		            {
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "key"),
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "value"),
+		            };
 
 					SqlFieldList fieldsToReturn = new SqlFieldList ()
-					{
-						new SqlField () { Alias = table.Columns[Tags.ColumnId].Name },
-						new SqlField () { Alias = table.Columns[Tags.ColumnKey].Name },
-						new SqlField () { Alias = table.Columns[Tags.ColumnValue].Name },
-					};
+		            {
+		                new SqlField () { Alias = table.Columns[Tags.ColumnId].Name },
+		                new SqlField () { Alias = table.Columns[Tags.ColumnKey].Name },
+		                new SqlField () { Alias = table.Columns[Tags.ColumnValue].Name },
+		            };
 
 					transaction.SqlBuilder.InsertData (tableName, fieldsToInsert, fieldsToReturn);
 
 					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.Mode = LogMode.Extended;
+					infrastructure.QueryLog.LogResult = true;
+					infrastructure.QueryLog.LogThreadName = true;
+					infrastructure.QueryLog.LogStackTrace = true;
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1345,12 +1371,18 @@ namespace Epsitec.Cresus.Database.UnitTests
 					Assert.AreEqual (3, entry.Result.Tables[0].Columns.Count);
 					Assert.AreEqual ("@PARAM_2", entry.Result.Tables[0].Columns[0].Name);
 					Assert.AreEqual ("@PARAM_3", entry.Result.Tables[0].Columns[1].Name);
-					Assert.AreEqual ("@PARAM_4", entry.Result.Tables[0].Columns[2].Name);		
+					Assert.AreEqual ("@PARAM_4", entry.Result.Tables[0].Columns[2].Name);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
 					Assert.AreEqual ("key", entry.Result.Tables[0].Rows[0].Values[1]);
 					Assert.AreEqual ("value", entry.Result.Tables[0].Rows[0].Values[2]);
+					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+
+					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
+
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1382,7 +1414,9 @@ namespace Epsitec.Cresus.Database.UnitTests
 					transaction.SqlBuilder.SelectData (query);
 
 					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.Mode = LogMode.Extended;
+					infrastructure.QueryLog.LogResult = true;
+					infrastructure.QueryLog.LogThreadName = true;
+					infrastructure.QueryLog.LogStackTrace = true;
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1419,6 +1453,13 @@ namespace Epsitec.Cresus.Database.UnitTests
 						Assert.AreEqual ("key" + (i + 1), entry.Result.Tables[0].Rows[i].Values[1]);
 						Assert.AreEqual ("value" + (i + 1), entry.Result.Tables[0].Rows[i].Values[2]);
 					}
+
+					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+
+					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
+
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}

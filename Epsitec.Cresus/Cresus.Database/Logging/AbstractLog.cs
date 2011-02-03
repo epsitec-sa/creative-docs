@@ -6,7 +6,11 @@ using System.Collections.Generic;
 
 using System.Data;
 
+using System.Diagnostics;
+
 using System.Linq;
+
+using System.Threading;
 
 
 namespace Epsitec.Cresus.Database.Logging
@@ -23,11 +27,27 @@ namespace Epsitec.Cresus.Database.Logging
 
 		internal AbstractLog()
 		{
-			this.Mode = LogMode.Basic;
+			this.LogResult = false;
+			this.LogStackTrace = false;
+			this.LogThreadName = false;
 		}
 
 
-		public LogMode Mode
+		public bool LogResult
+		{
+			get;
+			set;
+		}
+
+
+		public bool LogStackTrace
+		{
+			get;
+			set;
+		}
+
+
+		public bool LogThreadName
 		{
 			get;
 			set;
@@ -53,13 +73,10 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			if (!this.DiscardEntry ())
-			{
-				Result result = null;
-				Query query = this.GetQuery (command, result, startTime, duration);
+			Result result = null;
+			Query query = this.GetQuery (command, result, startTime, duration);
 
-				this.AddEntry (query);
-			}
+			this.AddEntry (query);
 		}
 
 
@@ -67,13 +84,10 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			if (!this.DiscardEntry ())
-			{
-				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
-				Query query = this.GetQuery (command, result, startTime, duration);
+			Result result = this.LogResult ? AbstractLog.GetResult (data) : null;
+			Query query = this.GetQuery (command, result, startTime, duration);
 
-				this.AddEntry (query);
-			}
+			this.AddEntry (query);
 		}
 
 
@@ -81,13 +95,10 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			if (!this.DiscardEntry ())
-			{
-				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (command, data);
-				Query query = this.GetQuery (command, result, startTime, duration);
+			Result result = this.LogResult ? AbstractLog.GetResult (command, data) : null;
+			Query query = this.GetQuery (command, result, startTime, duration);
 
-				this.AddEntry (query);
-			}
+			this.AddEntry (query);
 		}
 
 
@@ -95,25 +106,10 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			command.ThrowIfNull ("command");
 
-			if (!this.DiscardEntry ())
-			{
-				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
-				Query query = this.GetQuery (command, result, startTime, duration);
+			Result result = this.LogResult ? AbstractLog.GetResult (data) : null;
+			Query query = this.GetQuery (command, result, startTime, duration);
 
-				this.AddEntry (query);
-			}
-		}
-
-
-		private bool DiscardEntry()
-		{
-			return this.Mode == LogMode.Off;
-		}
-
-
-		private bool DiscardResult()
-		{
-			return this.Mode == LogMode.Basic;
+			this.AddEntry (query);
 		}
 
 
@@ -122,8 +118,10 @@ namespace Epsitec.Cresus.Database.Logging
 			int number = this.GetNextNumber ();
 			string sourceCode = AbstractLog.GetSourceCode (command);
 			IEnumerable<Parameter> parameter = AbstractLog.GetParameters (command);
-
-			return new Query (number, sourceCode, parameter, result, startTime, duration);
+			string threadName = this.LogThreadName ? Thread.CurrentThread.Name : null;
+			StackTrace stackTrace = this.LogStackTrace ? new StackTrace (2, true) : null;
+			
+			return new Query (number, startTime, duration, sourceCode, parameter, result, threadName, stackTrace);
 		}
 
 

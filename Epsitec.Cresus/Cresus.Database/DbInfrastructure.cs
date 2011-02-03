@@ -1947,10 +1947,9 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
-					
-					watch.Start ();
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
+
 					data = this.ExecuteSilent (count, command);
 					watch.Stop ();
 
@@ -2008,10 +2007,9 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 
-					watch.Start ();
 					data = this.ExecuteScalar (count, command);
 					watch.Stop ();
 
@@ -2130,10 +2128,9 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
-
-					watch.Start ();
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
+					
 					data = this.ExecuteOutputParameters (count, command);
 					watch.Stop ();
 
@@ -2191,10 +2188,9 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 
-					watch.Start ();
 					data = this.ExecuteRetData (count, command);
 					watch.Stop ();
 
@@ -2284,7 +2280,10 @@ namespace Epsitec.Cresus.Database
 
 		public void EnableLogging()
 		{
-			this.queryLog = new MemoryLog (500);
+			if (this.queryLog == null)
+			{
+				this.queryLog = new MemoryLog (500);
+			}
 		}
 		
 		/// <summary>

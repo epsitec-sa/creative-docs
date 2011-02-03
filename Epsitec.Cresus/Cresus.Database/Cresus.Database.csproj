@@ -148,7 +148,6 @@
     <Compile Include="DbSchemaUpdater.cs" />
     <Compile Include="Logging\AbstractLog.cs" />
     <Compile Include="Logging\Column.cs" />
-    <Compile Include="Logging\LogMode.cs" />
     <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="Logging\Parameter.cs" />
     <Compile Include="Logging\Query.cs" />
