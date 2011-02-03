@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public static class QueryAccessor
 	{
+		static QueryAccessor()
+		{
+			var tt = new Widgets.TaggedText ();
+		}
+
 		public static int Count(this Query query, string search, bool caseSensitive)
 		{
 			if (string.IsNullOrEmpty (search))
@@ -162,7 +167,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Pour l'instant, je ne garde que les mots-clés, mais cela pourrait être amélioré.
 			var text = query.SourceCode.Replace ("\n", "");
 
-			foreach (var word in QueryAccessor.SyntaxSqlWords)
+			foreach (var word in QueryAccessor.SqlKeywords)
 			{
 				int index = 0;
 				while (index < text.Length)
@@ -259,7 +264,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static string GetSqlAutoBreakedText(string text)
 		{
-			foreach (var word in QueryAccessor.AutoBreakSqlWords)
+			foreach (var word in QueryAccessor.SqlAutoBreakableWords)
 			{
 				text = text.Replace (word, string.Concat ("<br/>", word));
 			}
@@ -271,7 +276,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			//	Colorie en rouge tous les mots-clés SQL dans le texte d'une requête.
 			//	Ils doivent être en majuscule !
-			foreach (var word in QueryAccessor.SyntaxSqlWords)
+			foreach (var word in QueryAccessor.SqlKeywords)
 			{
 				int index = 0;
 				while (index < text.Length)
@@ -318,7 +323,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
 		}
 
-		private static IEnumerable<string> AutoBreakSqlWords
+		private static IEnumerable<string> SqlAutoBreakableWords
 		{
 			get
 			{
@@ -330,7 +335,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
-		private static IEnumerable<string> SyntaxSqlWords
+		private static IEnumerable<string> SqlKeywords
 		{
 			//	Retourne la liste de tous les mots-clés réservés pour SQL Server 2000.
 			//	Source: http://msdn.microsoft.com/en-us/library/aa238507(v=sql.80).aspx
