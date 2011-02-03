@@ -158,7 +158,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static FormattedText GetQuerySummary(this Query query)
 		{
-			//	Retourne le texte résumé de la requête SQL, avec seulement les mots-clés.
+			//	Retourne le texte résumé de la requête SQL.
+			//	Pour l'instant, je ne garde que les mots-clés, mais cela pourrait être amélioré.
 			var text = query.SourceCode.Replace ("\n", "");
 
 			foreach (var word in QueryAccessor.SyntaxSqlWords)
@@ -216,12 +217,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return builder.ToString ();
 		}
 
-		public static FormattedText GetQuery(this Query query, bool substitution = false, bool syntaxColorized = false)
+		public static FormattedText GetQuery(this Query query, bool substitution, bool syntaxColorized, bool autoBreak)
 		{
 			//	Retourne le texte de la requête SQL, avec ou sans substitution des paramètres (en bleu)
 			//	et coloriage syntaxique (en rouge).
 			var text = query.SourceCode.Replace ("\n", "");
 			text = TextLayout.ConvertToTaggedText (text);
+
+			if (autoBreak)
+			{
+				text = QueryAccessor.GetSqlAutoBreakedText (text);
+			}
 
 			if (substitution || syntaxColorized)
 			{
@@ -246,6 +252,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					text = QueryAccessor.GetSqlSyntaxColorizedText (text);
 				}
+			}
+
+			return text;
+		}
+
+		private static string GetSqlAutoBreakedText(string text)
+		{
+			foreach (var word in QueryAccessor.AutoBreakSqlWords)
+			{
+				text = text.Replace (word, string.Concat ("<br/>", word));
 			}
 
 			return text;
@@ -300,6 +316,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private static bool IsSqlWordCharacter(char c)
 		{
 			return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
+		}
+
+		private static IEnumerable<string> AutoBreakSqlWords
+		{
+			get
+			{
+				yield return "FROM";
+				yield return "ORDER";
+				yield return "SET";
+				yield return "WHERE";
+			}
 		}
 
 		private static IEnumerable<string> SyntaxSqlWords
