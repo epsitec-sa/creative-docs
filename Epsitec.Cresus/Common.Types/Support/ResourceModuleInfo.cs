@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -255,6 +255,7 @@ namespace Epsitec.Common.Support
 			copy.referenceModulePath = this.referenceModulePath;
 			copy.sourceNamespace = this.sourceNamespace;
 			copy.versions = this.versions == null ? null : new List<ResourceModuleVersion> (this.versions);
+			copy.textMode = this.textMode;
 
 			return copy;
 		}
