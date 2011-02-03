@@ -23,17 +23,17 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 		{
 			ExceptionAssert.Throw<ArgumentException>
 			(
-				() => new Query (-1, null, new List<Parameter> (), new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+				() => new Query (-1, DateTime.Now, TimeSpan.Zero, null, new List<Parameter> (), new Result (new List<Table> ()))
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new Query (0, null, new List<Parameter> (), new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+				() => new Query (0, DateTime.Now, TimeSpan.Zero, null, new List<Parameter> (), new Result (new List<Table> ()))
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new Query (0, "my source code", null, new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+				() => new Query (0, DateTime.Now, TimeSpan.Zero, "my source code", null, new Result (new List<Table> ()))
 			);
 		}
 
@@ -49,11 +49,13 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			var rows = new List<Row> () { new Row (new List<object> () { "result" }) };
 			var tables = new List<Table> () { new Table ("table", columns, rows) };
 			var result = new Result (tables);
+			var threadName = "myThread";
+			var stackTrace = new System.Diagnostics.StackTrace (true);
 
 			var startTime = DateTime.Now;
 			var duration = TimeSpan.FromTicks (123456789);
 
-			Query query = new Query (number, sourceCode, parameters, result, startTime, duration);
+			Query query = new Query (number, startTime, duration, sourceCode, parameters, result, threadName, stackTrace);
 
 			Assert.AreEqual (number, query.Number);
 			Assert.AreEqual (sourceCode, query.SourceCode);
@@ -61,6 +63,8 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			Assert.AreEqual (result, query.Result);
 			Assert.AreEqual (startTime, query.StartTime);
 			Assert.AreEqual (duration, query.Duration);
+			Assert.AreEqual (threadName, query.ThreadName);
+			Assert.AreEqual (stackTrace, query.StackTrace);
 		}
 
 

@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			System.DateTime startTime = System.DateTime.Now;
 			System.TimeSpan duration = System.TimeSpan.FromTicks (0);
 
-			return new Query (1, sourceCode, parameters, result, startTime, duration);
+			return new Query (1, startTime, duration, sourceCode, parameters, result);
 		}
 
 

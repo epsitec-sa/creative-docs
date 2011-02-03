@@ -79,17 +79,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Connection des événements.
 			this.extendedButton.Clicked += delegate
 			{
-				this.LogMode = Database.Logging.LogMode.Extended;
+				this.Mode = LogMode.Extended;
 			};
 
 			this.basicButton.Clicked += delegate
 			{
-				this.LogMode = Database.Logging.LogMode.Basic;
+				this.Mode = LogMode.Basic;
 			};
 
 			this.offButton.Clicked += delegate
 			{
-				this.LogMode = Database.Logging.LogMode.Off;
+				this.Mode = LogMode.Off;
 			};
 
 			this.secondaryButton.Clicked += delegate
@@ -488,9 +488,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateRadio()
 		{
-			this.extendedButton.ActiveState = (this.LogMode == Database.Logging.LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
-			this.basicButton.ActiveState    = (this.LogMode == Database.Logging.LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.offButton.ActiveState      = (this.LogMode == Database.Logging.LogMode.Off     ) ? ActiveState.Yes : ActiveState.No;
+			this.extendedButton.ActiveState = (this.Mode == LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
+			this.basicButton.ActiveState    = (this.Mode == LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
+			this.offButton.ActiveState      = (this.Mode == LogMode.Off     ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -1001,7 +1001,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
-		private LogMode LogMode
+		private LogMode Mode
 		{
 			//	Mode de trace.
 			get
@@ -1010,25 +1010,34 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (db.QueryLog == null)
 				{
-					return Database.Logging.LogMode.Off;
+					return LogMode.Off;
+				}
+				else if (db.QueryLog.LogResult)
+				{
+					return LogMode.Extended;
 				}
 				else
 				{
-					return db.QueryLog.Mode;
+					return LogMode.Basic;
 				}
 			}
 			set
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
-				if (value == Database.Logging.LogMode.Off)
+				if (value == LogMode.Off)
 				{
 					db.DisableLogging ();
+				}
+				else if (value == LogMode.Basic)
+				{
+					db.EnableLogging ();
+					db.QueryLog.LogResult = false;
 				}
 				else
 				{
 					db.EnableLogging ();
-					db.QueryLog.Mode = value;
+					db.QueryLog.LogResult = true;
 				}
 
 				this.UpdateRadio ();
@@ -1113,5 +1122,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string					lastSearching;
 		private bool					lastCaseSensitive;
+
+		// TODO Temporary enumeration added here for retro compatibility. Daniel should look at that
+		// and correct this if required.
+		// Marc
+		private enum LogMode
+		{
+			Off,
+			Basic,
+			Extended
+		}
+
 	}
 }
