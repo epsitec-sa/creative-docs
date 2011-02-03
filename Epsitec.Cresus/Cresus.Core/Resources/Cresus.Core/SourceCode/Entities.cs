@@ -2737,6 +2737,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DocumentState</c> field.
+		///	designer:fld/L0AO2/L0ATO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATO]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentState DocumentState
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentState> ("[L0ATO]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentState oldValue = this.DocumentState;
+				if (oldValue != value)
+				{
+					this.OnDocumentStateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentState> ("[L0ATO]", oldValue, value);
+					this.OnDocumentStateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>BusinessDocument</c> field.
 		///	designer:fld/L0AO2/L0AUK
 		///	</summary>
@@ -2775,6 +2797,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDocumentTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDocumentCategoryChanging(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
 		partial void OnDocumentCategoryChanged(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
+		partial void OnDocumentStateChanging(global::Epsitec.Cresus.Core.Business.DocumentState oldValue, global::Epsitec.Cresus.Core.Business.DocumentState newValue);
+		partial void OnDocumentStateChanged(global::Epsitec.Cresus.Core.Business.DocumentState oldValue, global::Epsitec.Cresus.Core.Business.DocumentState newValue);
 		partial void OnBusinessDocumentChanging(global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity newValue);
 		partial void OnBusinessDocumentChanged(global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity newValue);
 		

@@ -61,7 +61,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				CompactTitle     = TextFormatter.FormatText ("Documents liés"),
 				Text		     = CollectionTemplate.DefaultEmptyText,
 				HideAddButton    = true,
-				HideRemoveButton = true,
 			};
 
 			data.Add (tileData);
