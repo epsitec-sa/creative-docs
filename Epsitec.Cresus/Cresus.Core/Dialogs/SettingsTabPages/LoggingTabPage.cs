@@ -77,19 +77,28 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.CreateUIDetails (this.detailsFrame);
 
 			//	Connection des événements.
-			this.extendedButton.Clicked += delegate
+			this.logOnOffButton.Clicked += delegate
 			{
-				this.Mode = LogMode.Extended;
+				this.LogOnOff = !this.LogOnOff;
+				this.UpdateCheckButtons ();
 			};
 
-			this.basicButton.Clicked += delegate
+			this.logResultButton.Clicked += delegate
 			{
-				this.Mode = LogMode.Basic;
+				this.LogResult = !this.LogResult;
+				this.UpdateCheckButtons ();
 			};
 
-			this.offButton.Clicked += delegate
+			this.logStackTraceButton.Clicked += delegate
 			{
-				this.Mode = LogMode.Off;
+				this.LogStackTrace = !this.LogStackTrace;
+				this.UpdateCheckButtons ();
+			};
+
+			this.logThreadNameButton.Clicked += delegate
+			{
+				this.LogThreadName = !this.LogThreadName;
+				this.UpdateCheckButtons ();
 			};
 
 			this.secondaryButton.Clicked += delegate
@@ -179,7 +188,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateWidgets ();
 			};
 
-			this.UpdateRadio ();
+			this.UpdateCheckButtons ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
 			this.UpdateWidgets ();
@@ -194,29 +203,38 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			this.extendedButton = new RadioButton
+			this.logOnOffButton = new CheckButton
 			{
 				Parent = header,
-				Text = "Trace complète",
-				PreferredWidth = 110,
+				FormattedText = Misc.Bold ("Trace activée"),
+				PreferredWidth = 120,
 				AutoToggle = false,
 				Dock = DockStyle.Left,
 			};
 
-			this.basicButton = new RadioButton
+			this.logResultButton = new CheckButton
 			{
 				Parent = header,
-				Text = "Trace réduite",
-				PreferredWidth = 100,
+				Text = "Résultats",
+				PreferredWidth = 80,
 				AutoToggle = false,
 				Dock = DockStyle.Left,
 			};
 
-			this.offButton = new RadioButton
+			this.logThreadNameButton = new CheckButton
 			{
 				Parent = header,
-				Text = "Pas de trace",
-				PreferredWidth = 90,
+				Text = "Processus",
+				PreferredWidth = 80,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.logStackTraceButton = new CheckButton
+			{
+				Parent = header,
+				Text = "Pile",
+				PreferredWidth = 80,
 				AutoToggle = false,
 				Dock = DockStyle.Left,
 			};
@@ -486,11 +504,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdateWidgets ();
 		}
 
-		private void UpdateRadio()
+		private void UpdateCheckButtons()
 		{
-			this.extendedButton.ActiveState = (this.Mode == LogMode.Extended) ? ActiveState.Yes : ActiveState.No;
-			this.basicButton.ActiveState    = (this.Mode == LogMode.Basic   ) ? ActiveState.Yes : ActiveState.No;
-			this.offButton.ActiveState      = (this.Mode == LogMode.Off     ) ? ActiveState.Yes : ActiveState.No;
+			this.logOnOffButton.ActiveState      = this.LogOnOff      ? ActiveState.Yes : ActiveState.No;
+			this.logResultButton.ActiveState     = this.LogResult     ? ActiveState.Yes : ActiveState.No;
+			this.logStackTraceButton.ActiveState = this.LogStackTrace ? ActiveState.Yes : ActiveState.No;
+			this.logThreadNameButton.ActiveState = this.LogThreadName ? ActiveState.Yes : ActiveState.No;
+
+			this.logResultButton.Enable     = this.LogOnOff;
+			this.logStackTraceButton.Enable = this.LogOnOff;
+			this.logThreadNameButton.Enable = this.LogOnOff;
 		}
 
 
@@ -536,7 +559,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var query = this.queries[row];
 				var values = query.GetMainStrings (row);
-				var formattedValues = this.TaggedString (values);
+				var formattedValues = this.GetTaggedString (values);
 
 				this.mainTable.FillRow (row, alignments);
 				this.mainTable.UpdateRow (row, formattedValues);
@@ -635,7 +658,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				bool colorize   = LoggingTabPage.globalColorize;
 				bool autoBreak  = LoggingTabPage.globalAutoBreak;
 				FormattedText content = query.GetQuery (substitute, colorize, autoBreak).ToString ();
-				content = this.TaggedString (content);
+				content = this.GetTaggedString (content);
 
 				if (content.ToString ().Length >= this.queryField.MaxLength)
 				{
@@ -819,7 +842,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<parameters.Count; row++)
 			{
 				var values = QueryAccessor.GetParameterStrings (parameters[row]);
-				var formattedValues = this.TaggedString (values);
+				var formattedValues = this.GetTaggedString (values);
 
 				cellTable.FillRow (row, alignments);
 				cellTable.UpdateRow (row, formattedValues);
@@ -871,7 +894,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rowsCount; row++)
 			{
 				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
-				var formattedValues = this.TaggedString (values);
+				var formattedValues = this.GetTaggedString (values);
 
 				cellTable.FillRow (row, alignments.ToArray ());
 				cellTable.UpdateRow (row, formattedValues);
@@ -882,19 +905,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		#endregion
 
 
-		private FormattedText[] TaggedString(string[] values)
+		private FormattedText[] GetTaggedString(string[] values)
 		{
 			var formattedValues = new FormattedText[values.Length];
 
 			for (int i = 0; i < values.Length; i++)
 			{
-				formattedValues[i] = this.TaggedString (values[i]);
+				formattedValues[i] = this.GetTaggedString (values[i]);
 			}
 
 			return formattedValues;
 		}
 
-		private FormattedText TaggedString(string text)
+		private FormattedText GetTaggedString(string text)
 		{
 			string searching = this.SearchText;
 			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
@@ -911,7 +934,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				text = Misc.RemoveAccentsToLower (text);
 			}
 
-			var color = Color.FromName ("Green");
+			var color = Color.FromName ("Red");
 			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
 			var tag2 = "</b></font>";
 
@@ -933,7 +956,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return this.taggedText.GetTaggedText ();
 		}
 
-		private FormattedText TaggedString(FormattedText formattedText)
+		private FormattedText GetTaggedString(FormattedText formattedText)
 		{
 			string searching = this.SearchText;
 			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
@@ -951,7 +974,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				text = Misc.RemoveAccentsToLower (text);
 			}
 
-			var color = Color.FromName ("Green");
+			var color = Color.FromName ("Red");
 			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
 			var tag2 = "</b></font>";
 
@@ -1001,46 +1024,113 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
-		private LogMode Mode
+
+		private bool LogOnOff
 		{
-			//	Mode de trace.
+			get
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				return db.QueryLog != null;
+			}
+			set
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (value)
+				{
+					db.EnableLogging ();
+				}
+				else
+				{
+					db.DisableLogging ();
+				}
+
+				this.UpdateCheckButtons ();
+			}
+		}
+
+		private bool LogResult
+		{
 			get
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
 				if (db.QueryLog == null)
 				{
-					return LogMode.Off;
-				}
-				else if (db.QueryLog.LogResult)
-				{
-					return LogMode.Extended;
+					return false;
 				}
 				else
 				{
-					return LogMode.Basic;
+					return db.QueryLog.LogResult;
 				}
 			}
 			set
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
-				if (value == LogMode.Off)
+				if (db.QueryLog != null)
 				{
-					db.DisableLogging ();
+					db.QueryLog.LogResult = value;
 				}
-				else if (value == LogMode.Basic)
+
+				this.UpdateCheckButtons ();
+			}
+		}
+
+		private bool LogStackTrace
+		{
+			get
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (db.QueryLog == null)
 				{
-					db.EnableLogging ();
-					db.QueryLog.LogResult = false;
+					return false;
 				}
 				else
 				{
-					db.EnableLogging ();
-					db.QueryLog.LogResult = true;
+					return db.QueryLog.LogStackTrace;
+				}
+			}
+			set
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (db.QueryLog != null)
+				{
+					db.QueryLog.LogStackTrace = value;
 				}
 
-				this.UpdateRadio ();
+				this.UpdateCheckButtons ();
+			}
+		}
+
+		private bool LogThreadName
+		{
+			get
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (db.QueryLog == null)
+				{
+					return false;
+				}
+				else
+				{
+					return db.QueryLog.LogThreadName;
+				}
+			}
+			set
+			{
+				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+				if (db.QueryLog != null)
+				{
+					db.QueryLog.LogThreadName = value;
+				}
+
+				this.UpdateCheckButtons ();
 			}
 		}
 
@@ -1090,9 +1180,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private readonly List<Query>	queries;
 		private readonly TaggedText		taggedText;
 
-		private RadioButton				extendedButton;
-		private RadioButton				basicButton;
-		private RadioButton				offButton;
+		private CheckButton				logOnOffButton;
+		private CheckButton				logResultButton;
+		private CheckButton				logStackTraceButton;
+		private CheckButton				logThreadNameButton;
 		private Button					updateButton;
 		private Button					clearButton;
 		private GlyphButton				secondaryButton;
@@ -1122,16 +1213,5 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string					lastSearching;
 		private bool					lastCaseSensitive;
-
-		// TODO Temporary enumeration added here for retro compatibility. Daniel should look at that
-		// and correct this if required.
-		// Marc
-		private enum LogMode
-		{
-			Off,
-			Basic,
-			Extended
-		}
-
 	}
 }

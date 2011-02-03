@@ -219,8 +219,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public static FormattedText GetQuery(this Query query, bool substitution, bool syntaxColorized, bool autoBreak)
 		{
-			//	Retourne le texte de la requête SQL, avec ou sans substitution des paramètres (en bleu)
-			//	et coloriage syntaxique (en rouge).
+			//	Retourne le texte de la requête SQL, avec ou sans substitution des paramètres (en vert)
+			//	et coloriage syntaxique (en bleu).
 			var text = query.SourceCode.Replace ("\n", "");
 			text = TextLayout.ConvertToTaggedText (text);
 
@@ -239,12 +239,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Blue")).ToString ());
+							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Green")).ToString ());
 						}
 					}
 					else
 					{
-						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Blue")).ToString ());
+						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Green")).ToString ());
 					}
 				}
 
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static string GetSqlSyntaxColorizedText(string text)
 		{
-			//	Colorie en rouge tous les mots-clés SQL dans le texte d'une requête.
+			//	Colorie en bleu tous les mots-clés SQL dans le texte d'une requête.
 			//	Ils doivent être en majuscule !
 			foreach (var word in QueryAccessor.SqlKeywords)
 			{
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					if (QueryAccessor.IsSqlWordSeparator (text, index-1) &&
 						QueryAccessor.IsSqlWordSeparator (text, index+word.Length))
 					{
-						string subst = Misc.Colorize (Misc.Bold (word), Color.FromName ("Red")).ToString ();
+						string subst = Misc.Colorize (Misc.Bold (word), Color.FromName ("Blue")).ToString ();
 
 						text = text.Remove (index, word.Length);
 						text = text.Insert (index, subst);
