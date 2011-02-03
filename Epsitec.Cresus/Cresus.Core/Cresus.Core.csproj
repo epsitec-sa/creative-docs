@@ -822,6 +822,8 @@
     <EmbeddedResource Include="Images\Table.SelectColumn.icon" />
     <EmbeddedResource Include="Images\Table.SelectRow.icon" />
     <EmbeddedResource Include="Images\Data.ArticleAccountingDefinition.icon" />
+    <EmbeddedResource Include="Images\ActiveNo.icon" />
+    <EmbeddedResource Include="Images\ActiveYes.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
