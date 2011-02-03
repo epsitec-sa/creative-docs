@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			values.Add ((row+1).ToString ());
 			values.Add (query.GetNiceStartTime ());
+			values.Add ("");
 			values.Add (query.GetNiceDuration ());
 			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());

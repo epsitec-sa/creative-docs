@@ -145,6 +145,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SelectionChanged += delegate
 			{
 				this.UpdateDetails ();
+				this.UpdateRelativeTime ();
 			};
 
 			this.caseSensitiveButton.Clicked += delegate
@@ -469,26 +470,29 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdateTable()
 		{
 			int rows = this.queries.Count;
-			this.mainTable.SetArraySize (6, rows);
+			this.mainTable.SetArraySize (7, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
 			this.mainTable.SetWidthColumn (1,  70);
 			this.mainTable.SetWidthColumn (2,  60);
-			this.mainTable.SetWidthColumn (3, 380);
-			this.mainTable.SetWidthColumn (4, 120);
+			this.mainTable.SetWidthColumn (3,  60);
+			this.mainTable.SetWidthColumn (4, 790-40-70-60-60-120-120);
 			this.mainTable.SetWidthColumn (5, 120);
+			this.mainTable.SetWidthColumn (6, 120);
 
 			this.mainTable.SetHeaderTextH (0, "N°");
 			this.mainTable.SetHeaderTextH (1, "Début");
-			this.mainTable.SetHeaderTextH (2, "Durée");
-			this.mainTable.SetHeaderTextH (3, "Requête");
-			this.mainTable.SetHeaderTextH (4, "Paramètres");
-			this.mainTable.SetHeaderTextH (5, "Résultats");
+			this.mainTable.SetHeaderTextH (2, "Temps");
+			this.mainTable.SetHeaderTextH (3, "Durée");
+			this.mainTable.SetHeaderTextH (4, "Requête");
+			this.mainTable.SetHeaderTextH (5, "Paramètres");
+			this.mainTable.SetHeaderTextH (6, "Résultats");
 
 			ContentAlignment[] alignments =
 			{
 				ContentAlignment.MiddleRight,
 				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleRight,
 				ContentAlignment.MiddleRight,
 				ContentAlignment.MiddleLeft,
 				ContentAlignment.MiddleLeft,
@@ -521,7 +525,32 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 			}
 
+			this.UpdateRelativeTime ();
 			this.UpdateSearchCounter (counter, lines);
+		}
+
+		private void UpdateRelativeTime()
+		{
+			int rows = this.queries.Count;
+			int sel = this.mainTable.SelectedRow;
+			
+			if (sel == -1)
+			{
+				sel = 0;
+			}
+
+			if (sel < rows)
+			{
+				var reference = this.queries[sel].StartTime;
+
+				for (int row=0; row<rows; row++)
+				{
+					System.TimeSpan time = this.queries[row].StartTime.Subtract (reference);
+
+					var widget = this.mainTable.GetStaticText (row, 2);
+					widget.Text = LoggingTabPage.ToNiceString (time);
+				}
+			}
 		}
 
 		private void UpdateSearchCounter(int counter, int lines)
@@ -942,6 +971,41 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 
 				this.UpdateRadio ();
+			}
+		}
+
+
+		private static string ToNiceString(System.TimeSpan time)
+		{
+			long t = time.Ticks / 10L;  // en us
+			long abs = System.Math.Abs (t);
+
+			if (abs >= 60L*60L*1000L*1000L)  // heures ?
+			{
+				int h = (int) (t/60/60/1000/1000)%24;
+				int m = (int) (t/60/1000/1000)%60;
+				int s = (int) (t/1000/1000)%60;
+				return string.Concat (m.ToString (), " h ", m.ToString (), " m ", s.ToString (), " s");
+			}
+			else if (abs >= 60L*1000L*1000L)  // minutes ?
+			{
+				int m = (int) t/60/1000/1000;
+				int s = (int) (t/1000/1000)%60;
+				return string.Concat (m.ToString (), " m ", s.ToString (), " s");
+			}
+			else if (abs >= 1000L*1000L)  // secondes ?
+			{
+				double s = t/1000.0/1000.0;
+				return string.Concat (s.ToString ("0.00"), " s");
+			}
+			else if (abs >= 1000L)  // millisecondes ?
+			{
+				int m = (int) t/1000;
+				return string.Concat (m.ToString (), " ms");
+			}
+			else  // microsecondes ?
+			{
+				return string.Concat (t.ToString (), " µs");
 			}
 		}
 
