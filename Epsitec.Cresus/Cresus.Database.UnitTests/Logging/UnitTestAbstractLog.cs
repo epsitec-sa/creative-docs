@@ -52,6 +52,27 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 
 
 		[TestMethod]
+		public void TestQueryNumber()
+		{
+			TestLog testLog = new TestLog ()
+			{
+				Mode = LogMode.Basic,
+			};
+
+			IDbCommand command = this.GetSampleCommand1 ();
+			DateTime startTime = DateTime.Now;
+			TimeSpan duration = TimeSpan.FromSeconds (123);
+
+			for (int i = 0; i < 1000; i++)
+			{
+				testLog.AddEntry (command, startTime, duration);
+
+				Assert.AreEqual (i+1, testLog.GetEntry (i).Number);
+			}
+		}
+
+
+		[TestMethod]
 		public void AddEntryArgumentCheck()
 		{
 			TestLog testLog = new TestLog ();
@@ -438,9 +459,15 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			}
 
 
-			internal override void AddEntry(Query query)
+			protected override void AddEntry(Query query)
 			{
 				this.log.Add (query);
+			}
+
+
+			protected override int GetNextNumber()
+			{
+				return this.log.Count + 1;
 			}
 
 

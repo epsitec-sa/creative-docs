@@ -21,14 +21,19 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			ExceptionAssert.Throw<ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentException>
 			(
-				() => new Query (null, new List<Parameter> (), new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+				() => new Query (-1, null, new List<Parameter> (), new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new Query ("my source code", null, new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+				() => new Query (0, null, new List<Parameter> (), new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
+			);
+
+			ExceptionAssert.Throw<ArgumentNullException>
+			(
+				() => new Query (0, "my source code", null, new Result (new List<Table> ()), DateTime.Now, TimeSpan.Zero)
 			);
 		}
 
@@ -36,6 +41,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 		[TestMethod]
 		public void ConstructorAndGettersTest()
 		{
+			int number = 42;
 			var sourceCode = "My super SQL source code";
 			var parameters = new List<Parameter> () { new Parameter ("parameter", "value") };
 
@@ -47,8 +53,9 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			var startTime = DateTime.Now;
 			var duration = TimeSpan.FromTicks (123456789);
 
-			Query query = new Query (sourceCode, parameters, result, startTime, duration);
+			Query query = new Query (number, sourceCode, parameters, result, startTime, duration);
 
+			Assert.AreEqual (number, query.Number);
 			Assert.AreEqual (sourceCode, query.SourceCode);
 			CollectionAssert.AreEqual (parameters, query.Parameters);
 			Assert.AreEqual (result, query.Result);

@@ -20,16 +20,25 @@ namespace Epsitec.Cresus.Database.Logging
 	{
 
 
-		internal Query(string sourceCode, IEnumerable<Parameter> parameters, Result result, DateTime startTime, TimeSpan duration)
+		internal Query(int number, string sourceCode, IEnumerable<Parameter> parameters, Result result, DateTime startTime, TimeSpan duration)
 		{
+			number.ThrowIf (n => n < 0, "number is smaller than zero");
 			sourceCode.ThrowIfNull ("sourceCode");
 			parameters.ThrowIfNull ("parameters");
-			
+
+			this.Number = number;
 			this.SourceCode = sourceCode;
 			this.Parameters = parameters.ToList ().AsReadOnly ();
 			this.Result = result;
 			this.StartTime = startTime;
 			this.Duration = duration;
+		}
+
+
+		public int Number
+		{
+			get;
+			private set;
 		}
 
 
