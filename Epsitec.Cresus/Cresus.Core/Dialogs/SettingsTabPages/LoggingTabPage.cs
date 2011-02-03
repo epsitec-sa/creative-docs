@@ -925,8 +925,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					break;
 				}
 
-				this.taggedText.InsertTag (index, tag1, true);
-				this.taggedText.InsertTag (index+searching.Length, tag2, false);
+				this.taggedText.InsertTags (index, index+searching.Length, tag1, tag2);
 
 				index += searching.Length;
 			}
@@ -966,8 +965,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					break;
 				}
 
-				this.taggedText.InsertTag (index, tag1, true);
-				this.taggedText.InsertTag (index+searching.Length, tag2, false);
+				this.taggedText.InsertTags (index, index+searching.Length, tag1, tag2);
 
 				index += searching.Length;
 			}

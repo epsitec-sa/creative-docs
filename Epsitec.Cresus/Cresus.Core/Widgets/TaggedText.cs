@@ -40,17 +40,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			tt.SetSimpleText ("ceci est un test");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci est un test");
-			tt.InsertTag (5, "<b>", true);
-			tt.InsertTag (8, "</b>", false);
+			tt.InsertTags (5, 8, "<b>", "</b>");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci <b>est</b> un test");
-			tt.InsertTag (5, "<i>", true);
-			tt.InsertTag (8, "</i>", false);
+			tt.InsertTags (5, 8, "<i>", "</i>");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci <b><i>est</i></b> un test");
 
 			tt.SetSimpleText ("x<y");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "x&lt;y");
-			tt.InsertTag (1, "<b>", true);
-			tt.InsertTag (2, "</b>", false);
+			tt.InsertTags (1, 2, "<b>", "</b>");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "x<b>&lt;</b>y");
 		}
 #endif
@@ -141,6 +138,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.GetIndex (indexToSimpleText, out blocIndex, out stringIndex);
 
 			this.blocs[blocIndex] = this.blocs[blocIndex].Insert (stringIndex, text);
+		}
+
+		public void InsertTags(int startIndexToSimpleText, int endIndexToSimpleText, string startTag, string endTag)
+		{
+			this.InsertTag (startIndexToSimpleText, startTag, true);
+			this.InsertTag (endIndexToSimpleText, endTag, false);
 		}
 
 		public void InsertTag(int indexToSimpleText, string tag, bool begin = true)
