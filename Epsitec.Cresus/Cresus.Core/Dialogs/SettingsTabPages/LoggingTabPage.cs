@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			: base (application)
 		{
 			this.queries = new List<Query> ();
+			this.taggedText = new TaggedText ();
+
 			this.CopyQueries ();
 		}
 
@@ -533,10 +535,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var query = this.queries[row];
 				var values = query.GetMainStrings (row);
-				this.ColorizeSearchingString (values);
+				var formattedValues = this.TaggedString (values);
 
 				this.mainTable.FillRow (row, alignments);
-				this.mainTable.UpdateRow (row, values);
+				this.mainTable.UpdateRow (row, formattedValues);
 
 				if (!string.IsNullOrEmpty (search))
 				{
@@ -631,10 +633,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				bool substitute = LoggingTabPage.globalSubstitute;
 				bool colorize   = LoggingTabPage.globalColorize;
 				bool autoBreak  = LoggingTabPage.globalAutoBreak;
-				string content = query.GetQuery (substitute, colorize, autoBreak).ToString ();
-				content = this.ColorizeSearchingString (content);
+				FormattedText content = query.GetQuery (substitute, colorize, autoBreak).ToString ();
+				content = this.TaggedString (content);
 
-				if (content.Length >= this.queryField.MaxLength)
+				if (content.ToString ().Length >= this.queryField.MaxLength)
 				{
 					this.queryField.FormattedText = "Trop long...";
 				}
@@ -816,10 +818,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<parameters.Count; row++)
 			{
 				var values = QueryAccessor.GetParameterStrings (parameters[row]);
-				this.ColorizeSearchingString (values);
+				var formattedValues = this.TaggedString (values);
 
 				cellTable.FillRow (row, alignments);
-				cellTable.UpdateRow (row, values);
+				cellTable.UpdateRow (row, formattedValues);
 			}
 
 			return frame;
@@ -868,10 +870,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rowsCount; row++)
 			{
 				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
-				this.ColorizeSearchingString (values);
+				var formattedValues = this.TaggedString (values);
 
 				cellTable.FillRow (row, alignments.ToArray ());
-				cellTable.UpdateRow (row, values);
+				cellTable.UpdateRow (row, formattedValues);
 			}
 
 			return frame;
@@ -879,74 +881,108 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		#endregion
 
 
-		private void ColorizeSearchingString(string[] values)
+		private FormattedText[] TaggedString(string[] values)
 		{
+			var formattedValues = new FormattedText[values.Length];
+
 			for (int i = 0; i < values.Length; i++)
 			{
-				values[i] = this.ColorizeSearchingString (values[i]);
+				formattedValues[i] = this.TaggedString (values[i]);
 			}
+
+			return formattedValues;
 		}
 
-		private string ColorizeSearchingString(string text)
+		private FormattedText TaggedString(string text)
 		{
 			string searching = this.SearchText;
 			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
 
 			if (string.IsNullOrEmpty (searching))
 			{
-				return text;
+				return LoggingTabPage.GetTaggedText (text);
+			}
+
+			this.taggedText.SetSimpleText (text);
+
+			if (!caseSensitive)
+			{
+				text = Misc.RemoveAccentsToLower (text);
 			}
 
 			var color = Color.FromName ("Green");
 			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
 			var tag2 = "</b></font>";
 
-			if (caseSensitive)
+			int index = 0;
+			while (index < text.Length)
 			{
-				int index = 0;
-				while (index < text.Length)
+				index = text.IndexOf (searching, index);
+
+				if (index == -1)
 				{
-					index = text.IndexOf (searching, index);
-
-					if (index == -1)
-					{
-						break;
-					}
-
-					text = text.Insert (index+searching.Length, tag2);
-					text = text.Insert (index, tag1);
-
-					index += tag1.Length;
-					index += tag2.Length;
+					break;
 				}
 
+				this.taggedText.InsertTag (index, tag1);
+				this.taggedText.InsertTag (index+searching.Length, tag2);
+
+				index += searching.Length;
+			}
+
+			return this.taggedText.GetTaggedText ();
+		}
+
+		private FormattedText TaggedString(FormattedText formattedText)
+		{
+			string searching = this.SearchText;
+			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
+
+			if (string.IsNullOrEmpty (searching))
+			{
+				return formattedText;
+			}
+
+			this.taggedText.SetTaggedText (formattedText);
+			string text = this.taggedText.GetSimpleText ();
+
+			if (!caseSensitive)
+			{
+				text = Misc.RemoveAccentsToLower (text);
+			}
+
+			var color = Color.FromName ("Green");
+			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
+			var tag2 = "</b></font>";
+
+			int index = 0;
+			while (index < text.Length)
+			{
+				index = text.IndexOf (searching, index);
+
+				if (index == -1)
+				{
+					break;
+				}
+
+				this.taggedText.InsertTag (index, tag1);
+				this.taggedText.InsertTag (index+searching.Length, tag2);
+
+				index += searching.Length;
+			}
+
+			return this.taggedText.GetTaggedText ();
+		}
+
+		private static string GetTaggedText(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
 				return text;
 			}
 			else
 			{
-				var lowerText = Misc.RemoveAccentsToLower (text);
-
-				int index = 0;
-				while (index < text.Length)
-				{
-					index = lowerText.IndexOf (searching, index);
-
-					if (index == -1)
-					{
-						break;
-					}
-
-					text = text.Insert (index+searching.Length, tag2);
-					text = text.Insert (index, tag1);
-
-					lowerText = lowerText.Insert (index+searching.Length, tag2);
-					lowerText = lowerText.Insert (index, tag1);
-
-					index += tag1.Length;
-					index += tag2.Length;
-				}
-
-				return text;
+				return TextLayout.ConvertToTaggedText (text);
 			}
 		}
 
@@ -1044,6 +1080,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private static bool				globalAutoBreak              = true;
 
 		private readonly List<Query>	queries;
+		private readonly TaggedText		taggedText;
 
 		private RadioButton				extendedButton;
 		private RadioButton				basicButton;
