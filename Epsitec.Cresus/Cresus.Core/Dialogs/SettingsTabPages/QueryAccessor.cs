@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			yield return query.SourceCode;
 			yield return query.GetCompactParameters ();
 			yield return query.GetCompactResults ();
+			yield return query.GetStackTrace ();
 		}
 
 
@@ -89,7 +90,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());
 			values.Add (query.GetCompactResults ());
-			values.Add (query.ThreadName);
+			values.Add (query.GetNiceThreadName ());
 
 			return values.ToArray ();
 		}
@@ -154,6 +155,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			return values.ToArray ();
+		}
+
+
+		public static string GetStackTrace(this Query query)
+		{
+			if (query.StackTrace == null)
+			{
+				return "";
+			}
+			else
+			{
+				return query.StackTrace.ToString ().Replace ("\r", "");
+			}
 		}
 
 
@@ -784,6 +798,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			//	Retourne la durée sous une jolie forme.
 			return string.Concat ((query.Duration.Ticks/10).ToString (), " µs");  // un Tick vaut 100 nanosecondes
+		}
+
+		private static string GetNiceThreadName(this Query query)
+		{
+			//	Retourne le nom du processus sous une jolie forme.
+			if (string.IsNullOrEmpty (query.ThreadName))
+			{
+				return "Inconnu";
+			}
+			else
+			{
+				return query.ThreadName;
+			}
 		}
 	}
 }
