@@ -198,6 +198,7 @@
     <Compile Include="Dialogs\SettingsDialog.cs" />
     <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
+    <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />

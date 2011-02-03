@@ -26,6 +26,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class LoggingTabPage : AbstractSettingsTabPage
 	{
+		static LoggingTabPage()
+		{
+			LoggingTabPage.globalSearchMode.CaseSensitive      = true;
+			LoggingTabPage.globalSearchMode.SearchInQuery      = true;
+			LoggingTabPage.globalSearchMode.SearchInParameters = true;
+			LoggingTabPage.globalSearchMode.SearchInResults    = true;
+			LoggingTabPage.globalSearchMode.SearchInCallStack  = false;
+
+			LoggingTabPage.globalSubstitute = true;
+			LoggingTabPage.globalColorize   = true;
+			LoggingTabPage.globalAutoBreak  = true;
+		}
+
 		public LoggingTabPage(CoreApplication application)
 			: base (application)
 		{
@@ -161,7 +174,35 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.caseSensitiveButton.Clicked += delegate
 			{
-				LoggingTabPage.globalCaseSensitive = !LoggingTabPage.globalCaseSensitive;
+				LoggingTabPage.globalSearchMode.CaseSensitive = !LoggingTabPage.globalSearchMode.CaseSensitive;
+				this.Search (0);
+				this.UpdateWidgets ();
+			};
+
+			this.searchInQueryButton.Clicked += delegate
+			{
+				LoggingTabPage.globalSearchMode.SearchInQuery = !LoggingTabPage.globalSearchMode.SearchInQuery;
+				this.Search (0);
+				this.UpdateWidgets ();
+			};
+
+			this.searchInParametersButton.Clicked += delegate
+			{
+				LoggingTabPage.globalSearchMode.SearchInParameters = !LoggingTabPage.globalSearchMode.SearchInParameters;
+				this.Search (0);
+				this.UpdateWidgets ();
+			};
+
+			this.searchInResultsButton.Clicked += delegate
+			{
+				LoggingTabPage.globalSearchMode.SearchInResults = !LoggingTabPage.globalSearchMode.SearchInResults;
+				this.Search (0);
+				this.UpdateWidgets ();
+			};
+
+			this.searchInCallStackButton.Clicked += delegate
+			{
+				LoggingTabPage.globalSearchMode.SearchInCallStack = !LoggingTabPage.globalSearchMode.SearchInCallStack;
 				this.Search (0);
 				this.UpdateWidgets ();
 			};
@@ -283,15 +324,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			var box = new FrameBox
+
+			var box1 = new FrameBox
 			{
 				Parent = this.secondaryToolbar,
-				Dock = DockStyle.Fill,
+				Dock = DockStyle.Top,
 			};
 
 			this.searchClearButton = new GlyphButton
 			{
-				Parent = box,
+				Parent = box1,
 				GlyphShape = Common.Widgets.GlyphShape.Close,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 10, 2, 2),
@@ -299,7 +341,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var label = new StaticText
 			{
-				Parent = box,
+				Parent = box1,
 				Text = "Rechercher",
 				PreferredWidth = 64,
 				Dock = DockStyle.Left,
@@ -307,14 +349,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.searchField = new TextField
 			{
-				Parent = box,
+				Parent = box1,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
 			this.importButton = new Button
 			{
-				Parent = box,
+				Parent = box1,
 				Text = "Importer...",
 				PreferredWidth = 70,
 				Dock = DockStyle.Right,
@@ -323,26 +365,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.exportButton = new Button
 			{
-				Parent = box,
+				Parent = box1,
 				Text = "Exporter...",
 				PreferredWidth = 70,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
-			this.caseSensitiveButton = new CheckButton
-			{
-				Parent = box,
-				Text = "Respecter la casse",
-				PreferredWidth = 120,
-				AutoToggle = false,
-				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
-			};
-
 			this.searchCounterInfo = new StaticText
 			{
-				Parent = box,
+				Parent = box1,
 				PreferredWidth = 150,
 				Dock = DockStyle.Right,
 				Margins = new Margins (15, 0, 0, 0),
@@ -350,7 +382,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.searchNextButton = new Button
 			{
-				Parent = box,
+				Parent = box1,
 				Text = "Suivant",
 				PreferredWidth = 60,
 				Dock = DockStyle.Right,
@@ -359,11 +391,72 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.searchPrevButton = new Button
 			{
-				Parent = box,
+				Parent = box1,
 				Text = "Précédent",
 				PreferredWidth = 60,
 				Dock = DockStyle.Right,
 				Margins = new Margins (1, 0, 0, 0),
+			};
+
+
+			var box2 = new FrameBox
+			{
+				Parent = this.secondaryToolbar,
+				Dock = DockStyle.Top,
+				Margins = new Margins (91, 0, 0, 0),
+			};
+
+			this.caseSensitiveButton = new CheckButton
+			{
+				Parent = box2,
+				Text = "Respecter la casse",
+				PreferredWidth = 140,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			new StaticText
+			{
+				Parent = box2,
+				Text = "Chercher dans :",
+				PreferredWidth = 90,
+				Dock = DockStyle.Left,
+			};
+
+			this.searchInQueryButton = new CheckButton
+			{
+				Parent = box2,
+				Text = "les requêtes",
+				PreferredWidth = 90,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.searchInParametersButton = new CheckButton
+			{
+				Parent = box2,
+				Text = "les paramètres",
+				PreferredWidth = 100,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.searchInResultsButton = new CheckButton
+			{
+				Parent = box2,
+				Text = "les résultats",
+				PreferredWidth = 90,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+			};
+
+			this.searchInCallStackButton = new CheckButton
+			{
+				Parent = box2,
+				Text = "la pile",
+				PreferredWidth = 70,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
 			};
 		}
 
@@ -567,7 +660,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 
 			string search = this.SearchText;
-			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
+			bool caseSensitive = LoggingTabPage.globalSearchMode.CaseSensitive;
 
 			int counter = 0;
 			int lines = 0;
@@ -575,15 +668,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rows; row++)
 			{
 				var query = this.queries[row];
-				var values = query.GetMainStrings (row);
-				var formattedValues = this.GetTaggedString (values);
+				var values = query.GetMainContent (row, this.SearchText, LoggingTabPage.globalSearchMode);
 
 				this.mainTable.FillRow (row, alignments);
-				this.mainTable.UpdateRow (row, formattedValues);
+				this.mainTable.UpdateRow (row, values);
 
 				if (!string.IsNullOrEmpty (search))
 				{
-					int n = query.Count (search, caseSensitive);
+					int n = query.Count (search, LoggingTabPage.globalSearchMode);
 					if (n > 0)
 					{
 						counter += n;
@@ -675,7 +767,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				bool colorize   = LoggingTabPage.globalColorize;
 				bool autoBreak  = LoggingTabPage.globalAutoBreak;
 				FormattedText content = query.GetQuery (substitute, colorize, autoBreak).ToString ();
-				content = this.GetTaggedString (content);
+				content = QueryAccessor.GetTaggedText (content, this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInQuery);
 
 				if (content.ToString ().Length >= this.queryField.MaxLength)
 				{
@@ -708,7 +800,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 				else
 				{
-					this.stackField.FormattedText = this.GetTaggedString (query.GetStackTrace ());
+					content = QueryAccessor.GetTaggedText (query.GetStackTrace (), this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInCallStack);
+					this.stackField.FormattedText = content;
 				}
 			}
 		}
@@ -731,10 +824,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.queryOptionsToolbar.Visibility = LoggingTabPage.globalQueryOptionsVisibility;
 			this.queryOptionsButton.GlyphShape  = LoggingTabPage.globalQueryOptionsVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
 
-			this.caseSensitiveButton.ActiveState = LoggingTabPage.globalCaseSensitive ? ActiveState.Yes : ActiveState.No;
-			this.substituteButton.ActiveState    = LoggingTabPage.globalSubstitute    ? ActiveState.Yes : ActiveState.No;
-			this.colorizeButton.ActiveState      = LoggingTabPage.globalColorize      ? ActiveState.Yes : ActiveState.No;
-			this.autoBreakButton.ActiveState     = LoggingTabPage.globalAutoBreak     ? ActiveState.Yes : ActiveState.No;
+			this.caseSensitiveButton.ActiveState      = LoggingTabPage.globalSearchMode.CaseSensitive      ? ActiveState.Yes : ActiveState.No;
+			this.searchInQueryButton.ActiveState      = LoggingTabPage.globalSearchMode.SearchInQuery      ? ActiveState.Yes : ActiveState.No;
+			this.searchInParametersButton.ActiveState = LoggingTabPage.globalSearchMode.SearchInParameters ? ActiveState.Yes : ActiveState.No;
+			this.searchInResultsButton.ActiveState    = LoggingTabPage.globalSearchMode.SearchInResults    ? ActiveState.Yes : ActiveState.No;
+			this.searchInCallStackButton.ActiveState  = LoggingTabPage.globalSearchMode.SearchInCallStack  ? ActiveState.Yes : ActiveState.No;
+			this.substituteButton.ActiveState         = LoggingTabPage.globalSubstitute                    ? ActiveState.Yes : ActiveState.No;
+			this.colorizeButton.ActiveState           = LoggingTabPage.globalColorize                      ? ActiveState.Yes : ActiveState.No;
+			this.autoBreakButton.ActiveState          = LoggingTabPage.globalAutoBreak                     ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -756,12 +853,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			string search = this.SearchText;
-			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
 
-			if (this.lastSearching != search || this.lastCaseSensitive != caseSensitive)
+			if (this.lastSearching != search || !this.lastSearchMode.Compare (LoggingTabPage.globalSearchMode))
 			{
 				this.lastSearching = search;
-				this.lastCaseSensitive = caseSensitive;
+				this.lastSearchMode.CopyFrom (LoggingTabPage.globalSearchMode);
 
 				this.UpdateTable ();
 				this.UpdateDetails ();
@@ -793,7 +889,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 					var query = this.queries[sel];
 
-					if (query.ContainsString (search, caseSensitive))
+					if (query.ContainsString (search, LoggingTabPage.globalSearchMode))
 					{
 						this.mainTable.DeselectAll ();
 						this.mainTable.SelectRow (sel, true);
@@ -867,11 +963,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<parameters.Count; row++)
 			{
-				var values = QueryAccessor.GetParameterStrings (parameters[row]);
-				var formattedValues = this.GetTaggedString (values);
+				var values = QueryAccessor.GetParameterContent (parameters[row], this.SearchText, LoggingTabPage.globalSearchMode);
 
 				cellTable.FillRow (row, alignments);
-				cellTable.UpdateRow (row, formattedValues);
+				cellTable.UpdateRow (row, values);
 			}
 
 			return frame;
@@ -919,120 +1014,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<rowsCount; row++)
 			{
-				var values = QueryAccessor.GetTableResultsStrings (table.Rows[row].Values);
-				var formattedValues = this.GetTaggedString (values);
+				var values = QueryAccessor.GetTableResultsContent (table.Rows[row].Values, this.SearchText, LoggingTabPage.globalSearchMode);
 
 				cellTable.FillRow (row, alignments.ToArray ());
-				cellTable.UpdateRow (row, formattedValues);
+				cellTable.UpdateRow (row, values);
 			}
 
 			return frame;
 		}
 		#endregion
-
-
-		private FormattedText[] GetTaggedString(string[] values)
-		{
-			var formattedValues = new FormattedText[values.Length];
-
-			for (int i = 0; i < values.Length; i++)
-			{
-				formattedValues[i] = this.GetTaggedString (values[i]);
-			}
-
-			return formattedValues;
-		}
-
-		private FormattedText GetTaggedString(string text)
-		{
-			string searching = this.SearchText;
-			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
-
-			if (string.IsNullOrEmpty (searching))
-			{
-				return LoggingTabPage.GetTaggedText (text);
-			}
-
-			this.taggedText.SetSimpleText (text);
-
-			if (!caseSensitive)
-			{
-				text = Misc.RemoveAccentsToLower (text);
-			}
-
-			var color = Color.FromName ("Red");
-			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
-			var tag2 = "</b></font>";
-
-			int index = 0;
-			while (index < text.Length)
-			{
-				index = text.IndexOf (searching, index);
-
-				if (index == -1)
-				{
-					break;
-				}
-
-				this.taggedText.InsertTags (index, index+searching.Length, tag1, tag2);
-
-				index += searching.Length;
-			}
-
-			return this.taggedText.GetTaggedText ();
-		}
-
-		private FormattedText GetTaggedString(FormattedText formattedText)
-		{
-			string searching = this.SearchText;
-			bool caseSensitive = LoggingTabPage.globalCaseSensitive;
-
-			if (string.IsNullOrEmpty (searching))
-			{
-				return formattedText;
-			}
-
-			this.taggedText.SetTaggedText (formattedText);
-			string text = this.taggedText.GetSimpleText ();
-
-			if (!caseSensitive)
-			{
-				text = Misc.RemoveAccentsToLower (text);
-			}
-
-			var color = Color.FromName ("Red");
-			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
-			var tag2 = "</b></font>";
-
-			int index = 0;
-			while (index < text.Length)
-			{
-				index = text.IndexOf (searching, index);
-
-				if (index == -1)
-				{
-					break;
-				}
-
-				this.taggedText.InsertTags (index, index+searching.Length, tag1, tag2);
-
-				index += searching.Length;
-			}
-
-			return this.taggedText.GetTaggedText ();
-		}
-
-		private static string GetTaggedText(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return text;
-			}
-			else
-			{
-				return TextLayout.ConvertToTaggedText (text);
-			}
-		}
 
 
 		private string SearchText
@@ -1041,7 +1031,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				string search = this.searchField.Text;
 
-				if (!string.IsNullOrEmpty (search) && !LoggingTabPage.globalCaseSensitive)
+				if (!string.IsNullOrEmpty (search) && !LoggingTabPage.globalSearchMode.CaseSensitive)
 				{
 					search = Misc.RemoveAccentsToLower (search);
 				}
@@ -1196,12 +1186,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static bool					globalSecondaryVisibility    = false;
-		private static bool					globalQueryOptionsVisibility = false;
-		private static bool					globalCaseSensitive          = true;
-		private static bool					globalSubstitute             = true;
-		private static bool					globalColorize               = true;
-		private static bool					globalAutoBreak              = true;
+		private static bool					globalSecondaryVisibility;
+		private static bool					globalQueryOptionsVisibility;
+		private static SearchMode			globalSearchMode;
+		private static bool					globalSubstitute;
+		private static bool					globalColorize;
+		private static bool					globalAutoBreak;
 
 		private readonly TaggedText			taggedText;
 
@@ -1222,6 +1212,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private Button						searchNextButton;
 		private StaticText					searchCounterInfo;
 		private CheckButton					caseSensitiveButton;
+		private CheckButton					searchInQueryButton;
+		private CheckButton					searchInParametersButton;
+		private CheckButton					searchInResultsButton;
+		private CheckButton					searchInCallStackButton;
 		private Button						exportButton;
 		private Button						importButton;
 
@@ -1241,6 +1235,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private TextFieldMulti				stackField;
 
 		private string						lastSearching;
-		private bool						lastCaseSensitive;
+		private SearchMode					lastSearchMode;
 	}
 }
