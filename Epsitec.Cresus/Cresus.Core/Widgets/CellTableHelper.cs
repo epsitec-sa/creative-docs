@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static void UpdateRow(this CellTable table, int row, params FormattedText[] values)
 		{
-			//	Met à jour le contenu d'une ligne d'une table avec des textes.
+			//	Met à jour le contenu d'une ligne d'une table avec des textes taggés.
 			for (int column = 0; column < values.Count (); column++)
 			{
 				var text = table[column, row].Children[0] as StaticText;
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static void UpdateRow(this CellTable table, int row, params string[] values)
 		{
-			//	Met à jour le contenu d'une ligne d'une table avec des textes.
+			//	Met à jour le contenu d'une ligne d'une table avec des textes simples.
 			for (int column = 0; column < values.Count (); column++)
 			{
 				var text = table[column, row].Children[0] as StaticText;
