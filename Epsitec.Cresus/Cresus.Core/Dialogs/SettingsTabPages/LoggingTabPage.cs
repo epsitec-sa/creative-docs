@@ -127,6 +127,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.CopyQueries ();
 				this.UpdateTable ();
 				this.UpdateDetails ();
+				this.UpdateWidgets ();
 			};
 
 			this.clearButton.Clicked += delegate
@@ -924,8 +925,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					break;
 				}
 
-				this.taggedText.InsertTag (index, tag1);
-				this.taggedText.InsertTag (index+searching.Length, tag2);
+				this.taggedText.InsertTag (index, tag1, true);
+				this.taggedText.InsertTag (index+searching.Length, tag2, false);
 
 				index += searching.Length;
 			}
@@ -965,8 +966,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					break;
 				}
 
-				this.taggedText.InsertTag (index, tag1);
-				this.taggedText.InsertTag (index+searching.Length, tag2);
+				this.taggedText.InsertTag (index, tag1, true);
+				this.taggedText.InsertTag (index+searching.Length, tag2, false);
 
 				index += searching.Length;
 			}

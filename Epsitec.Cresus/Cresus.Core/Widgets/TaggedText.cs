@@ -40,17 +40,17 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			tt.SetSimpleText ("ceci est un test");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci est un test");
-			tt.InsertTag (5, "<b>");
-			tt.InsertTag (8, "</b>");
+			tt.InsertTag (5, "<b>", true);
+			tt.InsertTag (8, "</b>", false);
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci <b>est</b> un test");
-			tt.InsertTag (5, "<i>");
-			tt.InsertTag (8, "</i>");
-			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci <i><b>est</i></b> un test");
+			tt.InsertTag (5, "<i>", true);
+			tt.InsertTag (8, "</i>", false);
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "ceci <b><i>est</i></b> un test");
 
 			tt.SetSimpleText ("x<y");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "x&lt;y");
-			tt.InsertTag (1, "<b>");
-			tt.InsertTag (2, "</b>");
+			tt.InsertTag (1, "<b>", true);
+			tt.InsertTag (2, "</b>", false);
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "x<b>&lt;</b>y");
 		}
 #endif
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.blocs[blocIndex] = this.blocs[blocIndex].Insert (stringIndex, text);
 		}
 
-		public void InsertTag(int indexToSimpleText, string tag)
+		public void InsertTag(int indexToSimpleText, string tag, bool begin = true)
 		{
 			System.Diagnostics.Debug.Assert (TaggedText.IsTag (tag));
 
@@ -156,7 +156,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else if (stringIndex == this.blocs[blocIndex].Length)
 			{
-				this.blocs.Insert (blocIndex+1, tag);
+				blocIndex++;
+
+				if (begin)
+				{
+					//	On saute les tags vides, pour que le dernier tag inséré ait la priorité.
+					while (blocIndex < this.blocs.Count &&
+						   TaggedText.IsTag (this.blocs[blocIndex]) &&
+						   !TaggedText.IsCharTag (this.blocs[blocIndex]))
+					{
+						blocIndex++;
+					}
+				}
+
+				this.blocs.Insert (blocIndex, tag);
 			}
 			else
 			{
@@ -229,7 +242,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (TaggedText.IsTag (bloc))
 				{
-					if (bloc[0] == '&' || bloc == "<br/>")
+					if (TaggedText.IsCharTag (bloc))
 					{
 						startIndex++;
 					}
@@ -251,6 +264,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			return false;
 		}
 
+
+		private static bool IsCharTag(string text)
+		{
+			if (string.IsNullOrEmpty (text) || text.Length < 1)
+			{
+				return false;
+			}
+
+			return text == "<br/>" || text[0] == '&';
+		}
 
 		private static bool IsTag(string text)
 		{
