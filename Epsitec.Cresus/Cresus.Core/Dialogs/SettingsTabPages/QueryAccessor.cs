@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public static class QueryAccessor
 	{
-		public static int Count(this Query query, string search, bool caseSensitive)
+		public static int Count(this Query query, string search, SearchMode mode)
 		{
 			if (string.IsNullOrEmpty (search))
 			{
@@ -32,11 +32,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int count = 0;
 
-			foreach (var t in query.GetSearchableStrings ())
+			foreach (var t in query.GetSearchableStrings (mode))
 			{
 				string text = t;
 
-				if (!caseSensitive)
+				if (!mode.CaseSensitive)
 				{
 					text = Misc.RemoveAccentsToLower (t);
 				}
@@ -47,14 +47,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return count;
 		}
 
-		public static bool ContainsString(this Query query, string search, bool caseSensitive)
+		public static bool ContainsString(this Query query, string search, SearchMode mode)
 		{
 			//	Retourne true si le texte à chercher se trouve dans une ligne donnée.
-			foreach (var t in query.GetSearchableStrings ())
+			foreach (var t in query.GetSearchableStrings (mode))
 			{
 				string text = t;
 
-				if (!caseSensitive)
+				if (!mode.CaseSensitive)
 				{
 					text = Misc.RemoveAccentsToLower (t);
 				}
@@ -68,28 +68,43 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return false;
 		}
 
-		private static IEnumerable<string> GetSearchableStrings(this Query query)
+		private static IEnumerable<string> GetSearchableStrings(this Query query, SearchMode mode)
 		{
 			//	Retourne tous les textes où chercher pour une ligne donnée.
-			yield return query.SourceCode;
-			yield return query.GetCompactParameters ();
-			yield return query.GetCompactResults ();
-			yield return query.GetStackTrace ();
+			if (mode.SearchInQuery)
+			{
+				yield return query.SourceCode;
+			}
+
+			if (mode.SearchInParameters)
+			{
+				yield return query.GetCompactParameters ();
+			}
+
+			if (mode.SearchInResults)
+			{
+				yield return query.GetCompactResults ();
+			}
+
+			if (mode.SearchInCallStack)
+			{
+				yield return query.GetStackTrace ();
+			}
 		}
 
 
-		public static string[] GetMainStrings(this Query query, int row)
+		public static FormattedText[] GetMainContent(this Query query, int row, string search, SearchMode mode)
 		{
 			//	Retourne les textes pour peupler les 6 colonnes d'une ligne du tableau principal.
-			var values = new List<string> ();
+			var values = new List<FormattedText> ();
 
 			values.Add (query.Number.ToString ());
 			values.Add (query.GetNiceStartTime ());
 			values.Add ("");  // colonne pour le temps relatif
 			values.Add (query.GetNiceDuration ());
-			values.Add (query.GetQuerySummary ().ToString ());
-			values.Add (query.GetCompactParameters ());
-			values.Add (query.GetCompactResults ());
+			values.Add (QueryAccessor.GetTaggedText (query.GetQuerySummary (),      search, mode, mode.SearchInQuery));
+			values.Add (QueryAccessor.GetTaggedText (query.GetCompactParameters (), search, mode, mode.SearchInParameters));
+			values.Add (QueryAccessor.GetTaggedText (query.GetCompactResults (),    search, mode, mode.SearchInResults));
 			values.Add (query.GetNiceThreadName ());
 
 			return values.ToArray ();
@@ -133,25 +148,25 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return string.Join (", ", list);
 		}
 
-		public static string[] GetParameterStrings(Parameter parameter)
+		public static FormattedText[] GetParameterContent(Parameter parameter, string search, SearchMode mode)
 		{
 			//	Retourne les textes pour peupler les 2 colonnes d'une ligne du tableau des paramètres.
-			var values = new List<string> ();
+			var values = new List<FormattedText> ();
 
 			values.Add (parameter.Name);
-			values.Add (QueryAccessor.GetString (parameter.Value));
+			values.Add (QueryAccessor.GetTaggedText (QueryAccessor.GetString (parameter.Value), search, mode, mode.SearchInParameters));
 
 			return values.ToArray ();
 		}
 
-		public static string[] GetTableResultsStrings(ReadOnlyCollection<object> objects)
+		public static FormattedText[] GetTableResultsContent(ReadOnlyCollection<object> objects, string search, SearchMode mode)
 		{
 			//	Retourne les textes pour peupler les colonnes d'une ligne du tableau des résultats.
-			var values = new List<string> ();
+			var values = new List<FormattedText> ();
 
 			foreach (var obj in objects)
 			{
-				values.Add (QueryAccessor.GetString (obj));
+				values.Add (QueryAccessor.GetTaggedText (QueryAccessor.GetString (obj), search, mode, mode.SearchInResults));
 			}
 
 			return values.ToArray ();
@@ -776,6 +791,80 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		public static FormattedText GetTaggedText(string text, string search, SearchMode mode, bool searchingEnabled)
+		{
+			if (string.IsNullOrEmpty (search) || !searchingEnabled)
+			{
+				return TextLayout.ConvertToTaggedText (text);
+			}
+
+			QueryAccessor.taggedText.SetSimpleText (text);
+
+			if (!mode.CaseSensitive)
+			{
+				text = Misc.RemoveAccentsToLower (text);
+			}
+
+			var color = Color.FromName ("Red");
+			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
+			var tag2 = "</b></font>";
+
+			int index = 0;
+			while (index < text.Length)
+			{
+				index = text.IndexOf (search, index);
+
+				if (index == -1)
+				{
+					break;
+				}
+
+				QueryAccessor.taggedText.InsertTags (index, index+search.Length, tag1, tag2);
+
+				index += search.Length;
+			}
+
+			return QueryAccessor.taggedText.GetTaggedText ();
+		}
+
+		public static FormattedText GetTaggedText(FormattedText formattedText, string search, SearchMode mode, bool searchingEnabled)
+		{
+			if (string.IsNullOrEmpty (search) || !searchingEnabled)
+			{
+				return formattedText;
+			}
+
+			QueryAccessor.taggedText.SetTaggedText (formattedText);
+			string text = QueryAccessor.taggedText.GetSimpleText ();
+
+			if (!mode.CaseSensitive)
+			{
+				text = Misc.RemoveAccentsToLower (text);
+			}
+
+			var color = Color.FromName ("Red");
+			var tag1 = string.Concat ("<font color=\"#", Color.ToHexa (color), "\"><b>");
+			var tag2 = "</b></font>";
+
+			int index = 0;
+			while (index < text.Length)
+			{
+				index = text.IndexOf (search, index);
+
+				if (index == -1)
+				{
+					break;
+				}
+
+				QueryAccessor.taggedText.InsertTags (index, index+search.Length, tag1, tag2);
+
+				index += search.Length;
+			}
+
+			return QueryAccessor.taggedText.GetTaggedText ();
+		}
+
+	
 		private static string GetString(object value)
 		{
 			if (value is string)
@@ -812,5 +901,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				return query.ThreadName;
 			}
 		}
+
+
+		private static readonly Widgets.TaggedText taggedText = new Widgets.TaggedText ();
 	}
 }
