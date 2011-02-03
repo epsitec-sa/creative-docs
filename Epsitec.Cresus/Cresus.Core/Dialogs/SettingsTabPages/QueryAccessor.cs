@@ -23,11 +23,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public static class QueryAccessor
 	{
-		static QueryAccessor()
-		{
-			var tt = new Widgets.TaggedText ();
-		}
-
 		public static int Count(this Query query, string search, bool caseSensitive)
 		{
 			if (string.IsNullOrEmpty (search))
@@ -89,7 +84,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			values.Add ((row+1).ToString ());
 			values.Add (query.GetNiceStartTime ());
-			values.Add ("");
+			values.Add ("");  // colonne pour le temps relatif
 			values.Add (query.GetNiceDuration ());
 			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());
@@ -98,13 +93,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return values.ToArray ();
 		}
 
-		public static string GetCompactParameters(this Query query)
+		private static string GetCompactParameters(this Query query)
 		{
 			//	Retourne tous les paramètres sous une forme compacte.
 			return string.Join (", ", query.Parameters.Select (x => QueryAccessor.GetString (x.Value)));
 		}
 
-		public static string GetCompactResults(this Query query)
+		private static string GetCompactResults(this Query query)
 		{
 			//	Retourne tous les résultats sous une forme compacte.
 			if (query.Result == null)
@@ -770,7 +765,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			if (value is string)
 			{
-				return TextLayout.ConvertToTaggedText (value as string);
+				return value as string;
 			}
 			else
 			{

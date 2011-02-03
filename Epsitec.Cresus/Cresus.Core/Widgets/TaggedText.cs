@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -16,8 +17,24 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			var tt = new TaggedText ();
 
+			tt.SetSimpleText ("a&b");
+			System.Diagnostics.Debug.Assert (tt.GetSimpleText () == "a&b");
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "a&amp;b");
+
+			tt.SetTaggedText ("a&amp;b");
+			System.Diagnostics.Debug.Assert (tt.GetSimpleText () == "a&b");
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "a&amp;b");
+
+			tt.SetSimpleText ("a\nb");
+			System.Diagnostics.Debug.Assert (tt.GetSimpleText () == "a\nb");
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "a<br/>b");
+
+			tt.SetTaggedText ("a<br/>b");
+			System.Diagnostics.Debug.Assert (tt.GetSimpleText () == "a\nb");
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "a<br/>b");
+
 			tt.SetSimpleText (null);
-			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (tt.GetTaggedText ()));
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText ().IsNullOrEmpty);
 			tt.InsertTag (0, "<br/>");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "<br/>");
 
@@ -59,16 +76,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void SetTaggedText(string text)
+		public void SetTaggedText(FormattedText formattedText)
 		{
 			this.blocs.Clear ();
 
-			if (string.IsNullOrEmpty (text))
+			if (formattedText.IsNullOrEmpty)
 			{
 				this.blocs.Add ("");
 			}
 			else
 			{
+				string text = formattedText.ToString ();
+
 				int index = 0;
 				int last = 0;
 
@@ -117,6 +136,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void InsertSimpleText(int indexToSimpleText, string text)
 		{
+			//	Attention: Le texte ne doit pas contenir de tags ni de caractères "<>&;'" !
 			int blocIndex, stringIndex;
 			this.GetIndex (indexToSimpleText, out blocIndex, out stringIndex);
 
@@ -151,10 +171,49 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public string GetSimpleText()
 		{
-			return string.Concat (this.blocs.Where (x => !TaggedText.IsTag (x)));
+			var builder = new System.Text.StringBuilder ();
+
+			foreach (var bloc in this.blocs)
+			{
+				if (TaggedText.IsTag (bloc))
+				{
+					switch (bloc)
+					{
+						case "&lt;":
+							builder.Append ('<');
+							break;
+
+						case "&gt;":
+							builder.Append ('>');
+							break;
+
+						case "&amp;":
+							builder.Append ('&');
+							break;
+
+						case "&quot;":
+							builder.Append (';');
+							break;
+
+						case "&apos;":
+							builder.Append ('\'');
+							break;
+
+						case "<br/>":
+							builder.Append ('\n');
+							break;
+					}
+				}
+				else
+				{
+					builder.Append (bloc);
+				}
+			}
+
+			return builder.ToString ();
 		}
 
-		public string GetTaggedText()
+		public FormattedText GetTaggedText()
 		{
 			return string.Concat (this.blocs);
 		}
@@ -168,7 +227,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				var bloc = this.blocs[blocIndex];
 
-				if (!TaggedText.IsTag (bloc))
+				if (TaggedText.IsTag (bloc))
+				{
+					if (bloc[0] == '&' || bloc == "<br/>")
+					{
+						startIndex++;
+					}
+				}
+				else
 				{
 					if (indexToSimpleText >= startIndex && indexToSimpleText <= startIndex+bloc.Length)
 					{
