@@ -325,6 +325,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				yield return "FROM";
 				yield return "ORDER";
 				yield return "SET";
+				yield return "VALUES";
 				yield return "WHERE";
 			}
 		}

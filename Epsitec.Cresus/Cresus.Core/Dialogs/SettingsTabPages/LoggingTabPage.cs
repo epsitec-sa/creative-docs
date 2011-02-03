@@ -52,10 +52,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = parent,
 				PreferredHeight = 220,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (10, 0, 10, 10),
+				Margins = new Margins (0, 0, 10, 10),
 			};
 
-			this.splitter = new HSplitter
+			this.splitter1 = new HSplitter
 			{
 				Parent = parent,
 				Dock = DockStyle.Bottom,
@@ -352,8 +352,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var box = new FrameBox
 			{
 				Parent = parent,
+				PreferredHeight = 80,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 10),
+				Margins = new Margins (10, 10, 0, 10),
 			};
 
 			var leftBox = new FrameBox
@@ -377,8 +378,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = leftBox,
 				MaxLength = 100000,
 				IsReadOnly = true,
-				PreferredHeight = 66,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Fill,
 			};
 
 			this.queryOptionsButton = new GlyphButton
@@ -389,11 +389,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Dock = DockStyle.Top,
 			};
 
+			this.splitter2 = new HSplitter
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+			};
+
 			this.detailsBox = new FrameBox
 			{
 				Parent = parent,
 				PreferredHeight = 100,
 				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 0, 10, 0),
 			};
 		}
 
@@ -1056,7 +1063,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private Button					importButton;
 
 		private CellTable				mainTable;
-		private HSplitter				splitter;
+		private HSplitter				splitter1;
+		private HSplitter				splitter2;
 
 		private FrameBox				detailsFrame;
 		private GlyphButton				queryOptionsButton;
