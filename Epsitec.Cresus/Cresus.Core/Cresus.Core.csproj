@@ -101,6 +101,7 @@
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
     <Compile Include="Business\ActionAttribute.cs" />
+    <Compile Include="Business\DocumentState.cs" />
     <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
