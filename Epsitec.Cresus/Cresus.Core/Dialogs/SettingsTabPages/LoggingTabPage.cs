@@ -169,6 +169,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateWidgets ();
 			};
 
+			this.autoBreakButton.Clicked += delegate
+			{
+				LoggingTabPage.globalAutoBreak = !LoggingTabPage.globalAutoBreak;
+				this.UpdateDetails ();
+				this.UpdateWidgets ();
+			};
+
 			this.UpdateRadio ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
@@ -413,10 +420,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = this.queryOptionsToolbar,
 				Text = "Coloriage syntaxique",
-				PreferredWidth = 150,
+				PreferredWidth = 140,
 				AutoToggle = false,
 				Dock = DockStyle.Left,
-				Margins = new Margins (10, 0, 0, 0),
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.autoBreakButton = new CheckButton
+			{
+				Parent = this.queryOptionsToolbar,
+				Text = "Retours à la ligne automatiques",
+				PreferredWidth = 200,
+				AutoToggle = false,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 		}
 
@@ -606,7 +623,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				bool substitute = LoggingTabPage.globalSubstitute;
 				bool colorize   = LoggingTabPage.globalColorize;
-				string content = query.GetQuery (substitute, colorize).ToString ();
+				bool autoBreak  = LoggingTabPage.globalAutoBreak;
+				string content = query.GetQuery (substitute, colorize, autoBreak).ToString ();
 				content = this.ColorizeSearchingString (content);
 
 				if (content.Length >= this.queryField.MaxLength)
@@ -657,6 +675,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.caseSensitiveButton.ActiveState = LoggingTabPage.globalCaseSensitive ? ActiveState.Yes : ActiveState.No;
 			this.substituteButton.ActiveState    = LoggingTabPage.globalSubstitute    ? ActiveState.Yes : ActiveState.No;
 			this.colorizeButton.ActiveState      = LoggingTabPage.globalColorize      ? ActiveState.Yes : ActiveState.No;
+			this.autoBreakButton.ActiveState     = LoggingTabPage.globalAutoBreak     ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -1015,6 +1034,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private static bool				globalCaseSensitive          = true;
 		private static bool				globalSubstitute             = true;
 		private static bool				globalColorize               = true;
+		private static bool				globalAutoBreak              = true;
 
 		private readonly List<Query>	queries;
 
@@ -1043,6 +1063,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private FrameBox				queryOptionsToolbar;
 		private CheckButton				substituteButton;
 		private CheckButton				colorizeButton;
+		private CheckButton				autoBreakButton;
 		private TextFieldMulti			queryField;
 		private FrameBox				detailsBox;
 
