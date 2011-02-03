@@ -43,7 +43,10 @@ namespace Epsitec.Cresus.Database.Logging
 		public abstract Query GetEntry(int index);
 
 
-		internal abstract void AddEntry(Query query);
+		protected abstract void AddEntry(Query query);
+
+
+		protected abstract int GetNextNumber();
 
 
 		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration)
@@ -53,7 +56,7 @@ namespace Epsitec.Cresus.Database.Logging
 			if (!this.DiscardEntry ())
 			{
 				Result result = null;
-				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+				Query query = this.GetQuery (command, result, startTime, duration);
 
 				this.AddEntry (query);
 			}
@@ -67,7 +70,7 @@ namespace Epsitec.Cresus.Database.Logging
 			if (!this.DiscardEntry ())
 			{
 				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
-				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+				Query query = this.GetQuery (command, result, startTime, duration);
 
 				this.AddEntry (query);
 			}
@@ -81,7 +84,7 @@ namespace Epsitec.Cresus.Database.Logging
 			if (!this.DiscardEntry ())
 			{
 				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (command, data);
-				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+				Query query = this.GetQuery (command, result, startTime, duration);
 
 				this.AddEntry (query);
 			}
@@ -95,7 +98,7 @@ namespace Epsitec.Cresus.Database.Logging
 			if (!this.DiscardEntry ())
 			{
 				Result result = this.DiscardResult () ? null : AbstractLog.GetResult (data);
-				Query query = AbstractLog.GetQuery (command, result, startTime, duration);
+				Query query = this.GetQuery (command, result, startTime, duration);
 
 				this.AddEntry (query);
 			}
@@ -114,12 +117,13 @@ namespace Epsitec.Cresus.Database.Logging
 		}
 
 
-		private static Query GetQuery(IDbCommand command, Result result, DateTime startTime, TimeSpan duration)
+		private Query GetQuery(IDbCommand command, Result result, DateTime startTime, TimeSpan duration)
 		{
+			int number = this.GetNextNumber ();
 			string sourceCode = AbstractLog.GetSourceCode (command);
 			IEnumerable<Parameter> parameter = AbstractLog.GetParameters (command);
 
-			return new Query (sourceCode, parameter, result, startTime, duration);
+			return new Query (number, sourceCode, parameter, result, startTime, duration);
 		}
 
 

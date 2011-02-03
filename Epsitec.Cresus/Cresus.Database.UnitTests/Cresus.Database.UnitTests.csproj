@@ -161,6 +161,7 @@
     <None Include="Resources\large.gbak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Shadow Include="Test References\Cresus.Database.accessor" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

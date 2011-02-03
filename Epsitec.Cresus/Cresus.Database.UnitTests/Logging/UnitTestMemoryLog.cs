@@ -33,12 +33,13 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 
 			List<Query> list = new List<Query>();
 			MemoryLog log = new MemoryLog (size);
+			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
 
 			for (int i = 0; i < 3 * size; i++)
 			{
 				Query query = this.GetSampleQuery ();
 
-				log.AddEntry (query);
+				logAccessor.AddEntry (query);
 
 				if (list.Count >= size)
 				{
@@ -54,6 +55,28 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 				}
 			}
 		}
+		
+
+		[TestMethod]
+		public void GetNextNumberTest()
+		{
+			int size = 10;
+
+			MemoryLog log = new MemoryLog (size);
+			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
+			
+			for (int i = 0; i < 50; i++)
+			{
+				Assert.AreEqual (i + 1, logAccessor.GetNextNumber ());
+			}
+
+			log.Clear ();
+
+			for (int i = 0; i < 50; i++)
+			{
+				Assert.AreEqual (i + 1, logAccessor.GetNextNumber ());
+			}
+		}
 
 
 		[TestMethod]
@@ -62,12 +85,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			int size = 10;
 
 			MemoryLog log = new MemoryLog (size);
-
+			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject(log));
 			for (int i = 0; i < size; i++)
 			{
 				while (log.GetNbEntries () < i)
 				{
-					log.AddEntry (this.GetSampleQuery ());
+					logAccessor.AddEntry (this.GetSampleQuery ());
 				}
 
 				Assert.AreEqual (i, log.GetNbEntries ());
@@ -87,7 +110,7 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			System.DateTime startTime = System.DateTime.Now;
 			System.TimeSpan duration = System.TimeSpan.FromTicks (0);
 
-			return new Query (sourceCode, parameters, result, startTime, duration);
+			return new Query (1, sourceCode, parameters, result, startTime, duration);
 		}
 
 
