@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public LoggingTabPage(CoreApplication application)
 			: base (application)
 		{
-			this.queries = new List<Query> ();
 			this.taggedText = new TaggedText ();
 
 			this.CopyQueries ();
@@ -484,18 +483,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void CopyQueries()
 		{
 			//	Copie toutes les queries sur lesquelles on va travailler.
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+			this.queries = null;
 
-			this.queries.Clear ();
+			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
 			if (db.QueryLog != null)
 			{
 				int count = db.QueryLog.GetNbEntries ();
+				count = System.Math.Min (count, 500);
 
-				for (int i = 0; i < count; i++)
+				if (count > 0)
 				{
-					var query = db.QueryLog.GetEntry (i);
-					this.queries.Add (query);
+					this.queries = db.QueryLog.GetEntries (0, count);
 				}
 			}
 		}
@@ -534,7 +533,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateTable()
 		{
-			int rows = this.queries.Count;
+			int rows = (this.queries == null) ? 0 : this.queries.Count;
 			this.mainTable.SetArraySize (8, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
@@ -599,7 +598,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateRelativeTime()
 		{
-			int rows = this.queries.Count;
+			int rows = (this.queries == null) ? 0 : this.queries.Count;
 			int sel = this.mainTable.SelectedRow;
 			
 			if (sel == -1)
@@ -664,7 +663,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int sel = this.mainTable.SelectedRow;
 
-			if (sel == -1)
+			if (sel == -1 || this.queries == null)
 			{
 				this.queryField.FormattedText = null;
 			}
@@ -709,8 +708,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 				else
 				{
-					var stack = TextLayout.ConvertToTaggedText (query.StackTrace.ToString ());
-					this.stackField.FormattedText = stack;
+					this.stackField.FormattedText = this.GetTaggedString (query.GetStackTrace ());
 				}
 			}
 		}
@@ -752,7 +750,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void Search(int direction)
 		{
-			if (this.queries.Count == 0)
+			if (this.queries == null || this.queries.Count == 0)
 			{
 				return;
 			}
@@ -1198,50 +1196,51 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private static bool				globalSecondaryVisibility    = false;
-		private static bool				globalQueryOptionsVisibility = false;
-		private static bool				globalCaseSensitive          = true;
-		private static bool				globalSubstitute             = true;
-		private static bool				globalColorize               = true;
-		private static bool				globalAutoBreak              = true;
+		private static bool					globalSecondaryVisibility    = false;
+		private static bool					globalQueryOptionsVisibility = false;
+		private static bool					globalCaseSensitive          = true;
+		private static bool					globalSubstitute             = true;
+		private static bool					globalColorize               = true;
+		private static bool					globalAutoBreak              = true;
 
-		private readonly List<Query>	queries;
-		private readonly TaggedText		taggedText;
+		private readonly TaggedText			taggedText;
 
-		private CheckButton				logOnOffButton;
-		private CheckButton				logResultButton;
-		private CheckButton				logStackTraceButton;
-		private CheckButton				logThreadNameButton;
-		private Button					updateButton;
-		private Button					clearButton;
-		private GlyphButton				secondaryButton;
+		private ReadOnlyCollection<Query>	queries;
 
-		private FrameBox				secondaryToolbar;
-		private GlyphButton				searchClearButton;
-		private TextField				searchField;
-		private Button					searchPrevButton;
-		private Button					searchNextButton;
-		private StaticText				searchCounterInfo;
-		private CheckButton				caseSensitiveButton;
-		private Button					exportButton;
-		private Button					importButton;
+		private CheckButton					logOnOffButton;
+		private CheckButton					logResultButton;
+		private CheckButton					logStackTraceButton;
+		private CheckButton					logThreadNameButton;
+		private Button						updateButton;
+		private Button						clearButton;
+		private GlyphButton					secondaryButton;
 
-		private CellTable				mainTable;
-		private HSplitter				splitter1;
-		private HSplitter				splitter2;
-		private HSplitter				splitter3;
+		private FrameBox					secondaryToolbar;
+		private GlyphButton					searchClearButton;
+		private TextField					searchField;
+		private Button						searchPrevButton;
+		private Button						searchNextButton;
+		private StaticText					searchCounterInfo;
+		private CheckButton					caseSensitiveButton;
+		private Button						exportButton;
+		private Button						importButton;
 
-		private FrameBox				detailsFrame;
-		private GlyphButton				queryOptionsButton;
-		private FrameBox				queryOptionsToolbar;
-		private CheckButton				substituteButton;
-		private CheckButton				colorizeButton;
-		private CheckButton				autoBreakButton;
-		private TextFieldMulti			queryField;
-		private FrameBox				detailsBox;
-		private TextFieldMulti			stackField;
+		private CellTable					mainTable;
+		private HSplitter					splitter1;
+		private HSplitter					splitter2;
+		private HSplitter					splitter3;
 
-		private string					lastSearching;
-		private bool					lastCaseSensitive;
+		private FrameBox					detailsFrame;
+		private GlyphButton					queryOptionsButton;
+		private FrameBox					queryOptionsToolbar;
+		private CheckButton					substituteButton;
+		private CheckButton					colorizeButton;
+		private CheckButton					autoBreakButton;
+		private TextFieldMulti				queryField;
+		private FrameBox					detailsBox;
+		private TextFieldMulti				stackField;
+
+		private string						lastSearching;
+		private bool						lastCaseSensitive;
 	}
 }
