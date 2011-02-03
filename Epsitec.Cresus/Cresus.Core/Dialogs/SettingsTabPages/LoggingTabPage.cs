@@ -421,7 +421,22 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = parent,
 				PreferredHeight = 100,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 0, 10, 0),
+				Margins = new Margins (10, 0, 10, 10),
+			};
+
+			this.stackField = new TextFieldMulti
+			{
+				Parent = parent,
+				MaxLength = 100000,
+				IsReadOnly = true,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (10, 10, 10, 0),
+			};
+
+			this.splitter3 = new HSplitter
+			{
+				Parent = parent,
+				Dock = DockStyle.Bottom,
 			};
 		}
 
@@ -520,7 +535,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdateTable()
 		{
 			int rows = this.queries.Count;
-			this.mainTable.SetArraySize (7, rows);
+			this.mainTable.SetArraySize (8, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
 			this.mainTable.SetWidthColumn (1,  70);
@@ -529,6 +544,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SetWidthColumn (4, 790-40-70-60-60-120-120);
 			this.mainTable.SetWidthColumn (5, 120);
 			this.mainTable.SetWidthColumn (6, 120);
+			this.mainTable.SetWidthColumn (7, 120);
 
 			this.mainTable.SetHeaderTextH (0, "N°");
 			this.mainTable.SetHeaderTextH (1, "Début");
@@ -537,6 +553,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SetHeaderTextH (4, "Requête");
 			this.mainTable.SetHeaderTextH (5, "Paramètres");
 			this.mainTable.SetHeaderTextH (6, "Résultats");
+			this.mainTable.SetHeaderTextH (7, "Processus");
 
 			ContentAlignment[] alignments =
 			{
@@ -546,7 +563,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				ContentAlignment.MiddleRight,
 				ContentAlignment.MiddleLeft,
 				ContentAlignment.MiddleLeft,
-				ContentAlignment.MiddleLeft
+				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleLeft,
 			};
 
 			string search = this.SearchText;
@@ -683,6 +701,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						cellTable.Dock = DockStyle.Fill;
 						cellTable.Margins = new Margins (0, 10, 0, 0);
 					}
+				}
+
+				if (query.StackTrace == null)
+				{
+					this.stackField.FormattedText = null;
+				}
+				else
+				{
+					var stack = TextLayout.ConvertToTaggedText (query.StackTrace.ToString ());
+					this.stackField.FormattedText = stack;
 				}
 			}
 		}
@@ -1201,6 +1229,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private CellTable				mainTable;
 		private HSplitter				splitter1;
 		private HSplitter				splitter2;
+		private HSplitter				splitter3;
 
 		private FrameBox				detailsFrame;
 		private GlyphButton				queryOptionsButton;
@@ -1210,6 +1239,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private CheckButton				autoBreakButton;
 		private TextFieldMulti			queryField;
 		private FrameBox				detailsBox;
+		private TextFieldMulti			stackField;
 
 		private string					lastSearching;
 		private bool					lastCaseSensitive;

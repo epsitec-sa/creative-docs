@@ -82,13 +82,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Retourne les textes pour peupler les 6 colonnes d'une ligne du tableau principal.
 			var values = new List<string> ();
 
-			values.Add ((row+1).ToString ());
+			values.Add (query.Number.ToString ());
 			values.Add (query.GetNiceStartTime ());
 			values.Add ("");  // colonne pour le temps relatif
 			values.Add (query.GetNiceDuration ());
 			values.Add (query.GetQuerySummary ().ToString ());
 			values.Add (query.GetCompactParameters ());
 			values.Add (query.GetCompactResults ());
+			values.Add (query.ThreadName);
 
 			return values.ToArray ();
 		}
