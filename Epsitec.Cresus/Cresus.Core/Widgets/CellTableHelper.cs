@@ -46,5 +46,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				text.Text = values[column];
 			}
 		}
+
+		public static StaticText GetStaticText(this CellTable table, int row, int column)
+		{
+			return table[column, row].Children[0] as StaticText;
+		}
 	}
 }
