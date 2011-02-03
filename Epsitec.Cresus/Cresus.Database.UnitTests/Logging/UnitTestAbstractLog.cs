@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using System.Data;
 
@@ -429,6 +430,12 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			public override Query GetEntry(int index)
 			{
 				return this.log[index];
+			}
+
+
+			public override ReadOnlyCollection<Query> GetEntries(int index, int count)
+			{
+				return this.log.Skip (index).Take (count).ToList ().AsReadOnly ();
 			}
 
 

@@ -4,6 +4,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Collections.ObjectModel;
+
 using System.Data;
 
 using System.Diagnostics;
@@ -61,6 +63,9 @@ namespace Epsitec.Cresus.Database.Logging
 
 
 		public abstract Query GetEntry(int index);
+
+
+		public abstract ReadOnlyCollection<Query> GetEntries(int index, int count);
 
 
 		protected abstract void AddEntry(Query query);

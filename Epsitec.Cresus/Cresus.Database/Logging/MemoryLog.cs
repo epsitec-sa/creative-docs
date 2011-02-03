@@ -2,6 +2,10 @@
 
 using Epsitec.Common.Types.Collections;
 
+using System.Collections.Generic;
+
+using System.Collections.ObjectModel;
+
 
 namespace Epsitec.Cresus.Database.Logging
 {
@@ -40,6 +44,22 @@ namespace Epsitec.Cresus.Database.Logging
 		public override Query GetEntry(int index)
 		{
 			return this.log[index];
+		}
+
+
+		public override ReadOnlyCollection<Query> GetEntries(int index, int count)
+		{
+			index.ThrowIf (i => i < 0 || index >= this.log.Count, "index is out of bounds");
+			count.ThrowIf (c => c < 0 || index + c > this.log.Count, "count is out of bounds");
+
+			List<Query> data = new List<Query> ();
+
+			for (int i = index; i < index + count; i++)
+			{
+				data.Add (this.log[i]);
+			}
+
+			return data.AsReadOnly ();
 		}
 
 
