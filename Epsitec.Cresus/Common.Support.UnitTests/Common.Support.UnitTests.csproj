@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="Resources\Common.Support.UnitTests\module.info">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
