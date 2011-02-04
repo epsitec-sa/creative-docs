@@ -4,10 +4,12 @@ using Epsitec.Common.Support.UnitTests.Entities;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Common.Support.UnitTests
+namespace Epsitec.Common.Support.UnitTests.Extensions
 {
 
 
@@ -26,286 +28,292 @@ namespace Epsitec.Common.Support.UnitTests
 		[TestMethod]
 		public void HasCollectionChangedTest1()
 		{
-			AbstractContactEntity contact1 = new AbstractContactEntity ();
-			AbstractContactEntity contact2 = new AbstractContactEntity ();
-			AbstractContactEntity contact3 = new AbstractContactEntity ();
-			
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AS]")));
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
+			ValueDataEntity valueData3 = new ValueDataEntity ();
 
-			using (person.DefineOriginalValues ())
+			CollectionDataEntity collectionData = new CollectionDataEntity ();
+			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[L0AN3]")));
+
+			using (collectionData.DefineOriginalValues ())
 			{
-				person.Contacts.Add (contact1);
-				person.Contacts.Add (contact2);
+				collectionData.Collection.Add (valueData1);
+				collectionData.Collection.Add (valueData2);
 			}
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Add (contact3);
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Add (valueData3);
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Remove (contact3);
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Remove (valueData3);
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Remove (contact2);
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Remove (valueData2);
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Add (contact2);
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Add (valueData2);
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 		}
 
 
 		[TestMethod]
 		public void HasCollectionChangedTest2()
 		{
-			AbstractContactEntity contact = new AbstractContactEntity ();
+			ValueDataEntity valueData = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AS]")));
+			CollectionDataEntity collectionData = new CollectionDataEntity ();
+			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Add (contact);
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+		    collectionData.Collection.Add (valueData);
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Remove (contact);
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Remove (valueData);
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 		}
 
 
 		[TestMethod]
 		public void HasCollectionChangedTest3()
 		{
-			AbstractContactEntity contact1 = new AbstractContactEntity ();
-			AbstractContactEntity contact2 = new AbstractContactEntity ();
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			;
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			CollectionDataEntity collectionData = new CollectionDataEntity ();
 
-			using (person.DefineOriginalValues ())
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+
+			using (collectionData.DefineOriginalValues ())
 			{
-				person.Contacts.Add (contact1);
-				person.Contacts.Add (contact2);
+				collectionData.Collection.Add (valueData1);
+				collectionData.Collection.Add (valueData2);
 			}
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts[0] = contact2;
-			person.Contacts[1] = contact1;
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection[0] = valueData2;
+			collectionData.Collection[1] = valueData1;
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts[0] = contact1;
-			person.Contacts[1] = contact2;
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection[0] = valueData1;
+			collectionData.Collection[1] = valueData2;
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 		}
 
 
 		[TestMethod]
 		public void HasCollectionChangedTest4()
 		{
-			AbstractContactEntity contact1 = new AbstractContactEntity ();
-			AbstractContactEntity contact2 = new AbstractContactEntity ();
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			CollectionDataEntity collectionData = new CollectionDataEntity ();
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Add (contact1);
-			person.Contacts.Add (contact2);
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Add (valueData1);
+			collectionData.Collection.Add (valueData2);
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts[0] = contact2;
-			person.Contacts[1] = contact1;
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection[0] = valueData2;
+			collectionData.Collection[1] = valueData1;
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts[0] = contact1;
-			person.Contacts[1] = contact2;
-			Assert.IsTrue (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection[0] = valueData1;
+			collectionData.Collection[1] = valueData2;
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 
-			person.Contacts.Remove (contact1);
-			person.Contacts.Remove (contact2);
-			Assert.IsFalse (person.HasCollectionChanged (Druid.Parse ("[L0AS]")));
+			collectionData.Collection.Remove (valueData1);
+			collectionData.Collection.Remove (valueData2);
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void HasCollectionChangedTest5()
 		{
-			NaturalPersonEntity person = null;
+			CollectionDataEntity collectionData = null;
 
-			person.HasCollectionChanged (Druid.Parse ("[L0AS]"));
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]"))
+			);
 		}
 
 
 		[TestMethod]
 		public void HasReferenceChangedTest1()
 		{
-			PersonGenderEntity gender1 = new PersonGenderEntity ();
-			PersonGenderEntity gender2 = new PersonGenderEntity ();
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0A11]")));
+			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
+			Assert.IsFalse (referenceData.HasValueChanged (Druid.Parse ("[L0AL3]")));
 
-			using (person.DefineOriginalValues ())
+			using (referenceData.DefineOriginalValues ())
 			{
-				person.Gender = gender1;
+				referenceData.Reference = valueData1;
 			}
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender2;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData2;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender1;
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData1;
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 		}
 
 
 		[TestMethod]
 		public void HasReferenceChangedTest2()
 		{
-			PersonGenderEntity gender1 = new PersonGenderEntity ();
-			PersonGenderEntity gender2 = new PersonGenderEntity ();
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender1;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData1;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender2;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData2;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender1;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData1;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 		}
 
 
 		[TestMethod]
 		public void HasReferenceChangedTest3()
 		{
-			PersonGenderEntity gender1 = new PersonGenderEntity ();
-			PersonGenderEntity gender2 = new PersonGenderEntity ();
+			ValueDataEntity valueData1 = new ValueDataEntity ();
+			ValueDataEntity valueData2 = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			using (person.DefineOriginalValues ())
+			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
+			using (referenceData.DefineOriginalValues ())
 			{
-				person.Gender = gender1;
+				referenceData.Reference = valueData1;
 			}
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender2;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData2;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender1;
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData1;
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = null;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = null;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 		}
 
 
 		[TestMethod]
 		public void HasReferenceChangedTest4()
 		{
-			PersonGenderEntity gender1 = new PersonGenderEntity ();
+			ValueDataEntity valueData = new ValueDataEntity ();
 
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = gender1;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = valueData;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 
-			person.Gender = null;
-			Assert.IsTrue (person.HasReferenceChanged (Druid.Parse ("[L0A11]")));
+			referenceData.Reference = null;
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void HasReferenceChangedTest5()
 		{
-			NaturalPersonEntity person = null;
+			ReferenceDataEntity referenceData = null;
 
-			person.HasReferenceChanged (Druid.Parse ("[L0A11]"));
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]"))
+			);
 		}
 
 
 		[TestMethod]
 		public void HasValueChangedTest1()
 		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			ValueDataEntity valueData = new ValueDataEntity ();
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			using (person.DefineOriginalValues ())
+			using (valueData.DefineOriginalValues ())
 			{
-				person.Firstname = "Dupond";
+				valueData.Value = 1;
 			}
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			person.Firstname = "De-La-Motte";
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			valueData.Value = 2;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			person.Firstname = "Dupond";
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			valueData.Value = 1;
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 		}
 
 
 		[TestMethod]
 		public void HasValueChangedTest2()
 		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			ValueDataEntity valueData = new ValueDataEntity ();
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			person.Firstname = "De-La-Motte";
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			valueData.Value = 1;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			person.Firstname = "Dupond";
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			valueData.Value = 2;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 
-			person.Firstname = "De-La-Motte";
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0AV]")));
+			valueData.Value = 1;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
 		}
 
 
 		[TestMethod]
 		public void HasValueChangedTest3()
 		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			using (person.DefineOriginalValues ())
+			ValueDataEntity valueData = new ValueDataEntity ();
+			using (valueData.DefineOriginalValues ())
 			{
-				person.BirthDate = new Date (1950, 12, 12);
+				valueData.NullableValue = 1;
 			}
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 
-			person.BirthDate = new Date (1951, 12, 12);
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			valueData.NullableValue = 2;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 
-			person.BirthDate = new Date (1950, 12, 12);
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			valueData.NullableValue = 1;
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 
-			person.BirthDate = null;
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			valueData.NullableValue = null;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 		}
 
 
 		[TestMethod]
 		public void HasValueChangedTest4()
 		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			Assert.IsFalse (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			ValueDataEntity valueData = new ValueDataEntity ();
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 
-			person.BirthDate = new Date (1951, 12, 12);
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			valueData.NullableValue = 1;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 
-			person.BirthDate = null;
-			Assert.IsTrue (person.HasValueChanged (Druid.Parse ("[L0A61]")));
+			valueData.NullableValue = null;
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void HasValueChangedTest5()
 		{
-			NaturalPersonEntity person = null;
+			ValueDataEntity valueData = null;
 
-			person.HasValueChanged (Druid.Parse ("[L0AV]"));
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => valueData.HasValueChanged (Druid.Parse ("[L0AJ3]"))
+			);
 		}
 
 
