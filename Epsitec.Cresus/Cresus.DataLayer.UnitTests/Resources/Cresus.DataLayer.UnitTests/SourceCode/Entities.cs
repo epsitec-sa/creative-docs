@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0A3]", oldValue, value);
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AC]", oldValue, value);
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue = this.Country;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA]"))
 				{
 					this.OnCountryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[L0AA]", oldValue, value);
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.PostalCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6]"))
 				{
 					this.OnPostalCodeChanging (oldValue, value);
 					this.SetField<string> ("[L0A6]", oldValue, value);
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0A7]", oldValue, value);
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue = this.Country;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8]"))
 				{
 					this.OnCountryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[L0A8]", oldValue, value);
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity oldValue = this.Region;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9]"))
 				{
 					this.OnRegionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity> ("[L0A9]", oldValue, value);
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity oldValue = this.Street;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK]"))
 				{
 					this.OnStreetChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity> ("[L0AK]", oldValue, value);
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity oldValue = this.PostBox;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH]"))
 				{
 					this.OnPostBoxChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity> ("[L0AH]", oldValue, value);
@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity oldValue = this.Location;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AE]"))
 				{
 					this.OnLocationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity> ("[L0AE]", oldValue, value);
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Number;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AG]"))
 				{
 					this.OnNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AG]", oldValue, value);
@@ -473,7 +473,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AL]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<string> ("[L0AL]", oldValue, value);
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.StreetName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ]"))
 				{
 					this.OnStreetNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AJ]", oldValue, value);
@@ -558,7 +558,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity oldValue = this.PreferredLanguage;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AD1]"))
 				{
 					this.OnPreferredLanguageChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity> ("[L0AD1]", oldValue, value);
@@ -607,7 +607,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity oldValue = this.Title;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AU]"))
 				{
 					this.OnTitleChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity> ("[L0AU]", oldValue, value);
@@ -629,7 +629,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Firstname;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AV]"))
 				{
 					this.OnFirstnameChanging (oldValue, value);
 					this.SetField<string> ("[L0AV]", oldValue, value);
@@ -651,7 +651,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Lastname;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A01]"))
 				{
 					this.OnLastnameChanging (oldValue, value);
 					this.SetField<string> ("[L0A01]", oldValue, value);
@@ -673,7 +673,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity oldValue = this.Gender;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A11]"))
 				{
 					this.OnGenderChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity> ("[L0A11]", oldValue, value);
@@ -695,7 +695,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.BirthDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A61]"))
 				{
 					this.OnBirthDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0A61]", oldValue, value);
@@ -752,7 +752,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity oldValue = this.LegalPersonType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO1]"))
 				{
 					this.OnLegalPersonTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity> ("[L0AO1]", oldValue, value);
@@ -774,7 +774,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AH1]", oldValue, value);
@@ -796,7 +796,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AI1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AI1]", oldValue, value);
@@ -818,7 +818,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ1]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<string> ("[L0AJ1]", oldValue, value);
@@ -897,7 +897,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity oldValue = this.LegalPerson;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A81]"))
 				{
 					this.OnLegalPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity> ("[L0A81]", oldValue, value);
@@ -919,7 +919,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A71]"))
 				{
 					this.OnNaturalPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity> ("[L0A71]", oldValue, value);
@@ -970,7 +970,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK1]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<string> ("[L0AK1]", oldValue, value);
@@ -992,7 +992,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity oldValue = this.Address;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AR]"))
 				{
 					this.OnAddressChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity> ("[L0AR]", oldValue, value);
@@ -1061,7 +1061,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AS1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AS1]", oldValue, value);
@@ -1083,7 +1083,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AT1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AT1]", oldValue, value);
@@ -1164,7 +1164,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A41]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0A41]", oldValue, value);
@@ -1249,7 +1249,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AC1]", oldValue, value);
@@ -1316,7 +1316,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AF1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AF1]", oldValue, value);
@@ -1383,7 +1383,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AM1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AM1]", oldValue, value);
@@ -1405,7 +1405,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AN1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AN1]", oldValue, value);
@@ -1456,7 +1456,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AR1]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<string> ("[L0AR1]", oldValue, value);
@@ -1505,7 +1505,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity oldValue = this.TelecomType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A22]"))
 				{
 					this.OnTelecomTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity> ("[L0A22]", oldValue, value);
@@ -1527,7 +1527,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Number;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A32]"))
 				{
 					this.OnNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0A32]", oldValue, value);
@@ -1549,7 +1549,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Extension;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A42]"))
 				{
 					this.OnExtensionChanging (oldValue, value);
 					this.SetField<string> ("[L0A42]", oldValue, value);
@@ -1638,7 +1638,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A02]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0A02]", oldValue, value);
@@ -1687,7 +1687,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity oldValue = this.UriScheme;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A92]"))
 				{
 					this.OnUriSchemeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity> ("[L0A92]", oldValue, value);
@@ -1709,7 +1709,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Uri;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA2]"))
 				{
 					this.OnUriChanging (oldValue, value);
 					this.SetField<string> ("[L0AA2]", oldValue, value);
@@ -1796,7 +1796,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			set
 			{
 				string oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A82]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0A82]", oldValue, value);
@@ -1853,7 +1853,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			int? oldValue = obj.Rank;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A03]"))
 			{
 				IItemRankInterfaceImplementation.OnRankChanging (obj, oldValue, value);
 				entity.SetField<int?> ("[L0A03]", oldValue, value);
@@ -1897,7 +1897,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.Code;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AD3]"))
 			{
 				IItemCodeInterfaceImplementation.OnCodeChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AD3]", oldValue, value);
