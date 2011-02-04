@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	{
 		static LoggingTabPage()
 		{
+			LoggingTabPage.globalNumberOfEntriesPerPage = 200;
+
+			LoggingTabPage.globalLogResult     = true;
+			LoggingTabPage.globalLogThreadName = true;
+			LoggingTabPage.globalLogStackTrace = false;
+
 			LoggingTabPage.globalSearchMode.CaseSensitive      = true;
 			LoggingTabPage.globalSearchMode.SearchInQuery      = true;
 			LoggingTabPage.globalSearchMode.SearchInParameters = true;
@@ -44,7 +50,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.taggedText = new TaggedText ();
 
-			this.CopyQueries ();
+			this.UpdateQueries ();
 		}
 
 
@@ -89,28 +95,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.CreateUIDetails (this.detailsFrame);
 
 			//	Connection des événements.
-			this.logOnOffButton.Clicked += delegate
+			this.startButton.Clicked += delegate
 			{
-				this.LogOnOff = !this.LogOnOff;
-				this.UpdateCheckButtons ();
+				this.LogEnable = !this.LogEnable;
+				this.UpdateWidgets ();
 			};
 
-			this.logResultButton.Clicked += delegate
+			this.logMenuButton.Clicked += delegate
 			{
-				this.LogResult = !this.LogResult;
-				this.UpdateCheckButtons ();
+				this.LogMenu ();
 			};
 
-			this.logStackTraceButton.Clicked += delegate
+			this.showedMenuButton.Clicked += delegate
 			{
-				this.LogStackTrace = !this.LogStackTrace;
-				this.UpdateCheckButtons ();
-			};
-
-			this.logThreadNameButton.Clicked += delegate
-			{
-				this.LogThreadName = !this.LogThreadName;
-				this.UpdateCheckButtons ();
+				this.ShowedMenu ();
 			};
 
 			this.secondaryButton.Clicked += delegate
@@ -118,9 +116,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.SecondarySwap ();
 			};
 
-			this.queryOptionsButton.Clicked += delegate
+			this.queryMenuButton.Clicked += delegate
 			{
-				this.QueryOptionsSwap ();
+				this.QueryMenu ();
 			};
 
 			this.searchField.TextChanged += delegate
@@ -128,7 +126,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateWidgets ();
 			};
 
-			this.menuButton.Clicked += delegate
+			this.searchMenuButton.Clicked += delegate
 			{
 				this.SearchMenu ();
 			};
@@ -148,9 +146,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.Search (1);
 			};
 
+			this.logSlider.ValueChanged += delegate
+			{
+				this.firstQueryShowed = (int) this.logSlider.Value * LoggingTabPage.globalNumberOfEntriesPerPage;
+
+				this.CopyQueries ();
+				this.UpdateTable ();
+				this.UpdateDetails ();
+				this.UpdateWidgets ();
+			};
+
 			this.updateButton.Clicked += delegate
 			{
+				this.UpdateQueries ();
 				this.CopyQueries ();
+				this.UpdateSlider ();
 				this.UpdateTable ();
 				this.UpdateDetails ();
 				this.UpdateWidgets ();
@@ -177,28 +187,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateRelativeTime ();
 			};
 
-			this.substituteButton.Clicked += delegate
-			{
-				LoggingTabPage.globalSubstitute = !LoggingTabPage.globalSubstitute;
-				this.UpdateDetails ();
-				this.UpdateWidgets ();
-			};
-
-			this.colorizeButton.Clicked += delegate
-			{
-				LoggingTabPage.globalColorize = !LoggingTabPage.globalColorize;
-				this.UpdateDetails ();
-				this.UpdateWidgets ();
-			};
-
-			this.autoBreakButton.Clicked += delegate
-			{
-				LoggingTabPage.globalAutoBreak = !LoggingTabPage.globalAutoBreak;
-				this.UpdateDetails ();
-				this.UpdateWidgets ();
-			};
-
-			this.UpdateCheckButtons ();
+			this.CopyQueries ();
+			this.UpdateSlider ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
 			this.UpdateWidgets ();
@@ -213,40 +203,35 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			this.logOnOffButton = new CheckButton
+			this.startButton = new Button
 			{
 				Parent = header,
-				FormattedText = Misc.Bold ("Trace activée"),
-				PreferredWidth = 120,
-				AutoToggle = false,
+				PreferredWidth = 100,
 				Dock = DockStyle.Left,
 			};
 
-			this.logResultButton = new CheckButton
+			this.logMenuButton = new GlyphButton
 			{
 				Parent = header,
-				Text = "Résultats",
-				PreferredWidth = 80,
-				AutoToggle = false,
+				GlyphShape = Common.Widgets.GlyphShape.Menu,
 				Dock = DockStyle.Left,
+				Margins = new Margins (-1, 10, 0, 0),
 			};
 
-			this.logThreadNameButton = new CheckButton
+			this.firstTime = new StaticText
 			{
 				Parent = header,
-				Text = "Processus",
-				PreferredWidth = 80,
-				AutoToggle = false,
+				PreferredWidth = 50,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			this.logStackTraceButton = new CheckButton
+			this.logSlider = new HSlider
 			{
 				Parent = header,
-				Text = "Pile",
-				PreferredWidth = 80,
-				AutoToggle = false,
-				Dock = DockStyle.Left,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 3, 3),
 			};
 
 			this.secondaryButton = new GlyphButton
@@ -273,6 +258,23 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				PreferredWidth = 100,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			this.showedMenuButton = new GlyphButton
+			{
+				Parent = header,
+				GlyphShape = Common.Widgets.GlyphShape.Menu,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			this.lastTime = new StaticText
+			{
+				Parent = header,
+				PreferredWidth = 50,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 		}
 
@@ -350,7 +352,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Margins = new Margins (15, 0, 0, 0),
 			};
 
-			this.menuButton = new GlyphButton
+			this.searchMenuButton = new GlyphButton
 			{
 				Parent = box1,
 				GlyphShape = Common.Widgets.GlyphShape.Menu,
@@ -390,33 +392,31 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var leftBox = new FrameBox
 			{
 				Parent = box,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 16,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 1, 0, 0),
 			};
 
 			var rightBox = new FrameBox
 			{
 				Parent = box,
-				PreferredWidth = 18,
-				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
-			};
-
-			this.CreateUIQueryOptionsToolbar (leftBox);
-
-			this.queryField = new TextFieldMulti
-			{
-				Parent = leftBox,
-				MaxLength = 100000,
-				IsReadOnly = true,
 				Dock = DockStyle.Fill,
 			};
 
-			this.queryOptionsButton = new GlyphButton
+			this.queryMenuButton = new GlyphButton
+			{
+				Parent = leftBox,
+				GlyphShape = Common.Widgets.GlyphShape.Menu,
+				PreferredSize = new Size (16, 24),
+				Dock = DockStyle.Bottom,
+			};
+
+			this.queryField = new TextFieldMulti
 			{
 				Parent = rightBox,
-				PreferredSize = new Size (18, 18),
-				ButtonStyle = ButtonStyle.Slider,
-				Dock = DockStyle.Top,
+				MaxLength = 100000,
+				IsReadOnly = true,
+				Dock = DockStyle.Fill,
 			};
 
 			this.splitter2 = new HSplitter
@@ -449,66 +449,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 		}
 
-		private void CreateUIQueryOptionsToolbar(Widget parent)
-		{
-			this.queryOptionsToolbar = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
-			};
-
-			this.substituteButton = new CheckButton
-			{
-				Parent = this.queryOptionsToolbar,
-				Text = "Substituer les paramètres",
-				PreferredWidth = 150,
-				AutoToggle = false,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-
-			this.colorizeButton = new CheckButton
-			{
-				Parent = this.queryOptionsToolbar,
-				Text = "Coloriage syntaxique",
-				PreferredWidth = 140,
-				AutoToggle = false,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-
-			this.autoBreakButton = new CheckButton
-			{
-				Parent = this.queryOptionsToolbar,
-				Text = "Retours à la ligne automatiques",
-				PreferredWidth = 200,
-				AutoToggle = false,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-		}
-
-
-		private void CopyQueries()
-		{
-			//	Copie toutes les queries sur lesquelles on va travailler.
-			this.queries = null;
-
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			if (db.QueryLog != null)
-			{
-				int count = db.QueryLog.GetNbEntries ();
-				count = System.Math.Min (count, 500);
-
-				if (count > 0)
-				{
-					this.queries = db.QueryLog.GetEntries (0, count);
-				}
-			}
-		}
-
 
 		private void SecondarySwap()
 		{
@@ -522,28 +462,70 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdateWidgets ();
 		}
 
-		private void QueryOptionsSwap()
+
+		private void UpdateQueries()
 		{
-			LoggingTabPage.globalQueryOptionsVisibility = !LoggingTabPage.globalQueryOptionsVisibility;
-			this.UpdateWidgets ();
+			//	Copie toutes les queries sur lesquelles on va travailler.
+			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+			if (db.QueryLog == null)
+			{
+				this.allQueries = null;
+			}
+			else
+			{
+				int count = db.QueryLog.GetNbEntries ();
+
+				if (count == 0)
+				{
+					this.allQueries = null;
+				}
+				else
+				{
+					this.allQueries = db.QueryLog.GetEntries (0, count);
+				}
+			}
 		}
 
-		private void UpdateCheckButtons()
+		private void CopyQueries()
 		{
-			this.logOnOffButton.ActiveState      = this.LogOnOff      ? ActiveState.Yes : ActiveState.No;
-			this.logResultButton.ActiveState     = this.LogResult     ? ActiveState.Yes : ActiveState.No;
-			this.logStackTraceButton.ActiveState = this.LogStackTrace ? ActiveState.Yes : ActiveState.No;
-			this.logThreadNameButton.ActiveState = this.LogThreadName ? ActiveState.Yes : ActiveState.No;
-
-			this.logResultButton.Enable     = this.LogOnOff;
-			this.logStackTraceButton.Enable = this.LogOnOff;
-			this.logThreadNameButton.Enable = this.LogOnOff;
 		}
 
+
+		private void UpdateSlider()
+		{
+			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+
+			int count = (this.allQueries == null) ? 0 : this.allQueries.Count;
+
+			if (count == 0)
+			{
+				this.logSlider.Enable = false;
+				this.firstTime.Text = null;
+				this.lastTime.Text = null;
+			}
+			else
+			{
+				this.logSlider.Enable = true;
+
+				this.logSlider.Resolution  = 1;
+				this.logSlider.MinValue    = 0;
+				this.logSlider.MaxValue    = (count-1) / LoggingTabPage.globalNumberOfEntriesPerPage;
+				this.logSlider.SmallChange = 1;
+				this.logSlider.LargeChange = 1;
+				this.logSlider.Value       = this.firstQueryShowed;
+
+				var firstQuery = db.QueryLog.GetEntry (0);
+				var lastQuery  = db.QueryLog.GetEntry (count-1);
+
+				this.firstTime.Text = firstQuery.GetShortStartTime ();
+				this.lastTime.Text  = lastQuery.GetShortStartTime ();
+			}
+		}
 
 		private void UpdateTable()
 		{
-			int rows = (this.queries == null) ? 0 : this.queries.Count;
+			int rows = this.QueryCount;
 			this.mainTable.SetArraySize (8, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
@@ -553,7 +535,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.mainTable.SetWidthColumn (4, 790-40-70-60-60-120-120);
 			this.mainTable.SetWidthColumn (5, 120);
 			this.mainTable.SetWidthColumn (6, 120);
-			this.mainTable.SetWidthColumn (7, 120);
+			this.mainTable.SetWidthColumn (7, 120);  // dépasse volontairement
 
 			this.mainTable.SetHeaderTextH (0, "N°");
 			this.mainTable.SetHeaderTextH (1, "Début");
@@ -584,7 +566,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			for (int row=0; row<rows; row++)
 			{
-				var query = this.queries[row];
+				var query = this.GetQuery (row);
 				var values = query.GetMainContent (row, this.SearchText, LoggingTabPage.globalSearchMode);
 
 				this.mainTable.FillRow (row, alignments);
@@ -607,7 +589,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateRelativeTime()
 		{
-			int rows = (this.queries == null) ? 0 : this.queries.Count;
+			int rows = this.QueryCount;
 			int sel = this.mainTable.SelectedRow;
 			
 			if (sel == -1)
@@ -617,11 +599,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel < rows)
 			{
-				var reference = this.queries[sel].StartTime;
+				var reference = this.GetQuery (sel).StartTime;
 
 				for (int row=0; row<rows; row++)
 				{
-					System.TimeSpan time = this.queries[row].StartTime.Subtract (reference);
+					System.TimeSpan time = this.GetQuery (row).StartTime.Subtract (reference);
 
 					var widget = this.mainTable.GetStaticText (row, 2);
 					widget.Text = LoggingTabPage.ToNiceString (time);
@@ -672,13 +654,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int sel = this.mainTable.SelectedRow;
 
-			if (sel == -1 || this.queries == null)
+			if (sel == -1 || this.QueryCount == 0)
 			{
 				this.queryField.FormattedText = null;
 			}
 			else
 			{
-				var query = this.queries[sel];
+				var query = this.GetQuery (sel);
 
 				bool substitute = LoggingTabPage.globalSubstitute;
 				bool colorize   = LoggingTabPage.globalColorize;
@@ -718,6 +700,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateWidgets()
 		{
+			this.startButton.FormattedText = Misc.Bold (this.LogEnable ? "Stopper" : "Démarrer");
+
 			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
 			bool empty = this.mainTable.Rows == 0;
 
@@ -730,13 +714,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			this.secondaryToolbar.Visibility = LoggingTabPage.globalSecondaryVisibility;
 			this.secondaryButton.GlyphShape  = LoggingTabPage.globalSecondaryVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
-
-			this.queryOptionsToolbar.Visibility = LoggingTabPage.globalQueryOptionsVisibility;
-			this.queryOptionsButton.GlyphShape  = LoggingTabPage.globalQueryOptionsVisibility ? Common.Widgets.GlyphShape.TriangleUp : Common.Widgets.GlyphShape.TriangleDown;
-
-			this.substituteButton.ActiveState = LoggingTabPage.globalSubstitute ? ActiveState.Yes : ActiveState.No;
-			this.colorizeButton.ActiveState   = LoggingTabPage.globalColorize   ? ActiveState.Yes : ActiveState.No;
-			this.autoBreakButton.ActiveState  = LoggingTabPage.globalAutoBreak  ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -752,7 +729,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void Search(int direction)
 		{
-			if (this.queries == null || this.queries.Count == 0)
+			if (this.QueryCount == 0)
 			{
 				return;
 			}
@@ -792,7 +769,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						sel = 0;  // fin -> début
 					}
 
-					var query = this.queries[sel];
+					var query = this.GetQuery (sel);
 
 					if (query.ContainsString (search, LoggingTabPage.globalSearchMode))
 					{
@@ -812,6 +789,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			db.QueryLog.Clear ();
 
 			this.CopyQueries ();
+			this.UpdateQueries ();
+			this.UpdateSlider ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
 			this.UpdateWidgets ();
@@ -931,9 +910,33 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 
 		#region Menu
+		private void LogMenu()
+		{
+			var menu = new VMenu ();
+
+			this.AddItemToMenu (menu, LoggingTabPage.globalLogResult,     "LogResult",     "Enregistrer les résultats");
+			this.AddItemToMenu (menu, LoggingTabPage.globalLogThreadName, "LogThreadName", "Enregistrer les noms de processus");
+			this.AddItemToMenu (menu, LoggingTabPage.globalLogStackTrace, "LogStackTrace", "Enregistrer la pile complète");
+
+			this.ShowMenu (menu, this.logMenuButton);
+		}
+
+		private void ShowedMenu()
+		{
+			var menu = new VMenu ();
+
+			//?this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage ==   10, "EntriesShowed.10",   "Montre 10 entrées à la fois (debug)");
+			this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage ==  100, "EntriesShowed.100",  "Montre 100 entrées à la fois");
+			this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage ==  200, "EntriesShowed.200",  "Montre 200 entrées à la fois (*)");
+			this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage ==  500, "EntriesShowed.500",  "Montre 500 entrées à la fois");
+			//?this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage == 1000, "EntriesShowed.1000", "Montre 1000 entrées à la fois");
+			//?this.AddItemToMenu (menu, LoggingTabPage.globalNumberOfEntriesPerPage == 2000, "EntriesShowed.2000", "Montre 2000 entrées à la fois");
+
+			this.ShowMenu (menu, this.showedMenuButton);
+		}
+
 		private void SearchMenu()
 		{
-			//	Construit puis affiche le menu des options de recherche.
 			var menu = new VMenu ();
 
 			this.AddItemToMenu (menu, LoggingTabPage.globalSearchMode.CaseSensitive,      "CaseSensitive",      "Respecter la casse");
@@ -943,10 +946,26 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.AddItemToMenu (menu, LoggingTabPage.globalSearchMode.SearchInResults,    "SearchInResults",    "Rechercher dans les résultats");
 			this.AddItemToMenu (menu, LoggingTabPage.globalSearchMode.SearchInCallStack,  "SearchInCallStack",  "Rechercher dans la pile");
 
-			TextFieldCombo.AdjustComboSize (this.menuButton, menu, false);
+			this.ShowMenu (menu, this.searchMenuButton);
+		}
 
-			menu.Host = this.menuButton;
-			menu.ShowAsComboList (this.menuButton, Point.Zero, this.menuButton);
+		private void QueryMenu()
+		{
+			var menu = new VMenu ();
+
+			this.AddItemToMenu (menu, LoggingTabPage.globalSubstitute, "Substitute", "Substituer les paramètres");
+			this.AddItemToMenu (menu, LoggingTabPage.globalColorize,   "Colorize",   "Coloriage syntaxique");
+			this.AddItemToMenu (menu, LoggingTabPage.globalAutoBreak,  "AutoBreak",  "Retours à la ligne automatiques");
+
+			this.ShowMenu (menu, this.queryMenuButton);
+		}
+
+		private void ShowMenu(VMenu menu, Widget parent)
+		{
+			TextFieldCombo.AdjustComboSize (parent, menu, false);
+
+			menu.Host = parent;
+			menu.ShowAsComboList (parent, Point.Zero, parent);
 		}
 
 		private void AddItemToMenu(VMenu menu, bool check, string name, string text)
@@ -964,31 +983,81 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void MenuAction(string name)
 		{
-			switch (name)
+			if (name.StartsWith ("EntriesShowed."))
 			{
-				case "CaseSensitive":
-					LoggingTabPage.globalSearchMode.CaseSensitive = !LoggingTabPage.globalSearchMode.CaseSensitive;
-					break;
-
-				case "SearchInQuery":
-					LoggingTabPage.globalSearchMode.SearchInQuery = !LoggingTabPage.globalSearchMode.SearchInQuery;
-					break;
-
-				case "SearchInParameters":
-					LoggingTabPage.globalSearchMode.SearchInParameters = !LoggingTabPage.globalSearchMode.SearchInParameters;
-					break;
-
-				case "SearchInResults":
-					LoggingTabPage.globalSearchMode.SearchInResults = !LoggingTabPage.globalSearchMode.SearchInResults;
-					break;
-
-				case "SearchInCallStack":
-					LoggingTabPage.globalSearchMode.SearchInCallStack = !LoggingTabPage.globalSearchMode.SearchInCallStack;
-					break;
+				LoggingTabPage.globalNumberOfEntriesPerPage = int.Parse (name.Substring (14));
+				this.CopyQueries ();
+				this.UpdateSlider ();
+				this.UpdateTable ();
+				this.UpdateWidgets ();
 			}
+			else
+			{
+				switch (name)
+				{
+					case "LogResult":
+						LoggingTabPage.globalLogResult = !LoggingTabPage.globalLogResult;
+						this.LogEnable = this.LogEnable;
+						break;
 
-			this.Search (0);
-			this.UpdateWidgets ();
+					case "LogThreadName":
+						LoggingTabPage.globalLogThreadName = !LoggingTabPage.globalLogThreadName;
+						this.LogEnable = this.LogEnable;
+						break;
+
+					case "LogStackTrace":
+						LoggingTabPage.globalLogStackTrace = !LoggingTabPage.globalLogStackTrace;
+						this.LogEnable = this.LogEnable;
+						break;
+
+					case "CaseSensitive":
+						LoggingTabPage.globalSearchMode.CaseSensitive = !LoggingTabPage.globalSearchMode.CaseSensitive;
+						this.Search (0);
+						break;
+
+
+					case "SearchInQuery":
+						LoggingTabPage.globalSearchMode.SearchInQuery = !LoggingTabPage.globalSearchMode.SearchInQuery;
+						this.Search (0);
+						break;
+
+					case "SearchInParameters":
+						LoggingTabPage.globalSearchMode.SearchInParameters = !LoggingTabPage.globalSearchMode.SearchInParameters;
+						this.Search (0);
+						break;
+
+					case "SearchInResults":
+						LoggingTabPage.globalSearchMode.SearchInResults = !LoggingTabPage.globalSearchMode.SearchInResults;
+						this.Search (0);
+						break;
+
+					case "SearchInCallStack":
+						LoggingTabPage.globalSearchMode.SearchInCallStack = !LoggingTabPage.globalSearchMode.SearchInCallStack;
+						this.Search (0);
+						break;
+
+
+					case "Substitute":
+						LoggingTabPage.globalSubstitute = !LoggingTabPage.globalSubstitute;
+						this.UpdateDetails ();
+						this.UpdateWidgets ();
+						break;
+
+					case "Colorize":
+						LoggingTabPage.globalColorize = !LoggingTabPage.globalColorize;
+						this.UpdateDetails ();
+						this.UpdateWidgets ();
+						break;
+
+					case "AutoBreak":
+						LoggingTabPage.globalAutoBreak = !LoggingTabPage.globalAutoBreak;
+						this.UpdateDetails ();
+						this.UpdateWidgets ();
+						break;
+				}
+
+				this.UpdateWidgets ();
+			}
 		}
 		#endregion
 
@@ -1009,7 +1078,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private bool LogOnOff
+		private bool LogEnable
 		{
 			get
 			{
@@ -1025,16 +1094,16 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					db.EnableLogging ();
 
-					this.LogResult     = true;
-					this.LogStackTrace = true;
-					this.LogThreadName = true;
+					this.LogResult     = LoggingTabPage.globalLogResult;
+					this.LogStackTrace = LoggingTabPage.globalLogStackTrace;
+					this.LogThreadName = LoggingTabPage.globalLogThreadName;
 				}
 				else
 				{
 					db.DisableLogging ();
 				}
 
-				this.UpdateCheckButtons ();
+				this.UpdateWidgets ();
 			}
 		}
 
@@ -1061,8 +1130,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					db.QueryLog.LogResult = value;
 				}
-
-				this.UpdateCheckButtons ();
 			}
 		}
 
@@ -1089,8 +1156,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					db.QueryLog.LogStackTrace = value;
 				}
-
-				this.UpdateCheckButtons ();
 			}
 		}
 
@@ -1117,9 +1182,30 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					db.QueryLog.LogThreadName = value;
 				}
-
-				this.UpdateCheckButtons ();
 			}
+		}
+
+
+		private int QueryCount
+		{
+			get
+			{
+				if (this.allQueries == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return System.Math.Min (this.allQueries.Count-this.firstQueryShowed, LoggingTabPage.globalNumberOfEntriesPerPage);
+				}
+			}
+		}
+
+		private Query GetQuery(int index)
+		{
+			System.Diagnostics.Debug.Assert (this.allQueries != null);
+			System.Diagnostics.Debug.Assert (this.firstQueryShowed+index < this.allQueries.Count);
+			return this.allQueries[this.firstQueryShowed+index];
 		}
 
 
@@ -1158,8 +1244,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private static int					globalNumberOfEntriesPerPage;
+		private static bool					globalLogResult;
+		private static bool					globalLogThreadName;
+		private static bool					globalLogStackTrace;
 		private static bool					globalSecondaryVisibility;
-		private static bool					globalQueryOptionsVisibility;
 		private static SearchMode			globalSearchMode;
 		private static bool					globalSubstitute;
 		private static bool					globalColorize;
@@ -1167,12 +1256,15 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private readonly TaggedText			taggedText;
 
-		private ReadOnlyCollection<Query>	queries;
+		private ReadOnlyCollection<Query>	allQueries;
+		private int							firstQueryShowed;
 
-		private CheckButton					logOnOffButton;
-		private CheckButton					logResultButton;
-		private CheckButton					logStackTraceButton;
-		private CheckButton					logThreadNameButton;
+		private Button						startButton;
+		private GlyphButton					logMenuButton;
+		private StaticText					firstTime;
+		private HSlider						logSlider;
+		private StaticText					lastTime;
+		private GlyphButton					showedMenuButton;
 		private Button						updateButton;
 		private Button						clearButton;
 		private GlyphButton					secondaryButton;
@@ -1182,7 +1274,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private TextField					searchField;
 		private Button						searchPrevButton;
 		private Button						searchNextButton;
-		private GlyphButton					menuButton;
+		private GlyphButton					searchMenuButton;
 		private StaticText					searchCounterInfo;
 		private Button						exportButton;
 		private Button						importButton;
@@ -1193,11 +1285,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private HSplitter					splitter3;
 
 		private FrameBox					detailsFrame;
-		private GlyphButton					queryOptionsButton;
-		private FrameBox					queryOptionsToolbar;
-		private CheckButton					substituteButton;
-		private CheckButton					colorizeButton;
-		private CheckButton					autoBreakButton;
+		private GlyphButton					queryMenuButton;
 		private TextFieldMulti				queryField;
 		private FrameBox					detailsBox;
 		private TextFieldMulti				stackField;
