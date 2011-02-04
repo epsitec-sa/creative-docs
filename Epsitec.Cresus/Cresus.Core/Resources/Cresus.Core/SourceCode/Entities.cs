@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A3]", oldValue, value);
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC]", oldValue, value);
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue = this.Country;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA]"))
 				{
 					this.OnCountryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.CountryEntity> ("[L0AA]", oldValue, value);
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.PostalCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6]"))
 				{
 					this.OnPostalCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6]", oldValue, value);
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7]", oldValue, value);
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue = this.Country;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8]"))
 				{
 					this.OnCountryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.CountryEntity> ("[L0A8]", oldValue, value);
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity oldValue = this.Region;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9]"))
 				{
 					this.OnRegionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity> ("[L0A9]", oldValue, value);
@@ -441,7 +441,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue = this.Street;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK]"))
 				{
 					this.OnStreetChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.StreetEntity> ("[L0AK]", oldValue, value);
@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PostBoxEntity oldValue = this.PostBox;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH]"))
 				{
 					this.OnPostBoxChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PostBoxEntity> ("[L0AH]", oldValue, value);
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue = this.Location;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AE]"))
 				{
 					this.OnLocationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.LocationEntity> ("[L0AE]", oldValue, value);
@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Number;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AG]"))
 				{
 					this.OnNumberChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AG]", oldValue, value);
@@ -587,7 +587,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AL]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AL]", oldValue, value);
@@ -609,7 +609,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.StreetName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ]"))
 				{
 					this.OnStreetNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ]", oldValue, value);
@@ -672,7 +672,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue = this.PreferredLanguage;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AD1]"))
 				{
 					this.OnPreferredLanguageChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.LanguageEntity> ("[L0AD1]", oldValue, value);
@@ -721,7 +721,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue = this.Title;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AU]"))
 				{
 					this.OnTitleChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PersonTitleEntity> ("[L0AU]", oldValue, value);
@@ -743,7 +743,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Firstname;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AV]"))
 				{
 					this.OnFirstnameChanging (oldValue, value);
 					this.SetField<string> ("[L0AV]", oldValue, value);
@@ -765,7 +765,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Lastname;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A01]"))
 				{
 					this.OnLastnameChanging (oldValue, value);
 					this.SetField<string> ("[L0A01]", oldValue, value);
@@ -787,7 +787,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue = this.Gender;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A11]"))
 				{
 					this.OnGenderChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PersonGenderEntity> ("[L0A11]", oldValue, value);
@@ -809,7 +809,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.BirthDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A61]"))
 				{
 					this.OnBirthDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0A61]", oldValue, value);
@@ -878,7 +878,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity oldValue = this.LegalPersonType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO1]"))
 				{
 					this.OnLegalPersonTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity> ("[L0AO1]", oldValue, value);
@@ -900,7 +900,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AH1]", oldValue, value);
@@ -922,7 +922,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AI1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AI1]", oldValue, value);
@@ -944,7 +944,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ1]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ1]", oldValue, value);
@@ -1023,7 +1023,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue = this.LegalPerson;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A81]"))
 				{
 					this.OnLegalPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.LegalPersonEntity> ("[L0A81]", oldValue, value);
@@ -1045,7 +1045,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A71]"))
 				{
 					this.OnNaturalPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A71]", oldValue, value);
@@ -1096,7 +1096,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK1]"))
 				{
 					this.OnComplementChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AK1]", oldValue, value);
@@ -1118,7 +1118,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue = this.Address;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AR]"))
 				{
 					this.OnAddressChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[L0AR]", oldValue, value);
@@ -1205,7 +1205,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AS1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS1]", oldValue, value);
@@ -1227,7 +1227,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AT1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT1]", oldValue, value);
@@ -1326,7 +1326,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A41]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A41]", oldValue, value);
@@ -1411,7 +1411,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC1]", oldValue, value);
@@ -1609,7 +1609,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AM1]"))
 				{
 					this.OnShortNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AM1]", oldValue, value);
@@ -1631,7 +1631,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AN1]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AN1]", oldValue, value);
@@ -1682,7 +1682,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AR1]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AR1]", oldValue, value);
@@ -1731,7 +1731,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity oldValue = this.TelecomType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A22]"))
 				{
 					this.OnTelecomTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity> ("[L0A22]", oldValue, value);
@@ -1753,7 +1753,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Number;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A32]"))
 				{
 					this.OnNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0A32]", oldValue, value);
@@ -1775,7 +1775,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Extension;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A42]"))
 				{
 					this.OnExtensionChanging (oldValue, value);
 					this.SetField<string> ("[L0A42]", oldValue, value);
@@ -1864,7 +1864,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A02]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A02]", oldValue, value);
@@ -1913,7 +1913,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.UriSchemeEntity oldValue = this.UriScheme;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A92]"))
 				{
 					this.OnUriSchemeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.UriSchemeEntity> ("[L0A92]", oldValue, value);
@@ -1935,7 +1935,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Uri;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA2]"))
 				{
 					this.OnUriChanging (oldValue, value);
 					this.SetField<string> ("[L0AA2]", oldValue, value);
@@ -2022,7 +2022,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A82]"))
 				{
 					this.OnNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A82]", oldValue, value);
@@ -2191,7 +2191,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.Person;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AD2]"))
 				{
 					this.OnPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0AD2]", oldValue, value);
@@ -2213,7 +2213,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue = this.DefaultAddress;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AU2]"))
 				{
 					this.OnDefaultAddressChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[L0AU2]", oldValue, value);
@@ -2235,7 +2235,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.SalesRepresentative;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AE2]"))
 				{
 					this.OnSalesRepresentativeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AE2]", oldValue, value);
@@ -2257,7 +2257,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.FirstContactDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AF2]"))
 				{
 					this.OnFirstContactDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0AF2]", oldValue, value);
@@ -2291,7 +2291,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.VatNumber;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC5]"))
 				{
 					this.OnVatNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AC5]", oldValue, value);
@@ -2313,7 +2313,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.TaxMode? oldValue = this.TaxMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AN7]"))
 				{
 					this.OnTaxModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode?> ("[L0AN7]", oldValue, value);
@@ -2335,7 +2335,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.DefaultDebtorBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK7]"))
 				{
 					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0AK7]", oldValue, value);
@@ -2357,7 +2357,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.BillingMode? oldValue = this.DefaultBillingMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4A]"))
 				{
 					this.OnDefaultBillingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode?> ("[L0A4A]", oldValue, value);
@@ -2379,7 +2379,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.DefaultPriceGroup;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOM]"))
 				{
 					this.OnDefaultPriceGroupChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0AOM]", oldValue, value);
@@ -2413,7 +2413,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue = this.DefaultCurrencyCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AM7]"))
 				{
 					this.OnDefaultCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode?> ("[L0AM7]", oldValue, value);
@@ -2706,7 +2706,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.DocumentTitle;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6E]"))
 				{
 					this.OnDocumentTitleChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6E]", oldValue, value);
@@ -2728,7 +2728,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue = this.DocumentCategory;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8I]"))
 				{
 					this.OnDocumentCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> ("[L0A8I]", oldValue, value);
@@ -2750,7 +2750,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.DocumentState oldValue = this.DocumentState;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ATO]"))
 				{
 					this.OnDocumentStateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentState> ("[L0ATO]", oldValue, value);
@@ -2772,7 +2772,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity oldValue = this.BusinessDocument;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AUK]"))
 				{
 					this.OnBusinessDocumentChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.BusinessDocumentEntity> ("[L0AUK]", oldValue, value);
@@ -2847,7 +2847,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			int? oldValue = obj.Rank;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A03]"))
 			{
 				IItemRankInterfaceImplementation.OnRankChanging (obj, oldValue, value);
 				entity.SetField<int?> ("[L0A03]", oldValue, value);
@@ -2901,7 +2901,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			bool oldValue = obj.RevisionIsUpToDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A43]"))
 			{
 				IItemRevisionInterfaceImplementation.OnRevisionIsUpToDateChanging (obj, oldValue, value);
 				entity.SetField<bool> ("[L0A43]", oldValue, value);
@@ -2919,7 +2919,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.RevisionUniqueId;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A53]"))
 			{
 				IItemRevisionInterfaceImplementation.OnRevisionUniqueIdChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0A53]", oldValue, value);
@@ -3107,7 +3107,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode? oldValue = this.InputVatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ACF]"))
 				{
 					this.OnInputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode?> ("[L0ACF]", oldValue, value);
@@ -3129,7 +3129,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode? oldValue = this.OutputVatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH7]"))
 				{
 					this.OnOutputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode?> ("[L0AH7]", oldValue, value);
@@ -3175,7 +3175,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity oldValue = this.ArticleCategory;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AD7]"))
 				{
 					this.OnArticleCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity> ("[L0AD7]", oldValue, value);
@@ -3245,7 +3245,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue = this.BillingUnit;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ9]"))
 				{
 					this.OnBillingUnitChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0AJ9]", oldValue, value);
@@ -3267,7 +3267,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureGroupEntity oldValue = this.Units;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AI9]"))
 				{
 					this.OnUnitsChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureGroupEntity> ("[L0AI9]", oldValue, value);
@@ -3445,7 +3445,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.Code;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AD3]"))
 			{
 				IItemCodeInterfaceImplementation.OnCodeChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AD3]", oldValue, value);
@@ -3576,7 +3576,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AT3]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT3]", oldValue, value);
@@ -3598,7 +3598,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.DiscountRate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AR3]"))
 				{
 					this.OnDiscountRateChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AR3]", oldValue, value);
@@ -3620,7 +3620,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.Value;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AS3]"))
 				{
 					this.OnValueChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AS3]", oldValue, value);
@@ -3642,7 +3642,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.ValueIncludesTaxes;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHM]"))
 				{
 					this.OnValueIncludesTaxesChanging (oldValue, value);
 					this.SetField<bool> ("[L0AHM]", oldValue, value);
@@ -3664,7 +3664,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A5B]"))
 				{
 					this.OnRoundingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0A5B]", oldValue, value);
@@ -3829,7 +3829,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A44]"))
 				{
 					this.OnVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[L0A44]", oldValue, value);
@@ -3851,7 +3851,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Rate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A54]"))
 				{
 					this.OnRateChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0A54]", oldValue, value);
@@ -3954,7 +3954,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.NeverApplyDiscount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AM9]"))
 				{
 					this.OnNeverApplyDiscountChanging (oldValue, value);
 					this.SetField<bool> ("[L0AM9]", oldValue, value);
@@ -3976,7 +3976,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.DefaultDivideRatio;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AN9]"))
 				{
 					this.OnDefaultDivideRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AN9]", oldValue, value);
@@ -3998,7 +3998,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.DefaultMultiplyRatio;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO9]"))
 				{
 					this.OnDefaultMultiplyRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AO9]", oldValue, value);
@@ -4020,7 +4020,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultRoundingMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AV9]"))
 				{
 					this.OnDefaultRoundingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0AV9]", oldValue, value);
@@ -4109,7 +4109,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.MinQuantity;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK9]"))
 				{
 					this.OnMinQuantityChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AK9]", oldValue, value);
@@ -4131,7 +4131,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.MaxQuantity;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AL9]"))
 				{
 					this.OnMaxQuantityChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AL9]", oldValue, value);
@@ -4153,7 +4153,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue = this.CurrencyCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AK4]"))
 				{
 					this.OnCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode?> ("[L0AK4]", oldValue, value);
@@ -4175,7 +4175,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Value;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AL4]"))
 				{
 					this.OnValueChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AL4]", oldValue, value);
@@ -4197,7 +4197,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.ValueIncludesTaxes;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AGM]"))
 				{
 					this.OnValueIncludesTaxesChanging (oldValue, value);
 					this.SetField<bool> ("[L0AGM]", oldValue, value);
@@ -4219,7 +4219,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.ValueOverridesPriceGroup;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AQM]"))
 				{
 					this.OnValueOverridesPriceGroupChanging (oldValue, value);
 					this.SetField<bool> ("[L0AQM]", oldValue, value);
@@ -4354,7 +4354,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.CurrencyCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7B]"))
 				{
 					this.OnCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[L0A7B]", oldValue, value);
@@ -4376,7 +4376,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.ExchangeRateBase;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AAM]"))
 				{
 					this.OnExchangeRateBaseChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AAM]", oldValue, value);
@@ -4398,7 +4398,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.ExchangeRate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AQ4]"))
 				{
 					this.OnExchangeRateChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AQ4]", oldValue, value);
@@ -4420,7 +4420,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue = this.ExchangeRateSource;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASC]"))
 				{
 					this.OnExchangeRateSourceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity> ("[L0ASC]", oldValue, value);
@@ -4493,7 +4493,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.DateTime? oldValue = obj.BeginDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AU4]"))
 			{
 				IDateTimeRangeInterfaceImplementation.OnBeginDateChanging (obj, oldValue, value);
 				entity.SetField<global::System.DateTime?> ("[L0AU4]", oldValue, value);
@@ -4511,7 +4511,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.DateTime? oldValue = obj.EndDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AV4]"))
 			{
 				IDateTimeRangeInterfaceImplementation.OnEndDateChanging (obj, oldValue, value);
 				entity.SetField<global::System.DateTime?> ("[L0AV4]", oldValue, value);
@@ -4555,7 +4555,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			bool oldValue = obj.IsArchive;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AB5]"))
 			{
 				ILifetimeInterfaceImplementation.OnIsArchiveChanging (obj, oldValue, value);
 				entity.SetField<bool> ("[L0AB5]", oldValue, value);
@@ -4749,7 +4749,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Relation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOC]"))
 				{
 					this.OnRelationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AOC]", oldValue, value);
@@ -4771,7 +4771,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.DefaultDebtorBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AP7]"))
 				{
 					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0AP7]", oldValue, value);
@@ -4793,7 +4793,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.ActiveSalesRepresentative;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEC]"))
 				{
 					this.OnActiveSalesRepresentativeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AEC]", oldValue, value);
@@ -4815,7 +4815,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.ActiveOwner;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AFC]"))
 				{
 					this.OnActiveOwnerChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AFC]", oldValue, value);
@@ -4922,7 +4922,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.IdA;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AH5]"))
 			{
 				IReferenceNumberInterfaceImplementation.OnIdAChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AH5]", oldValue, value);
@@ -4940,7 +4940,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.IdB;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AI5]"))
 			{
 				IReferenceNumberInterfaceImplementation.OnIdBChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AI5]", oldValue, value);
@@ -4958,7 +4958,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.IdC;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AJ5]"))
 			{
 				IReferenceNumberInterfaceImplementation.OnIdCChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AJ5]", oldValue, value);
@@ -4994,7 +4994,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.ArticleQuantityType oldValue = this.QuantityType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADE]"))
 				{
 					this.OnQuantityTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.ArticleQuantityType> ("[L0ADE]", oldValue, value);
@@ -5016,7 +5016,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Quantity;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AN5]"))
 				{
 					this.OnQuantityChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AN5]", oldValue, value);
@@ -5038,7 +5038,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue = this.Unit;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AGA]"))
 				{
 					this.OnUnitChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0AGA]", oldValue, value);
@@ -5060,7 +5060,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.ExpectedDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO5]"))
 				{
 					this.OnExpectedDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0AO5]", oldValue, value);
@@ -5082,7 +5082,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.ExpectedDateFormat;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6A]"))
 				{
 					this.OnExpectedDateFormatChanging (oldValue, value);
 					this.SetField<string> ("[L0A6A]", oldValue, value);
@@ -5104,7 +5104,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.ColumnName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEE]"))
 				{
 					this.OnColumnNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AEE]", oldValue, value);
@@ -5215,7 +5215,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity oldValue = this.StockLocation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AT5]"))
 				{
 					this.OnStockLocationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity> ("[L0AT5]", oldValue, value);
@@ -5237,7 +5237,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int? oldValue = this.RestockingDelay;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AU5]"))
 				{
 					this.OnRestockingDelayChanging (oldValue, value);
 					this.SetField<int?> ("[L0AU5]", oldValue, value);
@@ -5259,7 +5259,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.RestockingThreshold;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AQ7]"))
 				{
 					this.OnRestockingThresholdChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AQ7]", oldValue, value);
@@ -5281,7 +5281,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.SupplierRelation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AV5]"))
 				{
 					this.OnSupplierRelationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AV5]", oldValue, value);
@@ -5303,7 +5303,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.SupplierArticleId;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A06]"))
 				{
 					this.OnSupplierArticleIdChanging (oldValue, value);
 					this.SetField<string> ("[L0A06]", oldValue, value);
@@ -5501,7 +5501,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.SellingBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A66]"))
 				{
 					this.OnSellingBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0A66]", oldValue, value);
@@ -5523,7 +5523,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.SellingDiscountBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A76]"))
 				{
 					this.OnSellingDiscountBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0A76]", oldValue, value);
@@ -5545,7 +5545,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.PurchaseBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A86]"))
 				{
 					this.OnPurchaseBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0A86]", oldValue, value);
@@ -5567,7 +5567,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.PurchaseDiscountBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A96]"))
 				{
 					this.OnPurchaseDiscountBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0A96]", oldValue, value);
@@ -5589,7 +5589,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue = this.CurrencyCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA6]"))
 				{
 					this.OnCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode?> ("[L0AA6]", oldValue, value);
@@ -5646,7 +5646,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.SerialId;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AE6]"))
 				{
 					this.OnSerialIdChanging (oldValue, value);
 					this.SetField<string> ("[L0AE6]", oldValue, value);
@@ -5668,7 +5668,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.BatchId;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AF6]"))
 				{
 					this.OnBatchIdChanging (oldValue, value);
 					this.SetField<string> ("[L0AF6]", oldValue, value);
@@ -5807,7 +5807,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.BookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO6]"))
 				{
 					this.OnBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0AO6]", oldValue, value);
@@ -5829,7 +5829,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int? oldValue = this.StandardPaymentTerm;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJB]"))
 				{
 					this.OnStandardPaymentTermChanging (oldValue, value);
 					this.SetField<int?> ("[L0AJB]", oldValue, value);
@@ -5880,7 +5880,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A97]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A97]", oldValue, value);
@@ -5902,7 +5902,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue = this.AmountDue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AVB]"))
 				{
 					this.OnAmountDueChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity> ("[L0AVB]", oldValue, value);
@@ -5924,7 +5924,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.TransactionId;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AFB]"))
 				{
 					this.OnTransactionIdChanging (oldValue, value);
 					this.SetField<string> ("[L0AFB]", oldValue, value);
@@ -5946,7 +5946,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue = this.IsrDefinition;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIB]"))
 				{
 					this.OnIsrDefinitionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[L0AIB]", oldValue, value);
@@ -5968,7 +5968,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.IsrReferenceNumber;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AGB]"))
 				{
 					this.OnIsrReferenceNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AGB]", oldValue, value);
@@ -5990,7 +5990,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int? oldValue = this.InstalmentRank;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4E]"))
 				{
 					this.OnInstalmentRankChanging (oldValue, value);
 					this.SetField<int?> ("[L0A4E]", oldValue, value);
@@ -6012,7 +6012,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.InstalmentName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A5E]"))
 				{
 					this.OnInstalmentNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A5E]", oldValue, value);
@@ -6155,7 +6155,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.DefaultInputVatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADF]"))
 				{
 					this.OnDefaultInputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[L0ADF]", oldValue, value);
@@ -6177,7 +6177,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.DefaultOutputVatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AG7]"))
 				{
 					this.OnDefaultOutputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[L0AG7]", oldValue, value);
@@ -6199,7 +6199,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.VatNumber;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3F]"))
 				{
 					this.OnVatNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0A3F]", oldValue, value);
@@ -6233,7 +6233,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultRoundingMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJA]"))
 				{
 					this.OnDefaultRoundingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0AJA]", oldValue, value);
@@ -6255,7 +6255,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.NeverApplyDiscount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHC]"))
 				{
 					this.OnNeverApplyDiscountChanging (oldValue, value);
 					this.SetField<bool> ("[L0AHC]", oldValue, value);
@@ -6277,7 +6277,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.ArticleType oldValue = this.ArticleType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A0E]"))
 				{
 					this.OnArticleTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.ArticleType> ("[L0A0E]", oldValue, value);
@@ -6465,7 +6465,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.DivideRatio;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AA9]"))
 				{
 					this.OnDivideRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AA9]", oldValue, value);
@@ -6487,7 +6487,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.MultiplyRatio;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AB9]"))
 				{
 					this.OnMultiplyRatioChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AB9]", oldValue, value);
@@ -6509,7 +6509,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.SmallestIncrement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AP9]"))
 				{
 					this.OnSmallestIncrementChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AP9]", oldValue, value);
@@ -6531,7 +6531,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AC9]"))
 				{
 					this.OnCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AC9]", oldValue, value);
@@ -6650,7 +6650,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AH9]"))
 				{
 					this.OnCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AH9]", oldValue, value);
@@ -6789,7 +6789,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue = this.PriceRoundingPolicy;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKA]"))
 				{
 					this.OnPriceRoundingPolicyChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy> ("[L0AKA]", oldValue, value);
@@ -6838,7 +6838,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.Visibility;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8A]"))
 				{
 					this.OnVisibilityChanging (oldValue, value);
 					this.SetField<bool> ("[L0A8A]", oldValue, value);
@@ -6860,7 +6860,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.AutoGenerated;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ALM]"))
 				{
 					this.OnAutoGeneratedChanging (oldValue, value);
 					this.SetField<bool> ("[L0ALM]", oldValue, value);
@@ -6882,7 +6882,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.LayoutSettings;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AAA]"))
 				{
 					this.OnLayoutSettingsChanging (oldValue, value);
 					this.SetField<string> ("[L0AAA]", oldValue, value);
@@ -6904,7 +6904,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.GroupLevel;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ABA]"))
 				{
 					this.OnGroupLevelChanging (oldValue, value);
 					this.SetField<int> ("[L0ABA]", oldValue, value);
@@ -6926,7 +6926,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.GroupIndex;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AFD]"))
 				{
 					this.OnGroupIndexChanging (oldValue, value);
 					this.SetField<int> ("[L0AFD]", oldValue, value);
@@ -7079,7 +7079,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3B]"))
 				{
 					this.OnVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[L0A3B]", oldValue, value);
@@ -7101,7 +7101,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.PrimaryUnitPriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHA]"))
 				{
 					this.OnPrimaryUnitPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AHA]", oldValue, value);
@@ -7123,7 +7123,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.PrimaryLinePriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ARA]"))
 				{
 					this.OnPrimaryLinePriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0ARA]", oldValue, value);
@@ -7145,7 +7145,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.PrimaryLinePriceAfterTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APM]"))
 				{
 					this.OnPrimaryLinePriceAfterTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0APM]", oldValue, value);
@@ -7167,7 +7167,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.NeverApplyDiscount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A1B]"))
 				{
 					this.OnNeverApplyDiscountChanging (oldValue, value);
 					this.SetField<bool> ("[L0A1B]", oldValue, value);
@@ -7201,7 +7201,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.TaxRate1;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADM]"))
 				{
 					this.OnTaxRate1Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ADM]", oldValue, value);
@@ -7223,7 +7223,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.TaxRate2;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEM]"))
 				{
 					this.OnTaxRate2Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AEM]", oldValue, value);
@@ -7245,7 +7245,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.FixedLinePrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASA]"))
 				{
 					this.OnFixedLinePriceChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ASA]", oldValue, value);
@@ -7267,7 +7267,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.FixedLinePriceIncludesTaxes;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJM]"))
 				{
 					this.OnFixedLinePriceIncludesTaxesChanging (oldValue, value);
 					this.SetField<bool> ("[L0AJM]", oldValue, value);
@@ -7289,7 +7289,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.ResultingLinePriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ACD]"))
 				{
 					this.OnResultingLinePriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ACD]", oldValue, value);
@@ -7311,7 +7311,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.ResultingLineTax1;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADD]"))
 				{
 					this.OnResultingLineTax1Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ADD]", oldValue, value);
@@ -7333,7 +7333,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.ResultingLineTax2;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ABM]"))
 				{
 					this.OnResultingLineTax2Changing (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ABM]", oldValue, value);
@@ -7355,7 +7355,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.FinalLinePriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4B]"))
 				{
 					this.OnFinalLinePriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A4B]", oldValue, value);
@@ -7377,7 +7377,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleShortDescriptionCache;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AVA]"))
 				{
 					this.OnArticleShortDescriptionCacheChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AVA]", oldValue, value);
@@ -7399,7 +7399,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleLongDescriptionCache;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A0B]"))
 				{
 					this.OnArticleLongDescriptionCacheChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A0B]", oldValue, value);
@@ -7421,7 +7421,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ReplacementText;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AUA]"))
 				{
 					this.OnReplacementTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AUA]", oldValue, value);
@@ -7500,7 +7500,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9B]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A9B]", oldValue, value);
@@ -7549,7 +7549,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes? oldValue = this.DisplayModes;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4D]"))
 				{
 					this.OnDisplayModesChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.PriceDisplayModes?> ("[L0A4D]", oldValue, value);
@@ -7571,7 +7571,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForPrimaryPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIC]"))
 				{
 					this.OnTextForPrimaryPriceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AIC]", oldValue, value);
@@ -7593,7 +7593,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForResultingPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ABD]"))
 				{
 					this.OnTextForResultingPriceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ABD]", oldValue, value);
@@ -7615,7 +7615,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForFixedPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6D]"))
 				{
 					this.OnTextForFixedPriceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6D]", oldValue, value);
@@ -7637,7 +7637,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.PrimaryPriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7D]"))
 				{
 					this.OnPrimaryPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A7D]", oldValue, value);
@@ -7659,7 +7659,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.PrimaryTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8D]"))
 				{
 					this.OnPrimaryTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A8D]", oldValue, value);
@@ -7681,7 +7681,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue = this.Discount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ABB]"))
 				{
 					this.OnDiscountChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.DiscountEntity> ("[L0ABB]", oldValue, value);
@@ -7703,7 +7703,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.FixedPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ACB]"))
 				{
 					this.OnFixedPriceChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ACB]", oldValue, value);
@@ -7725,7 +7725,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.FixedPriceIncludesTaxes;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIM]"))
 				{
 					this.OnFixedPriceIncludesTaxesChanging (oldValue, value);
 					this.SetField<bool> ("[L0AIM]", oldValue, value);
@@ -7747,7 +7747,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.ResultingPriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9D]"))
 				{
 					this.OnResultingPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A9D]", oldValue, value);
@@ -7769,7 +7769,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.ResultingTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AAD]"))
 				{
 					this.OnResultingTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AAD]", oldValue, value);
@@ -7791,7 +7791,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.FinalPriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADB]"))
 				{
 					this.OnFinalPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ADB]", oldValue, value);
@@ -7862,7 +7862,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue = this.PaymentType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AUB]"))
 				{
 					this.OnPaymentTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType> ("[L0AUB]", oldValue, value);
@@ -7884,7 +7884,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue = this.PaymentMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2C]"))
 				{
 					this.OnPaymentModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[L0A2C]", oldValue, value);
@@ -7906,7 +7906,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.PaymentData;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3E]"))
 				{
 					this.OnPaymentDataChanging (oldValue, value);
 					this.SetField<string> ("[L0A3E]", oldValue, value);
@@ -7928,7 +7928,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Amount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ARB]"))
 				{
 					this.OnAmountChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0ARB]", oldValue, value);
@@ -7950,7 +7950,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.CurrencyEntity oldValue = this.Currency;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ATB]"))
 				{
 					this.OnCurrencyChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.CurrencyEntity> ("[L0ATB]", oldValue, value);
@@ -7972,7 +7972,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.Date;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASB]"))
 				{
 					this.OnDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0ASB]", oldValue, value);
@@ -8049,7 +8049,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.ExchangeRateType oldValue = this.Type;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8M]"))
 				{
 					this.OnTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.ExchangeRateType> ("[L0A8M]", oldValue, value);
@@ -8071,7 +8071,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Originator;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ARC]"))
 				{
 					this.OnOriginatorChanging (oldValue, value);
 					this.SetField<string> ("[L0ARC]", oldValue, value);
@@ -8122,7 +8122,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHD]"))
 				{
 					this.OnTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]", oldValue, value);
@@ -8144,7 +8144,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ALD]"))
 				{
 					this.OnVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[L0ALD]", oldValue, value);
@@ -8166,7 +8166,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.BaseAmount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJD]"))
 				{
 					this.OnBaseAmountChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AJD]", oldValue, value);
@@ -8188,7 +8188,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Rate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AID]"))
 				{
 					this.OnRateChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AID]", oldValue, value);
@@ -8210,7 +8210,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.ResultingTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKM]"))
 				{
 					this.OnResultingTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AKM]", oldValue, value);
@@ -8301,7 +8301,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.MinValue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKE]"))
 				{
 					this.OnMinValueChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AKE]", oldValue, value);
@@ -8323,7 +8323,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.MaxValue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ALE]"))
 				{
 					this.OnMaxValueChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ALE]", oldValue, value);
@@ -8345,7 +8345,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.DefaultValue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AME]"))
 				{
 					this.OnDefaultValueChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0AME]", oldValue, value);
@@ -8367,7 +8367,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.PreferredValues;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ANE]"))
 				{
 					this.OnPreferredValuesChanging (oldValue, value);
 					this.SetField<string> ("[L0ANE]", oldValue, value);
@@ -8389,7 +8389,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue = this.UnitOfMeasure;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJE]"))
 				{
 					this.OnUnitOfMeasureChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0AJE]", oldValue, value);
@@ -8464,7 +8464,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.Decimal oldValue = obj.Modulo;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AHE]"))
 			{
 				IRoundingModeInterfaceImplementation.OnModuloChanging (obj, oldValue, value);
 				entity.SetField<global::System.Decimal> ("[L0AHE]", oldValue, value);
@@ -8482,7 +8482,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.Decimal oldValue = obj.AddBeforeModulo;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AIE]"))
 			{
 				IRoundingModeInterfaceImplementation.OnAddBeforeModuloChanging (obj, oldValue, value);
 				entity.SetField<global::System.Decimal> ("[L0AIE]", oldValue, value);
@@ -8518,7 +8518,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue = this.Cardinality;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2F]"))
 				{
 					this.OnCardinalityChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0A2F]", oldValue, value);
@@ -8540,7 +8540,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.DefaultValue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AQE]"))
 				{
 					this.OnDefaultValueChanging (oldValue, value);
 					this.SetField<string> ("[L0AQE]", oldValue, value);
@@ -8562,7 +8562,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Values;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APE]"))
 				{
 					this.OnValuesChanging (oldValue, value);
 					this.SetField<string> ("[L0APE]", oldValue, value);
@@ -8584,7 +8584,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortDescriptions;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ARE]"))
 				{
 					this.OnShortDescriptionsChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARE]", oldValue, value);
@@ -8606,7 +8606,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.LongDescriptions;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASE]"))
 				{
 					this.OnLongDescriptionsChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASE]", oldValue, value);
@@ -8663,7 +8663,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6F]"))
 				{
 					this.OnTextForPriceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6F]", oldValue, value);
@@ -8685,7 +8685,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForFixedPrice;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7F]"))
 				{
 					this.OnTextForFixedPriceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7F]", oldValue, value);
@@ -8707,7 +8707,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.PriceBeforeTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A0G]"))
 				{
 					this.OnPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A0G]", oldValue, value);
@@ -8729,7 +8729,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.PriceAfterTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8F]"))
 				{
 					this.OnPriceAfterTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A8F]", oldValue, value);
@@ -8751,7 +8751,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.FixedPriceAfterTax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9F]"))
 				{
 					this.OnFixedPriceAfterTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0A9F]", oldValue, value);
@@ -8878,7 +8878,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Person;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHF]"))
 				{
 					this.OnPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AHF]", oldValue, value);
@@ -8900,7 +8900,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.DisplayName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASG]"))
 				{
 					this.OnDisplayNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASG]", oldValue, value);
@@ -8922,7 +8922,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.LoginPicture;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8O]"))
 				{
 					this.OnLoginPictureChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0A8O]", oldValue, value);
@@ -8944,7 +8944,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.LoginName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIF]"))
 				{
 					this.OnLoginNameChanging (oldValue, value);
 					this.SetField<string> ("[L0AIF]", oldValue, value);
@@ -8966,7 +8966,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.LoginPasswordHash;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJF]"))
 				{
 					this.OnLoginPasswordHashChanging (oldValue, value);
 					this.SetField<string> ("[L0AJF]", oldValue, value);
@@ -8988,7 +8988,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? oldValue = this.AuthenticationMethod;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APG]"))
 				{
 					this.OnAuthenticationMethodChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod?> ("[L0APG]", oldValue, value);
@@ -9022,7 +9022,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.Disabled;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOF]"))
 				{
 					this.OnDisabledChanging (oldValue, value);
 					this.SetField<bool> ("[L0AOF]", oldValue, value);
@@ -9153,7 +9153,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.Disabled;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APF]"))
 				{
 					this.OnDisabledChanging (oldValue, value);
 					this.SetField<bool> ("[L0APF]", oldValue, value);
@@ -9187,7 +9187,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue = this.UserPowerLevel;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AQG]"))
 				{
 					this.OnUserPowerLevelChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel> ("[L0AQG]", oldValue, value);
@@ -9385,7 +9385,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.Currency;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AVG]"))
 				{
 					this.OnCurrencyChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[L0AVG]", oldValue, value);
@@ -9407,7 +9407,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.SubscriberNumber;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AUG]"))
 				{
 					this.OnSubscriberNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AUG]", oldValue, value);
@@ -9429,7 +9429,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.SubscriberAddress;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A5H]"))
 				{
 					this.OnSubscriberAddressChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A5H]", oldValue, value);
@@ -9451,7 +9451,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.BankReferenceNumberPrefix;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A0H]"))
 				{
 					this.OnBankReferenceNumberPrefixChanging (oldValue, value);
 					this.SetField<string> ("[L0A0H]", oldValue, value);
@@ -9473,7 +9473,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.BankAddressLine1;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A1H]"))
 				{
 					this.OnBankAddressLine1Changing (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A1H]", oldValue, value);
@@ -9495,7 +9495,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.BankAddressLine2;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2H]"))
 				{
 					this.OnBankAddressLine2Changing (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A2H]", oldValue, value);
@@ -9517,7 +9517,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.BankAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3H]"))
 				{
 					this.OnBankAccountChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A3H]", oldValue, value);
@@ -9539,7 +9539,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.IncomingBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4H]"))
 				{
 					this.OnIncomingBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0A4H]", oldValue, value);
@@ -9620,7 +9620,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Company;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7H]"))
 				{
 					this.OnCompanyChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0A7H]", oldValue, value);
@@ -9642,7 +9642,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue = this.Finance;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9H]"))
 				{
 					this.OnFinanceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity> ("[L0A9H]", oldValue, value);
@@ -9664,7 +9664,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue = this.Tax;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ACH]"))
 				{
 					this.OnTaxChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity> ("[L0ACH]", oldValue, value);
@@ -9686,7 +9686,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.CompanyLogo;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0KK]"))
 				{
 					this.OnCompanyLogoChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[L0KK]", oldValue, value);
@@ -9814,7 +9814,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.VatNumber;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADH]"))
 				{
 					this.OnVatNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0ADH]", oldValue, value);
@@ -9836,7 +9836,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue = this.TaxMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEH]"))
 				{
 					this.OnTaxModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[L0AEH]", oldValue, value);
@@ -9987,7 +9987,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.DocumentType oldValue = this.DocumentType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A5O]"))
 				{
 					this.OnDocumentTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentType> ("[L0A5O]", oldValue, value);
@@ -10009,7 +10009,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue = this.DocumentFlowDirection;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOO]"))
 				{
 					this.OnDocumentFlowDirectionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[L0AOO]", oldValue, value);
@@ -10031,7 +10031,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.DocumentSource oldValue = this.DocumentSource;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APO]"))
 				{
 					this.OnDocumentSourceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[L0APO]", oldValue, value);
@@ -10084,7 +10084,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue = this.Affair;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9K]"))
 				{
 					this.OnAffairChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0A9K]", oldValue, value);
@@ -10215,7 +10215,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.ExtraPaymentTerm;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2J]"))
 				{
 					this.OnExtraPaymentTermChanging (oldValue, value);
 					this.SetField<int> ("[L0A2J]", oldValue, value);
@@ -10237,7 +10237,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = this.AdministrativeTaxArticle;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3J]"))
 				{
 					this.OnAdministrativeTaxArticleChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0A3J]", oldValue, value);
@@ -10340,7 +10340,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.IsAuto;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEL]"))
 				{
 					this.OnIsAutoChanging (oldValue, value);
 					this.SetField<bool> ("[L0AEL]", oldValue, value);
@@ -10362,7 +10362,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.IsPublic;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJL]"))
 				{
 					this.OnIsPublicChanging (oldValue, value);
 					this.SetField<bool> ("[L0AJL]", oldValue, value);
@@ -10384,7 +10384,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				bool oldValue = this.IsForeign;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2O]"))
 				{
 					this.OnIsForeignChanging (oldValue, value);
 					this.SetField<bool> ("[L0A2O]", oldValue, value);
@@ -10501,7 +10501,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.NextNode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AAJ]"))
 				{
 					this.OnNextNodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AAJ]", oldValue, value);
@@ -10523,7 +10523,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Continuation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AVL]"))
 				{
 					this.OnContinuationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVL]", oldValue, value);
@@ -10545,7 +10545,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue = this.TransitionType;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASJ]"))
 				{
 					this.OnTransitionTypeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowTransitionType> ("[L0ASJ]", oldValue, value);
@@ -10567,7 +10567,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.TransitionAction;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ATJ]"))
 				{
 					this.OnTransitionActionChanging (oldValue, value);
 					this.SetField<string> ("[L0ATJ]", oldValue, value);
@@ -10622,7 +10622,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity oldValue = this.Edge;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIJ]"))
 				{
 					this.OnEdgeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0AIJ]", oldValue, value);
@@ -10644,7 +10644,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Node;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AML]"))
 				{
 					this.OnNodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AML]", oldValue, value);
@@ -10666,7 +10666,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.DateTime oldValue = this.Date;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A0K]"))
 				{
 					this.OnDateChanging (oldValue, value);
 					this.SetField<global::System.DateTime> ("[L0A0K]", oldValue, value);
@@ -10688,7 +10688,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue = this.User;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A1K]"))
 				{
 					this.OnUserChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0A1K]", oldValue, value);
@@ -10710,7 +10710,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Owner;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2K]"))
 				{
 					this.OnOwnerChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0A2K]", oldValue, value);
@@ -10732,7 +10732,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue = this.RelationContact;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A3K]"))
 				{
 					this.OnRelationContactChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractContactEntity> ("[L0A3K]", oldValue, value);
@@ -10754,7 +10754,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.RelationPerson;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A4K]"))
 				{
 					this.OnRelationPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[L0A4K]", oldValue, value);
@@ -10827,7 +10827,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A8K]"))
 				{
 					this.OnStatusChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0A8K]", oldValue, value);
@@ -10849,7 +10849,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue = this.Definition;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6K]"))
 				{
 					this.OnDefinitionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0A6K]", oldValue, value);
@@ -10924,7 +10924,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.Continuation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AVJ]"))
 				{
 					this.OnContinuationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AVJ]", oldValue, value);
@@ -10973,7 +10973,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue = this.BillToMailContact;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AGK]"))
 				{
 					this.OnBillToMailContactChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AGK]", oldValue, value);
@@ -10995,7 +10995,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue = this.ShipToMailContact;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AHK]"))
 				{
 					this.OnShipToMailContactChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[L0AHK]", oldValue, value);
@@ -11017,7 +11017,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.OtherPartyRelation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AFK]"))
 				{
 					this.OnOtherPartyRelationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AFK]", oldValue, value);
@@ -11039,7 +11039,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.OtherPartyBillingMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AIK]"))
 				{
 					this.OnOtherPartyBillingModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[L0AIK]", oldValue, value);
@@ -11061,7 +11061,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue = this.OtherPartyTaxMode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJK]"))
 				{
 					this.OnOtherPartyTaxModeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[L0AJK]", oldValue, value);
@@ -11107,7 +11107,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.BillingStatus oldValue = this.BillingStatus;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AMK]"))
 				{
 					this.OnBillingStatusChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingStatus> ("[L0AMK]", oldValue, value);
@@ -11129,7 +11129,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.BillingDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ANK]"))
 				{
 					this.OnBillingDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0ANK]", oldValue, value);
@@ -11151,7 +11151,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.CurrencyCode;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKK]"))
 				{
 					this.OnCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[L0AKK]", oldValue, value);
@@ -11173,7 +11173,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date? oldValue = this.PriceRefDate;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A9M]"))
 				{
 					this.OnPriceRefDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0A9M]", oldValue, value);
@@ -11195,7 +11195,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.PriceGroup;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ANM]"))
 				{
 					this.OnPriceGroupChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[L0ANM]", oldValue, value);
@@ -11217,7 +11217,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.DebtorBookAccount;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOK]"))
 				{
 					this.OnDebtorBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[L0AOK]", oldValue, value);
@@ -11304,7 +11304,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Common.Types.Date? oldValue = obj.BeginDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AQK]"))
 			{
 				IDateRangeInterfaceImplementation.OnBeginDateChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Common.Types.Date?> ("[L0AQK]", oldValue, value);
@@ -11322,7 +11322,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Common.Types.Date? oldValue = obj.EndDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0ARK]"))
 			{
 				IDateRangeInterfaceImplementation.OnEndDateChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Common.Types.Date?> ("[L0ARK]", oldValue, value);
@@ -11376,7 +11376,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Byte[] oldValue = this.Data;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A2L]"))
 				{
 					this.OnDataChanging (oldValue, value);
 					this.SetField<global::System.Byte[]> ("[L0A2L]", oldValue, value);
@@ -11433,7 +11433,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue = obj.Workflow;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A7L]"))
 			{
 				IWorkflowHostInterfaceImplementation.OnWorkflowChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[L0A7L]", oldValue, value);
@@ -11487,7 +11487,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.WorkflowName;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ALL]"))
 				{
 					this.OnWorkflowNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ALL]", oldValue, value);
@@ -11509,7 +11509,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.WorkflowDescription;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKL]"))
 				{
 					this.OnWorkflowDescriptionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AKL]", oldValue, value);
@@ -11543,7 +11543,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedDesign;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ADL]"))
 				{
 					this.OnSerializedDesignChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[L0ADL]", oldValue, value);
@@ -11596,7 +11596,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortText;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AOL]"))
 				{
 					this.OnShortTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AOL]", oldValue, value);
@@ -11618,7 +11618,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Common.Types.FormattedText oldValue = this.LongText;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APL]"))
 				{
 					this.OnLongTextChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0APL]", oldValue, value);
@@ -11677,7 +11677,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.BusinessCodeVector;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0ARL]"))
 			{
 				IBusinessLinkInterfaceImplementation.OnBusinessCodeVectorChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0ARL]", oldValue, value);
@@ -11731,7 +11731,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Byte[] oldValue = this.Data;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AUL]"))
 				{
 					this.OnDataChanging (oldValue, value);
 					this.SetField<global::System.Byte[]> ("[L0AUL]", oldValue, value);
@@ -11808,7 +11808,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.FileName;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0ASM]"))
 			{
 				IFileMetadataInterfaceImplementation.OnFileNameChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0ASM]", oldValue, value);
@@ -11826,7 +11826,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.FileUri;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0ATM]"))
 			{
 				IFileMetadataInterfaceImplementation.OnFileUriChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0ATM]", oldValue, value);
@@ -11844,7 +11844,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.FileMimeType;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AUM]"))
 			{
 				IFileMetadataInterfaceImplementation.OnFileMimeTypeChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AUM]", oldValue, value);
@@ -11898,7 +11898,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.DateTime? oldValue = obj.CreationDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A3N]"))
 			{
 				IDateMetadataInterfaceImplementation.OnCreationDateChanging (obj, oldValue, value);
 				entity.SetField<global::System.DateTime?> ("[L0A3N]", oldValue, value);
@@ -11916,7 +11916,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::System.DateTime? oldValue = obj.LastModificationDate;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A4N]"))
 			{
 				IDateMetadataInterfaceImplementation.OnLastModificationDateChanging (obj, oldValue, value);
 				entity.SetField<global::System.DateTime?> ("[L0A4N]", oldValue, value);
@@ -12110,7 +12110,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Byte[] oldValue = this.Data;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A6N]"))
 				{
 					this.OnDataChanging (oldValue, value);
 					this.SetField<global::System.Byte[]> ("[L0A6N]", oldValue, value);
@@ -12132,7 +12132,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.PixelWidth;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AMN]"))
 				{
 					this.OnPixelWidthChanging (oldValue, value);
 					this.SetField<int> ("[L0AMN]", oldValue, value);
@@ -12154,7 +12154,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.PixelHeight;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ANN]"))
 				{
 					this.OnPixelHeightChanging (oldValue, value);
 					this.SetField<int> ("[L0ANN]", oldValue, value);
@@ -12176,7 +12176,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.ThumbnailSize;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0ASN]"))
 				{
 					this.OnThumbnailSizeChanging (oldValue, value);
 					this.SetField<int> ("[L0ASN]", oldValue, value);
@@ -12198,7 +12198,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Dpi;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AON]"))
 				{
 					this.OnDpiChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AON]", oldValue, value);
@@ -12220,7 +12220,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				int oldValue = this.BitsPerPixel;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0APN]"))
 				{
 					this.OnBitsPerPixelChanging (oldValue, value);
 					this.SetField<int> ("[L0APN]", oldValue, value);
@@ -12297,7 +12297,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			int? oldValue = obj.WeakHash;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0A9N]"))
 			{
 				IDataHashInterfaceImplementation.OnWeakHashChanging (obj, oldValue, value);
 				entity.SetField<int?> ("[L0A9N]", oldValue, value);
@@ -12315,7 +12315,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.StrongHash;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AAN]"))
 			{
 				IDataHashInterfaceImplementation.OnStrongHashChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AAN]", oldValue, value);
@@ -12403,7 +12403,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ImageBlobEntity oldValue = this.ImageBlob;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AEN]"))
 				{
 					this.OnImageBlobChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageBlobEntity> ("[L0AEN]", oldValue, value);
@@ -12437,7 +12437,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity oldValue = this.ImageCategory;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJN]"))
 				{
 					this.OnImageCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity> ("[L0AJN]", oldValue, value);
@@ -12708,7 +12708,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Common.Types.FormattedText oldValue = obj.Name;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AUN]"))
 			{
 				INameDescriptionInterfaceImplementation.OnNameChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AUN]", oldValue, value);
@@ -12726,7 +12726,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Common.Types.FormattedText oldValue = obj.Description;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AVN]"))
 			{
 				INameDescriptionInterfaceImplementation.OnDescriptionChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AVN]", oldValue, value);
@@ -12862,7 +12862,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Byte[] oldValue = this.SerializedData;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0A7O]"))
 				{
 					this.OnSerializedDataChanging (oldValue, value);
 					this.SetField<global::System.Byte[]> ("[L0A7O]", oldValue, value);
@@ -12884,7 +12884,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				string oldValue = this.Informations;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0KN]"))
 				{
 					this.OnInformationsChanging (oldValue, value);
 					this.SetField<string> ("[L0KN]", oldValue, value);
@@ -12967,7 +12967,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue = this.Cardinality;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AFO]"))
 				{
 					this.OnCardinalityChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0AFO]", oldValue, value);
@@ -13118,7 +13118,7 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Quantity;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AKO]"))
 				{
 					this.OnQuantityChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[L0AKO]", oldValue, value);
@@ -13185,7 +13185,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = obj.ArticleDefinition;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0AMO]"))
 			{
 				IArticleDefinitionParametersInterfaceImplementation.OnArticleDefinitionChanging (obj, oldValue, value);
 				entity.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0AMO]", oldValue, value);
@@ -13203,7 +13203,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.ArticleParameters;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[L0ANO]"))
 			{
 				IArticleDefinitionParametersInterfaceImplementation.OnArticleParametersChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0ANO]", oldValue, value);
