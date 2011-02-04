@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="21" name="Common.Support.UnitTests" layer="s" textMode="String" namespace="Epsitec.Common.Support.UnitTests">
   <Versions>
-    <Version id="1" build="84" date="2011-02-04T13:06:56.2906498Z" />
+    <Version id="1" build="86" date="2011-02-04T13:59:49.7091590Z" />
   </Versions>
 </ModuleInfo>

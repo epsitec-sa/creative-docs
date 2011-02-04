@@ -687,6 +687,27 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.proxy = proxy;
 		}
 
+
+
+		/// <summary>
+		/// Tells whether the field given by <paramref name="id"/> is defined.
+		/// </summary>
+		/// <remarks>
+		/// The only way for a field to be undefined (for this method) is if the underlying value
+		/// stores don't stored any value for it, or if the value stored is
+		/// <see cref="Undefined.Value"/>. In any other case (even a <c>null</c> value), the field is
+		/// considered as defined for this method.
+		/// </remarks>
+		/// <param name="id">The id of the field.</param>
+		/// <returns><c>true</c> if the field is defined, <c>false</c> if it isn't.</returns>
+		public bool IsFieldDefined(string id)
+		{
+			object value = this.InternalGetValue (id);
+
+			return !UndefinedValue.IsUndefinedValue (value);
+		}
+
+
 		internal object InternalGetValueOrFieldCollection(string id)
 		{
 			object value;
