@@ -877,6 +877,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 		}
 
+		public static string GetShortStartTime(this Query query)
+		{
+			//	Retourne le temps sous une forme courte.
+			return query.StartTime.ToString ("HH:mm:ss");
+		}
+
 		private static string GetNiceStartTime(this Query query)
 		{
 			//	Retourne le temps sous une jolie forme.
