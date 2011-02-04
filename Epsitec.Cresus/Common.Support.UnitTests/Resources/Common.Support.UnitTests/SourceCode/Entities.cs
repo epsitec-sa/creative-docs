@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 			set
 			{
 				int oldValue = this.Value;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ3]"))
 				{
 					this.OnValueChanging (oldValue, value);
 					this.SetField<int> ("[L0AJ3]", oldValue, value);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 			set
 			{
 				int? oldValue = this.NullableValue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AO3]"))
 				{
 					this.OnNullableValueChanging (oldValue, value);
 					this.SetField<int?> ("[L0AO3]", oldValue, value);
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 			set
 			{
 				global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity oldValue = this.Reference;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[L0AL3]"))
 				{
 					this.OnReferenceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity> ("[L0AL3]", oldValue, value);

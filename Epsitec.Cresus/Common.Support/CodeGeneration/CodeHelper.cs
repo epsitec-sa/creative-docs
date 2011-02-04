@@ -119,6 +119,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string InterfaceImplementationSetterMethodPrefix = "Set";
 			public const string AbstractEntity = "Epsitec.Common.Support.EntityEngine.AbstractEntity";
 
+			public const string IsFieldDefinedMethod = "IsFieldDefined";
 			public const string SetFieldMethod = "SetField";
 			public const string GetFieldMethod = "GetField";
 			public const string GetCalculationMethod = "GetCalculation";
