@@ -49,8 +49,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			: base (application)
 		{
 			this.taggedText = new TaggedText ();
-
-			this.UpdateQueries ();
 		}
 
 
@@ -60,6 +58,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public override void CreateUI(Widget parent)
 		{
+			this.recordLabel = new StaticText
+			{
+				Parent = parent,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				FormattedText = Misc.FontColorize (Misc.FontSize (Misc.Bold ("Enregistrement en cours..."), 36), Color.FromBrightness (0.8)),
+				Anchor = AnchorStyles.All,
+			};
+
 			var topFrame = new FrameBox
 			{
 				Parent = parent,
@@ -150,17 +156,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				this.firstQueryShowed = (int) this.logSlider.Value * LoggingTabPage.globalNumberOfEntriesPerPage;
 
-				this.CopyQueries ();
-				this.UpdateTable ();
-				this.UpdateDetails ();
-				this.UpdateWidgets ();
-			};
-
-			this.updateButton.Clicked += delegate
-			{
-				this.UpdateQueries ();
-				this.CopyQueries ();
-				this.UpdateSlider ();
 				this.UpdateTable ();
 				this.UpdateDetails ();
 				this.UpdateWidgets ();
@@ -187,7 +182,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateRelativeTime ();
 			};
 
-			this.CopyQueries ();
 			this.UpdateSlider ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
@@ -246,15 +240,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = header,
 				Text = "Vider",
-				PreferredWidth = 100,
-				Dock = DockStyle.Right,
-				Margins = new Margins (10, 0, 0, 0),
-			};
-
-			this.updateButton = new Button
-			{
-				Parent = header,
-				Text = "Mettre à jour",
 				PreferredWidth = 100,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
@@ -463,40 +448,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private void UpdateQueries()
-		{
-			//	Copie toutes les queries sur lesquelles on va travailler.
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			if (db.QueryLog == null)
-			{
-				this.allQueries = null;
-			}
-			else
-			{
-				int count = db.QueryLog.GetNbEntries ();
-
-				if (count == 0)
-				{
-					this.allQueries = null;
-				}
-				else
-				{
-					this.allQueries = db.QueryLog.GetEntries (0, count);
-				}
-			}
-		}
-
-		private void CopyQueries()
-		{
-		}
-
-
 		private void UpdateSlider()
 		{
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-			int count = (this.allQueries == null) ? 0 : this.allQueries.Count;
+			int count = this.QueryTotalCount;
 
 			if (count == 0)
 			{
@@ -515,17 +469,24 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.logSlider.LargeChange = 1;
 				this.logSlider.Value       = this.firstQueryShowed;
 
-				var firstQuery = db.QueryLog.GetEntry (0);
-				var lastQuery  = db.QueryLog.GetEntry (count-1);
+				var firstQuery = this.GetAbsoluteQuery (0);
+				var lastQuery  = this.GetAbsoluteQuery (count-1);
 
-				this.firstTime.Text = firstQuery.GetShortStartTime ();
-				this.lastTime.Text  = lastQuery.GetShortStartTime ();
+				if (firstQuery != null)
+				{
+					this.firstTime.Text = firstQuery.GetShortStartTime ();
+				}
+
+				if (lastQuery != null)
+				{
+					this.lastTime.Text = lastQuery.GetShortStartTime ();
+				}
 			}
 		}
 
 		private void UpdateTable()
 		{
-			int rows = this.QueryCount;
+			int rows = this.QueryShowedCount;
 			this.mainTable.SetArraySize (8, rows);
 
 			this.mainTable.SetWidthColumn (0,  40);
@@ -567,18 +528,22 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			for (int row=0; row<rows; row++)
 			{
 				var query = this.GetQuery (row);
-				var values = query.GetMainContent (row, this.SearchText, LoggingTabPage.globalSearchMode);
+
+				var values = QueryAccessor.GetMainContent (query, row, this.SearchText, LoggingTabPage.globalSearchMode);
 
 				this.mainTable.FillRow (row, alignments);
 				this.mainTable.UpdateRow (row, values);
 
-				if (!string.IsNullOrEmpty (search))
+				if (query != null)
 				{
-					int n = query.Count (search, LoggingTabPage.globalSearchMode);
-					if (n > 0)
+					if (!string.IsNullOrEmpty (search))
 					{
-						counter += n;
-						lines++;
+						int n = query.Count (search, LoggingTabPage.globalSearchMode);
+						if (n > 0)
+						{
+							counter += n;
+							lines++;
+						}
 					}
 				}
 			}
@@ -589,7 +554,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateRelativeTime()
 		{
-			int rows = this.QueryCount;
+			int rows = this.QueryShowedCount;
 			int sel = this.mainTable.SelectedRow;
 			
 			if (sel == -1)
@@ -599,14 +564,37 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel < rows)
 			{
-				var reference = this.GetQuery (sel).StartTime;
+				System.DateTime reference;
+
+				var query = this.GetQuery (sel);
+
+				if (query == null)
+				{
+					reference = System.DateTime.Now;
+				}
+				else
+				{
+					reference = query.StartTime;
+				}
 
 				for (int row=0; row<rows; row++)
 				{
-					System.TimeSpan time = this.GetQuery (row).StartTime.Subtract (reference);
-
 					var widget = this.mainTable.GetStaticText (row, 2);
-					widget.Text = LoggingTabPage.ToNiceString (time);
+
+					if (widget != null)
+					{
+						query = this.GetQuery (row);
+
+						if (query == null)
+						{
+							widget.Text = null;
+						}
+						else
+						{
+							System.TimeSpan time = query.StartTime.Subtract (reference);
+							widget.Text = LoggingTabPage.ToNiceString (time);
+						}
+					}
 				}
 			}
 		}
@@ -654,56 +642,88 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			int sel = this.mainTable.SelectedRow;
 
-			if (sel == -1 || this.QueryCount == 0)
+			if (sel == -1 || this.QueryShowedCount == 0)
 			{
 				this.queryField.FormattedText = null;
+				this.stackField.FormattedText = null;
 			}
 			else
 			{
 				var query = this.GetQuery (sel);
 
-				bool substitute = LoggingTabPage.globalSubstitute;
-				bool colorize   = LoggingTabPage.globalColorize;
-				bool autoBreak  = LoggingTabPage.globalAutoBreak;
-				FormattedText content = query.GetQuery (substitute, colorize, autoBreak);
-				content = QueryAccessor.GetTaggedText (content, this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInQuery);
-
-				if (content.ToString ().Length >= this.queryField.MaxLength)
+				if (query == null)
 				{
-					this.queryField.FormattedText = "Trop long...";
+					this.queryField.FormattedText = null;
+					this.stackField.FormattedText = null;
 				}
 				else
 				{
-					this.queryField.FormattedText = content;
-				}
+					bool substitute = LoggingTabPage.globalSubstitute;
+					bool colorize   = LoggingTabPage.globalColorize;
+					bool autoBreak  = LoggingTabPage.globalAutoBreak;
+					FormattedText content = query.GetQuery (substitute, colorize, autoBreak);
+					content = QueryAccessor.GetTaggedText (content, this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInQuery);
 
-				var parameters = this.CreateParametersShower (query.Parameters);
-				parameters.Parent = this.detailsBox;
-				parameters.Dock = DockStyle.Left;
-				parameters.Margins = new Margins (0, 10, 0, 0);
-
-				if (query.Result != null)
-				{
-					foreach (var table in query.Result.Tables)
+					if (content.ToString ().Length >= this.queryField.MaxLength)
 					{
-						var cellTable = this.CreateTableResultsShower (table);
-						cellTable.Parent = this.detailsBox;
-						cellTable.Dock = DockStyle.Fill;
-						cellTable.Margins = new Margins (0, 10, 0, 0);
+						this.queryField.FormattedText = "Trop long...";
 					}
-				}
+					else
+					{
+						this.queryField.FormattedText = content;
+					}
 
-				content = QueryAccessor.GetTaggedText (query.GetStackTrace (), this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInCallStack);
-				this.stackField.FormattedText = content;
+					var parameters = this.CreateParametersShower (query.Parameters);
+					parameters.Parent = this.detailsBox;
+					parameters.Dock = DockStyle.Left;
+					parameters.Margins = new Margins (0, 10, 0, 0);
+
+					if (query.Result != null)
+					{
+						foreach (var table in query.Result.Tables)
+						{
+							var cellTable = this.CreateTableResultsShower (table);
+							cellTable.Parent = this.detailsBox;
+							cellTable.Dock = DockStyle.Fill;
+							cellTable.Margins = new Margins (0, 10, 0, 0);
+						}
+					}
+
+					content = QueryAccessor.GetTaggedText (query.GetStackTrace (), this.SearchText, LoggingTabPage.globalSearchMode, LoggingTabPage.globalSearchMode.SearchInCallStack);
+					this.stackField.FormattedText = content;
+				}
 			}
 		}
 
 		private void UpdateWidgets()
 		{
-			this.startButton.FormattedText = Misc.Bold (this.LogEnable ? "Stopper" : "Démarrer");
-
+			bool record = this.LogEnable;
 			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
 			bool empty = this.mainTable.Rows == 0;
+
+			this.startButton.FormattedText = Misc.Bold (record ? "Stopper" : "Démarrer");
+
+			this.recordLabel.Visibility = record;
+
+			this.logMenuButton.Enable = !record;
+			this.firstTime.Visibility = !record;
+			this.logSlider.Visibility = !record;
+			this.lastTime.Visibility = !record;
+			this.showedMenuButton.Visibility = !record;
+			this.clearButton.Visibility = !record;
+			this.secondaryButton.Visibility = !record;
+
+			this.secondaryToolbar.Visibility = !record;
+			this.mainTable.Visibility = !record;
+			this.splitter1.Visibility = !record;
+			this.splitter2.Visibility = !record;
+			this.splitter3.Visibility = !record;
+
+			this.detailsFrame.Visibility = !record;
+			this.queryMenuButton.Visibility = !record;
+			this.queryField.Visibility = !record;
+			this.detailsBox.Visibility = !record;
+			this.stackField.Visibility = !record;
 
 			this.searchClearButton.Enable = enable;
 			this.searchPrevButton.Enable  = enable;
@@ -729,7 +749,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void Search(int direction)
 		{
-			if (this.QueryCount == 0)
+			if (this.QueryShowedCount == 0)
 			{
 				return;
 			}
@@ -771,7 +791,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 					var query = this.GetQuery (sel);
 
-					if (query.ContainsString (search, LoggingTabPage.globalSearchMode))
+					if (query != null && query.ContainsString (search, LoggingTabPage.globalSearchMode))
 					{
 						this.mainTable.DeselectAll ();
 						this.mainTable.SelectRow (sel, true);
@@ -785,11 +805,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ClearTable()
 		{
-			var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-			db.QueryLog.Clear ();
+			this.queryLog = null;
 
-			this.CopyQueries ();
-			this.UpdateQueries ();
 			this.UpdateSlider ();
 			this.UpdateTable ();
 			this.UpdateDetails ();
@@ -986,7 +1003,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			if (name.StartsWith ("EntriesShowed."))
 			{
 				LoggingTabPage.globalNumberOfEntriesPerPage = int.Parse (name.Substring (14));
-				this.CopyQueries ();
 				this.UpdateSlider ();
 				this.UpdateTable ();
 				this.UpdateWidgets ();
@@ -997,17 +1013,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					case "LogResult":
 						LoggingTabPage.globalLogResult = !LoggingTabPage.globalLogResult;
-						this.LogEnable = this.LogEnable;
 						break;
 
 					case "LogThreadName":
 						LoggingTabPage.globalLogThreadName = !LoggingTabPage.globalLogThreadName;
-						this.LogEnable = this.LogEnable;
 						break;
 
 					case "LogStackTrace":
 						LoggingTabPage.globalLogStackTrace = !LoggingTabPage.globalLogStackTrace;
-						this.LogEnable = this.LogEnable;
 						break;
 
 					case "CaseSensitive":
@@ -1090,122 +1103,66 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
 
-				if (value)
+				if (value)  // démarre l'enregistrement ?
 				{
 					db.EnableLogging ();
 
-					this.LogResult     = LoggingTabPage.globalLogResult;
-					this.LogStackTrace = LoggingTabPage.globalLogStackTrace;
-					this.LogThreadName = LoggingTabPage.globalLogThreadName;
+					db.QueryLog.LogResult     = LoggingTabPage.globalLogResult;
+					db.QueryLog.LogStackTrace = LoggingTabPage.globalLogStackTrace;
+					db.QueryLog.LogThreadName = LoggingTabPage.globalLogThreadName;
+
+					this.UpdateWidgets ();
 				}
-				else
+				else  // stoppe l'enregistrement ?
 				{
+					this.queryLog = db.QueryLog;
+
 					db.DisableLogging ();
-				}
 
-				this.UpdateWidgets ();
-			}
-		}
-
-		private bool LogResult
-		{
-			get
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog == null)
-				{
-					return false;
-				}
-				else
-				{
-					return db.QueryLog.LogResult;
-				}
-			}
-			set
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog != null)
-				{
-					db.QueryLog.LogResult = value;
-				}
-			}
-		}
-
-		private bool LogStackTrace
-		{
-			get
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog == null)
-				{
-					return false;
-				}
-				else
-				{
-					return db.QueryLog.LogStackTrace;
-				}
-			}
-			set
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog != null)
-				{
-					db.QueryLog.LogStackTrace = value;
-				}
-			}
-		}
-
-		private bool LogThreadName
-		{
-			get
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog == null)
-				{
-					return false;
-				}
-				else
-				{
-					return db.QueryLog.LogThreadName;
-				}
-			}
-			set
-			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
-
-				if (db.QueryLog != null)
-				{
-					db.QueryLog.LogThreadName = value;
+					this.UpdateSlider ();
+					this.UpdateTable ();
+					this.UpdateDetails ();
+					this.UpdateWidgets ();
 				}
 			}
 		}
 
 
-		private int QueryCount
+		private int QueryTotalCount
 		{
 			get
 			{
-				if (this.allQueries == null)
+				if (this.queryLog != null)
 				{
-					return 0;
+					return this.queryLog.GetNbEntries ();
 				}
-				else
-				{
-					return System.Math.Min (this.allQueries.Count-this.firstQueryShowed, LoggingTabPage.globalNumberOfEntriesPerPage);
-				}
+
+				return 0;
+			}
+		}
+
+		private int QueryShowedCount
+		{
+			get
+			{
+				return System.Math.Min (this.QueryTotalCount-this.firstQueryShowed, LoggingTabPage.globalNumberOfEntriesPerPage);
 			}
 		}
 
 		private Query GetQuery(int index)
 		{
-			System.Diagnostics.Debug.Assert (this.allQueries != null);
-			System.Diagnostics.Debug.Assert (this.firstQueryShowed+index < this.allQueries.Count);
-			return this.allQueries[this.firstQueryShowed+index];
+			return this.GetAbsoluteQuery (this.firstQueryShowed+index);
+		}
+
+		private Query GetAbsoluteQuery(int index)
+		{
+			if (this.queryLog != null &&
+				index >= 0 && index < this.QueryTotalCount)
+			{
+				return this.queryLog.GetEntry (index);
+			}
+
+			return null;
 		}
 
 
@@ -1256,8 +1213,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private readonly TaggedText			taggedText;
 
-		private ReadOnlyCollection<Query>	allQueries;
+		private AbstractLog					queryLog;
 		private int							firstQueryShowed;
+
+		private StaticText					recordLabel;
 
 		private Button						startButton;
 		private GlyphButton					logMenuButton;
@@ -1265,7 +1224,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private HSlider						logSlider;
 		private StaticText					lastTime;
 		private GlyphButton					showedMenuButton;
-		private Button						updateButton;
 		private Button						clearButton;
 		private GlyphButton					secondaryButton;
 

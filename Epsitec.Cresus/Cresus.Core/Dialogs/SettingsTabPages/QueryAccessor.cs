@@ -98,14 +98,28 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Retourne les textes pour peupler les 6 colonnes d'une ligne du tableau principal.
 			var values = new List<FormattedText> ();
 
-			values.Add (query.Number.ToString ());
-			values.Add (query.GetNiceStartTime ());
-			values.Add ("");  // colonne pour le temps relatif
-			values.Add (query.GetNiceDuration ());
-			values.Add (QueryAccessor.GetTaggedText (query.GetQuerySummary (),      search, mode, mode.SearchInQuery));
-			values.Add (QueryAccessor.GetTaggedText (query.GetCompactParameters (), search, mode, mode.SearchInParameters));
-			values.Add (QueryAccessor.GetTaggedText (query.GetCompactResults (),    search, mode, mode.SearchInResults));
-			values.Add (query.GetNiceThreadName ());
+			if (query == null)
+			{
+				values.Add ("");
+				values.Add ("");
+				values.Add ("");  // colonne pour le temps relatif
+				values.Add ("");
+				values.Add (Misc.Italic ("Données effacées"));
+				values.Add ("");
+				values.Add ("");
+				values.Add ("");
+			}
+			else
+			{
+				values.Add (query.Number.ToString ());
+				values.Add (query.GetNiceStartTime ());
+				values.Add ("");  // colonne pour le temps relatif
+				values.Add (query.GetNiceDuration ());
+				values.Add (QueryAccessor.GetTaggedText (query.GetQuerySummary (), search, mode, mode.SearchInQuery));
+				values.Add (QueryAccessor.GetTaggedText (query.GetCompactParameters (), search, mode, mode.SearchInParameters));
+				values.Add (QueryAccessor.GetTaggedText (query.GetCompactResults (), search, mode, mode.SearchInResults));
+				values.Add (query.GetNiceThreadName ());
+			}
 
 			return values.ToArray ();
 		}
@@ -269,12 +283,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (value), Color.FromName ("Green")).ToString ());
+							text = text.Replace (parameter.Name, Misc.FontColorize (Misc.Bold (value), Color.FromName ("Green")).ToString ());
 						}
 					}
 					else
 					{
-						text = text.Replace (parameter.Name, Misc.Colorize (Misc.Bold (parameter.Name), Color.FromName ("Green")).ToString ());
+						text = text.Replace (parameter.Name, Misc.FontColorize (Misc.Bold (parameter.Name), Color.FromName ("Green")).ToString ());
 					}
 				}
 
@@ -316,7 +330,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					if (QueryAccessor.IsSqlWordSeparator (text, index-1) &&
 						QueryAccessor.IsSqlWordSeparator (text, index+word.Length))
 					{
-						string subst = Misc.Colorize (Misc.Bold (word), Color.FromName ("Blue")).ToString ();
+						string subst = Misc.FontColorize (Misc.Bold (word), Color.FromName ("Blue")).ToString ();
 
 						text = text.Remove (index, word.Length);
 						text = text.Insert (index, subst);
