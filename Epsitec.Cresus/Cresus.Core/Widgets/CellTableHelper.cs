@@ -37,6 +37,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public static void ClearRow(this CellTable table, int row)
+		{
+			//	Efface le contenu d'une ligne d'une table avec des textes taggés.
+			for (int column = 0; column < table.Columns; column++)
+			{
+				var text = table[column, row].Children[0] as StaticText;
+				text.Text = null;
+			}
+		}
+
 		public static void UpdateRow(this CellTable table, int row, params FormattedText[] values)
 		{
 			//	Met à jour le contenu d'une ligne d'une table avec des textes taggés.
@@ -59,7 +69,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static StaticText GetStaticText(this CellTable table, int row, int column)
 		{
-			return table[column, row].Children[0] as StaticText;
+			if (row < table.Rows && column < table.Columns)
+			{
+				return table[column, row].Children[0] as StaticText;
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

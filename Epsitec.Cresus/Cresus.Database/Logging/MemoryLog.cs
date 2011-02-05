@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Database.Logging
 		{
 			size.ThrowIf (s => s < 1, "size cannot be smaller than 1");
 
-			this.nextNumber = 1;
+			this.nextNumber = 0;
 			this.log = new CircularBuffer<Query> (size);
 		}
 
@@ -76,11 +76,7 @@ namespace Epsitec.Cresus.Database.Logging
 
 		protected override int GetNextNumber()
 		{
-			int number = this.nextNumber;
-
-			this.nextNumber = number + 1;
-
-			return number;
+			return this.nextNumber++;
 		}
 
 
