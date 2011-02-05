@@ -22,13 +22,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour l'ensemble des réglages globaux.
+	/// Dialogue pour l'ensemble du debug.
 	/// </summary>
-	public class SettingsDialog : AbstractDialog
+	public class DebugDialog : AbstractDialog
 	{
-		public SettingsDialog(CoreApplication application)
+		public DebugDialog(CoreApplication application)
 		{
 			this.application = application;
+
+			this.IsModal = false;
 
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
@@ -51,8 +53,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Réglages globaux";
-			this.window.MakeFixedSizeWindow ();
+			this.window.Text = "Dépannage";
 			this.window.ClientSize = new Size (850, 600);
 
 			this.window.WindowCloseClicked += delegate
@@ -63,6 +64,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupWidgets()
 		{
+			bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
+
 			var frame = new FrameBox
 			{
 				Parent = this.window.Root,
@@ -85,14 +88,33 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Fill,
 			};
 
-			//	Crée l'onglet 'printer'.
-			var printerPage = new TabPage
-			{
-				TabTitle = "Unités d'impression",
-				Name = "printer",
-			};
+			//	Crée l'onglet 'trace'.
+			TabPage loggingPage = null;
 
-			this.tabBook.Items.Add (printerPage);
+			if (devel)
+			{
+				loggingPage = new TabPage
+				{
+					TabTitle = "Trace",
+					Name = "logging",
+				};
+
+				this.tabBook.Items.Add (loggingPage);
+			}
+
+			//	Crée l'onglet 'maintenance'.
+			TabPage maintenancePage = null;
+
+			if (devel)
+			{
+				maintenancePage = new TabPage
+				{
+					TabTitle = "Maintenance",
+					Name = "maintenance",
+				};
+
+				this.tabBook.Items.Add (maintenancePage);
+			}
 
 			this.ActiveLastPage ();
 
@@ -105,29 +127,29 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 10, 0, 0),
 			};
 
-			this.cancelButton = new Button ()
+			this.closeButton = new Button ()
 			{
 				Parent = footer,
-				Text = "Annuler",
-				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
-				Dock = DockStyle.Right,
-				Margins = new Margins (10, 0, 0, 0),
-				TabIndex = 101,
-			};
-
-			this.acceptButton = new Button ()
-			{
-				Parent = footer,
-				Text = "D'accord",
+				Text = "Fermer",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				TabIndex = 100,
 			};
 
 			//	Rempli les onglets.
-			var printerSettings = new SettingsTabPages.PrinterUnitsTabPage (this.application);
-			printerSettings.CreateUI (printerPage);
-			this.settingsTabPages.Add (printerSettings);
+			if (devel)
+			{
+				var loggingSettings = new SettingsTabPages.LoggingTabPage (this.application);
+				loggingSettings.CreateUI (loggingPage);
+				this.settingsTabPages.Add (loggingSettings);
+			}
+
+			if (devel)
+			{
+				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
+				maintenanceSettings.CreateUI (maintenancePage);
+				this.settingsTabPages.Add (maintenanceSettings);
+			}
 
 			foreach (var tab in this.settingsTabPages)
 			{
@@ -135,14 +157,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			//	Connection des événements.
-			this.acceptButton.Clicked += delegate
+			this.closeButton.Clicked += delegate
 			{
 				this.AcceptChangingsAndClose ();
-			};
-
-			this.cancelButton.Clicked += delegate
-			{
-				this.RejectChangingsAndClose ();
 			};
 		}
 
@@ -193,14 +210,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.errorInfo.Text = null;
 				this.errorInfo.BackColor = Color.Empty;
 
-				this.acceptButton.Enable = true;
+				this.closeButton.Enable = true;
 			}
 			else  // erreur ?
 			{
 				this.errorInfo.Text = errorMessage;
 				this.errorInfo.BackColor = Color.FromName ("Gold");
 
-				this.acceptButton.Enable = false;
+				this.closeButton.Enable = false;
 			}
 		}
 
@@ -211,11 +228,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void ActiveLastPage()
 		{
-			string name = SettingsDialog.lastActivedPageName;
+			string name = DebugDialog.lastActivedPageName;
 
 			if (string.IsNullOrEmpty (name))
 			{
-				name = "printer";  // page par défaut
+				name = "logging";  // page par défaut
 			}
 
 			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
@@ -224,7 +241,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateLastActivedPageName()
 		{
-			SettingsDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
+			DebugDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
 		}
 
 
@@ -236,7 +253,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Window											window;
 		private TabBook											tabBook;
 		private StaticText										errorInfo;
-		private Button											acceptButton;
-		private Button											cancelButton;
+		private Button											closeButton;
 	}
 }

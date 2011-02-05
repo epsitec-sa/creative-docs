@@ -649,4 +649,5 @@
   <data name="Typ.DocumentState" id="AQO">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DocumentState" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.DocumentState, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0ARO]'}, {Text '1 [L0AUO]'}, {Text '2 [L0ASO]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.DocumentState, Cresus.Core/None" f:Labels="{Collection {Text 'État du document'}}" /&gt;</data>
   <data name="Fld.DocumentMetadata.DocumentState" id="ATO">&lt;s:data id="_0" f:Name="DocumentState" /&gt;</data>
   <data name="Val.DocumentState.None" id="AUO">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'État non défini'}}" /&gt;</data>
+  <data name="Cmd.Global.ShowDebug" id="KO">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Global.ShowDebug" f:Description="Accès au dépannage." f:Icon="manifest:Epsitec.Cresus.Core.Images.Debug.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Dépannage'}}" /&gt;</data>
 </bundle>
