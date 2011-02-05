@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 3,
+				PreferredWidth = Misc.GetButtonWidth (large: true) * 4,
 			};
 
 			{
@@ -464,6 +464,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.MultilingualEdition));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowSettings));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowDebug));
 		}
 
 

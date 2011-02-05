@@ -195,6 +195,7 @@
     <Compile Include="Data\ItemCodes.cs" />
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
+    <Compile Include="Dialogs\DebugDialog.cs" />
     <Compile Include="Dialogs\SettingsDialog.cs" />
     <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
@@ -824,6 +825,7 @@
     <EmbeddedResource Include="Images\Data.ArticleAccountingDefinition.icon" />
     <EmbeddedResource Include="Images\ActiveNo.icon" />
     <EmbeddedResource Include="Images\ActiveYes.icon" />
+    <EmbeddedResource Include="Images\Debug.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

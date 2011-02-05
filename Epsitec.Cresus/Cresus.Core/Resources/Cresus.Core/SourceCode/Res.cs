@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0KO
+				public static readonly global::Epsitec.Common.Widgets.Command ShowDebug = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/L0K1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
 				//	designer:cap/L0KF
@@ -178,6 +180,8 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Global
 			{
+				//	designer:cap/L0KO
+				public const long ShowDebug = 0x1500014000018L;
 				//	designer:cap/L0K1
 				public const long ShowSettings = 0x1500014000001L;
 				//	designer:cap/L0KF
