@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.controller = controller;
 			this.widgetUpdaters = new List<IWidgetUpdater> ();
 
-			this.TabNavigationMode = Common.Widgets.TabNavigationMode.ForwardTabActive | Common.Widgets.TabNavigationMode.ForwardToChildren;
+			this.TabNavigationMode = TabNavigationMode.ForwardTabActive | TabNavigationMode.ForwardToChildren;
 			this.TabIndex = 1;
 		}
 
@@ -51,6 +51,32 @@ namespace Epsitec.Cresus.Core.Widgets
 		public double GetPreferredWidth(int columnIndex, int columnCount)
 		{
 			return this.controller.GetPreferredWidth (columnCount, columnCount);
+		}
+
+
+		public void SetTileVisibility(string name, bool visibility)
+		{
+			//	Montre ou cache une tuile d'après son nom.
+			foreach (Widget child in this.GetAllChildren ())
+			{
+				if (child is Tiles.TitleTile)
+				{
+					var titleTile = child as Tiles.TitleTile;
+
+					foreach (var tile in titleTile.Items)
+					{
+						if (tile.Controller is Controllers.DataAccessors.TileDataItem)
+						{
+							var tileDataItem = tile.Controller as Controllers.DataAccessors.TileDataItem;
+
+							if (tileDataItem.Name == name)
+							{
+								child.Visibility = visibility;
+							}
+						}
+					}
+				}
+			}
 		}
 
 
