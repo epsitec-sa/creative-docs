@@ -475,8 +475,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBook(EditionTile tile, UIBuilder builder)
 		{
-			var localPage  = TabPageDef.Create (TabPageId.Local,  "Adresse spécifique", this.HandleSelectTabPageLocal);
-			var globalPage = TabPageDef.Create (TabPageId.Global, "Entreprise existante");
+			var localPage  = TabPageDef.Create (TabPageId.Local,  "Adresse spécifique",   this.HandleSelectTabPageLocal);
+			var globalPage = TabPageDef.Create (TabPageId.Global, "Entreprise existante", this.HandleSelectTabPageGlobal);
 
 			var selectedPage = this.Entity.LegalPerson.IsNull () ? localPage : globalPage;
 
@@ -485,19 +485,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBookLocalPage(TileDataItems data)
 		{
-			this.CreateUICountry (data);
-			this.CreateUIMain (data);
-			this.CreateUILocation (data);
+			bool visible = this.Entity.LegalPerson.IsNull ();
+
+			this.CreateUICountry (data, visible);
+			this.CreateUIMain (data, visible);
+			this.CreateUILocation (data, visible);
 		}
 
 		private void CreateTabBookGlobalPage(TileDataItems data)
 		{
-			this.CreateUILegalPerson (data);
-			this.CreateUIAddress (data);
+			bool visible = this.Entity.LegalPerson.IsNotNull ();
+
+			this.CreateUILegalPerson (data, visible);
+			this.CreateUIAddress (data, visible);
 		}
 		
 		private void HandleSelectTabPageLocal()
 		{
+			this.ShowTabPage (TabPageId.Local);
+
 			if (this.Entity.LegalPerson.IsNotNull ())
 			{
 				this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
@@ -509,14 +515,30 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		private void HandleSelectTabPageGlobal()
+		{
+			this.ShowTabPage (TabPageId.Global);
+		}
 
-		private void CreateUILegalPerson(TileDataItems data)
+		private void ShowTabPage(TabPageId page)
+		{
+			this.TileContainer.SetTileVisibility ("MailContactCountry",  page == TabPageId.Local);
+			this.TileContainer.SetTileVisibility ("MailContactMain",     page == TabPageId.Local);
+			this.TileContainer.SetTileVisibility ("MailContactLocation", page == TabPageId.Local);
+
+			this.TileContainer.SetTileVisibility ("MailContactPerson",   page == TabPageId.Global);
+			this.TileContainer.SetTileVisibility ("MailContactAddress",  page == TabPageId.Global);
+		}
+
+
+		private void CreateUILegalPerson(TileDataItems data, bool visibility = true)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactPerson",
-				Frameless       = true,
-				CreateEditionUI = (tile, builder) =>
+				Name              = "MailContactPerson",
+				Frameless         = true,
+				InitialVisibility = visibility,
+				CreateEditionUI   = (tile, builder) =>
 				{
 					var controller = new SelectionController<LegalPersonEntity> (this.BusinessContext)
 					{
@@ -546,13 +568,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			data.Add (tileData);
 		}
 
-		private void CreateUIAddress(TileDataItems data)
+		private void CreateUIAddress(TileDataItems data, bool visibility = true)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactAddress",
-				Frameless       = true,
-				CreateEditionUI = (tile, builder) =>
+				Name              = "MailContactAddress",
+				Frameless         = true,
+				InitialVisibility = visibility,
+				CreateEditionUI   = (tile, builder) =>
 				{
 					var controller = new SelectionController<AddressEntity> (this.BusinessContext)
 					{
@@ -607,13 +630,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return new NewEntityReference (person, customer);
 		}
 
-		private void CreateUIMain(TileDataItems data)
+		private void CreateUIMain(TileDataItems data, bool visibility = true)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactMain",
-				Frameless       = true,
-				CreateEditionUI = (tile, builder) =>
+				Name              = "MailContactMain",
+				Frameless         = true,
+				InitialVisibility = visibility,
+				CreateEditionUI   = (tile, builder) =>
 				{
 					builder.CreateTextField (tile, 0, "Rue", Marshaler.Create (() => this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x));
 					builder.CreateTextFieldMulti (tile, 52, "Complément 2", Marshaler.Create (() => this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x));
@@ -625,13 +649,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private void CreateUICountry(TileDataItems data)
+		private void CreateUICountry(TileDataItems data, bool visibility = true)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactCountry",
-				Frameless       = true,
-				CreateEditionUI = (tile, builder) =>
+				Name              = "MailContactCountry",
+				Frameless         = true,
+				InitialVisibility = visibility,
+				CreateEditionUI   = (tile, builder) =>
 				{
 					this.InitializeDefaultCountry ();  // met "Suisse" si rien
 					this.selectedCountry = this.Entity.Address.Location.Country;
@@ -650,13 +675,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			data.Add (tileData);
 		}
 
-		private void CreateUILocation(TileDataItems data)
+		private void CreateUILocation(TileDataItems data, bool visibility = true)
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactLocation",
-				Frameless       = true,
-				CreateEditionUI = (tile, builder) =>
+				Name              = "MailContactLocation",
+				Frameless         = true,
+				InitialVisibility = visibility,
+				CreateEditionUI   = (tile, builder) =>
 				{
 					var controller = new SelectionController<LocationEntity> (this.BusinessContext)
 					{

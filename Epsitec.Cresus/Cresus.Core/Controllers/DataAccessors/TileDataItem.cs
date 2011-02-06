@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			this.bindings = new HashSet<AccessorBinding> ();
 			this.DefaultMode = ViewControllerMode.Edition;
+			this.InitialVisibility = true;
 		}
 
 		public TileDataItem(TileDataItem template)
@@ -40,6 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.HideAddButton            = template.HideAddButton;
 				this.HideRemoveButton         = template.HideRemoveButton;
 				this.Frameless                = template.Frameless;
+				this.InitialVisibility        = template.InitialVisibility;
 				this.DataType                 = template.DataType;
 				this.Title                    = template.Title;
 				this.CompactTitle             = template.CompactTitle;
@@ -116,6 +118,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		public bool								HideRemoveButton
+		{
+			get;
+			set;
+		}
+
+		public bool								InitialVisibility
 		{
 			get;
 			set;
@@ -214,6 +222,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					if (this.titleTile != null && this.Tile != null)
 					{
 						this.titleTile.Items.Add (this.Tile);
+					}
+
+					if (this.Tile != null)
+					{
+						//?this.Tile.Visibility = this.InitialVisibility;
 					}
 				}
 			}
