@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 
@@ -1726,6 +1726,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			switch (rawType)
 			{
+				case DbRawType.Boolean:			return FbDbType.SmallInt;
 				case DbRawType.Int16:			return FbDbType.SmallInt;
 				case DbRawType.Int32:			return FbDbType.Integer;
 				case DbRawType.Int64:			return FbDbType.BigInt;
