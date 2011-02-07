@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database.Logging
 		public override void Clear()
 		{
 			this.log.Clear ();
-			this.nextNumber = 1;
+			this.nextNumber = 0;
 		}
 
 
