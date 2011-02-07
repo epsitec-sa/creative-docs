@@ -10,6 +10,40 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public static class Enumerations
 	{
+		public static IEnumerable<EnumKeyValues<Business.DocumentType>> GetAllPossibleDocumentType()
+		{
+			yield return EnumKeyValues.Create (Business.DocumentType.SalesQuote,          "Devis");
+			yield return EnumKeyValues.Create (Business.DocumentType.OrderConfiguration,  "Choix des options pour commande");
+			yield return EnumKeyValues.Create (Business.DocumentType.OrderBooking,        "Bon pour commande");
+			yield return EnumKeyValues.Create (Business.DocumentType.OrderConfirmation,   "Confirmation de commande");
+			yield return EnumKeyValues.Create (Business.DocumentType.ProductionOrder,     "Ordre de production");
+			yield return EnumKeyValues.Create (Business.DocumentType.ProductionChecklist, "Liste de production");
+			yield return EnumKeyValues.Create (Business.DocumentType.ShipmentChecklist,   "List d'expédition");
+			yield return EnumKeyValues.Create (Business.DocumentType.DeliveryNote,        "Bulletin de livraison");
+			yield return EnumKeyValues.Create (Business.DocumentType.Invoice,             "Facture");
+			yield return EnumKeyValues.Create (Business.DocumentType.InvoiceProForma,     "Facture pro forma");
+			yield return EnumKeyValues.Create (Business.DocumentType.PaymentReminder,     "Rappel");
+			yield return EnumKeyValues.Create (Business.DocumentType.Receipt,             "Reçu");
+			yield return EnumKeyValues.Create (Business.DocumentType.CreditMemo,          "Note de crédit");
+			yield return EnumKeyValues.Create (Business.DocumentType.QuoteRequest,        "Demande d'offre");
+			yield return EnumKeyValues.Create (Business.DocumentType.PurchaseOrder,       "Confirmation de commande");
+			yield return EnumKeyValues.Create (Business.DocumentType.Summary,             "Résumé");
+		}
+
+		public static IEnumerable<EnumKeyValues<Business.DocumentSource>> GetAllPossibleDocumentSource()
+		{
+			yield return EnumKeyValues.Create (Business.DocumentSource.Generated, "Généré");
+			yield return EnumKeyValues.Create (Business.DocumentSource.Internal,  "Interne");
+			yield return EnumKeyValues.Create (Business.DocumentSource.External,  "Externe");
+		}
+
+		public static IEnumerable<EnumKeyValues<Business.DocumentFlowDirection>> GetAllPossibleDocumentFlowDirection()
+		{
+			yield return EnumKeyValues.Create (Business.DocumentFlowDirection.Outgoing, "Sortant");
+			yield return EnumKeyValues.Create (Business.DocumentFlowDirection.Incoming, "Entrant");
+			yield return EnumKeyValues.Create (Business.DocumentFlowDirection.Internal, "Interne");
+		}
+
 		public static IEnumerable<EnumKeyValues<Finance.TaxMode>> GetAllPossibleTaxModes()
 		{
 			yield return EnumKeyValues.Create (Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");

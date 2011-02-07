@@ -112,6 +112,7 @@
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleAccountingDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueArticleParameterDefinitionViewController.cs" />

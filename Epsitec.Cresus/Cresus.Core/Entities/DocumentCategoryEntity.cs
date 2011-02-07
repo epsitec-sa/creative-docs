@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.Name, "<br/>", this.Description);
 		}
 
 		public override FormattedText GetCompactSummary()
