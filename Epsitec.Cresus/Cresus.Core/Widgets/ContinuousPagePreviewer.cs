@@ -51,6 +51,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void Update()
 		{
+			if (this.documentPrinter == null)
+			{
+				return;
+			}
+
 			//	Met à jour le contenu de la page.
 			double w = this.documentPrinter.RequiredPageSize.Width;
 			double h = Printers.AbstractDocumentPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
