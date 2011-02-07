@@ -685,26 +685,28 @@ namespace Epsitec.Cresus.Core
 			imageCategory2.CompatibleGroups.Add (imageGroup2);
 			imageCategory3.CompatibleGroups.Add (imageGroup2);
 
+			var dir = System.IO.Directory.GetCurrentDirectory ();  // retourne par exemple "S:\Epsitec.Cresus\Cresus.Core"
+
 			var imageDef1 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef1.Name = "CompanyLogo";
 			imageDef1.Description = "Logo principal de l'entreprise";
 			imageDef1.ImageGroups.Add (imageGroup1);
 			imageDef1.ImageCategory = imageCategory1;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef1, new System.IO.FileInfo ("../../Images/logo-cresus.png"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef1, new System.IO.FileInfo (dir+"/Images/logo-cresus.png"));
 
 			var imageDef2 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef2.Name = "PA";
 			imageDef2.Description = "Pierre Arnaud, directeur";
 			imageDef2.ImageGroups.Add (imageGroup2);
 			imageDef2.ImageCategory = imageCategory2;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef2, new System.IO.FileInfo ("../../Images/pa.tif"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef2, new System.IO.FileInfo (dir+"/Images/pa.tif"));
 
 			var imageDef3 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef3.Name = "DR";
 			imageDef3.Description = "Daniel Roux, ouvrier";
 			imageDef3.ImageGroups.Add (imageGroup2);
 			imageDef3.ImageCategory = imageCategory2;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef3, new System.IO.FileInfo ("../../Images/dr.tif"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef3, new System.IO.FileInfo (dir+"/Images/dr.tif"));
 
 			yield return imageDef1;
 			yield return imageDef2;
