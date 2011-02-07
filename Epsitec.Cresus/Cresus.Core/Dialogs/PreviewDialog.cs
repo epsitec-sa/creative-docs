@@ -64,10 +64,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 
 			var pageSize = this.entityPrinter.BoundsPageSize;
+			double width  = pageSize.Width*3+10+10;
+			double height = System.Math.Max (pageSize.Height*3+10+40, 500);
 
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Aperçu avant impression";
-			window.ClientSize = new Size (pageSize.Width*3+10+10, pageSize.Height*3+10+40);
+			window.ClientSize = new Size (width, height);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate

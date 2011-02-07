@@ -23,12 +23,12 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public AbstractDocumentPrinter(CoreData coreData, AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
-			this.coreData = coreData;
+			this.coreData      = coreData;
 			this.entityPrinter = entityPrinter;
-			this.entity = entity;
+			this.entity        = entity;
 
 			this.documentContainer = new DocumentContainer ();
-			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
+			this.tableColumns      = new Dictionary<TableColumnKeys, TableColumn> ();
 		}
 
 

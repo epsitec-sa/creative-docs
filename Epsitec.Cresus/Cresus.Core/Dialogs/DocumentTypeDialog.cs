@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWindowSize(bool showOptions, bool showPrinters, bool showPreview)
 		{
 			double width = DocumentTypeDialog.panelWidth;
-			double height = (int) (width*297/210);  // place pour une page A4 verticale
+			double height = System.Math.Max ((int) (width*297/210), 500);  // place pour une page A4 verticale
 
 			int columns = 1;
 

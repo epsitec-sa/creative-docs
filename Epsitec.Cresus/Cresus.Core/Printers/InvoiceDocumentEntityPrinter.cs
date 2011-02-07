@@ -109,6 +109,20 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
+				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Invoice, "Facture", "Facture avec ou sans bulletin de versement.");
+
+				type.AddDocumentOptionInvoice ();
+				type.AddDocumentOptionEsr ();
+
+				type.AddBasePrinterUnit ();
+				type.AddEsrPrinterUnit ();
+				type.AddLabelPrinterUnit ();
+
+				this.DocumentTypes.Add (type);
+			}
+
+#if false
+			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture avec un bulletin de versement intégré au bas de chaque page.");
 				
 				type.AddDocumentOptionInvoice ();
@@ -146,17 +160,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.DocumentTypes.Add (type);
 			}
+#endif
 		}
 
 
 		protected override DocumentType AdjustContinuousDocumentType(DocumentType type)
 		{
-			if (type == DocumentType.InvoiceWithInsideESR ||
-				type == DocumentType.InvoiceWithOutsideESR)
-			{
-				type = DocumentType.InvoiceWithoutESR;
-			}
-
 			return type;
 		}
 
