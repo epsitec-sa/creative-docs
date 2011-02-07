@@ -120,6 +120,8 @@
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentOptionsViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryViewController.cs" />
     <Compile Include="Controllers\WorkflowFactory.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
     <Compile Include="Data\DatabaseTime.cs" />
@@ -201,6 +203,9 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
+    <Compile Include="Entities\DocumentCategoryEntity.cs" />
+    <Compile Include="Entities\DocumentOptionsEntity.cs" />
+    <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
@@ -828,6 +833,8 @@
     <EmbeddedResource Include="Images\Debug.icon" />
     <EmbeddedResource Include="Images\Base.DocumentCategory.icon" />
     <EmbeddedResource Include="Images\Base.DocumentOptions.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentCategory.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentOptions.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
