@@ -826,6 +826,8 @@
     <EmbeddedResource Include="Images\ActiveNo.icon" />
     <EmbeddedResource Include="Images\ActiveYes.icon" />
     <EmbeddedResource Include="Images\Debug.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentCategory.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentOptions.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
