@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.documentContainer.Clear ();
 
-			if (this.SelectedDocumentType == DocumentType.Offer)
+			if (this.SelectedDocumentType == Business.DocumentType.SalesQuote)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.Order)
+			if (this.SelectedDocumentType == Business.DocumentType.OrderBooking)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.OrderAcknowledge)
+			if (this.SelectedDocumentType == Business.DocumentType.OrderConfirmation)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.ProductionOrder)
+			if (this.SelectedDocumentType == Business.DocumentType.ProductionOrder)
 			{
 				int documentRank = 0;
 				var groups = this.GetProdGroups ();
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			if (this.SelectedDocumentType == DocumentType.BL)
+			if (this.SelectedDocumentType == Business.DocumentType.DeliveryNote)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.Invoice)
+			if (this.SelectedDocumentType == Business.DocumentType.Invoice)
 			{
 				if (this.HasDocumentOption (DocumentOption.InvoiceWithoutESR))
 				{
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.RequiredPageSize.Height-82, 90, 10));
@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			if (this.SelectedDocumentType == DocumentType.BL)
+			if (this.SelectedDocumentType == Business.DocumentType.DeliveryNote)
 			{
 				this.tableColumns[TableColumnKeys.Discount ].Visible = false;
 				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Total    ].Visible = false;
 			}
 
-			if (this.SelectedDocumentType == DocumentType.ProductionOrder)
+			if (this.SelectedDocumentType == Business.DocumentType.ProductionOrder)
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
@@ -621,12 +621,12 @@ namespace Epsitec.Cresus.Core.Printers
 		private int InitializeColumnArticleLine(ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.SelectedDocumentType == DocumentType.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
+			if (this.SelectedDocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return 0;
 			}
 
-			if (this.SelectedDocumentType == DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
+			if (this.SelectedDocumentType == Business.DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
 			{
 				return 0;
 			}
@@ -738,12 +738,12 @@ namespace Epsitec.Cresus.Core.Printers
 		private int BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.SelectedDocumentType == DocumentType.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
+			if (this.SelectedDocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return 0;
 			}
 
-			if (this.SelectedDocumentType == DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
+			if (this.SelectedDocumentType == Business.DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
 			{
 				return 0;
 			}
@@ -775,7 +775,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.SelectedDocumentType == DocumentType.ProductionOrder);
+			FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.SelectedDocumentType == Business.DocumentType.ProductionOrder);
 
 			if (q1 != null)
 			{
@@ -1076,7 +1076,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			if (this.HasDocumentOption (DocumentOption.Signing))
 			{
-				if (this.SelectedDocumentType == DocumentType.BL)
+				if (this.SelectedDocumentType == Business.DocumentType.DeliveryNote)
 				{
 					var table = new TableBand ();
 
@@ -1095,7 +1095,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 				}
 
-				if (this.SelectedDocumentType == DocumentType.ProductionOrder)
+				if (this.SelectedDocumentType == Business.DocumentType.ProductionOrder)
 				{
 					var table = new TableBand ();
 
@@ -1114,7 +1114,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 				}
 
-				if (this.SelectedDocumentType == DocumentType.Order)
+				if (this.SelectedDocumentType == Business.DocumentType.OrderBooking)
 				{
 					var table = new TableBand ();
 
@@ -1148,7 +1148,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -1359,7 +1359,7 @@ namespace Epsitec.Cresus.Core.Printers
 			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
 			isr.From = this.Entity.BillToMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails, this.SelectedDocumentType);
+			isr.Communication = InvoiceDocumentHelper.GetTitle (this.metadata, this.Entity, billingDetails);
 
 			isr.Slip = new IsrSlip (billingDetails);
 			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
@@ -1373,8 +1373,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.SelectedDocumentType == DocumentType.BL ||
-					   this.SelectedDocumentType == DocumentType.ProductionOrder;
+				return this.SelectedDocumentType == Business.DocumentType.DeliveryNote ||
+					   this.SelectedDocumentType == Business.DocumentType.ProductionOrder;
 			}
 		}
 

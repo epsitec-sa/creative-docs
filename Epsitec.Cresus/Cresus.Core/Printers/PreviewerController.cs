@@ -112,8 +112,8 @@ namespace Epsitec.Cresus.Core.Printers
 				};
 			}
 
-			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug1 ||
-				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug2)
+			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == Business.DocumentType.Debug1 ||
+				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == Business.DocumentType.Debug2)
 			{
 				{
 					var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
@@ -847,7 +847,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected != DocumentType.None;
+				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected != Business.DocumentType.None;
 			}
 		}
 

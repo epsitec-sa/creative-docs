@@ -315,8 +315,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée le contrôleur.
 			DocumentMetadataEntity metadoc = this.GetMetadoc ();
 
-			//?this.previewController = new Printers.ContinuousController (this.Data, metadoc, Printers.DocumentType.InvoiceWithInsideESR);
-			this.previewController = new Printers.ContinuousController (this.Data, metadoc, Printers.DocumentType.Offer);
+			//?Business.DocumentType type = Business.DocumentType.Unknown;
+			Business.DocumentType type = Business.DocumentType.Invoice;
+
+			if (metadoc.DocumentCategory.IsNotNull ())
+			{
+				type = metadoc.DocumentCategory.DocumentType;
+			}
+
+			this.previewController = new Printers.ContinuousController (this.Data, metadoc, type);
 			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);

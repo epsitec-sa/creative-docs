@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Offer, "Offre", "Offre pour le client.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.SalesQuote, "Devis", "Devis pour le client.");
 
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Order, "Commande", "Commande pour le client.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.OrderBooking, "Commande", "Commande pour le client.");
 
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.OrderAcknowledge, "Confirmation de commande", "Confirmation de commande pour le client.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.OrderConfirmation, "Confirmation de commande", "Confirmation de commande pour le client.");
 				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
 				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.BL, "Bulletin de livraison", "Bulletin de livraison, sans prix.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.DeliveryNote, "Bulletin de livraison", "Bulletin de livraison, sans prix.");
 
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Invoice, "Facture", "Facture avec ou sans bulletin de versement.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.Invoice, "Facture", "Facture avec ou sans bulletin de versement.");
 
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionEsr ();
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected override DocumentType AdjustContinuousDocumentType(DocumentType type)
+		protected override Business.DocumentType AdjustContinuousDocumentType(Business.DocumentType type)
 		{
 			return type;
 		}

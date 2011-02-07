@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.documentContainer.Clear ();
 
-			if (this.SelectedDocumentType == DocumentType.Summary)
+			if (this.SelectedDocumentType == Business.DocumentType.Summary)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -97,18 +97,18 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintForegroundCurrentPage (port);
 
-			if (this.SelectedDocumentType == DocumentType.Summary)
+			if (this.SelectedDocumentType == Business.DocumentType.Summary)
 			{
 				this.documentContainer.PaintBackground (port, this.CurrentPage, this.PreviewMode);
 				this.documentContainer.PaintForeground (port, this.CurrentPage, this.PreviewMode);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.Debug1)
+			if (this.SelectedDocumentType == Business.DocumentType.Debug1)
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.Debug2)
+			if (this.SelectedDocumentType == Business.DocumentType.Debug2)
 			{
 				this.PaintTest2 (port);
 			}

@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected DocumentType SelectedDocumentType
+		protected Business.DocumentType SelectedDocumentType
 		{
 			get
 			{

@@ -35,5 +35,11 @@ namespace Epsitec.Cresus.Core.Business
 
 		QuoteRequest			= 8000,				//	demande d'offre
 		PurchaseOrder			= 8100,				//	confirmation de commande
+
+
+		Summary					= 10000,
+
+		Debug1					= 80000,
+		Debug2					= 80000,
 	}
 }
