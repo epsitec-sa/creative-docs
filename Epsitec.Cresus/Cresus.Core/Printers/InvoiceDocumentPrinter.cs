@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double h = this.IsDocumentWithoutPrice ? 0 : InvoiceDocumentPrinter.reportHeight;
 
-				if (this.SelectedDocumentType == DocumentType.InvoiceWithInsideESR)
+				if (this.HasDocumentOption (DocumentOption.InvoiceWithInsideESR))
 				{
 					return new Margins (20, 10, 20+h*2, h+InvoiceDocumentPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
 				}
@@ -155,44 +155,45 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.InvoiceWithInsideESR ||
-				this.SelectedDocumentType == DocumentType.InvoiceWithOutsideESR)
+			if (this.SelectedDocumentType == DocumentType.Invoice)
 			{
-				int documentRank = 0;
-				bool onlyTotal = false;
-				foreach (var billingDetails in this.Entity.BillingDetails)
+				if (this.HasDocumentOption (DocumentOption.InvoiceWithoutESR))
 				{
-					this.documentContainer.DocumentRank = documentRank++;
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+					if (this.Entity.BillingDetails.Count != 0)
+					{
+						var billingDetails = this.Entity.BillingDetails[0];
+						int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
-					this.BuildHeader (billingDetails);
-					this.BuildArticles (onlyTotal: onlyTotal);
-					this.BuildConditions (billingDetails);
-					this.BuildPages (billingDetails, firstPage);
-					this.BuildReportHeaders (firstPage);
-					this.BuildReportFooters (firstPage);
-					this.BuildEsrs (billingDetails, firstPage);
+						this.BuildHeader (billingDetails);
+						this.BuildArticles ();
+						this.BuildConditions (billingDetails);
+						this.BuildPages (billingDetails, firstPage);
+						this.BuildReportHeaders (firstPage);
+						this.BuildReportFooters (firstPage);
 
-					this.documentContainer.Ending (firstPage);
-					onlyTotal = true;
+						this.documentContainer.Ending (firstPage);
+					}
 				}
-			}
-
-			if (this.SelectedDocumentType == DocumentType.InvoiceWithoutESR)
-			{
-				if (this.Entity.BillingDetails.Count != 0)
+				else
 				{
-					var billingDetails = this.Entity.BillingDetails[0];
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+					int documentRank = 0;
+					bool onlyTotal = false;
+					foreach (var billingDetails in this.Entity.BillingDetails)
+					{
+						this.documentContainer.DocumentRank = documentRank++;
+						int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
-					this.BuildHeader (billingDetails);
-					this.BuildArticles ();
-					this.BuildConditions (billingDetails);
-					this.BuildPages (billingDetails, firstPage);
-					this.BuildReportHeaders (firstPage);
-					this.BuildReportFooters (firstPage);
+						this.BuildHeader (billingDetails);
+						this.BuildArticles (onlyTotal: onlyTotal);
+						this.BuildConditions (billingDetails);
+						this.BuildPages (billingDetails, firstPage);
+						this.BuildReportHeaders (firstPage);
+						this.BuildReportFooters (firstPage);
+						this.BuildEsrs (billingDetails, firstPage);
 
-					this.documentContainer.Ending (firstPage);
+						this.documentContainer.Ending (firstPage);
+						onlyTotal = true;
+					}
 				}
 			}
 		}
@@ -1302,12 +1303,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			if (this.SelectedDocumentType == DocumentType.InvoiceWithInsideESR)
+			if (this.HasDocumentOption (DocumentOption.InvoiceWithInsideESR))
 			{
 				this.BuildInsideEsrs (billingDetails, firstPage);
 			}
 
-			if (this.SelectedDocumentType == DocumentType.InvoiceWithOutsideESR)
+			if (this.HasDocumentOption (DocumentOption.InvoiceWithOutsideESR))
 			{
 				this.BuildOutsideEsr (billingDetails, firstPage);
 			}

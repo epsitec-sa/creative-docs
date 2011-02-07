@@ -22,6 +22,10 @@ namespace Epsitec.Cresus.Core.Printers
 		ColumnsOrderQD,
 		ColumnsOrderDQ,
 
+		InvoiceWithInsideESR,	// facture avec BV intégré
+		InvoiceWithOutsideESR,	// facture avec BV séparé
+		InvoiceWithoutESR,		// facture sans BV
+
 		InvoiceWithESR,
 		InvoiceWithES,
 

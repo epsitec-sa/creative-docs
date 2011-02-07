@@ -108,10 +108,8 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute les options d'impression liées aux factures.
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.HeaderLogo, null, "Imprime le logo de l'entreprise", true));
 
-			if (this.Type == DocumentType.BL                   ||
-				this.Type == DocumentType.InvoiceWithInsideESR ||
-				this.Type == DocumentType.InvoiceWithOutsideESR||
-				this.Type == DocumentType.InvoiceWithoutESR    )
+			if (this.Type == DocumentType.BL     ||
+				this.Type == DocumentType.Invoice)
 			{
 				this.options.Add (new DocumentOptionDefinition (DocumentOption.ArticleDelayed, null, "Imprime les articles livrés ultérieurement", true));
 			}
@@ -141,6 +139,11 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddDocumentOptionEsr()
 		{
 			//	Ajoute les options d'impression liées aux BV.
+			this.options.Add (new DocumentOptionDefinition ("Type de la facture :"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithInsideESR,  "Invoice", "Facture avec BV intégré"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithOutsideESR, "Invoice", "Facture avec BV séparé"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithoutESR,     "Invoice", "Facture sans BV", true));
+
 			this.options.Add (new DocumentOptionDefinition ("Type de bulletin de versement :"));
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithESR, "ESR", "BVR orange", true));
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithES,  "ESR", "BV rose"));

@@ -16,9 +16,7 @@ namespace Epsitec.Cresus.Core.Printers
 		OrderAcknowledge,		// confirmation de commande
 		ProductionOrder,		// ordre de production
 		BL,						// bulletin de livraison
-		InvoiceWithInsideESR,	// facture avec BV intégré
-		InvoiceWithOutsideESR,	// facture avec BV séparé
-		InvoiceWithoutESR,		// facture sans BV
+		Invoice,				// facture
 
 		Summary,
 		Debug1,
