@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Business
 			yield return EnumKeyValues.Create (Business.DocumentType.OrderConfirmation,   "Confirmation de commande");
 			yield return EnumKeyValues.Create (Business.DocumentType.ProductionOrder,     "Ordre de production");
 			yield return EnumKeyValues.Create (Business.DocumentType.ProductionChecklist, "Liste de production");
-			yield return EnumKeyValues.Create (Business.DocumentType.ShipmentChecklist,   "List d'expédition");
+			yield return EnumKeyValues.Create (Business.DocumentType.ShipmentChecklist,   "Liste d'expédition");
 			yield return EnumKeyValues.Create (Business.DocumentType.DeliveryNote,        "Bulletin de livraison");
 			yield return EnumKeyValues.Create (Business.DocumentType.Invoice,             "Facture");
 			yield return EnumKeyValues.Create (Business.DocumentType.InvoiceProForma,     "Facture pro forma");
