@@ -833,15 +833,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForColumn(DbColumn column, object value)
 		{
-			DbTypeDef type = column.Type;
-
 			DbTypeDef columnType = column.Type;
 			DbRawType rawType = columnType.RawType;
 			DbSimpleType simpleType = columnType.SimpleType;
 			DbNumDef numDef = columnType.NumDef;
 
 			object convertedValue = this.DataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, value);
-			DbRawType convertedRawType = this.DataConverter.FromDotNetToDatabaseType (type.RawType);
+			DbRawType convertedRawType = this.DataConverter.FromDotNetToDatabaseType (columnType.RawType);
 
 			SqlField SqlField = SqlField.CreateConstant (convertedValue, convertedRawType);
 			SqlField.Alias = column.GetSqlName ();
