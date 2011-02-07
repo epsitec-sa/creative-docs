@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("DocumentOptions", this.Entity, "Options du document", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 4);
+			builder.CreateEditionDetailedItemPicker ("DocumentOptions", this.Entity, "Options du document", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
 
 
