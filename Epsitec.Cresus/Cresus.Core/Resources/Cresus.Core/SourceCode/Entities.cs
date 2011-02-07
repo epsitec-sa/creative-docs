@@ -85,6 +85,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A6O]", typeof (Epsitec.Cresus.Core.Entities.PriceCalculatorEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AEO]", typeof (Epsitec.Cresus.Core.Entities.OptionValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHO]", typeof (Epsitec.Cresus.Core.Entities.OptionValueEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0KU]", typeof (Epsitec.Cresus.Core.Entities.DocumentOptionsEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -9996,6 +9997,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DocumentOptions</c> field.
+		///	designer:fld/L0AFH/L0K01
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0K01]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentOptionsEntity> DocumentOptions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentOptionsEntity> ("[L0K01]");
+			}
+		}
+		///	<summary>
 		///	The <c>DocumentFlowDirection</c> field.
 		///	designer:fld/L0AFH/L0AOO
 		///	</summary>
@@ -13212,6 +13225,107 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnArticleParametersChanged(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, string oldValue, string newValue);
 		static partial void OnArticleParametersChanging(global::Epsitec.Cresus.Core.Entities.IArticleDefinitionParameters obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.DocumentOptions Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>DocumentOptions</c> entity.
+	///	designer:cap/L0KU
+	///	</summary>
+	public partial class DocumentOptionsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.ILifetime
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0KU/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0KU/L0AUN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUN]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0KU/L0AVN
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVN]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>SerializedData</c> field.
+		///	designer:fld/L0KU/L0KV
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0KV]")]
+		public global::System.Byte[] SerializedData
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[L0KV]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.SerializedData;
+				if (oldValue != value || !this.IsFieldDefined("[L0KV]"))
+				{
+					this.OnSerializedDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0KV]", oldValue, value);
+					this.OnSerializedDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentOptionsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentOptionsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 20, 30);	// [L0KU]
+		public static readonly new string EntityStructuredTypeKey = "[L0KU]";
 	}
 }
 #endregion
