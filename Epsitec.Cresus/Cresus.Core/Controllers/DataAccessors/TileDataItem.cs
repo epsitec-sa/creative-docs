@@ -224,9 +224,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 						this.titleTile.Items.Add (this.Tile);
 					}
 
-					if (this.Tile != null)
+					if (this.titleTile != null)
 					{
-						//?this.Tile.Visibility = this.InitialVisibility;
+						this.titleTile.Visibility = this.InitialVisibility;
 					}
 				}
 			}

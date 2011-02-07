@@ -63,18 +63,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					var titleTile = child as Tiles.TitleTile;
 
-					foreach (var tile in titleTile.Items)
-					{
-						if (tile.Controller is Controllers.DataAccessors.TileDataItem)
-						{
-							var tileDataItem = tile.Controller as Controllers.DataAccessors.TileDataItem;
-
-							if (tileDataItem.Name == name)
-							{
-								child.Visibility = visibility;
-							}
-						}
-					}
+					titleTile.SetTileVisibility (name, visibility);
 				}
 			}
 		}

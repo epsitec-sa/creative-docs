@@ -54,9 +54,32 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public TileCollection Items
 		{
+			// TODO: Dans la nouvelle façon de créer les tuiles (réunification des tuiles Summary et Edition), une
+			//		 tuile TitleTile n'a toujours qu'une seule tuile GenericTile "fille". Cette collection pourrait
+			//		 donc être remplacée une une instance unique !
+			//		 SetTileVisibility ci-dessous fonctionne selon cette idée.
 			get
 			{
 				return this.items;
+			}
+		}
+
+		public void SetTileVisibility(string name, bool visibility)
+		{
+			//	Montre ou cache une tuile d'après son nom.
+			//	Si la tuile TitleTile contient une tuile GenericTile utilisant un contrôleur du nom
+			//	cherché, elle est montrée/cachée.
+			foreach (var tile in this.Items)
+			{
+				if (tile.Controller is Controllers.DataAccessors.TileDataItem)
+				{
+					var tileDataItem = tile.Controller as Controllers.DataAccessors.TileDataItem;
+
+					if (tileDataItem.Name == name)
+					{
+						this.Visibility = visibility;
+					}
+				}
 			}
 		}
 
