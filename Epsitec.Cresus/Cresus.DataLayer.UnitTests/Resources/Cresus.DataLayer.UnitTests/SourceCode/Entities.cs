@@ -25,6 +25,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AV1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A52]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.UriContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A62]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AI3]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity))]
 #region Epsitec.Cresus.DataLayer.UnitTests.Country Entity
 namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 {
@@ -1906,6 +1907,247 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		}
 		static partial void OnCodeChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj, string oldValue, string newValue);
 		static partial void OnCodeChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.DataLayer.UnitTests.ValueData Entity
+namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+{
+	///	<summary>
+	///	The <c>ValueData</c> entity.
+	///	designer:cap/L0AI3
+	///	</summary>
+	public partial class ValueDataEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>BooleanValue</c> field.
+		///	designer:fld/L0AI3/L0AJ3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJ3]")]
+		public bool BooleanValue
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0AJ3]");
+			}
+			set
+			{
+				bool oldValue = this.BooleanValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AJ3]"))
+				{
+					this.OnBooleanValueChanging (oldValue, value);
+					this.SetField<bool> ("[L0AJ3]", oldValue, value);
+					this.OnBooleanValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ByteArrayValue</c> field.
+		///	designer:fld/L0AI3/L0AK3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AK3]")]
+		public global::System.Byte[] ByteArrayValue
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[L0AK3]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.ByteArrayValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AK3]"))
+				{
+					this.OnByteArrayValueChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[L0AK3]", oldValue, value);
+					this.OnByteArrayValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DateTimeValue</c> field.
+		///	designer:fld/L0AI3/L0AL3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AL3]")]
+		public global::System.DateTime DateTimeValue
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime> ("[L0AL3]");
+			}
+			set
+			{
+				global::System.DateTime oldValue = this.DateTimeValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AL3]"))
+				{
+					this.OnDateTimeValueChanging (oldValue, value);
+					this.SetField<global::System.DateTime> ("[L0AL3]", oldValue, value);
+					this.OnDateTimeValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DateValue</c> field.
+		///	designer:fld/L0AI3/L0AQ3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQ3]")]
+		public global::Epsitec.Common.Types.Date DateValue
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[L0AQ3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date oldValue = this.DateValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AQ3]"))
+				{
+					this.OnDateValueChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[L0AQ3]", oldValue, value);
+					this.OnDateValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DecimalValue</c> field.
+		///	designer:fld/L0AI3/L0AO3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AO3]")]
+		public global::System.Decimal DecimalValue
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[L0AO3]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.DecimalValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AO3]"))
+				{
+					this.OnDecimalValueChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[L0AO3]", oldValue, value);
+					this.OnDecimalValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IntegerValue</c> field.
+		///	designer:fld/L0AI3/L0AM3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AM3]")]
+		public int IntegerValue
+		{
+			get
+			{
+				return this.GetField<int> ("[L0AM3]");
+			}
+			set
+			{
+				int oldValue = this.IntegerValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AM3]"))
+				{
+					this.OnIntegerValueChanging (oldValue, value);
+					this.SetField<int> ("[L0AM3]", oldValue, value);
+					this.OnIntegerValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LongIntegerValue</c> field.
+		///	designer:fld/L0AI3/L0AN3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AN3]")]
+		public long LongIntegerValue
+		{
+			get
+			{
+				return this.GetField<long> ("[L0AN3]");
+			}
+			set
+			{
+				long oldValue = this.LongIntegerValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AN3]"))
+				{
+					this.OnLongIntegerValueChanging (oldValue, value);
+					this.SetField<long> ("[L0AN3]", oldValue, value);
+					this.OnLongIntegerValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>StringValue</c> field.
+		///	designer:fld/L0AI3/L0AS3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AS3]")]
+		public string StringValue
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AS3]");
+			}
+			set
+			{
+				string oldValue = this.StringValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AS3]"))
+				{
+					this.OnStringValueChanging (oldValue, value);
+					this.SetField<string> ("[L0AS3]", oldValue, value);
+					this.OnStringValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TimeValue</c> field.
+		///	designer:fld/L0AI3/L0AR3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AR3]")]
+		public global::Epsitec.Common.Types.Time TimeValue
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Time> ("[L0AR3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Time oldValue = this.TimeValue;
+				if (oldValue != value || !this.IsFieldDefined("[L0AR3]"))
+				{
+					this.OnTimeValueChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Time> ("[L0AR3]", oldValue, value);
+					this.OnTimeValueChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnBooleanValueChanging(bool oldValue, bool newValue);
+		partial void OnBooleanValueChanged(bool oldValue, bool newValue);
+		partial void OnByteArrayValueChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnByteArrayValueChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDateTimeValueChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnDateTimeValueChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnDateValueChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateValueChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDecimalValueChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnDecimalValueChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnIntegerValueChanging(int oldValue, int newValue);
+		partial void OnIntegerValueChanged(int oldValue, int newValue);
+		partial void OnLongIntegerValueChanging(long oldValue, long newValue);
+		partial void OnLongIntegerValueChanged(long oldValue, long newValue);
+		partial void OnStringValueChanging(string oldValue, string newValue);
+		partial void OnStringValueChanged(string oldValue, string newValue);
+		partial void OnTimeValueChanging(global::Epsitec.Common.Types.Time oldValue, global::Epsitec.Common.Types.Time newValue);
+		partial void OnTimeValueChanged(global::Epsitec.Common.Types.Time oldValue, global::Epsitec.Common.Types.Time newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 114);	// [L0AI3]
+		public static readonly new string EntityStructuredTypeKey = "[L0AI3]";
 	}
 }
 #endregion

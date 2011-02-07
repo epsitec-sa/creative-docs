@@ -107,11 +107,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.Int16, DbRawType.Int16 },
 				{ Type.Int32, DbRawType.Int32 },
 				{ Type.Int64, DbRawType.Int64 },
-				{ Type.Double, DbRawType.LargeDecimal },
+				{ Type.Decimal, DbRawType.LargeDecimal },
 				{ Type.Date, DbRawType.Date },
 				{ Type.Time, DbRawType.Time },
 				{ Type.DateTime, DbRawType.DateTime },
 				{ Type.String, DbRawType.String },
+				{ Type.ByteArray, DbRawType.ByteArray },
 			};
 
 			foreach (Type match in matches.Keys)
@@ -133,11 +134,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.Int16, DbSimpleType.Decimal },
 				{ Type.Int32, DbSimpleType.Decimal },
 				{ Type.Int64, DbSimpleType.Decimal },
-				{ Type.Double, DbSimpleType.Decimal },
+				{ Type.Decimal, DbSimpleType.Decimal },
 				{ Type.Date, DbSimpleType.Date },
 				{ Type.Time, DbSimpleType.Time },
 				{ Type.DateTime, DbSimpleType.DateTime },
 				{ Type.String, DbSimpleType.String },
+				{ Type.ByteArray, DbSimpleType.ByteArray },
 			};
 
 			foreach (Type match in matches.Keys)
@@ -159,11 +161,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.Int16, DbNumDef.FromRawType (DbRawType.Int16) },
 				{ Type.Int32, DbNumDef.FromRawType (DbRawType.Int32) },
 				{ Type.Int64, DbNumDef.FromRawType (DbRawType.Int64) },
-				{ Type.Double, DbNumDef.FromRawType (DbRawType.LargeDecimal) },
+				{ Type.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal) },
 				{ Type.Date, DbNumDef.FromRawType (DbRawType.Date) },
 				{ Type.Time, DbNumDef.FromRawType (DbRawType.Time) },
 				{ Type.DateTime, DbNumDef.FromRawType (DbRawType.DateTime) },
 				{ Type.String, DbNumDef.FromRawType (DbRawType.String) },
+				{ Type.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray) },
 			};
 
 			foreach (Type match in matches.Keys)

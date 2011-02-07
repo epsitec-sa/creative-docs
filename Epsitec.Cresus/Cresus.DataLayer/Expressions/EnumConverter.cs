@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbRawType.Int32;
 				case Type.Int64:
 					return DbRawType.Int64;
-				case Type.Double:
+				case Type.Decimal:
 					return DbRawType.LargeDecimal;
 				case Type.Date:
 					return DbRawType.Date;
@@ -135,6 +135,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbRawType.DateTime;
 				case Type.String:
 					return DbRawType.String;
+				case Type.ByteArray:
+					return DbRawType.ByteArray;
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
 			}
@@ -159,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbSimpleType.Decimal;
 				case Type.Int64:
 					return DbSimpleType.Decimal;
-				case Type.Double:
+				case Type.Decimal:
 					return DbSimpleType.Decimal;
 				case Type.Date:
 					return DbSimpleType.Date;
@@ -169,6 +171,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbSimpleType.DateTime;
 				case Type.String:
 					return DbSimpleType.String;
+				case Type.ByteArray:
+					return DbSimpleType.ByteArray;
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
 			}

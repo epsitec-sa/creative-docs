@@ -677,13 +677,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
-		public void IntRequest1()
+		public void GetObjectBasedOnBooleanField1()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				ContactRoleEntity example = new ContactRoleEntity ();
+				ValueDataEntity example = new ValueDataEntity ();
 
 				Request request = new Request ()
 				{
@@ -693,129 +693,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				request.AddLocalConstraint (example,
 					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A03]")),
+						new Field (new Druid ("[L0AJ3]")),
 						BinaryComparator.IsEqual,
-						new Constant (1)
+						new Constant (true)
 					)
 				);
 
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
 
-				Assert.IsTrue (roles.Count == 1);
-				Assert.AreEqual (1, roles.First ().Rank);
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
 			}
 		}
 
 
 		[TestMethod]
-		public void IntRequest2()
+		public void GetObjectBasedOnBooleanField2()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				ContactRoleEntity example = new ContactRoleEntity ();
-
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
-
-				request.AddLocalConstraint (example,
-					new BinaryOperation (
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0A03]")),
-							BinaryComparator.IsLower,
-							new Constant (4)
-						),
-						BinaryOperator.And,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[L0A03]")),
-							BinaryComparator.IsGreaterOrEqual,
-							new Constant (3)
-						)
-					)
-				);
-
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
-
-				Assert.IsTrue (roles.Count == 1);
-				Assert.AreEqual (3, roles.First ().Rank);
-			}
-		}
-
-
-		[TestMethod]
-		public void IntRequest3()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				ContactRoleEntity example = new ContactRoleEntity ();
-
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
-
-				request.AddLocalConstraint (example,
-					new UnaryComparison (
-						new Field (new Druid ("[L0A03]")),
-						UnaryComparator.IsNull
-					)
-				);
-
-				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
-
-				Assert.IsTrue (roles.Count == 3);
-				Assert.IsTrue (roles.All (r => r.Rank == null));
-			}
-		}
-
-
-		[TestMethod]
-		public void DateRequest1()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
-
-				Request request = new Request ()
-				{
-					RootEntity = example,
-					RequestedEntity = example,
-				};
-
-				request.AddLocalConstraint (example,
-					new UnaryComparison (
-						new Field (new Druid ("[L0A61]")),
-						UnaryComparator.IsNotNull
-					)
-				);
-
-				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
-
-				Assert.IsTrue (persons.Count == 3);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
-			}
-		}
-
-
-		[TestMethod]
-		public void DateRequest2()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity example = new NaturalPersonEntity ();
+				ValueDataEntity example = new ValueDataEntity ();
 
 				Request request = new Request ()
 				{
@@ -825,16 +726,766 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				request.AddLocalConstraint (example,
 					new ComparisonFieldValue (
-						new Field (new Druid ("[L0A61]")),
-						BinaryComparator.IsEqual,
-						new Constant (new Date (1965, 5, 3))
+						new Field (new Druid ("[L0AJ3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (false)
 					)
 				);
 
-				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
 
-				Assert.IsTrue (persons.Count == 1);
-				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnByteArrayField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AK3]")),
+						BinaryComparator.IsEqual,
+						new Constant (new byte[] { 0x0F, 0xF0 })
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnByteArrayField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AK3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (new byte[] { 0x0F, 0xF0 })
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateTimeField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AL3]")),
+						BinaryComparator.IsEqual,
+						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateTimeField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AL3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateTimeField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AL3]")),
+						BinaryComparator.IsGreater,
+						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AQ3]")),
+						BinaryComparator.IsEqual,
+						new Constant (new Date (1291, 8, 1))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AQ3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (new Date (1291, 8, 1))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AQ3]")),
+						BinaryComparator.IsGreater,
+						new Constant (new Date (1291, 8, 1))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDecimalField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AO3]")),
+						BinaryComparator.IsEqual,
+						new Constant (123.456m)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDecimalField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AO3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (123.456m)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDecimalField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AO3]")),
+						BinaryComparator.IsGreater,
+						new Constant (123.456m)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnIntegerField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AM3]")),
+						BinaryComparator.IsEqual,
+						new Constant (42)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+	
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnIntegerField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AM3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (42)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnIntegerField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AM3]")),
+						BinaryComparator.IsLower,
+						new Constant (42)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnLongIntegerField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AN3]")),
+						BinaryComparator.IsEqual,
+						new Constant (4242)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnLongIntegerField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AN3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (4242)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnLongIntegerField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AN3]")),
+						BinaryComparator.IsLower,
+						new Constant (4242)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnStringField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AS3]")),
+						BinaryComparator.IsEqual,
+						new Constant ("blupi")
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnStringField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AS3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant ("blupi")
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnStringField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AS3]")),
+						BinaryComparator.IsLower,
+						new Constant ("blupi")
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnTimeField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AR3]")),
+						BinaryComparator.IsEqual,
+						new Constant (new Time (12, 12, 12))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnTimeField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AR3]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (new Time (12, 12, 12))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnTimeField3()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0AR3]")),
+						BinaryComparator.IsLower,
+						new Constant (new Time (12, 12, 12))
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
 			}
 		}
 

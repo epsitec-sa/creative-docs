@@ -9,6 +9,10 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Linq;
+
 using System.Collections.Generic;
 
 
@@ -54,6 +58,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 				EntityInfo<MailContactEntity>.GetTypeId (),
 				EntityInfo<TelecomContactEntity>.GetTypeId (),
 				EntityInfo<UriContactEntity>.GetTypeId (),
+				EntityInfo<ValueDataEntity>.GetTypeId (),
 			};
 
 			dataInfrastructure.CreateSchema (entityIds);
@@ -89,6 +94,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 			contactGertrude.NaturalPerson = gertrude;
 
 			NaturalPersonEntity hans = DataContextHelper.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, null);
+
+			ValueDataEntity valueData1 = DataContextHelper.CreateValueData (dataContext, true, new byte[] { 0x0F, 0xF0 }, new System.DateTime (1969, 7, 21, 4, 17, 0), new Date (1291, 8, 1), 123.456m, 42, 4242, "blupi", new Time (12, 12, 12));
+			ValueDataEntity valueData2 = DataContextHelper.CreateValueData (dataContext, false, new byte[] { 0xFF, 0x00 }, new System.DateTime (2011, 2, 6, 1, 2, 3), new Date (1789, 7, 14), 5423.675m, 6543, 2652, "mania", new Time (1, 2, 3));
+			ValueDataEntity valueData3 = DataContextHelper.CreateValueData (dataContext, true, new byte[] { 0x00, 0xFF }, new System.DateTime (2000, 1, 1, 0, 0, 0), new Date (1776, 7, 4), 0, 0, 0, "", new Time (0, 0, 0));
 
 			dataContext.SaveChanges ();
 		}
@@ -299,6 +308,38 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 			return example;
 		}
 
+
+		public static bool CheckValueData1(ValueDataEntity valueData)
+		{
+			return CheckValueData(valueData, true, new byte[]{0x0F, 0xF0}, new System.DateTime(1969, 7, 21, 4, 17, 0), new Date(1291, 8, 1), 123.456m, 42, 4242, "blupi", new Time(12, 12, 12));
+		}
+
+
+		public static bool CheckValueData2(ValueDataEntity valueData)
+		{
+			return CheckValueData (valueData, false, new byte[] { 0xFF, 0x00 }, new System.DateTime (2011, 2, 6, 1, 2, 3), new Date (1789, 7, 14), 5423.675m, 6543, 2652, "mania", new Time (1, 2, 3));
+		}
+
+
+		public static bool CheckValueData3(ValueDataEntity valueData)
+		{
+			return CheckValueData (valueData, true, new byte[] { 0x00, 0xFF }, new System.DateTime (2000, 1, 1, 0, 0, 0), new Date (1776, 7, 4), 0, 0, 0, "", new Time (0, 0, 0));
+		}
+
+
+		private static bool CheckValueData(ValueDataEntity valueData, bool booleanValue, byte[] byteArrayValue, System.DateTime dateTimeValue, Date dateValue, decimal decimalValue, int integerValue, int longIntegerValue, string stringValue, Time timeValue)
+		{
+			return valueData.BooleanValue == booleanValue
+            	&& valueData.ByteArrayValue.SequenceEqual (byteArrayValue)
+            	&& valueData.DateTimeValue == dateTimeValue
+            	&& valueData.DateValue == dateValue
+            	&& valueData.DecimalValue == decimalValue
+            	&& valueData.IntegerValue == integerValue
+            	&& valueData.LongIntegerValue == longIntegerValue
+            	&& valueData.StringValue == stringValue
+            	&& valueData.TimeValue == timeValue;
+		}
+            
 
 	}
 
