@@ -48,6 +48,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "WorkflowDefinitions":
 					return context => data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context);
 
+				case "DocumentCategory":
+					return context => data.GetAllEntities<DocumentCategoryEntity> (dataContext: context);
+
+				case "DocumentOptions":
+					return context => data.GetAllEntities<DocumentOptionsEntity> (dataContext: context);
+
 				default:
 					return null;
 			}
@@ -80,6 +86,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "WorkflowDefinitions":
 					return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();
+
+				case "DocumentCategory":
+					return EntityInfo<DocumentCategoryEntity>.GetTypeId ();
+
+				case "DocumentOptions":
+					return EntityInfo<DocumentOptionsEntity>.GetTypeId ();
 
 				default:
 					return Druid.Empty;
