@@ -55,6 +55,8 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Core.Res.CommandIds.Base.ShowImages)]
 		[Command (Core.Res.CommandIds.Base.ShowImageBlobs)]
 		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
+		[Command (Core.Res.CommandIds.Base.ShowDocumentCategory)]
+		[Command (Core.Res.CommandIds.Base.ShowDocumentOptions)]
 		public void ProcessBaseGenericShow(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	The generic Base.Show command handler uses the name of the command to
