@@ -577,6 +577,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 		}
 
 
+		public static ValueDataEntity CreateValueData(DataContext dataContext, bool booleanValue, byte[] byteArrayValue, System.DateTime dateTimeValue, Date dateValue, decimal decimalValue, int integerValue, long longIntegerValue, string stringValue, Time timeValue)
+		{
+			ValueDataEntity valueData = dataContext.CreateEntity<ValueDataEntity> ();
+
+			valueData.BooleanValue = booleanValue;
+			valueData.ByteArrayValue = byteArrayValue;
+			valueData.DateTimeValue = dateTimeValue;
+			valueData.DateValue = dateValue;
+			valueData.DecimalValue = decimalValue;
+			valueData.IntegerValue = integerValue;
+			valueData.LongIntegerValue = longIntegerValue;
+			valueData.StringValue = stringValue;
+			valueData.TimeValue = timeValue;
+
+			return valueData;
+		}
+
+
 	}
 
 

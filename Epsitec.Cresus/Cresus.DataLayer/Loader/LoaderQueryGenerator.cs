@@ -718,116 +718,54 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForValueField(AliasNode rootEntityAlias, AbstractEntity entity, StructuredTypeField field)
 		{
-			// TODO Make sure that the way we obtain the values is ok even in cases when the values
-			// are not supported. It seems to me that we should call the DataConverter.
-			// Marc
-
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
 
+			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 			string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
-
+			DbColumn dbColumn = dbTable.Columns[columnName];
+			
 			object fieldValue = entity.InternalGetValue (field.CaptionId.ToResourceId ());
 
-			AbstractType fieldType = (AbstractType) field.Type;
+			DbTypeDef columnType = dbColumn.Type;
+			DbRawType rawType = columnType.RawType;
+			DbSimpleType simpleType = columnType.SimpleType;
+			DbNumDef numDef = columnType.NumDef;
 
-			SqlFunction sqlCondition;
+			object convertedValue = this.DataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, fieldValue);
+			DbRawType convertedRawType = this.DataConverter.FromDotNetToDatabaseType (columnType.RawType);
+			SqlFunctionCode sqlFunctionCode = SqlFunctionCode.Unknown;
 
-			switch (fieldType.TypeCode)
+			switch (convertedRawType)
 			{
-				case TypeCode.String:
-					
-					// TODO The call to FormattedText is not very nice, but it must be done in order
-					// to allow research on regular text as well as on formatted text. This might
-					// indicate some kind of design flow in how the text in entities are implemented.
-					// So we can't do much right here to improve the situation. The correction must be
-					// done elsewhere first.
-					// Marc
-
-					string value = FormattedText.CastToString (fieldValue);
-
-					sqlCondition = new SqlFunction
-					(
-						SqlFunctionCode.CompareLike,
-						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant (value, DbRawType.String)
-					);
+				case DbRawType.String:
+					sqlFunctionCode = SqlFunctionCode.CompareLike;
 					break;
 
-				case TypeCode.Decimal:
-
-					// TODO Implement this case.
-					// Marc
-
-					throw new System.NotImplementedException ();
-
-				case TypeCode.Double:
-					
-					// TODO Implement this case.
-					// Marc
-
-					throw new System.NotImplementedException ();
-
-				case TypeCode.Integer:
-					sqlCondition = new SqlFunction
-					(
-						SqlFunctionCode.CompareEqual,
-						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((int) fieldValue, DbRawType.Int32)
-					);
-					break;
-
-				case TypeCode.LongInteger:
-					sqlCondition = new SqlFunction
-					(
-						SqlFunctionCode.CompareEqual,
-						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((long) fieldValue, DbRawType.Int64)
-					);
-					break;
-
-				case TypeCode.Boolean:
-					sqlCondition = new SqlFunction
-					(
-						SqlFunctionCode.CompareEqual,
-						this.BuildSqlFieldForEntityColumn(rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant ((bool) fieldValue, DbRawType.Boolean)
-					);
-					break;
-
-				case TypeCode.Date:
-
-					// TODO Implement this case.
-					// Marc
-
-					throw new System.NotImplementedException ();
-
-				case TypeCode.DateTime:
-
-					// TODO Implement this case.
-					// Marc
-
-					throw new System.NotImplementedException ();
-
-				case TypeCode.Time:
-
-					// TODO Implement this case.
-					// Marc
-
-					throw new System.NotImplementedException ();
-
-				case TypeCode.Enum:
-					sqlCondition = new SqlFunction
-					(
-						SqlFunctionCode.CompareEqual,
-						this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
-						SqlField.CreateConstant (EnumType.ConvertToInt ((System.Enum) fieldValue), DbRawType.Int32)
-					);
+				case DbRawType.Boolean:
+				case DbRawType.ByteArray:
+				case DbRawType.Date:
+				case DbRawType.DateTime:
+				case DbRawType.Guid:
+				case DbRawType.Int16:
+				case DbRawType.Int32:
+				case DbRawType.Int64:
+				case DbRawType.LargeDecimal:
+				case DbRawType.SmallDecimal:
+				case DbRawType.Time:
+					sqlFunctionCode = SqlFunctionCode.CompareEqual;
 					break;
 
 				default:
 					throw new System.NotImplementedException ();
 			}
+
+			SqlFunction sqlCondition = new SqlFunction
+			(
+				sqlFunctionCode,
+				this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName),
+				SqlField.CreateConstant (convertedValue, convertedRawType)
+			);
 
 			return SqlContainer.CreateSqlConditions (sqlCondition);
 		}

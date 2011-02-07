@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -403,6 +405,195 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					Assert.IsTrue (persons[0].Contacts.Count == 0);
 					Assert.IsTrue (persons[0].Gender == null);
 				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnBooleanField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					BooleanValue = false,
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnByteArrayField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					ByteArrayValue = new byte[] { 0x0F, 0xF0 },
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateTimeField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					DateTimeValue = new System.DateTime (1969, 7, 21, 4, 17, 0),
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDateField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					DateValue = new Date (1291, 8, 1),
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnDecimalField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					DecimalValue = 123.456m,
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnIntegerField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					IntegerValue = 42,
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnLongIntegerField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					LongIntegerValue = 4242,
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnStringField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					StringValue = "blupi",
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnTimeField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					TimeValue = new Time(12, 12, 12),
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
 			}
 		}
 

@@ -16,6 +16,12 @@
 
 
 		/// <summary>
+		/// The type for byte arrays.
+		/// </summary>
+		ByteArray,
+
+
+		/// <summary>
 		/// The type for short integer values.
 		/// </summary>
 		Int16,
@@ -34,9 +40,9 @@
 
 
 		/// <summary>
-		/// The type for floating point values.
+		/// The type for decimal values.
 		/// </summary>
-		Double,
+		Decimal,
 
 
 		/// <summary>

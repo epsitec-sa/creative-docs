@@ -55,27 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// </summary>
 		/// <param name="value">The value of the new <c>Constant</c></param>
 		public Constant(decimal value)
-			: this (Type.Double, (double) value)
-		{
-		}
-
-
-		/// <summary>
-		/// Builds a new <c>Constant</c> of type <see cref="float"/>.
-		/// </summary>
-		/// <param name="value">The value of the new <c>Constant</c></param>
-		public Constant(float value)
-			: this (Type.Double, value)
-		{
-		}
-
-
-		/// <summary>
-		/// Builds a new <c>Constant</c> of type <see cref="double"/>.
-		/// </summary>
-		/// <param name="value">The value of the new <c>Constant</c></param>
-		public Constant(double value)
-			: this (Type.Double, value)
+			: this (Type.Decimal, value)
 		{
 		}
 
@@ -86,6 +66,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <param name="value">The value of the new <c>Constant</c></param>
 		public Constant(bool value)
 			: this (Type.Boolean, value)
+		{
+		}
+
+
+		/// <summary>
+		/// Builds a new <c>Constant</c> of type <see cref="byte"/> arrays.
+		/// </summary>
+		/// <param name="value">The value of the new <c>Constant</c></param>
+		public Constant(byte[] value)
+			: this (Type.ByteArray, value)
 		{
 		}
 

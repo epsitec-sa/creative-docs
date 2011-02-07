@@ -206,6 +206,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 					EntityInfo<MailContactEntity>.GetTypeId (),
 					EntityInfo<TelecomContactEntity>.GetTypeId (),
 					EntityInfo<UriContactEntity>.GetTypeId (),
+					EntityInfo<ValueDataEntity>.GetTypeId (),
 				};
 
 				dataInfrastructure.CreateSchema (entityIds);

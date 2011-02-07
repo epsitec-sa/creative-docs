@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			new Constant ((int) 0);
 			new Constant ((long) 0);
 			new Constant ((decimal) 0);
-			new Constant ((float) 0);
-			new Constant ((double) 0);
 			new Constant (true);
 			new Constant ("test");
 			new Constant (Date.Today);
@@ -49,14 +47,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			Assert.AreEqual (Type.Int16, new Constant ((short) 0).Type);
 			Assert.AreEqual (Type.Int32, new Constant ((int) 0).Type);
 			Assert.AreEqual (Type.Int64, new Constant ((long) 0).Type);
-			Assert.AreEqual (Type.Double, new Constant ((decimal) 0).Type);
-			Assert.AreEqual (Type.Double, new Constant ((float) 0).Type);
-			Assert.AreEqual (Type.Double, new Constant ((double) 0).Type);
+			Assert.AreEqual (Type.Decimal, new Constant ((decimal) 0).Type);
 			Assert.AreEqual (Type.Boolean, new Constant (true).Type);
 			Assert.AreEqual (Type.String, new Constant ("test").Type);
 			Assert.AreEqual (Type.Date, new Constant (Date.Today).Type);
 			Assert.AreEqual (Type.Time, new Constant (Time.Now).Type);
 			Assert.AreEqual (Type.DateTime, new Constant (System.DateTime.Now).Type);
+			Assert.AreEqual (Type.ByteArray, new Constant (new byte[] { 0x00 }).Type);
 		}
 
 
@@ -66,9 +63,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			Assert.AreEqual (0, (short) new Constant ((short) 0).Value);
 			Assert.AreEqual (0, (int) new Constant ((int) 0).Value);
 			Assert.AreEqual (0, (long) new Constant ((long) 0).Value);
-			Assert.AreEqual (0, (double) new Constant ((decimal) 0).Value);
-			Assert.AreEqual (0, (float) new Constant ((float) 0).Value);
-			Assert.AreEqual (0, (double) new Constant ((double) 0).Value);
+			Assert.AreEqual (0, (decimal) new Constant ((decimal) 0).Value);
 			Assert.AreEqual (true, (bool) new Constant (true).Value);
 			Assert.AreEqual ("test", (string) new Constant ("test").Value);
 			Assert.AreEqual (Date.Today, (Date) new Constant (Date.Today).Value);
