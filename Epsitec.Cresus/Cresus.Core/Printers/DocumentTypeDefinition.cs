@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class DocumentTypeDefinition
 	{
-		public DocumentTypeDefinition(DocumentType type, string shortDescription, string longDescription)
+		public DocumentTypeDefinition(Business.DocumentType type, string shortDescription, string longDescription)
 		{
 			this.type             = type;
 			this.shortDescription = shortDescription;
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.printers = new List<DocumentPrinterFunction> ();
 		}
 
-		public DocumentType Type
+		public Business.DocumentType Type
 		{
 			get
 			{
@@ -108,8 +108,9 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute les options d'impression liées aux factures.
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.HeaderLogo, null, "Imprime le logo de l'entreprise", true));
 
-			if (this.Type == DocumentType.BL     ||
-				this.Type == DocumentType.Invoice)
+			if (this.Type == Business.DocumentType.DeliveryNote   ||
+				this.Type == Business.DocumentType.Invoice        ||
+				this.Type == Business.DocumentType.InvoiceProForma)
 			{
 				this.options.Add (new DocumentOptionDefinition (DocumentOption.ArticleDelayed, null, "Imprime les articles livrés ultérieurement", true));
 			}
@@ -123,8 +124,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.options.Add (new DocumentOptionDefinition ("Ordre des colonnes :"));
 
-			if (this.Type == DocumentType.BL             ||
-				this.Type == DocumentType.ProductionOrder)
+			if (this.Type == Business.DocumentType.DeliveryNote   ||
+				this.Type == Business.DocumentType.ProductionOrder)
 			{
 				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderQD, "ColumnsOrder", "Quantité, Désignation", true));
 				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderDQ, "ColumnsOrder", "Désignation, Quantité"));
@@ -232,14 +233,14 @@ namespace Epsitec.Cresus.Core.Printers
 		#endregion
 
 
-		public static string TypeToString(DocumentType type)
+		public static string TypeToString(Business.DocumentType type)
 		{
 			return type.ToString ();
 		}
 
-		public static DocumentType StringToType(string name)
+		public static Business.DocumentType StringToType(string name)
 		{
-			DocumentType type;
+			Business.DocumentType type;
 
 			if (System.Enum.TryParse (name, out type))
 			{
@@ -247,7 +248,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				return DocumentType.None;
+				return Business.DocumentType.None;
 			}
 		}
 
@@ -272,7 +273,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly DocumentType						type;
+		private readonly Business.DocumentType				type;
 		private readonly string								shortDescription;
 		private readonly string								longDescription;
 		private readonly List<DocumentOptionDefinition>		options;

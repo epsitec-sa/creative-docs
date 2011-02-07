@@ -343,11 +343,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (this.isPreview)
 			{
-				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None;
+				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != Business.DocumentType.None;
 			}
 			else
 			{
-				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None && this.entityPrinter.SelectedDocumentTypeDefinition.IsDocumentPrintersDefined;
+				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != Business.DocumentType.None && this.entityPrinter.SelectedDocumentTypeDefinition.IsDocumentPrintersDefined;
 			}
 		}
 
@@ -649,7 +649,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePreview()
 		{
-			if (this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None)
+			if (this.entityPrintingSettings.DocumentTypeSelected != Business.DocumentType.None)
 			{
 				this.previewerController.Update ();
 			}
@@ -661,7 +661,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return documentType.DocumentOptions.Where (x => x.Option == option).FirstOrDefault ();
 		}
 
-		private DocumentTypeDefinition GetDocumentType(DocumentType type)
+		private DocumentTypeDefinition GetDocumentType(Business.DocumentType type)
 		{
 			return this.entityPrinter.DocumentTypes.Where (x => x.Type == type).FirstOrDefault ();
 		}
@@ -703,7 +703,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				if (this.entityPrintingSettings.DocumentTypeSelected == DocumentType.None)
+				if (this.entityPrintingSettings.DocumentTypeSelected == Business.DocumentType.None)
 				{
 					return this.SettingsGlobalPrefix;
 				}

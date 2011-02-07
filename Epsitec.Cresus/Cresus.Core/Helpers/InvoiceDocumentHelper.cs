@@ -17,35 +17,16 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentType type)
+		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails)
 		{
-			string doc;
+			FormattedText doc = "Document";
 
-			switch (type)
+			if (metadata.DocumentCategory.IsNotNull ())
 			{
-				case Printers.DocumentType.BL:
-					doc = "Bulletin de livraison";
-					break;
-
-				case Printers.DocumentType.ProductionOrder:
-					doc = "Ordre de production";
-					break;
-
-				case Printers.DocumentType.Offer:
-					doc = "Offre";
-					break;
-
-				case Printers.DocumentType.Order:
-					doc = "Commande";
-					break;
-
-				case Printers.DocumentType.OrderAcknowledge:
-					doc = "Confirmation de commande";
-					break;
-
-				default:
-					doc = "Facture";
-					break;
+				if (!metadata.DocumentCategory.Name.IsNullOrEmpty)
+				{
+					doc = metadata.DocumentCategory.Name;
+				}
 			}
 
 			string title = TextFormatter.FormatText (string.Concat("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();

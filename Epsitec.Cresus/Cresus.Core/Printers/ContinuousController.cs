@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class ContinuousController
 	{
-		public ContinuousController(CoreData coreData, DocumentMetadataEntity metadoc, Printers.DocumentType documentType)
+		public ContinuousController(CoreData coreData, DocumentMetadataEntity metadoc, Business.DocumentType documentType)
 		{
 			this.entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (coreData, metadoc);
 			System.Diagnostics.Debug.Assert (this.entityPrinter != null);

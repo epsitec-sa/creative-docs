@@ -416,7 +416,6 @@
     <Compile Include="Printers\PrinterUnitFunction.cs" />
     <Compile Include="Printers\PageType.cs" />
     <Compile Include="Printers\DocumentPrinterFunction.cs" />
-    <Compile Include="Printers\DocumentType.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Repositories\ArticleGroupRepository.cs" />
     <Compile Include="Repositories\ArticleCategoryRepository.cs" />

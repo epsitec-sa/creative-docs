@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentPrinters.Add (new RelationDocumentPrinter (coreData, this, this.entity));
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
 				type.DocumentOptions.Add (new DocumentOptionDefinition ("Données à inclure :"));
 				type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationMail, null, "Adresses", true));
 				type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationTelecom, null, "Téléphones", true));
@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
 				this.DocumentTypes.Add (type);
 			}
 
 			{
-				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
+				DocumentTypeDefinition type = new DocumentTypeDefinition (Business.DocumentType.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
 				this.DocumentTypes.Add (type);
 			}
 		}

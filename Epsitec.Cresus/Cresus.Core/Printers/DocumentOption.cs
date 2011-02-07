@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Printers
 		InvoiceWithOutsideESR,	// facture avec BV séparé
 		InvoiceWithoutESR,		// facture sans BV
 
-		InvoiceWithESR,
-		InvoiceWithES,
+		InvoiceWithESR,			// facture avec BVR
+		InvoiceWithES,			// facture avec BV
 
 		ESRFacsimile,
 		Specimen,
