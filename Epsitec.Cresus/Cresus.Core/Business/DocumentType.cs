@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Business
 		PurchaseOrder			= 8100,				//	confirmation de commande
 
 
-		Summary					= 10000,
+		Summary					= 10000,			//	résumé générique
 
 		Debug1					= 80000,
 		Debug2					= 80000,

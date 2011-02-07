@@ -86,13 +86,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Crée l'onglet 'printer'.
-			var printerPage = new TabPage
+			var printerUnitsPage = new TabPage
 			{
 				TabTitle = "Unités d'impression",
-				Name = "printer",
+				Name = "printerUnits",
 			};
 
-			this.tabBook.Items.Add (printerPage);
+			this.tabBook.Items.Add (printerUnitsPage);
+
+			//	Crée l'onglet 'printer'.
+			var printerOptionsPage = new TabPage
+			{
+				TabTitle = "Options d'impression",
+				Name = "printerOptions",
+			};
+
+			this.tabBook.Items.Add (printerOptionsPage);
 
 			this.ActiveLastPage ();
 
@@ -125,9 +134,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Rempli les onglets.
-			var printerSettings = new SettingsTabPages.PrinterUnitsTabPage (this.application);
-			printerSettings.CreateUI (printerPage);
-			this.settingsTabPages.Add (printerSettings);
+			var printerUnits = new SettingsTabPages.PrinterUnitsTabPage (this.application);
+			printerUnits.CreateUI (printerUnitsPage);
+			this.settingsTabPages.Add (printerUnits);
+
+			var printerOptions = new SettingsTabPages.PrinterOptionsTabPage (this.application);
+			printerOptions.CreateUI (printerOptionsPage);
+			this.settingsTabPages.Add (printerOptions);
 
 			foreach (var tab in this.settingsTabPages)
 			{
@@ -215,7 +228,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (string.IsNullOrEmpty (name))
 			{
-				name = "printer";  // page par défaut
+				name = "printerUnits";  // page par défaut
 			}
 
 			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
