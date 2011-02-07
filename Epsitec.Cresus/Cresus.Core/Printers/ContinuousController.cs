@@ -170,6 +170,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateScroller()
 		{
+			if ((this.previewer == null) ||
+				(this.previewer.DocumentPrinter == null))
+			{
+				return;
+			}
+
 			var min = this.previewer.MinValue;
 			var max = this.previewer.MaxValue;
 			var vrt = this.previewer.VisibleRangeRatio;
