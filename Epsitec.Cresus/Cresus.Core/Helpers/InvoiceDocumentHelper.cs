@@ -19,19 +19,23 @@ namespace Epsitec.Cresus.Core.Helpers
 	{
 		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails)
 		{
-			FormattedText doc = "Document";
-
-			if (metadata.DocumentCategory.IsNotNull ())
-			{
-				if (!metadata.DocumentCategory.Name.IsNullOrEmpty)
-				{
-					doc = metadata.DocumentCategory.Name;
-				}
-			}
-
-			string title = TextFormatter.FormatText (string.Concat("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
+			FormattedText doc = InvoiceDocumentHelper.GetDocumentName (metadata);
+			string title = TextFormatter.FormatText (string.Concat ("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
 
 			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+		}
+
+		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata)
+		{
+			FormattedText name = "Document";
+
+			if (metadata.DocumentCategory.IsNotNull () &&
+				!metadata.DocumentCategory.Name.IsNullOrEmpty)
+			{
+				name = metadata.DocumentCategory.Name;
+			}
+
+			return name;
 		}
 
 		public static FormattedText GetInstalmentName(BusinessDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
