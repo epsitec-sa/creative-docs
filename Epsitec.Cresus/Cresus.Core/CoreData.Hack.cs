@@ -481,7 +481,7 @@ namespace Epsitec.Cresus.Core
 			var articleCategory1 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory1.Name = "Logiciels Crésus";
-			articleCategory1.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
+			articleCategory1.DefaultOutputVatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			articleCategory1.DefaultAccounting.Add (accountingDef);
 			articleCategory1.DefaultRoundingMode = priceRoundingMode;
 			articleCategory1.ArticleType = Business.ArticleType.Goods;
@@ -489,21 +489,21 @@ namespace Epsitec.Cresus.Core
 			var articleCategory2 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory2.Name = "Ports/emballages";
-			articleCategory2.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
+			articleCategory2.DefaultOutputVatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			articleCategory2.NeverApplyDiscount = true;
 			articleCategory2.ArticleType = Business.ArticleType.Freight;
 
 			var articleCategory3 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory3.Name = "Fenêtres";
-			articleCategory3.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
+			articleCategory3.DefaultOutputVatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			articleCategory3.ArticleType = Business.ArticleType.Goods;
 			articleCategory3.DefaultAccounting.Add (accountingDef);
 
 			var articleCategory4 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory4.Name = "Aliments";
-			articleCategory4.DefaultOutputVatCode = Business.Finance.VatCode.ReducedTax;
+			articleCategory4.DefaultOutputVatCode = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			articleCategory4.ArticleType = Business.ArticleType.Goods;
 			articleCategory4.DefaultAccounting.Add (accountingDef);
 
@@ -690,21 +690,21 @@ namespace Epsitec.Cresus.Core
 			imageDef1.Description = "Logo principal de l'entreprise";
 			imageDef1.ImageGroups.Add (imageGroup1);
 			imageDef1.ImageCategory = imageCategory1;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef1, new System.IO.FileInfo ("Images/logo-cresus.png"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef1, new System.IO.FileInfo ("../../Images/logo-cresus.png"));
 
 			var imageDef2 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef2.Name = "PA";
 			imageDef2.Description = "Pierre Arnaud, directeur";
 			imageDef2.ImageGroups.Add (imageGroup2);
 			imageDef2.ImageCategory = imageCategory2;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef2, new System.IO.FileInfo ("Images/pa.tif"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef2, new System.IO.FileInfo ("../../Images/pa.tif"));
 
 			var imageDef3 = this.DataContext.CreateEntity<ImageEntity> ();
 			imageDef3.Name = "DR";
 			imageDef3.Description = "Daniel Roux, ouvrier";
 			imageDef3.ImageGroups.Add (imageGroup2);
 			imageDef3.ImageCategory = imageCategory2;
-			this.imageDataStore.UpdateImage (this.DataContext, imageDef3, new System.IO.FileInfo ("Images/dr.tif"));
+			this.imageDataStore.UpdateImage (this.DataContext, imageDef3, new System.IO.FileInfo ("../../Images/dr.tif"));
 
 			yield return imageDef1;
 			yield return imageDef2;
