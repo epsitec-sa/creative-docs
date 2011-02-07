@@ -143,14 +143,14 @@ namespace Epsitec.Cresus.Database.UnitTests.Logging
 			
 			for (int i = 0; i < 50; i++)
 			{
-				Assert.AreEqual (i + 1, logAccessor.GetNextNumber ());
+				Assert.AreEqual (i, logAccessor.GetNextNumber ());
 			}
 
 			log.Clear ();
 
 			for (int i = 0; i < 50; i++)
 			{
-				Assert.AreEqual (i + 1, logAccessor.GetNextNumber ());
+				Assert.AreEqual (i, logAccessor.GetNextNumber ());
 			}
 		}
 
