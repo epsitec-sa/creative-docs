@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			DocumentMetadataEntity metadoc = this.GetMetadoc ();
 
 			//?Business.DocumentType type = Business.DocumentType.Unknown;
-			Business.DocumentType type = Business.DocumentType.Invoice;
+			Business.DocumentType type = Business.DocumentType.Invoice;  // TODO: remplacer cette ligne par la précédente !
 
 			if (metadoc.DocumentCategory.IsNotNull ())
 			{

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return FormattedText.Concat ("Facture ", this.metadata.IdA).ToSimpleText ();
+				return FormattedText.Concat (InvoiceDocumentHelper.GetDocumentName (this.metadata), " ", this.metadata.IdA).ToSimpleText ();
 			}
 		}
 

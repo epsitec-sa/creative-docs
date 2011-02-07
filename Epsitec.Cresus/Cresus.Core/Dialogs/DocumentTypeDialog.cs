@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.entityPrintingSettings = this.entityPrinter.EntityPrintingSettings;
 
 			this.confirmationButtons = new List<ConfirmationButton> ();
-			this.optionButtons = new List<AbstractButton> ();
-			this.printerCombos = new List<TextFieldCombo> ();
+			this.optionButtons       = new List<AbstractButton> ();
+			this.printerCombos       = new List<TextFieldCombo> ();
 
 			this.previewerController = new PreviewerController (this.entityPrinter, this.entities);
 			this.previewerController.ShowNotPrinting = true;
