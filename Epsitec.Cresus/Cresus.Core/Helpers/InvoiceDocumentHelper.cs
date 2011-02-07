@@ -19,23 +19,27 @@ namespace Epsitec.Cresus.Core.Helpers
 	{
 		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails)
 		{
-			FormattedText doc = InvoiceDocumentHelper.GetDocumentName (metadata);
-			string title = TextFormatter.FormatText (string.Concat ("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
+			//	Retourne le titre du document imprimé.
+			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
+			var doc = InvoiceDocumentHelper.GetDocumentName (metadata);
+			var title = TextFormatter.FormatText (string.Concat ("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
 
 			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}
 
 		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata)
 		{
-			FormattedText name = "Document";
-
-			if (metadata.DocumentCategory.IsNotNull () &&
-				!metadata.DocumentCategory.Name.IsNullOrEmpty)
+			//	Retourne le nom du document imprimé.
+			//	Par exemple "Facture", "Offre" ou "Bon pour commande".
+			if (metadata.DocumentCategory.IsNull () ||
+				metadata.DocumentCategory.Name.IsNullOrEmpty)
 			{
-				name = metadata.DocumentCategory.Name;
+				return "Document";  // nom générique
 			}
-
-			return name;
+			else
+			{
+				return metadata.DocumentCategory.Name;
+			}
 		}
 
 		public static FormattedText GetInstalmentName(BusinessDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
