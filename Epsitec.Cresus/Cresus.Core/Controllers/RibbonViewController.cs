@@ -31,7 +31,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.databaseMenuDefaultCommandName;
+				if (string.IsNullOrEmpty (this.databaseMenuDefaultCommandName))
+				{
+					return "";
+				}
+				else
+				{
+					return this.databaseMenuDefaultCommandName;
+				}
 			}
 			set
 			{
@@ -96,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreProgram.Application.PersistanceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
 				x => this.DatabaseMenuDefaultCommandNameChanged += x,
 				x => this.DatabaseMenuDefaultCommandNameChanged -= x,
-				xml => xml.Add (new XAttribute ("name", this.databaseMenuDefaultCommandName)),
+				xml => xml.Add (new XAttribute ("name", this.DatabaseMenuDefaultCommandName)),
 				xml => this.DatabaseMenuDefaultCommandName = xml.Attribute ("name").Value);
 		}
 
