@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.documentPrinters  = new List<AbstractDocumentPrinter> ();
-			this.documentTypes     = new List<DocumentTypeDefinition> ();
+			this.documentPrinters = new List<AbstractDocumentPrinter> ();
+			this.documentTypes    = new List<DocumentTypeDefinition> ();
 
 			this.EntityPrintingSettings = new EntityPrintingSettings ();
 		}
