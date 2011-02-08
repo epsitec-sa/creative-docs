@@ -816,7 +816,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForEntityValueField(Druid localEntityId, Druid fieldId, object value)
 		{
-			DbColumn column = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
+			DbColumn column = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
 
 			return this.CreateSqlFieldForColumn (column, value);
 		}
