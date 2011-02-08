@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Padding = new Margins (5),
 			};
 
-			this.mainController = new MainController (box, this.businessContext, this.documentOptionsEntity);
+			this.mainController = new MainController (this.businessContext, this.documentOptionsEntity);
 			this.mainController.CreateUI (box);
 		}
 

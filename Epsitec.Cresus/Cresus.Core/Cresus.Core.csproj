@@ -206,6 +206,9 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
+    <Compile Include="DocumentOptionsEditor\ValuesController.cs" />
+    <Compile Include="DocumentOptionsEditor\SelectController.cs" />
+    <Compile Include="DocumentOptionsEditor\DocumentOption.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
