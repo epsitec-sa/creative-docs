@@ -112,6 +112,8 @@
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsEditorViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsEditorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryViewController.cs" />
     <Compile Include="Controllers\WorkflowFactory.cs" />
@@ -213,8 +216,10 @@
     <Compile Include="DocumentOptionsEditor\DocumentOption.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
+    <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
+    <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
@@ -347,7 +352,7 @@
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
-    <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListEnumValuesController.cs" />
+    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
@@ -845,6 +850,8 @@
     <EmbeddedResource Include="Images\Base.DocumentOptions.icon" />
     <EmbeddedResource Include="Images\Data.DocumentCategory.icon" />
     <EmbeddedResource Include="Images\Data.DocumentOptions.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentPrintingUnits.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentPrintingUnits.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
