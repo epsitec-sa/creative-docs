@@ -123,8 +123,8 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			//	Ajoute les options d'impression générales.
 			list.Add (new DocumentOption ("Options générales :", "Global"));
-			list.Add (new DocumentOption ("HeaderLogo", DocumentOptionValueType.Boolean,  DocumentOptionWidgetType.CheckButton, "Global", "Imprime le logo de l'entreprise", "true"));
-			list.Add (new DocumentOption ("Specimen",   DocumentOptionValueType.Boolean,  DocumentOptionWidgetType.CheckButton, "Global", "Incruste la mention SPECIMEN",    "false"));
+			list.Add (new DocumentOption ("HeaderLogo", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "Global", "Imprime le logo de l'entreprise", "true"));
+			list.Add (new DocumentOption ("Specimen",   DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "Global", "Incruste la mention SPECIMEN",    "false"));
 
 			list.Add (new DocumentOption ("Margins",      DocumentOptionValueType.Distance, DocumentOptionWidgetType.Default, "Global", "Marges",           "20"));
 			list.Add (new DocumentOption ("LeftMargin",   DocumentOptionValueType.Distance, DocumentOptionWidgetType.Default, "Global", "Marge gauche",     "20"));
