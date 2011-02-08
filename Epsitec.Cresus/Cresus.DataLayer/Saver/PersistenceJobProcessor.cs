@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			SqlFieldList fields = new SqlFieldList ();
 
-			fields.AddRange (this.CreateSqlFields (table, localEntityId, job.GetFieldIdsWithValues ()));
+			fields.AddRange (this.CreateSqlFields (localEntityId, job.GetFieldIdsWithValues ()));
 			
 			if (job.IsRootTypeJob)
 			{
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList fields = new SqlFieldList ();
-			fields.AddRange (this.CreateSqlFields (table, localEntityId, fieldIdsWithValues));
+			fields.AddRange (this.CreateSqlFields (localEntityId, fieldIdsWithValues));
 
 			if (job.IsRootTypeJob)
 			{
@@ -683,14 +683,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
-		/// Builds the sequence of <see cref="SqlField"/> that are used to set the values of the
-		/// <see cref="AbstractEntity"/> in an INSERT or an UPDATE SQL request.
+		/// Builds the sequence of <see cref="SqlField"></see> that are used to set the values of the
+		/// <see cref="AbstractEntity"></see> in an INSERT or an UPDATE SQL request.
 		/// </summary>
-		/// <param name="table">The <see cref="DbTable"/> in which to insert the values.</param>
-		/// <param name="localEntityId">The <see cref="Druid"/> defining the local type of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="localEntityId">The <see cref="Druid"></see> defining the local type of the <see cref="AbstractEntity"></see>.</param>
 		/// <param name="fieldIdsWithValues">The mapping from the field ids to their values.</param>
-		/// <returns>The sequence of the <see cref="SqlField"/> that are used within the SQl Request.</returns>
-		private IEnumerable<SqlField> CreateSqlFields(DbTable table, Druid localEntityId, IEnumerable<KeyValuePair<Druid, object>> fieldIdsWithValues)
+		/// <returns>The sequence of the <see cref="SqlField"></see> that are used within the SQl Request.</returns>
+		private IEnumerable<SqlField> CreateSqlFields(Druid localEntityId, IEnumerable<KeyValuePair<Druid, object>> fieldIdsWithValues)
 		{
 			foreach (var fieldIdWithValue in fieldIdsWithValues)
 			{
@@ -707,7 +706,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 					value = (nullableType.IsNullable) ? System.DBNull.Value : fieldType.DefaultValue;
 				}
 
-				yield return this.CreateSqlFieldForEntityValueField (table, fieldId, value);
+				yield return this.CreateSqlFieldForEntityValueField (localEntityId, fieldId, value);
 			}
 		}
 
@@ -811,14 +810,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// Builds the <see cref="SqlField"/> used to set the value of an <see cref="AbstractEntity"/>
 		/// field of a row in a SQL request.
 		/// </summary>
-		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the id of the entity.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> defining the id of the field.</param>
 		/// <param name="value">The value of the field.</param>
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
-		private SqlField CreateSqlFieldForEntityValueField(DbTable table, Druid fieldId, object value)
+		private SqlField CreateSqlFieldForEntityValueField(Druid localEntityId, Druid fieldId, object value)
 		{
-			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
-			DbColumn column = table.Columns[columnName];
+			DbColumn column = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
 
 			return this.CreateSqlFieldForColumn (column, value);
 		}
