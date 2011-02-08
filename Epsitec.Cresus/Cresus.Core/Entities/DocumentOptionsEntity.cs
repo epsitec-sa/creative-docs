@@ -15,7 +15,8 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/> <br/>", this.GetOptionsSummary ()));
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -34,6 +35,56 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		private FormattedText GetOptionsSummary()
+		{
+			var dict = this.GetOptions ();
+			var all = DocumentOptionsEditor.DocumentOption.GetAllDocumentOptions ();
+			var builder = new System.Text.StringBuilder ();
+
+			foreach (var pair in dict)
+			{
+				var option = all.Where (x => x.Name == pair.Key).FirstOrDefault ();
+
+				if (option != null)
+				{
+					var description = option.Description;
+
+					if (string.IsNullOrEmpty (description))
+					{
+						description = pair.Key;
+					}
+
+					var value = pair.Value;
+
+					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Boolean)
+					{
+						switch (value)
+						{
+							case "false":
+								value = "non";
+								break;
+
+							case "true":
+								value = "oui";
+								break;
+						}
+					}
+
+					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Distance)
+					{
+						value = string.Concat (value, " mm");
+					}
+
+					builder.Append (description);
+					builder.Append (" = ");
+					builder.Append (value);
+					builder.Append ("<br/>");
+				}
+			}
+
+			return builder.ToString ();
+		}
 
 		public Dictionary<string, string> GetOptions()
 		{
