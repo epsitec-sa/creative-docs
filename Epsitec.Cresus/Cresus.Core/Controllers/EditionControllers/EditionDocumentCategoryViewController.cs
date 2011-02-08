@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIMain (builder);
 				this.CreateUIOptions (builder);
+				this.CreateUIUnits (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -64,6 +65,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionDetailedItemPicker ("DocumentOptions", this.Entity, "Options du document", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
 
+		private void CreateUIUnits(UIBuilder builder)
+		{
+			var controller = new SelectionController<DocumentPrintingUnitsEntity> (this.BusinessContext)
+			{
+				CollectionValueGetter    = () => this.Entity.DocumentPrintingUnits,
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
+			};
 
+			builder.CreateEditionDetailedItemPicker ("DocumentPrintingUnits", this.Entity, "Unités d'impression du document", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
+		}
 	}
 }

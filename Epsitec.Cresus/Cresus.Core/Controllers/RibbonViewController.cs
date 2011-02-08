@@ -575,6 +575,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (admin || devel || power)
 			{
+				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
+			}
+
+			if (admin || devel || power)
+			{
 				yield return Res.Commands.Base.ShowImages;
 			}
 

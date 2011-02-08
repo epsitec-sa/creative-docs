@@ -54,6 +54,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "DocumentOptions":
 					return context => data.GetAllEntities<DocumentOptionsEntity> (dataContext: context);
 
+				case "DocumentPrintingUnits":
+					return context => data.GetAllEntities<DocumentPrintingUnitsEntity> (dataContext: context);
+
 				default:
 					return null;
 			}
@@ -92,6 +95,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "DocumentOptions":
 					return EntityInfo<DocumentOptionsEntity>.GetTypeId ();
+
+				case "DocumentPrintingUnits":
+					return EntityInfo<DocumentPrintingUnitsEntity>.GetTypeId ();
 
 				default:
 					return Druid.Empty;
