@@ -216,6 +216,10 @@
     <Compile Include="DocumentOptionsEditor\DocumentOption.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
+    <Compile Include="DocumentPrintingUnitsEditor\DocumentOptionsEditorController.cs" />
+    <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
+    <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />
+    <Compile Include="DocumentPrintingUnitsEditor\ValuesController.cs" />
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />

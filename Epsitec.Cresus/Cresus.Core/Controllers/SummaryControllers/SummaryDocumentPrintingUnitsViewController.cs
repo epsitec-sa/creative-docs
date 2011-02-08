@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					{
 						Name				= "DocumentPrintingUnits",
 						IconUri				= "Data.DocumentPrintingUnits",
-						Title				= TextFormatter.FormatText ("Unités d'mpression pour un document"),
+						Title				= TextFormatter.FormatText ("Unités d'impression"),
 						CompactTitle		= TextFormatter.FormatText ("Unités d'impression"),
 						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
 						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),

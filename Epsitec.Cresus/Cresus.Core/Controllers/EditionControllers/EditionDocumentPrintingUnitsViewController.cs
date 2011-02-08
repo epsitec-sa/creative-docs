@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.DocumentPrintingUnits", "Unités d'impression pour un document");
+				builder.CreateEditionTitleTile ("Data.DocumentPrintingUnits", "Unités d'impression");
 
 				this.CreateUIMain (builder);
 
