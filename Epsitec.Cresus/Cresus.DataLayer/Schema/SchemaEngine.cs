@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the <see cref="DbTable"/> describing the schema of the field of an
+		/// Gets the <see cref="DbTable"/> describing the schema of a relation field of an
 		/// <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="localEntityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> containing the field.</param>
@@ -160,6 +160,24 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			}
 
 			return this.GetTableDefinitionFromCache (relationTableName);
+		}
+
+
+		/// <summary>
+		/// Gets the <see cref="DbColumn"/> describing the schema of a value field of an
+		/// <see cref="AbstractEntity"/>
+		/// </summary>
+		/// <param name="localEntityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> containing the field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <returns>The corresponding <see cref="DbColumn"/>.</returns>
+		public DbColumn GetEntityFieldColumnDefinition(Druid localEntityId, Druid fieldId)
+		{
+			string columnName = this.GetEntityColumnName (fieldId);
+
+			DbTable dbTable = this.GetEntityTableDefinition (localEntityId);
+			DbColumn dbColumn = dbTable.Columns[columnName];
+
+			return dbColumn;
 		}
 
 
@@ -247,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="entityId">The <see cref="Druid"/> whose <see cref="DbTable"/> name to get.</param>
 		/// <returns>The name of the <see cref="DbTable"/>.</returns>
-		public string GetEntityTableName(Druid entityId)
+		private string GetEntityTableName(Druid entityId)
 		{
 			return DbTable.GetEntityTableName(entityId);
 		}
@@ -259,7 +277,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
 		/// <returns>The name of the <see cref="DbColumn"/>.</returns>
-		public string GetEntityColumnName(Druid fieldId)
+		private string GetEntityColumnName(Druid fieldId)
 		{
 			return DbColumn.GetColumnName (fieldId);
 		}
@@ -272,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="localEntityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
 		/// <returns>The name of the <see cref="DbTable"/>.</returns>
-		public string GetRelationTableName(Druid localEntityId, Druid fieldId)
+		private string GetRelationTableName(Druid localEntityId, Druid fieldId)
 		{
 			string sourceTableName = this.GetEntityTableName (localEntityId);
 			string sourceColumnName = this.GetEntityColumnName (fieldId);

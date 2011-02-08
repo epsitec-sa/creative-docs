@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid, string>> data = new List<System.Tuple<Druid, string>>
 				{
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 					Druid entityId = d.Item1;
 					string name = d.Item2;
 
-					Assert.AreEqual (name, engine.GetEntityColumnName (entityId));
+					Assert.AreEqual (name, engineAccessor.GetEntityColumnName (entityId));
 				}
 			}
 		}
@@ -92,6 +93,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid,string>> data = new List<System.Tuple<Druid, string>> ()
 				{
@@ -112,7 +114,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 					Druid id = d.Item1;
 					string name = d.Item2;
 
-					Assert.AreEqual (name, engine.GetEntityTableName (id));
+					Assert.AreEqual (name, engineAccessor.GetEntityTableName (id));
 				}
 			}
 		}
@@ -124,6 +126,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid,Druid,string>> data = new List<System.Tuple<Druid, Druid, string>> ()
 				{
@@ -145,7 +148,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 					Druid fieldId = d.Item2;
 					string name = d.Item3;
 
-					Assert.AreEqual (name, engine.GetRelationTableName (entityId, fieldId));
+					Assert.AreEqual (name, engineAccessor.GetRelationTableName (entityId, fieldId));
 				}
 			}
 		}
