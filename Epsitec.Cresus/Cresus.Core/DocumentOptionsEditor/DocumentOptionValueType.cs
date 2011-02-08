@@ -7,11 +7,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 {
-	public enum DocumentOptionType
+	public enum DocumentOptionValueType
 	{
 		Undefined,
-		Boolean,
-		Integer,
-		Double,
+		Boolean,		// valeur "true" ou "false"
+		Distance,		// type 'double' correspondant à une distance en mm
 	}
 }

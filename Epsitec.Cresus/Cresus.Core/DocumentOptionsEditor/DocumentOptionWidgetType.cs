@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 {
-	public enum DocumentOptionWidget
+	public enum DocumentOptionWidgetType
 	{
 		Default,
 		CheckButton,
