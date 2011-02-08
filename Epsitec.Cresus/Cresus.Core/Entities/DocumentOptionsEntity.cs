@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (!string.IsNullOrEmpty (s))
 				{
+					// Exemple de table obtenue: "HeaderLogo", "true", "LayoutFrameless", "false", ""
 					string[] split = s.Split ('◊');
 
 					for (int i = 0; i < split.Length-1; i+=2)
@@ -76,6 +77,7 @@ namespace Epsitec.Cresus.Core.Entities
 					builder.Append ("◊");
 				}
 
+				// Exemple de chaîne obtenue: "HeaderLogo◊true◊LayoutFrameless◊false◊"
 				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
 				this.SerializedData = bytes;
 			}
