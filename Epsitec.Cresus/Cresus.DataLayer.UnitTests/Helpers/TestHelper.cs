@@ -24,8 +24,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 		{
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests");
-
-			System.IO.Directory.SetCurrentDirectory (@"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests\bin\Debug");
 		}
 
 		
