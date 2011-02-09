@@ -4,6 +4,8 @@ using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
+using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -28,6 +30,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			new Constant (Date.Today);
 			new Constant (Time.Now);
 			new Constant (System.DateTime.Now);
+			new Constant (SimpleEnum.Value1);
 		}
 
 
@@ -54,6 +57,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			Assert.AreEqual (Type.Time, new Constant (Time.Now).Type);
 			Assert.AreEqual (Type.DateTime, new Constant (System.DateTime.Now).Type);
 			Assert.AreEqual (Type.ByteArray, new Constant (new byte[] { 0x00 }).Type);
+			Assert.AreEqual (Type.Enum, new Constant (SimpleEnum.Value1).Type);
 		}
 
 
@@ -69,6 +73,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			Assert.AreEqual (Date.Today, (Date) new Constant (Date.Today).Value);
 			Assert.AreEqual (new Time (12, 0, 0), (Time) new Constant (new Time (12, 0, 0)).Value);
 			Assert.AreEqual (new System.DateTime (2010, 7, 22, 8, 50, 0), (System.DateTime) new Constant (new System.DateTime (2010, 7, 22, 8, 50, 0)).Value);
+			Assert.AreEqual (SimpleEnum.Value1, new Constant (SimpleEnum.Value1).Value);
 		}
 
 
