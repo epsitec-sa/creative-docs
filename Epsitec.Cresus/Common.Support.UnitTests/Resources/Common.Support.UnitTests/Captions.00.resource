@@ -1,83 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Fld.Country.Name" id="A3">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.Location.PostalCode" id="A6">&lt;s:data id="_0" f:Name="PostalCode" /&gt;</data>
-  <data name="Fld.Location.Name" id="A7">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.Location.Country" id="A8">&lt;s:data id="_0" f:Name="Country" /&gt;</data>
-  <data name="Fld.Location.Region" id="A9">&lt;s:data id="_0" f:Name="Region" /&gt;</data>
-  <data name="Fld.Region.Country" id="AA">&lt;s:data id="_0" f:Name="Country" /&gt;</data>
-  <data name="Fld.Region.Name" id="AC">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.Address.Location" id="AE">&lt;s:data id="_0" f:Name="Location" /&gt;</data>
-  <data name="Fld.PostBox.Number" id="AG">&lt;s:data id="_0" f:Name="Number" /&gt;</data>
-  <data name="Fld.Address.PostBox" id="AH">&lt;s:data id="_0" f:Name="PostBox" /&gt;</data>
-  <data name="Fld.Street.StreetName" id="AJ">&lt;s:data id="_0" f:Name="StreetName" /&gt;</data>
-  <data name="Fld.Address.Street" id="AK">&lt;s:data id="_0" f:Name="Street" /&gt;</data>
-  <data name="Fld.Street.Complement" id="AL">&lt;s:data id="_0" f:Name="Complement" /&gt;</data>
-  <data name="Fld.MailContact.Address" id="AR">&lt;s:data id="_0" f:Name="Address" /&gt;</data>
-  <data name="Fld.AbstractPerson.Contacts" id="AS">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
-  <data name="Fld.NaturalPerson.Title" id="AU">&lt;s:data id="_0" f:Name="Title" /&gt;</data>
-  <data name="Fld.NaturalPerson.Firstname" id="AV">&lt;s:data id="_0" f:Name="Firstname" /&gt;</data>
-  <data name="Fld.NaturalPerson.Lastname" id="A01">&lt;s:data id="_0" f:Name="Lastname" /&gt;</data>
-  <data name="Fld.NaturalPerson.Gender" id="A11">&lt;s:data id="_0" f:Name="Gender" /&gt;</data>
-  <data name="Fld.Language.Name" id="A41">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.NaturalPerson.BirthDate" id="A61">&lt;s:data id="_0" f:Name="BirthDate" /&gt;</data>
-  <data name="Fld.AbstractContact.NaturalPerson" id="A71">&lt;s:data id="_0" f:Name="NaturalPerson" /&gt;</data>
-  <data name="Fld.AbstractContact.LegalPerson" id="A81">&lt;s:data id="_0" f:Name="LegalPerson" /&gt;</data>
-  <data name="Fld.PersonGender.Name" id="AC1">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.AbstractPerson.PreferredLanguage" id="AD1">&lt;s:data id="_0" f:Name="PreferredLanguage" /&gt;</data>
-  <data name="Fld.ContactRole.Name" id="AF1">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.AbstractContact.Roles" id="AG1">&lt;s:data id="_0" f:Name="Roles" /&gt;</data>
-  <data name="Fld.LegalPerson.Name" id="AH1">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.LegalPerson.ShortName" id="AI1">&lt;s:data id="_0" f:Name="ShortName" /&gt;</data>
-  <data name="Fld.LegalPerson.Complement" id="AJ1">&lt;s:data id="_0" f:Name="Complement" /&gt;</data>
-  <data name="Fld.MailContact.Complement" id="AK1">&lt;s:data id="_0" f:Name="Complement" /&gt;</data>
-  <data name="Fld.LegalPersonType.ShortName" id="AM1">&lt;s:data id="_0" f:Name="ShortName" /&gt;</data>
-  <data name="Fld.LegalPersonType.Name" id="AN1">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.LegalPerson.LegalPersonType" id="AO1">&lt;s:data id="_0" f:Name="LegalPersonType" /&gt;</data>
-  <data name="Fld.AbstractContact.Comments" id="AP1">&lt;s:data id="_0" f:Name="Comments" /&gt;</data>
-  <data name="Fld.Comment.Text" id="AR1">&lt;s:data id="_0" f:Name="Text" /&gt;</data>
-  <data name="Fld.PersonTitle.ShortName" id="AS1">&lt;s:data id="_0" f:Name="ShortName" /&gt;</data>
-  <data name="Fld.PersonTitle.Name" id="AT1">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.TelecomType.Name" id="A02">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.TelecomContact.TelecomType" id="A22">&lt;s:data id="_0" f:Name="TelecomType" /&gt;</data>
-  <data name="Fld.TelecomContact.Number" id="A32">&lt;s:data id="_0" f:Name="Number" /&gt;</data>
-  <data name="Fld.TelecomContact.Extension" id="A42">&lt;s:data id="_0" f:Name="Extension" /&gt;</data>
-  <data name="Fld.UriScheme.Name" id="A82">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.UriContact.UriScheme" id="A92">&lt;s:data id="_0" f:Name="UriScheme" /&gt;</data>
-  <data name="Fld.UriContact.Uri" id="AA2">&lt;s:data id="_0" f:Name="Uri" /&gt;</data>
-  <data name="Fld.Customer.Id" id="AC2">&lt;s:data id="_0" f:Name="Id" /&gt;</data>
-  <data name="Fld.Customer.Person" id="AD2">&lt;s:data id="_0" f:Name="Person" /&gt;</data>
-  <data name="Fld.Customer.SalesRepresentative" id="AE2">&lt;s:data id="_0" f:Name="SalesRepresentative" /&gt;</data>
-  <data name="Fld.Customer.CustomerSince" id="AF2">&lt;s:data id="_0" f:Name="CustomerSince" /&gt;</data>
-  <data name="Fld.Customer.Folders" id="AH2">&lt;s:data id="_0" f:Name="Folders" /&gt;</data>
-  <data name="Fld.Folder.Id" id="AI2">&lt;s:data id="_0" f:Name="Id" /&gt;</data>
-  <data name="Fld.Folder.ExternalReference" id="AJ2">&lt;s:data id="_0" f:Name="ExternalReference" /&gt;</data>
-  <data name="Fld.Folder.InternalReference" id="AK2">&lt;s:data id="_0" f:Name="InternalReference" /&gt;</data>
-  <data name="Fld.Folder.Customer" id="AL2">&lt;s:data id="_0" f:Name="Customer" /&gt;</data>
-  <data name="Fld.Folder.SalesRepresentative" id="AM2">&lt;s:data id="_0" f:Name="SalesRepresentative" /&gt;</data>
-  <data name="Fld.Folder.Owner" id="AN2">&lt;s:data id="_0" f:Name="Owner" /&gt;</data>
-  <data name="Fld.Document.Description" id="AP2">&lt;s:data id="_0" f:Name="Description" /&gt;</data>
-  <data name="Fld.Document.FileName" id="AQ2">&lt;s:data id="_0" f:Name="FileName" /&gt;</data>
-  <data name="Fld.Document.MimeType" id="AR2">&lt;s:data id="_0" f:Name="MimeType" /&gt;</data>
-  <data name="Fld.Document.LastModificationDate" id="AS2">&lt;s:data id="_0" f:Name="LastModificationDate" /&gt;</data>
-  <data name="Fld.Folder.Documents" id="AT2">&lt;s:data id="_0" f:Name="Documents" /&gt;</data>
-  <data name="Fld.Customer.DefaultAddress" id="AU2">&lt;s:data id="_0" f:Name="DefaultAddress" /&gt;</data>
-  <data name="Fld.IItemRank.Rank" id="A03">&lt;s:data id="_0" f:Name="Rank" /&gt;</data>
-  <data name="Fld.IItemRevision.RevisionIsUpToDate" id="A43">&lt;s:data id="_0" f:Name="RevisionIsUpToDate" /&gt;</data>
-  <data name="Fld.IItemRevision.RevisionUniqueId" id="A53">&lt;s:data id="_0" f:Name="RevisionUniqueId" /&gt;</data>
-  <data name="Fld.ArticleDefinition.ShortDescription" id="A73">&lt;s:data id="_0" f:Name="ShortDescription" /&gt;</data>
-  <data name="Fld.ArticleDefinition.LongDescription" id="A83">&lt;s:data id="_0" f:Name="LongDescription" /&gt;</data>
-  <data name="Fld.ArticleDefinition.ArticleGroups" id="A93">&lt;s:data id="_0" f:Name="ArticleGroups" /&gt;</data>
-  <data name="Fld.PersonTitle.CompatibleGenders" id="AB3">&lt;s:data id="_0" f:Name="CompatibleGenders" /&gt;</data>
-  <data name="Fld.IItemCode.Code" id="AD3">&lt;s:data id="_0" f:Name="Code" /&gt;</data>
-  <data name="Fld.ArticleGroup.Name" id="AE3">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.AbstractArticleParameterDefinition.Name" id="AG3">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
-  <data name="Fld.ArticleDefinition.ArticleParameters" id="AH3">&lt;s:data id="_0" f:Name="ArticleParameters" /&gt;</data>
-  <data name="Fld.ValueData.Value" id="AJ3">&lt;s:data id="_0" f:Name="Value" /&gt;</data>
-  <data name="Typ.StructuredType.ValueData" id="AI3">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ValueData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[L0AI3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;200;108&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AJ3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AO3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[L0AJ3];[1006];0;[L0AJ3]'}, {Text '[L0AO3];[1006];1;[L0AO3];1024'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
-  <data name="Fld.ReferenceData.Reference" id="AL3">&lt;s:data id="_0" f:Name="Reference" /&gt;</data>
-  <data name="Typ.StructuredType.ReferenceData" id="AK3">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ReferenceData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[L0AK3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;132;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AL3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[L0AI3]&amp;lt;/Dst&amp;gt;&amp;lt;AttR&amp;gt;True&amp;lt;/AttR&amp;gt;&amp;lt;RtTyp&amp;gt;Bb&amp;lt;/RtTyp&amp;gt;&amp;lt;AbsDX&amp;gt;0&amp;lt;/AbsDX&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[L0AI3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;290;36;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AJ3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[L0AL3];[L0AI3];0;[L0AL3];1025'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
-  <data name="Fld.CollectionData.Collection" id="AN3">&lt;s:data id="_0" f:Name="Collection" /&gt;</data>
-  <data name="Typ.StructuredType.CollectionData" id="AM3">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="CollectionData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[L0AM3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;132;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AN3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[L0AI3]&amp;lt;/Dst&amp;gt;&amp;lt;AttR&amp;gt;True&amp;lt;/AttR&amp;gt;&amp;lt;RtTyp&amp;gt;Bb&amp;lt;/RtTyp&amp;gt;&amp;lt;AbsDX&amp;gt;0&amp;lt;/AbsDX&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[L0AI3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;290;36;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[L0AJ3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[L0AN3];[L0AI3];0;[L0AN3];1027'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
-  <data name="Fld.ValueData.NullableValue" id="AO3">&lt;s:data id="_0" f:Name="NullableValue" /&gt;</data>
+  <data name="Fld.ValueData.Value" id="A1">&lt;s:data id="_0" f:Name="Value" /&gt;</data>
+  <data name="Typ.StructuredType.ValueData" id="A">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ValueData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[I1A]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;200;108&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[I1A1]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[I1A2]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1006]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[I1A1];[1006];0;[I1A1]'}, {Text '[I1A2];[1006];1;[I1A2];1024'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data name="Fld.ValueData.NullableValue" id="A2">&lt;s:data id="_0" f:Name="NullableValue" /&gt;</data>
+  <data name="Fld.ReferenceData.Reference" id="A4">&lt;s:data id="_0" f:Name="Reference" /&gt;</data>
+  <data name="Typ.StructuredType.ReferenceData" id="A3">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ReferenceData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[I1A3]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[I1A4]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[I1A]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[I1A4];[I1A];0;[I1A4];1025'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data name="Typ.StructuredType.CollectionData" id="A5">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="CollectionData" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[I1A5]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;200;88&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[I1A6]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[I1A]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[I1A6];[I1A];0;[I1A6];3'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data name="Fld.CollectionData.Collection" id="A6">&lt;s:data id="_0" f:Name="Collection" /&gt;</data>
 </bundle>
