@@ -42,21 +42,22 @@ namespace Epsitec.Cresus.Core.Entities
 			var all = DocumentPrintingUnitsEditor.DocumentPageType.GetAllDocumentPageTypes ();
 			var builder = new System.Text.StringBuilder ();
 
-			foreach (var pair in dict)
+			foreach (var pageType in all)
 			{
-				var pageType = all.Where (x => x.Name == pair.Key).FirstOrDefault ();
-
-				var unit = pair.Value;
-
-				if (string.IsNullOrEmpty (unit))
+				if (dict.ContainsKey (pageType.Name))
 				{
-					unit = Misc.Italic ("(aucune)").ToString ();
-				}
+					var unit = dict[pageType.Name];
 
-				builder.Append (pageType.ShortDescription);
-				builder.Append (" = ");
-				builder.Append (unit);
-				builder.Append ("<br/>");
+					if (string.IsNullOrEmpty (unit))
+					{
+						unit = Misc.Italic ("(aucune)").ToString ();
+					}
+
+					builder.Append (pageType.ShortDescription);
+					builder.Append (" = ");
+					builder.Append (unit);
+					builder.Append ("<br/>");
+				}
 			}
 
 			return builder.ToString ();

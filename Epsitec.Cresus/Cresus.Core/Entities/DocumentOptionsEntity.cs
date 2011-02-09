@@ -42,20 +42,18 @@ namespace Epsitec.Cresus.Core.Entities
 			var all = DocumentOptionsEditor.DocumentOption.GetAllDocumentOptions ();
 			var builder = new System.Text.StringBuilder ();
 
-			foreach (var pair in dict)
+			foreach (var option in all)
 			{
-				var option = all.Where (x => x.Name == pair.Key).FirstOrDefault ();
-
-				if (option != null)
+				if (!string.IsNullOrEmpty (option.Name) && dict.ContainsKey (option.Name))
 				{
 					var description = option.Description;
 
 					if (string.IsNullOrEmpty (description))
 					{
-						description = pair.Key;
+						description = option.Name;
 					}
 
-					var value = pair.Value;
+					var value = dict[option.Name];
 
 					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Boolean)
 					{
