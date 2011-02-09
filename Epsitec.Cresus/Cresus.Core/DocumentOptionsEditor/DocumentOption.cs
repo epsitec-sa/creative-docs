@@ -117,12 +117,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			var list = new List<DocumentOption> ();
 
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
-			list.Add (new DocumentOption ("Orientation du papier :", "Orientation"));
+			list.Add (new DocumentOption ("Orientation du papier", "Orientation"));
 			list.Add (new DocumentOption ("OrientationVertical",   DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "Orientation", "Portrait", "true"));
 			list.Add (new DocumentOption ("OrientationHorizontal", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "Orientation", "Paysage",  "false"));
 
 			//	Ajoute les options d'impression générales.
-			list.Add (new DocumentOption ("Options générales :", "Global"));
+			list.Add (new DocumentOption ("Options générales", "Global"));
 			list.Add (new DocumentOption ("HeaderLogo", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "Global", "Imprime le logo de l'entreprise", "true"));
 			list.Add (new DocumentOption ("Specimen",   DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "Global", "Incruste la mention SPECIMEN",    "false"));
 
@@ -132,37 +132,37 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			list.Add (new DocumentOption ("TopMargin",    DocumentOptionValueType.Distance, DocumentOptionWidgetType.Default, "Global", "Marge supérieure", "20"));
 			list.Add (new DocumentOption ("BottomMargin", DocumentOptionValueType.Distance, DocumentOptionWidgetType.Default, "Global", "Marge inférieure", "20"));
 
-			list.Add (new DocumentOption ("Aspect des listes :", "TableAspect"));
+			list.Add (new DocumentOption ("Aspect des listes", "TableAspect"));
 			list.Add (new DocumentOption ("LayoutFrameless", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "TableAspect", "Espacé, sans encadrements",             "false"));
 			list.Add (new DocumentOption ("LayoutWithLine",  DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "TableAspect", "Espacé, avec des lignes de séparation", "true"));
 			list.Add (new DocumentOption ("LayoutWithFrame", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "TableAspect", "Serré, avec des encadrements",          "false"));
 
 			//	Ajoute les options d'impression liées aux factures.
-			list.Add (new DocumentOption ("Options pour les factures :", "InvoiceOption"));
+			list.Add (new DocumentOption ("Options pour les factures", "InvoiceOption"));
 			list.Add (new DocumentOption ("ArticleDelayed", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "InvoiceOption", "Imprime les articles livrés ultérieurement", "true",  Business.DocumentType.Invoice));
 			list.Add (new DocumentOption ("ArticleId",      DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "InvoiceOption", "Imprime les identificateurs d'article",      "false", Business.DocumentType.Invoice));
 
-			list.Add (new DocumentOption ("Ordre des colonnes :", "InvoiceColumnsOrder"));
+			list.Add (new DocumentOption ("Ordre des colonnes", "InvoiceColumnsOrder"));
 			list.Add (new DocumentOption ("ColumnsOrderQD", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceColumnsOrder", "Quantité, Désignation, Prix", "true", Business.DocumentType.Invoice));
 			list.Add (new DocumentOption ("ColumnsOrderDQ", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceColumnsOrder", "Désignation, Quantité, Prix", "false", Business.DocumentType.Invoice));
 
 			//	Ajoute les options d'impression liées aux BV.
-			list.Add (new DocumentOption ("Type de la facture :", "InvoiceESR"));
+			list.Add (new DocumentOption ("Type de la facture", "InvoiceESR"));
 			list.Add (new DocumentOption ("InvoiceWithInsideESR",  DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceESR", "Facture avec BV intégré", "false", Business.DocumentType.Invoice));
 			list.Add (new DocumentOption ("InvoiceWithOutsideESR", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceESR", "Facture avec BV séparé",  "false", Business.DocumentType.Invoice));
 			list.Add (new DocumentOption ("InvoiceWithoutESR",     DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceESR", "Facture sans BV",         "true",  Business.DocumentType.Invoice));
 
-			list.Add (new DocumentOption ("Type de bulletin de versement :", "InvoiceESRType"));
+			list.Add (new DocumentOption ("Type de bulletin de versement", "InvoiceESRType"));
 			list.Add (new DocumentOption ("InvoiceWithESR", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceESRType", "BVR orange", "true",  Business.DocumentType.Invoice));
 			list.Add (new DocumentOption ("InvoiceWithES",  DocumentOptionValueType.Boolean, DocumentOptionWidgetType.RadioButton, "InvoiceESRType", "BV rose",    "false", Business.DocumentType.Invoice));
 
-			list.Add (new DocumentOption ("Mode d'impression du BV :", "InvoiceESRMode"));
+			list.Add (new DocumentOption ("Mode d'impression du BV", "InvoiceESRMode"));
 			list.Add (new DocumentOption ("ESRFacsimile", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, "InvoiceESRMode", "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));
 
 			list.Add (new DocumentOption ("Signing", DocumentOptionValueType.Boolean, DocumentOptionWidgetType.CheckButton, null, "Cartouche", "true", Business.DocumentType.OrderBooking, Business.DocumentType.OrderConfirmation, Business.DocumentType.ProductionOrder, Business.DocumentType.ProductionChecklist, Business.DocumentType.ShipmentChecklist, Business.DocumentType.DeliveryNote, Business.DocumentType.Receipt));
 
 			//	Ajoute les options pour les clients.
-			list.Add (new DocumentOption ("Données du client à inclure :", "Relation"));
+			list.Add (new DocumentOption ("Données du client à inclure", "Relation"));
 			list.Add (new DocumentOption ("RelationMail",    DocumentOptionValueType.Boolean,  DocumentOptionWidgetType.CheckButton, "Relation", "Adresses",   "true", Business.DocumentType.Summary));
 			list.Add (new DocumentOption ("RelationTelecom", DocumentOptionValueType.Boolean,  DocumentOptionWidgetType.CheckButton, "Relation", "Téléphones", "true", Business.DocumentType.Summary));
 			list.Add (new DocumentOption ("RelationUri",     DocumentOptionValueType.Boolean,  DocumentOptionWidgetType.CheckButton, "Relation", "Emails",     "true", Business.DocumentType.Summary));

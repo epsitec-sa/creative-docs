@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public Dictionary<string, string> GetOptions()
 		{
+			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
 			var dict = new Dictionary<string, string> ();
 
@@ -112,6 +113,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public void SetOptions(Dictionary<string, string> options)
 		{
+			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)
 			{
 				this.SerializedData = null;
