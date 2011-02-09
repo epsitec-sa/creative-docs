@@ -2,8 +2,6 @@
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.UnitTests.Entities;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Common.UnitTesting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,26 +31,26 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData3 = new ValueDataEntity ();
 
 			CollectionDataEntity collectionData = new CollectionDataEntity ();
-			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[I1A6]")));
 
 			using (collectionData.DefineOriginalValues ())
 			{
 				collectionData.Collection.Add (valueData1);
 				collectionData.Collection.Add (valueData2);
 			}
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Add (valueData3);
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Remove (valueData3);
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Remove (valueData2);
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Add (valueData2);
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 		}
 
 
@@ -62,13 +60,13 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData = new ValueDataEntity ();
 
 			CollectionDataEntity collectionData = new CollectionDataEntity ();
-			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasValueChanged (Druid.Parse ("[I1A6]")));
 
 		    collectionData.Collection.Add (valueData);
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Remove (valueData);
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 		}
 
 
@@ -80,22 +78,22 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 
 			CollectionDataEntity collectionData = new CollectionDataEntity ();
 
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			using (collectionData.DefineOriginalValues ())
 			{
 				collectionData.Collection.Add (valueData1);
 				collectionData.Collection.Add (valueData2);
 			}
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection[0] = valueData2;
 			collectionData.Collection[1] = valueData1;
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection[0] = valueData1;
 			collectionData.Collection[1] = valueData2;
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 		}
 
 
@@ -106,23 +104,23 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData2 = new ValueDataEntity ();
 
 			CollectionDataEntity collectionData = new CollectionDataEntity ();
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Add (valueData1);
 			collectionData.Collection.Add (valueData2);
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection[0] = valueData2;
 			collectionData.Collection[1] = valueData1;
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection[0] = valueData1;
 			collectionData.Collection[1] = valueData2;
-			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsTrue (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 
 			collectionData.Collection.Remove (valueData1);
 			collectionData.Collection.Remove (valueData2);
-			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]")));
+			Assert.IsFalse (collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]")));
 		}
 
 
@@ -133,7 +131,7 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => collectionData.HasCollectionChanged (Druid.Parse ("[L0AN3]"))
+				() => collectionData.HasCollectionChanged (Druid.Parse ("[I1A6]"))
 			);
 		}
 
@@ -145,19 +143,19 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData2 = new ValueDataEntity ();
 
 			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
-			Assert.IsFalse (referenceData.HasValueChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasValueChanged (Druid.Parse ("[I1A4]")));
 
 			using (referenceData.DefineOriginalValues ())
 			{
 				referenceData.Reference = valueData1;
 			}
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData2;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData1;
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 		}
 
 
@@ -168,16 +166,16 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData2 = new ValueDataEntity ();
 
 			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData1;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData2;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData1;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 		}
 
 
@@ -192,16 +190,16 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			{
 				referenceData.Reference = valueData1;
 			}
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData2;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData1;
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = null;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 		}
 
 
@@ -211,13 +209,13 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			ValueDataEntity valueData = new ValueDataEntity ();
 
 			ReferenceDataEntity referenceData = new ReferenceDataEntity ();
-			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsFalse (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = valueData;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 
 			referenceData.Reference = null;
-			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]")));
+			Assert.IsTrue (referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]")));
 		}
 
 
@@ -228,7 +226,7 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => referenceData.HasReferenceChanged (Druid.Parse ("[L0AL3]"))
+				() => referenceData.HasReferenceChanged (Druid.Parse ("[I1A4]"))
 			);
 		}
 
@@ -237,19 +235,19 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 		public void HasValueChangedTest1()
 		{
 			ValueDataEntity valueData = new ValueDataEntity ();
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			using (valueData.DefineOriginalValues ())
 			{
 				valueData.Value = 1;
 			}
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			valueData.Value = 2;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			valueData.Value = 1;
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 		}
 
 
@@ -257,16 +255,16 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 		public void HasValueChangedTest2()
 		{
 			ValueDataEntity valueData = new ValueDataEntity ();
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			valueData.Value = 1;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			valueData.Value = 2;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 
 			valueData.Value = 1;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AJ3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A1]")));
 		}
 
 
@@ -278,16 +276,16 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 			{
 				valueData.NullableValue = 1;
 			}
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 
 			valueData.NullableValue = 2;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 
 			valueData.NullableValue = 1;
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 
 			valueData.NullableValue = null;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 		}
 
 
@@ -295,13 +293,13 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 		public void HasValueChangedTest4()
 		{
 			ValueDataEntity valueData = new ValueDataEntity ();
-			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsFalse (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 
 			valueData.NullableValue = 1;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 
 			valueData.NullableValue = null;
-			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[L0AO3]")));
+			Assert.IsTrue (valueData.HasValueChanged (Druid.Parse ("[I1A2]")));
 		}
 
 
@@ -312,7 +310,7 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => valueData.HasValueChanged (Druid.Parse ("[L0AJ3]"))
+				() => valueData.HasValueChanged (Druid.Parse ("[I1A1]"))
 			);
 		}
 
