@@ -1,4 +1,8 @@
-﻿using Epsitec.Common.Support;
+﻿#define LOCALHOST
+#define REMOTE_HOST_MARC
+
+
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Cresus.Database.UnitTests.Helpers
@@ -21,11 +25,57 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests");
 		}
-		
+
 
 		public static DbAccess GetDbAccessForTestDatabase()
 		{
-			return new DbAccess ("Firebird", "UTD_DATABASE", "localhost", "sysdba", "masterkey", false);
+
+#if LOCALHOST
+			string host = "localhost";
+#elif REMOTE_HOST_MARC
+			string host = "WIN-CDMPHQRQD03";
+#endif
+
+			return new DbAccess ("Firebird", "UTD_DATABASE", host, "sysdba", "masterkey", false);
+		}
+
+
+		public static System.IO.FileInfo GetEmployeeDatabaseFile()
+		{
+
+#if LOCALHOST
+			string file = @"Resources\employee.gbak";
+#elif REMOTE_HOST_MARC
+			string file = @"C:\Users\bettex\Documents\Cresus.Core\employee.gbak";
+#endif
+
+			return new System.IO.FileInfo (file);
+		}
+
+
+		public static System.IO.FileInfo GetLargeDatabaseFile()
+		{
+
+#if LOCALHOST
+			string file = @"Resources\large.gbak";
+#elif REMOTE_HOST_MARC
+			string file = @"C:\Users\bettex\Documents\Cresus.Core\large.gbak";
+#endif
+
+			return new System.IO.FileInfo (file);
+		}
+
+
+		public static System.IO.FileInfo GetTmpBackupFile()
+		{
+
+#if LOCALHOST
+			string file = @"Resources\test.gbak";
+#elif REMOTE_HOST_MARC
+			string file = @"C:\Users\bettex\Documents\Cresus.Core\test.gbak";
+#endif
+
+			return new System.IO.FileInfo (file);
 		}
 
 

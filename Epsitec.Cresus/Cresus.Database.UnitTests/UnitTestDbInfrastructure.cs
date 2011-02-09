@@ -1032,8 +1032,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbInfrastructureHelper.DeleteTestDatabase ();
 			}
 
-			System.IO.FileInfo backup1 = new System.IO.FileInfo (@"Resources\employee.gbak");
-			System.IO.FileInfo backup2 = new System.IO.FileInfo (@"test.gbak");
+			System.IO.FileInfo backup1 = TestHelper.GetEmployeeDatabaseFile ();
+			System.IO.FileInfo backup2 = TestHelper.GetTmpBackupFile ();
 
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 			dbAccess.IgnoreInitialConnectionErrors = false;
@@ -1063,8 +1063,8 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbInfrastructureHelper.DeleteTestDatabase ();
 			}
 
-			System.IO.FileInfo backup1 = new System.IO.FileInfo (@"Resources\large.gbak");
-			System.IO.FileInfo backup2 = new System.IO.FileInfo (@"test.gbak");
+			System.IO.FileInfo backup1 = TestHelper.GetLargeDatabaseFile ();
+			System.IO.FileInfo backup2 = TestHelper.GetTmpBackupFile ();
 
 			if (backup2.Exists)
 			{
