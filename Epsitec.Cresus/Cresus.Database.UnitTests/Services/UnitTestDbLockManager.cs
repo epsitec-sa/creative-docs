@@ -244,9 +244,9 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 				Assert.AreEqual (1, manager.GetLock ("myLock3").ConnectionId.Value);
 				Assert.AreEqual ("myLock3", manager.GetLock ("myLock3").Name);
 
-				Assert.IsTrue (manager.GetLock ("myLock1").CreationTime > manager.GetLock ("myLock2").CreationTime);
-				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime > manager.GetLock ("myLock2").CreationTime);
-				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime > manager.GetLock ("myLock1").CreationTime);
+				Assert.IsTrue (manager.GetLock ("myLock1").CreationTime >= manager.GetLock ("myLock2").CreationTime);
+				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime >= manager.GetLock ("myLock2").CreationTime);
+				Assert.IsTrue (manager.GetLock ("myLock3").CreationTime >= manager.GetLock ("myLock1").CreationTime);
 
 				manager.ReleaseLock ("myLock1", 0);
 				manager.ReleaseLock ("myLock2", 0);
