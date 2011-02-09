@@ -58,33 +58,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			Expression expression1 =
 				new ComparisonFieldField (
-					new Field (new Druid ("[L0A01]")),
+					new Field (new Druid ("[J1AM1]")),
 					BinaryComparator.IsEqual,
-					new Field (new Druid ("[L0AV]"))
+					new Field (new Druid ("[J1AL1]"))
 				);
 
 			Expression expression2 =
 				new ComparisonFieldValue (
-					new Field (new Druid ("[L0A61]")),
+					new Field (new Druid ("[J1AO1]")),
 					BinaryComparator.IsEqual,
 					new Constant (true)
 				);
 
 			Expression expression3 =
 				new UnaryComparison (
-					new Field (new Druid ("[L0AA2]")),
+					new Field (new Druid ("[J1A62]")),
 					UnaryComparator.IsNull
 				);
 
 			Expression expression4 =
 				new BinaryOperation (
 					new UnaryComparison (
-						new Field (new Druid ("[L0AT1]")),
+						new Field (new Druid ("[J1AP]")),
 						UnaryComparator.IsNotNull
 					),
 					BinaryOperator.Or,
 					new UnaryComparison (
-						new Field (new Druid ("[L0AS1]")),
+						new Field (new Druid ("[J1AO]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -129,9 +129,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			Expression expression1 =
 				new ComparisonFieldField (
-					new Field (new Druid ("[L0AS1]")),
+					new Field (new Druid ("[J1AO]")),
 					BinaryComparator.IsEqual,
-					new Field (new Druid ("[L0AV]"))
+					new Field (new Druid ("[J1AL1]"))
 				);
 
 			ExceptionAssert.Throw<System.ArgumentException>
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 		
 			Expression expression2 =
 				new ComparisonFieldValue (
-					new Field (new Druid ("[L0AS]")),
+					new Field (new Druid ("[J1AC1]")),
 					BinaryComparator.IsEqual,
 					new Constant (true)
 				);
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			Expression expression3 =
 				new UnaryComparison (
-					new Field (new Druid ("[L0AR]")),
+					new Field (new Druid ("[J1AV1]")),
 					UnaryComparator.IsNull
 				);
 
@@ -165,12 +165,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			Expression expression4 =
 				new BinaryOperation (
 					new UnaryComparison (
-						new Field (new Druid ("[L0A61]")),
+						new Field (new Druid ("[J1AO1]")),
 						UnaryComparator.IsNotNull
 					),
 					BinaryOperator.Or,
 					new UnaryComparison (
-						new Field (new Druid ("[L0AS1]")),
+						new Field (new Druid ("[J1AO]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 		
 			Expression expression5 =
 				new UnaryComparison (
-					new Field (new Druid ("[L0AV]")),
+					new Field (new Druid ("[J1AL1]")),
 					UnaryComparator.IsNull
 				);
 
@@ -209,23 +209,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			List<string> validIds = new List<string> ()
 			{
-				"[L0AV]",
-				"[L0A01]",
-				"[L0A61]"
+				"[J1AL1]",
+				"[J1AM1]",
+				"[J1AO1]"
 			};
 
 			List<string> invalidIds = new List<string> ()
 			{
 				"[L0S]",
-				"[L0AD1]",
-				"[L0AU]",
-				"[L0A11]",
-				"[L0A92]",
-				"[L0AN]",
-				"[L0AM]",
-				"[L0AG1]",
-				"[L0AA]",
-				"[L0AR]",
+				"[J1AD1]",
+				"[J1AK1]",
+				"[J1AN1]",
+				"[J1A52]",
+				"[J1AJ1]",
+				"[J1AB1]",
+				"[J1AP1]",
+				"[J1A8]",
+				"[J1AV1]",
 			};
 
 			foreach (string validId in validIds)

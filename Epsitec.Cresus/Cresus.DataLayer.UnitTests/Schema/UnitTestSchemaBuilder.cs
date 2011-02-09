@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIds = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A62]")
+				Druid.Parse ("[J1A81]")
 			};
 
 			this.CheckSchema (entityIds, false);
@@ -74,14 +74,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIdsToRegister = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]")
+				Druid.Parse ("[J1A9]")
 			};
 
 			List<Druid> entityIdsToCheck = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A4]"),
 			};
 
 			this.CheckSchema (entityIdsToCheck, false);
@@ -95,28 +95,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIdsToRegister = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]")
+				Druid.Parse ("[J1AT1]")
 			};
 
 			List<Druid> entityIdsToCheck = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]"),
-				Druid.Parse ("[L0AP]"),
-				Druid.Parse ("[L0AE1]"),
-				Druid.Parse ("[L0AQ1]"),
-				Druid.Parse ("[L0AN]"),
-				Druid.Parse ("[L0AM]"),
-				Druid.Parse ("[L0AO]"),
-				Druid.Parse ("[L0AL1]"),
-				Druid.Parse ("[L0AT]"),
-				Druid.Parse ("[L0AA1]"),
-				Druid.Parse ("[L0A21]"),
-				Druid.Parse ("[L0AD]"),
-				Druid.Parse ("[L0AI]"),
-				Druid.Parse ("[L0AF]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1AT1]"),
+				Druid.Parse ("[J1AA1]"),
+				Druid.Parse ("[J1AV]"),
+				Druid.Parse ("[J1A41]"),
+				Druid.Parse ("[J1AJ1]"),
+				Druid.Parse ("[J1AB1]"),
+				Druid.Parse ("[J1AE1]"),
+				Druid.Parse ("[J1A11]"),
+				Druid.Parse ("[J1AN]"),
+				Druid.Parse ("[J1AQ]"),
+				Druid.Parse ("[J1AT]"),
+				Druid.Parse ("[J1AJ]"),
+				Druid.Parse ("[J1AG]"),
+				Druid.Parse ("[J1AE]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A4]"),
 			};
 			
 			this.CheckSchema (entityIdsToCheck, false);
@@ -130,23 +130,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIds = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]"),
-				Druid.Parse ("[L0AP]"),
-				Druid.Parse ("[L0AE1]"),
-				Druid.Parse ("[L0AQ1]"),
-				Druid.Parse ("[L0AN]"),
-				Druid.Parse ("[L0AM]"),
-				Druid.Parse ("[L0AO]"),
-				Druid.Parse ("[L0AL1]"),
-				Druid.Parse ("[L0AT]"),
-				Druid.Parse ("[L0AA1]"),
-				Druid.Parse ("[L0A21]"),
-				Druid.Parse ("[L0AD]"),
-				Druid.Parse ("[L0AI]"),
-				Druid.Parse ("[L0AF]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1AT1]"),
+				Druid.Parse ("[J1AA1]"),
+				Druid.Parse ("[J1AV]"),
+				Druid.Parse ("[J1A41]"),
+				Druid.Parse ("[J1AJ1]"),
+				Druid.Parse ("[J1AB1]"),
+				Druid.Parse ("[J1AE1]"),
+				Druid.Parse ("[J1A11]"),
+				Druid.Parse ("[J1AN]"),
+				Druid.Parse ("[J1AQ]"),
+				Druid.Parse ("[J1AT]"),
+				Druid.Parse ("[J1AJ]"),
+				Druid.Parse ("[J1AG]"),
+				Druid.Parse ("[J1AE]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A4]"),
 			};
 
 			this.CheckSchema (entityIds, false);
@@ -160,37 +160,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIdsToRegister1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]")
+				Druid.Parse ("[J1A9]")
 			};
 
 			List<Druid> entityIdsToCheck1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A4]"),
 			};
 
 			List<Druid> entityIdsToRegister2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]")
+				Druid.Parse ("[J1AT1]")
 			};
 
 			List<Druid> entityIdsToCheck2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]"),
-				Druid.Parse ("[L0AP]"),
-				Druid.Parse ("[L0AE1]"),
-				Druid.Parse ("[L0AQ1]"),
-				Druid.Parse ("[L0AN]"),
-				Druid.Parse ("[L0AM]"),
-				Druid.Parse ("[L0AO]"),
-				Druid.Parse ("[L0AL1]"),
-				Druid.Parse ("[L0AT]"),
-				Druid.Parse ("[L0AA1]"),
-				Druid.Parse ("[L0A21]"),
-				Druid.Parse ("[L0AD]"),
-				Druid.Parse ("[L0AI]"),
-				Druid.Parse ("[L0AF]"),
+				Druid.Parse ("[J1AT1]"),
+				Druid.Parse ("[J1AA1]"),
+				Druid.Parse ("[J1AV]"),
+				Druid.Parse ("[J1A41]"),
+				Druid.Parse ("[J1AJ1]"),
+				Druid.Parse ("[J1AB1]"),
+				Druid.Parse ("[J1AE1]"),
+				Druid.Parse ("[J1A11]"),
+				Druid.Parse ("[J1AN]"),
+				Druid.Parse ("[J1AQ]"),
+				Druid.Parse ("[J1AT]"),
+				Druid.Parse ("[J1AJ]"),
+				Druid.Parse ("[J1AG]"),
+				Druid.Parse ("[J1AE]"),
 			};
 
 			this.CheckSchema (entityIdsToCheck1, false);
@@ -213,37 +213,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIdsToRegister1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]")
+				Druid.Parse ("[J1A9]")
 			};
 
 			List<Druid> entityIdsToCheck1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A4]"),
 			};
 
 			List<Druid> entityIdsToRegister2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]")
+				Druid.Parse ("[J1AT1]")
 			};
 
 			List<Druid> entityIdsToCheck2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]"),
-				Druid.Parse ("[L0AP]"),
-				Druid.Parse ("[L0AE1]"),
-				Druid.Parse ("[L0AQ1]"),
-				Druid.Parse ("[L0AN]"),
-				Druid.Parse ("[L0AM]"),
-				Druid.Parse ("[L0AO]"),
-				Druid.Parse ("[L0AL1]"),
-				Druid.Parse ("[L0AT]"),
-				Druid.Parse ("[L0AA1]"),
-				Druid.Parse ("[L0A21]"),
-				Druid.Parse ("[L0AD]"),
-				Druid.Parse ("[L0AI]"),
-				Druid.Parse ("[L0AF]"),
+				Druid.Parse ("[J1AT1]"),
+				Druid.Parse ("[J1AA1]"),
+				Druid.Parse ("[J1AV]"),
+				Druid.Parse ("[J1A41]"),
+				Druid.Parse ("[J1AJ1]"),
+				Druid.Parse ("[J1AB1]"),
+				Druid.Parse ("[J1AE1]"),
+				Druid.Parse ("[J1A11]"),
+				Druid.Parse ("[J1AN]"),
+				Druid.Parse ("[J1AQ]"),
+				Druid.Parse ("[J1AT]"),
+				Druid.Parse ("[J1AJ]"),
+				Druid.Parse ("[J1AG]"),
+				Druid.Parse ("[J1AE]"),
 			};
 
 			this.CheckSchema (entityIdsToCheck1, false);
@@ -266,37 +266,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		{
 			List<Druid> entityIdsToRegister1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]")
+				Druid.Parse ("[J1AT1]")
 			};
 
 			List<Druid> entityIdsToCheck1 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0AQ]"),
-				Druid.Parse ("[L0AP]"),
-				Druid.Parse ("[L0AE1]"),
-				Druid.Parse ("[L0AQ1]"),
-				Druid.Parse ("[L0AN]"),
-				Druid.Parse ("[L0AM]"),
-				Druid.Parse ("[L0AO]"),
-				Druid.Parse ("[L0AL1]"),
-				Druid.Parse ("[L0AT]"),
-				Druid.Parse ("[L0AA1]"),
-				Druid.Parse ("[L0A21]"),
-				Druid.Parse ("[L0AD]"),
-				Druid.Parse ("[L0AI]"),
-				Druid.Parse ("[L0AF]"),
+				Druid.Parse ("[J1AT1]"),
+				Druid.Parse ("[J1AA1]"),
+				Druid.Parse ("[J1AV]"),
+				Druid.Parse ("[J1A41]"),
+				Druid.Parse ("[J1AJ1]"),
+				Druid.Parse ("[J1AB1]"),
+				Druid.Parse ("[J1AE1]"),
+				Druid.Parse ("[J1A11]"),
+				Druid.Parse ("[J1AN]"),
+				Druid.Parse ("[J1AQ]"),
+				Druid.Parse ("[J1AT]"),
+				Druid.Parse ("[J1AJ]"),
+				Druid.Parse ("[J1AG]"),
+				Druid.Parse ("[J1AE]"),
 			};
 
 			List<Druid> entityIdsToRegister2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]")
+				Druid.Parse ("[J1A9]")
 			};
 
 			List<Druid> entityIdsToCheck2 = new List<Druid> ()
 			{
-				Druid.Parse ("[L0A5]"),
-				Druid.Parse ("[L0A4]"),
-				Druid.Parse ("[L0A1]"),
+				Druid.Parse ("[J1A9]"),
+				Druid.Parse ("[J1A6]"),
+				Druid.Parse ("[J1A4]"),
 			};
 
 			this.CheckSchema (entityIdsToCheck1, false);

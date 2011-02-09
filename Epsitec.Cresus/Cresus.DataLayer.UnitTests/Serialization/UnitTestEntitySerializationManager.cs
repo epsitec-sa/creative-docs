@@ -133,19 +133,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
 				ValueData valueData = new ValueData ();
-				valueData[Druid.Parse ("[L0AV]")] = "Albert";
-				valueData[Druid.Parse ("[L0A61]")] = new Date (1995, 1, 1);
+				valueData[Druid.Parse ("[J1AL1]")] = "Albert";
+				valueData[Druid.Parse ("[J1AO1]")] = new Date (1995, 1, 1);
 
 				ReferenceData referenceData = new ReferenceData ();
-				referenceData[Druid.Parse ("[L0AD1]")] = new DbKey (new DbId (1000000002));
-				referenceData[Druid.Parse ("[L0AU]")] = new DbKey (new DbId (1000000001));
+				referenceData[Druid.Parse ("[J1AD1]")] = new DbKey (new DbId (1000000002));
+				referenceData[Druid.Parse ("[J1AK1]")] = new DbKey (new DbId (1000000001));
 
 				CollectionData collectionData = new CollectionData ();
-				collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000002)));
-				collectionData[Druid.Parse ("[L0AS]")].Add (new DbKey (new DbId (1000000001)));
+				collectionData[Druid.Parse ("[J1AC1]")].Add (new DbKey (new DbId (1000000002)));
+				collectionData[Druid.Parse ("[J1AC1]")].Add (new DbKey (new DbId (1000000001)));
 
 				int logSequenceId = 4;
-				EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AN]"), logSequenceId, valueData, referenceData, collectionData);
+				EntityData data = new EntityData (new DbKey (new DbId (1000000001)), Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AJ1]"), logSequenceId, valueData, referenceData, collectionData);
 
 				new EntitySerializationManager (dataContext).Deserialize (alfred, data);
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AV]"));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AL1]"));
 
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0A11]"));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AN1]"));
 
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
 
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[L0AS]"));
+				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AC1]"));
 
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 			}

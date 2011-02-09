@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-				Druid fieldId = Druid.Parse ("[L0AV]");
+				Druid fieldId = Druid.Parse ("[J1AL1]");
 
 				var proxy = new ValueFieldProxy_Accessor (dataContext, person, fieldId);
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-					Druid fieldId = Druid.Parse ("[L0AV]");
+					Druid fieldId = Druid.Parse ("[J1AL1]");
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
@@ -80,12 +80,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[L0AN]"))
+						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[J1AJ1]"))
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[L0AD1]"))
+						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[J1AD1]"))
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
@@ -106,9 +106,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				var proxy1 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0AV]"));
-				var proxy2 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A01]"));
-				var proxy3 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A61]"));
+				var proxy1 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[J1AL1]"));
+				var proxy2 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[J1AM1]"));
+				var proxy3 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[J1AO1]"));
 
 				object value1 = proxy1.GetValue ();
 				object value2 = proxy2.GetValue ();

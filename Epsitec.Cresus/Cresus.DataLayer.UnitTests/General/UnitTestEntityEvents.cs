@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AV]"));
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AL1]"));
 
 				Assert.AreEqual (1, eventArgs.Count);
 				Assert.AreSame (alfred, eventArgs[0].Entity);

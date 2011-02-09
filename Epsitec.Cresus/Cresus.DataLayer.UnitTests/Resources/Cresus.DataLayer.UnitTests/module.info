@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="21" name="Cresus.DataLayer.UnitTests" layer="s" textMode="String" namespace="Epsitec.Cresus.DataLayer.UnitTests">
+<ModuleInfo id="51" name="Cresus.DataLayer.UnitTests" layer="s" textMode="String" namespace="Epsitec.Cresus.DataLayer.UnitTests">
   <Versions>
-    <Version id="1" build="83" date="2011-02-07T10:11:33.0138011Z" />
+    <Version id="1" build="106" date="2011-02-09T08:37:23.8657963Z" />
   </Versions>
 </ModuleInfo>

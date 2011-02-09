@@ -106,13 +106,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				List<DbTable> tables1 = new List<DbTable> ()
 				{
-					dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AM]")),
-					dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[L0AN]")),
-					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AS]")),
-					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AD1]")),
-					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AU]")),
-					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0A11]")),
-					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0A71]")),
+					dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[J1AB1]")),
+					dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[J1AJ1]")),
+					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
+					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AD1]")),
+					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AK1]")),
+					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AN1]")),
+					dataInfrastructure.SchemaEngine.GetRelationTableDefinition (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AR1]")),
 				};
 
 				List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
@@ -129,10 +129,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
             {
-                { Druid.Parse ("[L0AV]"), "coucou" },
+                { Druid.Parse ("[J1AL1]"), "coucou" },
             };
 
-			Druid localEntityId = Druid.Parse ("[L0AN]");
+			Druid localEntityId = Druid.Parse ("[J1AJ1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -159,8 +159,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			PersonTitleEntity target = new PersonTitleEntity ();
 
-			Druid localEntityId = Druid.Parse ("[L0AN]");
-			Druid fieldId = Druid.Parse ("[L0AU]");
+			Druid localEntityId = Druid.Parse ("[J1AJ1]");
+			Druid fieldId = Druid.Parse ("[J1AK1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -192,8 +192,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
                 new AbstractContactEntity (),
             };
 
-			Druid localEntityId = Druid.Parse ("[L0AM]");
-			Druid fieldId = Druid.Parse ("[L0AD]");
+			Druid localEntityId = Druid.Parse ("[J1AB1]");
+			Druid fieldId = Druid.Parse ("[J1AJ]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
