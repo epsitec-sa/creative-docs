@@ -780,6 +780,26 @@ namespace Epsitec.Cresus.Core
 			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
 
+		public void BackupDatabase(System.IO.FileInfo file)
+		{
+			CoreData.BackupDatabase (file, this.dbInfrastructure.Access);
+		}
+
+		public static void BackupDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			DbInfrastructure.BackupDatabase (dbAccess, file);
+		}
+
+		public static void RestoreDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		{
+			DbInfrastructure.RestoreDatabase (dbAccess, file);
+		}
+
+		public void RestoreDatabase(System.IO.FileInfo file)
+		{
+			CoreData.RestoreDatabase (file, this.dbInfrastructure.Access);
+		}
+
 		private void ReloadDatabase()
 		{
 			// TODO
