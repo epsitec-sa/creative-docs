@@ -39,13 +39,23 @@ namespace Epsitec.Cresus.Core.Entities
 		private FormattedText GetPrintingUnitsSummary()
 		{
 			var dict = this.GetPrintingUnits ();
+			var all = DocumentPrintingUnitsEditor.DocumentPageType.GetAllDocumentPageTypes ();
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var pair in dict)
 			{
-				builder.Append (pair.Key);
+				var pageType = all.Where (x => x.Name == pair.Key).FirstOrDefault ();
+
+				var unit = pair.Value;
+
+				if (string.IsNullOrEmpty (unit))
+				{
+					unit = Misc.Italic ("(aucune)").ToString ();
+				}
+
+				builder.Append (pageType.ShortDescription);
 				builder.Append (" = ");
-				builder.Append (pair.Value);
+				builder.Append (unit);
 				builder.Append ("<br/>");
 			}
 
@@ -64,7 +74,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (!string.IsNullOrEmpty (s))
 				{
-					// Exemple de table obtenue: "ForAllPages", "Brother HL-1870", "ForPagesCopy", "HP Color LaserJet 3600", ""
+					// Exemple de table obtenue: "ForAllPages", "Blanc", "ForPagesCopy", "Recyclé", ""
 					string[] split = s.Split ('◊');
 
 					for (int i = 0; i < split.Length-1; i+=2)
@@ -96,7 +106,7 @@ namespace Epsitec.Cresus.Core.Entities
 					builder.Append ("◊");
 				}
 
-				// Exemple de chaîne obtenue: "ForAllPages◊Brother HL-1870◊ForPagesCopy◊HP Color LaserJet 3600◊"
+				// Exemple de chaîne obtenue: "ForAllPages◊Blanc◊ForPagesCopy◊Recyclé◊"
 				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
 				this.SerializedData = bytes;
 			}
