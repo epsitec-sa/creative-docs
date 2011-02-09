@@ -79,7 +79,6 @@
     <Compile Include="Business\Finance\PriceCalculators\UnitTestNumericDimension.cs" />
     <Compile Include="Business\Finance\PriceCalculators\UnitTestDimensionTable.cs" />
     <Compile Include="Data\UnitTestLockTransaction.cs" />
-    <Compile Include="Entities\UnitTestPriceCalculatorEntity.cs" />
     <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Helpers\DbInfrastructureHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
