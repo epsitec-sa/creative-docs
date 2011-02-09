@@ -216,6 +216,7 @@
     <Compile Include="DocumentOptionsEditor\DocumentOption.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
+    <Compile Include="DocumentPrintingUnitsEditor\DocumentPageType.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />

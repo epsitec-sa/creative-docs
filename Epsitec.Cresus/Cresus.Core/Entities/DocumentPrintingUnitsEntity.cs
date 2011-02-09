@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public Dictionary<string, string> GetPrintingUnits()
 		{
+			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
 			// TODO: Ajouter un cache pour accélérer l'accès !
 			var dict = new Dictionary<string, string> ();
 
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (!string.IsNullOrEmpty (s))
 				{
-					// Exemple de table obtenue: "HeaderLogo", "true", "LayoutFrameless", "false", ""
+					// Exemple de table obtenue: "ForAllPages", "Brother HL-1870", "ForPagesCopy", "HP Color LaserJet 3600", ""
 					string[] split = s.Split ('◊');
 
 					for (int i = 0; i < split.Length-1; i+=2)
@@ -78,6 +79,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public void SetPrintingUnits(Dictionary<string, string> options)
 		{
+			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
 			if (options.Count == 0)
 			{
 				this.SerializedData = null;
@@ -94,7 +96,7 @@ namespace Epsitec.Cresus.Core.Entities
 					builder.Append ("◊");
 				}
 
-				// Exemple de chaîne obtenue: "HeaderLogo◊true◊LayoutFrameless◊false◊"
+				// Exemple de chaîne obtenue: "ForAllPages◊Brother HL-1870◊ForPagesCopy◊HP Color LaserJet 3600◊"
 				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
 				this.SerializedData = bytes;
 			}
