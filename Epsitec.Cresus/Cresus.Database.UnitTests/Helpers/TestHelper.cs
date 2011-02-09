@@ -20,8 +20,6 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 		{
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests");
-
-			System.IO.Directory.SetCurrentDirectory (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests\bin\Debug");
 		}
 		
 
