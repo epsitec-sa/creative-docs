@@ -45,6 +45,10 @@ namespace Epsitec.Cresus.Core
 			{
 				CoreProgram.ExecuteDatabaseRestore (args);
 			}
+			else if (args.Length == 1 && args[0].Equals ("-db-delete"))
+			{
+				CoreProgram.ExecuteDatabaseDelete (args);
+			}
 			else
 			{
 				CoreProgram.ExecuteCoreProgram ();
@@ -122,7 +126,14 @@ namespace Epsitec.Cresus.Core
 			CoreData.RestoreDatabase (file, dbAccess);
 		}
 
-		private static void ExecuteCoreProgram()
+		private static void ExecuteDatabaseDelete(string[] args)
+		{
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.DropDatabase (dbAccess);
+		}
+		
+        private static void ExecuteCoreProgram()
 		{
 			Data.Test.Example1 ();
 			using (var splash = new SplashScreen ("logo.png"))

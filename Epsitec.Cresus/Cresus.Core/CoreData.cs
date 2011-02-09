@@ -484,17 +484,6 @@ namespace Epsitec.Cresus.Core
 			return true;
 		}
 
-
-		private static bool CheckDatabaseEsistence(DbAccess access)
-		{
-			return DbInfrastructure.CheckDatabaseExistence (access);
-		}
-
-		private static void DropDatabase(DbAccess access)
-		{
-			DbInfrastructure.DropDatabase (access);
-		}
-
 		private void SetupDatabase(bool createNewDatabase)
 		{
 			if (createNewDatabase)
@@ -780,11 +769,6 @@ namespace Epsitec.Cresus.Core
 			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
 
-		public void BackupDatabase(System.IO.FileInfo file)
-		{
-			CoreData.BackupDatabase (file, this.dbInfrastructure.Access);
-		}
-
 		public static void BackupDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
 			DbInfrastructure.BackupDatabase (dbAccess, file);
@@ -795,9 +779,14 @@ namespace Epsitec.Cresus.Core
 			DbInfrastructure.RestoreDatabase (dbAccess, file);
 		}
 
-		public void RestoreDatabase(System.IO.FileInfo file)
+		private static bool CheckDatabaseEsistence(DbAccess access)
 		{
-			CoreData.RestoreDatabase (file, this.dbInfrastructure.Access);
+			return DbInfrastructure.CheckDatabaseExistence (access);
+		}
+
+		public static void DropDatabase(DbAccess access)
+		{
+			DbInfrastructure.DropDatabase (access);
 		}
 
 		private void ReloadDatabase()
