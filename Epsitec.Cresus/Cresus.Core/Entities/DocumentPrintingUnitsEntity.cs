@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
-			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/> <br/>", this.GetPrintingUnitsSummary ()));
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>", this.GetPrintingUnitsSummary ()));
 		}
 
 		public override FormattedText GetCompactSummary()
