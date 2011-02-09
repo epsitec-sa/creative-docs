@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Database;
+﻿#define LOCALHOST
+#define REMOTE_HOST_MARC
+
+using Epsitec.Cresus.Database;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
@@ -61,7 +64,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 		public static DbAccess GetDbAccessForTestDatabase()
 		{
-			return new DbAccess ("Firebird", "UTD_DATALAYER", "localhost", "sysdba", "masterkey", false);
+
+#if LOCALHOST
+			string host = "localhost";
+#elif REMOTE_HOST_MARC
+			string host = "WIN-CDMPHQRQD03";
+#endif
+
+			return new DbAccess ("Firebird", "UTD_DATALAYER", host, "sysdba", "masterkey", false);
 		}
 
 
