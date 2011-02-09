@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					return j is ValuePersistenceJob
 						&& ((ValuePersistenceJob) j).IsRootTypeJob
-						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[L0AM]")
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
 						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
 				}));
 
@@ -106,11 +106,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					return j is ValuePersistenceJob
 						&& !((ValuePersistenceJob) j).IsRootTypeJob
-						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[L0AN]")
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
 						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0AV]") && k.Value == null)
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0A01]") && ((string) (k.Value)) == "new last name")
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0A61]") && k.Value == null);
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
 				}));
 			}
 		}
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().Count () == 1);
 
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[L0A11]"));
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AN]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AN1]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AJ1]"));
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().Target == target);
 			}
 		}
@@ -175,8 +175,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().Count () == 1);
 
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[L0AS]"));
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AC1]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().Targets.SequenceEqual (targets));
 			}
 		}
@@ -221,29 +221,29 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				{
 					return j is ValuePersistenceJob
 						&& ((ValuePersistenceJob) j).IsRootTypeJob
-						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[L0AM]")
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
 						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
 				}));
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Any (j =>
 				{
 					return j is ValuePersistenceJob
 						&& !((ValuePersistenceJob) j).IsRootTypeJob
-						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[L0AN]")
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
 						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0AV]") && k.Value == null)
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0A01]") && ((string) (k.Value)) == "new last name")
-						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[L0A61]") && k.Value == null);
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
 				}));
 
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().Count () == 1);
 
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[L0AD1]"));
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AD1]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().Target == target);
 
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().Count () == 1);
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[L0AS]"));
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AC1]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().Targets.SequenceEqual (targets));
 			}
 		}
@@ -285,16 +285,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (jobs[0].Entity == entity);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
 				Assert.IsFalse (((ValuePersistenceJob) jobs[0]).IsRootTypeJob);
-				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AN]"));
+				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[J1AJ1]"));
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 1);
-				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[L0A01]"));
+				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[J1AM1]"));
 				Assert.IsTrue (((string) ((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().First ().Value) == "new last name");
 
 				Assert.IsTrue (jobs[1] is ValuePersistenceJob);
 				Assert.IsTrue (jobs[1].Entity == entity);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[1]).IsRootTypeJob);
-				Assert.IsTrue (((ValuePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (((ValuePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (((ValuePersistenceJob) jobs[1]).GetFieldIdsWithValues ().Count () == 0);
 			}
 		}
@@ -321,14 +321,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (jobs[0].Entity == entity);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).IsRootTypeJob);
-				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 0);
 
 				Assert.IsTrue (jobs[1] is ReferencePersistenceJob);
 				Assert.IsTrue (jobs[1].Entity == entity);
 				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
-				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AN]"));
-				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).FieldId == Druid.Parse ("[L0AU]"));
+				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[J1AJ1]"));
+				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).FieldId == Druid.Parse ("[J1AK1]"));
 				Assert.IsTrue (((ReferencePersistenceJob) jobs[1]).Target == target);
 			}
 		}
@@ -361,14 +361,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (jobs[0].Entity == entity);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).JobType == PersistenceJobType.Update);
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).IsRootTypeJob);
-				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (((ValuePersistenceJob) jobs[0]).GetFieldIdsWithValues ().Count () == 0);
 
 				Assert.IsTrue (jobs[1] is CollectionPersistenceJob);
 				Assert.IsTrue (jobs[1].Entity == entity);
 				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).JobType == PersistenceJobType.Update);
-				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[L0AM]"));
-				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).FieldId == Druid.Parse ("[L0AS]"));
+				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).LocalEntityId == Druid.Parse ("[J1AB1]"));
+				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).FieldId == Druid.Parse ("[J1AC1]"));
 				Assert.IsTrue (((CollectionPersistenceJob) jobs[1]).Targets.SequenceEqual (targets));
 			}
 		}
@@ -403,23 +403,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Count () == 2);
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().IsRootTypeJob == false);
-				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AN]"));
+				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AJ1]"));
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().Count () == 1);
-				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[L0A61]"));
+				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().First ().Key == Druid.Parse ("[J1AO1]"));
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().First ().GetFieldIdsWithValues ().First ().Value == null);
 
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).IsRootTypeJob);
-				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).LocalEntityId == Druid.Parse ("[L0AM]"));
+				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).LocalEntityId == Druid.Parse ("[J1AB1]"));
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().ElementAt (1).GetFieldIdsWithValues ().Count () == 0);
 
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().Count () == 1);
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AN]"));
-				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[L0A11]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AJ1]"));
+				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AN1]"));
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().First ().Target == null);
 
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().Count () == 1);
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[L0AM]"));
-				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[L0AS]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().LocalEntityId == Druid.Parse ("[J1AB1]"));
+				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().FieldId == Druid.Parse ("[J1AC1]"));
 				Assert.IsTrue (jobs.OfType<CollectionPersistenceJob> ().First ().Targets.SequenceEqual (targets));
 			}
 		}

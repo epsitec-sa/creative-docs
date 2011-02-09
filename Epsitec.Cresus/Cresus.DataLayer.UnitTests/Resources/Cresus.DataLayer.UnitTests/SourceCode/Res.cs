@@ -82,6 +82,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 		}
 		private static readonly global::Epsitec.Common.Support.ResourceManager _manager;
-		private const int _moduleId = 21;
+		private const int _moduleId = 51;
 	}
 }

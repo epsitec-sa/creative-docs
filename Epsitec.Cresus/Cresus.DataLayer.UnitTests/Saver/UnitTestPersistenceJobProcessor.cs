@@ -154,11 +154,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0A1]"),
+							Druid.Parse("[J1A4]"),
 							new Dictionary<Druid,object>()
 							{
-								{ Druid.Parse ("[L0AD3]"), "code"},
-								{ Druid.Parse ("[L0A3]"), "name"},
+								{ Druid.Parse ("[J1A3]"), "code"},
+								{ Druid.Parse ("[J1A5]"), "name"},
 							},
 							true,
 							PersistenceJobType.Insert
@@ -211,8 +211,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ReferencePersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AN]"),
-							Druid.Parse("[L0AU]"),
+							Druid.Parse("[J1AJ1]"),
+							Druid.Parse("[J1AK1]"),
 							target,
 							PersistenceJobType.Insert
 						)
@@ -267,8 +267,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new CollectionPersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AM]"),
-							Druid.Parse("[L0AS]"),
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
 							targets,
 							PersistenceJobType.Insert
 						)
@@ -323,12 +323,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AN]"),
+							Druid.Parse("[J1AJ1]"),
 							new Dictionary<Druid,object>()
 							{
-								{ Druid.Parse ("[L0AV]"), "firstname"},
-								{ Druid.Parse ("[L0A01]"), "lastname"},
-								{ Druid.Parse ("[L0A61]"), null },
+								{ Druid.Parse ("[J1AL1]"), "firstname"},
+								{ Druid.Parse ("[J1AM1]"), "lastname"},
+								{ Druid.Parse ("[J1AO1]"), null },
 							},
 							false,
 							PersistenceJobType.Update
@@ -380,16 +380,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ReferencePersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AN]"),
-							Druid.Parse("[L0AU]"),
+							Druid.Parse("[J1AJ1]"),
+							Druid.Parse("[J1AK1]"),
 							target,
 							PersistenceJobType.Update
 						),
 						new ReferencePersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AM]"),
-							Druid.Parse("[L0AD1]"),
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AD1]"),
 							null,
 							PersistenceJobType.Update
 						)
@@ -445,8 +445,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new CollectionPersistenceJob
 						(
 							entity,
-							Druid.Parse("[L0AM]"),
-							Druid.Parse("[L0AS]"),
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
 							targets,
 							PersistenceJobType.Update
 						),
@@ -515,8 +515,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new CollectionPersistenceJob
 						(
 							person4,
-							Druid.Parse ("[L0AM]"),
-							Druid.Parse ("[L0AS]"),
+							Druid.Parse ("[J1AB1]"),
+							Druid.Parse ("[J1AC1]"),
 							new List<AbstractContactEntity> ()
 							{
 								contact2,
@@ -527,20 +527,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ReferencePersistenceJob
 						(
 							person2,
-							Druid.Parse("[L0AN]"),
-							Druid.Parse("[L0A11]"),
+							Druid.Parse("[J1AJ1]"),
+							Druid.Parse("[J1AN1]"),
 							null,
 							PersistenceJobType.Update
 						),
 						new ValuePersistenceJob
 						(
 							person4,
-							Druid.Parse ("[L0AN]"),
+							Druid.Parse ("[J1AJ1]"),
 							new Dictionary<Druid,object> ()
 							{
-								{ Druid.Parse("[L0AV]"), "fn" },
-								{ Druid.Parse("[L0A01]"), "ln" },
-								{ Druid.Parse("[L0A61]"), null },
+								{ Druid.Parse("[J1AL1]"), "fn" },
+								{ Druid.Parse("[J1AM1]"), "ln" },
+								{ Druid.Parse("[J1AO1]"), null },
 							},
 							false,
 							PersistenceJobType.Insert
@@ -548,8 +548,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ReferencePersistenceJob
 						(
 							person4,
-							Druid.Parse ("[L0AN]"),
-							Druid.Parse ("[L0A11]"),
+							Druid.Parse ("[J1AJ1]"),
+							Druid.Parse ("[J1AN1]"),
 							gender1,
 							PersistenceJobType.Insert
 						),
@@ -560,10 +560,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							contact3,
-							Druid.Parse("[L0A52]"),
+							Druid.Parse("[J1A42]"),
 							new Dictionary<Druid,object> ()
 							{
-								{ Druid.Parse("[L0AA2]"), "uri" },
+								{ Druid.Parse("[J1A62]"), "uri" },
 							},
 							false,
 							PersistenceJobType.Insert
@@ -571,18 +571,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new CollectionPersistenceJob
 						(
 							person1,
-							Druid.Parse("[L0AM]"),
-							Druid.Parse("[L0AS]"),
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
 							new List<AbstractContactEntity> (),
 							PersistenceJobType.Update
 						),
 						new ValuePersistenceJob
 						(
 							contact1,
-							Druid.Parse("[L0A52]"),
+							Druid.Parse("[J1A42]"),
 							new Dictionary<Druid,object> ()
 							{
-								{ Druid.Parse("[L0AA2]"), "uri" },
+								{ Druid.Parse("[J1A62]"), "uri" },
 							},
 							false,
 							PersistenceJobType.Update
@@ -590,7 +590,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							contact3,
-							Druid.Parse("[L0AP]"),
+							Druid.Parse("[J1AA1]"),
 							new Dictionary<Druid,object> (),
 							true,
 							PersistenceJobType.Insert
@@ -598,7 +598,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							person4,
-							Druid.Parse ("[L0AM]"),
+							Druid.Parse ("[J1AB1]"),
 							new Dictionary<Druid,object> (),
 							true,
 							PersistenceJobType.Insert
@@ -606,12 +606,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 						new ValuePersistenceJob
 						(
 							gender2,
-							Druid.Parse("[L0AA1]"),
+							Druid.Parse("[J1AQ]"),
 							new Dictionary<Druid,object> ()
 							{
-								{ Druid.Parse("[L0A03]"), null },
-								{ Druid.Parse("[L0AD3]"), "code" },
-								{ Druid.Parse("[L0AC1]"), "name" },
+								{ Druid.Parse("[J1A1]"), null },
+								{ Druid.Parse("[J1A3]"), "code" },
+								{ Druid.Parse("[J1AR]"), "name" },
 							},
 							true,
 							PersistenceJobType.Insert

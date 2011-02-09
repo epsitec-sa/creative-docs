@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					query.Fields.Add (new SqlField ("CR_ID", "CR_ID"));
 
-					query.Tables.Add (new SqlField ("X_L0A11_L0AN", "X_L0A11_L0AN"));
+					query.Tables.Add (new SqlField ("X_J1AN1_J1AJ1", "X_J1AN1_J1AJ1"));
 
 					System.Data.DataTable data = dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 

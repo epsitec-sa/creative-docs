@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreEqual ("Albert", alfred.Firstname);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AV]"));
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AL1]"));
 
 				Assert.AreEqual ("Alfred", alfred.Firstname);
 			}
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreSame (german, alfred.PreferredLanguage);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AD1]"));
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AD1]"));
 
 				Assert.AreSame (french, alfred.PreferredLanguage);
 			}
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreEqual (0, alfred.Contacts.Count);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[L0AS]"));
+				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AC1]"));
 
 				Assert.AreEqual (2, alfred.Contacts.Count);
 				Assert.AreSame (contact1, alfred.Contacts[0]);

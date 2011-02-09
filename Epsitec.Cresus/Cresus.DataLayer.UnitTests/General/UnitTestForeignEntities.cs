@@ -476,7 +476,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => dataContext2.ReloadEntityField (person1, Druid.Parse ("[L0AS]"))
+						() => dataContext2.ReloadEntityField (person1, Druid.Parse ("[J1AC1]"))
 					);
 				}
 			}

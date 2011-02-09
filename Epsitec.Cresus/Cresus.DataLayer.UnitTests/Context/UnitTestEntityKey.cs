@@ -197,11 +197,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{
-				System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AP]")),
-				System.Tuple.Create (Druid.Parse ("[L0A52]"), Druid.Parse ("[L0AP]")),
-				System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AM]")),
-				System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AM]")),
-				System.Tuple.Create (Druid.Parse ("[L0AA1]"), Druid.Parse ("[L0AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1A42]"), Druid.Parse ("[J1AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AB1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AB1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AQ]"), Druid.Parse ("[J1AQ]")),
 			};
 
 			foreach (var sample in samples)
@@ -230,11 +230,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{
-				System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AP]")),
-				System.Tuple.Create (Druid.Parse ("[L0A52]"), Druid.Parse ("[L0AP]")),
-				System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AM]")),
-				System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AM]")),
-				System.Tuple.Create (Druid.Parse ("[L0AA1]"), Druid.Parse ("[L0AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1A42]"), Druid.Parse ("[J1AA1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AB1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AB1]")),
+				System.Tuple.Create (Druid.Parse ("[J1AQ]"), Druid.Parse ("[J1AQ]")),
 			};
 
 			foreach (var sample in samples)
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 			);
 			ExceptionAssert.Throw<System.FormatException>
 			(
-				() => EntityKey.Parse ("[L0AM]/wrong format")
+				() => EntityKey.Parse ("[J1AB1]/wrong format")
 			);
 			
 			ExceptionAssert.Throw<System.FormatException>
@@ -276,8 +276,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			Assert.IsNull (EntityKey.Parse (null));
 			Assert.IsNull (EntityKey.Parse (""));
-			Assert.AreEqual (new EntityKey (Druid.Parse ("[L0AM]"), new DbKey (new DbId (2))), EntityKey.Parse ("[L0AM]/2"));
-			Assert.AreEqual (new EntityKey (Druid.Parse ("[L0A11]"), new DbKey (new DbId (43))), EntityKey.Parse ("[L0A11]/43"));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AB1]"), new DbKey (new DbId (2))), EntityKey.Parse ("[J1AB1]/2"));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AN1]"), new DbKey (new DbId (43))), EntityKey.Parse ("[J1AN1]/43"));
 		}
 
 
