@@ -39,6 +39,8 @@ namespace Epsitec.Designer
 			var loadCresusGraphApplication = typeof (Epsitec.Cresus.Graph.GraphApplication);
 			var loadCresusDocumentsApplication = typeof (Epsitec.App.CresusDocuments.Application);
 			var loadCommonDocumentEditorApplication = typeof (Epsitec.Common.DocumentEditor.Application);
+			var loadCommonSupportUnitTests = typeof (Epsitec.Common.Support.UnitTests.UnitTestStringPacker);
+			var loadCresusDataLayerUnitTests = typeof (Epsitec.Cresus.DataLayer.UnitTests.Context.UnitTestDataContextEventArgs);
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;
