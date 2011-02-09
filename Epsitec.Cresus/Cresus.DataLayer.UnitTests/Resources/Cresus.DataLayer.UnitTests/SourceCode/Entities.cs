@@ -2031,6 +2031,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>EnumValue</c> field.
+		///	designer:fld/J1A72/J1AL2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[J1AL2]")]
+		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum EnumValue
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum> ("[J1AL2]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue = this.EnumValue;
+				if (oldValue != value || !this.IsFieldDefined("[J1AL2]"))
+				{
+					this.OnEnumValueChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum> ("[J1AL2]", oldValue, value);
+					this.OnEnumValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>IntegerValue</c> field.
 		///	designer:fld/J1A72/J1AD2
 		///	</summary>
@@ -2129,6 +2151,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		partial void OnDateValueChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDecimalValueChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDecimalValueChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnEnumValueChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum newValue);
+		partial void OnEnumValueChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum newValue);
 		partial void OnIntegerValueChanging(int oldValue, int newValue);
 		partial void OnIntegerValueChanged(int oldValue, int newValue);
 		partial void OnLongIntegerValueChanging(long oldValue, long newValue);

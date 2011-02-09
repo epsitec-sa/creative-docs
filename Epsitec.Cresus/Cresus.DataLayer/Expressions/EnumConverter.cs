@@ -125,6 +125,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbRawType.Int32;
 				case Type.Int64:
 					return DbRawType.Int64;
+				case Type.Enum:
+					return DbRawType.Int32;
 				case Type.Decimal:
 					return DbRawType.LargeDecimal;
 				case Type.Date:
@@ -154,14 +156,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			switch (type)
 			{
 				case Type.Boolean:
-					return DbSimpleType.Decimal;
 				case Type.Int16:
-					return DbSimpleType.Decimal;
 				case Type.Int32:
-					return DbSimpleType.Decimal;
 				case Type.Int64:
-					return DbSimpleType.Decimal;
 				case Type.Decimal:
+				case Type.Enum:
 					return DbSimpleType.Decimal;
 				case Type.Date:
 					return DbSimpleType.Date;

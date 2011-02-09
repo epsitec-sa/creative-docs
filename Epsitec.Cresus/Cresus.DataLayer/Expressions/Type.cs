@@ -46,6 +46,12 @@
 
 
 		/// <summary>
+		/// The type for enumeration values.
+		/// </summary>
+		Enum,
+
+
+		/// <summary>
 		/// The type for string values.
 		/// </summary>
 		String,

@@ -113,6 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.DateTime, DbRawType.DateTime },
 				{ Type.String, DbRawType.String },
 				{ Type.ByteArray, DbRawType.ByteArray },
+				{ Type.Enum, DbRawType.Int32 },
 			};
 
 			foreach (Type match in matches.Keys)
@@ -140,6 +141,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.DateTime, DbSimpleType.DateTime },
 				{ Type.String, DbSimpleType.String },
 				{ Type.ByteArray, DbSimpleType.ByteArray },
+				{ Type.Enum, DbSimpleType.Decimal },
 			};
 
 			foreach (Type match in matches.Keys)
@@ -167,6 +169,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				{ Type.DateTime, DbNumDef.FromRawType (DbRawType.DateTime) },
 				{ Type.String, DbNumDef.FromRawType (DbRawType.String) },
 				{ Type.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray) },
+				{ Type.Enum, DbNumDef.FromRawType (DbRawType.Int32) },
 			};
 
 			foreach (Type match in matches.Keys)

@@ -515,6 +515,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		public void GetObjectBasedOnEnumField()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ()
+				{
+					EnumValue = SimpleEnum.Value2,
+				};
+
+				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+			}
+		}
+
+
+		[TestMethod]
 		public void GetObjectBasedOnIntegerField()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())

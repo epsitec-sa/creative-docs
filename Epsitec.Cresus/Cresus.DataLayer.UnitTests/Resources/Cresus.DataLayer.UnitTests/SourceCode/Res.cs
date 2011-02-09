@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		
 		
 		
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings

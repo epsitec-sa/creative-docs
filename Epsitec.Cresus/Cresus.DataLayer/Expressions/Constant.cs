@@ -121,6 +121,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 		}
 
+
+		/// <summary>
+		/// Builds a new <c>Constant</c> of type <see cref="System.Enum"/>.
+		/// </summary>
+		/// <param name="value">The value of the new <c>Constant</c></param>
+		public Constant(System.Enum value)
+			: this (Type.Enum, value)
+		{
+		}
+
 		
 		/// <summary>
 		/// Builds a new <c>Constant</c>.

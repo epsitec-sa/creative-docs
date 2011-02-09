@@ -1101,6 +1101,71 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		public void GetObjectBasedOnEnumField1()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[J1AL2]")),
+						BinaryComparator.IsEqual,
+						new Constant (SimpleEnum.Value2)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 1);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectBasedOnEnumField2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[J1AL2]")),
+						BinaryComparator.IsNotEqual,
+						new Constant (SimpleEnum.Value2)
+					)
+				);
+
+				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
+
+				Assert.IsTrue (valueData.Count () == 2);
+
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
+				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
 		public void GetObjectBasedOnIntegerField1()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
