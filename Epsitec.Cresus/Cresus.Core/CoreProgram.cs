@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Core
 			{
 				CoreProgram.ExecuteDatabaseExport (args);
 			}
+			else if (args.Length == 2 && args[0].Equals ("-db-backup"))
+			{
+				CoreProgram.ExecuteDatabaseBackup (args);
+			}
+			else if (args.Length == 2 && args[0].Equals ("-db-restore"))
+			{
+				CoreProgram.ExecuteDatabaseRestore (args);
+			}
 			else
 			{
 				CoreProgram.ExecuteCoreProgram ();
@@ -96,6 +104,22 @@ namespace Epsitec.Cresus.Core
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
 			CoreData.ExportDatabase  (file, dbAccess, false);
+		}
+
+		private static void ExecuteDatabaseBackup(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.BackupDatabase (file, dbAccess);
+		}
+
+		private static void ExecuteDatabaseRestore(string[] args)
+		{
+			FileInfo file = new FileInfo (args[1]);
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+
+			CoreData.RestoreDatabase (file, dbAccess);
 		}
 
 		private static void ExecuteCoreProgram()
