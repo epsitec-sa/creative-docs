@@ -157,6 +157,7 @@
     <None Include="App.ico" />
     <None Include="App.res" />
     <None Include="App.rc" />
+    <None Include="compile-rc.bat" />
     <None Include="uac.manifest" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
@@ -274,7 +275,7 @@ xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /E
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 
-rem "$(SolutionDir)App.CreativeDocs\compile-rc.bat" "$(SolutionDir)App.CreativeDocs\App"</PreBuildEvent>
+"$(SolutionDir)App.CreativeDocs\compile-rc.bat" App.rc</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 
