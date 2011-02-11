@@ -73,40 +73,29 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			while (localEntityId.IsValid && !this.IsTableDefinitionInCache (this.GetEntityTableName (localEntityId)))
 			{
-				DbTable tableDefinition = this.GetEntityTableDefinition (localEntityId);
+				// This call loads the table in the cache if it is not yet loaded.
+				// Marc
 
-				this.LoadRelations (tableDefinition);
+				this.GetEntityTableDefinition (localEntityId);
 
 				ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
 				StructuredType entityType = TypeRosetta.CreateTypeObject (manager, localEntityId) as StructuredType;
 
-				localEntityId = entityType.BaseTypeId;
-			}
-		}
+				var relationFields = from field in entityType.Fields.Values
+									 where field.Membership != FieldMembership.Inherited
+									 let relation = field.Relation
+									 where relation == FieldRelation.Reference || relation == FieldRelation.Collection
+									 select field;
 
-
-		/// <summary>
-		/// Loads all the relation of a <see cref="DbTable"/> from the database in memory.
-		/// </summary>
-		/// <param name="tableDefinition">The <see cref="DbTable"/> whose relations to load.</param>
-		private void LoadRelations(DbTable tableDefinition)
-		{
-			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				foreach (DbColumn columnDefinition in tableDefinition.Columns)
+				foreach (StructuredTypeField field in relationFields)
 				{
-					DbCardinality cardinality = columnDefinition.Cardinality;
+					// This call loads the relation tables in the cache if it is not yet loaded.
+					// Marc
 
-					if (cardinality == DbCardinality.Reference || cardinality == DbCardinality.Collection)
-					{
-						string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
-						DbTable relationTableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
-
-						this.AddTableDefinitionToCache (relationTableName, relationTableDefinition);
-					}
+					this.GetRelationTableDefinition (entityType.CaptionId, field.CaptionId);
 				}
 
-				transaction.Commit ();
+				localEntityId = entityType.BaseTypeId;
 			}
 		}
 
