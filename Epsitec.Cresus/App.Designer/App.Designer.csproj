@@ -82,6 +82,10 @@
       <Project>{143A9741-1296-44BA-A2DA-85873722BC81}</Project>
       <Name>Common.Support.UnitTests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Assets\Cresus.Assets.csproj">
+      <Project>{290E4F95-9239-4B58-B3EE-063B6BC31CF3}</Project>
+      <Name>Cresus.Assets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
@@ -93,6 +97,14 @@
     <ProjectReference Include="..\Cresus.Graph\Cresus.Graph.csproj">
       <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
       <Name>Cresus.Graph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.WebServer\Cresus.WebServer.csproj">
+      <Project>{6E565F1B-C54D-431E-A74A-FE77E137EDDB}</Project>
+      <Name>Cresus.WebServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Product.Aider\Product.Aider.csproj">
+      <Project>{416AC12C-097A-4B2F-BD1D-38D1021EE3DB}</Project>
+      <Name>Product.Aider</Name>
     </ProjectReference>
     <Reference Include="System" />
     <Reference Include="System.Core">
