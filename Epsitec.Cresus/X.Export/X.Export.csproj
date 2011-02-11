@@ -166,10 +166,6 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\X.Tool.ResGenerator\X.Tool.ResGenerator.csproj">
-      <Project>{3E741450-319E-49CF-BFEC-35BE01CE0AFD}</Project>
-      <Name>X.Tool.ResGenerator</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
