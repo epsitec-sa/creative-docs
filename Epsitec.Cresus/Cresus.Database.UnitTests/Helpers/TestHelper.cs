@@ -40,42 +40,42 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 		}
 
 
-		public static System.IO.FileInfo GetEmployeeDatabaseFile()
+		public static string GetEmployeeDatabaseFilePath()
 		{
 
 #if LOCALHOST
-			string file = @"Resources\employee.gbak";
+			string file = new System.IO.FileInfo (@"Resources\employee.gbak").FullName;
 #elif REMOTE_HOST_MARC
 			string file = @"C:\Users\bettex\Documents\Cresus.Core\employee.gbak";
 #endif
 
-			return new System.IO.FileInfo (file);
+			return file;
 		}
 
 
-		public static System.IO.FileInfo GetLargeDatabaseFile()
+		public static string GetLargeDatabaseFilePath()
 		{
 
 #if LOCALHOST
-			string file = @"Resources\large.gbak";
+			string file = new System.IO.FileInfo (@"Resources\large.gbak").FullName;
 #elif REMOTE_HOST_MARC
 			string file = @"C:\Users\bettex\Documents\Cresus.Core\large.gbak";
 #endif
 
-			return new System.IO.FileInfo (file);
+			return file;
 		}
 
 
-		public static System.IO.FileInfo GetTmpBackupFile()
+		public static string GetTmpBackupFilePath()
 		{
 
 #if LOCALHOST
-			string file = @"Resources\test.gbak";
+			string file = new System.IO.FileInfo (@"Resources\test.gbak").FullName;
 #elif REMOTE_HOST_MARC
 			string file = @"C:\Users\bettex\Documents\Cresus.Core\test.gbak";
 #endif
 
-			return new System.IO.FileInfo (file);
+			return file;
 		}
 
 

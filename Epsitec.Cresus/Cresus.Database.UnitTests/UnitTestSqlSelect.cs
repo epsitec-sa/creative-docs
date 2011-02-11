@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			FileInfo file = TestHelper.GetEmployeeDatabaseFile ();
+			string file = TestHelper.GetEmployeeDatabaseFilePath ();
 
 			IDbAbstractionHelper.RestoreDatabase(file);
 		}

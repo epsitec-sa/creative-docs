@@ -1032,16 +1032,16 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbInfrastructureHelper.DeleteTestDatabase ();
 			}
 
-			System.IO.FileInfo backup1 = TestHelper.GetEmployeeDatabaseFile ();
-			System.IO.FileInfo backup2 = TestHelper.GetTmpBackupFile ();
+			string backup1 = TestHelper.GetEmployeeDatabaseFilePath ();
+			string backup2 = TestHelper.GetTmpBackupFilePath ();
 
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 			dbAccess.IgnoreInitialConnectionErrors = false;
 			dbAccess.CheckConnection = false;
 
-			if (backup2.Exists)
+			if (System.IO.File.Exists(backup2))
 			{
-				backup2.Delete ();
+				System.IO.File.Delete (backup2);
 			}
 
 			DbInfrastructure.RestoreDatabase (dbAccess, backup1);
@@ -1063,12 +1063,12 @@ namespace Epsitec.Cresus.Database.UnitTests
 				DbInfrastructureHelper.DeleteTestDatabase ();
 			}
 
-			System.IO.FileInfo backup1 = TestHelper.GetLargeDatabaseFile ();
-			System.IO.FileInfo backup2 = TestHelper.GetTmpBackupFile ();
+			string backup1 = TestHelper.GetLargeDatabaseFilePath ();
+			string backup2 = TestHelper.GetTmpBackupFilePath ();
 
-			if (backup2.Exists)
+			if (System.IO.File.Exists (backup2))
 			{
-				backup2.Delete ();
+				System.IO.File.Delete (backup2);
 			}
 
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();

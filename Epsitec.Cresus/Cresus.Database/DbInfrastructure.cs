@@ -365,20 +365,20 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public static void BackupDatabase(DbAccess dbAccess, System.IO.FileInfo file)
+		public static void BackupDatabase(DbAccess dbAccess, string remoteFilePath)
 		{
 			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
-				idbAbstraction.ServiceTools.Backup (file.FullName);
+				idbAbstraction.ServiceTools.Backup (remoteFilePath);
 			}
 		}
 
 
-		public static void RestoreDatabase(DbAccess dbAccess, System.IO.FileInfo file)
+		public static void RestoreDatabase(DbAccess dbAccess, string remoteFilePath)
 		{
 			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
-				idbAbstraction.ServiceTools.Restore (file.FullName);
+				idbAbstraction.ServiceTools.Restore (remoteFilePath);
 			}
 		}
 

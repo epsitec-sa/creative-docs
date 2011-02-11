@@ -70,7 +70,7 @@
 		}
 
 
-		public static void RestoreDatabase(System.IO.FileInfo file)
+		public static void RestoreDatabase(string file)
 		{
 			DbAccess dbAccess = TestHelper.GetDbAccessForTestDatabase ();
 
@@ -84,7 +84,7 @@
 
 			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
 			{
-				idbAbstraction.ServiceTools.Restore (file.FullName);
+				idbAbstraction.ServiceTools.Restore (file);
 
 				System.Threading.Thread.Sleep (1000);
 			}
