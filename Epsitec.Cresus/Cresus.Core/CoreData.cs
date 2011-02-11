@@ -769,14 +769,14 @@ namespace Epsitec.Cresus.Core
 			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
 
-		public static void BackupDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		public static void BackupDatabase(string remoteFilePath, DbAccess dbAccess)
 		{
-			DbInfrastructure.BackupDatabase (dbAccess, file);
+			DbInfrastructure.BackupDatabase (dbAccess, remoteFilePath);
 		}
 
-		public static void RestoreDatabase(System.IO.FileInfo file, DbAccess dbAccess)
+		public static void RestoreDatabase(string remoteFilePath, DbAccess dbAccess)
 		{
-			DbInfrastructure.RestoreDatabase (dbAccess, file);
+			DbInfrastructure.RestoreDatabase (dbAccess, remoteFilePath);
 		}
 
 		private static bool CheckDatabaseEsistence(DbAccess access)

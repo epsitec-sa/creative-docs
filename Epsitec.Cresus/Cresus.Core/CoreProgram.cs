@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExecuteDatabaseBackup(string[] args)
 		{
-			FileInfo file = new FileInfo (args[1]);
+			string file = args[1];
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
 			CoreData.BackupDatabase (file, dbAccess);
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExecuteDatabaseRestore(string[] args)
 		{
-			FileInfo file = new FileInfo (args[1]);
+			string file = args[1];
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
 			CoreData.RestoreDatabase (file, dbAccess);
