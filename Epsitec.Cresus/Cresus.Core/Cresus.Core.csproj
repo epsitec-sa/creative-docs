@@ -209,14 +209,10 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOptionValueType.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOptionWidgetType.cs" />
     <Compile Include="DocumentOptionsEditor\ValuesController.cs" />
     <Compile Include="DocumentOptionsEditor\SelectController.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOptionDescription.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
-    <Compile Include="DocumentPrintingUnitsEditor\DocumentPageType.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />
@@ -225,7 +221,11 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
-    <Compile Include="Print2\EntityPrinters\AbstractDocumentPrinter.cs" />
+    <Compile Include="Print2\Definitions\DocumentOptionDefinition.cs" />
+    <Compile Include="Print2\Definitions\DocumentOptionValueType.cs" />
+    <Compile Include="Print2\Definitions\DocumentOptionWidgetType.cs" />
+    <Compile Include="Print2\Definitions\PageTypeDefinition.cs" />
+    <Compile Include="Print2\EntityPrinters\AbstractPrinter.cs" />
     <Compile Include="Print2\Bands\TableColumn.cs" />
     <Compile Include="Print2\Containers\BandContainer.cs" />
     <Compile Include="Print2\Bands\AbstractEsrBand.cs" />
@@ -240,6 +240,7 @@
     <Compile Include="Print2\Containers\DocumentContainer.cs" />
     <Compile Include="Print2\DocumentOption.cs" />
     <Compile Include="Print2\Containers\PageContainer.cs" />
+    <Compile Include="Print2\JobToPrint.cs" />
     <Compile Include="Print2\PageType.cs" />
     <Compile Include="Print2\PrinterApplicationSettings.cs" />
     <Compile Include="Print2\EntityPrinters\DocumentMetadataPrinter.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Print2\OptionsDictionary.cs" />
     <Compile Include="Print2\PreviewMode.cs" />
     <Compile Include="Print2\PrintEngine.cs" />
+    <Compile Include="Print2\SectionToPrint.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
