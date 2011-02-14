@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Core.Print2
 #if true
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
+				//	Met toutes les options par défaut.
 				var all = Verbose.VerboseDocumentOption.GetAll ();
 
 				foreach (var one in all)
@@ -97,6 +98,11 @@ namespace Epsitec.Cresus.Core.Print2
 						result.Add (one.Option, one.DefaultValue);
 					}
 				}
+
+				//	Force un BV.
+				result.Add (DocumentOption.InvoiceWithInsideESR, "true");
+				result.Add (DocumentOption.InvoiceWithOutsideESR, "false");
+				result.Add (DocumentOption.InvoiceWithoutESR, "false");
 			}
 #endif
 
