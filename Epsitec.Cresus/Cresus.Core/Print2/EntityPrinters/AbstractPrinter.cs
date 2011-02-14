@@ -149,7 +149,8 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		public bool HasDocumentOption(DocumentOption option)
 		{
-			return this.options.ContainsOption (option);
+			var value = this.options.GetValue (option);
+			return value == "true";
 		}
 
 		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
