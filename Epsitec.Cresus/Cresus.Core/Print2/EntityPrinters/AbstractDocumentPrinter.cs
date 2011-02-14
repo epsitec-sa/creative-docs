@@ -12,32 +12,26 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Print2.Bands;
+using Epsitec.Cresus.Core.Print2.Containers;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print2
+namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 {
 	public abstract class AbstractDocumentPrinter
 	{
-#if false
-		public AbstractDocumentPrinter(CoreData coreData, AbstractEntity entity)
+		public AbstractDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			this.coreData = coreData;
-			this.entity   = entity;
+			this.coreData      = coreData;
+			this.entities      = entities;
+			this.options       = options;
+			this.printingUnits = printingUnits;
 
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns      = new Dictionary<TableColumnKeys, TableColumn> ();
-		}
-
-
-		protected Business.DocumentType SelectedDocumentType
-		{
-			get
-			{
-				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected;
-			}
 		}
 
 
@@ -105,17 +99,17 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		public bool IsEmpty(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public bool IsEmpty(PageType printerFunctionUsed = PageType.All)
 		{
 			return this.documentContainer.IsEmpty (printerFunctionUsed);
 		}
 
-		public int[] GetPhysicalPages(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public int[] GetPhysicalPages(PageType printerFunctionUsed = PageType.All)
 		{
 			return this.documentContainer.GetPhysicalPages (printerFunctionUsed);
 		}
 
-		public int PageCount(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public int PageCount(PageType printerFunctionUsed = PageType.All)
 		{
 			return this.documentContainer.PageCount (printerFunctionUsed);
 		}
@@ -155,68 +149,38 @@ namespace Epsitec.Cresus.Core.Print2
 
 		public bool HasDocumentOption(DocumentOption option)
 		{
-			//	Indique si une option est utilisée, en tenant compte des options forcées.
-			if (this.forcingOptionsToClear != null && this.forcingOptionsToClear.Contains (option))
-			{
-				return false;
-			}
-
-			if (this.forcingOptionsToSet != null && this.forcingOptionsToSet.Contains (option))
-			{
-				return true;
-			}
-
-			return this.entityPrinter.EntityPrintingSettings.HasDocumentOption (option);
+			return this.options.ContainsOption (option);
 		}
 
-		public bool HasPrinterUnitDefined(PrinterUnitFunction printerUnitFunction)
+		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
 		{
 			//	Indique si une unité d'impression est définie.
-			DocumentTypeDefinition documentTypeDefinition = this.entityPrinter.SelectedDocumentTypeDefinition;
-
-			if (documentTypeDefinition != null)
-			{
-				foreach (var documentPrinterFunction in documentTypeDefinition.DocumentPrinterFunctions)
-				{
-					if (documentPrinterFunction.PrinterFunction == printerUnitFunction)
-					{
-						return !string.IsNullOrEmpty (documentPrinterFunction.LogicalPrinterName);
-					}
-				}
-			}
-
-			return false;
+			return this.printingUnits.ContainsPageType (printerUnitFunction);
 		}
 
 
 		public PreviewMode PreviewMode
 		{
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get
-			{
-				return this.entityPrinter.PreviewMode;
-			}
-			set
-			{
-				this.entityPrinter.PreviewMode = value;
-			}
+			get;
+			set;
 		}
 
 
 		/// <summary>
 		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
 		/// </summary>
-		public virtual void SetPrinterUnit(PrinterUnit printerUnit)
+		public virtual void SetPrinterUnit(PrintingUnit printingUnit)
 		{
 			Size size;
 
-			if (printerUnit == null)
+			if (printingUnit == null)
 			{
 				size = this.PreferredPageSize;
 			}
 			else
 			{
-				size = printerUnit.PhysicalPaperSize;
+				size = printingUnit.PhysicalPaperSize;
 			}
 
 			if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
@@ -232,11 +196,8 @@ namespace Epsitec.Cresus.Core.Print2
 			this.requiredPageSize = size;
 		}
 
-		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
+		public virtual void BuildSections()
 		{
-			this.forcingOptionsToClear = forcingOptionsToClear;
-			this.forcingOptionsToSet   = forcingOptionsToSet;
-
 			this.documentContainer.PageSize    = this.RequiredPageSize;
 			this.documentContainer.PageMargins = this.PageMargins;
 		}
@@ -327,20 +288,37 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		public static AbstractDocumentPrinter CreateDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		{
+			if (entities == null || entities.Count () == 0)
+			{
+				return null;
+			}
+
+			var first = entities.FirstOrDefault ();
+
+			if (first is DocumentMetadataEntity)
+			{
+				return new DocumentMetadataPrinter (coreData, entities, options, printingUnits);
+			}
+
+			return null;
+		}
+
+
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
 		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
 
-		protected readonly AbstractEntity					entity;
+		protected readonly IEnumerable<AbstractEntity>		entities;
+		protected readonly OptionsDictionary				options;
+		protected readonly PrintingUnitsDictionary			printingUnits;
 		protected readonly DocumentContainer				documentContainer;
 		protected readonly CoreData							coreData;
 
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;
-		private List<DocumentOption>						forcingOptionsToClear;
-		private List<DocumentOption>						forcingOptionsToSet;
 		private int											currentPage;
 		private int											debugParam1;
 		private int											debugParam2;
-#endif
 	}
 }
