@@ -11,7 +11,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Printers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -297,22 +296,26 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public void Print()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			//?var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
-			PrintEngine.Print (this.Data, entity);
+			//?Printers.PrintEngine.Print (this.Data, entity);
+			Print2.PrintEngine.PrintCommand (this.Data, entity);
 
 			this.Data.DisposeDataContext (context);
 		}
 
 		public void Preview()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			//?var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
-			PrintEngine.Preview (this.Data, entity);
+			//?Printers.PrintEngine.Preview (this.Data, entity);
+			Print2.PrintEngine.PreviewCommand (this.Data, entity);
 
 			this.Data.DisposeDataContext (context);
 		}

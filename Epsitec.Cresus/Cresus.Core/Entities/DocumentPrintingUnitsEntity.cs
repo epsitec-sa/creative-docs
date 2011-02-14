@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var type = (PageType) System.Enum.Parse (typeof (PageType), split[i]);
+						var type = Print2.Common.StringToPageType (split[i]);
 						dict.Add (type, split[i+1]);
 					}
 				}

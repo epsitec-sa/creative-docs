@@ -7,6 +7,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Print2.Deserializer;
+
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -121,7 +123,6 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-#if false
 		public static IEnumerable<DeserializedPage> GetDeserializedPages(List<DeserializedJob> jobs)
 		{
 			foreach (var job in jobs)
@@ -135,7 +136,6 @@ namespace Epsitec.Cresus.Core.Print2
 				}
 			}
 		}
-#endif
 
 		public static PrintingUnit GetPrintingUnit(string logicalPrinterName)
 		{

@@ -10,12 +10,13 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Print2.Deserializer;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Printers
+namespace Epsitec.Cresus.Core.Print2
 {
 	/// <summary>
 	/// Ce contrôleur supervise une zone de prévisualisation et une barre d'outils. La zone de prévisualisation
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.coreData = coreData;
 			this.jobs = jobs;
-			this.pages = Printers.Common.GetDeserializedPages (this.jobs).ToList ();
+			this.pages = Print2.Common.GetDeserializedPages (this.jobs).ToList ();
 
 			this.currentZoom = 1;
 
@@ -215,7 +216,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var preview = new Widgets.XmlPrintedPagePreviewer (this.coreData)
 				{
 					Parent = this.previewFrame.Viewport,
-					//?Page = this.pages[pageRank],
+					Page = this.pages[pageRank],
 				};
 
 				this.pagePreviewers.Add (preview);
@@ -384,7 +385,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<Widgets.XmlPrintedPagePreviewer>	pagePreviewers;
 
-		private List<Printers.DeserializedPage>					pages;
+		private List<DeserializedPage>							pages;
 
 		private FrameBox										previewBox;
 		private FrameBox										pagesToolbarBox;

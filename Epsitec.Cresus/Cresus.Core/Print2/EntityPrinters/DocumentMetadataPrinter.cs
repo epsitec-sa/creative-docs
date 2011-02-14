@@ -1486,6 +1486,13 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				}
 				else
 				{
+#if true
+					if (this.Metadata.DocumentCategory.DocumentType == Business.DocumentType.None)
+					{
+						return Business.DocumentType.Invoice;  // TODO: Hask à supprimer dès que possible !
+					}
+#endif
+
 					return this.Metadata.DocumentCategory.DocumentType;
 				}
 			}
