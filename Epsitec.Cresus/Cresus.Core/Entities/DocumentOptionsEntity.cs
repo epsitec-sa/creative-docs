@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print2;
+using Epsitec.Cresus.Core.Print2.Definitions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 		private FormattedText GetOptionsSummary()
 		{
 			var dict = this.GetOptions ();
-			var all = DocumentOptionsEditor.DocumentOptionDescription.GetAllDocumentOptions ();
+			var all = DocumentOptionDefinition.GetAllDocumentOptions ();
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var option in all)
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					var value = dict.GetValue (option.Option);
 
-					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Boolean)
+					if (option.Type == DocumentOptionValueType.Boolean)
 					{
 						switch (value)
 						{
@@ -70,7 +71,7 @@ namespace Epsitec.Cresus.Core.Entities
 						}
 					}
 
-					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Distance)
+					if (option.Type == DocumentOptionValueType.Distance)
 					{
 						value = string.Concat (value, " mm");
 					}

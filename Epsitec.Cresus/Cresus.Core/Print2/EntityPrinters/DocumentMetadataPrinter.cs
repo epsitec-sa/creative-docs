@@ -24,7 +24,7 @@ using Epsitec.Cresus.Core.Business;
 namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 {
 
-	public class DocumentMetadataPrinter : AbstractDocumentPrinter
+	public class DocumentMetadataPrinter : AbstractPrinter
 	{
 		public DocumentMetadataPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			: base (coreData, entities, options, printingUnits)
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			get
 			{
 				double dx = 210;
-				double dy = (this.PreviewMode == Print2.PreviewMode.ContinuousPreview) ? AbstractDocumentPrinter.continuousHeight : 297;
+				double dy = (this.PreviewMode == Print2.PreviewMode.ContinuousPreview) ? AbstractPrinter.continuousHeight : 297;
 
 				return new Size (dx, dy);  // A4
 			}

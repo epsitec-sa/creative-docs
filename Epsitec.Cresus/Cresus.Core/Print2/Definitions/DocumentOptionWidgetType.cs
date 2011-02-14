@@ -5,7 +5,7 @@ using Epsitec.Cresus.Core.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentOptionsEditor
+namespace Epsitec.Cresus.Core.Print2.Definitions
 {
 	public enum DocumentOptionWidgetType
 	{

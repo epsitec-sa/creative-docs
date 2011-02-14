@@ -21,9 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 {
-	public abstract class AbstractDocumentPrinter
+	public abstract class AbstractPrinter
 	{
-		public AbstractDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public AbstractPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			this.coreData      = coreData;
 			this.entities      = entities;
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		/// <summary>
 		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
 		/// </summary>
-		public virtual void SetPrinterUnit(PrintingUnit printingUnit)
+		public virtual void SetPrintingUnit(PrintingUnit printingUnit)
 		{
 			Size size;
 
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public static AbstractDocumentPrinter CreateDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static AbstractPrinter CreateDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			if (entities == null || entities.Count () == 0)
 			{

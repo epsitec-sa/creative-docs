@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print2;
+using Epsitec.Cresus.Core.Print2.Definitions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 		private FormattedText GetPrintingUnitsSummary()
 		{
 			var dict = this.GetPrintingUnits ();
-			var all = DocumentPrintingUnitsEditor.DocumentPageType.GetAllDocumentPageTypes ();
+			var all = PageTypeDefinition.GetAllDocumentPageTypes ();
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var pageType in all)
