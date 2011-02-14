@@ -37,13 +37,25 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> collection, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
 			System.Diagnostics.Debug.Assert (coreData != null);
-			System.Diagnostics.Debug.Assert (collection != null);
+			System.Diagnostics.Debug.Assert (entities != null);
 			System.Diagnostics.Debug.Assert (options != null);
 			System.Diagnostics.Debug.Assert (printingUnits != null);
+
+			if (entities.Count () == 0)
+			{
+				return null;
+			}
+
+			var documentPrinter = EntityPrinters.AbstractDocumentPrinter.CreateDocumentPrinter (coreData, entities, options, printingUnits);
+
+			if (documentPrinter == null)
+			{
+				return null;
+			}
 
 			return null;
 		}

@@ -225,7 +225,8 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
-    <Compile Include="Print2\AbstractDocumentPrinter.cs" />
+    <Compile Include="Print2\EntityPrinters\AbstractDocumentPrinter.cs" />
+    <Compile Include="Print2\Bands\TableColumn.cs" />
     <Compile Include="Print2\Containers\BandContainer.cs" />
     <Compile Include="Print2\Bands\AbstractEsrBand.cs" />
     <Compile Include="Print2\Bands\CellBorder.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Print2\Containers\PageContainer.cs" />
     <Compile Include="Print2\PageType.cs" />
     <Compile Include="Print2\PrinterApplicationSettings.cs" />
+    <Compile Include="Print2\EntityPrinters\DocumentMetadataPrinter.cs" />
     <Compile Include="Print2\PrintingUnit.cs" />
     <Compile Include="Print2\PrintingUnitsDictionary.cs" />
     <Compile Include="Print2\OptionsDictionary.cs" />
