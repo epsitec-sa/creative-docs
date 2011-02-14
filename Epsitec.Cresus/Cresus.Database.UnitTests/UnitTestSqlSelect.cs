@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Data;
 
-using System.IO;
+using System.Linq;
 
 
 namespace Epsitec.Cresus.Database.UnitTests
@@ -185,6 +185,98 @@ namespace Epsitec.Cresus.Database.UnitTests
 				dataSet.Dispose ();
 			}
 		}
+
+
+		[TestMethod]
+		public void SqlSelectInTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table = SqlField.CreateName ("EMPLOYEE");
+				table.Alias = "A";
+				sqlSelect.Tables.Add (table);
+
+				short[] ids = new short[] { 5, 8, 9};
+
+				SqlFunction sqlFunction = new SqlFunction
+				(
+					SqlFunctionCode.SetIn,
+					SqlField.CreateAliasedName ("A", "EMP_NO", "EMP_NO"),
+					SqlField.CreateSet (new SqlSet (DbRawType.Int16, ids.Cast<object> ()))
+				);
+				sqlSelect.Conditions.Add (sqlFunction);
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (3, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectInCapacityTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table = SqlField.CreateName ("EMPLOYEE");
+				table.Alias = "A";
+				sqlSelect.Tables.Add (table);
+
+				// NOTE : 1500 is the maximum number of elements we can put into an IN clause, so we
+				// try it here, and it should work.
+				// Marc
+
+				SqlFunction sqlFunction = new SqlFunction
+				(
+					SqlFunctionCode.SetIn,
+					SqlField.CreateAliasedName ("A", "EMP_NO", "EMP_NO"),
+					SqlField.CreateSet (new SqlSet (DbRawType.Int16, Enumerable.Range (0, 1500).Cast<object> ()))
+				);
+				sqlSelect.Conditions.Add (sqlFunction);
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (42, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
 
 		[TestMethod]
 		public void SqlSelectInnerJoinTest()
