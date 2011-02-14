@@ -79,6 +79,15 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		public void Merge(PrintingUnitsDictionary src)
+		{
+			foreach (var pair in src.ContentPair)
+			{
+				this.Add (pair.Key, pair.Value);
+			}
+		}
+
+
 		private readonly Dictionary<PageType, string>		dictionary;
 	}
 }

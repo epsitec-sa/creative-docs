@@ -350,6 +350,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static void SaveJobs(CoreData coreData, List<JobToPrint> jobs)
 		{
+#if false
 			//	Sérialise et enregistre tous les jobs d'impression.
 			string xmlSource = PrintEngine.SerializeJobs (jobs);
 			System.IO.File.WriteAllText ("XmlExport-debug.txt", xmlSource);  // TODO: debug !
@@ -364,6 +365,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				PrintEngine.PrintJobs (coreData, deserializeJobs);
 			}
+#endif
 		}
 
 		private static string SerializeJobs(List<JobToPrint> jobs)

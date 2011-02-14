@@ -7,6 +7,9 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Printing;
 
+using Epsitec.Cresus.Core.Print2;
+using Epsitec.Cresus.Core.Print2.Deserializer;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,7 +33,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Printers.DeserializedPage Page
+		public DeserializedPage Page
 		{
 			//	Page affichée.
 			get
@@ -116,7 +119,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.lastZoom = zoom;
 
 				var port = new XmlPort (page.XRoot);
-				this.bitmap = port.Deserialize (id => Printers.PrintEngine.GetImage (this.coreData, id), new Size (pageWidth, pageHeight), zoom);
+				this.bitmap = port.Deserialize (id => PrintEngine.GetImage (this.coreData, id), new Size (pageWidth, pageHeight), zoom);
 			}
 		}
 
@@ -125,7 +128,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private readonly CoreData			coreData;
 
-		private Printers.DeserializedPage	page;
+		private DeserializedPage			page;
 		private Bitmap						bitmap;
 		private double						lastZoom;
 		private TextLayout					titleLayout;

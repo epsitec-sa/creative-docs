@@ -19,7 +19,8 @@ namespace Epsitec.Cresus.Core.Print2
 		{
 			var list = new List<PrintingUnit> ();
 
-			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("PrintingUnit");
+			//?Dictionary<string, string> settings = CoreApplication.ExtractSettings ("PrintingUnit");
+			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("PrinterUnit");
 
 			for (int i = 0; i < settings.Count; i++)
 			{
@@ -50,12 +51,14 @@ namespace Epsitec.Cresus.Core.Print2
 				}
 			}
 
-			CoreApplication.MergeSettings ("PrintingUnit", settings);
+			//?CoreApplication.MergeSettings ("PrintingUnit", settings);
+			CoreApplication.MergeSettings ("PrinterUnit", settings);
 		}
 
 		private static string GetKey(int index)
 		{
-			return string.Concat ("PrintingUnit", (index++).ToString (CultureInfo.InvariantCulture));
+			//?return string.Concat ("PrintingUnit", (index++).ToString (CultureInfo.InvariantCulture));
+			return string.Concat ("PrinterUnit", (index++).ToString (CultureInfo.InvariantCulture));
 		}
 	}
 }

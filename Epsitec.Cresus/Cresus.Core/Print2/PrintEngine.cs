@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print2.Verbose;
+using Epsitec.Cresus.Core.Print2.Deserializer;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -35,6 +36,96 @@ namespace Epsitec.Cresus.Core.Print2
 		public static bool CanPrint(AbstractEntity entity)
 		{
 			return true;
+		}
+
+
+		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
+		{
+		}
+
+		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
+		{
+			var list = new List<AbstractEntity> ();
+			list.Add (entity);
+
+			var options       = PrintEngine.GetOptions (entity);
+			var printingUnits = PrintEngine.GetPrintingUnits (entity);
+
+			var xml = PrintEngine.Print (coreData, list, options, printingUnits);
+
+			if (string.IsNullOrEmpty (xml))
+			{
+				return;
+			}
+
+			var deserializeJobs = PrintEngine.DeserializeJobs (coreData, xml);
+
+			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, coreData, deserializeJobs);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
+
+			if (dialog.Result == DialogResult.Accept)  // imprimer ?
+			{
+				//?PrintEngine.PrintJobs (coreData, deserializeJobs);
+			}
+		}
+
+		private static OptionsDictionary GetOptions(AbstractEntity entity)
+		{
+			var result = new OptionsDictionary ();
+
+			if (entity is DocumentMetadataEntity)
+			{
+				var metadata = entity as DocumentMetadataEntity;
+
+				foreach (var documentOptions in metadata.DocumentCategory.DocumentOptions)
+				{
+					var d = documentOptions.GetOptions ();
+					result.Merge (d);
+				}
+			}
+
+#if true
+			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
+			{
+				var all = Verbose.VerboseDocumentOption.GetAll ();
+
+				foreach (var one in all)
+				{
+					if (one.Type == DocumentOptionValueType.Boolean)
+					{
+						result.Add (one.Option, one.DefaultValue);
+					}
+				}
+			}
+#endif
+
+			return result;
+		}
+
+		private static PrintingUnitsDictionary GetPrintingUnits(AbstractEntity entity)
+		{
+			var result = new PrintingUnitsDictionary ();
+
+			if (entity is DocumentMetadataEntity)
+			{
+				var metadata = entity as DocumentMetadataEntity;
+
+				foreach (var documentOptions in metadata.DocumentCategory.DocumentPrintingUnits)
+				{
+					var d = documentOptions.GetPrintingUnits ();
+					result.Merge (d);
+				}
+			}
+
+#if true
+			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
+			{
+				result.Add (PageType.All, "Blanc");
+			}
+#endif
+
+			return result;
 		}
 
 
@@ -252,6 +343,67 @@ namespace Epsitec.Cresus.Core.Print2
 
 			return xDocument.ToString (SaveOptions.None);
 		}
+
+		private static List<DeserializedJob> DeserializeJobs(CoreData coreData, string xmlSource, double zoom=0)
+		{
+			//	Désérialise une liste de jobs d'impression.
+			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
+			var jobs = new List<DeserializedJob> ();
+
+			if (!string.IsNullOrWhiteSpace (xmlSource))
+			{
+				XDocument doc = XDocument.Parse (xmlSource, LoadOptions.None);
+				XElement root = doc.Element ("jobs");
+
+				foreach (var xJob in root.Elements ())
+				{
+					string title               = (string) xJob.Attribute ("title");
+					string printerPhysicalName = (string) xJob.Attribute ("printer-name");
+
+					var job = new DeserializedJob (title, printerPhysicalName);
+
+					foreach (var xSection in xJob.Elements ())
+					{
+						string printerLogicalName  = (string) xSection.Attribute ("printer-unit");
+						string printerPhysicalTray = (string) xSection.Attribute ("printer-tray");
+						double width               = (double) xSection.Attribute ("printer-width");
+						double height              = (double) xSection.Attribute ("printer-height");
+
+						var section = new DeserializedSection (job, printerLogicalName, printerPhysicalTray, new Size (width, height));
+
+						foreach (var xPage in xSection.Elements ())
+						{
+							int pageRank = (int) xPage.Attribute ("rank");
+
+							var page = new DeserializedPage (section, pageRank, xPage);
+
+							if (zoom > 0)  // génère une miniature de la page ?
+							{
+								var port = new XmlPort (xPage);
+								page.Miniature = port.Deserialize (id => PrintEngine.GetImage (coreData, id), new Size (width, height), zoom);
+							}
+
+							section.Pages.Add (page);
+						}
+
+						job.Sections.Add (section);
+					}
+
+					jobs.Add (job);
+				}
+			}
+
+			return jobs;
+		}
+
+		public static Image GetImage(CoreData coreData, string id)
+		{
+			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
+			var store = coreData.ImageDataStore;
+			var data = store.GetImageData (id);
+			return data.GetImage ();
+		}
+
 
 	
 		private static void RegisterFonts()

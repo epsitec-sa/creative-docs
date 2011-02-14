@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var option = (DocumentOption) System.Enum.Parse (typeof (DocumentOption), split[i]);
+						var option = Print2.Common.StringToDocumentOption (split[i]);
 						dict.Add (option, split[i+1]);
 					}
 				}

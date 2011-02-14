@@ -221,6 +221,9 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
+    <Compile Include="Print2\Deserializer\DeserializedJob.cs" />
+    <Compile Include="Print2\Deserializer\DeserializedPage.cs" />
+    <Compile Include="Print2\Deserializer\DeserializedSection.cs" />
     <Compile Include="Print2\Verbose\VerboseDocumentOption.cs" />
     <Compile Include="Print2\Verbose\DocumentOptionValueType.cs" />
     <Compile Include="Print2\Verbose\DocumentOptionWidgetType.cs" />
@@ -250,6 +253,7 @@
     <Compile Include="Print2\PreviewMode.cs" />
     <Compile Include="Print2\PrintEngine.cs" />
     <Compile Include="Print2\SectionToPrint.cs" />
+    <Compile Include="Print2\XmlPreviewerController.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
