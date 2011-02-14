@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Print2;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -39,21 +40,21 @@ namespace Epsitec.Cresus.Core.Entities
 		private FormattedText GetOptionsSummary()
 		{
 			var dict = this.GetOptions ();
-			var all = DocumentOptionsEditor.DocumentOption.GetAllDocumentOptions ();
+			var all = DocumentOptionsEditor.DocumentOptionDescription.GetAllDocumentOptions ();
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var option in all)
 			{
-				if (!string.IsNullOrEmpty (option.Name) && dict.ContainsKey (option.Name))
+				if (option.Option != Print2.DocumentOption.None && dict.ContainsOption (option.Option))
 				{
 					var description = option.Description;
 
 					if (string.IsNullOrEmpty (description))
 					{
-						description = option.Name;
+						description = option.Option.ToString ();
 					}
 
-					var value = dict[option.Name];
+					var value = dict.GetValue (option.Option);
 
 					if (option.Type == DocumentOptionsEditor.DocumentOptionValueType.Boolean)
 					{
@@ -84,11 +85,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToString ();
 		}
 
-		public Dictionary<string, string> GetOptions()
+		public Print2.OptionsDictionary GetOptions()
 		{
 			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new Dictionary<string, string> ();
+			var dict = new Print2.OptionsDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -101,7 +102,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						dict.Add (split[i], split[i+1]);
+						var option = (DocumentOption) System.Enum.Parse (typeof (DocumentOption), split[i]);
+						dict.Add (option, split[i+1]);
 					}
 				}
 			}
@@ -109,7 +111,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetOptions(Dictionary<string, string> options)
+		public void SetOptions(Print2.OptionsDictionary options)
 		{
 			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)
@@ -120,7 +122,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				var builder = new System.Text.StringBuilder ();
 
-				foreach (var pair in options)
+				foreach (var pair in options.ContentPair)
 				{
 					builder.Append (pair.Key);
 					builder.Append ("◊");

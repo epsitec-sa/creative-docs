@@ -213,7 +213,7 @@
     <Compile Include="DocumentOptionsEditor\DocumentOptionWidgetType.cs" />
     <Compile Include="DocumentOptionsEditor\ValuesController.cs" />
     <Compile Include="DocumentOptionsEditor\SelectController.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOption.cs" />
+    <Compile Include="DocumentOptionsEditor\DocumentOptionDescription.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\DocumentPageType.cs" />
@@ -224,6 +224,15 @@
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
+    <Compile Include="Print2\AbstractDocumentPrinter.cs" />
+    <Compile Include="Print2\DocumentOption.cs" />
+    <Compile Include="Print2\Misc.cs" />
+    <Compile Include="Print2\PageType.cs" />
+    <Compile Include="Print2\PrinterApplicationSettings.cs" />
+    <Compile Include="Print2\PrintingUnit.cs" />
+    <Compile Include="Print2\PrintingUnitsDictionary.cs" />
+    <Compile Include="Print2\OptionsDictionary.cs" />
+    <Compile Include="Print2\PreviewMode.cs" />
     <Compile Include="Print2\PrintEngine.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />

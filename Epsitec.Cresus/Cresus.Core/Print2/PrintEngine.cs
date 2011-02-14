@@ -37,13 +37,9 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> collection, Dictionary<string, string> options, Dictionary<string, string> printingUnits)
+		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> collection, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
-			//	Le dictionnaire 'options' contient "nom de l'option" / "valeur".
-			//	Par exemple "HeaderLogo" / "true".
-			//	Le dictionnaire 'printingUnits' contient "type de page" / "unité d'impression".
-			//	Par exemple "ForAllPages" / "Blanc".
 			System.Diagnostics.Debug.Assert (coreData != null);
 			System.Diagnostics.Debug.Assert (collection != null);
 			System.Diagnostics.Debug.Assert (options != null);
