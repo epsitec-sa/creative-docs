@@ -10,7 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Print2.Definitions;
+using Epsitec.Cresus.Core.Print2.Verbose;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Print2
 			//	On crée autant de sections que de pages, soit une section par page.
 			var sections = new List<SectionToPrint> ();
 			var printingUnitList = PrinterApplicationSettings.GetPrintingUnitList ();
-			var pageTypes = PageTypeDefinition.GetAllDocumentPageTypes ();
+			var pageTypes = VerbosePageType.GetAll ();
 
 			for (int entityRank = 0; entityRank < entities.Count (); entityRank++)
 			{
