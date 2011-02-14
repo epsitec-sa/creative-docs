@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Print2;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -44,9 +45,9 @@ namespace Epsitec.Cresus.Core.Entities
 
 			foreach (var pageType in all)
 			{
-				if (dict.ContainsKey (pageType.Name))
+				if (dict.ContainsPageType (pageType.Type))
 				{
-					var unit = dict[pageType.Name];
+					var unit = dict.GetPrintingUnit (pageType.Type);
 
 					if (string.IsNullOrEmpty (unit))
 					{
@@ -63,11 +64,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToString ();
 		}
 
-		public Dictionary<string, string> GetPrintingUnits()
+		public Print2.PrintingUnitsDictionary GetPrintingUnits()
 		{
 			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new Dictionary<string, string> ();
+			var dict = new Print2.PrintingUnitsDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -80,7 +81,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						dict.Add (split[i], split[i+1]);
+						var type = (PageType) System.Enum.Parse (typeof (PageType), split[i]);
+						dict.Add (type, split[i+1]);
 					}
 				}
 			}
@@ -88,7 +90,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetPrintingUnits(Dictionary<string, string> options)
+		public void SetPrintingUnits(Print2.PrintingUnitsDictionary options)
 		{
 			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
 			if (options.Count == 0)
@@ -99,7 +101,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				var builder = new System.Text.StringBuilder ();
 
-				foreach (var pair in options)
+				foreach (var pair in options.ContentPair)
 				{
 					builder.Append (pair.Key);
 					builder.Append ("◊");
