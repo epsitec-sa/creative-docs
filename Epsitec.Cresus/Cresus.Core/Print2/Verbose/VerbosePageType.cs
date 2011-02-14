@@ -7,11 +7,11 @@ using Epsitec.Cresus.Core.Print2;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print2.Definitions
+namespace Epsitec.Cresus.Core.Print2.Verbose
 {
-	public class PageTypeDefinition
+	public class VerbosePageType
 	{
-		public PageTypeDefinition(PageType type, string job, string shortDescription, string longDescription, params Business.DocumentType[] documentTypes)
+		public VerbosePageType(PageType type, string job, string shortDescription, string longDescription, params Business.DocumentType[] documentTypes)
 		{
 			this.Type             = type;
 			this.Job              = job;
@@ -103,22 +103,22 @@ namespace Epsitec.Cresus.Core.Print2.Definitions
 		}
 
 
-		public static IEnumerable<PageTypeDefinition> GetAllDocumentPageTypes()
+		public static IEnumerable<VerbosePageType> GetAll()
 		{
-			var list = new List<PageTypeDefinition> ();
+			var list = new List<VerbosePageType> ();
 
 			//	Ajoute les unités d'impression de base, qui devraient toujours exister.
-			list.Add (new PageTypeDefinition (PageType.All,       "All",   "Ensemble des pages", "Pour l'ensemble des pages"));
-			list.Add (new PageTypeDefinition (PageType.Copy,      "Copy",  "Copie des pages",    "Pour une copie de l'ensemble des pages"));
-			list.Add (new PageTypeDefinition (PageType.Single,    "Spec",  "Page unique",        "Pour une page unique"));
-			list.Add (new PageTypeDefinition (PageType.First,     "Spec",  "Première page",      "Pour la première page"));
-			list.Add (new PageTypeDefinition (PageType.Following, "Spec",  "Pages suivantes",    "Pour les pages suivantes"));
+			list.Add (new VerbosePageType (PageType.All,       "All",   "Ensemble des pages", "Pour l'ensemble des pages"));
+			list.Add (new VerbosePageType (PageType.Copy,      "Copy",  "Copie des pages",    "Pour une copie de l'ensemble des pages"));
+			list.Add (new VerbosePageType (PageType.Single,    "Spec",  "Page unique",        "Pour une page unique"));
+			list.Add (new VerbosePageType (PageType.First,     "Spec",  "Première page",      "Pour la première page"));
+			list.Add (new VerbosePageType (PageType.Following, "Spec",  "Pages suivantes",    "Pour les pages suivantes"));
 
 			//	Ajoute l'unité d'impression spécifique pour les BV.
-			list.Add (new PageTypeDefinition (PageType.Esr, "Spec", "BV", "Pour le BV", Business.DocumentType.Invoice));
+			list.Add (new VerbosePageType (PageType.Esr, "Spec", "BV", "Pour le BV", Business.DocumentType.Invoice));
 
 			//	Ajoute l'unité d'impression spécifique pour les étiquettes.
-			list.Add (new PageTypeDefinition (PageType.Label, "Label", "Etiquette", "Pour l'étiquette"));
+			list.Add (new VerbosePageType (PageType.Label, "Label", "Etiquette", "Pour l'étiquette"));
 
 			return list;
 		}

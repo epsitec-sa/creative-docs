@@ -221,10 +221,10 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
-    <Compile Include="Print2\Definitions\DocumentOptionDefinition.cs" />
-    <Compile Include="Print2\Definitions\DocumentOptionValueType.cs" />
-    <Compile Include="Print2\Definitions\DocumentOptionWidgetType.cs" />
-    <Compile Include="Print2\Definitions\PageTypeDefinition.cs" />
+    <Compile Include="Print2\Verbose\VerboseDocumentOption.cs" />
+    <Compile Include="Print2\Verbose\DocumentOptionValueType.cs" />
+    <Compile Include="Print2\Verbose\DocumentOptionWidgetType.cs" />
+    <Compile Include="Print2\Verbose\VerbosePageType.cs" />
     <Compile Include="Print2\EntityPrinters\AbstractPrinter.cs" />
     <Compile Include="Print2\Bands\TableColumn.cs" />
     <Compile Include="Print2\Containers\BandContainer.cs" />

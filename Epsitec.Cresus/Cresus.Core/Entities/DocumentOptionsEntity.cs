@@ -6,7 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Definitions;
+using Epsitec.Cresus.Core.Print2.Verbose;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 		private FormattedText GetOptionsSummary()
 		{
 			var dict = this.GetOptions ();
-			var all = DocumentOptionDefinition.GetAllDocumentOptions ();
+			var all = VerboseDocumentOption.GetAll ();
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var option in all)
