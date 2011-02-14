@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Print2
 			{
 				foreach (var documentOption in documentOptions)
 				{
-					builder.Append (Misc.DocumentOptionToString (documentOption));
+					builder.Append (Common.DocumentOptionToString (documentOption));
 					builder.Append (" ");
 				}
 			}
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core.Print2
 
 			foreach (var t in list)
 			{
-				var documentOption = Misc.StringToDocumentOption (t);
+				var documentOption = Common.StringToDocumentOption (t);
 
 				if (documentOption != DocumentOption.None)
 				{
