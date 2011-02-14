@@ -41,10 +41,12 @@ namespace Epsitec.Cresus.Core.Print2
 
 		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
 		{
+			//	La commande 'Print' du ruban a été activée.
 		}
 
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
 		{
+			//	La commande 'Preview' du ruban a été activée.
 			var list = new List<AbstractEntity> ();
 			list.Add (entity);
 
@@ -72,6 +74,7 @@ namespace Epsitec.Cresus.Core.Print2
 
 		private static OptionsDictionary GetOptions(AbstractEntity entity)
 		{
+			//	Retourne les options à utiliser pour l'entité.
 			var result = new OptionsDictionary ();
 
 			if (entity is DocumentMetadataEntity)
@@ -111,6 +114,7 @@ namespace Epsitec.Cresus.Core.Print2
 
 		private static PrintingUnitsDictionary GetPrintingUnits(AbstractEntity entity)
 		{
+			//	Retourne les unités d'impression à utiliser pour l'entité.
 			var result = new PrintingUnitsDictionary ();
 
 			if (entity is DocumentMetadataEntity)
@@ -155,6 +159,8 @@ namespace Epsitec.Cresus.Core.Print2
 			{
 				return null;
 			}
+
+			documentPrinter.PreviewMode = PreviewMode.Print;
 
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
