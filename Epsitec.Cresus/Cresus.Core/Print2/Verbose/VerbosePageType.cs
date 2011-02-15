@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			this.Job              = job;
 			this.ShortDescription = shortDescription;
 			this.LongDescription  = longDescription;
-			this.documentTypes    = documentTypes.ToList ();
+			this.DocumentTypes    = documentTypes;
 		}
 
 		public string Job
@@ -50,12 +50,10 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			private set;
 		}
 
-		public List<Business.DocumentType> DocumentTypes
+		public IEnumerable<Business.DocumentType> DocumentTypes
 		{
-			get
-			{
-				return this.documentTypes;
-			}
+			get;
+			private set;
 		}
 
 		public string JobNiceDescription
@@ -89,7 +87,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 				var types = Business.Enumerations.GetAllPossibleDocumentType ();
 				var strings = new List<string> ();
 
-				foreach (Business.DocumentType type in this.documentTypes)
+				foreach (Business.DocumentType type in this.DocumentTypes)
 				{
 					var t = types.Where (x => x.Key == type).FirstOrDefault ();
 
@@ -136,7 +134,5 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 
 
 		private static IEnumerable<VerbosePageType> allPageTypes;
-
-		private readonly List<Business.DocumentType> documentTypes;
 	}
 }

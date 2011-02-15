@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			this.Type          = type;
 			this.Description   = description;
 			this.DefaultValue  = defaultValue;
-			this.documentTypes = documentTypes.ToList ();
+			this.DocumentTypes = documentTypes;
 		}
 
-		private VerboseDocumentOption(DocumentOption option, string group, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, string defaultValue, params Business.DocumentType[] documentTypes)
+		private VerboseDocumentOption(DocumentOption option, string group, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, int defaultIndex, params Business.DocumentType[] documentTypes)
 		{
 			System.Diagnostics.Debug.Assert (enumeration != null && enumerationDescription != null);
 			System.Diagnostics.Debug.Assert (enumeration.Count () == enumerationDescription.Count ());
@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			this.Type                   = DocumentOptionValueType.Enumeration;
 			this.Enumeration            = enumeration;
 			this.EnumerationDescription = enumerationDescription;
-			this.DefaultValue           = defaultValue;
-			this.documentTypes          = documentTypes.ToList ();
+			this.DefaultValue           = enumeration.ElementAt (defaultIndex);
+			this.DocumentTypes          = documentTypes;
 		}
 
 		public string Title
@@ -97,10 +97,8 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 
 		public IEnumerable<Business.DocumentType> DocumentTypes
 		{
-			get
-			{
-				return this.documentTypes;
-			}
+			get;
+			private set;
 		}
 
 		public bool IsTitle
@@ -118,7 +116,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 				var types = Business.Enumerations.GetAllPossibleDocumentType ();
 				var strings = new List<string> ();
 
-				foreach (Business.DocumentType type in this.documentTypes)
+				foreach (Business.DocumentType type in this.DocumentTypes)
 				{
 					var t = types.Where (x => x.Key == type).FirstOrDefault ();
 
@@ -152,7 +150,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Orientation du papier", "Orientation"));
 			e = new string[] { "Portrait", "Landscape" };
 			d = new string[] { "Portrait", "Paysage" };
-			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", e, d, e[0]));
+			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", e, d, 0));
 
 			//	Ajoute les options d'impression générales.
 			list.Add (new VerboseDocumentOption ("Options générales", "Global"));
@@ -168,7 +166,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));
 			e = new string[] { "Frameless", "WithLine", "WithFrame" };
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
-			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", e, d, e[1]));
+			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", e, d, 1));
 
 			//	Ajoute les options d'impression liées aux factures.
 			list.Add (new VerboseDocumentOption ("Options pour les factures", "InvoiceOption"));
@@ -178,18 +176,18 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Ordre des colonnes", "ColumnsOrder"));
 			e = new string[] { "QD", "DQ" };
 			d = new string[] { "Quantité, Désignation, Prix", "Désignation, Quantité, Prix" };
-			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", e, d, e[0], Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", e, d, 0, Business.DocumentType.Invoice));
 
 			//	Ajoute les options d'impression liées aux BV.
 			list.Add (new VerboseDocumentOption ("Type de la facture", "EsrPosition"));
 			e = new string[] { "Without", "WithInside", "WithOutside" };
 			d = new string[] { "Facture sans BV", "Facture avec BV intégré", "Facture avec BV séparé" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrPosition, "EsrPosition", e, d, e[0], Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.EsrPosition, "EsrPosition", e, d, 0, Business.DocumentType.Invoice));
 
 			list.Add (new VerboseDocumentOption ("Type de bulletin de versement", "EsrType"));
 			e = new string[] { "Esr", "Es" };
 			d = new string[] { "BV orange", "BV rose" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrType, "EsrType", e, d, e[0], Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.EsrType, "EsrType", e, d, 0, Business.DocumentType.Invoice));
 
 			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceEsrMode"));
 			list.Add (new VerboseDocumentOption (DocumentOption.EsrFacsimile, "InvoiceEsrMode", DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));
@@ -206,7 +204,5 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 		}
 
 		private static IEnumerable<VerboseDocumentOption> allOptions;
-
-		private readonly List<Business.DocumentType> documentTypes;
 	}
 }

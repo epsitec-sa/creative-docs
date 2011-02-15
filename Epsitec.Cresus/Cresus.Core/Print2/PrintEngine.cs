@@ -33,12 +33,6 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		public static bool CanPrint(AbstractEntity entity)
-		{
-			return true;
-		}
-
-
 		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
