@@ -49,12 +49,6 @@ namespace Epsitec.Cresus.Core.Entities
 				if (option.Option != Print2.DocumentOption.None && dict.ContainsOption (option.Option))
 				{
 					var description = option.Description;
-
-					if (string.IsNullOrEmpty (description))
-					{
-						description = option.Option.ToString ();
-					}
-
 					var value = dict.GetValue (option.Option);
 
 					if (option.Type == DocumentOptionValueType.Boolean)
@@ -71,9 +65,28 @@ namespace Epsitec.Cresus.Core.Entities
 						}
 					}
 
+					if (option.Type == DocumentOptionValueType.Enumeration)
+					{
+						description = all.Where (x => x.IsTitle && x.Group == option.Group).Select (x => x.Title).FirstOrDefault ();
+
+						for (int i = 0; i < option.Enumeration.Count (); i++)
+						{
+							if (option.Enumeration.ElementAt (i) == value)
+							{
+								value = option.EnumerationDescription.ElementAt (i);
+								break;
+							}
+						}
+					}
+
 					if (option.Type == DocumentOptionValueType.Distance)
 					{
 						value = string.Concat (value, " mm");
+					}
+
+					if (string.IsNullOrEmpty (description))
+					{
+						description = Print2.Common.DocumentOptionToString (option.Option);
 					}
 
 					builder.Append (description);

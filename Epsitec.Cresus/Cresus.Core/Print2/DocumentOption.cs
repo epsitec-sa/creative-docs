@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Core.Print2
 	{
 		None,
 
-		OrientationVertical,
-		OrientationHorizontal,
+
+		Orientation,		// Postrait, Landscape
 
 		HeaderLogo,
 		Specimen,
@@ -23,24 +23,16 @@ namespace Epsitec.Cresus.Core.Print2
 		TopMargin,
 		BottomMargin,
 
-		LayoutFrameless,
-		LayoutWithLine,
-		LayoutWithFrame,
+		LayoutFrame,		// Frameless, WithLine, WithFrame
 	
 		ArticleDelayed,
 		ArticleId,
 
-		ColumnsOrderQD,
-		ColumnsOrderDQ,
-
-		InvoiceWithInsideESR,	// facture avec BV intégré
-		InvoiceWithOutsideESR,	// facture avec BV séparé
-		InvoiceWithoutESR,		// facture sans BV
-
-		InvoiceWithESR,			// facture avec BVR
-		InvoiceWithES,			// facture avec BV
-
-		ESRFacsimile,
+		ColumnsOrder,		// QD, DQ
+		
+		EsrPosition,		// WithInside, WithOutside, Without
+		EsrType,			// Esr, Es
+		EsrFacsimile,
 
 		Signing,
 

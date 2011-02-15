@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 	{
 		Undefined,
 		Boolean,		// valeur "true" ou "false"
+		Enumeration,	// énumération libre
 		Distance,		// type 'double' correspondant à une distance en mm
 	}
 }

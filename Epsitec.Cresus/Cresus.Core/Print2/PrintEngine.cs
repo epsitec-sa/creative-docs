@@ -103,9 +103,7 @@ namespace Epsitec.Cresus.Core.Print2
 				}
 
 				//	Force un BV.
-				result.Add (DocumentOption.InvoiceWithInsideESR, "true");
-				result.Add (DocumentOption.InvoiceWithOutsideESR, "false");
-				result.Add (DocumentOption.InvoiceWithoutESR, "false");
+				result.Add (DocumentOption.EsrPosition, "WithInside");
 			}
 #endif
 

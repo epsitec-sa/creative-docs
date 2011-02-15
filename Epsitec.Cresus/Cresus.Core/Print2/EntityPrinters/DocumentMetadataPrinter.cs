@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			{
 				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
 
-				if (this.HasDocumentOption (DocumentOption.InvoiceWithInsideESR))
+				if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithInside"))
 				{
 					return new Margins (20, 10, 20+h*2, h+DocumentMetadataPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
 				}
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.Invoice)
 			{
-				if (this.HasDocumentOption (DocumentOption.InvoiceWithoutESR))
+				if (this.HasDocumentOption (DocumentOption.EsrPosition, "Without"))
 				{
 					if (this.Entity.BillingDetails.Count != 0)
 					{
@@ -1305,12 +1305,12 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			if (this.HasDocumentOption (DocumentOption.InvoiceWithInsideESR))
+			if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithInside"))
 			{
 				this.BuildInsideEsrs (billingDetails, firstPage);
 			}
 
-			if (this.HasDocumentOption (DocumentOption.InvoiceWithOutsideESR))
+			if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithOutside"))
 			{
 				this.BuildOutsideEsr (billingDetails, firstPage);
 			}
@@ -1349,7 +1349,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
 			AbstractEsrBand isr;
 
-			if (this.HasDocumentOption (DocumentOption.InvoiceWithESR))
+			if (this.HasDocumentOption (DocumentOption.EsrType, "Esr"))
 			{
 				isr = new EsrBand ();  // BVR orangé
 			}
@@ -1358,7 +1358,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				isr = new EsBand ();  // BV rose
 			}
 
-			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
+			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.EsrFacsimile);
 			isr.From = this.Entity.BillToMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
@@ -1384,7 +1384,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.ColumnsOrderQD);
+				return this.HasDocumentOption (DocumentOption.ColumnsOrder, "QD");
 			}
 		}
 
@@ -1463,7 +1463,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.LayoutWithLine);
+				return this.HasDocumentOption (DocumentOption.LayoutFrame, "WithLine");
 			}
 		}
 
@@ -1471,7 +1471,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.LayoutWithFrame);
+				return this.HasDocumentOption (DocumentOption.LayoutFrame, "WithFrame");
 			}
 		}
 
