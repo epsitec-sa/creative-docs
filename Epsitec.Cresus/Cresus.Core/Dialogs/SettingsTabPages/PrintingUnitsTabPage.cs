@@ -12,8 +12,8 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Verbose;
+using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Print.Verbose;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -488,7 +488,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				foreach (var button in this.optionButtons)
 				{
-					var option = Print2.Common.StringToDocumentOption (button.Name);
+					var option = Print.Common.StringToDocumentOption (button.Name);
 
 					if (printingUnit.OptionsDictionary.ContainsOption (option))
 					{
@@ -603,7 +603,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					var check = new CheckButton
 					{
 						Parent = parent,
-						Name = Print2.Common.DocumentOptionToString (documentOption.Option),
+						Name = Print.Common.DocumentOptionToString (documentOption.Option),
 						Text = documentOption.Description,
 						AcceptThreeState = true,
 						ActiveState = ActiveState.Maybe,
@@ -615,7 +615,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					check.Clicked += delegate
 					{
 						PrintingUnit printingUnit = this.SelectedPrinter;
-						var option = Print2.Common.StringToDocumentOption (check.Name);
+						var option = Print.Common.StringToDocumentOption (check.Name);
 
 						if (check.ActiveState == ActiveState.Maybe)
 						{

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Print2.Controllers;
+using Epsitec.Cresus.Core.Print.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;

@@ -7,8 +7,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.EntityPrinters;
+using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Linq;

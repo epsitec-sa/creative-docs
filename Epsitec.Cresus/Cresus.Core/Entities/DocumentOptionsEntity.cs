@@ -5,8 +5,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Verbose;
+using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Print.Verbose;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			foreach (var option in all)
 			{
-				if (option.Option != Print2.DocumentOption.None && dict.ContainsOption (option.Option))
+				if (option.Option != Print.DocumentOption.None && dict.ContainsOption (option.Option))
 				{
 					var description = option.Description;
 					var value = dict.GetValue (option.Option);
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					if (string.IsNullOrEmpty (description))
 					{
-						description = Print2.Common.DocumentOptionToString (option.Option);
+						description = Print.Common.DocumentOptionToString (option.Option);
 					}
 
 					builder.Append (description);
@@ -99,11 +99,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToString ();
 		}
 
-		public Print2.OptionsDictionary GetOptions()
+		public Print.OptionsDictionary GetOptions()
 		{
 			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new Print2.OptionsDictionary ();
+			var dict = new Print.OptionsDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var option = Print2.Common.StringToDocumentOption (split[i]);
+						var option = Print.Common.StringToDocumentOption (split[i]);
 						dict.Add (option, split[i+1]);
 					}
 				}
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetOptions(Print2.OptionsDictionary options)
+		public void SetOptions(Print.OptionsDictionary options)
 		{
 			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)

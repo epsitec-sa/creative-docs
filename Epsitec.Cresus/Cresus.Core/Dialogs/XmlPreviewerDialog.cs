@@ -12,9 +12,9 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Deserializers;
-using Epsitec.Cresus.Core.Print2.Controllers;
+using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Print.Deserializers;
+using Epsitec.Cresus.Core.Print.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application = application;
 			this.coreData = coreData;
 			this.jobs = jobs;
-			this.pages = Print2.Common.GetDeserializedPages (this.jobs).ToList ();
+			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();
 			this.previewerController = new XmlPreviewerController (this.coreData, this.jobs);
 		}
 
