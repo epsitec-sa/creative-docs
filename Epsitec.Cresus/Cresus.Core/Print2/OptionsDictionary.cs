@@ -1,4 +1,4 @@
-//	Copyright � 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Print2
 {
 	/// <summary>
 	/// Ce dictionnaire contient toutes les options permettant d'adapter l'impression d'un document.
-	/// La cl� du dictionnaire est un nom d'option. Par exemple "HeaderLogo".
+	/// La clé du dictionnaire est un nom d'option. Par exemple "HeaderLogo".
 	/// La valeur du dictionnaire est la valeur de l'option. Par exemple "true".
 	/// </summary>
 	public class OptionsDictionary
@@ -19,6 +19,11 @@ namespace Epsitec.Cresus.Core.Print2
 			this.dictionary = new Dictionary<DocumentOption, string> ();
 		}
 
+
+		public void Clear()
+		{
+			this.dictionary.Clear ();
+		}
 
 		public void Add(DocumentOption option, string value)
 		{
@@ -88,32 +93,49 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		public string GetSerializedData()
+		{
+			//	Retourne une chaîne qui représente tout le contenu du dictionnaire.
+			var list = new List<string> ();
+
+			foreach (var pair in this.dictionary)
+			{
+				list.Add (Common.DocumentOptionToString (pair.Key));
+				list.Add (pair.Value);
+			}
+
+			return string.Join ("◊", list);
+		}
+
+		public void SetSerializedData(string data)
+		{
+			//	Initialise le dictionnaire à partir d'une chaîne obtenue avec GetSerializedData.
+			this.dictionary.Clear ();
+
+			if (!string.IsNullOrEmpty (data))
+			{
+				var list = data.Split ('◊');
+
+				for (int i = 0; i < list.Length-1; i+=2)
+				{
+					var option = Common.StringToDocumentOption (list[i]);
+					var value = list[i+1];
+
+					this.dictionary.Add (option, value);
+				}
+			}
+		}
+
+
 		public static OptionsDictionary GetDefault()
 		{
-			//	Retourne toutes les options par d�faut.
+			//	Retourne toutes les options par défaut.
 			var dict = new OptionsDictionary ();
 			var all = Verbose.VerboseDocumentOption.GetAll ();
 
 			foreach (var one in all)
 			{
 				dict.Add (one.Option, one.DefaultValue);
-			}
-
-			return dict;
-		}
-
-		public static OptionsDictionary GetGlobal()
-		{
-			//	Retourne toutes les options globales.
-			var dict = new OptionsDictionary ();
-			var all = Verbose.VerboseDocumentOption.GetAll ();
-
-			foreach (var one in all)
-			{
-				if (one.IsGlobal)
-				{
-					dict.Add (one.Option, one.DefaultValue);
-				}
 			}
 
 			return dict;
