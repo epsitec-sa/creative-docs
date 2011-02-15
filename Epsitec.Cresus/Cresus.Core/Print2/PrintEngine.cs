@@ -41,13 +41,7 @@ namespace Epsitec.Cresus.Core.Print2
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Preview' du ruban a été activée.
-			var list = new List<AbstractEntity> ();
-			list.Add (entity);
-
-			var options       = PrintEngine.GetOptions (entity);
-			var printingUnits = PrintEngine.GetPrintingUnits (entity);
-
-			var xml = PrintEngine.Print (coreData, list, options, printingUnits);
+			var xml = PrintEngine.Print (coreData, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
@@ -66,59 +60,24 @@ namespace Epsitec.Cresus.Core.Print2
 			}
 		}
 
-		private static OptionsDictionary GetOptions(AbstractEntity entity)
+
+		public static string Print(CoreData coreData, AbstractEntity entity)
 		{
-			//	Retourne les options à utiliser pour l'entité.
-			var result = new OptionsDictionary ();
+			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			var options       = PrintEngine.GetOptions (entity);
+			var printingUnits = PrintEngine.GetPrintingUnits (entity);
 
-			if (entity is DocumentMetadataEntity)
-			{
-				var metadata = entity as DocumentMetadataEntity;
-
-				foreach (var documentOptions in metadata.DocumentCategory.DocumentOptions)
-				{
-					var d = documentOptions.GetOptions ();
-					result.Merge (d);
-				}
-			}
-
-#if true
-			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
-			{
-				result = OptionsDictionary.GetDefault ();
-				result.Add (DocumentOption.EsrPosition, "WithInside");  // force un BV
-			}
-#endif
-
-			return result;
+			return PrintEngine.Print (coreData, entity, options, printingUnits);
 		}
 
-		private static PrintingUnitsDictionary GetPrintingUnits(AbstractEntity entity)
+		public static string Print(CoreData coreData, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			//	Retourne les unités d'impression à utiliser pour l'entité.
-			var result = new PrintingUnitsDictionary ();
+			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			var entities = new List<AbstractEntity> ();
+			entities.Add (entity);
 
-			if (entity is DocumentMetadataEntity)
-			{
-				var metadata = entity as DocumentMetadataEntity;
-
-				foreach (var documentOptions in metadata.DocumentCategory.DocumentPrintingUnits)
-				{
-					var d = documentOptions.GetPrintingUnits ();
-					result.Merge (d);
-				}
-			}
-
-#if true
-			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
-			{
-				result.Add (PageType.All, "Blanc");
-			}
-#endif
-
-			return result;
+			return PrintEngine.Print (coreData, entities, options, printingUnits);
 		}
-
 
 		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
@@ -161,30 +120,33 @@ namespace Epsitec.Cresus.Core.Print2
 
 					PrintingUnit printingUnit = printingUnitList.Where (p => p.LogicalName == printingUnitName).FirstOrDefault ();
 
-					documentPrinter.SetPrintingUnit (printingUnit);
-					documentPrinter.BuildSections ();
-
-					if (!documentPrinter.IsEmpty (pageType))
+					if (printingUnit != null)
 					{
-						var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
+						documentPrinter.SetPrintingUnit (printingUnit);
+						documentPrinter.BuildSections ();
 
-						for (int copy = 0; copy < printingUnit.Copies; copy++)
+						if (!documentPrinter.IsEmpty (pageType))
 						{
-							var physicalPages = documentPrinter.GetPhysicalPages (pageType);
-							foreach (var physicalPage in physicalPages)
-							{
-								string e = (entityRank+1).ToString ();
-								string p = (documentPrinterRank+1).ToString ();
-								string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
-								string c = (copy+1).ToString ();
-								string internalJobName = string.Concat (jobName, ".", e, ".", p, ".", d, ".", c);
+							var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
 
-								sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, entityRank, documentPrinter));
+							for (int copy = 0; copy < printingUnit.Copies; copy++)
+							{
+								var physicalPages = documentPrinter.GetPhysicalPages (pageType);
+								foreach (var physicalPage in physicalPages)
+								{
+									string e = (entityRank+1).ToString ();
+									string p = (documentPrinterRank+1).ToString ();
+									string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
+									string c = (copy+1).ToString ();
+									string internalJobName = string.Concat (jobName, ".", e, ".", p, ".", d, ".", c);
+
+									sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, entityRank, documentPrinter));
+								}
 							}
 						}
-					}
 
-					documentPrinterRank++;
+						documentPrinterRank++;
+					}
 				}
 			}
 
@@ -276,6 +238,63 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		#region Dictionary getter
+		private static OptionsDictionary GetOptions(AbstractEntity entity)
+		{
+			//	Retourne les options à utiliser pour l'entité.
+			var result = new OptionsDictionary ();
+
+			if (entity is DocumentMetadataEntity)
+			{
+				var metadata = entity as DocumentMetadataEntity;
+
+				foreach (var documentOptions in metadata.DocumentCategory.DocumentOptions)
+				{
+					var option = documentOptions.GetOptions ();
+					result.Merge (option);
+				}
+			}
+
+#if true
+			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
+			{
+				result = OptionsDictionary.GetDefault ();
+				result.Add (DocumentOption.EsrPosition, "WithInside");  // force un BV
+			}
+#endif
+
+			return result;
+		}
+
+		private static PrintingUnitsDictionary GetPrintingUnits(AbstractEntity entity)
+		{
+			//	Retourne les unités d'impression à utiliser pour l'entité.
+			var result = new PrintingUnitsDictionary ();
+
+			if (entity is DocumentMetadataEntity)
+			{
+				var metadata = entity as DocumentMetadataEntity;
+
+				foreach (var documentOptions in metadata.DocumentCategory.DocumentPrintingUnits)
+				{
+					var printingUnit = documentOptions.GetPrintingUnits ();
+					result.Merge (printingUnit);
+				}
+			}
+
+#if true
+			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
+			{
+				result.Add (PageType.All, "Blanc");
+			}
+#endif
+
+			return result;
+		}
+		#endregion
+
+
+		#region Serializer
 		private static string SerializeJobs(List<JobToPrint> jobs)
 		{
 			//	Retourne la chaîne xmlSource qui sérialise une liste de jobs d'impression.
@@ -396,9 +415,9 @@ namespace Epsitec.Cresus.Core.Print2
 			var data = store.GetImageData (id);
 			return data.GetImage ();
 		}
+		#endregion
 
 
-	
 		private static void RegisterFonts()
 		{
 			using (var stream = System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.Creus.Core.Resources.OCR_BB.tff"))
