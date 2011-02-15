@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		#region Command handler's
 		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
@@ -41,10 +42,19 @@ namespace Epsitec.Cresus.Core.Print2
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Preview' du ruban a été activée.
+			if (entity == null)
+			{
+				var message = "Il n'y a aucune donnée à visualiser.";
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+				return;
+			}
+
 			var xml = PrintEngine.Print (coreData, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
+				var message = "Ce type de donnée ne peut pas être visualisé.";
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 				return;
 			}
 
@@ -59,6 +69,7 @@ namespace Epsitec.Cresus.Core.Print2
 				//?PrintEngine.PrintJobs (coreData, deserializeJobs);
 			}
 		}
+		#endregion
 
 
 		public static string Print(CoreData coreData, AbstractEntity entity)

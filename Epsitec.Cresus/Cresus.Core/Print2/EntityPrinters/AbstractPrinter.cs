@@ -264,6 +264,8 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			//	Crée le *Printer adapté à un tyape d'entité.
 			//	Quel bonheur de ne pas utiliser la réflexion !
+			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
+			//	un *Printer. En particulier, il peut y avoir plusieurs *Printer pour une même entité.
 			if (entities == null || entities.Count () == 0)
 			{
 				return null;
@@ -274,6 +276,11 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			if (first is DocumentMetadataEntity)
 			{
 				return new DocumentMetadataPrinter (coreData, entities, options, printingUnits);
+			}
+
+			if (first is RelationEntity)
+			{
+				return new RelationPrinter (coreData, entities, options, printingUnits);
 			}
 
 			return null;
