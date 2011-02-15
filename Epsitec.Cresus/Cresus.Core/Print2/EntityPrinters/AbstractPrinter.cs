@@ -147,15 +147,19 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			}
 		}
 
-		public bool HasDocumentOption(DocumentOption option)
+
+		protected bool HasOption(DocumentOption option)
 		{
-			return this.HasDocumentOption (option, "true");
+			//	Indique si une option de type booléen est choisie.
+			return this.HasOption (option, "true");
 		}
 
-		public bool HasDocumentOption(DocumentOption option, string value)
+		protected bool HasOption(DocumentOption option, string value)
 		{
+			//	Indique si une option de type énumération est choisie.
 			return this.options.GetValue (option) == value;
 		}
+
 
 		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
 		{
@@ -188,7 +192,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				size = printingUnit.PhysicalPaperSize;
 			}
 
-			if (this.HasDocumentOption (DocumentOption.Orientation, "Landscape"))
+			if (this.HasOption (DocumentOption.Orientation, "Landscape"))
 			{
 				size = new Size (size.Height, size.Width);
 			}
@@ -209,7 +213,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
 		{
-			if (this.HasDocumentOption (DocumentOption.Specimen))
+			if (this.HasOption (DocumentOption.Specimen))
 			{
 				this.PaintSpecimen (port);
 			}
@@ -246,40 +250,9 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public int DebugParam1
-		{
-			get
-			{
-				return this.debugParam1;
-			}
-			set
-			{
-				if (this.debugParam1 != value)
-				{
-					this.debugParam1 = value;
-				}
-			}
-		}
-
-		public int DebugParam2
-		{
-			get
-			{
-				return this.debugParam2;
-			}
-			set
-			{
-				if (this.debugParam2 != value)
-				{
-					this.debugParam2 = value;
-				}
-			}
-		}
-
-
 		protected static FormattedText GetDefaultLocation()
 		{
-			//	Retourne la ville de l'entreprise, pour par exemple imprimer "Yverdon-les-Bains, le 30 septembre 2010".
+			//	Retourne la ville de l'entreprise, pour imprimer par exemple "Yverdon-les-Bains, le 30 septembre 2010".
 			var m = CoreProgram.Application.BusinessSettings.Company.Person.Contacts.Where (x => x is MailContactEntity).First () as MailContactEntity;
 
 			if (m == null)
@@ -295,6 +268,8 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		public static AbstractPrinter CreateDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
+			//	Crée le *Printer adapté à un tyape d'entité.
+			//	Quel bonheur de ne pas utiliser la réflexion !
 			if (entities == null || entities.Count () == 0)
 			{
 				return null;

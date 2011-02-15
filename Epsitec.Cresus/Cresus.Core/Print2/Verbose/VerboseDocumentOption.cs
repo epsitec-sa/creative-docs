@@ -17,13 +17,13 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 		}
 
 
-		public VerboseDocumentOption(string title, string group)
+		private VerboseDocumentOption(string title, string group)
 		{
 			this.Title = title;
 			this.Group = group;
 		}
 
-		public VerboseDocumentOption(DocumentOption option, string group, DocumentOptionValueType type, string description, string defaultValue, params Business.DocumentType[] documentTypes)
+		private VerboseDocumentOption(DocumentOption option, string group, DocumentOptionValueType type, string description, string defaultValue, params Business.DocumentType[] documentTypes)
 		{
 			this.Option        = option;
 			this.Group         = group;
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			this.documentTypes = documentTypes.ToList ();
 		}
 
-		public VerboseDocumentOption(DocumentOption option, string group, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, string defaultValue, params Business.DocumentType[] documentTypes)
+		private VerboseDocumentOption(DocumentOption option, string group, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, string defaultValue, params Business.DocumentType[] documentTypes)
 		{
 			System.Diagnostics.Debug.Assert (enumeration != null && enumerationDescription != null);
 			System.Diagnostics.Debug.Assert (enumeration.Count () == enumerationDescription.Count ());
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Orientation du papier", "Orientation"));
 			e = new string[] { "Portrait", "Landscape" };
 			d = new string[] { "Portrait", "Paysage" };
-			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", e, d, "Portrait"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", e, d, e[0]));
 
 			//	Ajoute les options d'impression générales.
 			list.Add (new VerboseDocumentOption ("Options générales", "Global"));
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));
 			e = new string[] { "Frameless", "WithLine", "WithFrame" };
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
-			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", e, d, "WithLine"));
+			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", e, d, e[1]));
 
 			//	Ajoute les options d'impression liées aux factures.
 			list.Add (new VerboseDocumentOption ("Options pour les factures", "InvoiceOption"));
@@ -178,18 +178,18 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption ("Ordre des colonnes", "ColumnsOrder"));
 			e = new string[] { "QD", "DQ" };
 			d = new string[] { "Quantité, Désignation, Prix", "Désignation, Quantité, Prix" };
-			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", e, d, "QD", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", e, d, e[0], Business.DocumentType.Invoice));
 
 			//	Ajoute les options d'impression liées aux BV.
 			list.Add (new VerboseDocumentOption ("Type de la facture", "EsrPosition"));
 			e = new string[] { "Without", "WithInside", "WithOutside" };
 			d = new string[] { "Facture sans BV", "Facture avec BV intégré", "Facture avec BV séparé" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrPosition, "EsrPosition", e, d, "Without", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.EsrPosition, "EsrPosition", e, d, e[0], Business.DocumentType.Invoice));
 
 			list.Add (new VerboseDocumentOption ("Type de bulletin de versement", "EsrType"));
 			e = new string[] { "Esr", "Es" };
 			d = new string[] { "BV orange", "BV rose" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrType, "EsrType", e, d, "Esr", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.EsrType, "EsrType", e, d, e[0], Business.DocumentType.Invoice));
 
 			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceEsrMode"));
 			list.Add (new VerboseDocumentOption (DocumentOption.EsrFacsimile, "InvoiceEsrMode", DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 		}
 
 
-		public VerbosePageType(PageType type, string job, string shortDescription, string longDescription, params Business.DocumentType[] documentTypes)
+		private VerbosePageType(PageType type, string job, string shortDescription, string longDescription, params Business.DocumentType[] documentTypes)
 		{
 			this.Type             = type;
 			this.Job              = job;
