@@ -23,9 +23,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 {
 
-	public class MailContactLabelPrinter : AbstractPrinter
+	public class DocumentMetadataMailContactPrinter : AbstractPrinter
 	{
-		public MailContactLabelPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public DocumentMetadataMailContactPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			: base (coreData, entities, options, printingUnits)
 		{
 		}
@@ -151,7 +151,22 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.entities.FirstOrDefault () as MailContactEntity;
+				var metadata = this.Metadata;
+
+				if (metadata != null && metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
+				{
+					return metadata.BusinessDocument.BillToMailContact;
+				}
+
+				throw new System.ArgumentException ("DocumentMetadata.BusinessDocument.BillToMailContact not found.");
+			}
+		}
+
+		private DocumentMetadataEntity Metadata
+		{
+			get
+			{
+				return this.entities.FirstOrDefault () as DocumentMetadataEntity;
 			}
 		}
 	}
