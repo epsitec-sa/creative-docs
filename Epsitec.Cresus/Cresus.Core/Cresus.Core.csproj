@@ -221,7 +221,7 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
-    <Compile Include="Print2\ContinuousController.cs" />
+    <Compile Include="Print2\Controllers\ContinuousController.cs" />
     <Compile Include="Print2\Deserializers\DeserializedJob.cs" />
     <Compile Include="Print2\Deserializers\DeserializedPage.cs" />
     <Compile Include="Print2\Deserializers\DeserializedSection.cs" />
@@ -255,7 +255,7 @@
     <Compile Include="Print2\PreviewMode.cs" />
     <Compile Include="Print2\PrintEngine.cs" />
     <Compile Include="Print2\SectionToPrint.cs" />
-    <Compile Include="Print2\XmlPreviewerController.cs" />
+    <Compile Include="Print2\Controllers\XmlPreviewerController.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />

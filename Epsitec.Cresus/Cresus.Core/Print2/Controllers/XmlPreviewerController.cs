@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print2
+namespace Epsitec.Cresus.Core.Print2.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur supervise une zone de prévisualisation et une barre d'outils. La zone de prévisualisation

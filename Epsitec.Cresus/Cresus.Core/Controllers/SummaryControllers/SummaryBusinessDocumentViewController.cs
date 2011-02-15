@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Print2.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -323,7 +324,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				type = metadoc.DocumentCategory.DocumentType;
 			}
 
-			this.previewController = new Print2.ContinuousController (this.Data, metadoc, type);
+			this.previewController = new ContinuousController (this.Data, metadoc, type);
 			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
@@ -370,6 +371,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		#endregion
 
 
-		private Print2.ContinuousController		 previewController;
+		private ContinuousController		 previewController;
 	}
 }
