@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
-		protected static readonly double					continuousHeight = 100000;  // 100m devrait suffire
+		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
 
 		protected readonly IEnumerable<AbstractEntity>		entities;
 		private OptionsDictionary							options;

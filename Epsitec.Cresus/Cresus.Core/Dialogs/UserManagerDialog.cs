@@ -12,7 +12,6 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Printers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
