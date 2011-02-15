@@ -226,7 +226,6 @@
     <Compile Include="Print2\Deserializers\DeserializedSection.cs" />
     <Compile Include="Print2\Verbose\VerboseDocumentOption.cs" />
     <Compile Include="Print2\Verbose\DocumentOptionValueType.cs" />
-    <Compile Include="Print2\Verbose\DocumentOptionWidgetType.cs" />
     <Compile Include="Print2\Verbose\VerbosePageType.cs" />
     <Compile Include="Print2\EntityPrinters\AbstractPrinter.cs" />
     <Compile Include="Print2\Bands\TableColumn.cs" />

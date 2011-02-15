@@ -149,8 +149,12 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		public bool HasDocumentOption(DocumentOption option)
 		{
-			var value = this.options.GetValue (option);
-			return value == "true";
+			return this.HasDocumentOption (option, "true");
+		}
+
+		public bool HasDocumentOption(DocumentOption option, string value)
+		{
+			return this.options.GetValue (option) == value;
 		}
 
 		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
@@ -184,7 +188,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				size = printingUnit.PhysicalPaperSize;
 			}
 
-			if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
+			if (this.HasDocumentOption (DocumentOption.Orientation, "Landscape"))
 			{
 				size = new Size (size.Height, size.Width);
 			}
