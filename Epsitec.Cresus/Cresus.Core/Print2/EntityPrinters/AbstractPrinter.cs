@@ -99,29 +99,19 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public bool IsEmpty(PageType printerFunctionUsed = PageType.All)
+		public bool IsEmpty(PageType printerFunctionUsed)
 		{
 			return this.documentContainer.IsEmpty (printerFunctionUsed);
 		}
 
-		public int[] GetPhysicalPages(PageType printerFunctionUsed = PageType.All)
+		public int[] GetPhysicalPages(PageType printerFunctionUsed)
 		{
 			return this.documentContainer.GetPhysicalPages (printerFunctionUsed);
-		}
-
-		public int PageCount(PageType printerFunctionUsed = PageType.All)
-		{
-			return this.documentContainer.PageCount (printerFunctionUsed);
 		}
 
 		public int GetDocumentRank(int page)
 		{
 			return this.documentContainer.GetDocumentRank (page);
-		}
-
-		public PageType GetPageType(int page)
-		{
-			return this.documentContainer.GetPageType (page);
 		}
 
 		public int CurrentPage
@@ -148,7 +138,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
+		public bool HasPrintingUnitDefined(PageType printerUnitFunction)
 		{
 			//	Indique si une unité d'impression est définie.
 			return this.printingUnits.ContainsPageType (printerUnitFunction);
@@ -192,6 +182,9 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			this.requiredPageSize = size;
 		}
 
+		/// <summary>
+		/// A utiliser à la place de SetPrintingUnit.
+		/// </summary>
 		public void SetContinuousPreviewMode()
 		{
 			this.PreviewMode = Print2.PreviewMode.ContinuousPreview;
@@ -260,9 +253,10 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits, bool all = true)
 		{
 			//	Crée les *Printer adaptés à un type d'entité. Le premier est toujours le principal.
+			//	Si all = false, on ne crée que le principal.
 			//	Quel bonheur de ne pas utiliser la réflexion, c'est tellement plus simple !
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
 			//	un *Printer. En particulier, il peut y avoir plusieurs *Printer pour une même entité.
@@ -276,10 +270,14 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				{
 					list.Add (new DocumentMetadataPrinter (coreData, entities, options, printingUnits));
 
-					var metadata = first as DocumentMetadataEntity;
-					if (metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
+					if (all)
 					{
-						list.Add (new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits));
+						var metadata = first as DocumentMetadataEntity;
+
+						if (metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
+						{
+							list.Add (new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits));
+						}
 					}
 				}
 

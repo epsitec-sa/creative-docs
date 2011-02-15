@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 			this.documentContainer.Clear ();
 
-			if (this.HasPrinterUnitDefined (PageType.Label))
+			if (this.HasPrintingUnitDefined (PageType.Label))
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.Label);
 				this.BuildSummary ();

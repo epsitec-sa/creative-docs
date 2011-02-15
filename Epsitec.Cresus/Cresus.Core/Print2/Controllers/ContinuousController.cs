@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Print2.Controllers
 
 			var options = OptionsDictionary.GetDefault ();
 
-			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, null);
+			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, null, all: false);
 			this.documentPrinter = documentPrinters.FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (this.documentPrinter != null);
 
