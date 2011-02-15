@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Print2.Controllers
 
 			var options = OptionsDictionary.GetDefault ();
 
-			this.documentPrinter = AbstractPrinter.CreateDocumentPrinter (coreData, entities, options, null);
+			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, null);
+			this.documentPrinter = documentPrinters.FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (this.documentPrinter != null);
 
 			this.documentPrinter.SetContinuousPreviewMode ();

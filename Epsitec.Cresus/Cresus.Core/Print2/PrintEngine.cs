@@ -37,6 +37,23 @@ namespace Epsitec.Cresus.Core.Print2
 		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
+			if (entity == null)
+			{
+				var message = "Il n'y a aucune donnée à imprimer.";
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+				return;
+			}
+
+			var xml = PrintEngine.Print (coreData, entity);
+
+			if (string.IsNullOrEmpty (xml))
+			{
+				var message = "Ce type de donnée ne peut pas être imprimé.";
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+				return;
+			}
+
+			// TODO: ...
 		}
 
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
@@ -103,15 +120,13 @@ namespace Epsitec.Cresus.Core.Print2
 				return null;
 			}
 
-			//	Crée la classe qui sait imprimer l'entité qui représente le document.
-			var documentPrinter = EntityPrinters.AbstractPrinter.CreateDocumentPrinter (coreData, entities, options, printingUnits);
+			//	Crée les classes qui savent imprimer l'entité qui représente le document (EntityPrinters.AbstrctPrinter).
+			var documentPrinters = EntityPrinters.AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, printingUnits);
 
-			if (documentPrinter == null)
+			if (documentPrinters.Count () == 0 || printingUnits.Count == 0)
 			{
 				return null;
 			}
-
-			documentPrinter.PreviewMode = PreviewMode.Print;
 
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
@@ -124,39 +139,44 @@ namespace Epsitec.Cresus.Core.Print2
 				var entity = entities.ElementAt (entityRank);
 
 				int documentPrinterRank = 0;
-				foreach (var pair in printingUnits.ContentPair)
+				foreach (var documentPrinter in documentPrinters)
 				{
-					var pageType         = pair.Key;
-					var printingUnitName = pair.Value;
-
-					PrintingUnit printingUnit = printingUnitList.Where (p => p.LogicalName == printingUnitName).FirstOrDefault ();
-
-					if (printingUnit != null)
+					foreach (var pair in printingUnits.ContentPair)
 					{
-						documentPrinter.SetPrintingUnit (printingUnit);
-						documentPrinter.BuildSections ();
+						var pageType         = pair.Key;
+						var printingUnitName = pair.Value;
 
-						if (!documentPrinter.IsEmpty (pageType))
+						PrintingUnit printingUnit = printingUnitList.Where (p => p.LogicalName == printingUnitName).FirstOrDefault ();
+
+						if (printingUnit != null &&
+							Common.InsidePageSize (printingUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
 						{
-							var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
+							documentPrinter.SetPrintingUnit (printingUnit);
+							documentPrinter.PreviewMode = PreviewMode.Print;
+							documentPrinter.BuildSections ();
 
-							for (int copy = 0; copy < printingUnit.Copies; copy++)
+							if (!documentPrinter.IsEmpty (pageType))
 							{
-								var physicalPages = documentPrinter.GetPhysicalPages (pageType);
-								foreach (var physicalPage in physicalPages)
-								{
-									string e = (entityRank+1).ToString ();
-									string p = (documentPrinterRank+1).ToString ();
-									string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
-									string c = (copy+1).ToString ();
-									string internalJobName = string.Concat (jobName, ".", e, ".", p, ".", d, ".", c);
+								var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
 
-									sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, entityRank, documentPrinter));
+								for (int copy = 0; copy < printingUnit.Copies; copy++)
+								{
+									var physicalPages = documentPrinter.GetPhysicalPages (pageType);
+									foreach (var physicalPage in physicalPages)
+									{
+										string e = (entityRank+1).ToString ();
+										string p = (documentPrinterRank+1).ToString ();
+										string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
+										string c = (copy+1).ToString ();
+										string internalJobName = string.Concat (jobName, ".", e, ".", p, ".", d, ".", c);
+
+										sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, entityRank, documentPrinter));
+									}
 								}
 							}
-						}
 
-						documentPrinterRank++;
+							documentPrinterRank++;
+						}
 					}
 				}
 			}
@@ -297,6 +317,9 @@ namespace Epsitec.Cresus.Core.Print2
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
 				result.Add (PageType.All, "Blanc");
+				//?result.Add (PageType.Esr, "Jaune");
+				//?result.Add (PageType.Copy, "Brouillon");
+				result.Add (PageType.Label, "Etiquettes");
 			}
 #endif
 

@@ -260,30 +260,36 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		public static AbstractPrinter CreateDocumentPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			//	Crée le *Printer adapté à un tyape d'entité.
-			//	Quel bonheur de ne pas utiliser la réflexion !
+			//	Crée les *Printer adaptés à un type d'entité. Le premier est toujours le principal.
+			//	Quel bonheur de ne pas utiliser la réflexion, c'est tellement plus simple !
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
 			//	un *Printer. En particulier, il peut y avoir plusieurs *Printer pour une même entité.
-			if (entities == null || entities.Count () == 0)
+			var list = new List<AbstractPrinter> ();
+
+			if (entities != null && entities.Count () != 0)
 			{
-				return null;
+				var first = entities.FirstOrDefault ();
+
+				if (first is DocumentMetadataEntity)
+				{
+					list.Add (new DocumentMetadataPrinter (coreData, entities, options, printingUnits));
+
+					var metadata = first as DocumentMetadataEntity;
+					if (metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
+					{
+						list.Add (new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits));
+					}
+				}
+
+				if (first is RelationEntity)
+				{
+					list.Add (new RelationPrinter (coreData, entities, options, printingUnits));
+				}
 			}
 
-			var first = entities.FirstOrDefault ();
-
-			if (first is DocumentMetadataEntity)
-			{
-				return new DocumentMetadataPrinter (coreData, entities, options, printingUnits);
-			}
-
-			if (first is RelationEntity)
-			{
-				return new RelationPrinter (coreData, entities, options, printingUnits);
-			}
-
-			return null;
+			return list;
 		}
 
 
