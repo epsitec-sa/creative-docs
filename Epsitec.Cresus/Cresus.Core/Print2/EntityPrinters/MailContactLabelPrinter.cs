@@ -147,7 +147,6 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-
 		private MailContactEntity Entity
 		{
 			get
