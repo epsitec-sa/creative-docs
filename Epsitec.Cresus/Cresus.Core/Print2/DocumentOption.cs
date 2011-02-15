@@ -11,33 +11,32 @@ namespace Epsitec.Cresus.Core.Print2
 	{
 		None,
 
+		Orientation,		// enum: Portrait, Landscape
 
-		Orientation,		// Postrait, Landscape
+		HeaderLogo,			// bool
+		Specimen,			// bool
 
-		HeaderLogo,
-		Specimen,
+		Margins,			// distance
+		LeftMargin,			// distance
+		RightMargin,		// distance
+		TopMargin,			// distance
+		BottomMargin,		// distance
 
-		Margins,
-		LeftMargin,
-		RightMargin,
-		TopMargin,
-		BottomMargin,
+		LayoutFrame,		// enum: Frameless, WithLine, WithFrame
 
-		LayoutFrame,		// Frameless, WithLine, WithFrame
-	
-		ArticleDelayed,
-		ArticleId,
+		ArticleDelayed,		// bool
+		ArticleId,			// bool
 
-		ColumnsOrder,		// QD, DQ
-		
-		EsrPosition,		// WithInside, WithOutside, Without
-		EsrType,			// Esr, Es
-		EsrFacsimile,
+		ColumnsOrder,		// enum: QD, DQ
 
-		Signing,
+		EsrPosition,		// enum: WithInside, WithOutside, Without
+		EsrType,			// enum: Esr, Es
+		EsrFacsimile,		// bool
 
-		RelationMail,
-		RelationTelecom,
-		RelationUri,
+		Signing,			// bool
+
+		RelationMail,		// bool
+		RelationTelecom,	// bool
+		RelationUri,		// bool
 	}
 }
