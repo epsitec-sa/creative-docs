@@ -11,6 +11,12 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 {
 	public class VerbosePageType
 	{
+		static VerbosePageType()
+		{
+			VerbosePageType.BuildAll ();
+		}
+
+
 		public VerbosePageType(PageType type, string job, string shortDescription, string longDescription, params Business.DocumentType[] documentTypes)
 		{
 			this.Type             = type;
@@ -105,6 +111,11 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 
 		public static IEnumerable<VerbosePageType> GetAll()
 		{
+			return VerbosePageType.allPageTypes;
+		}
+
+		private static void BuildAll()
+		{
 			var list = new List<VerbosePageType> ();
 
 			//	Ajoute les unités d'impression de base, qui devraient toujours exister.
@@ -120,9 +131,11 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			//	Ajoute l'unité d'impression spécifique pour les étiquettes.
 			list.Add (new VerbosePageType (PageType.Label, "Label", "Etiquette", "Pour l'étiquette"));
 
-			return list;
+			VerbosePageType.allPageTypes = list;
 		}
 
+
+		private static IEnumerable<VerbosePageType> allPageTypes;
 
 		private readonly List<Business.DocumentType> documentTypes;
 	}

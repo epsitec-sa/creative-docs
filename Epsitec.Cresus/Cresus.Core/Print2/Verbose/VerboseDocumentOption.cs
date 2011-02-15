@@ -11,6 +11,12 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 {
 	public class VerboseDocumentOption
 	{
+		static VerboseDocumentOption()
+		{
+			VerboseDocumentOption.BuildAll ();
+		}
+
+
 		public VerboseDocumentOption(string title, string group)
 		{
 			this.Title = title;
@@ -132,7 +138,12 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 		}
 
 
-		internal static IEnumerable<VerboseDocumentOption> GetAll()
+		public static IEnumerable<VerboseDocumentOption> GetAll()
+		{
+			return VerboseDocumentOption.allOptions;
+		}
+
+		private static void BuildAll()
 		{
 			var list = new List<VerboseDocumentOption> ();
 			string[] e, d;
@@ -191,9 +202,10 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation", DocumentOptionValueType.Boolean,  "Téléphones", "true", Business.DocumentType.Summary));
 			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation", DocumentOptionValueType.Boolean,  "Emails",     "true", Business.DocumentType.Summary));
 
-			return list;
+			VerboseDocumentOption.allOptions = list;
 		}
 
+		private static IEnumerable<VerboseDocumentOption> allOptions;
 
 		private readonly List<Business.DocumentType> documentTypes;
 	}
