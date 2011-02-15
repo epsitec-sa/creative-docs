@@ -35,6 +35,13 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
+		public void SetOptionsDictionary(OptionsDictionary options)
+		{
+			//	Impose d'autres options.
+			this.options = options;
+		}
+
+
 		public virtual string JobName
 		{
 			get
@@ -315,8 +322,8 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		protected static readonly double					continuousHeight = 100000;  // 100m devrait suffire
 
 		protected readonly IEnumerable<AbstractEntity>		entities;
-		protected readonly OptionsDictionary				options;
-		protected readonly PrintingUnitsDictionary			printingUnits;
+		private OptionsDictionary							options;
+		private readonly PrintingUnitsDictionary			printingUnits;
 		protected readonly DocumentContainer				documentContainer;
 		protected readonly CoreData							coreData;
 

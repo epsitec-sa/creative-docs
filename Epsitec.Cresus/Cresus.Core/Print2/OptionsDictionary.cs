@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Print2
 {
 	/// <summary>
 	/// Ce dictionnaire contient toutes les options permettant d'adapter l'impression d'un document.
-	/// La clé du dictionnaire est un nom d'option. Par exemple "HeaderLogo".
+	/// La clé du dictionnaire est un nom d'option (DocumentOption).
 	/// La valeur du dictionnaire est la valeur de l'option. Par exemple "true".
 	/// </summary>
 	public class OptionsDictionary
