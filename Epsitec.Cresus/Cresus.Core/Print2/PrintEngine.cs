@@ -53,7 +53,8 @@ namespace Epsitec.Cresus.Core.Print2
 				return;
 			}
 
-			// TODO: ...
+			var deserializeJobs = PrintEngine.DeserializeJobs (coreData, xml);
+			PrintEngine.PrintJobs (coreData, deserializeJobs);
 		}
 
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
