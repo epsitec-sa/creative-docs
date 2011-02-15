@@ -1334,7 +1334,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
 				this.documentContainer.CurrentVerticalPosition - DocumentMetadataPrinter.marginBeforeEsr < bounds.Top ||
-				this.HasPrinterUnitDefined (PageType.Single) == false)
+				this.HasPrintingUnitDefined (PageType.Single) == false)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture
 				//	et le BV sur une seule page !
