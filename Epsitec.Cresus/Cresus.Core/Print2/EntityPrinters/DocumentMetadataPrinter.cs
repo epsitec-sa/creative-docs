@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			{
 				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
 
-				if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithInside"))
+				if (this.HasOption (DocumentOption.EsrPosition, "WithInside"))
 				{
 					return new Margins (20, 10, 20+h*2, h+DocumentMetadataPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
 				}
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.Invoice)
 			{
-				if (this.HasDocumentOption (DocumentOption.EsrPosition, "Without"))
+				if (this.HasOption (DocumentOption.EsrPosition, "Without"))
 				{
 					if (this.Entity.BillingDetails.Count != 0)
 					{
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		private void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
-			if (this.HasDocumentOption (DocumentOption.HeaderLogo))
+			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
 				var settings = CoreProgram.Application.BusinessSettings;
 
@@ -437,13 +437,13 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				this.tableColumns[TableColumnKeys.Total          ].Visible = false;
 			}
 
-			if (!this.HasDocumentOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
+			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
 			}
 
-			if (!this.HasDocumentOption (DocumentOption.ArticleId))  // n'imprime pas les numéros d'article ?
+			if (!this.HasOption (DocumentOption.ArticleId))  // n'imprime pas les numéros d'article ?
 			{
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
@@ -1026,7 +1026,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
 		{
-			if (!this.HasDocumentOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
+			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
 			{
 				foreach (var quantity in line.ArticleQuantities)
 				{
@@ -1076,7 +1076,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		private void BuildFooter()
 		{
-			if (this.HasDocumentOption (DocumentOption.Signing))
+			if (this.HasOption (DocumentOption.Signing))
 			{
 				if (this.DocumentType == Business.DocumentType.DeliveryNote)
 				{
@@ -1305,12 +1305,12 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithInside"))
+			if (this.HasOption (DocumentOption.EsrPosition, "WithInside"))
 			{
 				this.BuildInsideEsrs (billingDetails, firstPage);
 			}
 
-			if (this.HasDocumentOption (DocumentOption.EsrPosition, "WithOutside"))
+			if (this.HasOption (DocumentOption.EsrPosition, "WithOutside"))
 			{
 				this.BuildOutsideEsr (billingDetails, firstPage);
 			}
@@ -1349,7 +1349,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
 			AbstractEsrBand isr;
 
-			if (this.HasDocumentOption (DocumentOption.EsrType, "Esr"))
+			if (this.HasOption (DocumentOption.EsrType, "Esr"))
 			{
 				isr = new EsrBand ();  // BVR orangé
 			}
@@ -1358,7 +1358,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 				isr = new EsBand ();  // BV rose
 			}
 
-			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.EsrFacsimile);
+			isr.PaintEsrSimulator = this.HasOption (DocumentOption.EsrFacsimile);
 			isr.From = this.Entity.BillToMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
@@ -1384,7 +1384,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.ColumnsOrder, "QD");
+				return this.HasOption (DocumentOption.ColumnsOrder, "QD");
 			}
 		}
 
@@ -1463,7 +1463,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.LayoutFrame, "WithLine");
+				return this.HasOption (DocumentOption.LayoutFrame, "WithLine");
 			}
 		}
 
@@ -1471,7 +1471,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		{
 			get
 			{
-				return this.HasDocumentOption (DocumentOption.LayoutFrame, "WithFrame");
+				return this.HasOption (DocumentOption.LayoutFrame, "WithFrame");
 			}
 		}
 

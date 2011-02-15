@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core.Print2
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.InternalJobName                  == p2.InternalJobName                 &&
+				if (p1.InternalJobName                  == p2.InternalJobName                  &&
 					p1.PrintingUnit.PhysicalPrinterName == p2.PrintingUnit.PhysicalPrinterName &&
 					p1.FirstPage                        == p2.FirstPage)
 				{
