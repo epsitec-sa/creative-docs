@@ -253,8 +253,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.xOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
-				this.yOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
+				this.xOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage horizontal :", "millimètres, vers la droite si positif", ++tabIndex);
+				this.yOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage vertical :",   "millimètres, vers le haut si positif",   ++tabIndex);
 			}
 
 			{
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.copiesField = PrintingUnitsTabPage.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
+				this.copiesField = PrintingUnitsTabPage.CreateTextField (box, "Nombre de copies :", "×", ++tabIndex);
 			}
 
 			//	Rempli le panneau de droite.

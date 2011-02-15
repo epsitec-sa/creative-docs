@@ -146,11 +146,13 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 
 		public static IEnumerable<VerboseDocumentOption> GetAll()
 		{
+			//	Retourne toutes les options existantes.
 			return VerboseDocumentOption.allOptions;
 		}
 
 		public static IEnumerable<VerboseDocumentOption> GetDefault()
 		{
+			//	Retourne les options globales, utilisées avec le réglage des unités d'impression (PrintingUnitsTabPage).
 			return VerboseDocumentOption.allOptions.Where (x => x.IsGlobal);
 		}
 

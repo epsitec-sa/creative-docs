@@ -170,6 +170,13 @@ namespace Epsitec.Cresus.Core.Print2
 						if (printingUnit != null &&
 							Common.InsidePageSize (printingUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
 						{
+							//	Fabrique le dictionnaire des options à partir des options de base et
+							//	des options définies avec l'unité d'impression.
+							var customOptions = new OptionsDictionary ();
+							customOptions.Merge (options);                         // options les moins prioritaires
+							customOptions.Merge (printingUnit.OptionsDictionary);  // options les plus prioritaires
+
+							documentPrinter.SetOptionsDictionary (customOptions);
 							documentPrinter.SetPrintingUnit (printingUnit);
 							documentPrinter.PreviewMode = PreviewMode.Print;
 							documentPrinter.BuildSections ();
