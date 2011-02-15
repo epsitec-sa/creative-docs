@@ -10,22 +10,28 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Print2.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Printers
+namespace Epsitec.Cresus.Core.Print2
 {
 	public class ContinuousController
 	{
 		public ContinuousController(CoreData coreData, DocumentMetadataEntity metadoc, Business.DocumentType documentType)
 		{
-			this.entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (coreData, metadoc);
-			System.Diagnostics.Debug.Assert (this.entityPrinter != null);
-			this.entityPrinter.ContinuousPrepare (documentType);
-			this.entityPrinter.SetPrinterUnit ();
-			this.entityPrinter.BuildSections ();
+			var entities = new List<AbstractEntity> ();
+			entities.Add (metadoc);
+
+			var options = OptionsDictionary.GetDefault ();
+
+			this.documentPrinter = AbstractPrinter.CreateDocumentPrinter (coreData, entities, options, null);
+			System.Diagnostics.Debug.Assert (this.documentPrinter != null);
+
+			this.documentPrinter.SetContinuousPreviewMode ();
+			this.documentPrinter.BuildSections ();
 
 			this.zoom = 1;
 		}
@@ -55,7 +61,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.previewer = new Widgets.ContinuousPagePreviewer ()
 			{
 				Parent          = main,
-				//?DocumentPrinter = this.entityPrinter.GetDocumentPrinter (0),
+				DocumentPrinter = this.documentPrinter,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (0, 1, 0, 1),
 			};
@@ -151,7 +157,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Update()
 		{
 			//	Met à jour le contenu de la page.
-			this.entityPrinter.BuildSections ();
+			this.documentPrinter.BuildSections ();
 			this.previewer.Update ();
 		}
 
@@ -238,7 +244,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly AbstractEntityPrinter			entityPrinter;
+		private readonly AbstractPrinter				documentPrinter;
 
 		private Widget									parent;
 		private double									zoom;

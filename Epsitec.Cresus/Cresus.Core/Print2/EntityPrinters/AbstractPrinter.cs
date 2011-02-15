@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 		/// <summary>
-		/// Taille du document à générer. Cette taille est définie par SetPrinterUnit.
+		/// Taille du document à générer. Cette taille est définie par SetPrintingUnit.
 		/// </summary>
 		public Size RequiredPageSize
 		{
@@ -148,19 +148,6 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
-		protected bool HasOption(DocumentOption option)
-		{
-			//	Indique si une option de type booléen est choisie.
-			return this.HasOption (option, "true");
-		}
-
-		protected bool HasOption(DocumentOption option, string value)
-		{
-			//	Indique si une option de type énumération est choisie.
-			return this.options.GetValue (option) == value;
-		}
-
-
 		public bool HasPrinterUnitDefined(PageType printerUnitFunction)
 		{
 			//	Indique si une unité d'impression est définie.
@@ -205,6 +192,13 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 			this.requiredPageSize = size;
 		}
 
+		public void SetContinuousPreviewMode()
+		{
+			this.PreviewMode = Print2.PreviewMode.ContinuousPreview;
+			this.requiredPageSize = this.PreferredPageSize;
+		}
+
+
 		public virtual void BuildSections()
 		{
 			this.documentContainer.PageSize    = this.RequiredPageSize;
@@ -225,7 +219,7 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 
 		private void PaintSpecimen(IPaintPort port)
 		{
-			//	Dessine un très gros "SPECIMEN" au travers de la page.
+			//	Dessine un très gros "SPECIMEN" en travers de la page.
 			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
 			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
 			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);
@@ -286,8 +280,28 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		}
 
 
+		protected bool HasOption(DocumentOption option)
+		{
+			//	Indique si une option de type booléen est choisie.
+			return this.HasOption (option, "true");
+		}
+
+		protected bool HasOption(DocumentOption option, string value)
+		{
+			//	Indique si une option de type énumération est choisie.
+			if (this.options == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.options.GetValue (option) == value;
+			}
+		}
+
+
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
-		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
+		protected static readonly double					continuousHeight = 100000;  // 100m devrait suffire
 
 		protected readonly IEnumerable<AbstractEntity>		entities;
 		protected readonly OptionsDictionary				options;
@@ -298,7 +312,5 @@ namespace Epsitec.Cresus.Core.Print2.EntityPrinters
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;
 		private int											currentPage;
-		private int											debugParam1;
-		private int											debugParam2;
 	}
 }

@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				type = metadoc.DocumentCategory.DocumentType;
 			}
 
-			this.previewController = new Printers.ContinuousController (this.Data, metadoc, type);
+			this.previewController = new Print2.ContinuousController (this.Data, metadoc, type);
 			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
@@ -370,6 +370,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		#endregion
 
 
-		private Printers.ContinuousController		 previewController;
+		private Print2.ContinuousController		 previewController;
 	}
 }

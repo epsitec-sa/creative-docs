@@ -88,6 +88,21 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
+		public static OptionsDictionary GetDefault()
+		{
+			//	Retourne toutes les options par défaut.
+			var dict = new OptionsDictionary ();
+			var all = Verbose.VerboseDocumentOption.GetAll ();
+
+			foreach (var one in all)
+			{
+				dict.Add (one.Option, one.DefaultValue);
+			}
+
+			return dict;
+		}
+
+
 		private readonly Dictionary<DocumentOption, string>		dictionary;
 	}
 }
