@@ -91,19 +91,8 @@ namespace Epsitec.Cresus.Core.Print2
 #if true
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
-				//	Met toutes les options par défaut.
-				var all = Verbose.VerboseDocumentOption.GetAll ();
-
-				foreach (var one in all)
-				{
-					if (one.Type == DocumentOptionValueType.Boolean)
-					{
-						result.Add (one.Option, one.DefaultValue);
-					}
-				}
-
-				//	Force un BV.
-				result.Add (DocumentOption.EsrPosition, "WithInside");
+				result = OptionsDictionary.GetDefault ();
+				result.Add (DocumentOption.EsrPosition, "WithInside");  // force un BV
 			}
 #endif
 

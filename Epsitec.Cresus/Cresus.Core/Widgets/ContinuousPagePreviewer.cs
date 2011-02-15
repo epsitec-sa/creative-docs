@@ -7,6 +7,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Print2;
+using Epsitec.Cresus.Core.Print2.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Printers.AbstractDocumentPrinter DocumentPrinter
+		public AbstractPrinter DocumentPrinter
 		{
 			get
 			{
@@ -438,7 +440,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		private readonly Timer						timer;
 
-		private Printers.AbstractDocumentPrinter	documentPrinter;
+		private AbstractPrinter						documentPrinter;
 		private Size								documentSize;		// taille du document en mm
 		private double								zoom;				// zoom souhaité (1 ou 2)
 		private double								lastBitmapWidth;
