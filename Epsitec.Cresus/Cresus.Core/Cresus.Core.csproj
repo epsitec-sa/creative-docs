@@ -256,6 +256,7 @@
     <Compile Include="Print2\PrintEngine.cs" />
     <Compile Include="Print2\SectionToPrint.cs" />
     <Compile Include="Print2\Controllers\XmlPreviewerController.cs" />
+    <Compile Include="Print2\XmlJobPrintEngine.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
