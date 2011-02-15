@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			foreach (var option in all)
 			{
-				if (option.Option != Print.DocumentOption.None && dict.ContainsOption (option.Option))
+				if (option.Option != DocumentOption.None && dict.ContainsOption (option.Option))
 				{
 					var description = option.Description;
 					var value = dict.GetValue (option.Option);
@@ -99,11 +99,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToString ();
 		}
 
-		public Print.OptionsDictionary GetOptions()
+		public OptionsDictionary GetOptions()
 		{
 			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new Print.OptionsDictionary ();
+			var dict = new OptionsDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetOptions(Print.OptionsDictionary options)
+		public void SetOptions(OptionsDictionary options)
 		{
 			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)

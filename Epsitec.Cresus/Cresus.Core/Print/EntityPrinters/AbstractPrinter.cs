@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		/// </summary>
 		public void SetContinuousPreviewMode()
 		{
-			this.PreviewMode = Print.PreviewMode.ContinuousPreview;
+			this.PreviewMode = PreviewMode.ContinuousPreview;
 			this.requiredPageSize = this.PreferredPageSize;
 		}
 

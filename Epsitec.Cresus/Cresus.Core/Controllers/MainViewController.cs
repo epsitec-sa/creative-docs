@@ -11,6 +11,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Print;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -300,7 +301,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
-			Core.Print.PrintEngine.PrintCommand (this.Data, entity);
+			PrintEngine.PrintCommand (this.Data, entity);
 
 			this.Data.DisposeDataContext (context);
 		}
@@ -311,7 +312,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
-			Core.Print.PrintEngine.PreviewCommand (this.Data, entity);
+			PrintEngine.PreviewCommand (this.Data, entity);
 
 			this.Data.DisposeDataContext (context);
 		}
