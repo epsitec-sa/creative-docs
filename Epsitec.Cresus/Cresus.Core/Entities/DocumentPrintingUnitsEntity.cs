@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return builder.ToString ();
 		}
 
-		public Print.PrintingUnitsDictionary GetPrintingUnits()
+		public PrintingUnitsDictionary GetPrintingUnits()
 		{
 			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new Print.PrintingUnitsDictionary ();
+			var dict = new PrintingUnitsDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetPrintingUnits(Print.PrintingUnitsDictionary options)
+		public void SetPrintingUnits(PrintingUnitsDictionary options)
 		{
 			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
 			if (options.Count == 0)
