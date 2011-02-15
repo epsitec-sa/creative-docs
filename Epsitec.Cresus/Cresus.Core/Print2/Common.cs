@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Print2.Deserializer;
+using Epsitec.Cresus.Core.Print2.Deserializers;
 
 using System.Collections.Generic;
 using System.Globalization;

@@ -13,7 +13,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Deserializer;
+using Epsitec.Cresus.Core.Print2.Deserializers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business.UserManagement;
 

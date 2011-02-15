@@ -221,9 +221,9 @@
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print2\Bands\AbstractBand.cs" />
-    <Compile Include="Print2\Deserializer\DeserializedJob.cs" />
-    <Compile Include="Print2\Deserializer\DeserializedPage.cs" />
-    <Compile Include="Print2\Deserializer\DeserializedSection.cs" />
+    <Compile Include="Print2\Deserializers\DeserializedJob.cs" />
+    <Compile Include="Print2\Deserializers\DeserializedPage.cs" />
+    <Compile Include="Print2\Deserializers\DeserializedSection.cs" />
     <Compile Include="Print2\Verbose\VerboseDocumentOption.cs" />
     <Compile Include="Print2\Verbose\DocumentOptionValueType.cs" />
     <Compile Include="Print2\Verbose\DocumentOptionWidgetType.cs" />

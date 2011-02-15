@@ -10,7 +10,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Print2.Deserializer;
+using Epsitec.Cresus.Core.Print2.Deserializers;
 
 using System.Collections.Generic;
 using System.Globalization;
