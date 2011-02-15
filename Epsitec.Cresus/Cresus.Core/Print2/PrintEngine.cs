@@ -11,7 +11,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print2.Verbose;
-using Epsitec.Cresus.Core.Print2.Deserializer;
+using Epsitec.Cresus.Core.Print2.Deserializers;
 
 using System.Collections.Generic;
 using System.Xml.Linq;

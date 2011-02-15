@@ -8,7 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Printing;
 
 using Epsitec.Cresus.Core.Print2;
-using Epsitec.Cresus.Core.Print2.Deserializer;
+using Epsitec.Cresus.Core.Print2.Deserializers;
 
 using System.Collections.Generic;
 using System.Linq;

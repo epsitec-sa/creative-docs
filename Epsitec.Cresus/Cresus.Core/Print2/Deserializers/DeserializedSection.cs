@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Print2.Deserializer
+namespace Epsitec.Cresus.Core.Print2.Deserializers
 {
 	public class DeserializedSection
 	{
