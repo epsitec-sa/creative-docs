@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (substitution || syntaxColorized)
 			{
-				foreach (var parameter in query.Parameters)
+				foreach (var parameter in query.Parameters.OrderByDescending (p => p.Name.Length))
 				{
 					if (substitution)
 					{
