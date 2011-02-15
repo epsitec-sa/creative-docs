@@ -445,7 +445,7 @@
     <Compile Include="Repositories\AffairRepository.cs" />
     <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
-    <Compile Include="Dialogs\SettingsTabPages\PrinterUnitsTabPage.cs" />
+    <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />

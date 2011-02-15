@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Rempli les onglets.
-			var printerUnits = new SettingsTabPages.PrinterUnitsTabPage (this.application);
+			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this.application);
 			printerUnits.CreateUI (printerUnitsPage);
 			this.settingsTabPages.Add (printerUnits);
 

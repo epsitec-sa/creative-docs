@@ -109,6 +109,8 @@ namespace Epsitec.Cresus.Core.Print2
 		public static string Print(CoreData coreData, AbstractEntity entity)
 		{
 			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			//	Si l'entité est de type DocumentMetadataEntity, on utilise les options et les unités
+			//	d'impression définies dans l'entité DocumentCategory.
 			var options       = PrintEngine.GetOptions (entity);
 			var printingUnits = PrintEngine.GetPrintingUnits (entity);
 

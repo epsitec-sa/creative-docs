@@ -9,6 +9,8 @@ namespace Epsitec.Cresus.Core.Print2
 {
 	public enum DocumentOption
 	{
+		//	ATTENTION: Les noms des options sont sérialisés. Il ne faut donc pas les changer !
+
 		None,
 
 		Orientation,		// enum: Portrait, Landscape

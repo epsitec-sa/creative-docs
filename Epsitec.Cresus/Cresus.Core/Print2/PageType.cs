@@ -9,6 +9,8 @@ namespace Epsitec.Cresus.Core.Print2
 {
 	public enum PageType
 	{
+		//	ATTENTION: Les noms des pages sont sérialisés. Il ne faut donc pas les changer !
+
 		Unknown,
 
 		All,			// toutes les pages

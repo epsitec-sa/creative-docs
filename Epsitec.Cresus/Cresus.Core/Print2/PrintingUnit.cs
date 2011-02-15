@@ -22,14 +22,14 @@ namespace Epsitec.Cresus.Core.Print2
 		public PrintingUnit()
 		{
 			this.Copies = 1;
-			this.forcingOptionsToClear = new List<DocumentOption> ();
-			this.forcingOptionsToSet   = new List<DocumentOption> ();
+			this.optionsDictionary = new OptionsDictionary ();
 		}
 
 		public PrintingUnit(string logicalName)
 		{
 			this.LogicalName = logicalName;
 			this.Copies = 1;
+			this.optionsDictionary = new OptionsDictionary ();
 		}
 
 
@@ -101,19 +101,11 @@ namespace Epsitec.Cresus.Core.Print2
 			set;
 		}
 
-		public List<DocumentOption> ForcingOptionsToClear
+		public OptionsDictionary OptionsDictionary
 		{
 			get
 			{
-				return this.forcingOptionsToClear;
-			}
-		}
-
-		public List<DocumentOption> ForcingOptionsToSet
-		{
-			get
-			{
-				return this.forcingOptionsToSet;
+				return this.optionsDictionary;
 			}
 		}
 
@@ -150,8 +142,7 @@ namespace Epsitec.Cresus.Core.Print2
 					PrintingUnit.serializableSeparator, "YOffset=",                  this.YOffset.ToString (CultureInfo.InvariantCulture),
 					PrintingUnit.serializableSeparator, "Copies=",                   this.Copies.ToString (CultureInfo.InvariantCulture),
 					PrintingUnit.serializableSeparator, "Comment=",                  this.Comment,
-					PrintingUnit.serializableSeparator, "ForcingOptionsToClear=",    PrintingUnit.GetDocumentOptions (this.forcingOptionsToClear),
-					PrintingUnit.serializableSeparator, "ForcingOptionsToSet=",      PrintingUnit.GetDocumentOptions (this.forcingOptionsToSet),
+					PrintingUnit.serializableSeparator, "OptionsDictionary=",        this.optionsDictionary.GetSerializedData (),
 					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Width=",  this.PhysicalPaperSize.Width.ToString (CultureInfo.InvariantCulture),
 					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Height=", this.PhysicalPaperSize.Height.ToString (CultureInfo.InvariantCulture),
 					PrintingUnit.serializableSeparator, "PhysicalDuplexMode=",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
@@ -166,6 +157,8 @@ namespace Epsitec.Cresus.Core.Print2
 
 			double paperSizeWidth  = 0;
 			double paperSizeHeight = 0;
+
+			this.optionsDictionary.Clear ();
 
 			foreach (var line in list)
 			{
@@ -203,12 +196,8 @@ namespace Epsitec.Cresus.Core.Print2
 							this.Comment = words[1];
 							break;
 
-						case "ForcingOptionsToClear":
-							PrintingUnit.SetDocumentOptions (this.forcingOptionsToClear, words[1]);
-							break;
-
-						case "ForcingOptionsToSet":
-							PrintingUnit.SetDocumentOptions (this.forcingOptionsToSet, words[1]);
+						case "OptionsDictionary":
+							this.optionsDictionary.SetSerializedData (words[1]);
 							break;
 
 						case "PhysicalPaperSize.Width":
@@ -229,40 +218,6 @@ namespace Epsitec.Cresus.Core.Print2
 			if (paperSizeWidth != 0 && paperSizeHeight != 0)
 			{
 				this.PhysicalPaperSize = new Size (paperSizeWidth, paperSizeHeight);
-			}
-		}
-
-
-		private static string GetDocumentOptions(List<DocumentOption> documentOptions)
-		{
-			var builder = new System.Text.StringBuilder ();
-
-			if (documentOptions != null)
-			{
-				foreach (var documentOption in documentOptions)
-				{
-					builder.Append (Common.DocumentOptionToString (documentOption));
-					builder.Append (" ");
-				}
-			}
-
-			return builder.ToString ();
-		}
-
-		private static void SetDocumentOptions(List<DocumentOption> documentOptions, string text)
-		{
-			documentOptions.Clear ();
-
-			string[] list = text.Split (new string[] { " " }, System.StringSplitOptions.RemoveEmptyEntries);
-
-			foreach (var t in list)
-			{
-				var documentOption = Common.StringToDocumentOption (t);
-
-				if (documentOption != DocumentOption.None)
-				{
-					documentOptions.Add (documentOption);
-				}
 			}
 		}
 
@@ -338,7 +293,6 @@ namespace Epsitec.Cresus.Core.Print2
 
 		private static readonly string serializableSeparator = "•";  // puce, unicode 2022
 
-		private readonly List<DocumentOption> forcingOptionsToClear;
-		private readonly List<DocumentOption> forcingOptionsToSet;
+		private readonly OptionsDictionary optionsDictionary;
 	}
 }

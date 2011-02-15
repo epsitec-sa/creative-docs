@@ -149,6 +149,11 @@ namespace Epsitec.Cresus.Core.Print2.Verbose
 			return VerboseDocumentOption.allOptions;
 		}
 
+		public static IEnumerable<VerboseDocumentOption> GetDefault()
+		{
+			return VerboseDocumentOption.allOptions.Where (x => x.IsGlobal);
+		}
+
 		private static void BuildAll()
 		{
 			var list = new List<VerboseDocumentOption> ();
