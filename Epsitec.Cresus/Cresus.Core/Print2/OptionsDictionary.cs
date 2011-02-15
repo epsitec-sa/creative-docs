@@ -102,6 +102,23 @@ namespace Epsitec.Cresus.Core.Print2
 			return dict;
 		}
 
+		public static OptionsDictionary GetGlobal()
+		{
+			//	Retourne toutes les options globales.
+			var dict = new OptionsDictionary ();
+			var all = Verbose.VerboseDocumentOption.GetAll ();
+
+			foreach (var one in all)
+			{
+				if (one.IsGlobal)
+				{
+					dict.Add (one.Option, one.DefaultValue);
+				}
+			}
+
+			return dict;
+		}
+
 
 		private readonly Dictionary<DocumentOption, string>		dictionary;
 	}
