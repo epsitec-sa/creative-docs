@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		#region Command handler's
+		#region Command handlers
 		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
@@ -83,7 +83,23 @@ namespace Epsitec.Cresus.Core.Print2
 
 			if (dialog.Result == DialogResult.Accept)  // imprimer ?
 			{
-				//?PrintEngine.PrintJobs (coreData, deserializeJobs);
+				PrintEngine.PrintJobs (coreData, deserializeJobs);
+			}
+		}
+
+		private static void PrintJobs(CoreData coreData, List<DeserializedJob> jobs)
+		{
+			foreach (var job in jobs)
+			{
+				PrintDocument printDocument = new PrintDocument ();
+
+				printDocument.DocumentName = job.JobFullName;
+				printDocument.SelectPrinter (FormattedText.Unescape (job.PrinterPhysicalName));
+				printDocument.PrinterSettings.Copies = 1;
+				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
+
+				var engine = new XmlJobPrintEngine (coreData, printDocument, job.Sections);
+				printDocument.Print (engine);
 			}
 		}
 		#endregion
@@ -269,7 +285,7 @@ namespace Epsitec.Cresus.Core.Print2
 		}
 
 
-		#region Dictionary getter
+		#region Dictionary getters
 		private static OptionsDictionary GetOptions(AbstractEntity entity)
 		{
 			//	Retourne les options à utiliser pour l'entité.
