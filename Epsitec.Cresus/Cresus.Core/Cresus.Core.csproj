@@ -185,7 +185,6 @@
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
-    <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentReminderDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionIsrDefinitionViewController.cs" />

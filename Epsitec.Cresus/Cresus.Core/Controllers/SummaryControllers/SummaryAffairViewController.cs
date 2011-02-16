@@ -52,19 +52,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIDocuments(TileDataItems data)
 		{
-			var tileData = new TileDataItem
-			{
-				AutoGroup        = false,
-				Name		     = "DocMetadata",
-				IconUri		     = "Data.Document",
-				Title		     = TextFormatter.FormatText ("Document lié"),
-				CompactTitle     = TextFormatter.FormatText ("Documents liés"),
-				Text		     = CollectionTemplate.DefaultEmptyText,
-				HideAddButton    = true,
-				DefaultMode      = ViewControllerMode.Summary,
-			};
-
-			data.Add (tileData);
+			data.Add (
+				new TileDataItem
+				{
+					AutoGroup        = false,
+					Name		     = "DocMetadata",
+					IconUri		     = "Data.Document",
+					Title		     = TextFormatter.FormatText ("Document lié"),
+					CompactTitle     = TextFormatter.FormatText ("Documents liés"),
+					Text		     = CollectionTemplate.DefaultEmptyText,
+					HideAddButton    = true,
+					DefaultMode      = ViewControllerMode.Summary,
+				});
 
 			var template = new CollectionTemplate<DocumentMetadataEntity> ("DocMetadata", this.BusinessContext);
 

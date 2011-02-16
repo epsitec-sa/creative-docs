@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,9 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	/// <summary>
-	/// The <c>Accessor</c> class implements a getter which uses two functions to
-	/// return a result: the first one gets the source object and the second one
-	/// extracts the result from the source object.
+	/// The <c>Accessor</c> class wraps a getter function.
 	/// </summary>
 	public class Accessor<TResult> : Accessor
 	{
@@ -33,6 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.getter ();
 		}
 
+		
 		private readonly System.Func<TResult> getter;
 	}
 }

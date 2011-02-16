@@ -120,11 +120,12 @@ namespace Epsitec.Designer
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 
-			DesignerApplication designerMainWindow;
+			var designerMainWindow = new DesignerApplication (pool)
+			{
+				Mode = DesignerMode.Build,
+				Standalone = true,
+			};
 
-			designerMainWindow = new DesignerApplication (pool);
-			designerMainWindow.Mode = DesignerMode.Build;
-			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
 
 			Program.StartProtocolService (designerMainWindow);

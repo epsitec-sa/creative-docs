@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// <typeparam name="TResult">The type of the result.</typeparam>
 	public class AccessorWithDefaultValue<TResult> : Accessor<TResult>
 	{
-		public AccessorWithDefaultValue(System.Func<TResult> getter, TResult defaultResult, System.Predicate<TResult> isEmptyPredicate)
-			: base (getter)
+		public AccessorWithDefaultValue(Accessor<TResult> accessor, TResult defaultResult, System.Predicate<TResult> isEmptyPredicate)
+			: base (accessor.Getter)
 		{
 			this.defaultResult    = defaultResult;
 			this.isEmptyPredicate = isEmptyPredicate;
