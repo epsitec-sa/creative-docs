@@ -114,25 +114,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public CollectionTemplate<T> DefineTitle(System.Func<T, FormattedText> action)
 		{
-			this.TitleAccessor = IndirectAccessor<T>.Create (action);
+			this.TitleAccessor = IndirectAccessor.Create (action);
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineText(System.Func<T, FormattedText> action)
 		{
-			this.TextAccessor = IndirectAccessor<T>.Create (action);
+			this.TextAccessor = IndirectAccessor.Create (action);
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineCompactTitle(System.Func<T, FormattedText> action)
 		{
-			this.CompactTitleAccessor = IndirectAccessor<T>.Create (action);
+			this.CompactTitleAccessor = IndirectAccessor.Create (action);
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineCompactText(System.Func<T, FormattedText> action)
 		{
-			this.CompactTextAccessor = IndirectAccessor<T>.Create (action);
+			this.CompactTextAccessor = IndirectAccessor.Create (action);
 			return this;
 		}
 
