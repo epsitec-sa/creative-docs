@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var xml = PrintEngine.Print (coreData, entity);
+			var xml = PrintEngine.MakePrintingData (coreData, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
@@ -53,8 +53,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var deserializeJobs = PrintEngine.DeserializeJobs (coreData, xml);
-			PrintEngine.PrintJobs (coreData, deserializeJobs);
+			PrintEngine.SendToPrinter (coreData, xml);
 		}
 
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
@@ -67,7 +66,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var xml = PrintEngine.Print (coreData, entity);
+			var xml = PrintEngine.MakePrintingData (coreData, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
@@ -106,29 +105,40 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static string Print(CoreData coreData, AbstractEntity entity)
+		public static void SendToPrinter(CoreData coreData, string xml)
 		{
-			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			//	Imprime effectivement le source xml d'un document.
+			var deserializeJobs = PrintEngine.DeserializeJobs (coreData, xml);
+			PrintEngine.PrintJobs (coreData, deserializeJobs);
+		}
+
+
+		public static string MakePrintingData(CoreData coreData, AbstractEntity entity)
+		{
+			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
+			//	Retourne le source xml correspondant.
 			//	Si l'entité est de type DocumentMetadataEntity, on utilise les options et les unités
 			//	d'impression définies dans l'entité DocumentCategory.
 			var options       = PrintEngine.GetOptions (entity);
 			var printingUnits = PrintEngine.GetPrintingUnits (entity);
 
-			return PrintEngine.Print (coreData, entity, options, printingUnits);
+			return PrintEngine.MakePrintingData (coreData, entity, options, printingUnits);
 		}
 
-		public static string Print(CoreData coreData, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string MakePrintingData(CoreData coreData, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
+			//	Retourne le source xml correspondant.
 			var entities = new List<AbstractEntity> ();
 			entities.Add (entity);
 
-			return PrintEngine.Print (coreData, entities, options, printingUnits);
+			return PrintEngine.MakePrintingData (coreData, entities, options, printingUnits);
 		}
 
-		public static string Print(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string MakePrintingData(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			//	Imprime un document et retourne le source xml correspondant, sans aucune interaction.
+			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
+			//	Retourne le source xml correspondant.
 			System.Diagnostics.Debug.Assert (coreData != null);
 			System.Diagnostics.Debug.Assert (entities != null);
 			System.Diagnostics.Debug.Assert (options != null);
