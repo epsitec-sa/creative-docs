@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -432,23 +432,8 @@ namespace Epsitec.Common.Drawing.Platform
 		public static NativeBitmap Load(string path)
 		{
 			path = System.IO.Path.GetFullPath (path);
-
-			try
-			{
-				BitmapImage bitmap = new BitmapImage ();
-
-				bitmap.BeginInit ();
-				bitmap.UriSource = new System.Uri (path);
-				bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-				bitmap.EndInit ();
-
-				BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
-				return new NativeBitmap (bitmap, fileFormat);
-			}
-			catch
-			{
-				return null;
-			}
+			
+			return NativeBitmap.Load (System.IO.File.ReadAllBytes (path), path);
 		}
 		
 		public static NativeBitmap Load(byte[] buffer, string path = null)
@@ -457,19 +442,49 @@ namespace Epsitec.Common.Drawing.Platform
 			{
 				using (var imageStreamSource = new System.IO.MemoryStream (buffer))
 				{
-					BitmapImage image = new BitmapImage ();
-					image.BeginInit ();
-					image.StreamSource = imageStreamSource;
-					image.CacheOption = BitmapCacheOption.OnLoad;
-					image.EndInit ();
-					BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
-					return new NativeBitmap (image, fileFormat);
+					return NativeBitmap.LoadFromMemoryStream (path, imageStreamSource);
 				}
 			}
 			catch
 			{
-				return null;
+				try
+				{
+					System.Drawing.Image drawingImage;
+
+					using (var imageStreamSource = new System.IO.MemoryStream (buffer))
+					{
+						drawingImage = System.Drawing.Image.FromStream (imageStreamSource);
+
+						using (var memoryStream = new System.IO.MemoryStream ())
+						{
+							drawingImage.Save (memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+							drawingImage.Dispose ();
+
+							memoryStream.Seek (0, System.IO.SeekOrigin.Begin);
+
+							return NativeBitmap.LoadFromMemoryStream (path, memoryStream);
+						}
+					}
+				}
+				catch
+				{
+					return null;
+				}
 			}
+		}
+
+		private static NativeBitmap LoadFromMemoryStream(string path, System.IO.MemoryStream imageStreamSource)
+		{
+			BitmapImage image = new BitmapImage ();
+
+			image.BeginInit ();
+			image.StreamSource  = imageStreamSource;
+//-			image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+			image.CacheOption   = BitmapCacheOption.OnLoad;
+			image.EndInit ();
+
+			BitmapFileFormat fileFormat = NativeBitmap.GuessFileFormat (path);
+			return new NativeBitmap (image, fileFormat);
 		}
 
 		public static NativeBitmap Create(System.Drawing.Bitmap bitmap)
