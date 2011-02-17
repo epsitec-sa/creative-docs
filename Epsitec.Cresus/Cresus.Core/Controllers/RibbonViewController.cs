@@ -565,6 +565,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (admin || devel || power)
 			{
+				yield return Res.Commands.Base.ShowDocumentCategoryMapping;
+			}
+
+			if (admin || devel || power)
+			{
 				yield return Res.Commands.Base.ShowDocumentCategory;
 			}
 

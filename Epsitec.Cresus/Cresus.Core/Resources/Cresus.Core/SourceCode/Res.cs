@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/L0KS
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
+				//	designer:cap/L0K51
+				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategoryMapping = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37));
 				//	designer:cap/L0KT
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentOptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
 				//	designer:cap/L0K41
@@ -144,6 +146,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowCustomers = 0x150000A000062L;
 				//	designer:cap/L0KS
 				public const long ShowDocumentCategory = 0x150001400001CL;
+				//	designer:cap/L0K51
+				public const long ShowDocumentCategoryMapping = 0x1500014000025L;
 				//	designer:cap/L0KT
 				public const long ShowDocumentOptions = 0x150001400001DL;
 				//	designer:cap/L0K41

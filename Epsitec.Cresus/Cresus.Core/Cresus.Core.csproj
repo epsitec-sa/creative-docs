@@ -843,6 +843,8 @@
     <EmbeddedResource Include="Images\Data.DocumentOptions.icon" />
     <EmbeddedResource Include="Images\Base.DocumentPrintingUnits.icon" />
     <EmbeddedResource Include="Images\Data.DocumentPrintingUnits.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentCategoryMapping.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentCategoryMapping.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
