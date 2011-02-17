@@ -556,6 +556,8 @@ namespace Epsitec.Cresus.Core
 			yield return EntityInfo<WorkflowEntity>.GetTypeId ();
 			yield return EntityInfo<SoftwareUserEntity>.GetTypeId ();
 			yield return EntityInfo<BusinessSettingsEntity>.GetTypeId ();
+
+			yield return EntityInfo<DocumentCategoryMappingEntity>.GetTypeId ();
 		}
 
 
