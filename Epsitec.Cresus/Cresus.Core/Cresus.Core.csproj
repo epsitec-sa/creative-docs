@@ -125,6 +125,7 @@
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryMappingViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryViewController.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Print\SectionToPrint.cs" />
     <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
     <Compile Include="Print\XmlJobPrintEngine.cs" />
+    <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
