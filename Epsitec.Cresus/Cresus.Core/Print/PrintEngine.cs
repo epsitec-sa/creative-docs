@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			PrintEngine.SendToPrinter (coreData, xml);
+			PrintEngine.SendDataToPrinter (coreData, xml);
 		}
 
 		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static void SendToPrinter(CoreData coreData, string xml)
+		public static void SendDataToPrinter(CoreData coreData, string xml)
 		{
 			//	Imprime effectivement le source xml d'un document.
 			var deserializeJobs = PrintEngine.DeserializeJobs (coreData, xml);

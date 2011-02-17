@@ -87,6 +87,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AHO]", typeof (Epsitec.Cresus.Core.Entities.OptionValueEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0KU]", typeof (Epsitec.Cresus.Core.Entities.DocumentOptionsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0K11]", typeof (Epsitec.Cresus.Core.Entities.DocumentPrintingUnitsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0K61]", typeof (Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -13440,6 +13441,67 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 20, 33);	// [L0K11]
 		public static readonly new string EntityStructuredTypeKey = "[L0K11]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.DocumentCategoryMapping Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>DocumentCategoryMapping</c> entity.
+	///	designer:cap/L0K61
+	///	</summary>
+	public partial class DocumentCategoryMappingEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>EntityType</c> field.
+		///	designer:fld/L0K61/L0K71
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0K71]")]
+		public string EntityType
+		{
+			get
+			{
+				return this.GetField<string> ("[L0K71]");
+			}
+			set
+			{
+				string oldValue = this.EntityType;
+				if (oldValue != value || !this.IsFieldDefined("[L0K71]"))
+				{
+					this.OnEntityTypeChanging (oldValue, value);
+					this.SetField<string> ("[L0K71]", oldValue, value);
+					this.OnEntityTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DocumentCategories</c> field.
+		///	designer:fld/L0K61/L0K81
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0K81]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> DocumentCategories
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> ("[L0K81]");
+			}
+		}
+		
+		partial void OnEntityTypeChanging(string oldValue, string newValue);
+		partial void OnEntityTypeChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 20, 38);	// [L0K61]
+		public static readonly new string EntityStructuredTypeKey = "[L0K61]";
 	}
 }
 #endregion

@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Core.Res.CommandIds.Base.ShowImages)]
 		[Command (Core.Res.CommandIds.Base.ShowImageBlobs)]
 		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
+		[Command (Core.Res.CommandIds.Base.ShowDocumentCategoryMapping)]
 		[Command (Core.Res.CommandIds.Base.ShowDocumentCategory)]
 		[Command (Core.Res.CommandIds.Base.ShowDocumentOptions)]
 		[Command (Core.Res.CommandIds.Base.ShowDocumentPrintingUnits)]
