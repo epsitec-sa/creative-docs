@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<SoftwareInfo status="ready">
-  <Files>
-    <File id="splash" value="Epsitec.App.Dolphin.SimpleSplash, App.Dolphin.SplashScreen" />
-    <File id="application" value="Epsitec.App.Dolphin.Core, App.Dolphin.Core" />
-  </Files>
-</SoftwareInfo>
