@@ -225,12 +225,12 @@
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Print\Bands\AbstractBand.cs" />
     <Compile Include="Print\Controllers\ContinuousController.cs" />
-    <Compile Include="Print\Deserializers\DeserializedJob.cs" />
-    <Compile Include="Print\Deserializers\DeserializedPage.cs" />
-    <Compile Include="Print\Deserializers\DeserializedSection.cs" />
-    <Compile Include="Print\Deserializers\Serialization.cs" />
     <Compile Include="Print\EntityPrinters\DocumentMetadataMailContactPrinter.cs" />
     <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
+    <Compile Include="Print\Serialization\DeserializedJob.cs" />
+    <Compile Include="Print\Serialization\DeserializedPage.cs" />
+    <Compile Include="Print\Serialization\DeserializedSection.cs" />
+    <Compile Include="Print\Serialization\SerializationEngine.cs" />
     <Compile Include="Print\Verbose\VerboseDocumentOption.cs" />
     <Compile Include="Print\Verbose\DocumentOptionValueType.cs" />
     <Compile Include="Print\Verbose\VerbosePageType.cs" />
@@ -874,6 +874,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
+    <Folder Include="Print\Deserializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

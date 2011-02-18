@@ -11,7 +11,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.Verbose;
-using Epsitec.Cresus.Core.Print.Deserializers;
+using Epsitec.Cresus.Core.Print.Serialization;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var deserializeJobs = Serialization.DeserializeJobs (coreData, xml);
+			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
 
 			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, coreData, deserializeJobs);
 			dialog.IsModal = true;
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Print
 		public static void SendDataToPrinter(CoreData coreData, string xml)
 		{
 			//	Imprime effectivement le source xml d'un document.
-			var deserializeJobs = Serialization.DeserializeJobs (coreData, xml);
+			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
 			PrintEngine.PrintJobs (coreData, deserializeJobs);
 		}
 
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core.Print
 				index++;
 			}
 
-			return Serialization.SerializeJobs (jobs);
+			return SerializationEngine.SerializeJobs (jobs);
 		}
 
 
