@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>0.0.5</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>10000</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Detail</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>N</KeyboardArrows>
+  <Rem>Exemple d&amp;apos;utilisation des routines en ROM. Affiche les chiffres cliqués sur le clavier sur les afficheurs successifs.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#0, B&lt;tab/&gt;&lt;tab/&gt;; digit de gauche&lt;br/&gt;LOOP:&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_WaitKey&lt;tab/&gt;&lt;tab/&gt;; attend une touche&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_DisplayHexaDigit&lt;tab/&gt;; affiche sur digit B&lt;br/&gt;&lt;tab/&gt;INC&lt;tab/&gt;B&lt;tab/&gt;&lt;tab/&gt;; digit suivant&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;LOOP&lt;tab/&gt;&lt;tab/&gt;; recommence à l&amp;apos;infini&lt;br/&gt;</Source>
+  <MemoryData>510001080301080C29100002</MemoryData>
+</Dolphin>

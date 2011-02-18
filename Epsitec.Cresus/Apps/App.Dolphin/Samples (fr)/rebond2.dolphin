@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>0.0.5</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>100000</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Code</PanelMode>
+  <DisplayBitmap>Y</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>Y</KeyboardArrows>
+  <Rem>Deuxième version d&amp;apos;une balle qui rebondit au milieu de l&amp;apos;écran bitmap sur les bords gauche et droite.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;&lt;tab/&gt;CLR&lt;tab/&gt;X&lt;tab/&gt;&lt;tab/&gt;; X à gauche&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#_BITMAPHEIGHT/2, Y ; Y au milieu&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#1, B&lt;tab/&gt;&lt;tab/&gt;; de gauche à droite&lt;br/&gt;LOOP:&lt;br/&gt;&lt;tab/&gt;COMP&lt;tab/&gt;#_BITMAPWIDTH-1, X ; touche le bord droite ?&lt;br/&gt;&lt;tab/&gt;JUMP,LO&lt;tab/&gt;RIGHT&lt;tab/&gt;&lt;tab/&gt;; non -&amp;gt; RIGHT&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#-1, B&lt;tab/&gt;&lt;tab/&gt;; de droite à gauche&lt;br/&gt;RIGHT:&lt;br/&gt;&lt;tab/&gt;COMP&lt;tab/&gt;#0, X&lt;tab/&gt;&lt;tab/&gt;; touche le bord gauche ?&lt;br/&gt;&lt;tab/&gt;JUMP,HI&lt;tab/&gt;LEFT&lt;tab/&gt;&lt;tab/&gt;; non -&amp;gt; LEFT&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#1, B&lt;tab/&gt;&lt;tab/&gt;; de gauche à droite&lt;br/&gt;LEFT:&lt;br/&gt;&lt;tab/&gt;ADD&lt;tab/&gt;B, X&lt;tab/&gt;&lt;tab/&gt;; avance ou recule X&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_NotPixel&lt;tab/&gt;&lt;tab/&gt;; allume le nouveau point&lt;br/&gt;&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#10, A&lt;tab/&gt;&lt;tab/&gt;; durée à attendre&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_WaitSec&lt;tab/&gt;&lt;tab/&gt;; attend...&lt;br/&gt;&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_NotPixel&lt;tab/&gt;&lt;tab/&gt;; éteint l&amp;apos;ancien point&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;LOOP&lt;br/&gt;</Source>
+  <MemoryData>22530C5101721F14000C51FF720017001351018601081B500A01080601081B100005</MemoryData>
+</Dolphin>

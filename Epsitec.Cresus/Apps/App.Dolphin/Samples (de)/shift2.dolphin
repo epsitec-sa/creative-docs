@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>1.1.1</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>10</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Detail</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>N</KeyboardArrows>
+  <Rem>Lässt ein Segment auf der linken Stelle der Anzeige umlaufen, überspringt das mittlere Segment und den Dezimalpunkt.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;START:&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#1, A&lt;tab/&gt;&lt;tab/&gt;; met le bit initial&lt;br/&gt;LOOP:&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;A, _DIGIT0&lt;tab/&gt;&lt;tab/&gt;; allume le bon segment&lt;br/&gt;&lt;tab/&gt;RL&lt;tab/&gt;A&lt;tab/&gt;&lt;tab/&gt;; décale le bit à gauche&lt;br/&gt;&lt;tab/&gt;AND&lt;tab/&gt;#H&amp;apos;3F, A&lt;tab/&gt;&lt;tab/&gt;; masque bits inutiles&lt;br/&gt;&lt;tab/&gt;JUMP,ZS&lt;tab/&gt;START&lt;tab/&gt;&lt;tab/&gt;; si plus rien -&amp;gt; START&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;LOOP&lt;tab/&gt;&lt;tab/&gt;; recommence à l&amp;apos;infini&lt;br/&gt;</Source>
+  <MemoryData>5001580C0030743F120000100002</MemoryData>
+</Dolphin>

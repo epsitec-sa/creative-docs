@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyName>App.CreativeDocs</AssemblyName>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <Win32Resource>app.res</Win32Resource>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug .NET 2.0\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <CodeAnalysisLogFile>bin\Debug\App.CreativeDocs.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
+      <Name>Common.DocumentEditor</Name>
+      <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
+      <Name>Common.Support.Implementation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.ico" />
+    <None Include="App.res" />
+    <None Include="App.rc" />
+    <None Include="compile-rc.bat" />
+    <None Include="uac.manifest" />
+    <Content Include="Resources\Common.Widgets\Captions.de.resource" />
+    <Content Include="Resources\Common.Support\Captions.de.resource" />
+    <Content Include="Resources\Common.Support\Strings.de.resource" />
+    <Content Include="Resources\Common.Document\Captions.de.resource" />
+    <Content Include="Resources\Common.Document\Captions.en.resource" />
+    <Content Include="Resources\Common.Document\Strings.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
+    <Content Include="Original Samples\objects.crdoc" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.00.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.de.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.en.resource" />
+    <Content Include="Resources\Common.DocumentEditor\module.info" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.00.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.de.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.en.resource" />
+    <Content Include="Resources\Common.Widgets\module.info" />
+    <Content Include="Resources\Common.Widgets\Captions.00.resource" />
+    <Content Include="Resources\Common.Widgets\Captions.en.resource" />
+    <Content Include="Resources\Common.Widgets\Strings.00.resource" />
+    <Content Include="Resources\Common.Widgets\Strings.de.resource" />
+    <Content Include="Resources\Common.Widgets\Strings.en.resource" />
+    <Content Include="Resources\Common.Designer\module.info" />
+    <Content Include="Resources\Common.Designer\Captions.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.en.resource" />
+    <Content Include="Resources\Common.Dialogs\module.info" />
+    <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
+    <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
+    <Content Include="Resources\Common.Document\module.info" />
+    <Content Include="Resources\Common.Document\Captions.00.resource" />
+    <Content Include="Resources\Common.Document\Strings.00.resource" />
+    <Content Include="Resources\Common.Document\Strings.en.resource" />
+    <Content Include="Resources\Common.Support\module.info" />
+    <Content Include="Resources\Common.Support\Captions.00.resource" />
+    <Content Include="Resources\Common.Support\Captions.en.resource" />
+    <Content Include="Resources\Common.Support\Strings.00.resource" />
+    <Content Include="Resources\Common.Support\Strings.en.resource" />
+    <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\Captions.en.resource" />
+    <Content Include="Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Resources\Common.Types\Strings.en.resource" />
+    <Content Include="Original Samples\normal.crmod" />
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
+    <Compile Include="Application.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="SplashScreen.png" />
+    <Content Include="Original Samples\2005-curve.crdoc" />
+    <Content Include="Original Samples\2005-font.crdoc" />
+    <Content Include="Original Samples\a4-1col.crmod" />
+    <Content Include="Original Samples\a4-2col.crmod" />
+    <Content Include="Original Samples\a4-3col.crmod" />
+    <Content Include="Original Samples\aqua1.crdoc" />
+    <Content Include="Original Samples\blupi.crdoc" />
+    <Content Include="Original Samples\cross1.crdoc" />
+    <Content Include="Original Samples\cross2.crdoc" />
+    <Content Include="Original Samples\flowchart1.crdoc" />
+    <Content Include="Original Samples\illusion1.crdoc" />
+    <Content Include="Original Samples\illusion2.crdoc" />
+    <Content Include="Original Samples\meca1.crdoc" />
+    <Content Include="Original Samples\motor.crdoc" />
+    <Content Include="Original Samples\perpective1.crdoc" />
+    <Content Include="Original Samples\perpective2.crdoc" />
+    <Content Include="Original Samples\smilies.crdoc" />
+    <Content Include="Original Samples\title.crdoc" />
+    <Content Include="Original Samples\transparency.crdoc" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" Inputs="App.rc" Outputs="App.res">
+    <Exec Command="compile-rc.bat App" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+
+"$(SolutionDir)App.CreativeDocs\compile-rc.bat" App.rc</PreBuildEvent>
+    <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
+del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
+
+xcopy "$(TargetDir)App.CreativeDocs.exe" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+
+ren "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
+
+call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*"
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

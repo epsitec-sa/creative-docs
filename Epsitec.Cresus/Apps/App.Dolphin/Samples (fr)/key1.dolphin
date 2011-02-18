@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>0.0.4</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>10000</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Detail</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <Rem>Ce programme fait l&amp;apos;écho de la touche cliquée sur l&amp;apos;afficheur gauche.&lt;br/&gt;&lt;br/&gt;- [0] n&amp;apos;affiche rien&lt;br/&gt;- [3] affiche &amp;quot;1&amp;quot;&lt;br/&gt;- [5] affiche une bizarrerie&lt;br/&gt;- [7] affiche &amp;quot;J&amp;quot;&lt;br/&gt;- etc.&lt;br/&gt;&lt;br/&gt;Ce comportement étrange est normal. Voir le programme &amp;quot;key2&amp;quot; pour afficher correctement la touche cliquée.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;LOOP:&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;_KEYBOARD, A&lt;tab/&gt;; lecture clavier dans A&lt;br/&gt;&lt;tab/&gt;TCLR&lt;tab/&gt;A :#_KEYBOARDFULL&lt;tab/&gt;; touche pressée ?&lt;br/&gt;&lt;tab/&gt;JUMP,EQ&lt;tab/&gt;LOOP&lt;tab/&gt;&lt;tab/&gt;; non -&amp;gt; LOOP&lt;br/&gt;&lt;tab/&gt;&lt;tab/&gt;&lt;tab/&gt;&lt;tab/&gt;; oui -&amp;gt;&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;A, _DIGIT0&lt;tab/&gt;&lt;tab/&gt;; écrit dans l&amp;apos;afficheur&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;LOOP&lt;tab/&gt;&lt;tab/&gt;; recommence à l&amp;apos;infini&lt;br/&gt;</Source>
+  <MemoryData>540C07D407120000580C0010</MemoryData>
+</Dolphin>

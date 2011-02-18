@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>1.1.1</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>10</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Detail</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>N</KeyboardArrows>
+  <Rem>Dieses Programm führt eine unendliche Schleife aus.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;LOOP:&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;LOOP&lt;br/&gt;</Source>
+  <MemoryData>0000000010</MemoryData>
+</Dolphin>

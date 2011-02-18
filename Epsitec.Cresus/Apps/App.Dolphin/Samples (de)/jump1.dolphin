@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>1.1.1</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>10000</ProcessorIPS>
+  <ProcessorStep>S</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Detail</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>N</KeyboardArrows>
+  <Rem>Sehr einfaches Programm, im Schritt-für-Schritt-Modus ausführen. Veranschaulicht die Anweisung JUMP H&amp;apos;3A0.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;NOP&lt;br/&gt;&lt;tab/&gt;JUMP&lt;tab/&gt;H&amp;apos;3A0&lt;br/&gt;</Source>
+  <MemoryData>00001003A0</MemoryData>
+</Dolphin>

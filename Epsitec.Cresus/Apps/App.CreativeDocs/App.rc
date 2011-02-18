@@ -1,0 +1,129 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "S:\\Epsitec.Cresus\\App.CreativeDocs\\uac.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+1                       ICON                    "S:\\Epsitec.Cresus\\App.CreativeDocs\\App.ico"
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// French (Switzerland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRS)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH_SWISS
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 3,1,0,1106
+ PRODUCTVERSION 3,0,0,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x0L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "Comments", "Visit http://www.creativedocs.net/ for detailed information"
+            VALUE "CompanyName", "OPaC bright ideas"
+            VALUE "FileDescription", "Creative Docs .NET"
+            VALUE "FileVersion", "3, 1, 0, 1106"
+            VALUE "InternalName", "Creative Docs .NET"
+            VALUE "LegalCopyright", "Copyright © 2002-2011, OPaC bright ideas & EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
+            VALUE "OriginalFilename", "Creative Docs .NET.exe"
+            VALUE "ProductName", "Creative Docs .NET"
+            VALUE "ProductVersion", "3, 0, 0, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
+
+#endif    // French (Switzerland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

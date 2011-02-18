@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Dolphin>
+  <Version>1.1.1</Version>
+  <ProcessorName>PSI30</ProcessorName>
+  <ProcessorIPS>100</ProcessorIPS>
+  <ProcessorStep>C</ProcessorStep>
+  <ProcessorInto>O</ProcessorInto>
+  <PanelMode>Code</PanelMode>
+  <DisplayBitmap>N</DisplayBitmap>
+  <DisplayTechno>CRT</DisplayTechno>
+  <KeyboardArrows>N</KeyboardArrows>
+  <Rem>Zeigt den Wert 2008 mit einer Geschwindigkeit von 100 Anweisungen pro Sekunde an, um zu zeigen, dass ein Prozessor eine Aufgabe nach der anderen bearbeitet und nicht gleichzeitig.</Rem>
+  <Source>&lt;tab/&gt;.LOC&lt;tab/&gt;0&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#H&amp;apos;08, A&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#2, B&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_DisplayHexaByte&lt;br/&gt;&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#H&amp;apos;20, A&lt;br/&gt;&lt;tab/&gt;MOVE&lt;tab/&gt;#0, B&lt;br/&gt;&lt;tab/&gt;CALL&lt;tab/&gt;_DisplayHexaByte&lt;br/&gt;&lt;br/&gt;&lt;tab/&gt;HALT&lt;br/&gt;</Source>
+  <MemoryData>5008510201080F5020510001080F03</MemoryData>
+</Dolphin>
