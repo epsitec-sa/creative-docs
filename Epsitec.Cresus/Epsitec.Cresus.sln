@@ -17,53 +17,53 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "Common.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Tool.ResGenerator", "X.Tool.ResGenerator\X.Tool.ResGenerator.csproj", "{3E741450-319E-49CF-BFEC-35BE01CE0AFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CreativeDocs", "App.CreativeDocs\App.CreativeDocs.csproj", "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CreativeDocs", "Apps\App.CreativeDocs\App.CreativeDocs.csproj", "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusDocuments", "App.CresusDocuments\App.CresusDocuments.csproj", "{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusDocuments", "Apps\App.CresusDocuments\App.CresusDocuments.csproj", "{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B4E1087F-2644-430B-A6D4-95B75D62398B} = {B4E1087F-2644-430B-A6D4-95B75D62398B}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Designer", "Common.Designer\Common.Designer.csproj", "{A70AD57E-0E80-48D7-8583-836C4758669D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusPictogrammes", "App.CresusPictogrammes\App.CresusPictogrammes.csproj", "{5AA8327F-FA0E-4951-8F90-63D15480042A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusPictogrammes", "Apps\App.CresusPictogrammes\App.CresusPictogrammes.csproj", "{5AA8327F-FA0E-4951-8F90-63D15480042A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Export", "X.Export\X.Export.csproj", "{F3A53056-6C28-470B-A79F-9AA9C2235BBF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B4E1087F-2644-430B-A6D4-95B75D62398B} = {B4E1087F-2644-430B-A6D4-95B75D62398B}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "App.Designer\App.Designer.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "Apps\App.Designer\App.Designer.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity", "Common.Identity\Common.Identity.csproj", "{3B21F4C6-9461-4751-9B23-9A9006743D68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol.Contract", "App.Designer.Protocol.Contract\App.Designer.Protocol.Contract.csproj", "{E5D2658F-7D33-48DF-9263-D740F821AE20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol.Contract", "Apps\App.Designer.Protocol.Contract\App.Designer.Protocol.Contract.csproj", "{E5D2658F-7D33-48DF-9263-D740F821AE20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol.Server", "App.Designer.Protocol.Server\App.Designer.Protocol.Server.csproj", "{A459BF1A-923E-410B-8B2C-02F969930A6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol.Server", "Apps\App.Designer.Protocol.Server\App.Designer.Protocol.Server.csproj", "{A459BF1A-923E-410B-8B2C-02F969930A6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core", "Cresus.Core\Cresus.Core.csproj", "{543293D0-CAFB-4431-8202-6C6D5FF5403A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol", "App.Designer.Protocol\App.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol", "Apps\App.Designer.Protocol\App.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph", "Common.Graph\Common.Graph.csproj", "{76C4BB36-308A-483E-9D6C-3401C96D2AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Graph", "Cresus.Graph\Cresus.Graph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusGraph", "Apps\App.CresusGraph\App.CresusGraph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphConnector.Win32", "Cresus.Graph\GraphConnector.Win32\GraphConnector.Win32.vcxproj", "{6DEB5DF9-EDAB-4943-9B19-48A57E6AEAEC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphConnector.Win32", "Apps\App.CresusGraph\GraphConnector.Win32\GraphConnector.Win32.vcxproj", "{6DEB5DF9-EDAB-4943-9B19-48A57E6AEAEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphConnector", "Cresus.Graph\GraphConnector\GraphConnector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphConnector", "Apps\App.CresusGraph\GraphConnector\GraphConnector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "Apps\App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Splash", "Common.Splash\Common.Splash.csproj", "{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.UnitTests", "UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj", "{F18C2336-9F85-4717-99B9-A1C30E8C463E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.UnitTests", "Tests.UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj", "{F18C2336-9F85-4717-99B9-A1C30E8C463E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Core.PerformanceTests", "X.Core.PerformanceTests\X.Core.PerformanceTests.csproj", "{3AC57C6D-2E15-4B39-9D8A-916757680A31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Core.PerformanceTests", "Tests\X.Core.PerformanceTests\X.Core.PerformanceTests.csproj", "{3AC57C6D-2E15-4B39-9D8A-916757680A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.UnitTests", "Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj", "{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.UnitTests", "Tests.UnitTests\Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj", "{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
 	ProjectSection(SolutionItems) = preProject
@@ -84,13 +84,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", 
 		Properties\AssemblyInfo.Solution.cs = Properties\AssemblyInfo.Solution.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.UnitTests", "Common.Support.UnitTests\Common.Support.UnitTests.csproj", "{143A9741-1296-44BA-A2DA-85873722BC81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.UnitTests", "Tests.UnitTests\Common.Support.UnitTests\Common.Support.UnitTests.csproj", "{143A9741-1296-44BA-A2DA-85873722BC81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting", "Common.UnitTesting\Common.UnitTesting.csproj", "{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting.UnitTests", "Common.UnitTesting.UnitTests\Common.UnitTesting.UnitTests.csproj", "{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting.UnitTests", "Tests.UnitTests\Common.UnitTesting.UnitTests\Common.UnitTesting.UnitTests.csproj", "{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{48CFC75E-EAA8-46CE-860F-871511583AE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Tests.UnitTests\Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{48CFC75E-EAA8-46CE-860F-871511583AE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.CorePlugIn.WorkflowDesigner", "Cresus.CorePlugIn.WorkflowDesigner\Cresus.CorePlugIn.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
 EndProject
@@ -117,25 +117,25 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Designer", "X.Setup
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Projects", "Test Projects", "{A5DEC601-2A25-40CC-9D48-413925F6B825}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets.Tests", "Common.Widgets.Tests\Common.Widgets.Tests.csproj", "{DD959763-7F9E-4170-ABEE-4CEE60C14468}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets.Tests", "Tests\Common.Widgets.Tests\Common.Widgets.Tests.csproj", "{DD959763-7F9E-4170-ABEE-4CEE60C14468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Tests", "Common.Support.Tests\Common.Support.Tests.csproj", "{99DC1B23-014D-4BE4-8D4D-3FC613360102}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Tests", "Tests\Common.Support.Tests\Common.Support.Tests.csproj", "{99DC1B23-014D-4BE4-8D4D-3FC613360102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Tests", "Common.Drawing.Tests\Common.Drawing.Tests.csproj", "{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Tests", "Tests\Common.Drawing.Tests\Common.Drawing.Tests.csproj", "{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dialogs.Tests", "Common.Dialogs.Tests\Common.Dialogs.Tests.csproj", "{867C60BD-6537-489D-8FE5-57D171496008}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dialogs.Tests", "Tests\Common.Dialogs.Tests\Common.Dialogs.Tests.csproj", "{867C60BD-6537-489D-8FE5-57D171496008}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.Tests", "Common.Types.Tests\Common.Types.Tests.csproj", "{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.Tests", "Tests\Common.Types.Tests\Common.Types.Tests.csproj", "{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common.UI.Tests\Common.UI.Tests.csproj", "{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Tests\Common.UI.Tests\Common.UI.Tests.csproj", "{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text.Exchange.Tests", "Common.Text.Exchange.Tests\Common.Text.Exchange.Tests.csproj", "{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text.Exchange.Tests", "Tests\Common.Text.Exchange.Tests\Common.Text.Exchange.Tests.csproj", "{2D23E2CA-6BFB-41B5-951D-E06E47E6F620}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity.Tests", "Common.Identity.Tests\Common.Identity.Tests.csproj", "{99212AC6-9A4B-419C-91FC-F3079C19D1B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity.Tests", "Tests\Common.Identity.Tests\Common.Identity.Tests.csproj", "{99212AC6-9A4B-419C-91FC-F3079C19D1B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.FormEngine.Tests", "Common.FormEngine.Tests\Common.FormEngine.Tests.csproj", "{4D0754CC-20A4-46BD-8844-65A3667D40FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.FormEngine.Tests", "Tests\Common.FormEngine.Tests\Common.FormEngine.Tests.csproj", "{4D0754CC-20A4-46BD-8844-65A3667D40FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Tests", "Common.Graph.Tests\Common.Graph.Tests.csproj", "{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Tests", "Tests\Common.Graph.Tests\Common.Graph.Tests.csproj", "{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D4CE4659-71D4-49B3-89F6-50A543F601FD} = {D4CE4659-71D4-49B3-89F6-50A543F601FD}
 		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338} = {5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}
@@ -144,7 +144,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Tests", "Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library", "Cresus.Core.Library\Cresus.Core.Library.csproj", "{91DA0241-F084-40C5-B76E-0240884D1841}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.UnitTests", "Common.Types.UnitTests\Common.Types.UnitTests.csproj", "{5450D6C2-4B74-4227-87E2-98E5DB2A5311}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.UnitTests", "Tests.UnitTests\Common.Types.UnitTests\Common.Types.UnitTests.csproj", "{5450D6C2-4B74-4227-87E2-98E5DB2A5311}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Assets", "Cresus.Assets\Cresus.Assets.csproj", "{290E4F95-9239-4B58-B3EE-063B6BC31CF3}"
 EndProject
