@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="1" name="Common.Types" layer="s" textMode="FormattedText">
+  <Versions>
+    <Version id="1" build="4" date="2007-10-24T08:38:03.4218750Z" />
+    <Version id="2" build="3" date="2007-11-02T15:57:42.2815587Z" />
+  </Versions>
+  <ReferenceModulePath>..\..\..\Common.Types\Resources\Common.Types</ReferenceModulePath>
+</ModuleInfo>
