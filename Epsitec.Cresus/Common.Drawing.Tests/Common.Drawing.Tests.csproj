@@ -114,6 +114,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <Reference Include="AntiGrain.NET">
       <Name>AntiGrain.NET</Name>
       <HintPath>..\External\AntiGrain.NET.dll</HintPath>
@@ -140,62 +144,9 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
-      <Name>Common.Drawing.Agg</Name>
-      <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing.Platform\Common.Drawing.Platform.csproj">
-      <Project>{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}</Project>
-      <Name>Common.Drawing.Platform</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
-      <Name>Common.Drawing</Name>
-      <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
-      <Name>Common.IO</Name>
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.OpenType\Common.OpenType.csproj">
-      <Name>Common.OpenType</Name>
-      <Project>{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
-      <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
-      <Name>Common.Printing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Name>Common.Support.Events</Name>
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Name>Common.Support</Name>
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Text\Common.Text.csproj">
-      <Name>Common.Text</Name>
-      <Project>{62F59974-6D79-4919-AAA0-10717A8D8514}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Name>Common.Types</Name>
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Name>Common.Widgets</Name>
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
   </ItemGroup>

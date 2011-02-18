@@ -102,69 +102,13 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Name>Common.DocumentEditor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
-      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
-      <Name>Common.Debug</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
-      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
-      <Name>Common.Dialogs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
-      <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
-      <Name>Common.Drawing.Agg</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
-      <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
-      <Name>Common.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.OpenType\Common.OpenType.csproj">
-      <Project>{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}</Project>
-      <Name>Common.OpenType</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
-      <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
-      <Name>Common.Printing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Name>Common.Support.Events</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Text.Exchange\Common.Text.Exchange.csproj">
-      <Project>{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}</Project>
-      <Name>Common.Text.Exchange</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Text\Common.Text.csproj">
-      <Project>{62F59974-6D79-4919-AAA0-10717A8D8514}</Project>
-      <Name>Common.Text</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
-      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
-      <Name>Common.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Name>Common.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

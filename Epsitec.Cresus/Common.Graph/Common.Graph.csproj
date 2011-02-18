@@ -121,44 +121,6 @@
     <Compile Include="Widgets\MiniChartView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
-      <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
-      <Name>Common.Drawing.Agg</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
-      <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
-      <Name>Common.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
-      <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
-      <Name>Common.Printing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Name>Common.Support.Events</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
-      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
-      <Name>Common.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Name>Common.Widgets</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
@@ -185,6 +147,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Epsitec.BingMapsWrapper.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

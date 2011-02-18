@@ -124,25 +124,6 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
-      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
-      <Name>Common.Debug</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Name>Common.Support.Events</Name>
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Name>Common.Support</Name>
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Name>Common.Types</Name>
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbSchemaUpdater.cs" />
@@ -208,7 +189,7 @@
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
     <Compile Include="DbContext.cs" />
-    <Compile Include="Res.cs" />
+    <Compile Include="Resources\Cresus.Database\SourceCode\Res.cs" />
     <Compile Include="SqlSet.cs" />
     <Compile Include="SqlSortOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
@@ -377,7 +358,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
