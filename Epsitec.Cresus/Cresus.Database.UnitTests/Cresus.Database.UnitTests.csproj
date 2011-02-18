@@ -108,41 +108,17 @@
     <Compile Include="Services\UnitTestDbUidManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
-      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
-      <Name>Common.Debug</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Name>Common.Support.Events</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
-      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
-      <Name>Common.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Name>Common.Widgets</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>

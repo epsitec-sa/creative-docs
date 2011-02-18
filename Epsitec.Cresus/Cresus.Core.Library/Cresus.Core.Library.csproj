@@ -48,52 +48,27 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Misc.cs" />
     <Compile Include="PersistenceManagerBinding`1.cs" />
     <Compile Include="ExceptionManager.cs" />
     <Compile Include="PersistenceManager.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextBuilder.cs" />
+    <Compile Include="TextFormatter.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
-      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
-      <Name>Common.Dialogs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing.Images\Common.Drawing.Images.csproj">
-      <Project>{FD37B74B-455D-4706-9ED3-BD210EB91975}</Project>
-      <Name>Common.Drawing.Images</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
-      <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
-      <Name>Common.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
-      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
-      <Name>Common.Support.Events</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Name>Common.Widgets</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

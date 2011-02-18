@@ -105,9 +105,9 @@
     <Compile Include="Properties\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModuleRepository.Service\ModuleRepository.Service.csproj">
       <Project>{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C}</Project>

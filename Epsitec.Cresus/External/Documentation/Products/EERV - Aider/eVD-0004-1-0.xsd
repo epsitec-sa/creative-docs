@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:eCH-0044="http://www.ech.ch/xmlns/eCH-0044/1"
+			xmlns:eVD-0004="http://evd.vd.ch/xmlns/eVD-0004/1"
+			targetNamespace="http://evd.vd.ch/xmlns/eVD-0004/1"
+			elementFormDefault="qualified"
+			attributeFormDefault="unqualified"
+			version="1.0">
+
+	<xs:annotation>
+		<xs:documentation xml:lang="fr">
+			Version initiale.
+
+			Types et éléments servants communs aux schemas RCPers.
+
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0044/1" schemaLocation="http://www.ech.ch/xmlns/eCH-0044/1/eCH-0044-1-0.xsd"/>
+
+	<xs:complexType name="personIdentificationType">
+		<xs:sequence>
+			<xs:element name="personId" type="eCH-0044:namedPersonIdType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="officialName" type="eCH-0044:baseNameType"/>
+			<xs:element name="firstNames" type="eCH-0044:baseNameType" minOccurs="0"/>
+			<xs:element name="dateOfBirth" type="eCH-0044:datePartiallyKnownType" minOccurs="0"/>
+			<xs:element name="sex" type="eCH-0044:sexType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

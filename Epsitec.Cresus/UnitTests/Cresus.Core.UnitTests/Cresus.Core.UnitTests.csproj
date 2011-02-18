@@ -87,29 +87,17 @@
     <Compile Include="UnitTestFormState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Dialogs\Common.Dialogs.csproj">
-      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
-      <Name>Common.Dialogs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>

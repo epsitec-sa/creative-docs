@@ -110,6 +110,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -124,14 +128,6 @@
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
-      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
-      <Name>Common.Types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
-      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Name>Common.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
