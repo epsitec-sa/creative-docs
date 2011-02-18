@@ -6,16 +6,15 @@ using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Print.Verbose;
-using Epsitec.Cresus.Core.Print.Deserializers;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Print.Deserializers
+namespace Epsitec.Cresus.Core.Print.Serialization
 {
-	public static class Serialization
+	public static class SerializationEngine
 	{
 		public static string SerializeJobs(List<JobToPrint> jobs)
 		{
