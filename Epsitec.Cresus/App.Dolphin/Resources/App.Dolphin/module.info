@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="103" name="App.Dolphin" layer="A" textMode="FormattedText">
-  <Versions>
-    <Version id="1" build="5" date="2007-12-10T07:26:44.5721250Z" />
-    <Version id="2" build="70" date="2008-01-09T14:49:15.2416743Z" />
-  </Versions>
-</ModuleInfo>
