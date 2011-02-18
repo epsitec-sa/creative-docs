@@ -10,6 +10,13 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public static class Enumerations
 	{
+		public static IEnumerable<EnumKeyValues<Business.PrintableEntities>> GetAllPrintableEntities()
+		{
+			yield return EnumKeyValues.Create (Business.PrintableEntities.Relation,          "Client");
+			yield return EnumKeyValues.Create (Business.PrintableEntities.ArticleDefinition, "Article");
+			yield return EnumKeyValues.Create (Business.PrintableEntities.DocumentMetadata,  "Document");
+		}
+
 		public static IEnumerable<EnumKeyValues<Business.DocumentType>> GetAllPossibleDocumentType()
 		{
 			yield return EnumKeyValues.Create (Business.DocumentType.SalesQuote,          "Devis");
