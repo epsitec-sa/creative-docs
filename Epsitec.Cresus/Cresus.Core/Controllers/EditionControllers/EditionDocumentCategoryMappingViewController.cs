@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type des documents", Marshaler.Create (() => this.Entity.EntityType, x => this.Entity.EntityType = x), Business.Enumerations.GetAllPossibleDocumentType (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), Business.Enumerations.GetAllPrintableEntities (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
 		private void CreateUICategories(UIBuilder builder)
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("DocumentCategory", this.Entity, "Catégorie des options", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
+			builder.CreateEditionDetailedItemPicker ("DocumentCategory", this.Entity, "Catégories des options", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
 	}
 }

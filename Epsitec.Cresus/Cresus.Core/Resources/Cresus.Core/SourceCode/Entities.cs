@@ -13507,24 +13507,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>EntityType</c> field.
+		///	The <c>PrintableEntity</c> field.
 		///	designer:fld/L0K61/L0K71
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0K71]")]
-		public string EntityType
+		public global::Epsitec.Cresus.Core.Business.PrintableEntities PrintableEntity
 		{
 			get
 			{
-				return this.GetField<string> ("[L0K71]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[L0K71]");
 			}
 			set
 			{
-				string oldValue = this.EntityType;
+				global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue = this.PrintableEntity;
 				if (oldValue != value || !this.IsFieldDefined("[L0K71]"))
 				{
-					this.OnEntityTypeChanging (oldValue, value);
-					this.SetField<string> ("[L0K71]", oldValue, value);
-					this.OnEntityTypeChanged (oldValue, value);
+					this.OnPrintableEntityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[L0K71]", oldValue, value);
+					this.OnPrintableEntityChanged (oldValue, value);
 				}
 			}
 		}
@@ -13541,8 +13541,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnEntityTypeChanging(string oldValue, string newValue);
-		partial void OnEntityTypeChanged(string oldValue, string newValue);
+		partial void OnPrintableEntityChanging(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
+		partial void OnPrintableEntityChanged(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
