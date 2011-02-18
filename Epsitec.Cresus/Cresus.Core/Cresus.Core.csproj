@@ -228,6 +228,7 @@
     <Compile Include="Print\Deserializers\DeserializedJob.cs" />
     <Compile Include="Print\Deserializers\DeserializedPage.cs" />
     <Compile Include="Print\Deserializers\DeserializedSection.cs" />
+    <Compile Include="Print\Deserializers\Serialization.cs" />
     <Compile Include="Print\EntityPrinters\DocumentMetadataMailContactPrinter.cs" />
     <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Print\Verbose\VerboseDocumentOption.cs" />
