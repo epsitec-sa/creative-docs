@@ -271,7 +271,7 @@
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
-    <Compile Include="Dialogs\XmlPreviewerDialog.cs" />
+    <Compile Include="Dialogs\PrintPreviewDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
@@ -874,7 +874,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
-    <Folder Include="Print\Deserializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

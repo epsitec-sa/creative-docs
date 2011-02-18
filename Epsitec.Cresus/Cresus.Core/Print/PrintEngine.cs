@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
 
-			var dialog = new Dialogs.XmlPreviewerDialog (CoreProgram.Application, coreData, deserializeJobs);
+			var dialog = new Dialogs.PrintPreviewDialog (CoreProgram.Application, coreData, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
