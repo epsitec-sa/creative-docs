@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// Dialogue pour monter un aperçu d'une page avant l'impression. On peut naviguer dans les différentes
 	/// pages du document.
 	/// </summary>
-	class XmlPreviewerDialog : AbstractDialog
+	class PrintPreviewDialog : AbstractDialog
 	{
-		public XmlPreviewerDialog(CoreApplication application, CoreData coreData, List<DeserializedJob> jobs)
+		public PrintPreviewDialog(CoreApplication application, CoreData coreData, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
