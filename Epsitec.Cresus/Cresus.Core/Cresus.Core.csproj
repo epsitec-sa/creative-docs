@@ -112,6 +112,7 @@
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsEditorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsEditorViewController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\ValuesController.cs" />
+    <Compile Include="Entities\DocumentCategoryMappingEntity.cs" />
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
