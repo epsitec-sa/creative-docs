@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					{
 						Name				= "DocumentCategoryMapping",
 						IconUri				= "Data.DocumentCategoryMapping",
-						Title				= TextFormatter.FormatText ("Assignation de catégorie de document"),
+						Title				= TextFormatter.FormatText ("Assignation de catégorie"),
 						CompactTitle		= TextFormatter.FormatText ("Assignation"),
 						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
 						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
