@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					{
 						Name				= "DocumentOptions",
 						IconUri				= "Data.DocumentOptions",
-						Title				= TextFormatter.FormatText ("Options pour un document"),
+						Title				= TextFormatter.FormatText ("Options d'impression"),
 						CompactTitle		= TextFormatter.FormatText ("Options"),
 						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
 						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),

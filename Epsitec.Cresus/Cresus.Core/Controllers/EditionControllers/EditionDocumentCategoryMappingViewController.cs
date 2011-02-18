@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.DocumentCategoryMapping", "Assignation de catégorie");
+				builder.CreateEditionTitleTile ("Data.DocumentCategoryMapping", "Assignation pour l'impression");
 
 				this.CreateUIMain (builder);
 				this.CreateUICategories (builder);
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("DocumentCategory", this.Entity, "Catégories des options", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
+			builder.CreateEditionDetailedItemPicker ("DocumentCategory", this.Entity, "Catégories", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
 	}
 }

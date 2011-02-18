@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.DocumentOptions", "Options pour un document");
+				builder.CreateEditionTitleTile ("Data.DocumentOptions", "Options d'impression pour un document");
 
 				this.CreateUIMain (builder);
 
