@@ -223,7 +223,7 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Client\ModuleRepository.Client.csproj">
+    <ProjectReference Include="..\Tool.ModuleRepository\ModuleRepository.Client\ModuleRepository.Client.csproj">
       <Project>{EC31ACEA-8F8A-43E8-9A26-584D8B22552C}</Project>
       <Name>ModuleRepository.Client</Name>
     </ProjectReference>

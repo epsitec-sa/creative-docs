@@ -111,13 +111,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="..\App.Designer.Protocol.Contract\App.Designer.Protocol.Contract.csproj">
+    <ProjectReference Include="..\Tool.Designer.Protocol.Contract\Tool.Designer.Protocol.Contract.csproj">
       <Project>{E5D2658F-7D33-48DF-9263-D740F821AE20}</Project>
-      <Name>App.Designer.Protocol.Contract</Name>
+      <Name>Tool.Designer.Protocol.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\App.Designer.Protocol.Server\App.Designer.Protocol.Server.csproj">
+    <ProjectReference Include="..\Tool.Designer.Protocol.Server\Tool.Designer.Protocol.Server.csproj">
       <Project>{A459BF1A-923E-410B-8B2C-02F969930A6D}</Project>
-      <Name>App.Designer.Protocol.Server</Name>
+      <Name>Tool.Designer.Protocol.Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>

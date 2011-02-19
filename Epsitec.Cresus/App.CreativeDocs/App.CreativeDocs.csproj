@@ -120,7 +120,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <ProjectReference Include="..\..\Common.DocumentEditor\Common.DocumentEditor.csproj">
+    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Name>Common.DocumentEditor</Name>
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
