@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library", "Cres
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.CorePlugIn.WorkflowDesigner", "Cresus.CorePlugIn.WorkflowDesigner\Cresus.CorePlugIn.WorkflowDesigner.csproj", "{527D3555-0B76-4E86-9EE0-443CC97061F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusGraph", "App.CresusGraph\App.CresusGraph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -574,6 +576,24 @@ Global
 		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|Win32.ActiveCfg = Release|x86
 		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|x86.ActiveCfg = Release|x86
 		{527D3555-0B76-4E86-9EE0-443CC97061F0}.Release|x86.Build.0 = Release|x86
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|Any CPU.Build.0 = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|Win32.ActiveCfg = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug .NET 2.0|x86.ActiveCfg = Debug .NET 2.0|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
