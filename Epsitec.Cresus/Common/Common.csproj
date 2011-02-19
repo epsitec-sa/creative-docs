@@ -419,6 +419,8 @@
     <Compile Include="Support\IImageProvider.cs" />
     <Compile Include="Support\IIsDisposed.cs" />
     <Compile Include="Support\ImageProvider.cs" />
+    <Compile Include="Support\Implementation\AbstractResourceProvider.cs" />
+    <Compile Include="Support\Implementation\FileProvider.cs" />
     <Compile Include="Support\InterfaceImplementationTester.cs" />
     <Compile Include="Support\Internal\DocumentManagerStream.cs" />
     <Compile Include="Support\Internal\ImageDocumentInfo.cs" />

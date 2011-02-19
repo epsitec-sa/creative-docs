@@ -28,14 +28,11 @@ namespace Epsitec.Common.Support
 		private void LoadImplementation()
 		{
 			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (ResourceManager) };
-			System.Reflection.Assembly assembly = AssemblyLoader.Load ("Common.Support.Implementation");
+			System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly (typeof (ResourceManager));
 
-			if (assembly == null)
-			{
-				throw new System.IO.FileNotFoundException ("Resource provider is missing", "Common.Support.Implementation.dll");
-			}
+			System.Diagnostics.Debug.Assert (assembly != null);
 
-			foreach (System.Type type in assembly.GetTypes ())
+			foreach (var type in assembly.GetTypes ())
 			{
 				if ((type.IsClass) &&
 					(!type.IsAbstract))

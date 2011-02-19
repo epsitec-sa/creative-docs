@@ -11,18 +11,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 		SolutionFiles\Epsitec.Cresus.snk = SolutionFiles\Epsitec.Cresus.snk
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{15A29239-3411-4BDA-BCE6-FEDD2754240A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug .NET 2.0|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Debug .NET 2.0|Any CPU.Build.0 = Debug .NET 2.0|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEF06147-ACD1-4DD0-937F-BF55544F07BF} = {15A29239-3411-4BDA-BCE6-FEDD2754240A}
 	EndGlobalSection
 EndGlobal
