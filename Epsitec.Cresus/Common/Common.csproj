@@ -36,7 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\SolutionFiles\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AntiGrain.NET">
@@ -58,16 +58,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+    <Compile Include="..\SolutionFiles\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Debug\Assert.cs" />
-    <Compile Include="Debug\AssertFailedException.cs" />
-    <Compile Include="Debug\ErrorLogger.cs" />
-    <Compile Include="Debug\Expect.cs" />
-    <Compile Include="Debug\FailureException.cs" />
-    <Compile Include="Debug\GeneralExceptionCatcher.cs" />
-    <Compile Include="Debug\Tracker.cs" />
+    <Compile Include="Debugging\Assert.cs" />
+    <Compile Include="Debugging\AssertFailedException.cs" />
+    <Compile Include="Debugging\ErrorLogger.cs" />
+    <Compile Include="Debugging\Expect.cs" />
+    <Compile Include="Debugging\FailureException.cs" />
+    <Compile Include="Debugging\GeneralExceptionCatcher.cs" />
+    <Compile Include="Debugging\Tracker.cs" />
     <Compile Include="Dialogs\AbstractDialog.cs" />
     <Compile Include="Dialogs\AbstractFileDialog.cs" />
     <Compile Include="Dialogs\AbstractMessageDialog.cs" />
@@ -1270,9 +1270,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Support\Resources\ProjectFileTemplate.xml" />
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
-    </None>
     <Content Include="Resources\Common.Support\Captions.00.resource" />
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
     <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
@@ -1301,6 +1298,9 @@
     <EmbeddedResource Include="Dialogs\Images\ViewDisposition.icon" />
     <EmbeddedResource Include="Dialogs\Images\ViewSize.icon" />
     <EmbeddedResource Include="Dialogs\Images\Warning.icon" />
+    <None Include="..\SolutionFiles\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
     <None Include="Resources\Common.Support\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.en.resource" />
     <Content Include="Resources\Common.Support\module.info" />
