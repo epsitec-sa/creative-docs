@@ -17,7 +17,7 @@
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <OutputType>Library</OutputType>
     <RootNamespace>Epsitec.Common.DocumentEditor</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -156,7 +156,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="App.ico" />
@@ -215,7 +215,7 @@
     <EmbeddedResource Include="Images\BulletJustifNone.icon" />
     <EmbeddedResource Include="Images\BulletJustifRight.icon" />
     <EmbeddedResource Include="Images\SuppressBefore.icon" />
-    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+    <Compile Include="..\Solution Items\AssemblyInfo.CrDocVer.cs">
       <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
     </Compile>
     <Compile Include="Application.cs">
@@ -733,7 +733,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PreBuildEvent>
+xcopy "$(SolutionDir)Common\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>

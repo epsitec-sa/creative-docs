@@ -9,7 +9,7 @@ namespace Epsitec.ModuleRepository
 	/// The <c>ModuleState</c> enumeration defines the possible states for
 	/// a given module.
 	/// </summary>
-	enum ModuleState
+	public enum ModuleState
 	{
 		Undefined,
 		InUse,

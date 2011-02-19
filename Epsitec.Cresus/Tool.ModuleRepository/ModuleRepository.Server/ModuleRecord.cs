@@ -9,7 +9,7 @@ namespace Epsitec.ModuleRepository
 	/// The <c>ModuleRecord</c> class stores identity information about a given
 	/// module.
 	/// </summary>
-	sealed class ModuleRecord
+	public sealed class ModuleRecord
 	{
 		public ModuleRecord()
 		{

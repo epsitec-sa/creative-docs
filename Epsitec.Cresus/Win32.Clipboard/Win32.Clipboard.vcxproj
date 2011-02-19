@@ -15,7 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Clipboard.Win32</ProjectName>
+    <ProjectName>Win32.Clipboard</ProjectName>
     <ProjectGuid>{B4E1087F-2644-430B-A6D4-95B75D62398B}</ProjectGuid>
     <RootNamespace>ClipboardDll</RootNamespace>
     <Keyword>Win32Proj</Keyword>

@@ -11,7 +11,7 @@
     <RootNamespace>Epsitec.Common.Designer</RootNamespace>
     <AssemblyName>Common.Designer</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -82,8 +82,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
-      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Comparers\BundleRank.cs" />
     <Compile Include="Comparers\Connection.cs" />
@@ -227,7 +227,7 @@
       <Project>{EC31ACEA-8F8A-43E8-9A26-584D8B22552C}</Project>
       <Name>ModuleRepository.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Service\ModuleRepository.Service.csproj">
+    <ProjectReference Include="..\Tool.ModuleRepository\ModuleRepository.Service\ModuleRepository.Service.csproj">
       <Project>{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C}</Project>
       <Name>ModuleRepository.Service</Name>
     </ProjectReference>
@@ -689,9 +689,6 @@
     <EmbeddedResource Include="Images\FormReset.icon" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
-    </None>
     <EmbeddedResource Include="Images\InitialMessage.icon" />
     <EmbeddedResource Include="Images\PropertyTextFont.icon" />
     <EmbeddedResource Include="Images\DisplayWindow.icon" />
@@ -733,6 +730,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

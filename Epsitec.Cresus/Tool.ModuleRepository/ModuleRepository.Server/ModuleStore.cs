@@ -13,7 +13,7 @@ namespace Epsitec.ModuleRepository
 	/// module store, which contains a collection of <see cref="ModuleRecord"/>
 	/// items.
 	/// </summary>
-	static class ModuleStore
+	public static class ModuleStore
 	{
 		/// <summary>
 		/// Reads the specified XML file and returns the collection of
