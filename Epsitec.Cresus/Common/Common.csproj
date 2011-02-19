@@ -36,7 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\SolutionFiles\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AntiGrain.NET">
@@ -58,7 +58,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionFiles\AssemblyInfo.Solution.cs">
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Debugging\Assert.cs" />
@@ -1300,7 +1300,7 @@
     <EmbeddedResource Include="Dialogs\Images\ViewDisposition.icon" />
     <EmbeddedResource Include="Dialogs\Images\ViewSize.icon" />
     <EmbeddedResource Include="Dialogs\Images\Warning.icon" />
-    <None Include="..\SolutionFiles\Epsitec.Cresus.snk">
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="Resources\Common.Support\Captions.de.resource" />
