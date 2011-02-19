@@ -82,31 +82,31 @@
       <Project>{143A9741-1296-44BA-A2DA-85873722BC81}</Project>
       <Name>Common.Support.UnitTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Assets\Cresus.Assets.csproj">
+    <ProjectReference Include="..\..\Cresus.Assets\Cresus.Assets.csproj">
       <Project>{290E4F95-9239-4B58-B3EE-063B6BC31CF3}</Project>
       <Name>Cresus.Assets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
+    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj">
+    <ProjectReference Include="..\..\Tests.UnitTests\Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj">
       <Project>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</Project>
       <Name>Cresus.DataLayer.UnitTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Graph\Cresus.Graph.csproj">
+    <ProjectReference Include="..\App.CresusGraph\App.CresusGraph.csproj">
       <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
-      <Name>Cresus.Graph</Name>
+      <Name>App.CresusGraph</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.WebServer\Cresus.WebServer.csproj">
+    <ProjectReference Include="..\..\Cresus.WebServer\Cresus.WebServer.csproj">
       <Project>{6E565F1B-C54D-431E-A74A-FE77E137EDDB}</Project>
       <Name>Cresus.WebServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Product.Aider\Product.Aider.csproj">
+    <ProjectReference Include="..\..\Product.Aider\Product.Aider.csproj">
       <Project>{416AC12C-097A-4B2F-BD1D-38D1021EE3DB}</Project>
       <Name>Product.Aider</Name>
     </ProjectReference>
@@ -127,23 +127,23 @@
       <Project>{A459BF1A-923E-410B-8B2C-02F969930A6D}</Project>
       <Name>App.Designer.Protocol.Server</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
+    <ProjectReference Include="..\..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Name>Common.DocumentEditor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Designer\Common.Designer.csproj">
+    <ProjectReference Include="..\..\Common.Designer\Common.Designer.csproj">
       <Project>{A70AD57E-0E80-48D7-8583-836C4758669D}</Project>
       <Name>Common.Designer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+    <ProjectReference Include="..\..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+    <ProjectReference Include="..\..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>

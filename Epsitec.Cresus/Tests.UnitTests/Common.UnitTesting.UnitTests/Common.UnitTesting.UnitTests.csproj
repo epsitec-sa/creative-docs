@@ -75,7 +75,7 @@
     <Compile Include="UnitTestExceptionAssert.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
+    <ProjectReference Include="..\..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
     </ProjectReference>

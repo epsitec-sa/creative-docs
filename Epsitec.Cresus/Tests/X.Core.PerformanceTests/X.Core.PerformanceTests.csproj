@@ -75,7 +75,7 @@
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
       <Name>Common.IO</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
@@ -91,15 +91,15 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+    <ProjectReference Include="..\..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Name>Cresus.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+    <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>

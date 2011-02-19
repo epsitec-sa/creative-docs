@@ -124,23 +124,23 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+    <ProjectReference Include="..\..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
       <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
       <Name>Epsitec.CresusToolkit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Graph\Common.Graph.csproj">
+    <ProjectReference Include="..\..\Common.Graph\Common.Graph.csproj">
       <Project>{76C4BB36-308A-483E-9D6C-3401C96D2AD6}</Project>
       <Name>Common.Graph</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+    <ProjectReference Include="..\..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>

@@ -108,7 +108,7 @@
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
@@ -120,7 +120,7 @@
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
+    <ProjectReference Include="..\..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
     </ProjectReference>

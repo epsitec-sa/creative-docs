@@ -142,25 +142,25 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+    <ProjectReference Include="..\..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+    <ProjectReference Include="..\..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Name>Cresus.Database.Implementation</Name>
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
       <Name>Cresus.Database</Name>
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>

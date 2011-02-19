@@ -85,15 +85,15 @@
     <Compile Include="Tool.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+    <ProjectReference Include="..\..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
