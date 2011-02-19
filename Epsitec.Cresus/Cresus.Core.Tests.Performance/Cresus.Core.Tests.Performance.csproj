@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3AC57C6D-2E15-4B39-9D8A-916757680A31}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cresus.Core</RootNamespace>
+    <AssemblyName>X.Core.PerformanceTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Epsitec.Cresus.PerformanceTests.Entity.EntityProgram</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug .NET 2.0\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\X.Core.PerformanceTests.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
+    <Compile Include="Concurrency\ConcurrencyProgram.cs" />
+    <Compile Include="DatabaseCreator.cs" />
+    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="Entity\EntityProgram.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\X.Core.PerformanceTests\SourceCode\Entities.cs" />
+    <Compile Include="Resources\X.Core.PerformanceTests\SourceCode\Res.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="Entity\TestPerformance.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
+      <Name>Common.Support.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
+      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
+      <Name>Common.Support</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
+      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
+      <Name>Common.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
+      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
+      <Name>Common.Widgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <Content Include="Resources\X.Core.PerformanceTests\Captions.00.resource">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\X.Core.PerformanceTests\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\X.Core.PerformanceTests\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
