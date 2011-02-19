@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 #include "stdafx.h"
-#include "GraphConnector.Win32.h"
+#include "Win32.GraphConnector.h"
 
 /*****************************************************************************/
 
