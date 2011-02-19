@@ -12,7 +12,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Cresus.DataLayer</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -140,7 +140,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Context\DataContextEventArgs.cs" />
@@ -226,8 +226,8 @@
     <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -53,7 +53,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -81,7 +81,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,8 +90,8 @@
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

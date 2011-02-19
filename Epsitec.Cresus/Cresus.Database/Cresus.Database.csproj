@@ -12,7 +12,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Cresus.Database</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -126,6 +126,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="DbSchemaUpdater.cs" />
     <Compile Include="Logging\AbstractLog.cs" />
     <Compile Include="Logging\Column.cs" />
@@ -139,7 +142,7 @@
     <Compile Include="Services\DbConnection.cs" />
     <Compile Include="Services\DbInfoManager.cs" />
     <Compile Include="Services\DbAbstractTableService.cs" />
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cache\DbTypeDefs.cs" />
@@ -337,8 +340,8 @@
     <Content Include="Resources\Cresus.Database\module.info" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
