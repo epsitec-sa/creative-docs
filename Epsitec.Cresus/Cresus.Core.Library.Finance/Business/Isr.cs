@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 //using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business.Finance;
-//using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,6 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public static class Isr
 	{
-#if false
 		/// <summary>
 		/// Gets a new reference number for an ISR.
 		/// </summary>
@@ -53,7 +52,6 @@ namespace Epsitec.Cresus.Core.Business
 				return Isr.GetNewReferenceNumber (data, isrDefinition.SubscriberNumber, isrDefinition.BankReferenceNumberPrefix);
 			}
 		}
-#endif
 
 		public static bool IsCompactReferenceNumber(string number)
 		{

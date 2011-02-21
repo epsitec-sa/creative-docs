@@ -25,14 +25,21 @@ namespace Epsitec.ModuleRepository
 		{
 			XDocument doc = XDocument.Load (path);
 
-			return from c in doc.Elements ("module")
-				   select new ModuleRecord ()
-				   {
-					   ModuleId = (int) c.Attribute ("id"),
-					   ModuleName = (string) c.Attribute ("name"),
-					   ModuleState = ((string) c.Attribute ("state")).ToEnum<ModuleState> (),
-					   DeveloperName = (string) c.Attribute ("owner")
-				   };
+			var records = from c in doc.Descendants ("module")
+						  select new ModuleRecord ()
+						  {
+							  ModuleId = (int) c.Attribute ("id"),
+							  ModuleName = (string) c.Attribute ("name"),
+							  ModuleState = ((string) c.Attribute ("state")).ToEnum<ModuleState> (),
+							  DeveloperName = (string) c.Attribute ("owner")
+						  };
+
+			foreach (var rec in records)
+			{
+				System.Console.WriteLine ("{0}: {1}, {2}, {3}", rec.ModuleId, rec.ModuleName, rec.ModuleState, rec.DeveloperName);
+			}
+
+			return records;
 		}
 
 		/// <summary>

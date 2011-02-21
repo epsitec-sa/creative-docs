@@ -15,6 +15,8 @@ namespace Epsitec.ModuleRepository
 		{
 			System.IO.Directory.CreateDirectory (Properties.Settings.Default.RepositoryPath);
 
+			ModuleRepositoryService.Setup ();
+
 			try
 			{
 				ServiceHost host = new ServiceHost (typeof (ModuleRepositoryService), new System.Uri (Properties.Settings.Default.ServiceUrl));

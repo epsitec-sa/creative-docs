@@ -155,6 +155,8 @@ namespace Epsitec.ModuleRepository
 			lock (this.records)
 			{
 				this.records.Clear ();
+
+				System.Console.Out.WriteLine ("Reloading from {0}", ModuleRepositoryService.storePath);
 				
 				if (System.IO.File.Exists (ModuleRepositoryService.storePath))
 				{
@@ -167,6 +169,10 @@ namespace Epsitec.ModuleRepository
 		{
 			ModuleRepositoryService service = new ModuleRepositoryService ();
 			service.Reload ();
+		}
+
+		public static void Setup()
+		{
 		}
 
 		private List<ModuleRecord> records = ModuleRepositoryService.globalRecords;
