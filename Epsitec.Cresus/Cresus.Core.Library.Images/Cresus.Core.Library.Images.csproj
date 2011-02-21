@@ -30,12 +30,21 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="Data\ImageData.cs" />
     <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +78,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
     <None Include="Resources\Cresus.Core.Library.Images\Captions.00.resource" />
     <None Include="Resources\Cresus.Core.Library.Images\module.info" />
     <None Include="Resources\Cresus.Core.Library.Images\Strings.00.resource" />

@@ -50,6 +50,36 @@ namespace Epsitec.Common.Designer
 
 			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone();
 
+			if ((this.moduleInfo.Assemblies != null) &&
+				(System.IO.Path.GetFileName (moduleId.Path).Equals (moduleId.Name, System.StringComparison.InvariantCultureIgnoreCase)))
+			{
+				string assemblyRootPath = System.IO.Path.GetDirectoryName (System.IO.Path.GetDirectoryName (moduleId.Path));
+				string assemblyBinPath  = System.IO.Path.Combine (assemblyRootPath, "bin", "Debug");
+
+				foreach (var name in this.moduleInfo.Assemblies.Split (';'))
+				{
+					string assemblyPathDll = System.IO.Path.Combine (assemblyBinPath, name + ".dll");
+					string assemblyPathExe = System.IO.Path.Combine (assemblyBinPath, name + ".exe");
+
+					try
+					{
+						if (System.IO.File.Exists (assemblyPathDll))
+						{
+							System.Reflection.Assembly.LoadFrom (assemblyPathDll);
+						}
+						if (System.IO.File.Exists (assemblyPathExe))
+						{
+							System.Reflection.Assembly.LoadFrom (assemblyPathExe);
+						}
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("Could not load assembly " + name + " : " + ex.Message);
+					}
+				}
+			}
+
+
 			this.modifier = new Modifier(this);
 
 			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleId);

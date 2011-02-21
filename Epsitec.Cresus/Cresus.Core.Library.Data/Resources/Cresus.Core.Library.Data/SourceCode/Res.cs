@@ -12,10 +12,14 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			//	designer:cap/8VAM
+			public static readonly Epsitec.Common.Types.StructuredType ICategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/8VAB
 			public static readonly Epsitec.Common.Types.StructuredType IDataHash = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 			//	designer:cap/8VA9
 			public static readonly Epsitec.Common.Types.StructuredType IDateMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+			//	designer:cap/8VAJ
+			public static readonly Epsitec.Common.Types.StructuredType IDateTimeRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19));
 			//	designer:cap/8VAA
 			public static readonly Epsitec.Common.Types.StructuredType IFileMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			//	designer:cap/8VA4
@@ -44,6 +48,14 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
 				//	designer:cap/8VAI
 				public static readonly global::Epsitec.Common.Support.Druid LastModificationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
+			}
+			
+			public static class IDateTimeRange
+			{
+				//	designer:cap/8VAK
+				public static readonly global::Epsitec.Common.Support.Druid BeginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
+				//	designer:cap/8VAL
+				public static readonly global::Epsitec.Common.Support.Druid EndDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
 			}
 			
 			public static class IFileMetadata

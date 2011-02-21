@@ -90,6 +90,26 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets the assemblies related to this module.
+		/// </summary>
+		/// <value>
+		/// The assemblies.
+		/// </value>
+		public string Assemblies
+		{
+			get
+			{
+				return this.assemblies;
+			}
+			set
+			{
+				this.VerifyWritable ("Assemblies");
+				this.assemblies = value;
+			}
+		}
+
+
+		/// <summary>
 		/// Gets or sets the text mode used when generating associated code.
 		/// </summary>
 		/// <value>The text mode.</value>
@@ -256,6 +276,7 @@ namespace Epsitec.Common.Support
 			copy.sourceNamespace = this.sourceNamespace;
 			copy.versions = this.versions == null ? null : new List<ResourceModuleVersion> (this.versions);
 			copy.textMode = this.textMode;
+			copy.assemblies = this.assemblies;
 
 			return copy;
 		}
@@ -272,6 +293,7 @@ namespace Epsitec.Common.Support
 		private ResourceModuleId				fullId;
 		private string							referenceModulePath;
 		private string							sourceNamespace;
+		private string							assemblies;
 		private ResourceTextMode				textMode;
 		private List<ResourceModuleVersion>		versions;
 		private int								patchDepth;

@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageCategory</c> entity.
 	///	designer:cap/9VA1
 	///	</summary>
-	public partial class ImageCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ImageCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageGroup</c> entity.
 	///	designer:cap/9VA2
 	///	</summary>
-	public partial class ImageGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ImageGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ImageBlob</c> entity.
 	///	designer:cap/9VA4
 	///	</summary>
-	public partial class ImageBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.IDateMetadata, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.IDataHash
+	public partial class ImageBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.IFileMetadata, global::Epsitec.Cresus.Core.Entities.IDataHash
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -410,24 +410,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		#region IFileMetadata Members
-		///	<summary>
-		///	The <c>FileName</c> field.
-		///	designer:fld/9VA4/8VAE
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAE]")]
-		public string FileName
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileName (this, value);
-			}
-		}
-		#endregion
 		#region IDateMetadata Members
 		///	<summary>
 		///	The <c>CreationDate</c> field.
@@ -464,24 +446,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		#region IFileMetadata Members
-		///	<summary>
-		///	The <c>FileUri</c> field.
-		///	designer:fld/9VA4/8VAF
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAF]")]
-		public string FileUri
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUri (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUri (this, value);
-			}
-		}
-		#endregion
 		#region IDateMetadata Members
 		///	<summary>
 		///	The <c>LastModificationDate</c> field.
@@ -501,6 +465,38 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		#region IFileMetadata Members
+		///	<summary>
+		///	The <c>FileName</c> field.
+		///	designer:fld/9VA4/8VAE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAE]")]
+		public string FileName
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>FileUri</c> field.
+		///	designer:fld/9VA4/8VAF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAF]")]
+		public string FileUri
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.GetFileUri (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IFileMetadataInterfaceImplementation.SetFileUri (this, value);
+			}
+		}
 		///	<summary>
 		///	The <c>FileMimeType</c> field.
 		///	designer:fld/9VA4/8VAG

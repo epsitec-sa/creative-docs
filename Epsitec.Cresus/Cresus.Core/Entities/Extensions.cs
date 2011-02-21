@@ -46,45 +46,5 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return status;
 		}
-
-
-		public static bool IsNull(this AbstractEntity entity)
-		{
-			return entity.UnwrapNullEntity () == null;
-		}
-
-		public static bool IsNotNull(this AbstractEntity entity)
-		{
-			return entity.UnwrapNullEntity () != null;
-		}
-
-		/// <summary>
-		/// Compares two entities and returns <c>true</c> if they refer to the same database key
-		/// or if they are the same memory instance.
-		/// </summary>
-		/// <param name="that">The reference entity.</param>
-		/// <param name="other">The other entity.</param>
-		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
-		public static bool DbKeyEquals(this AbstractEntity that, AbstractEntity other)
-		{
-			if (that.RefEquals (other))
-			{
-				return true;
-			}
-			else
-			{
-				return CoreProgram.Application.Data.DataContextPool.AreEqualDatabaseInstances (that, other);
-			}
-		}
-
-		public static bool RefEquals(this AbstractEntity that, AbstractEntity other)
-		{
-			return that.UnwrapNullEntity () == other.UnwrapNullEntity ();
-		}
-		
-		public static bool RefDiffers(this AbstractEntity that, AbstractEntity other)
-		{
-			return that.UnwrapNullEntity () != other.UnwrapNullEntity ();
-		}
 	}
 }

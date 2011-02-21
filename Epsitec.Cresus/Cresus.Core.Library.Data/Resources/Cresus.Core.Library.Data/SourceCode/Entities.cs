@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>IFileMetadata</c> entity.
 	///	designer:cap/8VAA
 	///	</summary>
-	public interface IFileMetadata
+	public interface IFileMetadata : global::Epsitec.Cresus.Core.Entities.IDateMetadata
 	{
 		///	<summary>
 		///	The <c>FileName</c> field.
@@ -448,6 +448,94 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnStrongHashChanged(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
 		static partial void OnStrongHashChanging(global::Epsitec.Cresus.Core.Entities.IDataHash obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IDateTimeRange Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IDateTimeRange</c> entity.
+	///	designer:cap/8VAJ
+	///	</summary>
+	public interface IDateTimeRange
+	{
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/8VAJ/8VAK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAK]")]
+		global::System.DateTime? BeginDate
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/8VAJ/8VAL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAL]")]
+		global::System.DateTime? EndDate
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IDateTimeRangeInterfaceImplementation
+	{
+		public static global::System.DateTime? GetBeginDate(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.DateTime?> ("[8VAK]");
+		}
+		public static void SetBeginDate(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.DateTime? oldValue = obj.BeginDate;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAK]"))
+			{
+				IDateTimeRangeInterfaceImplementation.OnBeginDateChanging (obj, oldValue, value);
+				entity.SetField<global::System.DateTime?> ("[8VAK]", oldValue, value);
+				IDateTimeRangeInterfaceImplementation.OnBeginDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnBeginDateChanged(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		static partial void OnBeginDateChanging(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		public static global::System.DateTime? GetEndDate(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.DateTime?> ("[8VAL]");
+		}
+		public static void SetEndDate(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.DateTime? oldValue = obj.EndDate;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAL]"))
+			{
+				IDateTimeRangeInterfaceImplementation.OnEndDateChanging (obj, oldValue, value);
+				entity.SetField<global::System.DateTime?> ("[8VAL]", oldValue, value);
+				IDateTimeRangeInterfaceImplementation.OnEndDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnEndDateChanged(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		static partial void OnEndDateChanging(global::Epsitec.Cresus.Core.Entities.IDateTimeRange obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ICategory Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ICategory</c> entity.
+	///	designer:cap/8VAM
+	///	</summary>
+	public interface ICategory : global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+	}
+	public static partial class ICategoryInterfaceImplementation
+	{
 	}
 }
 #endregion

@@ -50,6 +50,8 @@
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Res.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -60,6 +62,10 @@
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
@@ -69,6 +75,9 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="Resources\Cresus.Core.Library.UserManagement\Captions.00.resource" />
+    <None Include="Resources\Cresus.Core.Library.UserManagement\module.info" />
+    <None Include="Resources\Cresus.Core.Library.UserManagement\Strings.00.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
