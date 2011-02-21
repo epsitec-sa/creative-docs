@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DocumentEditor", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusPictogrammes", "App.CresusPictogrammes\App.CresusPictogrammes.csproj", "{5AA8327F-FA0E-4951-8F90-63D15480042A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusDesigner", "App.Designer\App.CresusDesigner.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusDesigner", "App.CresusDesigner\App.CresusDesigner.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Designer.Protocol", "Tool.Designer.Protocol\Tool.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
 EndProject
