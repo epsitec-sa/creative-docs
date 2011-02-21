@@ -150,10 +150,6 @@
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

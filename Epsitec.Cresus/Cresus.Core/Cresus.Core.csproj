@@ -111,6 +111,7 @@
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
+    <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
@@ -161,8 +162,6 @@
     <Compile Include="Business\WorkflowStatus.cs" />
     <Compile Include="Business\DocumentFlowDirection.cs" />
     <Compile Include="Business\DocumentType.cs" />
-    <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
-    <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\WorkflowTransitionType.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
@@ -367,7 +366,6 @@
     <Compile Include="Business\DocumentSource.cs" />
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\EnumValueCardinality.cs" />
-    <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
@@ -662,9 +660,17 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
       <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
+      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
+      <Name>Cresus.Core.Library.UserManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
