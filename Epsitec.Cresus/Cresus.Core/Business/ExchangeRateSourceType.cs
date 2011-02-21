@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Business
 	/// See §1.1.3.1 of the document "Info TVA 7".
 	/// </summary>
 	[DesignerVisible]
-	public enum ExchangeRateType
+	public enum ExchangeRateSourceType
 	{
 		Unknown,
 

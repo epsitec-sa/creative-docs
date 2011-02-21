@@ -16,12 +16,26 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StringType BookAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
 			//	designer:cap/CVA
 			public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+			//	designer:cap/CVAF1
+			public static readonly Epsitec.Common.Types.EnumType ExchangeRateSourceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 			//	designer:cap/CVAF
-			public static readonly Epsitec.Common.Types.StringType IsrBankReferenceNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
+			public static readonly Epsitec.Common.Types.StringType IsrBankOrRefNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
+			//	designer:cap/CVAL1
+			public static readonly Epsitec.Common.Types.EnumType PaymentDetailType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
 			//	designer:cap/CVAA
 			public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+			//	designer:cap/CVAL
+			public static readonly Epsitec.Common.Types.StructuredType BillingDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
+			//	designer:cap/CVAT
+			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
+			//	designer:cap/CVAU
+			public static readonly Epsitec.Common.Types.StructuredType ExchangeRateSource = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 			//	designer:cap/CVA9
 			public static readonly Epsitec.Common.Types.StructuredType IsrDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+			//	designer:cap/CVA21
+			public static readonly Epsitec.Common.Types.StructuredType PaymentDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
+			//	designer:cap/CVAV
+			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 		}
 		
 		public static class Values
@@ -94,10 +108,120 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 			
+			public static class ExchangeRateSourceType
+			{
+				//	designer:cap/CVAK1
+				public static global::Epsitec.Common.Types.Caption BankSpecific
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52));
+					}
+				}
+				//	designer:cap/CVAI1
+				public static global::Epsitec.Common.Types.Caption FederalDailyRate
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 50));
+					}
+				}
+				//	designer:cap/CVAH1
+				public static global::Epsitec.Common.Types.Caption FederalMonthlyRate
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+					}
+				}
+				//	designer:cap/CVAJ1
+				public static global::Epsitec.Common.Types.Caption GroupSpecific
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51));
+					}
+				}
+				//	designer:cap/CVAG1
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
+					}
+				}
+			}
+			
+			public static class PaymentDetailType
+			{
+				//	designer:cap/CVAN1
+				public static global::Epsitec.Common.Types.Caption AmountDue
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55));
+					}
+				}
+				//	designer:cap/CVAO1
+				public static global::Epsitec.Common.Types.Caption AmountPaid
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56));
+					}
+				}
+				//	designer:cap/CVAM1
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54));
+					}
+				}
+			}
+			
 		}
 		
 		public static class Fields
 		{
+			public static class BillingDetail
+			{
+				//	designer:cap/CVAN
+				public static readonly global::Epsitec.Common.Support.Druid AmountDue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
+				//	designer:cap/CVAS
+				public static readonly global::Epsitec.Common.Support.Druid InstalmentName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
+				//	designer:cap/CVAR
+				public static readonly global::Epsitec.Common.Support.Druid InstalmentRank = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+				//	designer:cap/CVAP
+				public static readonly global::Epsitec.Common.Support.Druid IsrDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
+				//	designer:cap/CVAQ
+				public static readonly global::Epsitec.Common.Support.Druid IsrReferenceNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
+				//	designer:cap/CVAM
+				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
+				//	designer:cap/CVAO
+				public static readonly global::Epsitec.Common.Support.Druid TransactionId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
+			}
+			
+			public static class Currency
+			{
+				//	designer:cap/CVA91
+				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41);
+				//	designer:cap/CVAB1
+				public static readonly global::Epsitec.Common.Support.Druid ExchangeRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
+				//	designer:cap/CVAA1
+				public static readonly global::Epsitec.Common.Support.Druid ExchangeRateBase = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42);
+				//	designer:cap/CVAC1
+				public static readonly global::Epsitec.Common.Support.Druid ExchangeRateSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44);
+			}
+			
+			public static class ExchangeRateSource
+			{
+				//	designer:cap/CVAE1
+				public static readonly global::Epsitec.Common.Support.Druid Originator = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 46);
+				//	designer:cap/CVAD1
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 45);
+			}
+			
 			public static class IsrDefinition
 			{
 				//	designer:cap/CVAI
@@ -116,6 +240,30 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid SubscriberAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 				//	designer:cap/CVAC
 				public static readonly global::Epsitec.Common.Support.Druid SubscriberNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
+			}
+			
+			public static class PaymentDetail
+			{
+				//	designer:cap/CVA61
+				public static readonly global::Epsitec.Common.Support.Druid Amount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38);
+				//	designer:cap/CVA71
+				public static readonly global::Epsitec.Common.Support.Druid Currency = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
+				//	designer:cap/CVA81
+				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40);
+				//	designer:cap/CVA51
+				public static readonly global::Epsitec.Common.Support.Druid PaymentData = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37);
+				//	designer:cap/CVA41
+				public static readonly global::Epsitec.Common.Support.Druid PaymentMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36);
+				//	designer:cap/CVA31
+				public static readonly global::Epsitec.Common.Support.Druid PaymentType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35);
+			}
+			
+			public static class PaymentMode
+			{
+				//	designer:cap/CVA01
+				public static readonly global::Epsitec.Common.Support.Druid BookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
+				//	designer:cap/CVA11
+				public static readonly global::Epsitec.Common.Support.Druid StandardPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
 			}
 		}
 		

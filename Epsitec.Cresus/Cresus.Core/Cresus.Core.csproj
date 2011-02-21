@@ -138,7 +138,7 @@
     <Compile Include="Data\ItemCode.cs" />
     <Compile Include="Data\ItemCodeGenerator.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
-    <Compile Include="Business\ExchangeRateType.cs" />
+    <Compile Include="Business\ExchangeRateSourceType.cs" />
     <Compile Include="Business\Finance\PriceCalculators\AbstractPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ArticlePriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DocumentPriceCalculator.cs" />
