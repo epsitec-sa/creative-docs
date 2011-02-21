@@ -821,11 +821,11 @@ namespace Epsitec.Common.Types
 						type = new DateTimeType (caption);
 						break;
 
-					case "Epsitec.Common.Types.Date, Common.Types":
+					case "Epsitec.Common.Types.Date, Common":
 						type = new DateType (caption);
 						break;
 
-					case "Epsitec.Common.Types.Time, Common.Types":
+					case "Epsitec.Common.Types.Time, Common":
 						type = new TimeType (caption);
 						break;
 

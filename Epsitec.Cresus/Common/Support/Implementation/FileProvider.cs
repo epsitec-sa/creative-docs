@@ -438,6 +438,16 @@ namespace Epsitec.Common.Support.Implementation
 				path = path + System.IO.Path.DirectorySeparatorChar;
 			}
 
+			string path1 = System.IO.Path.Combine (path, "resources");
+			
+			if (System.IO.Directory.Exists (path1))
+			{
+				this.pathPrefixRoot = path1;
+				this.pathPrefix = path1 + System.IO.Path.DirectorySeparatorChar;
+				
+				return true;
+			}
+
 			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
 			//	plus intéressant (celui des sources).
 

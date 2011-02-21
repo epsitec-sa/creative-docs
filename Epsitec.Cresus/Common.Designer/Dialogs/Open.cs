@@ -231,6 +231,11 @@ namespace Epsitec.Common.Designer.Dialogs
 						continue;
 					}
 
+					if (Open.GetComparableText (this.GetModulePath (moduleInfo)).Contains ("/bin/"))
+					{
+						continue;
+					}
+
 					if (state == ModuleState.Openable)
 					{
 						this.moduleInfosLive.Add (moduleInfo);

@@ -519,7 +519,7 @@ namespace Epsitec.Common.Types
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
 			xml = xml.Replace (@"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""", @"xmlns:s=""*1""");
 			xml = xml.Replace (@"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""", @"xmlns:f=""*1""");
-			xml = xml.Replace (@"SystemType=""E:Epsitec.Common.Types.NotAnEnum, Common.Types""", @"SystemType=""*NaE""");
+			xml = xml.Replace (@"SystemType=""E:Epsitec.Common.Types.NotAnEnum, Common""", @"SystemType=""*NaE""");
 
 			return xml;
 		}
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Types
 			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
 			xml = xml.Replace (@"xmlns:s=""*1""", @"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""");
 			xml = xml.Replace (@"xmlns:f=""*1""", @"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""");
-			xml = xml.Replace (@"SystemType=""*NaE""", @"SystemType=""E:Epsitec.Common.Types.NotAnEnum, Common.Types""");
+			xml = xml.Replace (@"SystemType=""*NaE""", @"SystemType=""E:Epsitec.Common.Types.NotAnEnum, Common""");
 
 			return xml;
 		}

@@ -141,6 +141,150 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Common.Designer\Resources\Common.Designer\Captions.00.resource">
+      <Link>Resources\Common.Designer\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Designer\Resources\Common.Designer\module.info">
+      <Link>Resources\Common.Designer\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Designer\Resources\Common.Designer\Strings.00.resource">
+      <Link>Resources\Common.Designer\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Designer\Resources\Common.Designer\Strings.en.resource">
+      <Link>Resources\Common.Designer\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Captions.00.resource">
+      <Link>Resources\Common.Document\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Captions.de.resource">
+      <Link>Resources\Common.Document\Captions.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Captions.en.resource">
+      <Link>Resources\Common.Document\Captions.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\module.info">
+      <Link>Resources\Common.Document\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Strings.00.resource">
+      <Link>Resources\Common.Document\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Strings.de.resource">
+      <Link>Resources\Common.Document\Strings.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common.Document\Resources\Common.Document\Strings.en.resource">
+      <Link>Resources\Common.Document\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Captions.00.resource">
+      <Link>Resources\Common.Dialogs\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Captions.de.resource">
+      <Link>Resources\Common.Dialogs\Captions.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Captions.en.resource">
+      <Link>Resources\Common.Dialogs\Captions.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\module.info">
+      <Link>Resources\Common.Dialogs\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Strings.00.resource">
+      <Link>Resources\Common.Dialogs\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Strings.de.resource">
+      <Link>Resources\Common.Dialogs\Strings.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Dialogs\Strings.en.resource">
+      <Link>Resources\Common.Dialogs\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Captions.00.resource">
+      <Link>Resources\Common.Support\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Captions.de.resource">
+      <Link>Resources\Common.Support\Captions.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Captions.en.resource">
+      <Link>Resources\Common.Support\Captions.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\module.info">
+      <Link>Resources\Common.Support\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Strings.00.resource">
+      <Link>Resources\Common.Support\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Strings.de.resource">
+      <Link>Resources\Common.Support\Strings.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Support\Strings.en.resource">
+      <Link>Resources\Common.Support\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\Captions.00.resource">
+      <Link>Resources\Common.Types\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\Captions.en.resource">
+      <Link>Resources\Common.Types\Captions.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\module.info">
+      <Link>Resources\Common.Types\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\Strings.00.resource">
+      <Link>Resources\Common.Types\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\Strings.de.resource">
+      <Link>Resources\Common.Types\Strings.de.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Types\Strings.en.resource">
+      <Link>Resources\Common.Types\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Widgets\Captions.00.resource">
+      <Link>Resources\Common.Widgets\Captions.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Widgets\Captions.en.resource">
+      <Link>Resources\Common.Widgets\Captions.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Widgets\module.info">
+      <Link>Resources\Common.Widgets\module.info</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Widgets\Strings.00.resource">
+      <Link>Resources\Common.Widgets\Strings.00.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Common\Resources\Common.Widgets\Strings.en.resource">
+      <Link>Resources\Common.Widgets\Strings.en.resource</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
@@ -149,43 +293,6 @@
     <Content Include="default.identities">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Common.Widgets\Captions.de.resource" />
-    <Content Include="Resources\Common.Support\Captions.de.resource" />
-    <Content Include="Resources\Common.Support\Strings.de.resource" />
-    <Content Include="Resources\Common.Document\Captions.de.resource" />
-    <Content Include="Resources\Common.Document\Captions.en.resource" />
-    <Content Include="Resources\Common.Document\Strings.de.resource" />
-    <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
-    <Content Include="Resources\Common.Widgets\module.info" />
-    <Content Include="Resources\Common.Widgets\Captions.00.resource" />
-    <Content Include="Resources\Common.Widgets\Captions.en.resource" />
-    <Content Include="Resources\Common.Widgets\Strings.00.resource" />
-    <Content Include="Resources\Common.Widgets\Strings.de.resource" />
-    <Content Include="Resources\Common.Widgets\Strings.en.resource" />
-    <Content Include="Resources\Common.Designer\module.info" />
-    <Content Include="Resources\Common.Designer\Captions.00.resource" />
-    <Content Include="Resources\Common.Designer\Strings.00.resource" />
-    <Content Include="Resources\Common.Designer\Strings.en.resource" />
-    <Content Include="Resources\Common.Dialogs\module.info" />
-    <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
-    <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
-    <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
-    <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
-    <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
-    <Content Include="Resources\Common.Document\module.info" />
-    <Content Include="Resources\Common.Document\Captions.00.resource" />
-    <Content Include="Resources\Common.Document\Strings.00.resource" />
-    <Content Include="Resources\Common.Document\Strings.en.resource" />
-    <Content Include="Resources\Common.Support\module.info" />
-    <Content Include="Resources\Common.Support\Captions.00.resource" />
-    <Content Include="Resources\Common.Support\Captions.en.resource" />
-    <Content Include="Resources\Common.Support\Strings.00.resource" />
-    <Content Include="Resources\Common.Support\Strings.en.resource" />
-    <Content Include="Resources\Common.Types\module.info" />
-    <Content Include="Resources\Common.Types\Captions.00.resource" />
-    <Content Include="Resources\Common.Types\Captions.en.resource" />
-    <Content Include="Resources\Common.Types\Strings.00.resource" />
-    <Content Include="Resources\Common.Types\Strings.en.resource" />
     <Compile Include="..\Solution Items\AssemblyInfo.CrDocVer.cs">
       <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
     </Compile>
@@ -230,13 +337,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)External\default.identities" "$(ProjectDir)" /Y
-del "$(ProjectDir)Resources\*.xml"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
