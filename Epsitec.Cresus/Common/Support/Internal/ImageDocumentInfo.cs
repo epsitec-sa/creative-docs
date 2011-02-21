@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support.Internal
 				if (dx > 0 && dy > 0)
 				{
 					string format = this.imageData.GetFileFormat ().ToString ();
-					return string.Format(Res.Strings.Image.Description, dx, dy, format);
+					return string.Format(Res.Strings.Image.Description.ToString (), dx, dy, format);
 				}
 			}
 

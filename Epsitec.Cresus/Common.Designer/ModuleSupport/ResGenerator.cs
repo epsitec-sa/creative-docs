@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -368,7 +368,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				});
 		}
 
-
 		static void GenerateGenericCaptions(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields, string className,
 			System.Action<string, Druid> fieldWriter)
 		{
@@ -466,121 +465,29 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			formatter.WriteEndClass ();
 		}
 
-
-
-
 		static void GenerateValues(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> valFields)
 		{
-#if false
-			string prefix   = "";
-			bool addNewline = false;
-
-			generator.BeginBlock ("public static class", "Values");
-
-			string[] fields   = new string[valFields.Count];
-			string[] sortKeys = new string[valFields.Count];
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				fields[i] = valFields[i];
-
-				int pos = fields[i].LastIndexOf ('.');
-				if (pos < 0)
+			ResGenerator.GenerateGenericCaptions (manager, formatter, defaultNamespace, bundleId, bundle, valFields,
+				"Values",
+				(delta, localDruid) =>
 				{
-					sortKeys[i] = fields[i];
-				}
-				else
-				{
-					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
-				}
-			}
-
-			System.Array.Sort (sortKeys, fields);
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				string field = fields[i].Substring (4);
-
-				while (prefix != "" && !field.StartsWith (prefix + "."))
-				{
-					//	Remonte d'un niveau dans la hiérarchie des classes.
-					string[] args = prefix.Split ('.');
-					string last = args[args.Length-1];
-
-					generator.EndBlock ();
-
-					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
-					addNewline = true;
-				}
-
-				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length+1);
-
-				if (addNewline)
-				{
-					buffer.Append (generator.Tabs);
-					buffer.Append ("\n");
-					addNewline = false;
-				}
-
-				//	Crée les classes manquantes, si besoin :
-				while (delta.IndexOf ('.') > -1)
-				{
-					string[] args = delta.Split ('.');
-					string elem = args[0];
-
-					generator.BeginBlock ("public static class", elem);
-
-					if (prefix.Length == 0)
-					{
-						prefix = elem;
-					}
-					else
-					{
-						prefix = string.Concat (prefix, ".", elem);
-					}
-
-					delta = field.Substring (prefix.Length + 1);
-				}
-
-				//	Crée l'accesseur pour le champ actuel :
-
-				Support.Druid localDruid = bundle[fields[i]].Id;
-				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
-
-				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
-				buffer.Append (generator.Tabs);
-
-				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
-				buffer.Append (delta);
-				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (", ");
-				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (")); } }\n");
-			}
-
-			//	Referme les classes ouvertes :
-			if (prefix.Length > 0)
-			{
-				string[] args = prefix.Split ('.');
-
-				for (int j = 0; j < args.Length; j++)
-				{
-					generator.EndBlock ();
-				}
-			}
-
-			generator.EndBlock ();
-#endif
+					formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
+					formatter.WriteBeginGetter (CodeAttributes.Default);
+					formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ",
+						localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
+					formatter.WriteEndGetter ();
+					formatter.WriteEndProperty ();
+				});
 		}
+
 
 		static void GenerateFields(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> fldFields)
 		{
-#if false
 			string prefix   = "";
 			bool addNewline = false;
 
-			generator.BeginBlock ("public static class", "Fields");
+			formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "Fields");
 
 			string[] fields   = new string[fldFields.Count];
 			string[] sortKeys = new string[fldFields.Count];
@@ -612,7 +519,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = prefix.Split ('.');
 					string last = args[args.Length-1];
 
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 
 					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
 					addNewline = true;
@@ -622,8 +529,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				if (addNewline)
 				{
-					buffer.Append (generator.Tabs);
-					buffer.Append ("\n");
+					formatter.WriteCodeLine ();
 					addNewline = false;
 				}
 
@@ -633,7 +539,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = delta.Split ('.');
 					string elem = args[0];
 
-					generator.BeginBlock ("public static class", elem);
+					formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
 
 					if (prefix.Length == 0)
 					{
@@ -652,16 +558,14 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				Support.Druid localDruid = bundle[fields[i]].Id;
 				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
-				buffer.Append (generator.Tabs);
-
-				buffer.Append ("public static readonly global::Epsitec.Common.Support.Druid ");
-				buffer.Append (delta);
-				buffer.Append (@" = new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (", ");
-				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (");\n");
+				formatter.WriteCodeLine ("//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'));
+				
+				formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
+					@"global::Epsitec.Common.Support.Druid ",
+					delta,
+					@" = new global::Epsitec.Common.Support.Druid (_moduleId, ",
+					localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+					localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
 			}
 
 			//	Referme les classes ouvertes :
@@ -671,21 +575,19 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				for (int j = 0; j < args.Length; j++)
 				{
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 				}
 			}
 
-			generator.EndBlock ();
-#endif
+			formatter.WriteEndClass ();
 		}
 
 		static void GenerateTypes(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> typFields)
 		{
-#if false
 			string prefix   = "";
 			bool addNewline = false;
 
-			generator.BeginBlock ("public static class", "Types");
+			formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "Types");
 
 			string[] fields   = new string[typFields.Count];
 			string[] sortKeys = new string[typFields.Count];
@@ -728,7 +630,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = prefix.Split ('.');
 					string last = args[args.Length-1];
 
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 
 					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
 					addNewline = true;
@@ -738,8 +640,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				if (addNewline)
 				{
-					buffer.Append (generator.Tabs);
-					buffer.Append ("\n");
+					formatter.WriteCodeLine ();
 					addNewline = false;
 				}
 
@@ -749,7 +650,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = delta.Split ('.');
 					string elem = args[0];
 
-					generator.BeginBlock ("public static class", elem);
+					formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
 
 					if (prefix.Length == 0)
 					{
@@ -789,21 +690,15 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
-				buffer.Append (generator.Tabs);
 
-				buffer.Append ("public static readonly global::");
-				buffer.Append (typeName);
-				buffer.Append (" ");
-				buffer.Append (delta);
-				buffer.Append (" = (global::");
-				buffer.Append (typeName);
-				buffer.Append (") global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (");
-				buffer.Append ("new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (", ");
-				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append ("));\n");
+				formatter.WriteCodeLine ("//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'));
+
+				formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
+					typeName, @" ", delta,
+					@" = (global::", typeName, @") global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (",
+					@"new global::Epsitec.Common.Support.Druid (_moduleId, ",
+					localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+					localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
 			}
 
 			//	Referme les classes ouvertes :
@@ -813,12 +708,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				for (int j = 0; j < args.Length; j++)
 				{
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 				}
 			}
 
-			generator.EndBlock ();
-#endif
+			formatter.WriteEndClass ();
 		}
 
 		static void GenerateStrings(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, ResourceTextMode textMode, string bundleId, ResourceBundle bundle)

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -21,8 +21,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 		/// <param name="formatter">The code formatter.</param>
 		public static void EmitHeader(CodeFormatter formatter)
 		{
-			string   html = Epsitec.Common.Support.Res.Strings.CodeGenerator.SourceFileHeader;
-			string   text = Epsitec.Common.Types.Converters.TextConverter.ConvertToSimpleText (html);
+			string text = Epsitec.Common.Support.Res.Strings.CodeGenerator.SourceFileHeader.ToSimpleText ();
 
 			string[] lines = text.Split (new string[] { "<br/>", "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
 
