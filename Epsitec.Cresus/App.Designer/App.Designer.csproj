@@ -90,7 +90,7 @@
       <Project>{290E4F95-9239-4B58-B3EE-063B6BC31CF3}</Project>
       <Name>Cresus.Assets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
     </ProjectReference>
