@@ -8,7 +8,7 @@
     <ProjectGuid>{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.Designer</RootNamespace>
-    <AssemblyName>App.Designer</AssemblyName>
+    <AssemblyName>App.CresusDesigner</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <FileUpgradeFlags>

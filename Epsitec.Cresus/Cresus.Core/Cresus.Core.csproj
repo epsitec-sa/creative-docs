@@ -712,7 +712,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
     <EmbeddedResource Include="Images\Edition.Delete.icon" />

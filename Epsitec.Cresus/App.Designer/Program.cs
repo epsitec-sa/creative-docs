@@ -35,15 +35,15 @@ namespace Epsitec.Designer
 			paths.Add (System.IO.Path.Combine (execPath, "Resources"));
 
 			//	Juste pour forcer le chargement des ressources manifest:... correspondantes.
-			var loadCresusAssets = typeof (Epsitec.Cresus.Assets.Res);
+//-			var loadCresusAssets = typeof (Epsitec.Cresus.Assets.Res);
 			var loadCresusCoreApplication = typeof (Epsitec.Cresus.Core.CoreApplication);
 			var loadCresusGraphApplication = typeof (Epsitec.Cresus.Graph.GraphApplication);
 			var loadCresusDocumentsApplication = typeof (Epsitec.App.CresusDocuments.Application);
 			var loadCommonDocumentEditorApplication = typeof (Epsitec.Common.DocumentEditor.Application);
-			var loadCommonSupportUnitTests = typeof (Epsitec.Common.Support.UnitTests.UnitTestStringPacker);
-			var loadCresusDataLayerUnitTests = typeof (Epsitec.Cresus.DataLayer.UnitTests.Context.UnitTestDataContextEventArgs);
-			var loadCresusWebServer = typeof (Epsitec.Cresus.WebServer.Component);
-			var loadProductAider = typeof (Epsitec.Product.Aider.Res);
+//-			var loadCommonSupportUnitTests = typeof (Epsitec.Common.Support.UnitTests.UnitTestStringPacker);
+//-			var loadCresusDataLayerUnitTests = typeof (Epsitec.Cresus.DataLayer.UnitTests.Context.UnitTestDataContextEventArgs);
+//-			var loadCresusWebServer = typeof (Epsitec.Cresus.WebServer.Component);
+//-			var loadProductAider = typeof (Epsitec.Product.Aider.Res);
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;
