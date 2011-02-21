@@ -54,14 +54,12 @@
     <Compile Include="Business\Finance\PriceDisplayModes.cs" />
     <Compile Include="Business\Finance\RoundingPolicy.cs" />
     <Compile Include="Business\Finance\Tax.cs" />
-    <Compile Include="Business\Finance\TaxCalculator.cs" />
-    <Compile Include="Business\Finance\TaxContext.cs" />
     <Compile Include="Business\Finance\TaxMode.cs" />
     <Compile Include="Business\Finance\TaxRateAmount.cs" />
     <Compile Include="Business\Finance\VatCode.cs" />
     <Compile Include="Business\Finance\VatCodeRate.cs" />
+    <Compile Include="Business\IsrHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="V11\ImportFile.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />

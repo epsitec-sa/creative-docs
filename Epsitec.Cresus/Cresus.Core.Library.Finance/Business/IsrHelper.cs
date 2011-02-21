@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business
 	/// <summary>
 	/// The class <c>EsrHelper</c> contains static methods used to check or build es values.
 	/// </summary>
-	static class EsrHelper
+	static class IsrHelper
 	{
 		/// <summary>
 		/// This <see cref="Dictionnary"/> is used to convert a <see cref="char"/> to an <see cref="int"/>
@@ -68,9 +68,9 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				iban = string.Format ("{0}{1}", iban.Substring (4), iban.Substring (0, 4));
 
-				foreach (string s in EsrHelper.charConversionTable.Keys)
+				foreach (string s in IsrHelper.charConversionTable.Keys)
 				{
-					iban = iban.Replace (s, EsrHelper.charConversionTable[s]);
+					iban = iban.Replace (s, IsrHelper.charConversionTable[s]);
 				}
 
 				string remainder = "";
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns>A <see cref="bool"/> indicating if iban is valid or not.</returns>
 		public static bool CheckBeneficiaryIban(string iban)
 		{
-			return EsrHelper.CheckIban (iban);
+			return IsrHelper.CheckIban (iban);
 		}
 
 		/// <summary>
@@ -252,8 +252,8 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns>A <see cref="bool"/> indicating if the values required to build the reference line are valid or not.</returns>
 		public static bool CheckReferenceLine(string iban, string reference)
 		{
-			return EsrHelper.CheckBeneficiaryIban (iban)
-				&& EsrHelper.CheckReferenceClientNumber (reference);
+			return IsrHelper.CheckBeneficiaryIban (iban)
+				&& IsrHelper.CheckReferenceClientNumber (reference);
 		}
 
 		/// <summary>
@@ -265,9 +265,9 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns>A <see cref="bool"/> indicating if the values required to build the clearing line are valid or not.</returns>
 		public static bool CheckClearingLine(string constant, string clearing, string key)
 		{
-			return EsrHelper.CheckClearingConstant (constant)
-				&& EsrHelper.CheckClearingBank (clearing)
-				&& EsrHelper.CheckClearingBankKey (key);
+			return IsrHelper.CheckClearingConstant (constant)
+				&& IsrHelper.CheckClearingBank (clearing)
+				&& IsrHelper.CheckClearingBankKey (key);
 		}
 
 		/// <summary>
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
 		public static string BuildFrancPart(string amount)
 		{
-			if (!EsrHelper.CheckAmount (amount))
+			if (!IsrHelper.CheckAmount (amount))
 			{
 				throw new System.ArgumentException (string.Format("the provided argument is not valid. Iban: {0}.", amount));
 			}
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
 		public static string BuildCentPart(string amount)
 		{
-			if (!EsrHelper.CheckAmount (amount))
+			if (!IsrHelper.CheckAmount (amount))
 			{
 				throw new System.ArgumentException (string.Format ("the provided argument is not valid. Iban: {0}.", amount));
 			}
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <exception cref="System.ArgumentException">If the provided values are not valid.</exception>
 		public static string BuildReferenceLine(string iban, string reference)
 		{
-			if (!EsrHelper.CheckReferenceLine (iban, reference))
+			if (!IsrHelper.CheckReferenceLine (iban, reference))
 			{
 				string message = string.Format ("One of the provided argument is not valid. Iban: {0}. Reference: {1}.", iban, reference);
 				throw new System.ArgumentException (message);
@@ -404,7 +404,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				error = "N°IBAN du bénéficiaire: doit se terminer par 12 chiffres.";
 			}
-			else if (!EsrHelper.CheckBeneficiaryIban (iban))
+			else if (!IsrHelper.CheckBeneficiaryIban (iban))
 			{
 				error = "N°IBAN du bénéficiaire: invalide.";
 			}
@@ -439,7 +439,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				error = "Nom et adresse du bénéficiaire: chaque ligne ne peut contenir que 27 caractères.";
 			}
-			else if (!EsrHelper.CheckBeneficiaryAddress (address))
+			else if (!IsrHelper.CheckBeneficiaryAddress (address))
 			{
 				error = "Nom et adresse du bénéficiaire: invalide.";
 			}
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				error = "Montant: ne peut contenir que des chiffres et une virgule.";
 			}
-			else if (!EsrHelper.CheckAmount(amount))
+			else if (!IsrHelper.CheckAmount(amount))
 			{
 				error = "Montant: invalide.";
 			}
@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				error = "Versé par: chaque ligne ne peut contenir que 30 caractères.";
 			}
-			else if (!EsrHelper.CheckPayedBy (payedBy))
+			else if (!IsrHelper.CheckPayedBy (payedBy))
 			{
 				error = "Versé par: invalide.";
 			}
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Core.Business
 		public static string GetErrorMessageForReason(string reason)
 		{
 			string[] lines = reason.Split ('\n');
-			bool valid = EsrHelper.CheckReason (reason);
+			bool valid = IsrHelper.CheckReason (reason);
 
 			string error;
 

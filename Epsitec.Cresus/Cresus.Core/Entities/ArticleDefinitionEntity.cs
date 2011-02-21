@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;

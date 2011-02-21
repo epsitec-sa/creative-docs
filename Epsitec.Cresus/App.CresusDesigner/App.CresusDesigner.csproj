@@ -78,25 +78,13 @@
       <Project>{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}</Project>
       <Name>App.CresusDocuments</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.UnitTests\Common.Support.UnitTests.csproj">
-      <Project>{143A9741-1296-44BA-A2DA-85873722BC81}</Project>
-      <Name>Common.Support.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Assets\Cresus.Assets.csproj">
-      <Project>{290E4F95-9239-4B58-B3EE-063B6BC31CF3}</Project>
-      <Name>Cresus.Assets</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Tests.UnitTests\Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj">
-      <Project>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</Project>
-      <Name>Cresus.DataLayer.UnitTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\App.CresusGraph\App.CresusGraph.csproj">
       <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
@@ -134,10 +122,6 @@
     <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Name>Common.Support.Implementation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -20,10 +20,25 @@ namespace Epsitec.Common.Splash
 		public SplashScreen(string logoFileName)
 		{
 			this.logoFileName = logoFileName;
-			this.logoFilePath = System.IO.Path.Combine (System.Windows.Forms.Application.StartupPath, logoFileName);
+			this.logoFilePath = System.IO.Path.Combine (SplashScreen.GetStartupPath (), logoFileName);
 			this.phase = SplashPhase.FadeIn;
 
 			this.LaunchSplashThread ();
+		}
+
+		private static string GetStartupPath()
+		{
+			string path = System.Windows.Forms.Application.StartupPath;
+
+			foreach (var suffix in new string[] { @"\bin\Debug", @"\bin\Release" })
+			{
+				if (path.EndsWith (suffix))
+				{
+					return path.Substring (0, path.Length - suffix.Length);
+				}
+			}
+			
+			return path;
 		}
 
 		public SplashPhase Phase
