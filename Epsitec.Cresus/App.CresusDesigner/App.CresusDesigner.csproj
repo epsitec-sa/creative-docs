@@ -82,10 +82,6 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\App.CresusGraph\App.CresusGraph.csproj">
       <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
       <Name>App.CresusGraph</Name>

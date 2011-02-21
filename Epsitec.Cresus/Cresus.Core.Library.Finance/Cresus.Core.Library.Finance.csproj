@@ -63,6 +63,8 @@
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\IsrType.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Res.cs" />
     <Compile Include="V11\V11AbstractLine.cs" />
     <Compile Include="V11\V11Error.cs" />
     <Compile Include="V11\V11LineBVRTransaction.cs" />
@@ -78,12 +80,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="Resources\Cresus.Core.Library.Finance\Captions.00.resource" />
+    <None Include="Resources\Cresus.Core.Library.Finance\module.info" />
+    <None Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
