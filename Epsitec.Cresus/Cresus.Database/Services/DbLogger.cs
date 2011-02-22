@@ -47,7 +47,6 @@ namespace Epsitec.Cresus.Database.Services
 		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
 		        new DbColumn(Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
 		        new DbColumn(Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true },
-		        new DbColumn(Tags.ColumnSequenceNumber, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
 		    };
 
 			table.DefineCategory (DbElementCat.Internal);
@@ -91,10 +90,27 @@ namespace Epsitec.Cresus.Database.Services
 
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
+			return this.GetLogEntry (condition);
+		}
+
+
+		public DbLogEntry GetLatestLogEntry()
+		{
+			this.CheckIsTurnedOn ();
+
+			SqlFunction condition = this.CreateConditionForlatestEntry ();
+
+			return this.GetLogEntry (condition);
+		}
+
+
+		private DbLogEntry GetLogEntry(SqlFunction condition)
+		{
 			var data = this.GetRowValues (condition);
 
 			return data.Any () ? DbLogEntry.CreateDbLogEntry (data.First ()) : null;
 		}
+
 
 
 		/// <summary>
@@ -141,7 +157,27 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateConstant (entryId.Value, DbRawType.Int64)
 			);
 		}
-                
+
+
+		private SqlFunction CreateConditionForlatestEntry()
+		{
+			string tableName = this.DbTable.GetSqlName ();
+			string columnName = this.DbTable.Columns[Tags.ColumnId].GetSqlName ();
+
+			SqlSelect subQuery = new SqlSelect ();
+			subQuery.Fields.Add (SqlField.CreateAggregate (SqlAggregateFunction.Max, SqlField.CreateName (columnName)));
+			subQuery.Tables.Add (SqlField.CreateName (tableName));
+
+			SqlFunction condition = new SqlFunction
+			(
+				SqlFunctionCode.CompareEqual,
+				SqlField.CreateName (columnName),
+				SqlField.CreateSubQuery (subQuery)
+			);
+
+			return condition;
+		}
+                            
 		
 	}
 

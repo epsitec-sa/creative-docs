@@ -102,27 +102,42 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Dictionary<DbKey, ReferenceData> referencesData;
 			Dictionary<DbKey, CollectionData> collectionsData;
 
-			using (DbTransaction innerTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData (innerTransaction, request, false);
-				referencesData = this.GetReferenceData (innerTransaction, request);
-				collectionsData = this.GetCollectionData (innerTransaction, request);
+				valuesData = this.GetValueData (transaction, request, false);
 
-				innerTransaction.Commit ();
+				if (valuesData.Any ())
+				{
+					referencesData = this.GetReferenceData (transaction, request);
+					collectionsData = this.GetCollectionData (transaction, request);
+				}
+				else
+				{
+					referencesData = new Dictionary<DbKey, ReferenceData> ();
+					collectionsData = new Dictionary<DbKey, CollectionData> ();
+				}
+
+				transaction.Commit ();
 			}
 
+			return this.GetEntitiesData (request, valuesData, referencesData, collectionsData);
+		}
+
+
+		private IEnumerable<EntityData> GetEntitiesData(Request request, Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> valuesData, Dictionary<DbKey, ReferenceData> referencesData, Dictionary<DbKey, CollectionData> collectionsData)
+		{
 			foreach (DbKey rowKey in valuesData.Keys)
 			{
-				System.Tuple<Druid, long, ValueData> tuple = valuesData[rowKey];
-				
+				var tuple = valuesData[rowKey];
+
 				Druid loadedEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 				Druid leafEntityId = tuple.Item1;
-				long logSequenceNumber = tuple.Item2;
+				long logId = tuple.Item2;
 				ValueData entityValueData = tuple.Item3;
 				ReferenceData entityReferenceData = referencesData[rowKey];
 				CollectionData entityCollectionData = collectionsData.ContainsKey (rowKey) ? collectionsData[rowKey] : new CollectionData ();
 
-				yield return new EntityData (rowKey, leafEntityId, loadedEntityId, logSequenceNumber, entityValueData, entityReferenceData, entityCollectionData);
+				yield return new EntityData (rowKey, leafEntityId, loadedEntityId,  logId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 
@@ -216,11 +231,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				targetsData = this.GetCollectionEntityData(entity, fieldId)
+				targetsData = this.GetCollectionEntityData (entity, fieldId)
 					.ToDictionary (data => data.RowKey, data => data);
 
-				targetKeys = this.GetCollectionKeys (transaction, entity, fieldId)
-					.Select (d => d.Item2).ToList ();
+				if (targetsData.Any ())
+				{
+					targetKeys = this.GetCollectionKeys (transaction, entity, fieldId)
+						.Select (d => d.Item2).ToList ();
+				}
+				else
+				{
+					targetKeys = new List<DbKey> ();
+				}
 
 				transaction.Commit ();
 			}
@@ -280,72 +302,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#endregion
 
 
-		public long? GetLogSequenceNumberForEntity(EntityKey normalizedEntityKey)
-		{	
-			DbTable entityDbTable = this.SchemaEngine.GetEntityTableDefinition (normalizedEntityKey.EntityId);
-			DbTable logDbTable = this.DbInfrastructure.ResolveDbTable (Tags.TableLog);
-
-			DbColumn entityIdDbColumn = entityDbTable.Columns[Tags.ColumnId];
-			DbColumn entityLogIdDbColumn = entityDbTable.Columns[Tags.ColumnRefLog];
-			DbColumn logIdDbColumn = logDbTable.Columns[Tags.ColumnId];
-			DbColumn logSequenceNumberIdDbColumn = logDbTable.Columns[Tags.ColumnSequenceNumber];
-
-			SqlField entitySqlTable = SqlField.CreateAliasedName (entityDbTable.GetSqlName (), "entity");
-			SqlField logSqlTable = SqlField.CreateAliasedName (logDbTable.GetSqlName (), "log");
-
-			SqlField entityIdColumn = SqlField.CreateAliasedName ("entity", entityIdDbColumn.GetSqlName (), Tags.ColumnId);
-			SqlField entityLogIdColumn = SqlField.CreateAliasedName ("entity", entityLogIdDbColumn.GetSqlName (), Tags.ColumnRefLog);
-			SqlField logLogIdColumn = SqlField.CreateAliasedName ("log", logIdDbColumn.GetSqlName (), Tags.ColumnId);
-			SqlField logSequenceNumberIdColumn = SqlField.CreateAliasedName ("log", logSequenceNumberIdDbColumn.GetSqlName (), Tags.ColumnSequenceNumber);
-
-			SqlJoin sqlJoin = new SqlJoin (entityLogIdColumn, logLogIdColumn, SqlJoinCode.Inner);
-
-			SqlField condition = SqlField.CreateFunction
-			(
-				new SqlFunction
-				(
-					SqlFunctionCode.CompareEqual,
-					entityIdColumn,
-					SqlField.CreateConstant (normalizedEntityKey.RowKey.Id.Value, DbRawType.Int64)
-				)
-			);
-
-			SqlSelect query = new SqlSelect ();
-
-			query.Tables.Add (entitySqlTable);
-			query.Tables.Add (logSqlTable);
-
-			query.Joins.Add (sqlJoin);
-
-			query.Conditions.Add (condition);
-
-			query.Fields.Add (logSequenceNumberIdColumn);
-
-			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				dbTransaction.SqlBuilder.SelectData (query);
-				object value = this.DbInfrastructure.ExecuteScalar (dbTransaction);
-				
-				dbTransaction.Commit ();
-
-				long? result = null;
-
-				if (value != null)
-				{
-					result = (long) value;
-				}
-
-				return result;
-			}
-		}
-
-
 		#region GET VALUE DATA
 
 
 		private Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> GetValueData(DbTransaction transaction, Request request, bool returnBinaryBlobs)
 		{
-			Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> ();
+			var valueData = new Dictionary<DbKey, System.Tuple<Druid, long, ValueData>> ();
 
 			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 
@@ -364,7 +326,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			foreach (DataRow dataRow in data.Tables[0].Rows)
 			{
 				ValueData entityValueData = new ValueData ();
-				long logSequenceNumber = (long) dataRow[dataRow.ItemArray.Length - 3];
+				long logId = (long) dataRow[dataRow.ItemArray.Length - 3];
 				Druid realEntityId = Druid.FromLong ((long) dataRow[dataRow.ItemArray.Length - 2]);
 				DbKey entityKey = new DbKey (new DbId ((long) dataRow[dataRow.ItemArray.Length - 1]));
 
@@ -391,7 +353,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					}
 				}
 
-				valueData[entityKey] = System.Tuple.Create (realEntityId, logSequenceNumber, entityValueData);
+				valueData[entityKey] = System.Tuple.Create (realEntityId, logId, entityValueData);
 			}
 
 			return valueData;
@@ -609,11 +571,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 
 			SqlContainer sqlContainerForRequestRootEntityId = this.BuildSqlContainerForRequestRootEntityId (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForRequestRequestedEntity = this.BuildSqlContainerForRequestRequestedEntity (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
 			SqlContainer sqlContainerForFields = this.BuildSqlContainerForFields (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForLocalConstraints = this.BuildSqlContainerForLocalConstraints (request, rootEntityAlias, entity);
 
-			return sqlContainerForRequestRootEntityId.Plus (sqlContainerForSubEntities).Plus (sqlContainerForFields).Plus (sqlContainerForLocalConstraints);
+			return sqlContainerForRequestRootEntityId
+				.Plus (sqlContainerForRequestRequestedEntity)
+				.Plus (sqlContainerForSubEntities)
+				.Plus (sqlContainerForFields)
+				.Plus (sqlContainerForLocalConstraints);
 		}
 
 
@@ -635,6 +602,31 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					SqlFunctionCode.CompareEqual,
 					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId),
 					SqlField.CreateConstant (id, DbRawType.Int64)
+				);
+
+				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
+			}
+
+			return sqlContainer;
+		}
+
+
+		private SqlContainer BuildSqlContainerForRequestRequestedEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			SqlContainer sqlContainer = SqlContainer.Empty;
+
+			long? minimumLogId = request.RequestedEntityMinimumLogId;
+
+			if (minimumLogId.HasValue)
+			{
+				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+
+				SqlFunction sqlCondition = new SqlFunction
+				(
+					SqlFunctionCode.CompareGreaterThanOrEqual,
+					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnRefLog),
+					SqlField.CreateConstant (minimumLogId.Value, DbRawType.Int64)
 				);
 
 				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
@@ -944,8 +936,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
 
-			SqlContainer sqlContainerForJoinToLog = this.BuildSqlContainerForJoinToLog (rootEntityAlias, rootEntityId);
-
 			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.None)
 				.Where (field => field.Source == FieldSource.Value)
@@ -953,10 +943,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.Select (field => field.CaptionId)
 				.OrderBy (field => field.ToResourceId ())
 				.Select (field => this.BuildSqlFieldForValueField (rootEntityAlias, entity, field))
-				.Append (this.BuildSqlFieldForLogSequenceNumber (rootEntityAlias))
+				.Append (this.BuildSqlFieldForLogId (rootEntityAlias, rootEntityId))
 				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnInstanceType))
 				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId))
-				.Aggregate (sqlContainerForJoinToLog, (acc, e) => acc.PlusSqlFields (e));
+				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlFields (e));
 		}
 
 
@@ -972,35 +962,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlContainer BuildSqlContainerForJoinToLog(AliasNode entityAlias, Druid rootEntityId)
+		private SqlField BuildSqlFieldForLogId(AliasNode rootEntityAlias, Druid rootEntityId)
 		{
-			AliasNode logAlias = entityAlias.CreateChild ("log");
+			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (rootEntityId);
+			DbColumn dbColumn = dbTable.Columns[Tags.ColumnRefLog];
 
-			DbTable entityDbTable = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
-			DbTable logDbTable = this.DbInfrastructure.ResolveDbTable (Tags.TableLog);
-
-			DbColumn entityLogIdDbColumn = entityDbTable.Columns[Tags.ColumnRefLog];
-			DbColumn logLogIdDbColumn = logDbTable.Columns[Tags.ColumnId];
-
-			SqlField sqlTable = SqlField.CreateAliasedName (logDbTable.GetSqlName (), logAlias.Alias);
-
-			SqlField entityLogIdColumn = SqlField.CreateAliasedName (entityAlias.Alias, entityLogIdDbColumn.GetSqlName (), Tags.ColumnRefLog);
-			SqlField logLogIdColumn = SqlField.CreateAliasedName (logAlias.Alias, logLogIdDbColumn.GetSqlName (), Tags.ColumnId);
-
-			SqlJoin sqlJoin = new SqlJoin (entityLogIdColumn, logLogIdColumn, SqlJoinCode.Inner);
-
-			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
-		}
-
-
-		private SqlField BuildSqlFieldForLogSequenceNumber(AliasNode entityAlias)
-		{
-			AliasNode logAlias = entityAlias.GetChild ("log");
-
-			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (Tags.TableLog);
-			DbColumn dbColumn = dbTable.Columns[Tags.ColumnSequenceNumber];
-
-			return SqlField.CreateAliasedName (logAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnSequenceNumber);
+			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnRefLog);
 		}
 
 

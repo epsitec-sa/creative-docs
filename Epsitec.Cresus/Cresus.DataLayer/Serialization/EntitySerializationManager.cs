@@ -66,10 +66,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// Serializes the given <see cref="AbstractEntity"/> to an equivalent <see cref="EntityData"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to serialize.</param>
-		/// <param name="logSequenceNumber">The value that must be used as the log sequence number.</param>
+		/// <param name="logId">The value that must be used as the log id.</param>
 		/// <returns>The serialized <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		public EntityData Serialize(AbstractEntity entity, long logSequenceNumber)
+		public EntityData Serialize(AbstractEntity entity, long logId)
 		{
 			entity.ThrowIfNull ("entity");
 			
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			ReferenceData referenceData = this.GetReferenceData (entity);
 			CollectionData collectionData = this.GetCollectionData (entity);
 			
-			return new EntityData (rowKey, leafEntityId, loadedEntityId, logSequenceNumber, valueData, referenceData, collectionData);
+			return new EntityData (rowKey, leafEntityId, loadedEntityId, logId, valueData, referenceData, collectionData);
 		}
 
 
@@ -206,12 +206,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			
 			Druid leafEntityId = data.LeafEntityId;
 			DbKey rowKey = data.RowKey;
-			long logSequenceNumber = data.LogSequenceNumber;
 
 			AbstractEntity entity = this.DataContext.EntityContext.CreateEmptyEntity (leafEntityId);
 
 			this.DataContext.DefineRowKey (entity, rowKey);
-			this.DataContext.DefineLogSequenceNumber (entity, logSequenceNumber);
 
 			this.DeserializeEntityFields (data, entity);
 

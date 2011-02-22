@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		public void LogSequenceNumberTest()
+		public void LogIdTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
 			Druid loadedEntityId = Druid.FromLong (2);
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, logSequenceNumber, valueData, referenceData, collectionData);
 
-			Assert.AreEqual (logSequenceNumber, entityData.LogSequenceNumber);
+			Assert.AreEqual (logSequenceNumber, entityData.LogId);
 		}
 
 

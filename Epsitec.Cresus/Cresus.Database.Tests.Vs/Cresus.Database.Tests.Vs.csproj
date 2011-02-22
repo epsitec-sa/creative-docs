@@ -82,6 +82,7 @@
     <Compile Include="Logging\UnitTestResult.cs" />
     <Compile Include="Logging\UnitTestRow.cs" />
     <Compile Include="Logging\UnitTestTable.cs" />
+    <Compile Include="Services\UnitTestDbEntityDeletionLogger.cs" />
     <Compile Include="UnitTestDbNumDef.cs" />
     <Compile Include="UnitTestDbSchemaUpdater.cs" />
     <Compile Include="UnitTestDbSqlStandard.cs" />

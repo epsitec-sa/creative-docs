@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support;
+﻿using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
@@ -25,13 +25,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-			
+		}
+
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
-		public void ReloadValue()
+		public void ReloadValueModifiedInMemory()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -45,67 +50,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreEqual ("Albert", alfred.Firstname);
 
-				dataContext.ReloadEntity (alfred);
+				bool changes = dataContext.Reload ();
+				Assert.IsFalse (changes);
 
-				Assert.AreEqual ("Alfred", alfred.Firstname);
+				Assert.AreEqual ("Albert", alfred.Firstname);
+				Assert.IsTrue (dataContext.GetEntitiesModified ().Contains (alfred));
 			}
 		}
 
 
 		[TestMethod]
-		public void ReloadReference()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-				LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
-				LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
-
-				Assert.AreSame (french, alfred.PreferredLanguage);
-
-				alfred.PreferredLanguage = german;
-
-				Assert.AreSame (german, alfred.PreferredLanguage);
-
-				dataContext.ReloadEntity (alfred);
-
-				Assert.AreSame (french, alfred.PreferredLanguage);
-			}
-		}
-
-
-		[TestMethod]
-		public void ReloadCollection()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-				UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
-				UriContactEntity contact2 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
-
-				Assert.AreEqual (2, alfred.Contacts.Count);
-				Assert.AreSame (contact1, alfred.Contacts[0]);
-				Assert.AreSame (contact2, alfred.Contacts[1]);
-
-				alfred.Contacts.Clear ();
-
-				Assert.AreEqual (0, alfred.Contacts.Count);
-
-				dataContext.ReloadEntity (alfred);
-
-				Assert.AreEqual (2, alfred.Contacts.Count);
-				Assert.AreSame (contact1, alfred.Contacts[0]);
-				Assert.AreSame (contact2, alfred.Contacts[1]);
-			}
-		}
-
-
-		[TestMethod]
-		public void ReloadDeletedEntity()
+		public void ReloadValueModifiedInDatabase()
 		{
 			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
 			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
@@ -119,55 +74,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
 			{
-				UriContactEntity contact1 = dataContext1.CreateEntity<UriContactEntity> ();
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				contact1.Uri = "coucou@blabla.com";
+				Assert.AreEqual ("Alfred", alfred1.Firstname);
+				Assert.AreEqual ("Alfred", alfred2.Firstname);
+
+				alfred1.Firstname = "Albert";
+
+				Assert.AreEqual ("Albert", alfred1.Firstname);
+				Assert.AreEqual ("Alfred", alfred2.Firstname);
 
 				dataContext1.SaveChanges ();
 
-				UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
+				bool changes = dataContext2.Reload ();
+				Assert.IsTrue (changes);
 
-				Assert.IsFalse (dataContext1.IsDeleted (contact1));
-				Assert.IsFalse (dataContext2.IsDeleted (contact2));
-
-				dataContext1.DeleteEntity (contact1);
-				dataContext1.SaveChanges ();
-
-				Assert.IsTrue (dataContext1.IsDeleted (contact1));
-				Assert.IsFalse (dataContext2.IsDeleted (contact2));
-
-				dataContext2.ReloadEntity (contact2);
-
-				Assert.IsTrue (dataContext1.IsDeleted (contact1));
-				Assert.IsTrue (dataContext2.IsDeleted (contact2));
+				Assert.AreEqual ("Albert", alfred1.Firstname);
+				Assert.AreEqual ("Albert", alfred2.Firstname);
+				Assert.IsFalse (dataContext1.GetEntitiesModified ().Contains (alfred1));
+				Assert.IsFalse (dataContext2.GetEntitiesModified ().Contains (alfred2));
 			}
 		}
 
 
 		[TestMethod]
-		public void ReloadFieldValue()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-				Assert.AreEqual ("Alfred", alfred.Firstname);
-
-				alfred.Firstname = "Albert";
-
-				Assert.AreEqual ("Albert", alfred.Firstname);
-
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AL1]"));
-
-				Assert.AreEqual ("Alfred", alfred.Firstname);
-			}
-		}
-
-
-		[TestMethod]
-		public void ReloadFieldReference()
+		public void ReloadReferenceModifiedInMemory()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -175,7 +107,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
-				LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity german = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002)));
 
 				Assert.AreSame (french, alfred.PreferredLanguage);
 
@@ -183,15 +115,61 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreSame (german, alfred.PreferredLanguage);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AD1]"));
+				bool changes = dataContext.Reload ();
+				Assert.IsFalse (changes);
 
-				Assert.AreSame (french, alfred.PreferredLanguage);
+				Assert.AreSame (german, alfred.PreferredLanguage);
+				Assert.IsTrue (dataContext.GetEntitiesModified ().Contains (alfred));
 			}
 		}
 
 
 		[TestMethod]
-		public void ReloadCollectionField()
+		public void ReloadReferenceModifiedInDatabase()
+		{
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity french1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity german1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002)));
+
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity french2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
+				LanguageEntity german2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002)));
+
+				Assert.AreSame (french1, alfred1.PreferredLanguage);
+				Assert.AreSame (french2, alfred2.PreferredLanguage);
+
+				alfred1.PreferredLanguage = german1;
+
+				Assert.AreSame (german1, alfred1.PreferredLanguage);
+				Assert.AreSame (french2, alfred2.PreferredLanguage);
+
+				dataContext1.SaveChanges ();
+
+				bool changes = dataContext2.Reload ();
+				Assert.IsTrue (changes);
+
+				Assert.AreSame (german1, alfred1.PreferredLanguage);
+				Assert.AreSame (german2, alfred2.PreferredLanguage);
+				Assert.IsFalse (dataContext1.GetEntitiesModified ().Contains (alfred1));
+				Assert.IsFalse (dataContext2.GetEntitiesModified ().Contains (alfred2));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadCollectionModifiedInMemory()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -209,11 +187,236 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.AreEqual (0, alfred.Contacts.Count);
 
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AC1]"));
+				bool changes = dataContext.Reload ();
+				Assert.IsFalse (changes);
 
-				Assert.AreEqual (2, alfred.Contacts.Count);
-				Assert.AreSame (contact1, alfred.Contacts[0]);
-				Assert.AreSame (contact2, alfred.Contacts[1]);
+				Assert.AreEqual (0, alfred.Contacts.Count);
+				Assert.IsTrue (dataContext.GetEntitiesModified ().Contains (alfred));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadCollectionModifiedInDatabase()
+		{
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact1A = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact1B = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact2A = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity contact2B = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));
+
+				Assert.AreEqual (2, alfred1.Contacts.Count);
+				Assert.AreSame (contact1A, alfred1.Contacts[0]);
+				Assert.AreSame (contact1B, alfred1.Contacts[1]);
+
+				Assert.AreEqual (2, alfred2.Contacts.Count);
+				Assert.AreSame (contact2A, alfred2.Contacts[0]);
+				Assert.AreSame (contact2B, alfred2.Contacts[1]);
+
+				alfred1.Contacts.Clear ();
+
+				Assert.AreEqual (0, alfred1.Contacts.Count);
+
+				Assert.AreEqual (2, alfred2.Contacts.Count);
+				Assert.AreSame (contact2A, alfred2.Contacts[0]);
+				Assert.AreSame (contact2B, alfred2.Contacts[1]);
+
+				dataContext1.SaveChanges ();
+
+				bool changes = dataContext2.Reload ();
+				Assert.IsTrue (changes);
+
+				Assert.AreEqual (0, alfred1.Contacts.Count);
+				Assert.AreEqual (0, alfred2.Contacts.Count);
+				Assert.IsFalse (dataContext1.GetEntitiesModified ().Contains (alfred1));
+				Assert.IsFalse (dataContext2.GetEntitiesModified ().Contains (alfred2));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadEntityDeletedInMemory()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				dataContext.SaveChanges ();
+
+				dataContext.DeleteEntity (alfred);
+
+				Assert.IsTrue (dataContext.IsDeleted (alfred));
+
+				bool changes = dataContext.Reload ();
+				Assert.IsFalse (changes);
+
+				Assert.IsTrue (dataContext.IsDeleted (alfred));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadEntityDeletedInDatabase()
+		{
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				Assert.IsFalse (dataContext1.IsDeleted (alfred1));
+				Assert.IsFalse (dataContext2.IsDeleted (alfred2));
+
+				dataContext1.DeleteEntity (alfred1);
+				dataContext1.SaveChanges ();
+
+				Assert.IsTrue (dataContext1.IsDeleted (alfred1));
+				Assert.IsFalse (dataContext2.IsDeleted (alfred2));
+
+				bool changes = dataContext2.Reload ();
+				Assert.IsTrue (changes);
+
+				Assert.IsTrue (dataContext1.IsDeleted (alfred1));
+				Assert.IsTrue (dataContext2.IsDeleted (alfred2));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReloadNonPersistentEntities()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+
+				NaturalPersonEntity albertLeVert = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				albertLeVert.Firstname = "Albert";
+				albertLeVert.Lastname = "Le Vert";
+
+				Assert.IsTrue (dataContext.Contains (albertLeVert));
+				Assert.AreEqual ("Albert", albertLeVert.Firstname);
+				Assert.AreEqual ("Le Vert", albertLeVert.Lastname);
+
+				bool changes = dataContext.Reload ();
+				Assert.IsFalse (changes);
+
+				Assert.IsTrue (dataContext.Contains (albertLeVert));
+				Assert.AreEqual ("Albert", albertLeVert.Firstname);
+				Assert.AreEqual ("Le Vert", albertLeVert.Lastname);
+				Assert.IsTrue (dataContext.GetEntitiesModified ().Contains (albertLeVert));
+			}
+		}
+
+
+		[TestMethod]
+		public void SpecialCase()
+		{
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity gertrude2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+				alfred1.Firstname = "Albert";
+				dataContext1.SaveChanges ();
+
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				alfred2.Firstname = "Edgar";
+
+				bool changes = dataContext2.Reload ();
+				Assert.IsFalse (changes);
+
+				Assert.AreEqual ("Edgar", alfred2.Firstname);
+			}
+		}
+
+
+		[TestMethod]
+		public void ComplexCase()
+		{
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
+
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity gertrude2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+				NaturalPersonEntity hans1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
+				NaturalPersonEntity hans2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
+
+				alfred1.Firstname = "Albert";
+
+				gertrude2.Firstname = "Germaine";
+
+				hans1.BirthDate = new Date (2000, 1, 1);
+
+				UriSchemeEntity uriScheme1 = dataContext1.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
+				UriContactEntity uriContact1 = dataContext1.CreateEntity<UriContactEntity> ();
+
+				uriContact1.Uri = "hans@coucou.com";
+				uriContact1.UriScheme = uriScheme1;
+
+				hans1.Contacts.Add (uriContact1);
+
+				Assert.AreEqual (0, hans2.Contacts.Count);
+
+				dataContext1.SaveChanges ();
+
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				alfred2.Firstname = "Edgar";
+
+				bool changes = dataContext2.Reload ();
+				Assert.IsTrue (changes);
+
+				Assert.AreEqual ("Edgar", alfred2.Firstname);
+				Assert.AreEqual ("Germaine", gertrude2.Firstname);
+				Assert.AreEqual (new Date (2000, 1, 1), hans2.BirthDate);
+				Assert.AreEqual (1, hans2.Contacts.Count);
 			}
 		}
 

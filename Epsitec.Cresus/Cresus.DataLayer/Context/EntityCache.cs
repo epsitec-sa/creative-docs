@@ -9,6 +9,8 @@ using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
@@ -36,7 +38,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
-			this.entityIdToLogSequenceNumber = new Dictionary<long, long> ();
+			this.entityTypeIdToLogId = new Dictionary<Druid, long> ();
+			this.entityIdToLogId = new Dictionary<long, long> ();
 		}
 
 
@@ -86,9 +89,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.entityKeyToEntity.Remove (entityKey);
 			}
 
-			if (this.entityIdToLogSequenceNumber.ContainsKey (id))
+			if (this.entityIdToLogId.ContainsKey (id))
 			{
-				this.entityIdToLogSequenceNumber.Remove (id);
+				this.entityIdToLogId.Remove (id);
 			}
 		}
 
@@ -124,15 +127,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Associates the given log sequence number to the given <see cref="AbstractEntity"/>.
+		/// Associates the given log id to the given entity type.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to associate with the log sequence number.</param>
-		/// <param name="logSequenceNumber">The value of the log sequence number to associate with the <see cref="AbstractEntity"/>.</param>
-		/// <exception cref="System.ArgumentException">
-		/// If <paramref name="entity"/> is null.
-		/// If <paramref name="entity"/>is not in the cache.
-		/// </exception>
-		public void DefineLogSequenceNumber(AbstractEntity entity, long logSequenceNumber)
+		/// <param name="entityTypeId">The <see cref="Druid"/> that identifies the entity type.</param>
+		/// <param name="logId">The log id that must be associated with the entity type.</param>
+		public void DefineLogId(Druid entityTypeId, long logId)
+		{
+			this.entityTypeIdToLogId[entityTypeId] = logId;
+		}
+
+
+		/// <summary>
+		/// Associates the given log id to the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to which associate the log id.</param>
+		/// <param name="logId">The log id that must be associated with the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not defined in this instance.</exception>
+		public void DefineLogId(AbstractEntity entity, long logId)
 		{
 			entity.ThrowIfNull ("entity");
 
@@ -143,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				throw new System.ArgumentException ("Entity is not yet defined cache");
 			}
 
-			this.entityIdToLogSequenceNumber[id] = logSequenceNumber;
+			this.entityIdToLogId[id] = logId;
 		}
 
 
@@ -195,10 +207,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The corresponding <see cref="AbstractEntity"/>.</returns>
 		public AbstractEntity GetEntity(EntityKey entityKey)
 		{
-			if (this.entityKeyToEntity.ContainsKey (entityKey))
-			{
-				EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
+			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
 
+			if (this.entityKeyToEntity.ContainsKey (normalizedEntityKey))
+			{
 				return this.entityKeyToEntity[normalizedEntityKey];
 			}
 			else
@@ -209,24 +221,58 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets the log sequence number corresponding th the given <see cref="AbstractEntity"/> if
-		/// there is any.
+		/// Gets the log id currently associated with the given entity type.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose log sequence number to retrieve.</param>
-		/// <returns>The log sequence number.</returns>
-		public long? GetLogSequenceNumber(AbstractEntity entity)
+		/// <param name="entityTypeId">The <see cref="Druid"/> that defines the entity type.</param>
+		/// <returns>The log is currently associated with the given entity type.</returns>
+		public long? GetLogId(Druid entityTypeId)
+		{
+			if (this.entityTypeIdToLogId.ContainsKey (entityTypeId))
+			{
+				return this.entityTypeIdToLogId[entityTypeId];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the log id currently associated with the given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose log id to get.</param>
+		/// <returns>The log is currently associated with the given <see cref="AbstractEntity"/>.</returns>
+		public long? GetLogId(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
 
 			long id = entity.GetEntitySerialId ();
 
-			if (this.entityIdToLogSequenceNumber.ContainsKey (id))
+			if (this.entityIdToLogId.ContainsKey (id))
 			{
-				return this.entityIdToLogSequenceNumber[id];
+				return this.entityIdToLogId[id];
 			}
 			else
 			{
 				return null;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the smallest log id currently associated to an entity type known by this instance.
+		/// </summary>
+		/// <returns>The smallest log id.</returns>
+		public long? GetMinimumLogId()
+		{
+			if (this.entityTypeIdToLogId.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.entityTypeIdToLogId.Values.Min ();
 			}
 		}
 
@@ -238,6 +284,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IEnumerable<AbstractEntity> GetEntities()
 		{
 			return this.entityIdToEntity.Values;
+		}
+
+
+		/// <summary>
+		/// Gets the sequence of <see cref="Druid"/> that defined all the entity types known by this
+		/// instance.
+		/// </summary>
+		/// <returns>The sequence of <see cref="Druid"/>.</returns>
+		public IEnumerable<Druid> GetEntityTypeIds()
+		{
+			return this.entityTypeIdToLogId.Keys;
 		}
 		
 
@@ -260,9 +317,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
+		/// Maps the <see cref="Druid"/> of the entity types known by this instance to their log id.
+		/// </summary>
+		private readonly Dictionary<Druid, long> entityTypeIdToLogId;
+		
+		/// <summary>
 		/// Maps the entity serial ids to their corresponding log sequence number.
 		/// </summary>
-		private readonly Dictionary<long, long> entityIdToLogSequenceNumber;
+		private readonly Dictionary<long, long> entityIdToLogId;
 
 
 	}

@@ -8,6 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database.UnitTests.Services
 {
@@ -60,15 +62,40 @@ namespace Epsitec.Cresus.Database.UnitTests.Services
 					DbLogEntry logEntry2 = logger.GetLogEntry (logEntry1.EntryId);
 
 					Assert.AreEqual (dbId, logEntry1.ConnectionId);
-					Assert.AreEqual (dbId.Value, logEntry1.SequenceNumber);
 					Assert.AreEqual (logEntry1.EntryId, logEntry2.EntryId);
 					Assert.AreEqual (logEntry1.ConnectionId, logEntry2.ConnectionId);
 					Assert.AreEqual (logEntry1.DateTime, logEntry2.DateTime);
-					Assert.AreEqual (logEntry1.SequenceNumber, logEntry2.SequenceNumber);
 
 					logger.RemoveLogEntry (dbId);
 
 					Assert.IsFalse (logger.LogEntryExists (dbId));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetLatestLogEntry()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbLogger logger = dbInfrastructure.ServiceManager.Logger;
+
+				List<DbId> sampleIds = this.GetDbIdSamples ().ToList ();
+
+				Assert.IsNull (logger.GetLatestLogEntry ());
+
+				for (int i = 0; i < sampleIds.Count; i++)
+				{
+					DbId dbId = sampleIds[i];
+	
+					DbLogEntry logEntry1 = logger.CreateLogEntry (dbId);
+					DbLogEntry logEntry2 = logger.GetLatestLogEntry ();
+
+					Assert.AreEqual (dbId, logEntry1.ConnectionId);
+					Assert.AreEqual (logEntry1.EntryId, logEntry2.EntryId);
+					Assert.AreEqual (logEntry1.ConnectionId, logEntry2.ConnectionId);
+					Assert.AreEqual (logEntry1.DateTime, logEntry2.DateTime);
 				}
 			}
 		}

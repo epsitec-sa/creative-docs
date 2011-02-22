@@ -141,6 +141,46 @@ namespace Epsitec.Common.Support.UnitTests.Extensions
 		}
 
 
+		[TestMethod]
+		public void SplitArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ((IEnumerable<int>) null).Split (i => i == 0)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ((IEnumerable<int>) null).Split (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void SplitTest()
+		{
+			var result1 = Enumerable.Range (0, 10).Split (i => i < 5);
+
+			CollectionAssert.AreEqual (Enumerable.Range (5, 5).ToList (), result1.Item1.ToList ());
+			CollectionAssert.AreEqual (Enumerable.Range (0, 5).ToList (), result1.Item2.ToList ());
+
+			var result2 = Enumerable.Range (0, 10).Split (i => i < 10);
+
+			CollectionAssert.AreEqual (Enumerable.Range (0, 0).ToList (), result2.Item1.ToList ());
+			CollectionAssert.AreEqual (Enumerable.Range (0, 10).ToList (), result2.Item2.ToList ());
+
+			var result3 = Enumerable.Range (0, 10).Split (i => i < 0);
+
+			CollectionAssert.AreEqual (Enumerable.Range (0, 10).ToList (), result3.Item1.ToList ());
+			CollectionAssert.AreEqual (Enumerable.Range (0, 0).ToList (), result3.Item2.ToList ());
+
+			var result4 = Enumerable.Range (0, 0).Split (i => i < 0);
+
+			CollectionAssert.AreEqual (Enumerable.Range (0, 0).ToList (), result4.Item1.ToList ());
+			CollectionAssert.AreEqual (Enumerable.Range (0, 0).ToList (), result4.Item2.ToList ());
+		}
+
+
 	}
 
 

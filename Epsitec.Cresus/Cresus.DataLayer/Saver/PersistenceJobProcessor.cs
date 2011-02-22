@@ -89,6 +89,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
+		/// The <see cref="DbEntityDeletionLogger"/> used by this instance.
+		/// </summary>
+		private DbEntityDeletionLogger EntityDeletionLogger
+		{
+			get
+			{
+				return this.DbInfrastructure.ServiceManager.EntityDeletionLogger;
+			}
+		}
+
+
+		/// <summary>
 		/// The <see cref="DataConverter"/> used by this instance.
 		/// </summary>
 		private DataConverter DataConverter
@@ -122,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (var deleteJob in jobsCopy.OfType<DeletePersistenceJob> ())
 			{
-				this.ProcessJob (transaction, deleteJob);
+				this.ProcessJob (transaction, dbLogEntry, deleteJob);
 			}
 
 			foreach (var rootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => j.IsRootTypeJob))
@@ -153,8 +165,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// Executes the given <see cref="DeletePersistenceJob"/> to the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
+		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
 		/// <param name="job">The <see cref="DeletePersistenceJob"/> to execute.</param>
-		private void ProcessJob(DbTransaction transaction, DeletePersistenceJob job)
+		private void ProcessJob(DbTransaction transaction, DbLogEntry dbLogEntry, DeletePersistenceJob job)
 		{
 			AbstractEntity entity = job.Entity;
 			DbKey dbKey = this.GetPersistentEntityDbKey (entity);
@@ -162,6 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			this.DeleteEntityValues (transaction, entity, dbKey);
 			this.DeleteEntitySourceRelations (transaction, entity, dbKey);
 			this.DeleteEntityTargetRelations (transaction, entity, dbKey);
+			this.AddEntityDeletionLogEntry (dbLogEntry, entity, dbKey);
 		}
 
 
@@ -265,6 +279,22 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid fieldId = new Druid (fieldPath.Fields.First ());
 
 			this.DeleteEntityTargetRelation (transaction, localEntityId, fieldId, dbKey);
+		}
+
+
+		/// <summary>
+		/// Adds an entry in the CR_EDL table that store which entities have been deleted.
+		/// </summary>
+		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entity">The entity which has been deleted.</param>
+		/// <param name="dbKey">The <see cref="DbKey"/> of the deleted entity.</param>
+		private void AddEntityDeletionLogEntry(DbLogEntry dbLogEntry, AbstractEntity entity, DbKey dbKey)
+		{
+			DbId logEntryId = dbLogEntry.EntryId;
+			long instanceType = entity.GetEntityStructuredTypeId ().ToLong ();
+			DbId entityId = dbKey.Id;
+
+			this.EntityDeletionLogger.CreateEntityDeletionLogEntry (logEntryId, instanceType, entityId);
 		}
 
 

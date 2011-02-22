@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.UnitTesting;
 
@@ -70,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		public void AddTestArgumentCheck()
+		public void AddArgumentCheck()
 		{
 			EntityContext entityContext = new EntityContext ();
 			EntityCache entityCache = new EntityCache (entityContext);
@@ -248,9 +249,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 				Assert.AreSame (entity, entityCache.GetEntity (entityKey));
 			}
-
-			Assert.IsNull (entityCache.GetEntity (new EntityKey ()));
-			Assert.IsNull (entityCache.GetEntity (new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)))));
 		}
 
 		
@@ -396,7 +394,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		public void RemoveTestArgumentCheck()
+		public void RemoveArgumentCheck()
 		{
 			EntityContext entityContext = new EntityContext ();
 			EntityCache entityCache = new EntityCache (entityContext);
@@ -405,6 +403,119 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 			(
 				() => entityCache.Remove (null)
 			);
+		}
+
+
+		[TestMethod]
+		public void DefineAndGetLogIdTest1()
+		{
+			EntityContext entityContext = new EntityContext ();
+			EntityCache entityCache = new EntityCache (entityContext);
+
+			List<Druid> samples = Enumerable.Range (1, 10).Select (i => Druid.FromLong (i)).ToList ();
+
+			for (int i = 0; i < 5; i++)
+			{
+				foreach (Druid sample in samples)
+				{
+					entityCache.DefineLogId (sample, sample.ToLong () + i);
+				}
+
+				foreach (Druid sample in samples)
+				{
+					Assert.AreEqual (sample.ToLong () + i, entityCache.GetLogId (sample));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void DefineLogIdArgumentCheck2()
+		{
+			EntityContext entityContext = new EntityContext ();
+			EntityCache entityCache = new EntityCache (entityContext);
+
+			List<AbstractEntity> samples = new List<AbstractEntity> ()
+			{
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new UriContactEntity (),
+				new TelecomContactEntity (),
+				new MailContactEntity (),
+				new LanguageEntity (),
+			};
+
+			foreach (AbstractEntity sample in samples)
+			{
+				entityCache.Add (sample);
+			}
+
+			for (int i = 0; i < 5; i++)
+			{
+				for (int j = 0; j < samples.Count; j++)
+				{
+					entityCache.DefineLogId (samples[j], j + i);
+				}
+
+				for (int j = 0; j < samples.Count; j++)
+				{
+					Assert.AreEqual (j + i, entityCache.GetLogId (samples[j]));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void DefineAndGetLogIdTest2()
+		{
+			EntityContext entityContext = new EntityContext ();
+			EntityCache entityCache = new EntityCache (entityContext);
+
+			entityCache.Add (new NaturalPersonEntity ());
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => entityCache.DefineLogId ((AbstractEntity) null, 0)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => entityCache.DefineLogId (new NaturalPersonEntity (), 0)
+			);
+		}
+
+
+		[TestMethod]
+		public void GetMinimumLogId()
+		{
+			EntityContext entityContext = new EntityContext ();
+			EntityCache entityCache = new EntityCache (entityContext);
+
+			Assert.IsNull (entityCache.GetMinimumLogId ());
+
+			for (int i = 0; i < 10; i++)
+			{
+				entityCache.DefineLogId (Druid.FromLong (i + 1), i);
+
+				Assert.AreEqual (0, entityCache.GetMinimumLogId ());
+			}
+		}
+
+
+		[TestMethod]
+		public void GetEntityTypeIdsTest()
+		{
+			EntityContext entityContext = new EntityContext ();
+			EntityCache entityCache = new EntityCache (entityContext);
+
+			List<Druid> samples = Enumerable.Range (1, 10).Select (i => Druid.FromLong (i)).ToList ();
+
+			foreach (Druid sample in samples)
+			{
+				entityCache.DefineLogId (sample, 1);
+			}
+
+			Assert.IsTrue (samples.SetEquals (entityCache.GetEntityTypeIds ()));
 		}
 
 

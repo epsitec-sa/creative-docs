@@ -443,46 +443,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
-		[TestMethod]
-		public void ReloadEntity()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				{
-					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataContext2.ReloadEntity (person1)
-					);
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void ReloadEntityField()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				{
-					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataContext2.ReloadEntityField (person1, Druid.Parse ("[J1AC1]"))
-					);
-				}
-			}
-		}
-
-
 	}
 
 

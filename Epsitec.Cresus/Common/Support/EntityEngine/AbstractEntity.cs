@@ -1361,6 +1361,16 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+
+		/// <summary>
+		/// Resets the data generation for this entity to zero.
+		/// </summary>
+		internal void ResetDataGeneration()
+		{
+			this.dataGeneration = 0;
+		}
+
+
 		/// <summary>
 		/// Updates the data generation for this entity to match the one of the
 		/// associated context, and notifies the <see cref="EntityContext"/>

@@ -8,6 +8,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -377,21 +378,58 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entitiesCache.DefineRowKey (entity, key);
 		}
-
-
+		
 		/// <summary>
-		/// Associates the given log sequence number to the given <see cref="AbstractEntity"/>.
+		/// Associates a new log id to an entity type id.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to associate with the log sequence number.</param>
-		/// <param name="logSequenceNumber">The value of the log sequence number to associate with the <see cref="AbstractEntity"/>.</param>
+		/// <param name="entityTypeId">The <see cref="Druid"/> that defines the entity type id.</param>
+		/// <param name="logId">The new log id.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void DefineLogSequenceNumber(AbstractEntity entity, long logSequenceNumber)
+		internal void DefineLogId(Druid entityTypeId, long logId)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			this.entitiesCache.DefineLogSequenceNumber (entity, logSequenceNumber);
+			this.entitiesCache.DefineLogId (entityTypeId, logId);
 		}
 
+		/// <summary>
+		/// Associates a new log id to an <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to which associate the log id.</param>
+		/// <param name="logId">The new log id.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void DefineLogId(AbstractEntity entity, long logId)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			this.entitiesCache.DefineLogId (entity, logId);
+		}
+		
+		/// <summary>
+		/// Gets the log id associated to an entity type id.
+		/// </summary>
+		/// <param name="entityTypeId">The <see cref="Druid"/> that defines the entity type id.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <returns>The log id.</returns>
+		internal long? GetLogId(Druid entityTypeId)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			return this.entitiesCache.GetLogId (entityTypeId);
+		}
+
+		/// <summary>
+		/// Gets the log id associated to an <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose log id to get.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <returns>The log id.</returns>
+		internal long? GetLogId(AbstractEntity entity)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			return this.entitiesCache.GetLogId (entity);
+		}
 
 		/// <summary>
 		/// Tells whether the <see cref="AbstractEntity"/> managed by this instance have been
@@ -588,6 +626,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
+		/// Gets the sequence of <see cref="Druid"/> that defines the types of the <see cref="AbstractEntity"/>
+		/// managed by this instance.
+		/// </summary>
+		/// <returns>The sequence of <see cref="Druid"/> for the types.</returns>
+		internal IEnumerable<Druid> GetManagedEntityTypeIds()
+		{
+			return this.entitiesCache.GetEntityTypeIds ();
+		}
+
+
+		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance and which contain changes
 		/// since the last call to <see cref="SaveChanges"/>.
 		/// </summary>
@@ -645,18 +694,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesToDelete.Remove (entity);
 			this.emptyEntities.Remove (entity);
 			this.fieldsToResave.Remove (entity);
-		}
-
-
-		/// <summary>
-		/// Clears the list of the <see cref="AbstractEntity"/> which are to be deleted.
-		/// </summary>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void ClearEntitiesToDelete()
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			this.entitiesToDelete.Clear ();
 		}
 
 		/// <summary>
@@ -811,80 +848,88 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Reloads the data of all the <see cref="AbstractEntity"/> that are managed by this
-		/// instance. This will therefore erase all the modifications that have been made to these
-		/// <see cref="AbstractEntity"/>.
+		/// Refreshes the <see cref="AbstractEntity"/> that are managed by this instance and that
+		/// have been modified or deleted in the database since they have been loaded in memory. This
+		/// method will thus erase all modifications done in memory for the <see cref="AbstractEntity"/>
+		/// that have been modified or deleted in the database. The other <see cref="AbstractEntity"/>
+		/// won't be touched.
 		/// </summary>
-		public void ReloadEntities()
+		/// <returns><c>true</c> if a modification occured, <c>false</c> if none occured.</returns>
+		public bool Reload()
 		{
-			foreach (AbstractEntity entity in this.GetEntities ().Where (e => this.IsPersistent (e)).ToList ())
+			this.AssertDataContextIsNotDisposed ();
+
+			bool changes;
+
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.ReloadEntity (entity);
+				bool deletions = this.DeleteDeletedEnties ();
+				bool modifications = this.ReloadOutDatedEntities ();
+
+				changes = deletions || modifications;
 			}
+
+			return changes;
 		}
 
 		/// <summary>
-		/// Reloads all the data of the given <see cref="AbstractEntity"/> so that it is consistent
-		/// with its value in the database. This will erase all modifications to the given
-		/// <see cref="AbstractEntity"/> and might even delete it if it has been deleted in the
-		/// database.
+		/// Deletes the <see cref="AbstractEntity"/> that are managed by this instance and that have
+		/// been deleted in the database after they have been loaded in memory.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to reload.</param>
-		public void ReloadEntity(AbstractEntity entity)
+		/// <returns><c>true</c> if an <see cref="AbstractEntity"/> has been deleted, <c>false</c> if none where deleted.</returns>
+		private bool DeleteDeletedEnties()
 		{
-			bool reload = entity != null
-				&& this.IsPersistent (entity)
-				&& entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration;
+			bool deletions = false;
 
-			if (!reload)
+			DbId logId = new DbId (this.entitiesCache.GetMinimumLogId () ?? 0);
+
+			var dbEntityDeletionLogger = this.DbInfrastructure.ServiceManager.EntityDeletionLogger;
+			var deletionLogEntries = dbEntityDeletionLogger.GetEntityDeletionLogEntries (logId);
+
+			foreach (var deletionLogEntry in deletionLogEntries)
 			{
-				EntityKey entityKey = this.GetNormalizedEntityKey (entity).Value;
-				
-				long? databaseLogSequenceNumber = this.DataLoader.GetLogSequenceNumberForEntity (entityKey);
-				long? dataContextLogSequenceNumber = this.entitiesCache.GetLogSequenceNumber (entity);
+				Druid entityTypeId = Druid.FromLong (deletionLogEntry.InstanceType);
+				DbKey rowKey = new DbKey (deletionLogEntry.EntityId);
 
-				reload = !dataContextLogSequenceNumber.HasValue
-					|| !databaseLogSequenceNumber.HasValue
-					|| databaseLogSequenceNumber > dataContextLogSequenceNumber.Value;
-			}
+				EntityKey entityKey = new EntityKey (entityTypeId, rowKey);
 
-			if (reload)
-			{
-				this.AssertDataContextIsNotDisposed ();
-				this.AssertEntityIsNotForeign (entity);
+				AbstractEntity deletedEntity = this.GetEntity (entityKey);
 
-				using (entity.UseSilentUpdates ())
-				using (entity.DefineOriginalValues ())
-				using (entity.DisableEvents ())
+				if (deletedEntity != null)
 				{
-					this.DataLoader.ReloadEntity (entity);
+					this.RemoveAllReferences (deletedEntity, EntityChangedEventSource.Reload);
+					this.MarkAsDeleted (deletedEntity);
+					this.NotifyEntityChanged (deletedEntity, EntityChangedEventSource.Reload, EntityChangedEventType.Deleted);
+
+					deletions = true;
 				}
 			}
+
+			return deletions;
 		}
 
 		/// <summary>
-		/// Reloads the value of a given field of a given <see cref="AbstractEntity"/> so that it is
-		/// consistent with its value in the database. This will erase any modification that has been
-		/// made to that field.
+		/// Reloads the data of the <see cref="AbstractEntity"/> that are managed by this instance
+		/// and that have been modified in the database after they have been loaded in memory.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to reload.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> defining which field to reload.</param>
-		public void ReloadEntityField(AbstractEntity entity, Druid fieldId)
+		/// <returns><c>true</c> if an <see cref="AbstractEntity"/> has been modified, <c>false</c> if none where modified.</returns>
+		private bool ReloadOutDatedEntities()
 		{
-			if (entity == null)
+			bool modifications = false;
+			
+			DbLogEntry lastLogEntry = this.DbInfrastructure.ServiceManager.Logger.GetLatestLogEntry ();
+
+			foreach (Druid entityTypeId in this.GetManagedEntityTypeIds ().ToList ())
 			{
-				return;
+				long currentLogId = this.GetLogId (entityTypeId).Value;
+				long lastLogId = lastLogEntry.EntryId.Value;
+
+				bool modificationsForTypeId = this.DataLoader.ReloadOutDatedEntities (entityTypeId, currentLogId, lastLogId);
+
+				modifications = modifications || modificationsForTypeId;
 			}
 
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (entity);
-
-			using (entity.UseSilentUpdates ())
-			using (entity.DefineOriginalValues ())
-			using (entity.DisableEvents ())
-			{
-				this.DataLoader.ReloadEntityField (entity, fieldId);
-			}
+			return modifications;
 		}
 
 		/// <summary>
@@ -1569,15 +1614,35 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				return entity;
 			}
-			
+
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
 			entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
 
-			long logSequenceNumber = sender.entitiesCache.GetLogSequenceNumber (entity).Value;
-			EntityData data = sender.SerializationManager.Serialize (entity, logSequenceNumber);
+			TEntity receiverEntity = (TEntity) receiver.GetEntity (sender.GetLeafEntityKey (entity).Value);
 			
-			return (TEntity) receiver.DataLoader.DeserializeEntityData (data);
+			if (receiverEntity != null)
+			{
+				return receiverEntity;
+			}
+			
+			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
+
+			long senderEntityLogId = sender.entitiesCache.GetLogId (entity).Value;
+			EntityData data = sender.SerializationManager.Serialize (entity, senderEntityLogId);
+
+			TEntity copiedEntity = (TEntity) receiver.DataLoader.DeserializeEntityData (data);
+
+			receiver.entitiesCache.DefineLogId (copiedEntity, senderEntityLogId);
+			
+			long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
+
+			if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
+			{
+				receiver.entitiesCache.DefineLogId (entityTypeId, senderEntityLogId);
+			}
+
+			return copiedEntity;
 		}
 
 		public TEntity ResolveEntity<TEntity>(TEntity model)

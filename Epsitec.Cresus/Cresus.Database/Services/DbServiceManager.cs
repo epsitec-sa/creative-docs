@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Database.Services
 			this.LockManager = new DbLockManager (dbInfrastructure);
 			this.Logger = new DbLogger (dbInfrastructure);
 			this.UidManager = new DbUidManager (dbInfrastructure);
+			this.EntityDeletionLogger = new DbEntityDeletionLogger (dbInfrastructure);
 		}
 
 
@@ -59,6 +60,13 @@ namespace Epsitec.Cresus.Database.Services
 		}
 
 
+		public DbEntityDeletionLogger EntityDeletionLogger
+		{
+			get;
+			private set;
+		}
+
+
 		internal void RegisterServiceTables()
 		{
 			foreach (DbTable dbTable in this.GetServiceTables ())
@@ -75,6 +83,7 @@ namespace Epsitec.Cresus.Database.Services
 			this.LockManager.TurnOn ();
 			this.Logger.TurnOn ();
 			this.UidManager.TurnOn ();
+			this.EntityDeletionLogger.TurnOn ();
 
 			base.TurnOn ();
 		}
@@ -89,6 +98,7 @@ namespace Epsitec.Cresus.Database.Services
 				this.LockManager.CreateDbTable (),
 				this.Logger.CreateDbTable (),
 				this.UidManager.CreateDbTable (),
+				this.EntityDeletionLogger.CreateDbTable (),
 			};
 		}
 

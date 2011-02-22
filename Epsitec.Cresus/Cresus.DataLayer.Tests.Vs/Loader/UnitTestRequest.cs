@@ -321,6 +321,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 		}
 
 
+		[TestMethod]
+		public void RequestedEntityMinimumLogIdTest()
+		{
+			Request request = new Request ();
+
+			for (int i = 0; i < 10; i++)
+			{
+				Assert.IsNull (request.RequestedEntityMinimumLogId);
+
+				request.RequestedEntityMinimumLogId = i;
+
+				Assert.AreEqual (i, request.RequestedEntityMinimumLogId);
+
+				request.RequestedEntityMinimumLogId = null;
+			}
+		}
+
+
 	}
 
 

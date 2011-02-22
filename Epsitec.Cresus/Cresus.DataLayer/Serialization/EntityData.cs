@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
 		/// <param name="leafEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="logSequenceNumber">The sequence number of log entry currently associated witht the <see cref="AbstractEntity"/>.</param>
+		/// <param name="logId">The sequence number of log entry currently associated with the <see cref="AbstractEntity"/>.</param>
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="valueData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="referenceData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
-		public EntityData(DbKey rowKey, Druid leafEntityId, Druid loadedEntityId, long logSequenceNumber, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		public EntityData(DbKey rowKey, Druid leafEntityId, Druid loadedEntityId, long logId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
 			valueData.ThrowIfNull ("valueData");
 			referenceData.ThrowIfNull ("referenceData");
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			this.RowKey = rowKey;
 			this.LeafEntityId = leafEntityId;
 			this.LoadedEntityId = loadedEntityId;
-			this.LogSequenceNumber = logSequenceNumber;
+			this.LogId = logId;
 			this.ValueData = valueData;
 			this.ReferenceData = referenceData;
 			this.CollectionData = collectionData;
@@ -90,10 +90,9 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets the sequence number of the log entry currently associated with the
-		/// <see cref="AbstractEntity"/>.
+		/// Gets the id of the log entry currently associated with the <see cref="AbstractEntity"/>.
 		/// </summary>
-		public long LogSequenceNumber
+		public long LogId
 		{
 			get;
 			private set;

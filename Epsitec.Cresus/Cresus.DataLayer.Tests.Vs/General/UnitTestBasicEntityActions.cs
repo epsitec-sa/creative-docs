@@ -982,6 +982,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
+		[TestMethod]
+		public void DeleteNonPersistentEntity()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+					dataContext.DeleteEntity (person);
+
+					Assert.IsTrue (dataContext.IsDeleted (person));
+
+					dataContext.SaveChanges ();
+
+					Assert.IsTrue (dataContext.IsDeleted (person));
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000005)));
+
+					Assert.IsNull (person);
+				}
+			}
+		}
+
+
 	}
 
 

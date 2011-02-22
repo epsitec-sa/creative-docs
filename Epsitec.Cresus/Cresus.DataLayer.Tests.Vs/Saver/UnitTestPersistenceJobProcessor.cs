@@ -131,6 +131,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 					Assert.IsNull (entity);
 				}
+
+				DbEntityDeletionLogger logger = dbInfrastructure.ServiceManager.EntityDeletionLogger;
+
+				DbEntityDeletionLogEntry entry = logger.GetEntityDeletionLogEntries (new DbId (0))
+					.Where (e => e.InstanceType == EntityInfo<NaturalPersonEntity>.GetTypeId ().ToLong () && e.EntityId == 1000000001).FirstOrDefault ();
+
+				Assert.IsNotNull (entry);
 			}
 		}
 

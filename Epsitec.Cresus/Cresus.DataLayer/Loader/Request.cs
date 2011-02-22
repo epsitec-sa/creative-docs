@@ -90,6 +90,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
+
+		/// <summary>
+		/// Defines the minimum log id that the entities should have to be returned by the request.
+		/// </summary>
+		internal long? RequestedEntityMinimumLogId
+		{
+			get;
+			set;
+		}
+
 		
 		/// <summary>
 		/// Adds a constraint to an <see cref="AbstractEntity"/>. Note that the constraint should

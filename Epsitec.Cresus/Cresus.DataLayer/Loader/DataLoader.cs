@@ -1,7 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Services;
@@ -73,6 +72,30 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
+		/// The <see cref="DbInfrastructure"/> used by this instance.
+		/// </summary>
+		private DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return this.DataContext.DataInfrastructure.DbInfrastructure;
+			}
+		}
+
+
+		/// <summary>
+		/// The <see cref="DbLogger"/> used by this instance.
+		/// </summary>
+		private DbLogger DbLogger
+		{
+			get
+			{
+				return this.DbInfrastructure.ServiceManager.Logger;
+			}
+		}
+
+
+		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> defined by the given <see cref="DbKey"/> and entity
 		/// id out of the database.
 		/// </summary>
@@ -136,8 +159,22 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			request.RootEntity.ThrowIfNull ("request.RootEntity");
 			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
 
-			return from data in this.LoaderQueryGenerator.GetEntitiesData (request)
-				   select (T) this.DeserializeEntityData (data);
+			DbLogEntry lastLogEntry;
+			IEnumerable<EntityData> entityData;
+
+			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+				entityData = this.LoaderQueryGenerator.GetEntitiesData (request);
+
+				dbTransaction.Commit ();
+			}
+
+			List<T> entities = entityData.Select (d => (T) this.DeserializeEntityData (d)).ToList ();
+
+			this.AssignLogIds (lastLogEntry, entities);
+
+			return entities;
 		}
 
 
@@ -172,13 +209,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			entity.ThrowIfNull ("entity");
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
-			EntityData targetData = this.LoaderQueryGenerator.GetReferenceField (entity, fieldId);
+			EntityData entityData;
+			DbLogEntry lastLogEntry;
+			
+			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				entityData = this.LoaderQueryGenerator.GetReferenceField (entity, fieldId);
+				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+
+				dbTransaction.Commit ();
+			}
 
 			AbstractEntity target = null;
 
-			if (targetData != null)
+			if (entityData != null)
 			{
-				target = this.DeserializeEntityData (targetData);
+				target = this.DeserializeEntityData (entityData);
+
+				this.AssignLogIds (lastLogEntry, new List<AbstractEntity> () { target });
 			}
 
 			return target;
@@ -199,8 +247,55 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			entity.ThrowIfNull ("entity");
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
-			return from data in this.LoaderQueryGenerator.GetCollectionField (entity, fieldId)
-				   select this.DeserializeEntityData (data);
+			IEnumerable<EntityData> entityData;
+			DbLogEntry lastLogEntry;
+			
+			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				entityData = this.LoaderQueryGenerator.GetCollectionField (entity, fieldId);
+				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+
+				dbTransaction.Commit ();
+			}
+			
+			var entities = entityData.Select (d => this.DeserializeEntityData (d)).ToList ();
+
+			this.AssignLogIds (lastLogEntry, entities);
+
+			return entities;
+		}
+
+
+		/// <summary>
+		/// Reloads the data of all the out dated <see cref="AbstractEntity"/> of the given type in
+		/// the associated <see cref="DataContext"/>.
+		/// </summary>
+		/// <param name="entityTypeId">The <see cref="Druid"/> that defined the type of the <see cref="AbstractEntity"/> to reload.</param>
+		/// <param name="currentlogId">The log id of the <see cref="AbstractEntity"/> of the given types in the <see cref="DataContext"/>.</param>
+		/// <param name="newLogId">The current log id.</param>
+		/// <returns><c>true</c> if an <see cref="AbstractEntity"/> has been reloaded, <c>false</c> if none have been reloaded.</returns>
+		public bool ReloadOutDatedEntities(Druid entityTypeId, long currentlogId, long newLogId)
+		{
+			bool modifications = false;
+
+			Request request = new Request ()
+			{
+				RootEntity = EntityClassFactory.CreateEmptyEntity (entityTypeId),
+				RequestedEntityMinimumLogId = currentlogId + 1,
+			};
+
+			var result = this.LoaderQueryGenerator.GetEntitiesData (request);
+
+			foreach (EntityData entityData in result)
+			{
+				bool modified = this.DeserializeEntityData (entityData, newLogId);
+
+				modifications = modifications || modified;
+			}
+
+			this.DataContext.DefineLogId (entityTypeId, newLogId);
+
+			return modifications;
 		}
 
 
@@ -231,73 +326,69 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		/// <summary>
-		/// Erases the data of the given <see cref="AbstractEntity"/> and replaces it by its data as
-		/// stored in the database.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose data to reload.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		public void ReloadEntity(AbstractEntity entity)
+
+		private bool DeserializeEntityData(EntityData entityData, long newLogId)
 		{
-			entity.ThrowIfNull ("entity");
-			
-			Druid entityId = entity.GetEntityStructuredTypeId ();
+			bool modifications = false;
 
-			Request request = new Request ()
+			Druid leafEntityId = entityData.LeafEntityId;
+			DbKey rowKey = entityData.RowKey;
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+
+			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
+
+			if (entity != null)
 			{
-				RootEntity = EntityClassFactory.CreateEmptyEntity (entityId),
-				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey
-			};
+				long? oldEntityLogId = this.DataContext.GetLogId (entity);
+				long newEntityLogId = entityData.LogId;
 
-			EntityData data = this.LoaderQueryGenerator.GetEntitiesData (request).FirstOrDefault ();
+				if (!oldEntityLogId.HasValue || oldEntityLogId.Value < newEntityLogId)
+				{
+					using (entity.UseSilentUpdates ())
+					using (entity.DefineOriginalValues ())
+					using (entity.DisableEvents ())
+					{
+						this.DataContext.SerializationManager.Deserialize (entity, entityData);
+					}
 
-			if (data != null)
-			{
-				this.DataContext.SerializationManager.Deserialize (entity, data);
-				this.DataContext.DefineLogSequenceNumber (entity, data.LogSequenceNumber);
+					entity.ResetDataGeneration ();
 
-				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);
+					this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);
+
+					modifications = true;
+				}
+
+				this.DataContext.DefineLogId (entity, newLogId);
 			}
-			else
-			{
-				this.DataContext.RemoveAllReferences (entity, EntityChangedEventSource.Internal);
-				this.DataContext.MarkAsDeleted (entity);
 
-				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Deleted);
+			return modifications;
+		}
+
+		/// <summary>
+		/// Assigns the log ids to the entity types in the associated DataContext.
+		/// </summary>
+		/// <param name="logEntry">The log entry that contains the new log id.</param>
+		/// <param name="entities">The <see cref="AbstractEntity"/> for which to assign the new log ids.</param>
+		private void AssignLogIds(DbLogEntry logEntry, IEnumerable<AbstractEntity> entities)
+		{
+			var entityTypeIds = entities
+				.Select (e => e.GetEntityStructuredTypeId ())
+				.Distinct ()
+				.Where (d => !this.DataContext.GetLogId (d).HasValue);
+
+			long newLogId = logEntry == null ? 0 : logEntry.EntryId.Value;
+
+			foreach (Druid entityTypeId in entityTypeIds)
+			{
+				this.DataContext.DefineLogId (entityTypeId, newLogId);
+			}
+
+			foreach (AbstractEntity entity in entities)
+			{
+				this.DataContext.DefineLogId (entity, newLogId);
 			}
 		}
-
-
-		/// <summary>
-		/// Erases the data of the given field of the given <see cref="AbstractEntity"/> and replaces
-		/// it by its data as stored in the database.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to reload.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> defining which field to reload.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
-		public void ReloadEntityField(AbstractEntity entity, Druid fieldId)
-		{
-			entity.ThrowIfNull ("entity");
-			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
-			
-			this.DataContext.SerializationManager.ReplaceFieldByProxy (entity, fieldId);
-
-			this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);			
-		}
-
-
-		/// <summary>
-		/// Gets the value of the sequence number of the log entry that is currently associated with the
-		/// <see cref="AbstractEntity"/> defined by the given <see cref="EntityKey"/>.
-		/// </summary>
-		/// <param name="normalizedEntityKey">The normalized <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/>.</param>
-		/// <returns>The value of the sequence number of the log entry.</returns>
-		public long? GetLogSequenceNumberForEntity(EntityKey normalizedEntityKey)
-		{
-			return this.LoaderQueryGenerator.GetLogSequenceNumberForEntity (normalizedEntityKey);
-		}
-
+		
 
 	}
 

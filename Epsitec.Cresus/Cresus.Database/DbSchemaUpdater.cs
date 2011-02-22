@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Database
 			return dbTable.Category == DbElementCat.Relation
 				|| dbInfrastructure.FindBuiltInDbTables ()
 				.Select (t => t.Name)
-				.Append (Tags.TableConnection, Tags.TableInfo, Tags.TableLog, Tags.TableLock, Tags.TableUid)
+				.Append (Tags.TableConnection, Tags.TableInfo, Tags.TableLog, Tags.TableLock, Tags.TableUid, Tags.TableEntityDeletionLog)
 				.Any (n => string.Equals (n, dbTable.Name));
 		}
 

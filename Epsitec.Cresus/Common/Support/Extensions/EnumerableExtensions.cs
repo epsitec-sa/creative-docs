@@ -57,6 +57,8 @@ namespace Epsitec.Common.Support.Extensions
 		/// <param name="sequence">The sequence to which to append the new elements.</param>
 		/// <param name="elements">The elements to append to the sequence.</param>
 		/// <returns>A new <see cref="IEnumerable{T}"/> that contains the concatenation of the sequence and the elements.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sequence"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="elements"/> is <c>null</c>.</exception>
 		public static IEnumerable<T> Append<T>(this IEnumerable<T> sequence, params T[] elements)
 		{
 			sequence.ThrowIfNull ("sequence");
@@ -91,6 +93,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="sequence">The sequence to shuffle.</param>
 		/// <returns>The shuffled sequence.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sequence"/> is <c>null</c>.</exception>
 		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> sequence)
 		{
 			sequence.ThrowIfNull ("sequence");
@@ -131,12 +134,14 @@ namespace Epsitec.Common.Support.Extensions
 		/// Checks that both <see cref="IEnumerable{T}"/> contain the same set of elements, ignoring
 		/// duplicates entries in both sequences.
 		/// </summary>
-		/// <remarks>This LINQ method will buffer both imput sequences and will execute immediately.
+		/// <remarks>This LINQ method will buffer both input sequences and will execute immediately.
 		/// Its has a complexity of O(n) where n is the length of the longest input sequence.</remarks>
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="first">The first <see cref="IEnumerable{T}"/>.</param>
 		/// <param name="second">The second <see cref="IEnumerable{T}"/>.</param>
 		/// <returns><c>true</c> if both sequence contain the same set of elements, <c>false</c> if they don't.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="first"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="second"/> is <c>null</c>.</exception>
 		public static bool SetEquals<T>(this IEnumerable<T> first, IEnumerable<T> second)
 		{
 			first.ThrowIfNull ("first");
@@ -147,6 +152,47 @@ namespace Epsitec.Common.Support.Extensions
 
 			return set1.SetEquals (set2);
 		}
+
+
+		/// <summary>
+		/// Splits the given <see cref="IEnumerable{T}"/> in two sequences based on a given predicate.
+		/// </summary>
+		/// <remarks>
+		/// The first item in the result contains the elements of the sequence for which the predicate
+		/// is not satisfied. The second item in the result contains the elements of the sequence for
+		/// which the predicate is satisfied.
+		/// 
+		/// This LINQ method will execute immediately and consume the whole input sequence when called.
+		/// It has a complexity of O(n) where n is the length of the input sequence.
+		/// </remarks>
+		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
+		/// <param name="sequence">The sequence to split.</param>
+		/// <param name="predicate">The predicate used for the split.</param>
+		/// <returns>The two resulting sequences.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sequence"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="predicate"/> is <c>null</c>.</exception>	
+		public static System.Tuple<IEnumerable<T>, IEnumerable<T>> Split<T>(this IEnumerable<T> sequence, System.Func<T, bool> predicate)
+		{
+			sequence.ThrowIfNull ("sequence");
+			predicate.ThrowIfNull ("predicate");
+
+			var groups = sequence
+				.GroupBy (e => predicate (e))
+				.ToDictionary (g => g.Key, g => (IEnumerable<T>) g);
+
+			if (!groups.ContainsKey (true))
+			{
+				groups[true] = new T[0];
+			}
+
+			if (!groups.ContainsKey (false))
+			{
+				groups[false] = new T[0];
+			}
+
+			return System.Tuple.Create (groups[false], groups[true]);
+		}
+
 
 		/// <summary>
 		/// Gets an instance of <see cref="System.Random"/> local to the calling thread. That means
@@ -165,6 +211,7 @@ namespace Epsitec.Common.Support.Extensions
 				return EnumerableExtensions.dice;
 			}
 		}
+
 
 		[System.ThreadStatic]
 		private static System.Random dice;

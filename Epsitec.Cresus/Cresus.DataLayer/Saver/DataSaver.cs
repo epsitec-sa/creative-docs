@@ -141,7 +141,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			this.CleanSavedEntities (entitiesToSave);
 			this.AssignNewEntityKeys (newEntityKeys);
-			this.AssignNewLogSequenceNumber (entitiesToSave, dbLogEntry);
 			
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
@@ -292,21 +291,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				DbKey key = newEntityKey.Value;
 
 				this.DataContext.DefineRowKey (entity, key);
-			}
-		}
-
-
-		/// <summary>
-		/// Assigns the log sequence number to the <see cref="AbstractEntity"/> that have been
-		/// inserted in the database.
-		/// </summary>
-		/// <param name="entities">The sequence of <see cref="AbstractEntity"/> that have been inserted in the database.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that has been used for the insertions.</param>
-		private void AssignNewLogSequenceNumber(IEnumerable<AbstractEntity> entities, DbLogEntry dbLogEntry)
-		{
-			foreach (AbstractEntity entity in entities)
-			{
-				this.DataContext.DefineLogSequenceNumber (entity, dbLogEntry.SequenceNumber);
 			}
 		}
 

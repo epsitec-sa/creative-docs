@@ -508,23 +508,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		[TestMethod]
 		public void EntityReloadUpdateEvent()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			// Here we need two DataInfrastructures, otherwise both DataContext will be synchronized
+			// and we don't want that. Therefore, we also require two DbInfrastructures, because they
+			// are tightly coupled with the DataInfrastructures.
+			// Marc
 
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
-				alfred.Firstname = "Albert";
+				alfred1.Firstname = "Albert";
+
+				dataContext1.SaveChanges ();
 
 				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
-				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
+				dataContext2.EntityChanged += (s, a) => eventArgs.Add (a);
 
-				dataContext.ReloadEntity (alfred);
+				dataContext2.Reload ();
 
 				Assert.AreEqual (1, eventArgs.Count);
-				Assert.AreSame (alfred, eventArgs[0].Entity);
+				Assert.AreSame (alfred2, eventArgs[0].Entity);
 				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
 				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 			}
@@ -556,36 +566,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				dataContext2.EntityChanged += (s, a) => eventArgs.Add (a);
 
-				dataContext2.ReloadEntity (alfred2);
+				dataContext2.Reload ();
 
 				Assert.AreEqual (1, eventArgs.Count);
 				Assert.AreSame (alfred2, eventArgs[0].Entity);
 				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
-				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
-			}
-		}
-
-
-		[TestMethod]
-		public void EntityReloadFieldUpdateEvent()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-				alfred.Firstname = "Albert";
-
-				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
-
-				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
-
-				dataContext.ReloadEntityField (alfred, Druid.Parse ("[J1AL1]"));
-
-				Assert.AreEqual (1, eventArgs.Count);
-				Assert.AreSame (alfred, eventArgs[0].Entity);
-				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
 				Assert.AreEqual (EntityChangedEventSource.Reload, eventArgs[0].EventSource);
 			}
 		}
