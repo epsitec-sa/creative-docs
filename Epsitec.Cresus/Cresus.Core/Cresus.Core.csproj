@@ -90,9 +90,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
-    <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
-    <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\Actions\AffairActions.cs" />
     <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />

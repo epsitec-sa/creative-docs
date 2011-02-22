@@ -47,6 +47,9 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\Finance\BillingMode.cs" />
     <Compile Include="Business\Finance\BillingStatus.cs" />
     <Compile Include="Business\Finance\CurrencyCode.cs" />
@@ -91,6 +94,10 @@
     <None Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
+      <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>

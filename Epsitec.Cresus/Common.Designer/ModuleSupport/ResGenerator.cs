@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			List<string> valFields = new List<string> ();
 			List<string> fldFields = new List<string> ();
 
-			foreach (string field in bundle.FieldNames)
+			foreach (string field in bundle.FieldNames.Distinct ())
 			{
 				if (field.StartsWith ("Cmd."))
 				{
