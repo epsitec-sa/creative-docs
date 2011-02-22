@@ -8,7 +8,7 @@ namespace Epsitec.Common.Support
 	/// <summary>
 	/// La classe AssemblyLoader permet de charger une "assembly" d'après son nom.
 	/// </summary>
-	public sealed class AssemblyLoader
+	public static class AssemblyLoader
 	{
 		/// <summary>
 		/// Loads the specified assembly. The assembly is searched in the same directory
@@ -28,24 +28,56 @@ namespace Epsitec.Common.Support
 				loadPath = System.IO.Path.Combine (loadPath, subfolder);
             }
 
+			return AssemblyLoader.LoadFromPath (name, loadPath);
+		}
+
+
+		/// <summary>
+		/// Loads the specified assembly from a specified path. This will probe both for the
+		/// <c>dll</c> and <c>exe</c> files.
+		/// </summary>
+		/// <param name="name">The assembly name (without file extension).</param>
+		/// <param name="loadPath">The assembly load path.</param>
+		/// <param name="loadDependencies">If set to <c>true</c>, loads also all direct dependencies.</param>
+		/// <returns>
+		/// The assembly if it could be found; otherwise, <c>null</c>.
+		/// </returns>
+		public static System.Reflection.Assembly LoadFromPath(string name, string loadPath, bool loadDependencies = false)
+		{
 			if (System.IO.Directory.Exists (loadPath))
 			{
 				foreach (string ext in new string[] { ".dll", ".exe" })
 				{
-					string fileName = string.Concat (name, ext);
-					string fullName = System.IO.Path.Combine (loadPath, fileName);
+					string fullName = System.IO.Path.Combine (loadPath, name + ext);
 
 					if (System.IO.File.Exists (fullName))
 					{
-						return System.Reflection.Assembly.LoadFrom (fullName);
+						try
+						{
+							var assembly = System.Reflection.Assembly.LoadFrom (fullName);
+
+							if (assembly != null)
+							{
+								if (loadDependencies)
+								{
+									//	Force the dependencies to be resolved...
+
+									assembly.GetTypes ();
+								}
+
+								return assembly;
+							}
+						}
+						catch (System.Exception ex)
+						{
+							System.Diagnostics.Debug.WriteLine ("Could not load assembly from file " + fullName + " : " + ex.Message);
+						}
 					}
 				}
 			}
 
 			return null;
 		}
-
-
 		/// <summary>
 		/// Loads all assemblies which match the specified pattern.
 		/// </summary>

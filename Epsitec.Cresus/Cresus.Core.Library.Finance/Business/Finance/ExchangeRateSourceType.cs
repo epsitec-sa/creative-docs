@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Business.Finance
 {
 	/// <summary>
 	/// The <c>ExchangeRateType</c> defines who specifies the exchange rate.

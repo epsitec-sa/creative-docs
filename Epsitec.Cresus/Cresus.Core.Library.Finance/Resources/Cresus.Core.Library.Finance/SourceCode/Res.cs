@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core
 		{
 			//	designer:cap/CVAK
 			public static readonly Epsitec.Common.Types.StringType BookAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
-			//	designer:cap/CVA
-			public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+			//	designer:cap/CVAP1
+			public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
 			//	designer:cap/CVAF1
 			public static readonly Epsitec.Common.Types.EnumType ExchangeRateSourceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 			//	designer:cap/CVAF
@@ -50,12 +50,36 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 					}
 				}
+				//	designer:cap/CVA2
+				public static global::Epsitec.Common.Types.Caption Aud
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
+					}
+				}
 				//	designer:cap/CVA5
 				public static global::Epsitec.Common.Types.Caption Chf
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+					}
+				}
+				//	designer:cap/CVA5
+				public static global::Epsitec.Common.Types.Caption Chf
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+					}
+				}
+				//	designer:cap/CVA3
+				public static global::Epsitec.Common.Types.Caption Cny
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
 					}
 				}
 				//	designer:cap/CVA3
@@ -74,6 +98,22 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
 					}
 				}
+				//	designer:cap/CVA8
+				public static global::Epsitec.Common.Types.Caption Eur
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
+					}
+				}
+				//	designer:cap/CVA6
+				public static global::Epsitec.Common.Types.Caption Gbp
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+					}
+				}
 				//	designer:cap/CVA6
 				public static global::Epsitec.Common.Types.Caption Gbp
 				{
@@ -90,12 +130,36 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 					}
 				}
+				//	designer:cap/CVA4
+				public static global::Epsitec.Common.Types.Caption Jpy
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+					}
+				}
 				//	designer:cap/CVA1
 				public static global::Epsitec.Common.Types.Caption None
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+					}
+				}
+				//	designer:cap/CVA1
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+					}
+				}
+				//	designer:cap/CVA7
+				public static global::Epsitec.Common.Types.Caption Usd
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
 					}
 				}
 				//	designer:cap/CVA7

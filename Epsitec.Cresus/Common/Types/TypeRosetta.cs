@@ -1,7 +1,10 @@
 //	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -1251,6 +1254,49 @@ namespace Epsitec.Common.Types
 			}
 
 			return null;
+		}
+
+		public static System.Type GetSystemType(string name)
+		{
+			var type = System.Type.GetType (name, false);
+
+			if (type == null)
+			{
+				//	This happens if the type belongs to an assembly which was loaded dynamically;
+				//	not sure why, however.
+				//	http://stackoverflow.com/questions/3758209/why-would-system-type-gettypexyz-return-null-if-typeofxyz-exists
+
+				name = name.Split (',')[0];		//	keep just the type name and drop the assembly name
+
+				for (int pass = 0; pass < 2; pass++)
+				{
+					var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
+								let typeInAssembly = assembly.GetType (name, false, false)
+								where typeInAssembly != null
+								select typeInAssembly;
+
+					type = types.FirstOrDefault ();
+
+					if (type != null)
+					{
+						break;
+					}
+
+					//	The type could not be found in the known assemblies, by using GetType. However,
+					//	by calling GetTypes, we might load additional assemblies; we can do a second pass
+					//	after that...
+					
+					System.AppDomain.CurrentDomain.GetAssemblies ().ForEach (assembly => assembly.GetTypes ());
+				}
+
+				if (type == null)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("The type '{0}' is missing - not found in any loaded assembly.", name));
+				}
+//-				System.Diagnostics.Debug.Assert (type != null, string.Format ("The type '{0}' is missing - not found in any loaded assembly.", name));
+			}
+			
+			return type;
 		}
 
 		/// <summary>

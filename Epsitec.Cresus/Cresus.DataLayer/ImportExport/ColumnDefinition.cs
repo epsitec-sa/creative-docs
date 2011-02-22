@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			xmlReader.ReadEndElement ();
 
-			return System.Type.GetType (adoTypeAsString);
+			return TypeRosetta.GetSystemType (adoTypeAsString);
 		}
 
 

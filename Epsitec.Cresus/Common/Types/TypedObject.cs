@@ -72,27 +72,8 @@ namespace Epsitec.Common.Types
 				int pos = value.IndexOf ('/');
 				string typeName = value.Substring (0, pos);
 				string strValue = value.Substring (pos+1);
-				System.Type type = System.Type.GetType (typeName);
-
-				if (type == null)
-				{
-					//	This happens if the type belongs to an assembly which was loaded dynamically;
-					//	not sure why, however.
-					//	http://stackoverflow.com/questions/3758209/why-would-system-type-gettypexyz-return-null-if-typeofxyz-exists
-
-//-					System.Diagnostics.Debug.WriteLine ("Type '" + typeName + "' cannot be resolved by System.Type.GetType...");
-
-					typeName = typeName.Split (',')[0];		//	keep just the type name and drop the assembly name
-
-					var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-								from assemblyType in assembly.GetTypes ()
-								where assemblyType.FullName == typeName
-									select assemblyType;
-
-					type = types.FirstOrDefault ();
-
-					System.Diagnostics.Debug.Assert (type != null, string.Format ("The type '{0}' is missing - not found in any loaded assembly.", typeName));
-				}
+				
+				System.Type type = TypeRosetta.GetSystemType (typeName);
 
 				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
 				return new TypedObject (converter.ConvertFromString (strValue, null));

@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business.Finance;
-//using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Business
 	/// </remarks>
 	public class IsrSlip
 	{
-#if false
 		public IsrSlip(BillingDetailEntity billingDetails, bool optionalAmount = false)
 		{
 			var amount   = billingDetails.AmountDue.Amount;
@@ -46,7 +45,6 @@ namespace Epsitec.Cresus.Core.Business
 			System.Diagnostics.Debug.Assert ((this.subscriberNumber.StartsWith ("01") && this.currency == CurrencyCode.Chf) ||
 				/**/						 (this.subscriberNumber.StartsWith ("03") && this.currency == CurrencyCode.Eur)); 
 		}
-#endif
 		
 		public string							SubscriberNumber
 		{

@@ -50,6 +50,7 @@
     <Compile Include="Business\Finance\BillingMode.cs" />
     <Compile Include="Business\Finance\BillingStatus.cs" />
     <Compile Include="Business\Finance\CurrencyCode.cs" />
+    <Compile Include="Business\Finance\ExchangeRateSourceType.cs" />
     <Compile Include="Business\Finance\PaymentDetailType.cs" />
     <Compile Include="Business\Finance\PriceDisplayModes.cs" />
     <Compile Include="Business\Finance\RoundingPolicy.cs" />

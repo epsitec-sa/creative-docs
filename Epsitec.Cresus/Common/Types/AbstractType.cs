@@ -329,8 +329,8 @@ namespace Epsitec.Common.Types
 				
 				name = string.Concat (name, ", mscorlib");
 			}
-			
-			System.Type type = System.Type.GetType (name, false);
+
+			System.Type type = TypeRosetta.GetSystemType (name);
 
 			switch (prefix)
 			{

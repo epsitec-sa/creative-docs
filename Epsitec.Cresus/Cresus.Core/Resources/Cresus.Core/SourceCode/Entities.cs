@@ -8043,19 +8043,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQC/L0A8M
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A8M]")]
-		public global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType Type
+		public global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType Type
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType> ("[L0A8M]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType> ("[L0A8M]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType oldValue = this.Type;
+				global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue = this.Type;
 				if (oldValue != value || !this.IsFieldDefined("[L0A8M]"))
 				{
 					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType> ("[L0A8M]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType> ("[L0A8M]", oldValue, value);
 					this.OnTypeChanged (oldValue, value);
 				}
 			}
@@ -8082,9 +8082,9 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		
-		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType newValue);
-		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.ExchangeRateSourceType newValue);
+
+		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType newValue);
 		partial void OnOriginatorChanging(string oldValue, string newValue);
 		partial void OnOriginatorChanged(string oldValue, string newValue);
 		

@@ -58,24 +58,7 @@ namespace Epsitec.Common.Designer
 
 				foreach (var name in this.moduleInfo.Assemblies.Split (';'))
 				{
-					string assemblyPathDll = System.IO.Path.Combine (assemblyBinPath, name + ".dll");
-					string assemblyPathExe = System.IO.Path.Combine (assemblyBinPath, name + ".exe");
-
-					try
-					{
-						if (System.IO.File.Exists (assemblyPathDll))
-						{
-							System.Reflection.Assembly.LoadFrom (assemblyPathDll);
-						}
-						if (System.IO.File.Exists (assemblyPathExe))
-						{
-							System.Reflection.Assembly.LoadFrom (assemblyPathExe);
-						}
-					}
-					catch (System.Exception ex)
-					{
-						System.Diagnostics.Debug.WriteLine ("Could not load assembly " + name + " : " + ex.Message);
-					}
+					AssemblyLoader.LoadFromPath (name, assemblyBinPath, loadDependencies: true);
 				}
 			}
 

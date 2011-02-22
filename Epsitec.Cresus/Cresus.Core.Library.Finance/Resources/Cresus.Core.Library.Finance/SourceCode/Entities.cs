@@ -76,19 +76,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/CVA9/CVAB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVAB]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum Currency
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode Currency
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVAB]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVAB]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.Currency;
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.Currency;
 				if (oldValue != value || !this.IsFieldDefined("[CVAB]"))
 				{
 					this.OnCurrencyChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVAB]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVAB]", oldValue, value);
 					this.OnCurrencyChanged (oldValue, value);
 				}
 			}
@@ -248,8 +248,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCurrencyChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnCurrencyChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnCurrencyChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnCurrencyChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnSubscriberNumberChanging(string oldValue, string newValue);
 		partial void OnSubscriberNumberChanged(string oldValue, string newValue);
 		partial void OnSubscriberAddressChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -538,19 +538,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/CVAT/CVA91
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVA91]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum CurrencyCode
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode CurrencyCode
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVA91]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVA91]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.CurrencyCode;
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.CurrencyCode;
 				if (oldValue != value || !this.IsFieldDefined("[CVA91]"))
 				{
 					this.OnCurrencyCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVA91]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVA91]", oldValue, value);
 					this.OnCurrencyCodeChanged (oldValue, value);
 				}
 			}
@@ -622,8 +622,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCurrencyCodeChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnCurrencyCodeChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnExchangeRateBaseChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateBaseChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -677,19 +677,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/CVAU/CVAD1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVAD1]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum Type
+		public global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType Type
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVAD1]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType> ("[CVAD1]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.Type;
+				global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue = this.Type;
 				if (oldValue != value || !this.IsFieldDefined("[CVAD1]"))
 				{
 					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVAD1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType> ("[CVAD1]", oldValue, value);
 					this.OnTypeChanged (oldValue, value);
 				}
 			}
@@ -717,8 +717,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTypeChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnTypeChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType newValue);
 		partial void OnOriginatorChanging(string oldValue, string newValue);
 		partial void OnOriginatorChanged(string oldValue, string newValue);
 		
@@ -911,19 +911,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/CVA21/CVA31
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVA31]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum PaymentType
+		public global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType PaymentType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVA31]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType> ("[CVA31]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.PaymentType;
+				global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue = this.PaymentType;
 				if (oldValue != value || !this.IsFieldDefined("[CVA31]"))
 				{
 					this.OnPaymentTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[CVA31]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType> ("[CVA31]", oldValue, value);
 					this.OnPaymentTypeChanged (oldValue, value);
 				}
 			}
@@ -1039,8 +1039,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPaymentTypeChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnPaymentTypeChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnPaymentTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
+		partial void OnPaymentTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
 		partial void OnPaymentModeChanging(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
 		partial void OnPaymentModeChanged(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
 		partial void OnPaymentDataChanging(string oldValue, string newValue);

@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		private AbstractObject CreateObject(string typeName, AbstractEntity entity)
 		{
 			string fullTypeName = "Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects.Object" + typeName;
-			System.Type type = System.Type.GetType (fullTypeName);
+			System.Type type = TypeRosetta.GetSystemType (fullTypeName);
 
 			if (type == null)
 			{
