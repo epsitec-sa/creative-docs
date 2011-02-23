@@ -462,6 +462,10 @@
       <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
       <Name>Cresus.Core.Library.Images</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
+      <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
+      <Name>Cresus.Core.Library.Print</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
       <Name>Cresus.Core.Library.UserManagement</Name>
