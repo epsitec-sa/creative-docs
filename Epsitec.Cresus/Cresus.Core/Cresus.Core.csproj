@@ -204,15 +204,10 @@
     <Compile Include="Entities\ArticleQuantityEntity.cs" />
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
-    <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
     <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
-    <Compile Include="Entities\ImageBlobEntity.cs" />
-    <Compile Include="Entities\ImageCategoryEntity.cs" />
-    <Compile Include="Entities\ImageGroupEntity.cs" />
-    <Compile Include="Entities\ImageEntity.cs" />
     <Compile Include="Entities\IDataHashExtension.cs" />
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
@@ -230,7 +225,6 @@
     <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\BusinessDocumentEntity.cs" />
     <Compile Include="Entities\LocationEntity.cs" />
-    <Compile Include="Entities\PaymentModeEntity.cs" />
     <Compile Include="Entities\RelationEntity.cs" />
     <Compile Include="Entities\PersonTitleEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
@@ -238,8 +232,6 @@
     <Compile Include="Entities\UriContactEntity.cs" />
     <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Entities\MailContactEntity.cs" />
-    <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
-    <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
@@ -289,7 +281,6 @@
     <Compile Include="V11\ImportFile.cs" />
     <Compile Include="Repositories\AffairRepository.cs" />
     <Compile Include="Repositories\DocumentMetadataRepository.cs" />
-    <Compile Include="Repositories\Repository`1.cs" />
     <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />
     <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
@@ -355,7 +346,6 @@
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
     <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
-    <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Repositories\RelationRepository.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\CommentRepository.cs" />
@@ -375,7 +365,6 @@
     <Compile Include="Repositories\TelecomTypeRepository.cs" />
     <Compile Include="Repositories\UriContactRepository.cs" />
     <Compile Include="Repositories\UriSchemeRepository.cs" />
-    <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\CountryRepository.cs" />
     <Compile Include="Repositories\AbstractPersonRepository.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
@@ -473,6 +462,10 @@
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Workflows\Cresus.Core.Workflows.csproj">
+      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
+      <Name>Cresus.Core.Workflows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>

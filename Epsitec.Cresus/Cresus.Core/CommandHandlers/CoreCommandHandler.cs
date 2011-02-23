@@ -56,19 +56,25 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
 			var mainViewController = orchestrator.MainViewController;
 
 			mainViewController.Print ();
+#endif
 		}
 
 		[Command (Res.CommandIds.Edition.Preview)]
 		public void ProcessEditionPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
 			var mainViewController = orchestrator.MainViewController;
 
 			mainViewController.Preview ();
+#endif
 		}
 
 		[Command (Res.CommandIds.File.ImportV11)]

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		public static void CreateSalesQuote()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.Transition.BusinessContext;
+			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 

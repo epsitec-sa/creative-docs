@@ -63,6 +63,10 @@
     <Compile Include="Business\Finance\VatCode.cs" />
     <Compile Include="Business\Finance\VatCodeRate.cs" />
     <Compile Include="Business\IsrHelper.cs" />
+    <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\IsrDefinitionEntity.cs" />
+    <Compile Include="Entities\PaymentModeEntity.cs" />
+    <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -82,9 +86,7 @@
     <Compile Include="V11\V11RecordLine.cs" />
     <Compile Include="V11\V11TotalLine.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>

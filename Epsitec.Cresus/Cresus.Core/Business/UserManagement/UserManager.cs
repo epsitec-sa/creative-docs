@@ -55,8 +55,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (this.businessContext == null)
                 {
+					throw new System.NotImplementedException ();
+#if false
 					this.businessContext = this.data.CreateBusinessContext ();
 					this.businessContext.GlobalLock = Data.GlobalLocks.UserManagement;
+#endif
                 }
 
 				return this.businessContext;

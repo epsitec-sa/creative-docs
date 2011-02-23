@@ -17,8 +17,11 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(BillingDetailEntity billingDetails)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var context      = Logic.Current.BusinessContext;
 			var dueDate      = Date.Today;
+			throw new System.NotImplementedException ();
 			var settings     = Logic.Current.BusinessSettings;
 			var invoice      = Logic.Current.BusinessContext.GetMasterEntity<BusinessDocumentEntity> ();
 			var currencyCode = CurrencyCode.Chf;
@@ -53,6 +56,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				billingDetails.IsrDefinition = context.GetLocalEntity (isrDef);
 				billingDetails.IsrReferenceNumber = Isr.GetNewReferenceNumber (Logic.Current.Data, isrDef);
 			}
+#endif
 		}
 	}
 }

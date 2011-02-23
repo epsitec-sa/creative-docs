@@ -298,6 +298,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIPreviewPanel()
 		{
+			throw new System.NotImplementedException ();
+#if false
 			//	Crée le conteneur.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
@@ -329,6 +331,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
+#endif
 		}
 
 		private DocumentMetadataEntity GetMetadoc()
@@ -351,6 +354,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CloseUIPreviewPanel()
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var mainViewController = this.Orchestrator.MainViewController;
 			var previewController  = mainViewController.PreviewViewController;
 
@@ -362,6 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				previewController.Clear ();
 				previewController.Updating -= this.HandlePreviewPanelUpdating;
 			}
+#endif
 		}
 
 		private void HandlePreviewPanelUpdating(object sender)

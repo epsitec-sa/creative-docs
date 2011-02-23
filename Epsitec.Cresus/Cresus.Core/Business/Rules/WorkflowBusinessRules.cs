@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplySetupRule(WorkflowEntity workflow)
 		{
 			var affair = Logic.Current.BusinessContext.GetMasterEntity<AffairEntity> ();
-
-			workflow.Affair = affair;
+			throw new System.NotImplementedException ();
+//-			workflow.Affair = affair;
 		}
 	}
 }

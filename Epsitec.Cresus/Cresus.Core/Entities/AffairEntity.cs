@@ -20,8 +20,11 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				if (this.documents == null)
                 {
+					throw new System.NotImplementedException ();
+#if false
 					this.documents = new ObservableList<BusinessDocumentEntity> ();
 					this.documents.AddRange (this.Workflow.Threads.SelectMany (thread => thread.ActiveDocuments).Select (x => x.BusinessDocument).Where (x => x.IsNotNull ()).Distinct ());
+#endif
                 }
 
 				//	TODO : refresh this list when changes happen

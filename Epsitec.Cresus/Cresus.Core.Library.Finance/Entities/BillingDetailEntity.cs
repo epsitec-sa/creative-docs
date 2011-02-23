@@ -4,8 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,11 +11,11 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class BillingDetailEntity
 	{
-		public FormattedText GetCompactSummary(BusinessDocumentEntity invoiceDocument)
+		public FormattedText GetCompactSummary(AbstractEntity/*BusinessDocumentEntity*/ invoiceDocument)
 		{
 			string amount = Misc.PriceToString (this.AmountDue.Amount);
 			FormattedText title = Misc.FirstLine (this.Text);
-			FormattedText ratio = Helpers.InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, this, true);
+			FormattedText ratio = FormattedText.Empty; //Helpers.InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, this, true);
 
 			if (ratio.IsNullOrWhiteSpace)
 			{

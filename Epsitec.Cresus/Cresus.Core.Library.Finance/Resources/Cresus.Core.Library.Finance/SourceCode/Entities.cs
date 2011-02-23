@@ -10,6 +10,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAU]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA21]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVA22]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1062,6 +1063,149 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 34);	// [CVA21]
 		public static readonly new string EntityStructuredTypeKey = "[CVA21]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PaymentReminderDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PaymentReminderDefinition</c> entity.
+	///	designer:cap/CVA22
+	///	</summary>
+	public partial class PaymentReminderDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVA22/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/CVA22/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVA22/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVA22/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>ExtraPaymentTerm</c> field.
+		///	designer:fld/CVA22/CVA32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA32]")]
+		public int ExtraPaymentTerm
+		{
+			get
+			{
+				return this.GetField<int> ("[CVA32]");
+			}
+			set
+			{
+				int oldValue = this.ExtraPaymentTerm;
+				if (oldValue != value || !this.IsFieldDefined("[CVA32]"))
+				{
+					this.OnExtraPaymentTermChanging (oldValue, value);
+					this.SetField<int> ("[CVA32]", oldValue, value);
+					this.OnExtraPaymentTermChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>AdministrativeTaxCode</c> field.
+		///	designer:fld/CVA22/CVA42
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA42]")]
+		public string AdministrativeTaxCode
+		{
+			get
+			{
+				return this.GetField<string> ("[CVA42]");
+			}
+			set
+			{
+				string oldValue = this.AdministrativeTaxCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVA42]"))
+				{
+					this.OnAdministrativeTaxCodeChanging (oldValue, value);
+					this.SetField<string> ("[CVA42]", oldValue, value);
+					this.OnAdministrativeTaxCodeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnExtraPaymentTermChanging(int oldValue, int newValue);
+		partial void OnExtraPaymentTermChanged(int oldValue, int newValue);
+		partial void OnAdministrativeTaxCodeChanging(string oldValue, string newValue);
+		partial void OnAdministrativeTaxCodeChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 66);	// [CVA22]
+		public static readonly new string EntityStructuredTypeKey = "[CVA22]";
 	}
 }
 #endregion

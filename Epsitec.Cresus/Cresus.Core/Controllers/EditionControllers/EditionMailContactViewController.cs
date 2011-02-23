@@ -604,19 +604,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private ReferenceController GetLegalPersonReferenceController()
 		{
+			throw new System.NotImplementedException ();
+#if false
 			return ReferenceController.Create (
 				this.EntityGetter,
 				entity => entity.LegalPerson,
 				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault (),
 				creator: this.CreateNewLegalPerson);
+#endif
 		}
 
 		private ReferenceController GetAddressReferenceController()
 		{
+			throw new System.NotImplementedException ();
+#if false
 			return ReferenceController.Create (
 				this.EntityGetter,
 				entity => entity.Address,
 				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault ());
+#endif
 		}
 
 		private NewEntityReference CreateNewLegalPerson(DataContext context)

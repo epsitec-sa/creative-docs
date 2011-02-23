@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			affair.IdA = string.Format ("{0:000000}", nextId);
 			affair.Workflow = workflow;
 			
-			System.Diagnostics.Debug.Assert (workflow.Affair == affair);
+//-			System.Diagnostics.Debug.Assert (workflow.Affair == affair);
 
 			//	TODO: ...compléter...
 		}

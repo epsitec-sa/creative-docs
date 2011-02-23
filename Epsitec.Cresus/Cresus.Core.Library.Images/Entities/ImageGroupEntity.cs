@@ -4,43 +4,29 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PaymentModeEntity
+	public partial class ImageGroupEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					"Code: ",        this.Code,        "\n",
-					"Résumé: ",      this.Name,        "\n",
-					"Description: ", this.Description, "\n",
-					"Compte: ",      this.BookAccount
-				);
+			return TextFormatter.FormatText (this.Code, "~:", this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
-		}
-
-		public override string[] GetEntityKeywords()
-		{
-			return new string[] { this.Name.ToSimpleText () };
+			return TextFormatter.FormatText (this.Code, "~:", this.Name);
 		}
 
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
+				a.Accumulate (this.Code.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
-				a.Accumulate (this.Description.GetEntityStatus ());
-				a.Accumulate (this.BookAccount.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

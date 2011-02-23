@@ -76,6 +76,13 @@ namespace Epsitec.Common.Types
 				System.Type type = TypeRosetta.GetSystemType (typeName);
 
 				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
+
+				if (converter == null)
+				{
+					System.Diagnostics.Debug.WriteLine ("Could not resolve type " + typeName);
+					return new TypedObject (null);
+				}
+
 				return new TypedObject (converter.ConvertFromString (strValue, null));
 			}
 		}

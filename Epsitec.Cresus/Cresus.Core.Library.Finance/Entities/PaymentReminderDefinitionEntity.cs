@@ -4,23 +4,16 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ImageGroupEntity
+	public partial class PaymentReminderDefinitionEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Code, "~:", this.Name);
-		}
-
-		public override FormattedText GetCompactSummary()
-		{
-			return TextFormatter.FormatText (this.Code, "~:", this.Name);
+			return TextFormatter.FormatText (this.Code, this.Name);
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -29,6 +22,8 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Code.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+//				a.Accumulate (this.AdministrativeTaxArticle.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

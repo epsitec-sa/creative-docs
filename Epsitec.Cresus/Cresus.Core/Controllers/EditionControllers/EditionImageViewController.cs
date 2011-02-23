@@ -206,6 +206,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ImportImage(string filename)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var file = new System.IO.FileInfo (filename);
 			var store = this.Data.ImageDataStore;
 
@@ -215,6 +217,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.Entity.Name = System.IO.Path.GetFileNameWithoutExtension (this.Entity.ImageBlob.FileName);
 			}
+#endif
 		}
 	}
 }

@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core
 		
         private static void ExecuteCoreProgram()
 		{
-			Data.Test.Example1 ();
+//-			Data.Test.Example1 ();
 			using (var splash = new SplashScreen ("logo.png"))
 			{
 				CoreProgram.ExecuteCoreProgram (splash);

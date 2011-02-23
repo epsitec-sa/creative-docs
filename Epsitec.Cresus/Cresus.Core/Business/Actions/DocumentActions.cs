@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		public static void CreateOrderBooking()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.Transition.BusinessContext;
+			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		public static void CreateOrderConfirmation()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.Transition.BusinessContext;
+			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();

@@ -18,6 +18,12 @@ namespace Epsitec.Common.Types
 
 		public static ISerializationConverter GetSerializationConverter(System.Type type)
 		{
+			if (type == null)
+			{
+				return null;
+			}
+
+
 			ISerializationConverter converter;
 			
 			if (InvariantConverter.typeConverters.TryGetValue (type, out converter))

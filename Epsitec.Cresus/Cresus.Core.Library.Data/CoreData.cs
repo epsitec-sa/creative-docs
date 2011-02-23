@@ -271,12 +271,11 @@ namespace Epsitec.Cresus.Core
 			this.IsReady = true;
 		}
 
-#if false
 		public void SetupBusiness()
 		{
-			TaxContext.Initialize (this);
+			throw new System.NotImplementedException ();
+//-			TaxContext.Initialize (this);
 		}
-#endif
 
 #if false
 		private void PreserveNavigation(System.Action action)

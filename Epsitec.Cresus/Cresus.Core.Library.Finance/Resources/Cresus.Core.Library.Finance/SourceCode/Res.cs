@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType PaymentDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
 			//	designer:cap/CVAV
 			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
+			//	designer:cap/CVA22
+			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
 		}
 		
 		public static class Values
@@ -264,6 +266,14 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid BookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
 				//	designer:cap/CVA11
 				public static readonly global::Epsitec.Common.Support.Druid StandardPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
+			}
+			
+			public static class PaymentReminderDefinition
+			{
+				//	designer:cap/CVA42
+				public static readonly global::Epsitec.Common.Support.Druid AdministrativeTaxCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
+				//	designer:cap/CVA32
+				public static readonly global::Epsitec.Common.Support.Druid ExtraPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 			}
 		}
 		

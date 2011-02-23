@@ -4,18 +4,22 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ImageCategoryEntity
+	public partial class PaymentModeEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText
+				(
+					"Code: ",        this.Code,        "\n",
+					"Résumé: ",      this.Name,        "\n",
+					"Description: ", this.Description, "\n",
+					"Compte: ",      this.BookAccount
+				);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -33,7 +37,8 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
-				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Description.GetEntityStatus ());
+				a.Accumulate (this.BookAccount.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

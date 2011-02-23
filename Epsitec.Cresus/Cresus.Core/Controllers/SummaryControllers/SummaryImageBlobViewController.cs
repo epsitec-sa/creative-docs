@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIPreview(Widget parent)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			//	Crée l'aperçu de l'image.
 			var store = this.Data.ImageDataStore;
 			var data = store.GetImageData (this.Entity.Code, 300);
@@ -70,6 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				Image = image,
 				Dock = DockStyle.Fill,
 			};
+#endif
 		}
 	}
 }

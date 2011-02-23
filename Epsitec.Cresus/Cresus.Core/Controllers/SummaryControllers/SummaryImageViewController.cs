@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée l'aperçu de l'image.
 			if (this.Entity.ImageBlob.IsNotNull ())
 			{
+				throw new System.NotImplementedException ();
+#if false
 				var store = this.Data.ImageDataStore;
 				var data = store.GetImageData (this.Entity.ImageBlob.Code, 300);
 				Image image = data.GetImage ();
@@ -74,6 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Image = image,
 					Dock = DockStyle.Fill,
 				};
+#endif
 			}
 		}
 	}
