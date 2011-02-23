@@ -11,7 +11,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Print;
+//-using Epsitec.Cresus.Core.Print;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.commandContext = commandContext;
 
 			this.actionViewController  = new ActionViewController (this.Orchestrator);
-			this.previewViewController = new PreviewViewController (this.Orchestrator);
+//-			this.previewViewController = new PreviewViewController (this.Orchestrator);
 
 			this.browserViewController = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+#if false
 		public PreviewViewController PreviewViewController
 		{
 			get
@@ -102,6 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.previewViewController;
 			}
 		}
+#endif
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
@@ -109,7 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return this.browserSettingsController;
 			yield return this.DataViewController;
 			yield return this.actionViewController;
-			yield return this.previewViewController;
+//-			yield return this.previewViewController;
 		}
 
 		public override void CreateUI(Widget container)
@@ -120,7 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserViewController.CreateUI (this.leftPanel);
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
 			this.DataViewController.CreateUI (this.mainPanel);
-			this.previewViewController.CreateUI (this.rightPreviewPanel);
+//-			this.previewViewController.CreateUI (this.rightPreviewPanel);
 			this.actionViewController.CreateUI (this.rightActionPanel);
 
 			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
@@ -293,7 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-
+#if false
 		
 		public void Print()
 		{
@@ -348,6 +350,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+#endif
+
 		public IEnumerable<AbstractEntity> GetVisibleEntities()
 		{
 			var leaf = this.DataViewController.GetLeafViewController ();
@@ -368,7 +372,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly ActionViewController actionViewController;
-		private readonly PreviewViewController previewViewController;
+//-		private readonly PreviewViewController previewViewController;
 
 		private FrameBox frame;
 

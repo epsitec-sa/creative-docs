@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			//	designer:cap/DVAU
+			public static readonly Epsitec.Common.Types.EnumType WorkflowTransitionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 			//	designer:cap/DVA
 			public static readonly Epsitec.Common.Types.StructuredType Workflow = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/DVA5
@@ -26,6 +28,38 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType WorkflowStep = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/DVA1
 			public static readonly Epsitec.Common.Types.StructuredType WorkflowThread = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+		}
+		
+		public static class Values
+		{
+			public static class WorkflowTransitionType
+			{
+				//	designer:cap/DVA11
+				public static global::Epsitec.Common.Types.Caption Call
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
+					}
+				}
+				//	designer:cap/DVAV
+				public static global::Epsitec.Common.Types.Caption Default
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
+					}
+				}
+				//	designer:cap/DVA01
+				public static global::Epsitec.Common.Types.Caption Fork
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
+					}
+				}
+			}
+			
 		}
 		
 		public static class Fields

@@ -14,13 +14,13 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public static class WorkflowFactory
 	{
-		public static WorkflowEntity CreateDefaultWorkflow<T>(BusinessContext businessContext, string workflowName = null)
+		public static WorkflowEntity CreateDefaultWorkflow<T>(IBusinessContext businessContext, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
 			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
 			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
 
-			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (workflowName));
+			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext.Data, workflowName));
 
 			workflow.Threads.Add (thread);
 			
@@ -32,14 +32,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// type.
 		/// </summary>
 		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <param name="data">The core data.</param>
 		/// <param name="workflowName">Optional name of the workflow.</param>
 		/// <returns>
 		/// The default workflow definition associated with the specified entity type.
 		/// </returns>
-		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(string workflowName = null)
+		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(CoreData data, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
-			var repository = CoreProgram.Application.Data.GetRepository<WorkflowDefinitionEntity> ();
+			var repository = data.GetRepository<WorkflowDefinitionEntity> ();
 			var example = repository.CreateExample ();
 
 			if (string.IsNullOrEmpty (workflowName))

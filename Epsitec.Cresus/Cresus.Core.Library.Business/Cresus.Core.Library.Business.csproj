@@ -39,11 +39,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Binders\IFieldBinder.cs" />
+    <Compile Include="Binders\IFieldBinderProvider.cs" />
+    <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
+    <Compile Include="Business\ArticleQuantityType.cs" />
+    <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
@@ -54,19 +60,69 @@
     <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
+    <Compile Include="Business\EnumValueCardinality.cs" />
     <Compile Include="Business\GenericBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />
     <Compile Include="Business\Logic.cs" />
+    <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\RuleType.cs" />
+    <Compile Include="Business\UnitOfMeasureCategory.cs" />
+    <Compile Include="Controllers\ActionViewController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsMode.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
+    <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
+    <Compile Include="Controllers\DataAccessors\Accessor.cs" />
+    <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
+    <Compile Include="Controllers\DataAccessors\AccessorWithDefaultValue.cs" />
+    <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
+    <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
+    <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
+    <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataType.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
+    <Compile Include="Controllers\EnumController.cs" />
+    <Compile Include="Controllers\EnumKeyValues.cs" />
+    <Compile Include="Controllers\EnumValueController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
+    <Compile Include="Controllers\IGroupedItem.cs" />
+    <Compile Include="Controllers\IGroupedItemPosition.cs" />
+    <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\IWidgetUpdater.cs" />
+    <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\MainWindowController.cs" />
+    <Compile Include="Controllers\NewEntityReference.cs" />
+    <Compile Include="Controllers\PreviewViewController.cs" />
+    <Compile Include="Controllers\ReferenceController.cs" />
+    <Compile Include="Controllers\SelectionController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
+    <Compile Include="Controllers\TextValueController.cs" />
+    <Compile Include="Controllers\TileContainerController.cs" />
+    <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
+    <Compile Include="Controllers\ViewLayoutController.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
@@ -126,9 +182,29 @@
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
+      <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
+      <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
+      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
+      <Name>Cresus.Core.Library.UserManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Workflows\Cresus.Core.Workflows.csproj">
+      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
+      <Name>Cresus.Core.Workflows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
+      <Name>Cresus.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>

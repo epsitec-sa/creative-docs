@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class WorkflowTransition
 	{
-		public WorkflowTransition(BusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowNodeEntity workflowNode, WorkflowEdgeEntity workflowEdge)
+		public WorkflowTransition(IBusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowNodeEntity workflowNode, WorkflowEdgeEntity workflowEdge)
 		{
 			this.businessContext = businessContext;
 			this.workflow = workflow;
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		public BusinessContext					BusinessContext
+		public IBusinessContext					BusinessContext
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		private readonly BusinessContext		businessContext;
+		private readonly IBusinessContext		businessContext;
 		private readonly WorkflowEntity			workflow;
 		private readonly WorkflowThreadEntity	thread;
 		private readonly WorkflowNodeEntity		node;

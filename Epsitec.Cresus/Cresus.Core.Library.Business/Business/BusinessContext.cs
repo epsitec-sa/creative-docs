@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class BusinessContext : IIsDisposed
+	public sealed class BusinessContext : IIsDisposed, IBusinessContext
 	{
 		public BusinessContext(BusinessContextPool pool)
 		{
@@ -399,6 +399,11 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				this.dataContextDiscarded = true;
 			}
+		}
+
+		void IBusinessContext.SaveChanges()
+		{
+			this.SaveChanges (EntitySaveMode.None);
 		}
 
 		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)

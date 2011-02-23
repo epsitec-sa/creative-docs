@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainWindowController : CoreViewController, IWidgetUpdater
 	{
-		public MainWindowController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator)
+		public MainWindowController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator, CoreViewController ribbonController)
 			: base ("MainWindow", orchestrator)
 		{
 			this.data = data;
 			this.commandContext = commandContext;
 			
-			this.ribbonController = new RibbonViewController (this.Orchestrator);
+			this.ribbonController = ribbonController;
 			this.mainViewController = this.Orchestrator.MainViewController;
 
 			Library.UI.UpdateRequested += sender => this.Update ();
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private readonly CoreData				data;
-		private readonly RibbonViewController	ribbonController;
+		private readonly CoreViewController		ribbonController;
 		private readonly MainViewController		mainViewController;
 		private readonly CommandContext			commandContext;
 		

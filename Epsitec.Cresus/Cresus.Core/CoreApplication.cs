@@ -44,7 +44,10 @@ namespace Epsitec.Cresus.Core
 			this.userManager = new Business.UserManagement.UserManager (this.data);
 
 			this.mainWindowOrchestrator = new DataViewOrchestrator (this.data, this.CommandContext);
-			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator);
+			
+			var ribbonController = new RibbonViewController (this.mainWindowOrchestrator);
+			
+			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator, ribbonController);
 
 			this.userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}

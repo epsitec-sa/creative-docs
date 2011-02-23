@@ -66,6 +66,7 @@
     <Compile Include="Entities\AbstractEntityExtension.cs" />
     <Compile Include="Entities\IDataHashExtension.cs" />
     <Compile Include="CoreDataComponent.cs" />
+    <Compile Include="IBusinessContext.cs" />
     <Compile Include="ICoreDataComponentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Repository.cs" />

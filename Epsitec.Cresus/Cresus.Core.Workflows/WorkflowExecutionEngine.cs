@@ -2,7 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -13,11 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public sealed class WorkflowExecutionEngine : IIsDisposed
 	{
-		public WorkflowExecutionEngine(WorkflowController controller, WorkflowTransition transition)
+		public WorkflowExecutionEngine(WorkflowTransition transition)
 		{
-			this.controller      = controller;
 			this.transition      = transition;
-			this.data            = this.controller.Data;
+			this.data            = this.transition.BusinessContext.Data;
 			this.businessContext = this.transition.BusinessContext;
 		}
 
@@ -35,14 +36,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			get
 			{
 				return this.transition;
-			}
-		}
-
-		public WorkflowController Controller
-		{
-			get
-			{
-				return this.controller;
 			}
 		}
 
@@ -287,10 +280,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			step.Edge  = edge;
 			step.Node  = node;
 			step.Date  = System.DateTime.UtcNow;
-			step.User  = null; // TODO: ...
-			step.Owner = null; // TODO: ...
-			step.RelationContact = null; // TODO: ...
-			step.RelationPerson  = null; // TODO: ...
+//			step.User  = null; // TODO: ...
+//			step.Owner = null; // TODO: ...
+//			step.RelationContact = null; // TODO: ...
+//			step.RelationPerson  = null; // TODO: ...
 
 			thread.History.Add (step);
 		}
@@ -299,9 +292,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private static WorkflowExecutionEngine current;
 
 		private readonly WorkflowTransition transition;
-		private readonly WorkflowController controller;
 		private readonly CoreData			data;
-		private readonly BusinessContext	businessContext;
+		private readonly IBusinessContext	businessContext;
 
 		private bool isDisposed;
 	}
