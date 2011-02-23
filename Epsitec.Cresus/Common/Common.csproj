@@ -1273,15 +1273,31 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Support\Resources\ProjectFileTemplate.xml" />
-    <Content Include="Resources\Common.Support\Captions.00.resource" />
+    <Content Include="Resources\Common.Support\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Drawing\Resources\LineBreak.compressed" />
-    <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
-    <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
-    <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
-    <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
-    <Content Include="Resources\Common.Dialogs\module.info" />
-    <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
-    <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Dialogs\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Dialogs\Images\FavoritesAdd.icon" />
     <EmbeddedResource Include="Dialogs\Images\FavoritesLarge.icon" />
     <EmbeddedResource Include="Dialogs\Images\FavoritesRemove.icon" />
@@ -1304,22 +1320,54 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Common.Support\Captions.de.resource" />
-    <Content Include="Resources\Common.Support\Captions.en.resource" />
-    <Content Include="Resources\Common.Support\module.info" />
-    <Content Include="Resources\Common.Support\Strings.00.resource" />
-    <None Include="Resources\Common.Support\Strings.de.resource" />
-    <Content Include="Resources\Common.Support\Strings.en.resource" />
-    <Content Include="Resources\Common.Types\Captions.00.resource" />
-    <Content Include="Resources\Common.Types\Captions.en.resource" />
-    <Content Include="Resources\Common.Types\module.info" />
-    <Content Include="Resources\Common.Types\Strings.00.resource" />
-    <Content Include="Resources\Common.Types\Strings.en.resource" />
-    <Content Include="Resources\Common.Widgets\Captions.00.resource" />
-    <Content Include="Resources\Common.Widgets\Strings.en.resource" />
-    <Content Include="Resources\Common.Widgets\Captions.en.resource" />
-    <Content Include="Resources\Common.Widgets\module.info" />
-    <Content Include="Resources\Common.Widgets\Strings.00.resource" />
+    <Content Include="Resources\Common.Support\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Types\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Types\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Types\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Types\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Types\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Widgets\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Widgets\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Widgets\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Widgets\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Widgets\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Widgets\Images\ActiveCurrent.icon" />
     <EmbeddedResource Include="Widgets\Images\ActiveNo.icon" />
     <EmbeddedResource Include="Widgets\Images\ActiveYes.icon" />

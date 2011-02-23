@@ -85,9 +85,15 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Library.Images\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Library.Images\module.info" />
-    <None Include="Resources\Cresus.Core.Library.Images\Strings.00.resource" />
+    <Content Include="Resources\Cresus.Core.Library.Images\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Images\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Images\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

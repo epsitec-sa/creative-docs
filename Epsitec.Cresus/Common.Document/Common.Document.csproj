@@ -676,13 +676,23 @@
     <Compile Include="ZoomHistory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Resources\Common.Document\module.info" />
-    <Content Include="Resources\Common.Document\Strings.00.resource" />
-    <Content Include="Resources\Common.Document\Strings.en.resource" />
+    <Content Include="Resources\Common.Document\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Document\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Document\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Common.Document\Captions.00.resource" />
-    <Content Include="Resources\Common.Document\Strings.de.resource" />
+    <Content Include="Resources\Common.Document\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Document\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

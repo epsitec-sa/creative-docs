@@ -91,9 +91,15 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Library.Finance\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Library.Finance\module.info" />
-    <None Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource" />
+    <Content Include="Resources\Cresus.Core.Library.Finance\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Finance\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
