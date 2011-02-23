@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
@@ -176,7 +177,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			//	Make sure the UI is in a stable state before returning a click
 			//	simulator, or else we might work with an outdated UI:
-			CoreApplication.ExecuteAsyncCallbacks ();
+			Dispatcher.ExecutePending ();
 
 			var key = this.GetLeafViewControllerKey ();
 			

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
@@ -311,13 +312,13 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if ((this.businessContext != null) &&
 				(this.businessContext.ContainsChanges ()))
 			{
-				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
-				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, true);
+				Dispatcher.SetCommandEnable (Res.Commands.Edition.SaveRecord, true);
+				Dispatcher.SetCommandEnable (Res.Commands.Edition.DiscardRecord, true);
 			}
 			else
 			{
-				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
-				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, false);
+				Dispatcher.SetCommandEnable (Res.Commands.Edition.SaveRecord, false);
+				Dispatcher.SetCommandEnable (Res.Commands.Edition.DiscardRecord, false);
 			}
 		}
 

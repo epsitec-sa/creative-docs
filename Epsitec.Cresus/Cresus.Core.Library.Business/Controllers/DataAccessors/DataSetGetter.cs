@@ -19,8 +19,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	{
 		public static DataSetCollectionGetter ResolveDataSet(CoreData data, string dataSetName)
 		{
+			throw new System.NotImplementedException ();
+
 			switch (dataSetName)
 			{
+#if false
 				case "Customers":
 					return context => data.GetAllEntities<RelationEntity> (dataContext: context);
 
@@ -59,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "DocumentPrintingUnits":
 					return context => data.GetAllEntities<DocumentPrintingUnitsEntity> (dataContext: context);
-
+#endif
 				default:
 					return null;
 			}
@@ -69,6 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			switch (dataSetName)
 			{
+#if false
 				case "Customers":
 					return EntityInfo<RelationEntity>.GetTypeId ();
 
@@ -104,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "DocumentPrintingUnits":
 					return EntityInfo<DocumentPrintingUnitsEntity>.GetTypeId ();
-
+#endif
 				default:
 					return Druid.Empty;
 			}

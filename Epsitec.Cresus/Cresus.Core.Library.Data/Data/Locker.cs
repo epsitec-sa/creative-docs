@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 		
-		internal static string GetEntityLockName(DataContext context, AbstractEntity entity)
+		public static string GetEntityLockName(DataContext context, AbstractEntity entity)
 		{
 			var key = context.GetNormalizedEntityKey (entity);
 

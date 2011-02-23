@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Dialogs;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 
@@ -273,7 +274,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				FormattedText formattedText = new FormattedText (value);
 				MultilingualText multilingual = new MultilingualText (formattedText);
 
-				var dialog = new Dialogs.MultilingualEditionDialog (textField, multilingual);
+				var dialog = new MultilingualEditionDialog (textField, multilingual);
 				dialog.IsModal = true;
 				dialog.OpenDialog ();
 

@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void UpdateAllWidgets()
 		{
-			CoreProgram.Application.MainWindowController.Update ();
+			Dispatcher.RequestRefreshUI ();
 		}
 
 		public double GetPreferredWidth(int columnIndex, int columnCount)

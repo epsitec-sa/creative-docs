@@ -10,6 +10,7 @@ using Epsitec.Common.Types.Collections;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -711,7 +712,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		private void AsyncUpdateMainWindowController()
 		{
-			CoreApplication.QueueAsyncCallback (this.SyncUpdateMainWindowController);
+			Dispatcher.Queue (this.SyncUpdateMainWindowController);
 		}
 
 		private void SyncUpdateMainWindowController()
@@ -722,7 +723,7 @@ namespace Epsitec.Cresus.Core.Business
 				return;
 			}
 
-			CoreProgram.Application.MainWindowController.Update ();
+			Dispatcher.RequestRefreshUI ();
 		}
 
 		private void HandleFirstEntityChange()

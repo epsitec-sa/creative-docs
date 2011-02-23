@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -120,6 +121,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private AbstractEntity CreateRealEntity(System.Action<BusinessContext, AbstractEntity> initializer)
 			{
+				throw new System.NotImplementedException ();
+#if false
 				var rootEntityId = this.GetRootEntityId ();
 				
 				CoreData        data    = this.orchestrator.Data;
@@ -156,6 +159,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.browser.RefreshScrollList ();
 
 				return localEntity;
+#endif
 			}
 
 			private Druid GetRootEntityId()

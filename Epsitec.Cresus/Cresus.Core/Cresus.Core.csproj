@@ -187,7 +187,6 @@
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
-    <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
@@ -241,7 +240,6 @@
     <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
-    <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
@@ -264,13 +262,11 @@
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
-    <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
-    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
@@ -278,7 +274,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
-    <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="TableDesigner\BaseController.cs" />
     <Compile Include="TableDesigner\DesignerTable.cs" />
     <Compile Include="TableDesigner\DesignerValues.cs" />
@@ -315,8 +310,6 @@
     <Compile Include="Entities\SubTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="CommandHandlerStack.cs" />
-    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
-    <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />
@@ -361,7 +354,6 @@
     <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
     <Compile Include="Entities\Extensions.cs" />
-    <Compile Include="Painter.cs" />
     <Compile Include="Repositories\RelationRepository.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\CommentRepository.cs" />

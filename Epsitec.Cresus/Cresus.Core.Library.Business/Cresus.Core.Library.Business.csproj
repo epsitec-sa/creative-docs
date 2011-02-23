@@ -67,6 +67,10 @@
     <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\RuleType.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
+    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
+    <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
+    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
+    <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
@@ -132,9 +137,12 @@
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
+    <Compile Include="Painter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Res.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
+    <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
@@ -146,7 +154,6 @@
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\Miniature.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
-    <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
     <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TaggedText.cs" />

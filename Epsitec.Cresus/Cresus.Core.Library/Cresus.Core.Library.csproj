@@ -48,6 +48,8 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
+    <Compile Include="Dispatcher.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="PersistenceManagerBinding`1.cs" />
     <Compile Include="ExceptionManager.cs" />
@@ -57,10 +59,12 @@
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="TextFormatter.cs" />
+    <Compile Include="UI.Constants.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
+    <Compile Include="Widgets\StaticGlyph.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

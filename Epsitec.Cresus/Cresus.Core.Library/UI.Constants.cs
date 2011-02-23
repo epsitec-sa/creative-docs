@@ -1,0 +1,14 @@
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+namespace Epsitec.Cresus.Core.Library
+{
+	public static partial class UI
+	{
+		public static readonly double RightMargin				= 10;
+		public static readonly double MarginUnderLabel			= 1;
+		public static readonly double MarginUnderTextField		= 2;
+		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
+		public static readonly double ComboButtonWidth			= 14;
+	}
+}

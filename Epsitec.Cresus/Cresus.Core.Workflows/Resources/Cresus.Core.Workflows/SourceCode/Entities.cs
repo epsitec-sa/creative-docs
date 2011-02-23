@@ -818,3 +818,47 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
+#region Epsitec.Cresus.Core.IWorkflowHost Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IWorkflowHost</c> entity.
+	///	designer:cap/DVA21
+	///	</summary>
+	public interface IWorkflowHost
+	{
+		///	<summary>
+		///	The <c>Workflow</c> field.
+		///	designer:fld/DVA21/DVA31
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[DVA31]")]
+		global::Epsitec.Cresus.Core.Entities.WorkflowEntity Workflow
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IWorkflowHostInterfaceImplementation
+	{
+		public static global::Epsitec.Cresus.Core.Entities.WorkflowEntity GetWorkflow(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[DVA31]");
+		}
+		public static void SetWorkflow(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue = obj.Workflow;
+			if (oldValue != value || !entity.IsFieldDefined("[DVA31]"))
+			{
+				IWorkflowHostInterfaceImplementation.OnWorkflowChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowEntity> ("[DVA31]", oldValue, value);
+				IWorkflowHostInterfaceImplementation.OnWorkflowChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWorkflowChanged(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEntity newValue);
+		static partial void OnWorkflowChanging(global::Epsitec.Cresus.Core.Entities.IWorkflowHost obj, global::Epsitec.Cresus.Core.Entities.WorkflowEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowEntity newValue);
+	}
+}
+#endregion
+

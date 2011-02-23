@@ -658,6 +658,8 @@ namespace Epsitec.Cresus.Core
 		#region Account editor
 		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
 			//	selon le plan comptable en cours. Si le plan comptable n'existe pas, on crée
 			//	une ligne éditable toute simple.
@@ -752,6 +754,7 @@ namespace Epsitec.Cresus.Core
 			};
 
 			return editor;
+#endif
 		}
 
 		private static FormattedText GetAccountText(Business.Accounting.BookAccountDefinition account)

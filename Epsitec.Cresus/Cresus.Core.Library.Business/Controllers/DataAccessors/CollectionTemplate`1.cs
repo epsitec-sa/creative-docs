@@ -20,6 +20,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext)
 			: base (name)
 		{
+			this.businessContext = null;
+			this.dataContextPool = dataContext.DataContextPool;
+
 			this.DefineCreateItem (() => CollectionTemplate<T>.CreateEmptyItem (dataContext));
 		}
 
@@ -27,6 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			: base (name)
 		{
 			this.businessContext = businessContext;
+			this.dataContextPool = businessContext.Data.DataContextPool;
 
 			this.DefineCreateItem (() => this.businessContext.CreateEntityAndRegisterAsEmpty<T> ());
 			this.DefineDeleteItem (x => this.businessContext.ArchiveEntity<T> (x));
@@ -193,7 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = TileDataType.CollectionItem;
 
-			var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (source);
+			var context = this.dataContextPool.FindDataContext (source);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (source)))
@@ -306,6 +310,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		private readonly BusinessContext businessContext;
+		private readonly DataContextPool dataContextPool;
 
 		private System.Func<T> createItem;
 		private System.Func<int> createGetIndex;

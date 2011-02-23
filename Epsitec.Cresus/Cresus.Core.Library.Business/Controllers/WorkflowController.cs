@@ -6,6 +6,7 @@ using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -97,8 +98,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void QueueAsyncUpdate()
 		{
 			var job = new TaskletJob (this, this.Update, TaskletRunMode.Async);
-
-			CoreApplication.QueueTasklets ("WorkflowController.Update", job);
+			
+			Dispatcher.QueueTasklets ("WorkflowController.Update", job);
 		}
 
 		private void UpdateEnabledTransitions()
@@ -149,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ExecuteAction(WorkflowTransition transition)
 		{
-			using (var engine = new WorkflowExecutionEngine (this, transition))
+			using (var engine = new WorkflowExecutionEngine (transition))
 			{
 				engine.Execute ();
 			}

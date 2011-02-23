@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -128,12 +129,16 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.image = null;
 			}
 
+			throw new System.NotImplementedException ();
+
+#if false
 			if (this.coreData != null && this.imageEntity.IsNotNull ())
 			{
 				var store = this.coreData.ImageDataStore;
 				var data = store.GetImageData (this.imageEntity.ImageBlob.Code, (int) (Misc.GetButtonWidth () - 2));
 				this.image = data.GetImage ();
 			}
+#endif
 		}
 
 

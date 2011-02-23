@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
-	class MultilingualEditionDialog : AbstractDialog
+	public class MultilingualEditionDialog : AbstractDialog
 	{
 		public MultilingualEditionDialog(AbstractTextField textField, MultilingualText multilingualText)
 		{
@@ -160,14 +160,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = rightFrame,
 					Text = desc,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
 				};
 
 				var line = new FrameBox
 				{
 					Parent = rightFrame,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderTextField),
 					TabIndex = tabIndex++,
 				};
 

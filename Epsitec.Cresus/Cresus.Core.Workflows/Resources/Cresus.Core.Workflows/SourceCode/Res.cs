@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Core
 		{
 			//	designer:cap/DVAU
 			public static readonly Epsitec.Common.Types.EnumType WorkflowTransitionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+			//	designer:cap/DVA21
+			public static readonly Epsitec.Common.Types.StructuredType IWorkflowHost = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
 			//	designer:cap/DVA
 			public static readonly Epsitec.Common.Types.StructuredType Workflow = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/DVA5
@@ -64,6 +66,12 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Fields
 		{
+			public static class IWorkflowHost
+			{
+				//	designer:cap/DVA31
+				public static readonly global::Epsitec.Common.Support.Druid Workflow = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35);
+			}
+			
 			public static class Workflow
 			{
 				//	designer:cap/DVAO
