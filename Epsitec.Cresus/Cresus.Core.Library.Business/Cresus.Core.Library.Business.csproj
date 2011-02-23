@@ -122,6 +122,7 @@
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Factories\BusinessContextPoolFactory.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />

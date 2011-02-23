@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class BusinessContextPool : CoreDataComponent
 	{
-		private BusinessContextPool(CoreData data)
+		internal BusinessContextPool(CoreData data)
 			: base (data)
 		{
 			this.pool = new List<BusinessContext> ();
@@ -68,32 +68,6 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			this.pool.Remove (context);
 		}
-
-		#region BusinessContextPoolFactory Class
-
-		public sealed class BusinessContextPoolFactory : ICoreDataComponentFactory
-		{
-			#region ICoreDataComponentFactory Members
-
-			public bool CanCreate(CoreData data)
-			{
-				return true;
-			}
-
-			public CoreDataComponent Create(CoreData data)
-			{
-				return new BusinessContextPool (data);
-			}
-
-			public System.Type GetComponentType()
-			{
-				return typeof (BusinessContextPool);
-			}
-
-			#endregion
-		}
-
-		#endregion
 
 
 		private readonly List<BusinessContext> pool;

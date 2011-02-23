@@ -36,6 +36,10 @@ namespace Epsitec.Cresus.Core
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
+
+			Factories.CoreDataComponentFactory.SetupComponents (this);
+
+
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
 			this.connectionManager = new ConnectionManager (this);
 			this.locker = new Locker (this);
@@ -154,33 +158,16 @@ namespace Epsitec.Cresus.Core
 			return this.DataContext;
 		}
 
-		private void SetupComponents()
+		internal bool ContainsComponent(string name)
 		{
-			var factories = Resolvers.CoreDataComponentFactoryResolver.Resolve ().ToList ();
-			bool again = true;
-
-			while (again)
-			{
-				again = false;
-
-				foreach (var factory in factories)
-				{
-					var type = factory.GetComponentType ();
-					var name = type.FullName;
-
-					if (this.components.ContainsKey (name))
-					{
-						continue;
-					}
-
-					if (factory.CanCreate (this))
-					{
-						this.components.Add (name, factory.Create (this));
-						again = true;
-					}
-				}
-			}
+			return this.components.ContainsKey (name);
 		}
+
+		internal void RegisterComponent(string name, CoreDataComponent component)
+		{
+			this.components[name] = component;
+		}
+
 
 		private DataContext EnsureDataContext(ref DataContext dataContext, string name)
 		{

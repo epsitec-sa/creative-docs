@@ -10,21 +10,15 @@ namespace Epsitec.Cresus.Core.Resolvers
 	{
 		public static IEnumerable<ICoreDataComponentFactory> Resolve()
 		{
-			return from type in CoreDataComponentFactoryResolver.FindFactorySystemTypes ()
-				   select System.Activator.CreateInstance (type) as ICoreDataComponentFactory;
+			if (CoreDataComponentFactoryResolver.factories == null)
+			{
+				CoreDataComponentFactoryResolver.factories = new List<ICoreDataComponentFactory> (InterfaceImplementationResolver<ICoreDataComponentFactory>.CreateInstances ());
+			}
+
+			return CoreDataComponentFactoryResolver.factories;
 		}
 
-		private static IEnumerable<System.Type> FindFactorySystemTypes()
-		{
-			string interfaceTypeName = typeof (ICoreDataComponentFactory).FullName;
-
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract
-						where type.GetInterface (interfaceTypeName) != null
-						select type;
-
-			return types;
-		}
+		[System.ThreadStatic]
+		private static List<ICoreDataComponentFactory> factories;
 	}
 }
