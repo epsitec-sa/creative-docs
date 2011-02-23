@@ -1,10 +1,6 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-
-using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -12,11 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class BusinessContextPool
+	public sealed class BusinessContextPool : CoreDataComponent
 	{
-		public BusinessContextPool(CoreData data)
+		private BusinessContextPool(CoreData data)
+			: base (data)
 		{
-			this.data = data;
 			this.pool = new List<BusinessContext> ();
 		}
 
@@ -50,7 +46,7 @@ namespace Epsitec.Cresus.Core.Business
 		internal DataContext CreateDataContext(BusinessContext context)
 		{
 			string name = string.Format ("BusinessContext #{0}", context.UniqueId);
-			return this.data.CreateDataContext (name);
+			return this.Data.CreateDataContext (name);
 		}
 
 		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)
@@ -60,7 +56,7 @@ namespace Epsitec.Cresus.Core.Business
 				context.SaveChanges ();
 			}
 
-			this.data.DisposeDataContext (dataContext);
+			this.Data.DisposeDataContext (dataContext);
 		}
 
 		internal void Add(BusinessContext context)
@@ -73,7 +69,33 @@ namespace Epsitec.Cresus.Core.Business
 			this.pool.Remove (context);
 		}
 
+		#region BusinessContextPoolFactory Class
+
+		public sealed class BusinessContextPoolFactory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return true;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new BusinessContextPool (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (BusinessContextPool);
+			}
+
+			#endregion
+		}
+
+		#endregion
+
+
 		private readonly List<BusinessContext> pool;
-		private readonly CoreData data;
 	}
 }

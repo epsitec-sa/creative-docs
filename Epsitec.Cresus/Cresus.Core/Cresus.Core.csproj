@@ -94,9 +94,6 @@
     <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
     <Compile Include="Business\ActionVerb.cs" />
-    <Compile Include="Business\BusinessContext.cs" />
-    <Compile Include="Business\BusinessContextPool.cs" />
-    <Compile Include="Business\BusinessRuleAttribute.cs" />
     <Compile Include="Business\ActionAttribute.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\DocumentState.cs" />
@@ -129,12 +126,10 @@
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryViewController.cs" />
-    <Compile Include="Controllers\WorkflowFactory.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
     <Compile Include="Data\DatabaseTime.cs" />
     <Compile Include="Data\ItemCode.cs" />
     <Compile Include="Data\ItemCodeGenerator.cs" />
-    <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Finance\PriceCalculators\AbstractPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ArticlePriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DocumentPriceCalculator.cs" />
@@ -185,14 +180,8 @@
     <Compile Include="Controllers\EditionControllers\EditionBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
-    <Compile Include="Controllers\WorkflowAction.cs" />
-    <Compile Include="Controllers\WorkflowActionValidationResult.cs" />
-    <Compile Include="Controllers\WorkflowController.cs" />
-    <Compile Include="Controllers\WorkflowTransition.cs" />
-    <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
     <Compile Include="Data\GlobalLock.cs" />
     <Compile Include="Data\GlobalLocks.cs" />
-    <Compile Include="Data\ImageData.cs" />
     <Compile Include="Data\ItemCodes.cs" />
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
@@ -262,7 +251,6 @@
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
-    <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Dialogs\PrintPreviewDialog.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
@@ -323,11 +311,8 @@
     <Compile Include="Entities\WorkflowNodeEntity.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
-    <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
-    <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
-    <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
@@ -346,15 +331,9 @@
     <Compile Include="Repositories\VatDefinitionRepository.cs" />
     <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
     <Compile Include="Repositories\WorkflowNodeRepository.cs" />
-    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
-    <Compile Include="Business\CompositeBusinessRule.cs" />
-    <Compile Include="Business\GenericBusinessRule`1.cs" />
-    <Compile Include="Business\Logic.cs" />
-    <Compile Include="Business\GenericBusinessRule.cs" />
     <Compile Include="Business\Rules\LegalPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
-    <Compile Include="Business\RuleType.cs" />
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
@@ -375,13 +354,10 @@
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
-    <Compile Include="Factories\EntityViewControllerFactory.cs" />
     <Compile Include="Resolvers\BusinessActionResolver.cs" />
-    <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
-    <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEndTotalBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
@@ -391,8 +367,6 @@
     <Compile Include="Data\LockTransaction.cs" />
     <Compile Include="Data\DataLifetimeExpectancy.cs" />
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
-    <Compile Include="Resolvers\RepositoryResolver.cs" />
-    <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="TableDesigner\BaseController.cs" />
     <Compile Include="TableDesigner\DesignerTable.cs" />
     <Compile Include="TableDesigner\DesignerValues.cs" />
@@ -407,8 +381,6 @@
     <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
     <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
-    <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
-    <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />
     <Compile Include="Controllers\PreviewViewController.cs" />
@@ -424,9 +396,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
     <Compile Include="Helpers\ArticleParameterHelper.cs" />
-    <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
-    <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
-    <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Repositories\ArticleGroupRepository.cs" />
     <Compile Include="Repositories\ArticleCategoryRepository.cs" />
     <Compile Include="Entities\AbstractDocumentItemEntity.cs" />
@@ -476,18 +445,13 @@
     <Compile Include="Controllers\EditionControllers\EditionTelecomContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionMailContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
-    <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
-    <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
-    <Compile Include="Controllers\DataViewController.cs" />
-    <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\IGroupedItem.cs" />
     <Compile Include="Controllers\IGroupedItemPosition.cs" />
     <Compile Include="Controllers\NewEntityReference.cs" />
     <Compile Include="Controllers\ReferenceController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
-    <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentModeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureViewController.cs" />
@@ -504,7 +468,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
     <Compile Include="Controllers\TextValueController.cs" />
     <Compile Include="Controllers\TileContainerController.cs" />
-    <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
@@ -520,10 +483,7 @@
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
     <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
-    <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
     <Compile Include="Painter.cs" />
-    <Compile Include="CoreData.Hack.Constants.cs" />
-    <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Repositories\RelationRepository.cs" />
     <Compile Include="Data\CoreDataBrowser.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
@@ -548,12 +508,10 @@
     <Compile Include="Repositories\CountryRepository.cs" />
     <Compile Include="Repositories\AbstractPersonRepository.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
-    <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="CoreCommandDispatcher.cs" />
-    <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -656,6 +614,10 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
+      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
+      <Name>Cresus.Core.Library.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
@@ -663,6 +625,10 @@
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
       <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>

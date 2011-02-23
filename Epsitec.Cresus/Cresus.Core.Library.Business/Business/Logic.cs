@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+#if false
 		public CoreApplication					Application
 		{
 			get
@@ -45,6 +46,7 @@ namespace Epsitec.Cresus.Core.Business
 				return this.Application.BusinessSettings;
 			}
 		}
+#endif
 
 		public BusinessContext					BusinessContext
 		{

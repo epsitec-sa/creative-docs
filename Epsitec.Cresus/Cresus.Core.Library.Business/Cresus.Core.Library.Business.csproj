@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</ProjectGuid>
+    <ProjectGuid>{E70C6F16-A0BF-439B-845D-87B164510AA0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
-    <AssemblyName>Cresus.Core.Library.Data</AssemblyName>
+    <AssemblyName>Cresus.Core.Library.Business</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,68 +39,71 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Business\RefIdGenerator.cs" />
-    <Compile Include="Business\RefIdGeneratorPool.cs" />
-    <Compile Include="CoreData.cs" />
-    <Compile Include="DataExtractionMode.cs" />
-    <Compile Include="Data\ConnectionManager.cs" />
-    <Compile Include="Data\ConnectionUserIdentity.cs" />
-    <Compile Include="Data\CoreDataBrowser.cs" />
-    <Compile Include="Data\DatabaseTime.cs" />
-    <Compile Include="Data\DataLifetimeExpectancy.cs" />
-    <Compile Include="Data\GlobalLock.cs" />
-    <Compile Include="Data\GlobalLocks.cs" />
-    <Compile Include="Data\ItemCode.cs" />
-    <Compile Include="Data\ItemCodeGenerator.cs" />
-    <Compile Include="Data\ItemCodes.cs" />
-    <Compile Include="Data\Locker.cs" />
-    <Compile Include="Data\LockMonitor.cs" />
-    <Compile Include="Data\LockOwner.cs" />
-    <Compile Include="Data\LockTransaction.cs" />
-    <Compile Include="Entities\AbstractEntityExtension.cs" />
-    <Compile Include="Entities\IDataHashExtension.cs" />
-    <Compile Include="CoreDataComponent.cs" />
-    <Compile Include="ICoreDataComponentFactory.cs" />
+    <Compile Include="Business\BusinessContext.cs" />
+    <Compile Include="Business\BusinessContextPool.cs" />
+    <Compile Include="Business\BusinessRuleAttribute.cs" />
+    <Compile Include="Business\CompositeBusinessRule.cs" />
+    <Compile Include="Business\EntitySaveMode.cs" />
+    <Compile Include="Business\GenericBusinessRule.cs" />
+    <Compile Include="Business\GenericBusinessRule`1.cs" />
+    <Compile Include="Business\Logic.cs" />
+    <Compile Include="Business\RuleType.cs" />
+    <Compile Include="Controllers\CoreController.cs" />
+    <Compile Include="Controllers\CoreViewController.cs" />
+    <Compile Include="Controllers\DataViewController.cs" />
+    <Compile Include="Controllers\EntityViewController.cs" />
+    <Compile Include="Controllers\EntityViewController`1.cs" />
+    <Compile Include="Controllers\IClickSimulator.cs" />
+    <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\ViewControllerMode.cs" />
+    <Compile Include="Controllers\WorkflowAction.cs" />
+    <Compile Include="Controllers\WorkflowActionValidationResult.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Controllers\WorkflowExecutionEngine.cs" />
+    <Compile Include="Controllers\WorkflowFactory.cs" />
+    <Compile Include="Controllers\WorkflowTransition.cs" />
+    <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
+    <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
+    <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
+    <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
+    <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="Repositories\Repository`1.cs" />
-    <Compile Include="Resolvers\CoreDataComponentFactoryResolver.cs" />
-    <Compile Include="Resolvers\RepositoryResolver.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Res.cs" />
+    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
+    <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Library.Data\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Library.Data\module.info" />
-    <None Include="Resources\Cresus.Core.Library.Data\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Name>Cresus.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,7 +4,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("Cresus.Core.Library.Data")]
-[assembly: AssemblyDescription ("Crésus Data")]
+[assembly: AssemblyTitle ("Cresus.Core.Workflows")]
+[assembly: AssemblyDescription ("Crésus Workflows")]
 [assembly: AssemblyProduct ("Crésus")]
 [assembly: AssemblyCopyright ("Copyright © 2010-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

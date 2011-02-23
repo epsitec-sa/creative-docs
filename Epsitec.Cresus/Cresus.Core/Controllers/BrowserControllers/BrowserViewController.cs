@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return;
 			}
 
-			this.scrollList.SelectedItemIndex = this.collection.GetIndex (CoreData.FindEntityKey (entity));
+			this.scrollList.SelectedItemIndex = this.collection.GetIndex (this.data.FindEntityKey (entity));
 		}
 
 		/// <summary>

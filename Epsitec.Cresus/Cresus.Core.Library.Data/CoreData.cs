@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 			this.AllowDatabaseUpdate = allowDatabaseUpdate;
 
+			this.components = new Dictionary<string, CoreDataComponent> ();
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
@@ -126,6 +127,18 @@ namespace Epsitec.Cresus.Core
 		}
 #endif
 
+		public T GetComponent<T>()
+			where T : CoreDataComponent
+		{
+			CoreDataComponent component;
+
+			if (this.components.TryGetValue (typeof (T).FullName, out component))
+			{
+				return component as T;
+			}
+
+			return null;
+		}
 
 		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
 		{
@@ -139,6 +152,34 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return this.DataContext;
+		}
+
+		private void SetupComponents()
+		{
+			var factories = Resolvers.CoreDataComponentFactoryResolver.Resolve ().ToList ();
+			bool again = true;
+
+			while (again)
+			{
+				again = false;
+
+				foreach (var factory in factories)
+				{
+					var type = factory.GetComponentType ();
+					var name = type.FullName;
+
+					if (this.components.ContainsKey (name))
+					{
+						continue;
+					}
+
+					if (factory.CanCreate (this))
+					{
+						this.components.Add (name, factory.Create (this));
+						again = true;
+					}
+				}
+			}
 		}
 
 		private DataContext EnsureDataContext(ref DataContext dataContext, string name)
@@ -769,6 +810,7 @@ namespace Epsitec.Cresus.Core
 //-		private readonly BusinessContextPool businessContextPool;
 		private readonly Locker locker;
 //		private readonly ImageDataStore imageDataStore;
+		private readonly Dictionary<string, CoreDataComponent> components;
 
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;

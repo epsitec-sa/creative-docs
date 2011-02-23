@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.entityRecords = new List<EntityRecord> ();
 			this.masterEntities = new List<AbstractEntity> ();
 
+			this.data = this.pool.Data;
 			this.dataContext = this.pool.CreateDataContext (this);
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 			
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			get
 			{
-				return CoreProgram.Application.Data;
+				return this.data;
 			}
 		}
 
@@ -619,7 +620,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				this.entity = entity;
 				this.businessContext = businessContext;
-				this.dataContext = CoreProgram.Application.Data.DataContextPool.FindDataContext (entity);
+				this.dataContext = this.businessContext.Data.DataContextPool.FindDataContext (entity);
 			}
 
 			public DataContext DataContext
@@ -783,6 +784,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly List<EntityRecord>		entityRecords;
 		private readonly List<AbstractEntity>	masterEntities;
 		private readonly Locker					locker;
+		private readonly CoreData				data;
 
 		private int								dataChangedCounter;
 		private bool							dataContextDirty;
