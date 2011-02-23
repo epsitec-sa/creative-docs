@@ -16,7 +16,6 @@ using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Serialization;
 using Epsitec.Cresus.Core.Print.Controllers;
 using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -30,7 +29,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintPreviewDialog : AbstractDialog
 	{
-		public PrintPreviewDialog(CoreApplication application, CoreData coreData, List<DeserializedJob> jobs)
+		public PrintPreviewDialog(Application application, CoreData coreData, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
@@ -162,7 +161,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly CoreApplication						application;
+		private readonly Application							application;
 		private readonly CoreData								coreData;
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<DeserializedPage>					pages;

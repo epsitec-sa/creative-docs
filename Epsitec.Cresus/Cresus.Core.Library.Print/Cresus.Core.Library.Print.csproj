@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</ProjectGuid>
+    <ProjectGuid>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Core.Workflows</RootNamespace>
-    <AssemblyName>Cresus.Core.Workflows</AssemblyName>
+    <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
+    <AssemblyName>Cresus.Core.Library.Print</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,30 +46,54 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="ActionAttribute.cs" />
-    <Compile Include="ActionVerb.cs" />
+    <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
+    <Compile Include="Dialogs\PrintPreviewDialog.cs" />
+    <Compile Include="Print\Bands\AbstractBand.cs" />
+    <Compile Include="Print\Bands\AbstractEsrBand.cs" />
+    <Compile Include="Print\Bands\CellBorder.cs" />
+    <Compile Include="Print\Bands\EsBand.cs" />
+    <Compile Include="Print\Bands\EsrBand.cs" />
+    <Compile Include="Print\Bands\ImageBand.cs" />
+    <Compile Include="Print\Bands\SurfaceBand.cs" />
+    <Compile Include="Print\Bands\TableBand.cs" />
+    <Compile Include="Print\Bands\TableColumn.cs" />
+    <Compile Include="Print\Bands\TextBand.cs" />
+    <Compile Include="Print\Common.cs" />
+    <Compile Include="Print\Containers\BandContainer.cs" />
+    <Compile Include="Print\Containers\DocumentContainer.cs" />
+    <Compile Include="Print\Containers\PageContainer.cs" />
+    <Compile Include="Print\Controllers\ContinuousController.cs" />
+    <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
+    <Compile Include="Print\DocumentOption.cs" />
+    <Compile Include="Print\EntityPrinters\AbstractPrinter.cs" />
+    <Compile Include="Print\EntityPrinters\DocumentMetadataMailContactPrinter.cs" />
+    <Compile Include="Print\EntityPrinters\DocumentMetadataPrinter.cs" />
+    <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
+    <Compile Include="Print\JobToPrint.cs" />
+    <Compile Include="Print\OptionsDictionary.cs" />
+    <Compile Include="Print\PageType.cs" />
+    <Compile Include="Print\PreviewMode.cs" />
+    <Compile Include="Print\PrintEngine.cs" />
+    <Compile Include="Print\PrinterApplicationSettings.cs" />
+    <Compile Include="Print\PrintingUnit.cs" />
+    <Compile Include="Print\PrintingUnitsDictionary.cs" />
+    <Compile Include="Print\SectionToPrint.cs" />
+    <Compile Include="Print\Serialization\DeserializedJob.cs" />
+    <Compile Include="Print\Serialization\DeserializedPage.cs" />
+    <Compile Include="Print\Serialization\DeserializedSection.cs" />
+    <Compile Include="Print\Serialization\SerializationEngine.cs" />
+    <Compile Include="Print\Verbose\DocumentOptionValueType.cs" />
+    <Compile Include="Print\Verbose\VerboseDocumentOption.cs" />
+    <Compile Include="Print\Verbose\VerbosePageType.cs" />
+    <Compile Include="Print\XmlJobPrintEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resolvers\BusinessActionResolver.cs" />
-    <Compile Include="Resources\Cresus.Core.Workflows\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.Core.Workflows\SourceCode\Res.cs" />
-    <Compile Include="WorkflowAction.cs" />
-    <Compile Include="WorkflowActionValidationResult.cs" />
-    <Compile Include="WorkflowController.cs" />
-    <Compile Include="WorkflowExecutionEngine.cs" />
-    <Compile Include="WorkflowFactory.cs" />
-    <Compile Include="WorkflowStatus.cs" />
-    <Compile Include="WorkflowTransition.cs" />
-    <Compile Include="WorkflowTransitionType.cs" />
+    <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
+    <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Workflows\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Workflows\module.info">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\Cresus.Core.Workflows\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -84,13 +108,17 @@
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
+      <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
+      <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

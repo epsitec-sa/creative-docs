@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Busines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Workflows", "Cresus.Core.Workflows\Cresus.Core.Workflows.csproj", "{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Print", "Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj", "{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -798,6 +800,24 @@ Global
 		{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}.Release|Win32.ActiveCfg = Release|Any CPU
 		{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}.Release|x86.ActiveCfg = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
