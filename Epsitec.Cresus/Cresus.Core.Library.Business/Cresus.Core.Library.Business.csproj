@@ -45,8 +45,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Binders\IFieldBinder.cs" />
-    <Compile Include="Binders\IFieldBinderProvider.cs" />
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
     <Compile Include="Business\ArticleType.cs" />
@@ -125,7 +123,6 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
-    <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
@@ -139,7 +136,6 @@
     <Compile Include="Res.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
-    <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />

@@ -2,10 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Support.PlugIns;
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;

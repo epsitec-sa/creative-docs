@@ -41,8 +41,12 @@ namespace Epsitec.Cresus.Core.Factories
 				return result;
 			}
 
-			var providers  = InterfaceImplementationResolver<IFieldBinderProvider>.GetInstances ();
-			var binders    = from provider in providers
+			if (FieldBinderFactory.providers == null)
+			{
+				FieldBinderFactory.providers = new List<IFieldBinderProvider> (InterfaceImplementationResolver<IFieldBinderProvider>.CreateInstances ());
+			}
+
+			var binders    = from provider in FieldBinderFactory.providers
 							 let binder = provider.GetFieldBinder (namedType)
 							 where binder != null
 							 select binder;
@@ -68,5 +72,8 @@ namespace Epsitec.Cresus.Core.Factories
 
 		[System.ThreadStatic]
 		private static Dictionary<INamedType, IFieldBinder> binders;
+
+		[System.ThreadStatic]
+		private static List<IFieldBinderProvider> providers;
 	}
 }
