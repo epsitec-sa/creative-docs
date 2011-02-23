@@ -7,7 +7,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
-using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core
 {
@@ -20,7 +19,7 @@ namespace Epsitec.Cresus.Core
 		/// Initializes a new instance of the <see cref="CoreCommandDispatcher"/> class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public CoreCommandDispatcher(CoreApplication application)
+		public CoreCommandDispatcher(Application application)
 		{
 			this.application     = application;
 			this.dispatcher      = application.CommandDispatcher;
@@ -58,9 +57,12 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateCommandHandlers()
 		{
+			throw new System.NotImplementedException ();
+#if false
 			this.commandHandlers.Add (new CommandHandlers.CoreCommandHandler (this));
 			this.commandHandlers.Add (new CommandHandlers.DatabaseCommandHandler (this));
 			this.commandHandlers.Add (new CommandHandlers.NavigationCommandHandler (this));
+#endif
 		}
 
 		private void RegisterCommandHandlers()
@@ -106,6 +108,7 @@ namespace Epsitec.Cresus.Core
 			return this.commandContext.GetCommandState (command);
 		}
 
+#if false
 		public static Orchestrators.DataViewOrchestrator GetOrchestrator(CommandEventArgs e)
 		{
 			var controller = MainViewController.Find (e.CommandContextChain);
@@ -119,6 +122,7 @@ namespace Epsitec.Cresus.Core
 				return controller.Orchestrator;
 			}
 		}
+#endif
 
 		public void Dispatch(CommandDispatcher dispatcher, CommandEventArgs e, System.Action<Command> action = null)
 		{
@@ -162,7 +166,7 @@ namespace Epsitec.Cresus.Core
 			return stack;
 		}
 
-		private readonly CoreApplication application;
+		private readonly Application application;
 		private readonly CommandDispatcher dispatcher;
 		private readonly CommandContext commandContext;
 		private readonly Dictionary<Command, CommandHandlerStack> commandHandlerStack;

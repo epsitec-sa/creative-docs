@@ -87,6 +87,8 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		private void SelectDatabase(CommandEventArgs e)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var commandName  = e.Command.Name;
 
 			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.showDatabaseCommandPrefix));
@@ -98,6 +100,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 			controller.SelectDataSet (databaseName);
 			this.OnChanged ();
+#endif
 		}
 
 		private void UpdateActiveCommandState(CommandState activeState)

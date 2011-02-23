@@ -104,7 +104,6 @@
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
-    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
@@ -313,7 +312,6 @@
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\SubTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
-    <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />
@@ -383,7 +381,6 @@
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
-    <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

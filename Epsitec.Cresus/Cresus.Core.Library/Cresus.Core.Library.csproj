@@ -48,6 +48,8 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CommandHandlerStack.cs" />
+    <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dispatcher.cs" />
     <Compile Include="Misc.cs" />
