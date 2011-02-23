@@ -67,10 +67,6 @@
     <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\RuleType.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
-    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
-    <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
-    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
-    <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />

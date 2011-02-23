@@ -102,6 +102,10 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
+    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
+    <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
+    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
+    <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
