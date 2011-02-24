@@ -93,7 +93,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Images"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Business", "Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj", "{E70C6F16-A0BF-439B-845D-87B164510AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Workflows", "Cresus.Core.Workflows\Cresus.Core.Workflows.csproj", "{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Workflows", "Cresus.Core.Workflows\Cresus.Core.Library.Workflows.csproj", "{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Print", "Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj", "{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}"
 EndProject

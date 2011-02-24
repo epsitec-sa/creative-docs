@@ -463,9 +463,9 @@
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Workflows\Cresus.Core.Workflows.csproj">
+    <ProjectReference Include="..\Cresus.Core.Workflows\Cresus.Core.Library.Workflows.csproj">
       <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
-      <Name>Cresus.Core.Workflows</Name>
+      <Name>Cresus.Core.Library.Workflows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>

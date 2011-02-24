@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Cresus.Core.Workflows</RootNamespace>
-    <AssemblyName>Cresus.Core.Workflows</AssemblyName>
+    <AssemblyName>Cresus.Core.Library.Workflows</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,8 +58,8 @@
     <Compile Include="Repositories\WorkflowNodeRepository.cs" />
     <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Resolvers\BusinessActionResolver.cs" />
-    <Compile Include="Resources\Cresus.Core.Workflows\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.Core.Workflows\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
     <Compile Include="WorkflowAction.cs" />
     <Compile Include="WorkflowActionValidationResult.cs" />
     <Compile Include="WorkflowExecutionEngine.cs" />
@@ -72,11 +72,11 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Workflows\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Workflows\module.info">
+    <None Include="Resources\Cresus.Core.Library.Workflows\Captions.00.resource" />
+    <None Include="Resources\Cresus.Core.Library.Workflows\module.info">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Resources\Cresus.Core.Workflows\Strings.00.resource" />
+    <None Include="Resources\Cresus.Core.Library.Workflows\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
