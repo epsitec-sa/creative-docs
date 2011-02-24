@@ -357,7 +357,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.users[row];
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
+			throw new System.NotImplementedException ();
+#if false
 			button.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+#endif
 
 			var text = this.table[1, row].Children[0] as StaticText;
 			text.FormattedText = user.ShortDescription;
@@ -370,7 +373,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWidgets()
 		{
 			var user = this.SelectedUser;
-			bool passwordRequired = UserManager.IsPasswordRequired (user);
+			bool passwordRequired = (user != null) && user.IsPasswordRequired;
 
 			this.passBoxEdit.Visibility = (user == null ||  passwordRequired);
 			this.passBoxInfo.Visibility = (user != null && !passwordRequired);
@@ -396,7 +399,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			if (UserManager.IsPasswordRequired (user))
+			if (user.IsPasswordRequired)
 			{
 				return LoginResult.Retry;
 			}

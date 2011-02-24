@@ -79,7 +79,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
+				throw new System.NotImplementedException ();
+#if false
 				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+#endif
 				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
 
 				ToolTip.Default.SetToolTip (this.authenticateUserButton, user.ShortDescription);

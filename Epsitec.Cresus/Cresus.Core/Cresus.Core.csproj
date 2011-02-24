@@ -212,8 +212,6 @@
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
-    <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
-    <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
     <Compile Include="Entities\PostBoxEntity.cs" />
     <Compile Include="Entities\StreetEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
@@ -230,7 +228,6 @@
     <Compile Include="Entities\UriContactEntity.cs" />
     <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Entities\MailContactEntity.cs" />
-    <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />

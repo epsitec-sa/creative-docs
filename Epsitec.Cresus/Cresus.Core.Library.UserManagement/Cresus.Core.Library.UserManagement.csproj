@@ -45,15 +45,21 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Entities\SoftwareUserEntity.cs" />
+    <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
+    <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
     <Compile Include="Hack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
-    <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
     <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Res.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+      <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
+      <Name>Common.Identity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>

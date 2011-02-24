@@ -5,7 +5,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Extensions;
-using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,26 @@ namespace Epsitec.Cresus.Core.Entities
 					&& (this.Disabled == false)
 					&& (System.DateTime.Now.InRange (this))
 					&& (this.UserGroups.Where (group => !group.IsArchive).All (group => group.Disabled == false));
+			}
+		}
+
+		public bool IsPasswordRequired
+		{
+			get
+			{
+				switch (this.AuthenticationMethod)
+				{
+					case Business.UserManagement.UserAuthenticationMethod.Password:
+						return true;
+					case Business.UserManagement.UserAuthenticationMethod.None:
+						return false;
+					case Business.UserManagement.UserAuthenticationMethod.System:
+						return string.Compare (this.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) != 0;
+					case Business.UserManagement.UserAuthenticationMethod.Disabled:
+						return false;
+					default:
+						throw new System.NotSupportedException (string.Format ("Authentication method {0} not supported", this.AuthenticationMethod));
+				}
 			}
 		}
 
@@ -49,7 +68,7 @@ namespace Epsitec.Cresus.Core.Entities
 					text = TextFormatter.FormatText (this.DisplayName, "(", this.LoginName, ")");
 				}
 
-				if (Business.UserManagement.UserManager.IsPasswordRequired (this) == false)
+				if (this.IsPasswordRequired == false)
 				{
 					text = TextFormatter.FormatText (text, "*");
 				}

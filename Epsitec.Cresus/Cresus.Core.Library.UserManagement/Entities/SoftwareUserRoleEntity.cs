@@ -4,14 +4,12 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class SoftwareUserGroupEntity
+	public partial class SoftwareUserRoleEntity
 	{
 		public override EntityStatus GetEntityStatus()
 		{
@@ -20,7 +18,6 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.Code.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.Roles.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
 			}

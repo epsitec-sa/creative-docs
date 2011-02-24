@@ -55,11 +55,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (this.businessContext == null)
                 {
-					throw new System.NotImplementedException ();
-#if false
-					this.businessContext = this.data.CreateBusinessContext ();
+					this.businessContext = BusinessContext.Create (this.data);
 					this.businessContext.GlobalLock = Data.GlobalLocks.UserManagement;
-#endif
                 }
 
 				return this.businessContext;
@@ -273,7 +270,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
 		{
-			if (!UserManager.IsPasswordRequired (user))
+			if (user.IsNull ())
+			{
+				return false;
+			}
+
+			if (user.IsPasswordRequired == false)
 			{
 				return true;
 			}
@@ -284,31 +286,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string password)
 		{
 			return user.CheckPassword (password);
-		}
-
-		public static bool IsPasswordRequired(SoftwareUserEntity user)
-		{
-			if (user == null)
-			{
-				return false;
-			}
-
-			if (user.AuthenticationMethod == UserAuthenticationMethod.Password)
-			{
-				return true;
-			}
-
-			if (user.AuthenticationMethod == UserAuthenticationMethod.None)
-			{
-				return false;
-			}
-
-			if (user.AuthenticationMethod == UserAuthenticationMethod.System)
-			{
-				return string.Compare (user.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) != 0;
-			}
-
-			return false;
 		}
 
 

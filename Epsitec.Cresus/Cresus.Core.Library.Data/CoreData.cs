@@ -271,8 +271,6 @@ namespace Epsitec.Cresus.Core
 		public void SetupBusiness()
 		{
 			Factories.CoreDataComponentFactory.SetupComponents (this.components.Select (x => x.Value));
-			throw new System.NotImplementedException ();
-//-			TaxContext.Initialize (this);
 		}
 
 #if false

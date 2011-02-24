@@ -853,7 +853,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.users[row];
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
+			throw new System.NotImplementedException ();
+#if false
 			button.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+#endif
 
 			FormattedText description = user.ShortDescription;
 
@@ -974,6 +977,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
+			throw new System.NotImplementedException ();
+#if false
 			int sel = this.personField.SelectedItemIndex - 1;
 
 			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
@@ -984,6 +989,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
 			}
+#endif
 
 			this.naturalPersonEntities = null;
 
@@ -993,10 +999,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			if (user.Person.IsNotNull ())
 			{
 				return user.Person.GetCompactSummary ();
 			}
+#endif
 
 			return null;
 		}
