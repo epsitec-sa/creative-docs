@@ -62,19 +62,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/DVA1/DVAG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAG]")]
-		public global::Epsitec.Common.Support.Druid Status
+		public global::Epsitec.Cresus.Core.Business.WorkflowStatus Status
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Support.Druid> ("[DVAG]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[DVAG]");
 			}
 			set
 			{
-				global::Epsitec.Common.Support.Druid oldValue = this.Status;
+				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
 				if (oldValue != value || !this.IsFieldDefined("[DVAG]"))
 				{
 					this.OnStatusChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Support.Druid> ("[DVAG]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[DVAG]", oldValue, value);
 					this.OnStatusChanged (oldValue, value);
 				}
 			}
@@ -126,8 +126,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnStatusChanging(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
-		partial void OnStatusChanged(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
+		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
 		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		
@@ -779,19 +779,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/DVA6/DVAN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAN]")]
-		public global::Epsitec.Common.Support.Druid? SerializedDesign
+		public string SerializedDesign
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Support.Druid?> ("[DVAN]");
+				return this.GetField<string> ("[DVAN]");
 			}
 			set
 			{
-				global::Epsitec.Common.Support.Druid? oldValue = this.SerializedDesign;
+				string oldValue = this.SerializedDesign;
 				if (oldValue != value || !this.IsFieldDefined("[DVAN]"))
 				{
 					this.OnSerializedDesignChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Support.Druid?> ("[DVAN]", oldValue, value);
+					this.SetField<string> ("[DVAN]", oldValue, value);
 					this.OnSerializedDesignChanged (oldValue, value);
 				}
 			}
@@ -801,8 +801,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnWorkflowNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSerializedDesignChanging(global::Epsitec.Common.Support.Druid? oldValue, global::Epsitec.Common.Support.Druid? newValue);
-		partial void OnSerializedDesignChanged(global::Epsitec.Common.Support.Druid? oldValue, global::Epsitec.Common.Support.Druid? newValue);
+		partial void OnSerializedDesignChanging(string oldValue, string newValue);
+		partial void OnSerializedDesignChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

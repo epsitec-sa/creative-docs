@@ -17,6 +17,11 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public static class EntityInfo
 	{
+		public static Druid GetTypeId(System.Type type)
+		{
+			return EntityClassFactory.GetEntityId (type);
+		}
+
 		public static IStructuredType GetStructuredType(Druid entityId)
 		{
 			if (entityId.IsEmpty)

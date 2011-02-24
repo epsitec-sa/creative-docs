@@ -336,10 +336,14 @@
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Cresus.Database\Captions.00.resource" />
+    <Content Include="Resources\Cresus.Database\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Cresus.Database\module.info" />
+    <Content Include="Resources\Cresus.Database\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

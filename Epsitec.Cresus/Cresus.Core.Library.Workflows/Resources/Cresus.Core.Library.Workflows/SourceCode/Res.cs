@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			//	designer:cap/DVA41
+			public static readonly Epsitec.Common.Types.EnumType WorkflowStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 			//	designer:cap/DVAU
 			public static readonly Epsitec.Common.Types.EnumType WorkflowTransitionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 			//	designer:cap/DVA21
@@ -34,6 +36,58 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Values
 		{
+			public static class WorkflowStatus
+			{
+				//	designer:cap/DVA71
+				public static global::Epsitec.Common.Types.Caption Active
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
+					}
+				}
+				//	designer:cap/DVA91
+				public static global::Epsitec.Common.Types.Caption Cancelled
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
+					}
+				}
+				//	designer:cap/DVA81
+				public static global::Epsitec.Common.Types.Caption Done
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
+					}
+				}
+				//	designer:cap/DVA51
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37));
+					}
+				}
+				//	designer:cap/DVA61
+				public static global::Epsitec.Common.Types.Caption Pending
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
+					}
+				}
+				//	designer:cap/DVAA1
+				public static global::Epsitec.Common.Types.Caption TimedOut
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42));
+					}
+				}
+			}
+			
 			public static class WorkflowTransitionType
 			{
 				//	designer:cap/DVA11
@@ -195,7 +249,7 @@ namespace Epsitec.Cresus.Core
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
-			Res._manager.DefineDefaultModuleName ("Cresus.Core.Workflows");
+			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Workflows");
 		}
 		
 		public static void Initialize()

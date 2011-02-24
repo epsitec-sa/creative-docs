@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -38,6 +39,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static Druid GetEntityId(System.Type type)
 		{
 			return EntityClassFactory.FindId (type);
+		}
+
+		/// <summary>
+		/// Gets all the entity ids for all known entities in the current application domain.
+		/// </summary>
+		/// <returns>The collection of <see cref="Druid"/> of the known entities.</returns>
+		public static IEnumerable<Druid> GetAllEntityIds()
+		{
+			return EntityClassFactory.FindAll ().Select (x => x.Item1);
 		}
 	}
 }

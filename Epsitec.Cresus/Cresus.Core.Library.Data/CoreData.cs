@@ -590,6 +590,7 @@ namespace Epsitec.Cresus.Core
 
 		private static IEnumerable<Druid> GetManagedEntityIds()
 		{
+			return EntityClassFactory.GetAllEntityIds ().Where (x => x.Module >= 1000);
 #if false
 			yield return EntityInfo<RelationEntity>.GetTypeId ();
 			yield return EntityInfo<NaturalPersonEntity>.GetTypeId ();
@@ -624,7 +625,6 @@ namespace Epsitec.Cresus.Core
 
 			yield return EntityInfo<DocumentCategoryMappingEntity>.GetTypeId ();
 #endif
-			yield break;
 		}
 
 
@@ -632,7 +632,9 @@ namespace Epsitec.Cresus.Core
 		{
 			this.connectionManager.Validate ();
 
-			this.DataInfrastructure.CreateSchema (CoreData.GetManagedEntityIds ());
+			var entityIds = CoreData.GetManagedEntityIds ().ToArray ();
+
+			this.DataInfrastructure.CreateSchema (entityIds);
 		}
 
 		private void PopulateDatabase()

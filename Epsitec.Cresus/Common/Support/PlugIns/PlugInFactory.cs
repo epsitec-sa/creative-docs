@@ -101,6 +101,14 @@ namespace Epsitec.Common.Support.PlugIns
 			}
 		}
 
+		public static IEnumerable<System.Tuple<TId, System.Type>> FindAll()
+		{
+			foreach (var item in PlugInFactory<TClass, TAttribute, TId>.types)
+			{
+				yield return new System.Tuple<TId, System.Type> (item.Key, item.Value.Type);
+			}
+		}
+
 		/// <summary>
 		/// Sets up the plug-in factory; scans all available assemblies for
 		/// classes marked with the dedicated attribute.

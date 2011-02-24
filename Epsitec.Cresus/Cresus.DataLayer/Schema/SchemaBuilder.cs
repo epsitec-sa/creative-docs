@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (structuredType == null)
 			{
-				throw new System.ArgumentException ("typeId does not defined a structured type.");
+				throw new System.ArgumentException (string.Format ("The typeId {0} does not map to a structured type.", typeId));
 			}
 
 			return structuredType;

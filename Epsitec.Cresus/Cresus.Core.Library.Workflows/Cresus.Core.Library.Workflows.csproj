@@ -72,11 +72,16 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="Resources\Cresus.Core.Library.Workflows\Captions.00.resource" />
-    <None Include="Resources\Cresus.Core.Library.Workflows\module.info">
+    <Content Include="Resources\Cresus.Core.Library.Workflows\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Workflows\module.info">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\Cresus.Core.Library.Workflows\Strings.00.resource" />
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Workflows\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
