@@ -1299,6 +1299,7 @@ namespace Epsitec.Common.Types
 			return type;
 		}
 
+
 		/// <summary>
 		/// Queues a fix-up callback which must be called immediately after type
 		/// creation.

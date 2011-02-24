@@ -16,8 +16,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 	public class ArticlePriceCalculator : AbstractPriceCalculator
 	{
-		public ArticlePriceCalculator(BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
+		public ArticlePriceCalculator(CoreData data, BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
 		{
+			this.data = data;
 			this.document     = document;
 			this.articleItem  = articleItem;
 			this.articleDef   = this.articleItem.ArticleDefinition;
@@ -355,11 +356,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			if ((this.articleItem.BeginDate.HasValue) &&
 				(this.articleItem.EndDate.HasValue))
 			{
-				taxCalculator = new TaxCalculator (this.articleItem);
+				taxCalculator = new TaxCalculator (this.data, this.articleItem);
 			}
 			else
 			{
-				taxCalculator = new TaxCalculator (new Date (this.date));
+				taxCalculator = new TaxCalculator (this.data, new Date (this.date));
 			}
 
 			var tax = taxCalculator.ComputeTax (articleValue, this.articleItem.VatCode);
@@ -447,6 +448,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				   select def;
 		}
 
+		private readonly CoreData					data;
 		private readonly BusinessDocumentEntity		document;
 		private readonly ArticleDocumentItemEntity	articleItem;
 		private readonly ArticleDefinitionEntity	articleDef;

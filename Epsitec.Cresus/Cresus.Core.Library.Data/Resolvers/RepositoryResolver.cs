@@ -1,6 +1,8 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Repositories;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -42,8 +44,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			const string baseTypeName = "Repository`1";
 
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						where type.IsClass && !type.IsAbstract
 						let baseType = type.BaseType
 						where baseType != null && baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType

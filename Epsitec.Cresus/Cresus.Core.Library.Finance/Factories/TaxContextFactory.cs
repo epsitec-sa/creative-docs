@@ -1,14 +1,15 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core.Factories
 {
-	public sealed class BusinessContextPoolFactory : ICoreDataComponentFactory
+	public sealed class TaxContextFactory : ICoreDataComponentFactory
 	{
 		#region ICoreDataComponentFactory Members
 
@@ -19,12 +20,12 @@ namespace Epsitec.Cresus.Core.Factories
 
 		public CoreDataComponent Create(CoreData data)
 		{
-			return new BusinessContextPool (data);
+			return new TaxContext (data);
 		}
 
 		public System.Type GetComponentType()
 		{
-			return typeof (BusinessContextPool);
+			return typeof (TaxContext);
 		}
 
 		#endregion

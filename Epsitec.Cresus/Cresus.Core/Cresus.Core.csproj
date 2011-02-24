@@ -133,7 +133,6 @@
     <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculator.cs" />
     <Compile Include="Business\Finance\TaxCalculator.cs" />
-    <Compile Include="Business\Finance\TaxContext.cs" />
     <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -182,7 +181,6 @@
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
-    <Compile Include="Extensions\DateRangeExtensions.cs" />
     <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
@@ -590,7 +588,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

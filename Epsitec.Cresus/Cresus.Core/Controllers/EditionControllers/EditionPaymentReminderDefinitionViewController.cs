@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUITaxArticle(UIBuilder builder)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.AdministrativeTaxArticle,
@@ -63,6 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			};
 
 			builder.CreateAutoCompleteTextField ("Article pour facturer une taxe", controller);
+#endif
 		}
 
 

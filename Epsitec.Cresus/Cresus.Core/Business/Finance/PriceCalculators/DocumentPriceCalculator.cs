@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
+
 		/// <summary>
 		/// Updates the prices of the attached business document. This will most likely
 		/// change the resulting prices and final prices of all lines in the invoice.
@@ -205,6 +206,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			get
 			{
 				return this.document;
+			}
+		}
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.context.Data;
 			}
 		}
 

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -39,8 +40,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 			var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
 
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes (typeof (BusinessRuleAttribute), false).Length > 0
 						let baseType = type.BaseType
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)

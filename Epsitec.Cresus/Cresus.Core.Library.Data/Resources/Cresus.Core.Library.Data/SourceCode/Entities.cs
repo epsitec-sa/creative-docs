@@ -540,3 +540,75 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
+#region Epsitec.Cresus.Core.IDateRange Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IDateRange</c> entity.
+	///	designer:cap/8VAN
+	///	</summary>
+	public interface IDateRange
+	{
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/8VAN/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/8VAN/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		global::Epsitec.Common.Types.Date? EndDate
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IDateRangeInterfaceImplementation
+	{
+		public static global::Epsitec.Common.Types.Date? GetBeginDate(global::Epsitec.Cresus.Core.Entities.IDateRange obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Common.Types.Date?> ("[8VAO]");
+		}
+		public static void SetBeginDate(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Common.Types.Date? oldValue = obj.BeginDate;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAO]"))
+			{
+				IDateRangeInterfaceImplementation.OnBeginDateChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Common.Types.Date?> ("[8VAO]", oldValue, value);
+				IDateRangeInterfaceImplementation.OnBeginDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnBeginDateChanged(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		static partial void OnBeginDateChanging(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		public static global::Epsitec.Common.Types.Date? GetEndDate(global::Epsitec.Cresus.Core.Entities.IDateRange obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Common.Types.Date?> ("[8VAP]");
+		}
+		public static void SetEndDate(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Common.Types.Date? oldValue = obj.EndDate;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAP]"))
+			{
+				IDateRangeInterfaceImplementation.OnEndDateChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Common.Types.Date?> ("[8VAP]", oldValue, value);
+				IDateRangeInterfaceImplementation.OnEndDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnEndDateChanged(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		static partial void OnEndDateChanging(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+	}
+}
+#endregion
+

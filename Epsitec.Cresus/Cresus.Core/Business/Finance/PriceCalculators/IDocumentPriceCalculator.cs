@@ -18,6 +18,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			get;
 		}
+
+		CoreData Data
+		{
+			get;
+		}
 		
 		void Process(ArticlePriceCalculator calculator);
 		void Process(SubTotalPriceCalculator calculator);

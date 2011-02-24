@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
 	public class SubTotalPriceCalculator : AbstractPriceCalculator
 	{
-		public SubTotalPriceCalculator(BusinessDocumentEntity document, SubTotalDocumentItemEntity totalItem)
+		public SubTotalPriceCalculator(CoreData data, BusinessDocumentEntity document, SubTotalDocumentItemEntity totalItem)
 		{
 			this.document  = document;
 			this.totalItem = totalItem;

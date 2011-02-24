@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			if (CoreDataComponentFactoryResolver.factories == null)
 			{
-				CoreDataComponentFactoryResolver.factories = new List<ICoreDataComponentFactory> (InterfaceImplementationResolver<ICoreDataComponentFactory>.CreateInstances ());
+				CoreDataComponentFactoryResolver.factories = InterfaceImplementationResolver<ICoreDataComponentFactory>.CreateInstances ().ToList ();
 			}
 
 			return CoreDataComponentFactoryResolver.factories;

@@ -17,20 +17,19 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	/// The <c>TaxContext</c> class provides access to the VAT definitions for
 	/// specified date ranges and VAT codes.
 	/// </summary>
-	public class TaxContext
+	public class TaxContext : CoreDataComponent
 	{
-		private TaxContext(CoreData data)
+		internal TaxContext(CoreData data)
+			: base (data)
 		{
-			this.vatDefs = data.GetAllEntities<VatDefinitionEntity> ().ToArray ();
 		}
 
-		
-		public static TaxContext				Current
+
+		public override void ExecuteSetupPhase()
 		{
-			get
-			{
-				return TaxContext.current;
-			}
+			base.ExecuteSetupPhase ();
+
+			this.vatDefs = this.Data.GetAllEntities<VatDefinitionEntity> ().ToArray ();			
 		}
 
 
@@ -63,14 +62,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return results.ToArray ();
 		}
 		
-		public static void Initialize(CoreData data)
-		{
-			TaxContext.current = new TaxContext (data);
-		}
-
 		
 		
-		private readonly VatDefinitionEntity[]	vatDefs;
-		private static TaxContext				current;
+		private VatDefinitionEntity[]	vatDefs;
 	}
 }

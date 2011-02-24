@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Factories
 {
 	public static class CoreDataComponentFactory
 	{
-		public static void SetupComponents(CoreData data)
+		public static void RegisterComponents(CoreData data)
 		{
 			var factories = CoreDataComponentFactoryResolver.Resolve ();
 
@@ -37,6 +37,32 @@ namespace Epsitec.Cresus.Core.Factories
 					}
 				}
 			}
+		}
+
+		public static void SetupComponents(IEnumerable<CoreDataComponent> componentCollection)
+		{
+			var components = componentCollection.ToList ();
+
+			bool again = true;
+
+			while (again)
+			{
+				again = false;
+
+				foreach (var component in components)
+				{
+					if (component.IsSetupPending)
+					{
+						if (component.CanExecuteSetupPhase ())
+						{
+							component.ExecuteSetupPhase ();
+							again = true;
+						}
+					}
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (components.All (x => x.IsSetupPending == false));
 		}
 	}
 }

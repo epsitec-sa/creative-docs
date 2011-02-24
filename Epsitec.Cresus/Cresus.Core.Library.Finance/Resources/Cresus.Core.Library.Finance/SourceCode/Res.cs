@@ -14,16 +14,24 @@ namespace Epsitec.Cresus.Core
 		{
 			//	designer:cap/CVAK
 			public static readonly Epsitec.Common.Types.StringType BookAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
-			//	designer:cap/CVAP1
-			public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
-			//	designer:cap/CVAF1
-			public static readonly Epsitec.Common.Types.EnumType ExchangeRateSourceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 			//	designer:cap/CVAF
 			public static readonly Epsitec.Common.Types.StringType IsrBankOrRefNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 			//	designer:cap/CVAL1
 			public static readonly Epsitec.Common.Types.EnumType PaymentDetailType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
 			//	designer:cap/CVAA
 			public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+			public static class Finance
+			{
+				//	designer:cap/CVAP1
+				public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
+				//	designer:cap/CVAF1
+				public static readonly Epsitec.Common.Types.EnumType ExchangeRateSourceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
+				//	designer:cap/CVAL2
+				public static readonly Epsitec.Common.Types.EnumType RoundingPolicy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85));
+				//	designer:cap/CVA52
+				public static readonly Epsitec.Common.Types.EnumType VatCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
+			}
+			
 			//	designer:cap/CVAL
 			public static readonly Epsitec.Common.Types.StructuredType BillingDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
 			//	designer:cap/CVAT
@@ -38,118 +46,291 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 			//	designer:cap/CVA22
 			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
+			//	designer:cap/CVAR2
+			public static readonly Epsitec.Common.Types.StructuredType VatDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 91));
 		}
 		
 		public static class Values
 		{
-			public static class CurrencyCode
+			public static class Finance
 			{
-				//	designer:cap/CVAR1
-				public static global::Epsitec.Common.Types.Caption Aud
+				public static class CurrencyCode
 				{
-					get
+					//	designer:cap/CVAR1
+					public static global::Epsitec.Common.Types.Caption Aud
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 59));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 59));
+						}
+					}
+					//	designer:cap/CVAU1
+					public static global::Epsitec.Common.Types.Caption Chf
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62));
+						}
+					}
+					//	designer:cap/CVAS1
+					public static global::Epsitec.Common.Types.Caption Cny
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 60));
+						}
+					}
+					//	designer:cap/CVA12
+					public static global::Epsitec.Common.Types.Caption Eur
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65));
+						}
+					}
+					//	designer:cap/CVAV1
+					public static global::Epsitec.Common.Types.Caption Gbp
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63));
+						}
+					}
+					//	designer:cap/CVAT1
+					public static global::Epsitec.Common.Types.Caption Jpy
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61));
+						}
+					}
+					//	designer:cap/CVAQ1
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
+						}
+					}
+					//	designer:cap/CVA02
+					public static global::Epsitec.Common.Types.Caption Usd
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+						}
 					}
 				}
-				//	designer:cap/CVAU1
-				public static global::Epsitec.Common.Types.Caption Chf
+				
+				public static class ExchangeRateSourceType
 				{
-					get
+					//	designer:cap/CVAK1
+					public static global::Epsitec.Common.Types.Caption BankSpecific
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52));
+						}
+					}
+					//	designer:cap/CVAI1
+					public static global::Epsitec.Common.Types.Caption FederalDailyRate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 50));
+						}
+					}
+					//	designer:cap/CVAH1
+					public static global::Epsitec.Common.Types.Caption FederalMonthlyRate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+						}
+					}
+					//	designer:cap/CVAJ1
+					public static global::Epsitec.Common.Types.Caption GroupSpecific
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51));
+						}
+					}
+					//	designer:cap/CVAG1
+					public static global::Epsitec.Common.Types.Caption Unknown
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
+						}
 					}
 				}
-				//	designer:cap/CVAS1
-				public static global::Epsitec.Common.Types.Caption Cny
+				
+				public static class RoundingPolicy
 				{
-					get
+					//	designer:cap/CVAM2
+					public static global::Epsitec.Common.Types.Caption None
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 60));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86));
+						}
+					}
+					//	designer:cap/CVAQ2
+					public static global::Epsitec.Common.Types.Caption OnFinalPriceAfterTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 90));
+						}
+					}
+					//	designer:cap/CVAP2
+					public static global::Epsitec.Common.Types.Caption OnFinalPriceBeforeTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 89));
+						}
+					}
+					//	designer:cap/CVAO2
+					public static global::Epsitec.Common.Types.Caption OnUnitPriceAfterTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 88));
+						}
+					}
+					//	designer:cap/CVAN2
+					public static global::Epsitec.Common.Types.Caption OnUnitPriceBeforeTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 87));
+						}
 					}
 				}
-				//	designer:cap/CVA12
-				public static global::Epsitec.Common.Types.Caption Eur
+				
+				public static class VatCode
 				{
-					get
+					//	designer:cap/CVA72
+					public static global::Epsitec.Common.Types.Caption Excluded
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71));
+						}
 					}
-				}
-				//	designer:cap/CVAV1
-				public static global::Epsitec.Common.Types.Caption Gbp
-				{
-					get
+					//	designer:cap/CVA62
+					public static global::Epsitec.Common.Types.Caption None
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70));
+						}
 					}
-				}
-				//	designer:cap/CVAT1
-				public static global::Epsitec.Common.Types.Caption Jpy
-				{
-					get
+					//	designer:cap/CVAG2
+					public static global::Epsitec.Common.Types.Caption ReducedInputTaxOnInvestementOrOperatingExpenses
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80));
+						}
 					}
-				}
-				//	designer:cap/CVAQ1
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
+					//	designer:cap/CVAD2
+					public static global::Epsitec.Common.Types.Caption ReducedInputTaxOnMaterialOrServiceExpenses
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77));
+						}
 					}
-				}
-				//	designer:cap/CVA02
-				public static global::Epsitec.Common.Types.Caption Usd
-				{
-					get
+					//	designer:cap/CVAA2
+					public static global::Epsitec.Common.Types.Caption ReducedTax
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74));
+						}
 					}
-				}
-			}
-			
-			public static class ExchangeRateSourceType
-			{
-				//	designer:cap/CVAK1
-				public static global::Epsitec.Common.Types.Caption BankSpecific
-				{
-					get
+					//	designer:cap/CVAJ2
+					public static global::Epsitec.Common.Types.Caption ReducedTaxOnTurnover
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 83));
+						}
 					}
-				}
-				//	designer:cap/CVAI1
-				public static global::Epsitec.Common.Types.Caption FederalDailyRate
-				{
-					get
+					//	designer:cap/CVAH2
+					public static global::Epsitec.Common.Types.Caption SpecialInputTaxOnInvestementOrOperatingExpenses
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 50));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 81));
+						}
 					}
-				}
-				//	designer:cap/CVAH1
-				public static global::Epsitec.Common.Types.Caption FederalMonthlyRate
-				{
-					get
+					//	designer:cap/CVAE2
+					public static global::Epsitec.Common.Types.Caption SpecialInputTaxOnMaterialOrServiceExpenses
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78));
+						}
 					}
-				}
-				//	designer:cap/CVAJ1
-				public static global::Epsitec.Common.Types.Caption GroupSpecific
-				{
-					get
+					//	designer:cap/CVAB2
+					public static global::Epsitec.Common.Types.Caption SpecialTax
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75));
+						}
 					}
-				}
-				//	designer:cap/CVAG1
-				public static global::Epsitec.Common.Types.Caption Unknown
-				{
-					get
+					//	designer:cap/CVAK2
+					public static global::Epsitec.Common.Types.Caption SpecialTaxOnTurnover
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84));
+						}
+					}
+					//	designer:cap/CVAF2
+					public static global::Epsitec.Common.Types.Caption StandardInputTaxOnInvestementOrOperatingExpenses
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 79));
+						}
+					}
+					//	designer:cap/CVAC2
+					public static global::Epsitec.Common.Types.Caption StandardInputTaxOnMaterialOrServiceExpenses
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76));
+						}
+					}
+					//	designer:cap/CVA92
+					public static global::Epsitec.Common.Types.Caption StandardTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73));
+						}
+					}
+					//	designer:cap/CVAI2
+					public static global::Epsitec.Common.Types.Caption StandardTaxOnTurnover
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 82));
+						}
+					}
+					//	designer:cap/CVA82
+					public static global::Epsitec.Common.Types.Caption ZeroRated
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72));
+						}
 					}
 				}
 			}
@@ -274,6 +455,14 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid AdministrativeTaxCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
 				//	designer:cap/CVA32
 				public static readonly global::Epsitec.Common.Support.Druid ExtraPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
+			}
+			
+			public static class VatDefinition
+			{
+				//	designer:cap/CVAT2
+				public static readonly global::Epsitec.Common.Support.Druid Rate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
+				//	designer:cap/CVAS2
+				public static readonly global::Epsitec.Common.Support.Druid VatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 			}
 		}
 		

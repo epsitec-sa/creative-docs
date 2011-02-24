@@ -1,6 +1,8 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,8 +50,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static IEnumerable<System.Type> FindSystemTypes(System.Type[] constructorArgumentTypes)
 		{
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						where type.IsClass && !type.IsAbstract && type.GetConstructor (constructorArgumentTypes) != null && type.GetInterfaces ().Any (x => x == typeof (TInterface))
 						select type;
 

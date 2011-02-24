@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
-			Factories.CoreDataComponentFactory.SetupComponents (this);
+			Factories.CoreDataComponentFactory.RegisterComponents (this);
 
 
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
@@ -147,6 +147,11 @@ namespace Epsitec.Cresus.Core
 			}
 
 			throw new System.InvalidOperationException (string.Format ("The component {0} cannot be found", componentName));
+		}
+
+		public IEnumerable<CoreDataComponent> GetComponents()
+		{
+			return this.components.Select (x => x.Value);
 		}
 
 		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
@@ -265,6 +270,7 @@ namespace Epsitec.Cresus.Core
 
 		public void SetupBusiness()
 		{
+			Factories.CoreDataComponentFactory.SetupComponents (this.components.Select (x => x.Value));
 			throw new System.NotImplementedException ();
 //-			TaxContext.Initialize (this);
 		}

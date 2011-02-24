@@ -20,13 +20,15 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	/// </summary>
 	public class TaxCalculator
 	{
-		public TaxCalculator(Date date)
+		public TaxCalculator(CoreData data, Date date)
 		{
+			this.data = data;
 			this.date = date;
 		}
 
-		public TaxCalculator(IDateRange dateRange)
+		public TaxCalculator(CoreData data, IDateRange dateRange)
 		{
+			this.data = data;
 			this.dateRange = dateRange;
 		}
 
@@ -41,20 +43,22 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		/// <returns>The computed tax.</returns>
 		public Tax ComputeTax(decimal amount, VatCode vatCode)
 		{
+			var taxContext = this.data.GetComponent<TaxContext> ();
+
 			if (this.date.HasValue)
 			{
-				var vatDef = TaxContext.Current.GetVatDefinition (this.date.Value, vatCode);
+				var vatDef = taxContext.GetVatDefinition (this.date.Value, vatCode);
 
 				return vatDef == null ? new Tax () : new Tax (new TaxRateAmount (amount, vatCode, vatDef.Rate));
 			}
 
 			if (this.dateRange != null)
 			{
-				VatDefinitionEntity[] vatDefs = TaxContext.Current.GetVatDefinitions (this.dateRange, vatCode);
+				VatDefinitionEntity[] vatDefs = taxContext.GetVatDefinitions (this.dateRange, vatCode);
 
 				if (vatDefs.Length == 0)
 				{
-					if (TaxContext.Current.GetVatDefinitions (vatCode).IsEmpty ())
+					if (taxContext.GetVatDefinitions (vatCode).IsEmpty ())
 					{
 						System.Diagnostics.Debug.WriteLine ("Cannot find VAT rate for VatCode." + vatCode);
 						return new Tax ();
@@ -86,8 +90,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return new Tax ();
 		}
 
-		
 
+		private readonly CoreData				data;
 		private readonly Date?					date;
 		private readonly IDateRange				dateRange;
 	}

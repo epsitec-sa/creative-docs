@@ -11,6 +11,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA21]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA22]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAR2]", typeof (Epsitec.Cresus.Core.Entities.VatDefinitionEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1206,6 +1207,187 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 66);	// [CVA22]
 		public static readonly new string EntityStructuredTypeKey = "[CVA22]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.VatDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>VatDefinition</c> entity.
+	///	designer:cap/CVAR2
+	///	</summary>
+	public partial class VatDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/CVAR2/8VA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA1]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVAR2/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVAR2/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/CVAR2/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVAR2/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/CVAR2/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>VatCode</c> field.
+		///	designer:fld/CVAR2/CVAS2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAS2]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.VatCode VatCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVAS2]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAS2]"))
+				{
+					this.OnVatCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVAS2]", oldValue, value);
+					this.OnVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Rate</c> field.
+		///	designer:fld/CVAR2/CVAT2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAT2]")]
+		public global::System.Decimal Rate
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[CVAT2]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Rate;
+				if (oldValue != value || !this.IsFieldDefined("[CVAT2]"))
+				{
+					this.OnRateChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVAT2]", oldValue, value);
+					this.OnRateChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 91);	// [CVAR2]
+		public static readonly new string EntityStructuredTypeKey = "[CVAR2]";
 	}
 }
 #endregion

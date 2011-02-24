@@ -1,6 +1,7 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
@@ -102,8 +103,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static IEnumerable<System.Type> FindBusinessActionSystemTypes()
 		{
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						let name = type.Name
 						where name.EndsWith (BusinessActionResolver.ClassSuffixActions)
 						where type.IsClass && type.IsAbstract && type.IsSealed
@@ -116,8 +116,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			actionClass = actionClass + BusinessActionResolver.ClassSuffixActions;
 
-			var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-						from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						let name = type.Name
 						where name == actionClass
 						where type.IsClass && type.IsAbstract && type.IsSealed

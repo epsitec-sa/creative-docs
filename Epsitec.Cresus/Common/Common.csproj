@@ -901,6 +901,7 @@
     <Compile Include="Types\TimeType.cs" />
     <Compile Include="Types\TypeCode.cs" />
     <Compile Include="Types\TypedObject.cs" />
+    <Compile Include="Types\TypeEnumerator.cs" />
     <Compile Include="Types\TypeRosetta.cs" />
     <Compile Include="Types\UndefinedValue.cs" />
     <Compile Include="Types\UndefinedValueMode.cs" />

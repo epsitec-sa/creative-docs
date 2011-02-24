@@ -22,7 +22,29 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public bool IsSetupPending
+		{
+			get
+			{
+				return this.wasSetupExecuted == false;
+			}
+		}
+
+
+		public virtual bool CanExecuteSetupPhase()
+		{
+			System.Diagnostics.Debug.Assert (this.IsSetupPending);
+
+			return true;
+		}
+
+		public virtual void ExecuteSetupPhase()
+		{
+			this.wasSetupExecuted = true;
+		}
+
 
 		private readonly CoreData data;
+		private bool wasSetupExecuted;
 	}
 }

@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType IDataHash = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 			//	designer:cap/8VA9
 			public static readonly Epsitec.Common.Types.StructuredType IDateMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+			//	designer:cap/8VAN
+			public static readonly Epsitec.Common.Types.StructuredType IDateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23));
 			//	designer:cap/8VAJ
 			public static readonly Epsitec.Common.Types.StructuredType IDateTimeRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19));
 			//	designer:cap/8VAA
@@ -48,6 +50,14 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
 				//	designer:cap/8VAI
 				public static readonly global::Epsitec.Common.Support.Druid LastModificationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
+			}
+			
+			public static class IDateRange
+			{
+				//	designer:cap/8VAO
+				public static readonly global::Epsitec.Common.Support.Druid BeginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
+				//	designer:cap/8VAP
+				public static readonly global::Epsitec.Common.Support.Druid EndDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
 			}
 			
 			public static class IDateTimeRange

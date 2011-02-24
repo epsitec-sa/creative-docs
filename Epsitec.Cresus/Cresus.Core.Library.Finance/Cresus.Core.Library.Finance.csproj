@@ -58,6 +58,7 @@
     <Compile Include="Business\Finance\PriceDisplayModes.cs" />
     <Compile Include="Business\Finance\RoundingPolicy.cs" />
     <Compile Include="Business\Finance\Tax.cs" />
+    <Compile Include="Business\Finance\TaxContext.cs" />
     <Compile Include="Business\Finance\TaxMode.cs" />
     <Compile Include="Business\Finance\TaxRateAmount.cs" />
     <Compile Include="Business\Finance\VatCode.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
+    <Compile Include="Factories\TaxContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -117,6 +119,10 @@
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
