@@ -135,13 +135,18 @@ namespace Epsitec.Cresus.Core
 			where T : CoreDataComponent
 		{
 			CoreDataComponent component;
+			string componentName = typeof (T).FullName;
 
-			if (this.components.TryGetValue (typeof (T).FullName, out component))
+			if (this.components.TryGetValue (componentName, out component))
 			{
-				return component as T;
+				T result = component as T;
+
+				System.Diagnostics.Debug.Assert (result != null);
+
+				return result;
 			}
 
-			return null;
+			throw new System.InvalidOperationException (string.Format ("The component {0} cannot be found", componentName));
 		}
 
 		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)

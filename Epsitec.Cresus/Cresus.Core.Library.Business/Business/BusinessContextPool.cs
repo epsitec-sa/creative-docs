@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (this.pool.Contains (context))
 			{
-				context.Dispose ();
+				context.DisposeFromPool ();
 
 				System.Diagnostics.Debug.Assert (this.pool.Contains (context) == false);
 			}

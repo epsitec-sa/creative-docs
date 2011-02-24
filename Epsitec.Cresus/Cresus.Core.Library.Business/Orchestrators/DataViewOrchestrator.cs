@@ -265,10 +265,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			
 			System.Diagnostics.Debug.Assert (this.businessContext == null);
 
-			throw new System.NotImplementedException ();
-#if false
-			this.SetActiveBusinessContext (this.data.CreateBusinessContext ());
-#endif
+			this.SetActiveBusinessContext (BusinessContext.Create (this.data));
 		}
 		
 		private void SetActiveBusinessContext(BusinessContext context)

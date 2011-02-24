@@ -160,6 +160,14 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
+
+		public static BusinessContext Create(CoreData data)
+		{
+			var pool = data.GetComponent<BusinessContextPool> ();
+			return pool.CreateBusinessContext ();
+		}
+
+
 		/// <summary>
 		/// Acquires the lock (as defined by the <see cref="BusinessContext.GlobalLock"/> and
 		/// <see cref="BusinessContext.ActiveEntity"/> properties).
@@ -599,6 +607,17 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void Dispose()
 		{
+			this.pool.DisposeBusinessContext (this);
+
+			System.Diagnostics.Debug.Assert (this.isDisposed);
+
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+
+		internal void DisposeFromPool()
+		{
 			if (this.isDisposed == false)
 			{
 				this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
@@ -610,14 +629,12 @@ namespace Epsitec.Cresus.Core.Business
 				{
 					this.ReleaseLock ();
 				}
-
-				System.GC.SuppressFinalize (this);
+				
 				this.isDisposed = true;
 			}
 		}
 
-		#endregion
-		
+
 		#region EntityRecord Class
 
 		private class EntityRecord
