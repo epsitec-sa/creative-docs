@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core
 		{
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.DropDatabase (dbAccess);
+			Data.Infrastructure.DropDatabase (dbAccess);
 		}
 		
         private static void ExecuteCoreProgram()

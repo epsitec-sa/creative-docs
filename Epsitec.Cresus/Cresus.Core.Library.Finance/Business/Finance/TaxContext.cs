@@ -24,6 +24,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 		}
 
+		public override bool CanExecuteSetupPhase()
+		{
+			return this.Data.IsReady;
+		}
 
 		public override void ExecuteSetupPhase()
 		{

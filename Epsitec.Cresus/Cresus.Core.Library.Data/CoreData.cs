@@ -53,22 +53,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public bool								IsDataContextActive
-		{
-			get
-			{
-				return this.activeDataContext != null;
-			}
-		}
-
-		public DataContext						DataContext
-		{
-			get
-			{
-				return this.EnsureDataContext (ref this.activeDataContext, "Active");
-			}
-		}
-
 		public DataContextPool					DataContextPool
 		{
 			get
@@ -104,7 +88,7 @@ namespace Epsitec.Cresus.Core
 		public bool								IsReady
 		{
 			get;
-			private set;
+			internal set;
 		}
 
 		public bool								ForceDatabaseCreation
@@ -163,7 +147,7 @@ namespace Epsitec.Cresus.Core
 					return this.EnsureDataContext (ref this.immutableDataContext, lifetimeExpectancy.ToString ());
 			}
 
-			return this.DataContext;
+			return this.activeDataContext;
 		}
 
 		private bool ContainsComponent<T>()
@@ -200,83 +184,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void SetupDatabase()
-		{
-			if (!this.IsReady)
-			{
-				System.Diagnostics.Debug.Assert (this.DataInfrastructure.DbInfrastructure.IsConnectionOpen == false);
-				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
-
-				var databaseAccess = CoreData.GetDatabaseAccess ();
-				
-				try
-				{
-					bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
-
-					System.Diagnostics.Debug.Assert (this.DataInfrastructure.DbInfrastructure.IsConnectionOpen);
-					System.Diagnostics.Debug.Assert (this.activeDataContext == null);
-
-					this.SetupDataContext (this.CreateDataContext ("setup-only"));
-					this.SetupDatabase (createNewDatabase: databaseIsNew || this.ForceDatabaseCreation);
-					this.DisposeDataContext (this.activeDataContext);
-
-					System.Diagnostics.Debug.Assert (this.activeDataContext == null);
-					System.Diagnostics.Debug.WriteLine ("Database ready");
-				}
-				catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
-				{
-					// TODO All this part where we try to update the schema of the database if it is
-					// incompatible is experimental, and must be checked/modified in order to be of
-					// production quality.
-					// Marc
-					
-					System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
-
-					if (this.AllowDatabaseUpdate)
-					{
-						IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
-
-						d.OpenDialog ();
-
-						if (d.Result == DialogResult.Yes)
-						{
-							try
-							{
-								this.DataInfrastructure.UpdateSchema (CoreData.GetManagedEntityIds ());
-							}
-							catch (System.Exception e)
-							{
-								UI.ShowErrorMessage ("Erreur", "Impossible de mettre à jour la base de donnée.", e);
-							}
-						}
-
-						System.Environment.Exit (0);
-					}
-					else
-					{
-						// TODO This way of exiting the program is kind of violent. It might be a
-						// good idea to soften it.
-						// Marc
-						
-						UI.ShowErrorMessage (
-							Res.Strings.Error.IncompatibleDatabase,
-							Res.Strings.Hint.Error.IncompatibleDatabase, ex);
-
-						System.Environment.Exit (0);
-					}
-				}
-				catch (System.Exception ex)
-				{
-					UI.ShowErrorMessage (
-						Res.Strings.Error.CannotConnectToLocalDatabase,
-						Res.Strings.Hint.Error.CannotConnectToLocalDatabase, ex);
-
-					System.Environment.Exit (0);
-				}
-			}
-
-			this.IsReady = true;
-		}
 
 		public void SetupBusiness()
 		{
@@ -527,137 +434,6 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-		private bool ConnectToDatabase(DbAccess access)
-		{
-			if (this.ForceDatabaseCreation && CoreData.CheckDatabaseEsistence (access))
-			{
-				CoreData.DropDatabase (access);
-			}
-
-			try
-			{
-				if (CoreData.CheckDatabaseEsistence (access))
-				{
-					this.DataInfrastructure.DbInfrastructure.AttachToDatabase (access);
-					System.Diagnostics.Trace.WriteLine ("Connected to database");
-					return false;
-				}
-			}
-			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException)
-			{
-				throw;
-			}
-			catch (System.Exception ex)
-			{
-				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
-			}
-
-			System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
-			this.DataInfrastructure.DbInfrastructure.CreateDatabase (access);
-			System.Diagnostics.Trace.WriteLine ("Created new database");
-
-			return true;
-		}
-
-		private void SetupDatabase(bool createNewDatabase)
-		{
-			if (createNewDatabase)
-			{
-				this.CreateDatabaseSchemas ();
-				this.PopulateDatabase ();
-			}
-			else
-			{
-				this.VerifyDatabaseSchemas ();
-				this.ReloadDatabase ();
-			}
-
-			this.ValidateConnection ();
-			this.VerifyUidGenerators ();
-		}
-
-		private void ValidateConnection()
-		{
-			this.ConnectionManager.Validate ();
-			this.locker.Validate ();
-		}
-
-		private void VerifyUidGenerators()
-		{
-#if false
-			this.refIdGeneratorPool.GetGenerator<RelationEntity> ();
-			this.refIdGeneratorPool.GetGenerator<AffairEntity> ();
-			this.refIdGeneratorPool.GetGenerator<ArticleDefinitionEntity> ();
-#endif
-		}
-
-		private void VerifyDatabaseSchemas()
-		{
-			this.ConnectionManager.Validate ();
-
-			if (!this.DataInfrastructure.CheckSchema (CoreData.GetManagedEntityIds ()))
-			{
-				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ("Incompatible database schema");
-			}
-		}
-
-		private static IEnumerable<Druid> GetManagedEntityIds()
-		{
-			return EntityClassFactory.GetAllEntityIds ().Where (x => x.Module >= 1000);
-#if false
-			yield return EntityInfo<RelationEntity>.GetTypeId ();
-			yield return EntityInfo<NaturalPersonEntity>.GetTypeId ();
-			yield return EntityInfo<LegalPersonEntity>.GetTypeId ();
-			yield return EntityInfo<MailContactEntity>.GetTypeId ();
-			yield return EntityInfo<TelecomContactEntity>.GetTypeId ();
-			yield return EntityInfo<UriContactEntity>.GetTypeId ();
-
-			yield return EntityInfo<VatDefinitionEntity>.GetTypeId ();
-			
-			yield return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
-			yield return EntityInfo<DocumentMetadataEntity>.GetTypeId ();
-			yield return EntityInfo<ImageBlobEntity>.GetTypeId ();
-			yield return EntityInfo<ImageEntity>.GetTypeId ();
-			
-			yield return EntityInfo<ArticleDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<TextDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<SubTotalDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<EndTotalDocumentItemEntity>.GetTypeId ();
-			yield return EntityInfo<TaxDocumentItemEntity>.GetTypeId ();
-
-			yield return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
-			yield return EntityInfo<EnumValueArticleParameterDefinitionEntity>.GetTypeId ();
-			yield return EntityInfo<NumericValueArticleParameterDefinitionEntity>.GetTypeId ();
-			yield return EntityInfo<FreeTextValueArticleParameterDefinitionEntity>.GetTypeId ();
-			yield return EntityInfo<OptionValueArticleParameterDefinitionEntity>.GetTypeId ();
-			
-			yield return EntityInfo<AffairEntity>.GetTypeId ();
-			yield return EntityInfo<WorkflowEntity>.GetTypeId ();
-			yield return EntityInfo<SoftwareUserEntity>.GetTypeId ();
-			yield return EntityInfo<BusinessSettingsEntity>.GetTypeId ();
-
-			yield return EntityInfo<DocumentCategoryMappingEntity>.GetTypeId ();
-#endif
-		}
-
-
-		private void CreateDatabaseSchemas()
-		{
-			this.ConnectionManager.Validate ();
-
-			var entityIds = CoreData.GetManagedEntityIds ().ToArray ();
-
-			this.DataInfrastructure.CreateSchema (entityIds);
-		}
-
-		private void PopulateDatabase()
-		{
-			this.ConnectionManager.Validate ();
-
-//-			this.PopulateDatabaseHack ();
-//-			this.PopulateUsers ();
-		}
-
 		public void ImportDatabase(System.IO.FileInfo file)
 		{
 			RawImportMode importMode = RawImportMode.PreserveIds;
@@ -688,9 +464,9 @@ namespace Epsitec.Cresus.Core
 
 		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, RawImportMode importMode)
 		{
-			if (CoreData.CheckDatabaseEsistence (dbAccess))
+			if (Infrastructure.CheckDatabaseEsistence (dbAccess))
 			{
-				CoreData.DropDatabase (dbAccess);
+				Infrastructure.DropDatabase (dbAccess);
 			}
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
@@ -701,7 +477,7 @@ namespace Epsitec.Cresus.Core
 				{
 					dataInfrastructure.OpenConnection ("root");
 
-					dataInfrastructure.CreateSchema (CoreData.GetManagedEntityIds ());
+					dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
 
 					CoreData.ImportDatabase (file, dataInfrastructure, importMode);
 				}
@@ -775,20 +551,7 @@ namespace Epsitec.Cresus.Core
 			DbInfrastructure.RestoreDatabase (dbAccess, remoteFilePath);
 		}
 
-		private static bool CheckDatabaseEsistence(DbAccess access)
-		{
-			return DbInfrastructure.CheckDatabaseExistence (access);
-		}
 
-		public static void DropDatabase(DbAccess access)
-		{
-			DbInfrastructure.DropDatabase (access);
-		}
-
-		private void ReloadDatabase()
-		{
-			// TODO
-		}
 
 		public void SetupDataContext(DataContext dataContext)
 		{

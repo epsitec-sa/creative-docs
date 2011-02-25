@@ -30,9 +30,13 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		public void Load(CoreData coreData, string name)
 		{
 			//	Associe à l'objet une image cherchée dans la base de données.
-			var example = new ImageEntity ();
+			
+			var repository = coreData.GetRepository<ImageEntity> ();
+			var example = repository.CreateExample ();
+
 			example.Name = TextFormatter.FormatText (name);
-			var imageEntity = coreData.DataContext.GetByExample<ImageEntity> (example).FirstOrDefault ();
+
+			var imageEntity = repository.GetByExample (example).FirstOrDefault ();
 
 			this.Load (coreData, imageEntity);
 		}

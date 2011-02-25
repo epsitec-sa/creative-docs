@@ -328,7 +328,6 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
-			this.data.SetupDatabase ();
 			this.data.SetupBusiness ();
 			this.OnSetupDataDone ();
 
