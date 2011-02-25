@@ -3,28 +3,25 @@
 
 using Epsitec.Cresus.Core.Data;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Cresus.Core.Factories
 {
-	public sealed class ConnectionManagerFactory : ICoreDataComponentFactory
+	public sealed class InfrastructureFactory : ICoreDataComponentFactory
 	{
 		#region ICoreDataComponentFactory Members
 
 		public bool CanCreate(CoreData data)
 		{
-			return data.DataInfrastructure != null;
+			return true;
 		}
 
 		public CoreDataComponent Create(CoreData data)
 		{
-			return new ConnectionManager (data);
+			return new Infrastructure (data);
 		}
 
 		public System.Type GetComponentType()
 		{
-			return typeof (ConnectionManager);
+			return typeof (Infrastructure);
 		}
 
 		#endregion

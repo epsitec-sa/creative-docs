@@ -28,14 +28,12 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreData(bool forceDatabaseCreation, bool allowDatabaseUpdate)
 		{
-			this.IsReady = false;
 			this.ForceDatabaseCreation = forceDatabaseCreation;
-			this.AllowDatabaseUpdate = allowDatabaseUpdate;
+			this.AllowDatabaseUpdate   = allowDatabaseUpdate;
 
-			this.components = new Dictionary<string, CoreDataComponent> ();
-			this.disposableComponents = new Stack<System.IDisposable> ();
-			this.dbInfrastructure = new DbInfrastructure ();
-			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
+			this.components               = new Dictionary<string, CoreDataComponent> ();
+			this.registeredComponents     = new List<CoreDataComponent> ();
+			this.disposableComponents     = new Stack<System.IDisposable> ();
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
@@ -51,7 +49,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.dataInfrastructure;
+				return this.ContainsComponent<Infrastructure> () ? this.GetComponent<Infrastructure> ().DataInfrastructure : null;
 			}
 		}
 
@@ -151,7 +149,7 @@ namespace Epsitec.Cresus.Core
 
 		public IEnumerable<CoreDataComponent> GetComponents()
 		{
-			return this.components.Select (x => x.Value);
+			return this.registeredComponents;
 		}
 
 		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
@@ -168,6 +166,13 @@ namespace Epsitec.Cresus.Core
 			return this.DataContext;
 		}
 
+		private bool ContainsComponent<T>()
+			where T : CoreDataComponent
+		{
+			string componentName = typeof (T).FullName;
+			return this.components.ContainsKey (componentName);
+		}
+
 		internal bool ContainsComponent(string name)
 		{
 			return this.components.ContainsKey (name);
@@ -176,6 +181,7 @@ namespace Epsitec.Cresus.Core
 		internal void RegisterComponent(string name, CoreDataComponent component)
 		{
 			this.components[name] = component;
+			this.registeredComponents.Add (component);
 		}
 
 		internal void RegisterComponentAsDisposable(System.IDisposable component)
@@ -198,7 +204,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (!this.IsReady)
 			{
-				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen == false);
+				System.Diagnostics.Debug.Assert (this.DataInfrastructure.DbInfrastructure.IsConnectionOpen == false);
 				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
 				var databaseAccess = CoreData.GetDatabaseAccess ();
@@ -207,7 +213,7 @@ namespace Epsitec.Cresus.Core
 				{
 					bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
 
-					System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
+					System.Diagnostics.Debug.Assert (this.DataInfrastructure.DbInfrastructure.IsConnectionOpen);
 					System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
 					this.SetupDataContext (this.CreateDataContext ("setup-only"));
@@ -236,7 +242,7 @@ namespace Epsitec.Cresus.Core
 						{
 							try
 							{
-								this.dataInfrastructure.UpdateSchema (CoreData.GetManagedEntityIds ());
+								this.DataInfrastructure.UpdateSchema (CoreData.GetManagedEntityIds ());
 							}
 							catch (System.Exception e)
 							{
@@ -274,7 +280,7 @@ namespace Epsitec.Cresus.Core
 
 		public void SetupBusiness()
 		{
-			Factories.CoreDataComponentFactory.SetupComponents (this.components.Select (x => x.Value));
+			Factories.CoreDataComponentFactory.SetupComponents (this.registeredComponents);
 		}
 
 #if false
@@ -408,7 +414,7 @@ namespace Epsitec.Cresus.Core
 		
 		public DataContext CreateDataContext(string name)
 		{
-			var context = this.dataInfrastructure.CreateDataContext (true);
+			var context = this.DataInfrastructure.CreateDataContext (true);
 			context.Name = name;
 
 			return context;
@@ -416,7 +422,7 @@ namespace Epsitec.Cresus.Core
 
 		public void DisposeDataContext(DataContext context)
 		{
-			if (this.dataInfrastructure.ContainsDataContext (context))
+			if (this.DataInfrastructure.ContainsDataContext (context))
 			{
 				if (this.activeDataContext == context)
 				{
@@ -428,7 +434,7 @@ namespace Epsitec.Cresus.Core
 				CoreApplication.QueueAsyncCallback (
 					delegate
 					{
-						this.dataInfrastructure.DeleteDataContext (context);
+						this.DataInfrastructure.DeleteDataContext (context);
 					});
 #endif
 			}
@@ -516,11 +522,6 @@ namespace Epsitec.Cresus.Core
 				var disposable = this.disposableComponents.Pop ();
 				disposable.Dispose ();
 			}
-
-			if (this.dbInfrastructure.IsConnectionOpen)
-			{
-				this.dbInfrastructure.Dispose ();
-			}
 		}
 
 
@@ -537,7 +538,7 @@ namespace Epsitec.Cresus.Core
 			{
 				if (CoreData.CheckDatabaseEsistence (access))
 				{
-					this.dbInfrastructure.AttachToDatabase (access);
+					this.DataInfrastructure.DbInfrastructure.AttachToDatabase (access);
 					System.Diagnostics.Trace.WriteLine ("Connected to database");
 					return false;
 				}
@@ -552,7 +553,7 @@ namespace Epsitec.Cresus.Core
 			}
 
 			System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
-			this.dbInfrastructure.CreateDatabase (access);
+			this.DataInfrastructure.DbInfrastructure.CreateDatabase (access);
 			System.Diagnostics.Trace.WriteLine ("Created new database");
 
 			return true;
@@ -594,7 +595,7 @@ namespace Epsitec.Cresus.Core
 		{
 			this.ConnectionManager.Validate ();
 
-			if (!this.dataInfrastructure.CheckSchema (CoreData.GetManagedEntityIds ()))
+			if (!this.DataInfrastructure.CheckSchema (CoreData.GetManagedEntityIds ()))
 			{
 				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ("Incompatible database schema");
 			}
@@ -661,7 +662,7 @@ namespace Epsitec.Cresus.Core
 		{
 			RawImportMode importMode = RawImportMode.PreserveIds;
 
-			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
+			CoreData.ImportDatabase (file, this.DataInfrastructure, importMode);
 		}
 
 		public static void ImportDatabase(System.IO.FileInfo file, DbAccess dbAccess)
@@ -682,7 +683,7 @@ namespace Epsitec.Cresus.Core
 		{
 			RawImportMode importMode = RawImportMode.DecrementIds;
 
-			CoreData.ImportDatabase (file, this.dataInfrastructure, importMode);
+			CoreData.ImportDatabase (file, this.DataInfrastructure, importMode);
 		}
 
 		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, RawImportMode importMode)
@@ -714,7 +715,7 @@ namespace Epsitec.Cresus.Core
 
 		public void ImportSharedData(System.IO.FileInfo file)
 		{
-			CoreData.ImportSharedData (file, this.dataInfrastructure);
+			CoreData.ImportSharedData (file, this.DataInfrastructure);
 		}
 
 		public static void ImportSharedData(System.IO.FileInfo file, DbAccess dbAccess)
@@ -739,7 +740,7 @@ namespace Epsitec.Cresus.Core
 
 		public void ExportDatabase(System.IO.FileInfo file, bool exportOnlyUserData)
 		{
-			CoreData.ExportDatabase (file, this.dataInfrastructure, exportOnlyUserData);
+			CoreData.ExportDatabase (file, this.DataInfrastructure, exportOnlyUserData);
 		}
 
 		public static void ExportDatabase(System.IO.FileInfo file, DbAccess dbAccess, bool exportOnlyUserData)
@@ -807,13 +808,12 @@ namespace Epsitec.Cresus.Core
 
 
 
-		private readonly DbInfrastructure dbInfrastructure;
-		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
 		private readonly RefIdGeneratorPool refIdGeneratorPool;
 		private readonly Locker locker;
 //		private readonly ImageDataStore imageDataStore;
 		private readonly Dictionary<string, CoreDataComponent> components;
+		private readonly List<CoreDataComponent> registeredComponents;
 		private readonly Stack<System.IDisposable> disposableComponents;
 
 		private DataContext immutableDataContext;

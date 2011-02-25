@@ -48,6 +48,7 @@
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="CoreData.cs" />
+    <Compile Include="Data\Infrastructure.cs" />
     <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Data\ConnectionManager.cs" />
     <Compile Include="Data\ConnectionUserIdentity.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Extensions\DateRangeExtensions.cs" />
     <Compile Include="Factories\ConnectionManagerFactory.cs" />
     <Compile Include="Factories\CoreDataComponentFactory.cs" />
+    <Compile Include="Factories\InfrastructureFactory.cs" />
     <Compile Include="IBusinessContext.cs" />
     <Compile Include="ICoreDataComponentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
