@@ -162,8 +162,12 @@
     <EmbeddedResource Include="Images\RegularFlower1.icon" />
     <EmbeddedResource Include="Images\ShaperHandleSharp.icon" />
     <EmbeddedResource Include="Images\ShaperHandleRound.icon" />
-    <Content Include="Resources\Common.DocumentEditor\Captions.de.resource" />
-    <Content Include="Resources\Common.DocumentEditor\Strings.de.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.DocumentEditor\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Images\PropertyTension.icon" />
     <EmbeddedResource Include="Images\ObjectFree.icon" />
     <EmbeddedResource Include="Images\ViewDisposition.icon" />
@@ -179,8 +183,12 @@
     <EmbeddedResource Include="Images\NavigatePrev.icon" />
     <EmbeddedResource Include="Images\FileTypeOriginalSamples.icon" />
     <EmbeddedResource Include="Images\FileTypeMySamples.icon" />
-    <Content Include="Resources\Common.DocumentEditor\Captions.00.resource" />
-    <Content Include="Resources\Common.DocumentEditor\Captions.en.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.DocumentEditor\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Images\FileRename.icon" />
     <EmbeddedResource Include="Images\FileDelete.icon" />
     <EmbeddedResource Include="Images\NewDirectory.icon" />
@@ -195,7 +203,9 @@
     <EmbeddedResource Include="Images\Picker.icon" />
     <EmbeddedResource Include="Images\Zoom.icon" />
     <EmbeddedResource Include="Images\Hand.icon" />
-    <Content Include="Resources\Common.DocumentEditor\module.info" />
+    <Content Include="Resources\Common.DocumentEditor\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Images\ToolSelect.icon" />
     <EmbeddedResource Include="Images\ToolEdit.icon" />
     <EmbeddedResource Include="Images\ToolGlobal.icon" />
@@ -689,8 +699,12 @@
     <EmbeddedResource Include="Images\ZoomShift.icon" />
     <EmbeddedResource Include="Images\ZoomShiftCtrl.icon" />
     <EmbeddedResource Include="Images\ZoomSub.icon" />
-    <Content Include="Resources\Common.DocumentEditor\Strings.00.resource" />
-    <Content Include="Resources\Common.DocumentEditor\Strings.en.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.DocumentEditor\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Images\FrameNone.icon" />
     <EmbeddedResource Include="Images\PropertyFrame.icon" />
     <EmbeddedResource Include="Images\FrameFrameAndShadow.icon" />
@@ -728,8 +742,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
