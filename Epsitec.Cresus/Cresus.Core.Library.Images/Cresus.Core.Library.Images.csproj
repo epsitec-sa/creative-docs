@@ -59,6 +59,7 @@
     <Compile Include="Repositories\ImageRepository.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Images\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Images\SourceCode\Res.cs" />
+    <Compile Include="Widgets\IconOrImageButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

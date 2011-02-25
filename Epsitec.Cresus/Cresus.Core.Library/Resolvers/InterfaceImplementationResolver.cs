@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core.Resolvers
 	public static class InterfaceImplementationResolver<TInterface>
 			where TInterface : class
 	{
+		public static TInterface CreateInstance<T>(T constructorArgument)
+		{
+			return InterfaceImplementationResolver<TInterface>.CreateInstances (constructorArgument).FirstOrDefault ();
+		}
+
 		/// <summary>
 		/// Creates one instance for every class which implements <typeparamref name="TInterface"/>.
 		/// </summary>

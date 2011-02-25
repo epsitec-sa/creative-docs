@@ -26,10 +26,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class LoginDialog : AbstractDialog
 	{
-		public LoginDialog(CoreApplication application, SoftwareUserEntity user, bool softwareStartup)
+		public LoginDialog(Application application, CoreData data, SoftwareUserEntity user, bool softwareStartup)
 		{
 			this.application     = application;
-			this.manager         = application.UserManager;
+			this.data            = data;
+			this.manager         = this.data.GetComponent<UserManager> ();
 			this.initialUser     = user;
 			this.softwareStartup = softwareStartup;
 
@@ -300,7 +301,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.CloseAction (cancel: true);
 
-			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, this.SelectedUser);
+			var dialog = new Dialogs.UserManagerDialog (this.application, this.data, this.SelectedUser);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 		}
@@ -326,7 +327,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var button = new IconOrImageButton
 				{
-					CoreData = this.manager.CoreData,
+					CoreData = this.data,
 					PreferredSize = new Size (Misc.GetButtonWidth (), Misc.GetButtonWidth ()),
 					IconUri = Misc.GetResourceIconUri ("UserManager"),
 					IconPreferredSize = new Size (31, 31),
@@ -525,7 +526,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		private readonly CoreApplication						application;
+		private readonly Application							application;
+		private readonly CoreData								data;
 		private readonly UserManager							manager;
 		private readonly SoftwareUserEntity						initialUser;
 		private readonly bool									softwareStartup;

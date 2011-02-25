@@ -18,6 +18,7 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
@@ -26,10 +27,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class UserManagerDialog : AbstractDialog
 	{
-		public UserManagerDialog(CoreApplication application, SoftwareUserEntity user)
+		public UserManagerDialog(Application application, CoreData data, SoftwareUserEntity user)
 		{
 			this.application = application;
-			this.manager     = application.UserManager;
+			this.manager     = data.GetComponent<UserManager> ();
 
 			this.initialUser = user;
 			this.authenticatedUser = this.manager.AuthenticatedUser;
@@ -134,7 +135,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				//	Crée la toolbar.
 				double buttonSize = 19;
 
-				this.toolbar = UIBuilder.CreateMiniToolbar (leftPane, buttonSize);
+				this.toolbar = UI.Toolkit.CreateMiniToolbar (leftPane, buttonSize);
 				this.toolbar.Margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right) + new Margins (0, 0, 0, -1);
 				this.toolbar.TabIndex = tabIndex++;
 
@@ -961,6 +962,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.personField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
 
+			throw new System.NotImplementedException ();
+#if false
 			var example = new NaturalPersonEntity ();
 			//	L'exemple reste vide; on obtient donc toutes les personnes physiques.
 			//	TODO: Par la suite, il faudra se limiter aux employés, mais cette notion n'existe pas pour l'instant.
@@ -970,6 +973,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.personField.Items.Add (person.GetCompactSummary ());
 			}
+#endif
 		}
 
 		private void NaturalPersonChanged()
@@ -989,9 +993,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
 			}
-#endif
 
 			this.naturalPersonEntities = null;
+#endif
 
 			this.UpdateTable ();
 			this.UpdateWidgets ();
@@ -1370,7 +1374,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		private readonly CoreApplication					application;
+		private readonly Application						application;
 		private readonly UserManager						manager;
 		private readonly List<SoftwareUserEntity>			users;
 		private readonly List<SoftwareUserGroupEntity>		groups;
@@ -1397,7 +1401,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										acceptButton;
 		private Button										cancelButton;
 		private bool										editionStarted;
-		private List<NaturalPersonEntity>					naturalPersonEntities;
+//-		private List<NaturalPersonEntity>					naturalPersonEntities;
 		private bool										ignoreChange;
 		private IList<Data.LockOwner>						lockOwners;
 		private bool										isLockAcquired;

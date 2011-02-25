@@ -101,7 +101,6 @@
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
-    <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
@@ -134,8 +133,6 @@
     <Compile Include="Business\Finance\PriceCalculator.cs" />
     <Compile Include="Business\Finance\TaxCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
-    <Compile Include="Business\Isr.cs" />
-    <Compile Include="Business\IsrSlip.cs" />
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
@@ -189,8 +186,6 @@
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
-    <Compile Include="Dialogs\LoginDialog.cs" />
-    <Compile Include="Dialogs\UserManagerDialog.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
@@ -585,6 +580,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Business\UserManagement\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

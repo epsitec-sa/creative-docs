@@ -70,8 +70,21 @@
     <Compile Include="UI.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
+    <Compile Include="UI.Toolkit.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
+    <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
+    <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
+    <Compile Include="Widgets\Tiles\EditionTile.cs" />
+    <Compile Include="Widgets\Tiles\FrameTile.cs" />
+    <Compile Include="Widgets\Tiles\GenericTile.cs" />
+    <Compile Include="Widgets\Tiles\PanelTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\SummaryTile.cs" />
+    <Compile Include="Widgets\Tiles\Tile.cs" />
+    <Compile Include="Widgets\Tiles\TileArrow.cs" />
+    <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
+    <Compile Include="Widgets\Tiles\TitleTile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

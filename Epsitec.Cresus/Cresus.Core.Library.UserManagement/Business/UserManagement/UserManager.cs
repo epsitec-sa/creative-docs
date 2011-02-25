@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
@@ -17,19 +18,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// The <c>UserManager</c> class is used to authenticate users, based on their name
 	/// and on their credentials (which might be a password).
 	/// </summary>
-	public class UserManager
+	public class UserManager : CoreDataComponent
 	{
 		public UserManager(CoreData data)
+			: base (data)
 		{
-			this.data = data;
-		}
-
-		public CoreData							CoreData
-		{
-			get
-			{
-				return this.data;
-			}
 		}
 
 	
@@ -49,14 +42,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Gets the associated business context.
 		/// </summary>
 		/// <value>The business context.</value>
-		public BusinessContext					BusinessContext
+		public IBusinessContext					BusinessContext
 		{
 			get
 			{
 				if (this.businessContext == null)
                 {
-					this.businessContext = BusinessContext.Create (this.data);
-					this.businessContext.GlobalLock = Data.GlobalLocks.UserManagement;
+					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Data);
+					this.businessContext.GlobalLock = GlobalLocks.UserManagement;
                 }
 
 				return this.businessContext;
@@ -68,9 +61,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Authenticates the specified user. This will display a dialog to query for the
 		/// user name and/or password.
 		/// </summary>
+		/// <param name="application">The application.</param>
+		/// <param name="data">The data.</param>
 		/// <param name="user">The user (or <c>null</c> if it must be selected interactively).</param>
-		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
-		public bool Authenticate(SoftwareUserEntity user = null, bool softwareStartup = false)
+		/// <param name="softwareStartup">if set to <c>true</c> [software startup].</param>
+		/// <returns>
+		///   <c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.
+		/// </returns>
+		public bool Authenticate(Application application, CoreData data, SoftwareUserEntity user = null, bool softwareStartup = false)
 		{
 			//	Make sure the user entity belongs to our data context; the only way to know for sure
 			//	is to retrieve the user based on its 'code':
@@ -91,7 +89,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return true;
 			}
 
-			var dialog = new Dialogs.LoginDialog (CoreProgram.Application, user, softwareStartup);
+			var dialog = new Dialogs.LoginDialog (application, data, user, softwareStartup);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
@@ -159,7 +157,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The complete collection of users.</returns>
 		public IEnumerable<SoftwareUserEntity> GetAllUsers()
 		{
-			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsArchive == false);
+			return this.Data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsArchive == false);
 		}
 
 		/// <summary>
@@ -168,12 +166,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The collection of active users.</returns>
 		public IEnumerable<SoftwareUserEntity> GetActiveUsers()
 		{
-			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
+			return this.Data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
 		}
 
 		public IEnumerable<SoftwareUserGroupEntity> GetAllUserGroups()
 		{
-			return this.data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext).Where (group => group.IsArchive == false);
+			return this.Data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext).Where (group => group.IsArchive == false);
 		}
 
 		/// <summary>
@@ -316,6 +314,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private readonly CoreData			data;
 
 		private SoftwareUserEntity			authenticatedUser;
-		private BusinessContext				businessContext;
+		private IBusinessContext			businessContext;
 	}
 }
