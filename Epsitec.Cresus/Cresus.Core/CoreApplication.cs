@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core
 			
 			this.persistenceManager = new PersistenceManager ();
 
-			this.data = new CoreData (forceDatabaseCreation: true, allowDatabaseUpdate: true);
+			this.data = new CoreData (forceDatabaseCreation: false, allowDatabaseUpdate: true);
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
@@ -330,7 +330,10 @@ namespace Epsitec.Cresus.Core
 		{
 			this.data.SetupBusiness ();
 
-			Hack.PopulateUsers (this.data.CreateDataContext ("hack"));
+			if (this.data.ForceDatabaseCreation)
+			{
+				Hack.PopulateUsers (this.data.CreateDataContext ("hack"));
+			}
 
 			this.OnSetupDataDone ();
 

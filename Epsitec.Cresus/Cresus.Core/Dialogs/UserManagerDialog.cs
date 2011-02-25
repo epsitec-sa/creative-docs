@@ -977,8 +977,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			throw new System.NotImplementedException ();
 #if false
+			throw new System.NotImplementedException ();
 			int sel = this.personField.SelectedItemIndex - 1;
 
 			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
@@ -999,8 +999,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
 		{
-			throw new System.NotImplementedException ();
 #if false
+			throw new System.NotImplementedException ();
 			if (user.Person.IsNotNull ())
 			{
 				return user.Person.GetCompactSummary ();
