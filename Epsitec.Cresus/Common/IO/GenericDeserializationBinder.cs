@@ -75,6 +75,7 @@ namespace Epsitec.Common.IO
 					case "Common.Types":
 					case "Common.Support":
 					case "Common.Widgets":
+					case "Common.OpenType":
 						replace = true;
 						break;
 				}
