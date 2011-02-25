@@ -4,30 +4,32 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Core
 {
-#if false
-	public class Hack
+#if true
+	public static class Hack
 	{
-		public void PopulateUsers()
+		public static void PopulateUsers(DataContext context)
 		{
-			var role = this.DataContext.CreateEntity<SoftwareUserRoleEntity> ();
+			var role = context.CreateEntity<SoftwareUserRoleEntity> ();
 
 			role.Code = "?";
 			role.Name = "Principal";
 
-			var groupSystem     = this.CreateUserGroup (role, "Système", Business.UserManagement.UserPowerLevel.System);
-			var groupDev        = this.CreateUserGroup (role, "Développeurs", Business.UserManagement.UserPowerLevel.Developer);
-			var groupAdmin      = this.CreateUserGroup (role, "Administrateurs", Business.UserManagement.UserPowerLevel.Administrator);
-			var groupPowerUser  = this.CreateUserGroup (role, "Utilisateurs avec pouvoir", Business.UserManagement.UserPowerLevel.PowerUser);
-			var groupStandard   = this.CreateUserGroup (role, "Utilisateurs standards", Business.UserManagement.UserPowerLevel.Standard);
-			var groupRestricted = this.CreateUserGroup (role, "Utilisateurs restreints", Business.UserManagement.UserPowerLevel.Restricted);
+			var groupSystem     = Hack.CreateUserGroup (context, role, "Système", Business.UserManagement.UserPowerLevel.System);
+			var groupDev        = Hack.CreateUserGroup (context, role, "Développeurs", Business.UserManagement.UserPowerLevel.Developer);
+			var groupAdmin      = Hack.CreateUserGroup (context, role, "Administrateurs", Business.UserManagement.UserPowerLevel.Administrator);
+			var groupPowerUser  = Hack.CreateUserGroup (context, role, "Utilisateurs avec pouvoir", Business.UserManagement.UserPowerLevel.PowerUser);
+			var groupStandard   = Hack.CreateUserGroup (context, role, "Utilisateurs standards", Business.UserManagement.UserPowerLevel.Standard);
+			var groupRestricted = Hack.CreateUserGroup (context, role, "Utilisateurs restreints", Business.UserManagement.UserPowerLevel.Restricted);
 
 #if false
 			this.CreateUserGroup (logicGroup, "Utilisateurs restreints 1", Business.UserManagement.UserPowerLevel.Restricted);
@@ -40,22 +42,22 @@ namespace Epsitec.Cresus.Core
 			this.CreateUserGroup (logicGroup, "Utilisateurs restreints 8", Business.UserManagement.UserPowerLevel.Restricted);
 #endif
 
-			var userStandard1 = this.CreateUser (groupDev, "Pierre Arnaud", "arnaud", "smaky", Business.UserManagement.UserAuthenticationMethod.System);
-			var userStandard2 = this.CreateUser (groupDev, "Marc Bettex", "Marc", "tiger", Business.UserManagement.UserAuthenticationMethod.System);
-			var userStandard3 = this.CreateUser (groupDev, "Daniel Roux", "Daniel", "blupi", Business.UserManagement.UserAuthenticationMethod.System);
-			var userEpsitec   = this.CreateUser (groupDev, "Epsitec", "Epsitec", "admin", Business.UserManagement.UserAuthenticationMethod.Password);
+			var userStandard1 = Hack.CreateUser (context, groupDev, "Pierre Arnaud", "arnaud", "smaky", Business.UserManagement.UserAuthenticationMethod.System);
+			var userStandard2 = Hack.CreateUser (context, groupDev, "Marc Bettex", "Marc", "tiger", Business.UserManagement.UserAuthenticationMethod.System);
+			var userStandard3 = Hack.CreateUser (context, groupDev, "Daniel Roux", "Daniel", "blupi", Business.UserManagement.UserAuthenticationMethod.System);
+			var userEpsitec   = Hack.CreateUser (context, groupDev, "Epsitec", "Epsitec", "admin", Business.UserManagement.UserAuthenticationMethod.Password);
 
 			userStandard1.UserGroups.Add (groupStandard);
 			userStandard2.UserGroups.Add (groupStandard);
 			userStandard3.UserGroups.Add (groupStandard);
 			userEpsitec.UserGroups.Add (groupAdmin);
 
-			this.DataContext.SaveChanges ();
+			context.SaveChanges ();
 		}
 
-		private SoftwareUserGroupEntity CreateUserGroup(SoftwareUserRoleEntity role, string name, Business.UserManagement.UserPowerLevel level)
+		private static SoftwareUserGroupEntity CreateUserGroup(DataContext context, SoftwareUserRoleEntity role, string name, Business.UserManagement.UserPowerLevel level)
 		{
-			var group = this.DataContext.CreateEntity<SoftwareUserGroupEntity> ();
+			var group = context.CreateEntity<SoftwareUserGroupEntity> ();
 			var logic = new Logic (group, null);
 
 			logic.ApplyRules (RuleType.Setup, group);
@@ -68,9 +70,9 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		private SoftwareUserEntity CreateUser(SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, Business.UserManagement.UserAuthenticationMethod am)
+		private static SoftwareUserEntity CreateUser(DataContext context, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, Business.UserManagement.UserAuthenticationMethod am)
 		{
-			var user = this.DataContext.CreateEntity<SoftwareUserEntity> ();
+			var user = context.CreateEntity<SoftwareUserEntity> ();
 			var logic = new Logic (user, null);
 
 			logic.ApplyRules (RuleType.Setup, user);
@@ -81,6 +83,7 @@ namespace Epsitec.Cresus.Core
 			user.UserGroups.Add (group);
 			user.SetPassword (userPassword);
 
+#if false
 			FormattedText[] p = displayName.Split (" ");
 			if (p.Length == 2)
 			{
@@ -90,23 +93,24 @@ namespace Epsitec.Cresus.Core
 					user.Person = person;
 				}
 			}
+#endif
 
 			return user;
 		}
 
-		private string SearchNaturalPerson(string firstName, string lastName)
+		private static string SearchNaturalPerson(string firstName, string lastName)
 		{
 			return null;
 		}
 
 #if false
-		private NaturalPersonEntity SearchNaturalPerson(string firstName, string lastName)
+		private NaturalPersonEntity SearchNaturalPerson(DataContext context, string firstName, string lastName)
 		{
 			var example = new NaturalPersonEntity ();
 			example.Firstname = firstName;
 			example.Lastname = lastName;
 
-			return this.DataContext.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
+			return context.GetByExample<NaturalPersonEntity> (example).FirstOrDefault ();
 		}
 #endif
 

@@ -357,8 +357,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.users[row];
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
-			throw new System.NotImplementedException ();
 #if false
+			throw new System.NotImplementedException ();
 			button.ImageEntity = user.Person.Pictures.FirstOrDefault ();
 #endif
 

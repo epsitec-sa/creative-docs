@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class Logic
 	{
-		internal Logic(AbstractEntity entity, BusinessContext businessContext)
+		public Logic(AbstractEntity entity, BusinessContext businessContext)
 		{
 			this.entity = entity;
 			this.entityType = entity.GetType ();

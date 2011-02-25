@@ -79,8 +79,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				throw new System.NotImplementedException ();
 #if false
+				throw new System.NotImplementedException ();
 				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
 #endif
 				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");

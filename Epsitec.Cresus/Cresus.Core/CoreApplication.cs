@@ -329,6 +329,9 @@ namespace Epsitec.Cresus.Core
 		internal void SetupData()
 		{
 			this.data.SetupBusiness ();
+
+			Hack.PopulateUsers (this.data.CreateDataContext ("hack"));
+
 			this.OnSetupDataDone ();
 
 #if false

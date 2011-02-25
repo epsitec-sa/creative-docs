@@ -181,6 +181,7 @@
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
+    <Compile Include="Hack.cs" />
     <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
     <Compile Include="Repositories\DocumentOptionsRepository.cs" />
