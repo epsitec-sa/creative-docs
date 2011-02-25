@@ -40,8 +40,6 @@ namespace Epsitec.Cresus.Core
 
 
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
-			this.locker = new Locker (this);
-//-			this.businessContextPool =  new BusinessContextPool (this);
 //-			this.imageDataStore = new ImageDataStore (this);
 		}
 
@@ -65,7 +63,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.locker;
+				return this.ContainsComponent<Locker> () ? this.GetComponent<Locker> () : null;
 			}
 		}
 
@@ -416,8 +414,6 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
-			this.locker.Dispose ();
-
 			if (this.activeDataContext != null)
 			{
 				this.activeDataContext.Dispose ();
@@ -573,7 +569,6 @@ namespace Epsitec.Cresus.Core
 
 		private readonly EntityContext independentEntityContext;
 		private readonly RefIdGeneratorPool refIdGeneratorPool;
-		private readonly Locker locker;
 //		private readonly ImageDataStore imageDataStore;
 		private readonly Dictionary<string, CoreDataComponent> components;
 		private readonly List<CoreDataComponent> registeredComponents;

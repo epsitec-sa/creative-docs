@@ -44,7 +44,6 @@ namespace Epsitec.Cresus.Core.Data
 			base.ExecuteSetupPhase ();
 
 			this.connectionManager = this.Data.ConnectionManager;
-			this.locker = this.Data.DataLocker;
 
 			this.SetupDatabase ();
 			this.Data.IsReady = true;
@@ -201,7 +200,6 @@ namespace Epsitec.Cresus.Core.Data
 		private void ValidateConnection()
 		{
 			this.connectionManager.Validate ();
-			this.locker.Validate ();
 		}
 
 		private void VerifyUidGenerators()
@@ -254,6 +252,5 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private ConnectionManager connectionManager;
-		private Locker locker;
 	}
 }

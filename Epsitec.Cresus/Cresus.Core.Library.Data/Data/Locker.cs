@@ -22,26 +22,17 @@ namespace Epsitec.Cresus.Core.Data
 	/// items. It returns a <see cref="LockTransaction"/> to describe the
 	/// lock (which might or might not have been taken).
 	/// </summary>
-	public sealed class Locker : System.IDisposable
+	public sealed class Locker : CoreDataComponent, System.IDisposable
 	{
 		public Locker(CoreData data)
+			: base (data)
 		{
-			this.data = data;
-			this.dataInfrastructure = this.data.DataInfrastructure;
+			this.dataInfrastructure = this.Data.DataInfrastructure;
 			this.lockMonitors = new WeakList<LockMonitor> ();
 			this.lockMonitorTimer = new Timer ();
 			this.lockMonitorTimer.TimeElapsed += this.HandleLockMonitorTimerTimeElapsed;
 			this.lockMonitorTimer.Delay      = 0.5;
 			this.lockMonitorTimer.AutoRepeat = 2.5;
-		}
-
-		
-		public void Validate()
-		{
-			if (!this.isReady)
-			{
-				this.isReady = true;
-			}
 		}
 
 		
@@ -87,7 +78,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public LockMonitor CreateLockMonitor(IEnumerable<string> lockNames)
 		{
-			return new LockMonitor (this.data, lockNames);
+			return new LockMonitor (this.Data, lockNames);
 		}
 
 
@@ -181,12 +172,10 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private readonly CoreData				data;
 		private readonly DataInfrastructure		dataInfrastructure;
 		private readonly WeakList<LockMonitor>	lockMonitors;
 		private readonly Timer					lockMonitorTimer;
 
-		private bool							isReady;
 		private string[]						lockMonitorNames;
 	}
 }
