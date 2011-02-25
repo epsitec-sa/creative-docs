@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public override void ApplySetupRule(RelationEntity relation)
 		{
-			var pool      = Logic.Current.Data.RefIdGeneratorPool;
+			var pool      = Logic.Current.Data.GetComponent<RefIdGeneratorPool> ();
 			var generator = pool.GetGenerator<RelationEntity> ();
 			var nextId    = generator.GetNextId ();
 

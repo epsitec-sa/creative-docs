@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business
 				throw new System.ArgumentException ("Subscriber number is invalid");
 			}
 
-			var generator  = data.RefIdGeneratorPool.GetGenerator (Isr.GeneratorNamePrefix + subscriberNumber);
+			var generator  = data.GetComponent<RefIdGeneratorPool> ().GetGenerator (Isr.GeneratorNamePrefix + subscriberNumber);
 			var nextLongId = generator.GetNextId ();
 
 			var refNumber  = nextLongId.ToString (System.Globalization.NumberFormatInfo.InvariantInfo);

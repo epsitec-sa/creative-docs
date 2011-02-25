@@ -13,21 +13,12 @@ namespace Epsitec.Cresus.Core.Business
 	/// The <c>RefIdGeneratorPool</c> maintains a collection of <see cref="RefIdGenerator"/>
 	/// instances.
 	/// </summary>
-	public class RefIdGeneratorPool
+	public class RefIdGeneratorPool : CoreDataComponent
 	{
 		public RefIdGeneratorPool(CoreData data)
+			: base (data)
 		{
-			this.data = data;
 			this.generators = new Dictionary<string, RefIdGenerator> ();
-		}
-
-
-		public CoreData Data
-		{
-			get
-			{
-				return this.data;
-			}
 		}
 
 
@@ -69,7 +60,6 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		private readonly CoreData data;
 		private readonly Dictionary<string, RefIdGenerator> generators;
 	}
 }

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(DocumentMetadataEntity entity)
 		{
-			var pool = Logic.Current.Data.RefIdGeneratorPool;
+			var pool = Logic.Current.Data.GetComponent<RefIdGeneratorPool> ();
 			var generator = pool.GetGenerator<AffairEntity> ();
 			var nextId    = generator.GetNextId ();
 

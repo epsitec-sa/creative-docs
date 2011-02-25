@@ -51,6 +51,7 @@
     <Compile Include="Entities\ImageCategoryEntity.cs" />
     <Compile Include="Entities\ImageEntity.cs" />
     <Compile Include="Entities\ImageGroupEntity.cs" />
+    <Compile Include="Factories\ImageDataStoreFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ImageBlobRepository.cs" />
     <Compile Include="Repositories\ImageCategoryRepository.cs" />

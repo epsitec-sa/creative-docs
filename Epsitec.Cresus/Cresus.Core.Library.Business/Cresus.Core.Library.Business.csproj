@@ -124,6 +124,7 @@
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Factories\BusinessContextPoolFactory.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Factories\RefIdGeneratorPoolFactory.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />

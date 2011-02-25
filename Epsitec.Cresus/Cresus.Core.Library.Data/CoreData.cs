@@ -7,7 +7,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
@@ -37,10 +36,6 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
-
-
-			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
-//-			this.imageDataStore = new ImageDataStore (this);
 		}
 
 		public DataInfrastructure				DataInfrastructure
@@ -75,14 +70,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public RefIdGeneratorPool				RefIdGeneratorPool
-		{
-			get
-			{
-				return this.refIdGeneratorPool;
-			}
-		}
-
 		public bool								IsReady
 		{
 			get;
@@ -100,16 +87,6 @@ namespace Epsitec.Cresus.Core
 			get;
 			private set;
 		}
-
-#if false
-		public ImageDataStore					ImageDataStore
-		{
-			get
-			{
-				return this.imageDataStore;
-			}
-		}
-#endif
 
 		public T GetComponent<T>()
 			where T : CoreDataComponent
@@ -568,8 +545,6 @@ namespace Epsitec.Cresus.Core
 
 
 		private readonly EntityContext independentEntityContext;
-		private readonly RefIdGeneratorPool refIdGeneratorPool;
-//		private readonly ImageDataStore imageDataStore;
 		private readonly Dictionary<string, CoreDataComponent> components;
 		private readonly List<CoreDataComponent> registeredComponents;
 		private readonly Stack<System.IDisposable> disposableComponents;

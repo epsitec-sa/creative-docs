@@ -18,12 +18,11 @@ namespace Epsitec.Cresus.Core.Data
 	/// <summary>
 	/// The <c>ImageDataStore</c> is used to store images into the database.
 	/// </summary>
-	public sealed class ImageDataStore
+	public sealed class ImageDataStore : CoreDataComponent
 	{
 		public ImageDataStore(CoreData data)
+			: base (data)
 		{
-			this.data = data;
-			this.NewDataContext ();
 		}
 
 		
@@ -40,6 +39,16 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		public override bool CanExecuteSetupPhase()
+		{
+			return this.Data.IsReady;
+		}
+
+		public override void ExecuteSetupPhase()
+		{
+			base.ExecuteSetupPhase ();
+			this.NewDataContext ();
+		}
 
 		/// <summary>
 		/// Gets the image data for the specified item code. If duplicates are found, returns the
@@ -72,7 +81,7 @@ namespace Epsitec.Cresus.Core.Data
 		/// <returns><c>true</c> if the database contains an up-to-date image; otherwise, <c>false</c>.</returns>
 		public bool CheckEqual(string code, ImageData imageData)
 		{
-			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Data, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = code,
@@ -144,7 +153,7 @@ namespace Epsitec.Cresus.Core.Data
 		/// </returns>
 		private ImageBlobEntity GetImageBlob(string code, int thumbnailSize = 0)
 		{
-			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Data, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = code,
@@ -204,7 +213,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			var nativeImage = NativeBitmap.Load (imageBlob.Data);
 			
-			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Data, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = imageBlob.Code,
@@ -289,7 +298,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private ImageBlobEntity FindSimilarImageBlob(ImageBlobEntity imageBlob)
 		{
-			var repository = new ImageBlobRepository (this.data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Data, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				WeakHash = imageBlob.WeakHash,
@@ -306,14 +315,14 @@ namespace Epsitec.Cresus.Core.Data
 			int contextId   = ImageDataStore.GetNextContextId ();
 			var contextName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "ImageDataStore #{0}", contextId);
 			
-			this.context = this.data.CreateDataContext (contextName);
+			this.context = this.Data.CreateDataContext (contextName);
 		}
 
 		private void DisposeDataContext()
 		{
 			if (this.context != null)
 			{
-				this.data.DisposeDataContext (this.context);
+				this.Data.DisposeDataContext (this.context);
 				this.context = null;
 			}
 		}
@@ -326,7 +335,6 @@ namespace Epsitec.Cresus.Core.Data
 		
 		private static int						nextContextId;
 
-		private readonly CoreData				data;
 		private DataContext						context;
 	}
 }
