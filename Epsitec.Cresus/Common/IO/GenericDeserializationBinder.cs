@@ -159,6 +159,11 @@ namespace Epsitec.Common.IO
 
 		private static string FindReplacementTypeName(string prefix, string typeName)
 		{
+			if (prefix.Contains (","))
+			{
+				prefix = GenericDeserializationBinder.FixAssemblyName (prefix);
+			}
+
 			foreach (System.Reflection.Assembly assembly in GenericDeserializationBinder.assemblies)
 			{
 				if (assembly.FullName.StartsWith (prefix))
