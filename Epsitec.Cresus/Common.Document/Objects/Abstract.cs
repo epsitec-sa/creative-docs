@@ -3832,14 +3832,17 @@ namespace Epsitec.Common.Document.Objects
 		private void CreateMissingProperties()
 		{
 			//	Crée toutes les propriétés dont l'objet a besoin et qui n'étaient pas sérialisées.
-			//	Cela arrive lorsqu'on ouvre un document créé avant que la propriété 'Frame' existe.
-			foreach (int value in System.Enum.GetValues (typeof (Properties.Type)))
+			//	Cela arrive par exemple lorsqu'on ouvre un document créé avant que la propriété 'Frame' existe.
+			if (this.document.Type != DocumentType.Pictogram)  // pour gagner du temps lors de la génération d'icônes
 			{
-				Properties.Type type = (Properties.Type) value;
-				if (this.ExistingProperty (type) &&
-					!this.ExistProperty (type))
+				foreach (int value in System.Enum.GetValues (typeof (Properties.Type)))
 				{
-					this.AddProperty (type, null, false);
+					Properties.Type type = (Properties.Type) value;
+					if (this.ExistingProperty (type) &&
+					!this.ExistProperty (type))
+					{
+						this.AddProperty (type, null, false);
+					}
 				}
 			}
 		}
