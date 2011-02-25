@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		public UserManagerDialog(Application application, CoreData data, SoftwareUserEntity user)
 		{
 			this.application = application;
+			this.data        = data;
 			this.manager     = data.GetComponent<UserManager> ();
 
 			this.initialUser = user;
@@ -212,7 +213,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Nom du compte :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
 				};
 
 				this.loginNameField = new TextFieldEx
@@ -234,7 +235,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Nom complet de l'utilisateur :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
 				};
 
 				this.displayNameField = new TextFieldEx
@@ -256,7 +257,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Personne physique correspondante :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
 				};
 
 				this.personField = new TextFieldCombo
@@ -301,7 +302,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Dates de début et de fin de validité du compte :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
 				};
 
 				{
@@ -347,7 +348,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "L'utilisateur fait partie des groupes suivants :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel+2),
+					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel+2),
 				};
 
 				double scrollableHeight = 15 * System.Math.Min (this.groups.Count, 5);
@@ -386,7 +387,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Pour changer le mot de passe :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 10, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, 0, 10, UI.MarginUnderLabel),
 				};
 
 				this.newPasswordField1 = new TextFieldEx
@@ -463,7 +464,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			foreach (var owner in this.lockOwners)
 			{
 				SoftwareUserEntity user = this.manager.FindActiveUser (owner.User.UserCode);
-				System.DateTime lockTime = owner.LockTime.ToLocalTime (this.manager.CoreData);
+				System.DateTime lockTime = owner.LockTime.ToLocalTime (this.data);
 				
 				string desc = string.Format ("verrou = {0}<br/>utilisateur = {1}<br/>date = {2} {3}<br/>", owner.LockName, user.DisplayName, lockTime.ToShortDateString (), lockTime.ToShortTimeString ());
 				users.Append (desc);
@@ -823,7 +824,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var button = new IconOrImageButton
 				{
-					CoreData = this.manager.CoreData,
+					CoreData = this.data,
 					PreferredSize = new Size (Misc.GetButtonWidth (), Misc.GetButtonWidth ()),
 					IconUri = Misc.GetResourceIconUri ("UserManager"),
 					IconPreferredSize = new Size (31, 31),
@@ -1375,6 +1376,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private readonly Application						application;
+		private readonly CoreData							data;
 		private readonly UserManager						manager;
 		private readonly List<SoftwareUserEntity>			users;
 		private readonly List<SoftwareUserGroupEntity>		groups;

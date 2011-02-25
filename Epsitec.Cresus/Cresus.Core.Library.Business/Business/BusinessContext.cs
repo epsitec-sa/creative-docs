@@ -22,6 +22,11 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class BusinessContext : IIsDisposed, IBusinessContext
 	{
+		public BusinessContext(CoreData data)
+			: this (data.GetComponent<BusinessContextPool> ())
+		{
+		}
+
 		public BusinessContext(BusinessContextPool pool)
 		{
 			this.pool = pool;

@@ -133,7 +133,6 @@
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
-    <Compile Include="Painter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
@@ -141,7 +140,6 @@
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
-    <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\ItemPicker.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
@@ -153,6 +151,14 @@
     <Compile Include="Widgets\TextFieldNavigator.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
     <Compile Include="Widgets\TilePageButton.cs" />
+    <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
+    <Compile Include="Widgets\Tiles\ControllerTile.cs" />
+    <Compile Include="Widgets\Tiles\EditionTile.cs" />
+    <Compile Include="Widgets\Tiles\GenericTile.cs" />
+    <Compile Include="Widgets\Tiles\PanelTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\SummaryTile.cs" />
+    <Compile Include="Widgets\Tiles\TitleTile.cs" />
     <Compile Include="Widgets\TileTabBook.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\VStaticText.cs" />

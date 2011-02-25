@@ -55,6 +55,7 @@
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dispatcher.cs" />
     <Compile Include="Misc.cs" />
+    <Compile Include="Painter.cs" />
     <Compile Include="PersistenceManagerBinding`1.cs" />
     <Compile Include="ExceptionManager.cs" />
     <Compile Include="PersistenceManager.cs" />
@@ -73,18 +74,12 @@
     <Compile Include="UI.Toolkit.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
+    <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
-    <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
-    <Compile Include="Widgets\Tiles\EditionTile.cs" />
     <Compile Include="Widgets\Tiles\FrameTile.cs" />
-    <Compile Include="Widgets\Tiles\GenericTile.cs" />
-    <Compile Include="Widgets\Tiles\PanelTitleTile.cs" />
-    <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
-    <Compile Include="Widgets\Tiles\SummaryTile.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
-    <Compile Include="Widgets\Tiles\TitleTile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

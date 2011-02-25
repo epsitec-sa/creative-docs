@@ -8,8 +8,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
 
-using Epsitec.Cresus.Core.Controllers;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,6 +29,26 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.SetEmbedder (embedder);
 		}
 
+
+		protected override int GroupedItemIndex
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+			set
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		protected override string GroupId
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{

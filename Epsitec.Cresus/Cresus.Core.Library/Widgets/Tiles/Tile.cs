@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       o--TilePageButton
 	/// 
 	/// </summary>
-	public class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
+	public abstract class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
-		public Tile(Direction arrowDirection)
+		protected Tile(Direction arrowDirection)
 		{
 			this.tileArrow    = new TileArrow (arrowDirection);
 			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
@@ -60,6 +60,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get;
 			set;
+		}
+
+		public virtual bool IsDraggable
+		{
+			get
+			{
+				return false;
+			}
 		}
 
 		public bool Frameless
@@ -142,18 +150,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			get
 			{
 				return this.tileArrow;
-			}
-		}
-
-		public virtual Controllers.ITileController Controller
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-				throw new System.InvalidOperationException ();
 			}
 		}
 
@@ -462,7 +458,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public void OnDragging(DragEventArgs e)
 		{
 			// TODO: IsSelected pas suffisant
-			if (this.Controller == null || !this.IsDragAndDropEnabled || this.IsSelected)
+			if (this.IsDraggable)
 			{
 				return;
 			}
@@ -483,7 +479,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					this.dragWindowSourceOffset = this.MapScreenToClient (mouseCursor);
 					this.dragWindowSourceSize = this.ActualSize;
 
-					this.dragErsatzTile = new Tile (Direction.Left)
+					this.dragErsatzTile = new ErsatzTile (Direction.Left)
 					{
 						Margins       = this.Margins,
 						PreferredSize = this.dragWindowSourceSize,
@@ -538,7 +534,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 				Tile target = this.FindDropTarget (mouseCursor);
 
-				if (target == null || target.GroupId != this.dragGroupId || target.Controller == null)
+				if (target == null || target.GroupId != this.dragGroupId || !target.IsDraggable)
 				{
 					this.dragWindowTarget.Hide ();
 				}
@@ -616,48 +612,36 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		#endregion
 
-		private int GroupedItemIndex
+		class ErsatzTile : Tile
 		{
-			get
+			public ErsatzTile(Direction direction)
+				: base (direction)
 			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
-				
-				if (grouped == null)
+			}
+
+			protected override int GroupedItemIndex
+			{
+				get
 				{
-					return -1;
+					throw new System.NotImplementedException ();
 				}
-				else
+				set
 				{
-					return grouped.GroupedItemIndex;
+					throw new System.NotImplementedException ();
 				}
 			}
-			set
+			protected override string GroupId
 			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
-
-				if (grouped != null)
+				get
 				{
-					grouped.GroupedItemIndex = value;
+					throw new System.NotImplementedException ();
 				}
 			}
 		}
 
-		private string GroupId
-		{
-			get
-			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+		protected abstract int GroupedItemIndex { get; set; }
 
-				if (grouped == null)
-				{
-					return null;
-				}
-				else
-				{
-					return grouped.GetGroupId ();
-				}
-			}
-		}
+		protected abstract string GroupId { get; }
 
 		private static Point MouseCursorLocation
 		{

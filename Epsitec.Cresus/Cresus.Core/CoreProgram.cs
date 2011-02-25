@@ -145,31 +145,34 @@ namespace Epsitec.Cresus.Core
 		private static void ExecuteCoreProgram(SplashScreen splash)
 		{
 			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
-			
+
 			UI.Initialize ();
 
-			new CoreApplication ();
+			var app = new CoreApplication ();
 
-			System.Diagnostics.Debug.Assert (CoreProgram.application.ResourceManagerPool.PoolName == "Core");
+			System.Diagnostics.Debug.Assert (app == CoreProgram.application);
+			System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
 
 			CoreApplication.LoadSettings ();
-			
-			CoreProgram.application.DiscoverPlugIns ();
-			CoreProgram.application.CreatePlugIns ();
-			CoreProgram.application.SetupData ();
-			CoreProgram.application.CreateUI ();
 
-			if (CoreProgram.application.UserManager.Authenticate (CoreProgram.application.UserManager.FindActiveUser (), softwareStartup: true))
+			app.DiscoverPlugIns ();
+			app.CreatePlugIns ();
+			app.SetupData ();
+			app.CreateUI ();
+
+			var user = app.UserManager.FindActiveUser ();
+
+			if (app.UserManager.Authenticate (app, app.Data, user, softwareStartup: true))
 			{
-				CoreProgram.application.Window.Show ();
-				CoreProgram.application.Window.Run ();
+				app.Window.Show ();
+				app.Window.Run ();
 
 				CoreApplication.SaveSettings ();
 			}
-			
+
 			UI.ShutDown ();
 
-			CoreProgram.application.Dispose ();
+			app.Dispose ();
 			CoreProgram.application = null;
 		}
 

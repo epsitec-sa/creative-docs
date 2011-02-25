@@ -69,6 +69,26 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		protected override int GroupedItemIndex
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+			set
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		protected override string GroupId
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
 	
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
