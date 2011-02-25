@@ -373,17 +373,20 @@ namespace Epsitec.Common.Document.Properties
 			{
 				var viewer = this.document.Modifier.ActiveViewer;
 
-				if (obj.PopupInterfaceFrame == null)
+				if (viewer.Window != null)
 				{
-					//	Crée l'interface popup.
-					this.UpdateCropLogic (obj);
+					if (obj.PopupInterfaceFrame == null)
+					{
+						//	Crée l'interface popup.
+						this.UpdateCropLogic (obj);
 
-					obj.PopupInterfaceFrame = this.CreatePopupInterface (obj);
-					viewer.OpenPopupInterface (obj.PopupInterfaceFrame, obj, this.GetPopupInterfacePosition);
-					viewer.MovePopupInterface ();
+						obj.PopupInterfaceFrame = this.CreatePopupInterface (obj);
+						viewer.OpenPopupInterface (obj.PopupInterfaceFrame, obj, this.GetPopupInterfacePosition);
+						viewer.MovePopupInterface ();
+					}
+
+					this.UpdatePopupInterface (obj);
 				}
-
-				this.UpdatePopupInterface (obj);
 			}
 			else
 			{

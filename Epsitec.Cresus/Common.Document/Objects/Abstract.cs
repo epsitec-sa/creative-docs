@@ -2678,7 +2678,6 @@ namespace Epsitec.Common.Document.Objects
 			this.isDirtyPageAndLayerNumbers = src.isDirtyPageAndLayerNumbers;
 			this.pageNumber          = src.pageNumber;
 			this.layerNumber         = src.layerNumber;
-			this.popupInterfaceFrame = src.popupInterfaceFrame;
 
 			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();
