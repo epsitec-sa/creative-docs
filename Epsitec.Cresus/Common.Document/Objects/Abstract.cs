@@ -3838,8 +3838,8 @@ namespace Epsitec.Common.Document.Objects
 				foreach (int value in System.Enum.GetValues (typeof (Properties.Type)))
 				{
 					Properties.Type type = (Properties.Type) value;
-					if (this.ExistingProperty (type) &&
-					!this.ExistProperty (type))
+					if (this.ExistingProperty (type) &&  // propriété utilisée par ce type d'objet ?
+						!this.ExistProperty (type))      // propriété n'existe pas ?
 					{
 						this.AddProperty (type, null, false);
 					}

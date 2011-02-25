@@ -555,6 +555,7 @@ namespace Epsitec.Common.Document.Properties
 					this.FileName = filename;
 					this.FileDate = this.document.ImageCache.LoadFromFile (this.FileName);
 					this.document.Modifier.OpletQueueValidateAction ();
+					this.document.Notifier.NotifyPropertyChanged (this);
 				}
 			}
 		}
@@ -576,6 +577,7 @@ namespace Epsitec.Common.Document.Properties
 				}
 
 				this.document.Modifier.OpletQueueValidateAction ();
+				this.document.Notifier.NotifyPropertyChanged (this);
 			}
 		}
 
@@ -605,6 +607,7 @@ namespace Epsitec.Common.Document.Properties
 				}
 
 				this.document.Modifier.OpletQueueValidateAction ();
+				this.document.Notifier.NotifyPropertyChanged (this);
 			}
 		}
 
@@ -614,6 +617,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.cropLogic.RelativeZoom = zoom;
 				this.document.Modifier.OpletQueueValidateAction ();
+				this.document.Notifier.NotifyPropertyChanged (this);
 			}
 		}
 		#endregion
