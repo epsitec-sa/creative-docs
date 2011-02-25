@@ -3825,6 +3825,23 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.aggregates = new UndoableList(this.document, UndoableListType.AggregatesInsideObject);
 			}
+
+			this.CreateMissingProperties ();
+		}
+
+		private void CreateMissingProperties()
+		{
+			//	Crée toutes les propriétés dont l'objet a besoin et qui n'étaient pas sérialisées.
+			//	Cela arrive lorsqu'on ouvre un document créé avant que la propriété 'Frame' existe.
+			foreach (int value in System.Enum.GetValues (typeof (Properties.Type)))
+			{
+				Properties.Type type = (Properties.Type) value;
+				if (this.ExistingProperty (type) &&
+					!this.ExistProperty (type))
+				{
+					this.AddProperty (type, null, false);
+				}
+			}
 		}
 
 		public virtual void ReadFinalize()
