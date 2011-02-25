@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core
 			this.AllowDatabaseUpdate = allowDatabaseUpdate;
 
 			this.components = new Dictionary<string, CoreDataComponent> ();
+			this.disposableComponents = new Stack<System.IDisposable> ();
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
@@ -41,7 +42,6 @@ namespace Epsitec.Cresus.Core
 
 
 			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
-			this.connectionManager = new ConnectionManager (this);
 			this.locker = new Locker (this);
 //-			this.businessContextPool =  new BusinessContextPool (this);
 //-			this.imageDataStore = new ImageDataStore (this);
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.connectionManager;
+				return this.GetComponent<ConnectionManager> ();
 			}
 		}
 
@@ -178,6 +178,10 @@ namespace Epsitec.Cresus.Core
 			this.components[name] = component;
 		}
 
+		internal void RegisterComponentAsDisposable(System.IDisposable component)
+		{
+			this.disposableComponents.Push (component);
+		}
 
 		private DataContext EnsureDataContext(ref DataContext dataContext, string name)
 		{
@@ -506,8 +510,12 @@ namespace Epsitec.Cresus.Core
 				this.activeDataContext.Dispose ();
 				this.activeDataContext = null;
 			}
-			
-			this.connectionManager.Dispose ();
+
+			while (this.disposableComponents.Count > 0)
+			{
+				var disposable = this.disposableComponents.Pop ();
+				disposable.Dispose ();
+			}
 
 			if (this.dbInfrastructure.IsConnectionOpen)
 			{
@@ -569,7 +577,7 @@ namespace Epsitec.Cresus.Core
 
 		private void ValidateConnection()
 		{
-			this.connectionManager.Validate ();
+			this.ConnectionManager.Validate ();
 			this.locker.Validate ();
 		}
 
@@ -584,7 +592,7 @@ namespace Epsitec.Cresus.Core
 
 		private void VerifyDatabaseSchemas()
 		{
-			this.connectionManager.Validate ();
+			this.ConnectionManager.Validate ();
 
 			if (!this.dataInfrastructure.CheckSchema (CoreData.GetManagedEntityIds ()))
 			{
@@ -634,7 +642,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
-			this.connectionManager.Validate ();
+			this.ConnectionManager.Validate ();
 
 			var entityIds = CoreData.GetManagedEntityIds ().ToArray ();
 
@@ -643,7 +651,7 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateDatabase()
 		{
-			this.connectionManager.Validate ();
+			this.ConnectionManager.Validate ();
 
 //-			this.PopulateDatabaseHack ();
 //-			this.PopulateUsers ();
@@ -803,11 +811,10 @@ namespace Epsitec.Cresus.Core
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
 		private readonly RefIdGeneratorPool refIdGeneratorPool;
-		private readonly ConnectionManager connectionManager;
-//-		private readonly BusinessContextPool businessContextPool;
 		private readonly Locker locker;
 //		private readonly ImageDataStore imageDataStore;
 		private readonly Dictionary<string, CoreDataComponent> components;
+		private readonly Stack<System.IDisposable> disposableComponents;
 
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;

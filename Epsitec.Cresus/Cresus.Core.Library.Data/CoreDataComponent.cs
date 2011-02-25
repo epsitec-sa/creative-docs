@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Core
 			this.wasSetupExecuted = true;
 		}
 
+		public virtual System.IDisposable GetDisposable()
+		{
+			return this as System.IDisposable;
+		}
+
 
 		private readonly CoreData data;
 		private bool wasSetupExecuted;

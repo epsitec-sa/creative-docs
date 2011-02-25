@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.Core.Factories
 						if (component.CanExecuteSetupPhase ())
 						{
 							component.ExecuteSetupPhase ();
+
+							CoreDataComponentFactory.RegisterDisposableComponent (component);
 							again = true;
 						}
 					}
@@ -63,6 +65,17 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			System.Diagnostics.Debug.Assert (components.All (x => x.IsSetupPending == false));
+		}
+		
+		private static void RegisterDisposableComponent(CoreDataComponent component)
+		{
+			var data = component.Data;
+			var disposable = component.GetDisposable ();
+
+			if (disposable != null)
+			{
+				data.RegisterComponentAsDisposable (disposable);
+			}
 		}
 	}
 }

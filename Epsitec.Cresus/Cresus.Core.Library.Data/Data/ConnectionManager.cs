@@ -15,11 +15,11 @@ namespace Epsitec.Cresus.Core.Data
 	/// The <c>CoreDataConnectionManager</c> class maintains an active connection with
 	/// the underlying database. Typically, it updates the connection state periodically.
 	/// </summary>
-	public sealed class ConnectionManager : System.IDisposable
+	public sealed class ConnectionManager : CoreDataComponent, System.IDisposable
 	{
 		public ConnectionManager(CoreData data)
+			: base (data)
 		{
-			this.data = data;
 			this.dataInfrastructure = data.DataInfrastructure;
 			
 			this.keepAliveTimer = new Timer ()
@@ -58,6 +58,13 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				return this.timeOffset;
 			}
+		}
+
+
+		public override void ExecuteSetupPhase()
+		{
+			base.ExecuteSetupPhase ();
+			this.Validate ();
 		}
 
 		/// <summary>
@@ -106,20 +113,20 @@ namespace Epsitec.Cresus.Core.Data
 
 		private ConnectionUserIdentity GetIdentity()
 		{
-			return new ConnectionUserIdentity (this.data.GetActiveUserItemCode ());
+			return new ConnectionUserIdentity (this.Data.GetActiveUserItemCode ());
 		}
 
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			this.CloseConnection ();
-
 			if (this.keepAliveTimer.State != TimerState.Disposed)
 			{
 				this.keepAliveTimer.TimeElapsed -= this.HandleKeepAliveTimerTimeElapsed;
 				this.keepAliveTimer.Dispose ();
 			}
+			
+			this.CloseConnection ();
 		}
 
 		#endregion
@@ -145,7 +152,6 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 
-		private readonly CoreData				data;
 		private readonly DataInfrastructure		dataInfrastructure;
 		private readonly Timer					keepAliveTimer;
 		
