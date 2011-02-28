@@ -119,10 +119,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : UriContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, businessContext.DataContext, filter: x => x.UriScheme.Code == "mailto")
+			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, businessContext.DataContext, filter: x => x.UriType.Protocol == "mailto")
 				.DefineText			(x => x.GetSummary ())
 				.DefineCompactText	(x => x.GetCompactSummary ())
-				.DefineSetupItem    (x => x.UriScheme = businessContext.GetLocalEntity (businessContext.Data.GetAllEntities<UriSchemeEntity> ().Where (y => y.Code == "mailto").FirstOrDefault ()));
+				.DefineSetupItem    (x => x.UriType = businessContext.GetLocalEntity (businessContext.Data.GetAllEntities<UriTypeEntity> ().Where (y => y.Protocol == "mailto").FirstOrDefault ()));
 
 			data.Add (
 				new TileDataItem

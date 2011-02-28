@@ -201,8 +201,6 @@
     <Compile Include="Entities\RelationEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureEntity.cs" />
-    <Compile Include="Entities\UriContactEntity.cs" />
-    <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
@@ -326,7 +324,7 @@
     <Compile Include="Repositories\TelecomContactRepository.cs" />
     <Compile Include="Repositories\TelecomTypeRepository.cs" />
     <Compile Include="Repositories\UriContactRepository.cs" />
-    <Compile Include="Repositories\UriSchemeRepository.cs" />
+    <Compile Include="Repositories\UriTypeRepository.cs" />
     <Compile Include="Repositories\CountryRepository.cs" />
     <Compile Include="Repositories\AbstractPersonRepository.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />

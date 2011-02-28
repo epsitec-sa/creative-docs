@@ -12,6 +12,10 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/9VA
 			public static readonly Epsitec.Common.Types.StructuredType Image = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/9VA4
@@ -26,6 +30,10 @@ namespace Epsitec.Cresus.Core
 		{
 			public static class Image
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/9VAB
 				public static readonly global::Epsitec.Common.Support.Druid ImageBlob = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/9VAD
@@ -36,6 +44,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class ImageBlob
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/9VAA
 				public static readonly global::Epsitec.Common.Support.Druid BitsPerPixel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/9VA5
@@ -52,6 +64,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class ImageCategory
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/9VA3
 				public static readonly global::Epsitec.Common.Support.Druid CompatibleGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 			}
@@ -106,6 +122,10 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Images");
+			Types._Initialize ();
+			Fields.Image._Initialize ();
+			Fields.ImageBlob._Initialize ();
+			Fields.ImageCategory._Initialize ();
 		}
 		
 		public static void Initialize()

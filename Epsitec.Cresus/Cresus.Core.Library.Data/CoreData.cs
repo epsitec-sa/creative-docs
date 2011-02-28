@@ -462,7 +462,17 @@ namespace Epsitec.Cresus.Core
 				{
 					dataInfrastructure.OpenConnection ("root");
 
-					dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
+					List<Druid> druids = new List<Druid> ();
+
+					foreach (var type in Infrastructure.GetManagedEntityIds ().Select (x => TypeRosetta.GetTypeObject (x)).OfType<StructuredType> ())
+					{
+						if ((type.Flags & StructuredTypeFlags.GenerateSchema) != 0)
+						{
+							druids.Add (type.CaptionId);
+						}
+					}
+
+					dataInfrastructure.CreateSchema (druids);
 
 					CoreData.ImportDatabase (file, dataInfrastructure, importMode);
 				}

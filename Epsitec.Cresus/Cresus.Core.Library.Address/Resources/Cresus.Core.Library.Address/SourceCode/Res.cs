@@ -48,6 +48,14 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType StateProvinceCounty = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35));
 			//	designer:cap/FVA01
 			public static readonly Epsitec.Common.Types.StructuredType Street = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
+			//	designer:cap/FVAL1
+			public static readonly Epsitec.Common.Types.StructuredType TelecomContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
+			//	designer:cap/FVAK1
+			public static readonly Epsitec.Common.Types.StructuredType TelecomType = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52));
+			//	designer:cap/FVAP1
+			public static readonly Epsitec.Common.Types.StructuredType UriContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
+			//	designer:cap/FVAQ1
+			public static readonly Epsitec.Common.Types.StructuredType UriType = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
 		}
 		
 		public static class Fields
@@ -233,6 +241,42 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/FVAH1
 				public static readonly global::Epsitec.Common.Support.Druid StreetName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49);
 			}
+			
+			public static class TelecomContact
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAO1
+				public static readonly global::Epsitec.Common.Support.Druid Extension = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
+				//	designer:cap/FVAN1
+				public static readonly global::Epsitec.Common.Support.Druid Number = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
+				//	designer:cap/FVAM1
+				public static readonly global::Epsitec.Common.Support.Druid TelecomType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54);
+			}
+			
+			public static class UriContact
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAT1
+				public static readonly global::Epsitec.Common.Support.Druid Uri = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61);
+				//	designer:cap/FVAS1
+				public static readonly global::Epsitec.Common.Support.Druid UriType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 60);
+			}
+			
+			public static class UriType
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAR1
+				public static readonly global::Epsitec.Common.Support.Druid Protocol = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 59);
+			}
 		}
 		
 		//	Code mapping for 'String' resources
@@ -299,6 +343,9 @@ namespace Epsitec.Cresus.Core
 			Fields.PostBox._Initialize ();
 			Fields.StateProvinceCounty._Initialize ();
 			Fields.Street._Initialize ();
+			Fields.TelecomContact._Initialize ();
+			Fields.UriContact._Initialize ();
+			Fields.UriType._Initialize ();
 		}
 		
 		public static void Initialize()

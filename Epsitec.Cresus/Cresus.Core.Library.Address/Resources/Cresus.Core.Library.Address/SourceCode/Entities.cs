@@ -19,6 +19,10 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA21]", typeof (Epsitec.Cresus.Core.Entities.LocationEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA31]", typeof (Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA41]", typeof (Epsitec.Cresus.Core.Entities.CountryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVAK1]", typeof (Epsitec.Cresus.Core.Entities.TelecomTypeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVAL1]", typeof (Epsitec.Cresus.Core.Entities.TelecomContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVAP1]", typeof (Epsitec.Cresus.Core.Entities.UriContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVAQ1]", typeof (Epsitec.Cresus.Core.Entities.UriTypeEntity))]
 #region Epsitec.Cresus.Core.AbstractPerson Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -80,7 +84,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-
+		
 		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		
@@ -177,7 +181,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-
+		
 		partial void OnLegalPersonChanging(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
 		partial void OnLegalPersonChanged(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
 		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
@@ -441,7 +445,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[FVAK]");
 			}
 		}
-
+		
 		partial void OnTitleChanging(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
 		partial void OnTitleChanged(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
 		partial void OnFirstnameChanging(string oldValue, string newValue);
@@ -564,7 +568,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-
+		
 		partial void OnLegalPersonTypeChanging(global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity newValue);
 		partial void OnLegalPersonTypeChanged(global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity newValue);
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -990,7 +994,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-
+		
 		partial void OnAddressChanging(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
 		
@@ -1127,7 +1131,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-
+		
 		partial void OnStreetChanging(global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue, global::Epsitec.Cresus.Core.Entities.StreetEntity newValue);
 		partial void OnStreetChanged(global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue, global::Epsitec.Cresus.Core.Entities.StreetEntity newValue);
 		partial void OnPostBoxChanging(global::Epsitec.Cresus.Core.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.Core.Entities.PostBoxEntity newValue);
@@ -1606,6 +1610,408 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 36);	// [FVA41]
 		public static readonly new string EntityStructuredTypeKey = "[FVA41]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.TelecomType Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>TelecomType</c> entity.
+	///	designer:cap/FVAK1
+	///	</summary>
+	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory, global::Epsitec.Cresus.Core.Entities.IItemRank
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/FVAK1/8VA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA1]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/FVAK1/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/FVAK1/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/FVAK1/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/FVAK1/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 52);	// [FVAK1]
+		public static readonly new string EntityStructuredTypeKey = "[FVAK1]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.TelecomContact Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>TelecomContact</c> entity.
+	///	designer:cap/FVAL1
+	///	</summary>
+	public partial class TelecomContactEntity : global::Epsitec.Cresus.Core.Entities.AbstractContactEntity
+	{
+		///	<summary>
+		///	The <c>TelecomType</c> field.
+		///	designer:fld/FVAL1/FVAM1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAM1]")]
+		public global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity TelecomType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity> ("[FVAM1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity oldValue = this.TelecomType;
+				if (oldValue != value || !this.IsFieldDefined("[FVAM1]"))
+				{
+					this.OnTelecomTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity> ("[FVAM1]", oldValue, value);
+					this.OnTelecomTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Number</c> field.
+		///	designer:fld/FVAL1/FVAN1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAN1]")]
+		public string Number
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAN1]");
+			}
+			set
+			{
+				string oldValue = this.Number;
+				if (oldValue != value || !this.IsFieldDefined("[FVAN1]"))
+				{
+					this.OnNumberChanging (oldValue, value);
+					this.SetField<string> ("[FVAN1]", oldValue, value);
+					this.OnNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Extension</c> field.
+		///	designer:fld/FVAL1/FVAO1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAO1]")]
+		public string Extension
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAO1]");
+			}
+			set
+			{
+				string oldValue = this.Extension;
+				if (oldValue != value || !this.IsFieldDefined("[FVAO1]"))
+				{
+					this.OnExtensionChanging (oldValue, value);
+					this.SetField<string> ("[FVAO1]", oldValue, value);
+					this.OnExtensionChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnTelecomTypeChanging(global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity newValue);
+		partial void OnTelecomTypeChanged(global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity newValue);
+		partial void OnNumberChanging(string oldValue, string newValue);
+		partial void OnNumberChanged(string oldValue, string newValue);
+		partial void OnExtensionChanging(string oldValue, string newValue);
+		partial void OnExtensionChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TelecomContactEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TelecomContactEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 53);	// [FVAL1]
+		public static readonly new string EntityStructuredTypeKey = "[FVAL1]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.UriContact Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>UriContact</c> entity.
+	///	designer:cap/FVAP1
+	///	</summary>
+	public partial class UriContactEntity : global::Epsitec.Cresus.Core.Entities.AbstractContactEntity
+	{
+		///	<summary>
+		///	The <c>UriType</c> field.
+		///	designer:fld/FVAP1/FVAS1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAS1]")]
+		public global::Epsitec.Cresus.Core.Entities.UriTypeEntity UriType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.UriTypeEntity> ("[FVAS1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.UriTypeEntity oldValue = this.UriType;
+				if (oldValue != value || !this.IsFieldDefined("[FVAS1]"))
+				{
+					this.OnUriTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.UriTypeEntity> ("[FVAS1]", oldValue, value);
+					this.OnUriTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Uri</c> field.
+		///	designer:fld/FVAP1/FVAT1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAT1]")]
+		public string Uri
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAT1]");
+			}
+			set
+			{
+				string oldValue = this.Uri;
+				if (oldValue != value || !this.IsFieldDefined("[FVAT1]"))
+				{
+					this.OnUriChanging (oldValue, value);
+					this.SetField<string> ("[FVAT1]", oldValue, value);
+					this.OnUriChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnUriTypeChanging(global::Epsitec.Cresus.Core.Entities.UriTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.UriTypeEntity newValue);
+		partial void OnUriTypeChanged(global::Epsitec.Cresus.Core.Entities.UriTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.UriTypeEntity newValue);
+		partial void OnUriChanging(string oldValue, string newValue);
+		partial void OnUriChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.UriContactEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.UriContactEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 57);	// [FVAP1]
+		public static readonly new string EntityStructuredTypeKey = "[FVAP1]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.UriType Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>UriType</c> entity.
+	///	designer:cap/FVAQ1
+	///	</summary>
+	public partial class UriTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/FVAQ1/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/FVAQ1/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/FVAQ1/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/FVAQ1/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Protocol</c> field.
+		///	designer:fld/FVAQ1/FVAR1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAR1]")]
+		public string Protocol
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAR1]");
+			}
+			set
+			{
+				string oldValue = this.Protocol;
+				if (oldValue != value || !this.IsFieldDefined("[FVAR1]"))
+				{
+					this.OnProtocolChanging (oldValue, value);
+					this.SetField<string> ("[FVAR1]", oldValue, value);
+					this.OnProtocolChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnProtocolChanging(string oldValue, string newValue);
+		partial void OnProtocolChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.UriTypeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.UriTypeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 58);	// [FVAQ1]
+		public static readonly new string EntityStructuredTypeKey = "[FVAQ1]";
 	}
 }
 #endregion

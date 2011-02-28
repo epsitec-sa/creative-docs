@@ -12,15 +12,15 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class UriSchemeRepository : Repository<UriSchemeEntity>
+	public class UriTypeRepository : Repository<UriTypeEntity>
 	{
-		public UriSchemeRepository(CoreData data, DataContext context = null)
+		public UriTypeRepository(CoreData data, DataContext context = null)
 			: base (data, context, DataLifetimeExpectancy.Immutable)
 		{
 		}
 
 
-		public IEnumerable<UriSchemeEntity> GetByCode(string code)
+		public IEnumerable<UriTypeEntity> GetByCode(string code)
 		{
 			var example = this.CreateExample ();
 			example.Code = code;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Repositories
 			return this.GetByExample (example);
 		}
 
-		public IEnumerable<UriSchemeEntity> GetByName(FormattedText name)
+		public IEnumerable<UriTypeEntity> GetByName(FormattedText name)
 		{
 			var example = this.CreateExample ();
 			example.Name = name;

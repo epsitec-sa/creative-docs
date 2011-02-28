@@ -12,6 +12,10 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/AVAM
 			public static readonly Epsitec.Common.Types.EnumType UserAuthenticationMethod = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/AVAE
@@ -26,8 +30,16 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Values
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class UserAuthenticationMethod
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/AVAQ
 				public static global::Epsitec.Common.Types.Caption Disabled
 				{
@@ -64,6 +76,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class UserPowerLevel
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/AVAI
 				public static global::Epsitec.Common.Types.Caption Administrator
 				{
@@ -128,6 +144,10 @@ namespace Epsitec.Cresus.Core
 		{
 			public static class SoftwareUser
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/AVAB
 				public static readonly global::Epsitec.Common.Support.Druid AuthenticationMethod = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/AVAD
@@ -148,6 +168,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class SoftwareUserGroup
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/AVA3
 				public static readonly global::Epsitec.Common.Support.Druid Disabled = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 				//	designer:cap/AVA4
@@ -206,6 +230,12 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.UserManagement");
+			Types._Initialize ();
+			Values._Initialize ();
+			Values.UserAuthenticationMethod._Initialize ();
+			Values.UserPowerLevel._Initialize ();
+			Fields.SoftwareUser._Initialize ();
+			Fields.SoftwareUserGroup._Initialize ();
 		}
 		
 		public static void Initialize()

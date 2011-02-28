@@ -842,6 +842,7 @@ namespace Epsitec.Common.Types
 						break;
 
 					case "System.String":
+					case "Epsitec.Common.Types.FormattedText, Common":
 						type = new StringType (caption);
 						break;
 

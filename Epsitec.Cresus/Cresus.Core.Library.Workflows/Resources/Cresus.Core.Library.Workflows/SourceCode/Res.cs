@@ -12,6 +12,10 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/DVA41
 			public static readonly Epsitec.Common.Types.EnumType WorkflowStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 			//	designer:cap/DVAU
@@ -36,8 +40,16 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Values
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class WorkflowStatus
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVA71
 				public static global::Epsitec.Common.Types.Caption Active
 				{
@@ -90,6 +102,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class WorkflowTransitionType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVA11
 				public static global::Epsitec.Common.Types.Caption Call
 				{
@@ -122,24 +138,40 @@ namespace Epsitec.Cresus.Core
 		{
 			public static class IWorkflowHost
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVA31
 				public static readonly global::Epsitec.Common.Support.Druid Workflow = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35);
 			}
 			
 			public static class Workflow
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAO
 				public static readonly global::Epsitec.Common.Support.Druid Threads = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
 			}
 			
 			public static class WorkflowCall
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAF
 				public static readonly global::Epsitec.Common.Support.Druid Continuation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15);
 			}
 			
 			public static class WorkflowDefinition
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAN
 				public static readonly global::Epsitec.Common.Support.Druid SerializedDesign = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
 				//	designer:cap/DVAL
@@ -152,6 +184,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class WorkflowEdge
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAC
 				public static readonly global::Epsitec.Common.Support.Druid Continuation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
 				//	designer:cap/DVAB
@@ -164,6 +200,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class WorkflowNode
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAA
 				public static readonly global::Epsitec.Common.Support.Druid Edges = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/DVA7
@@ -176,6 +216,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class WorkflowStep
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAR
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
 				//	designer:cap/DVAP
@@ -190,6 +234,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class WorkflowThread
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/DVAJ
 				public static readonly global::Epsitec.Common.Support.Druid CallGraph = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
 				//	designer:cap/DVAH
@@ -250,6 +298,18 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Workflows");
+			Types._Initialize ();
+			Values._Initialize ();
+			Values.WorkflowStatus._Initialize ();
+			Values.WorkflowTransitionType._Initialize ();
+			Fields.IWorkflowHost._Initialize ();
+			Fields.Workflow._Initialize ();
+			Fields.WorkflowCall._Initialize ();
+			Fields.WorkflowDefinition._Initialize ();
+			Fields.WorkflowEdge._Initialize ();
+			Fields.WorkflowNode._Initialize ();
+			Fields.WorkflowStep._Initialize ();
+			Fields.WorkflowThread._Initialize ();
 		}
 		
 		public static void Initialize()
