@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -8,16 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-
-
 	// TODO Comment this class.
 	// Marc
 
-
 	public sealed class CodeDimension : AbstractDimension
 	{
-
-
 		public CodeDimension(string code)
 			: this (code, new List<string> ())
 		{
@@ -46,7 +44,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		public override int Count
 		{
 			get
@@ -54,13 +51,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				return this.values.Count;
 			}
 		}
-		
 
+		
 		public override void Add(string value)
 		{
 			this.Insert (this.values.Count, value);
 		}
-
 
 		public void Insert(int index, string value)
 		{
@@ -77,7 +73,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		public override void Remove(string value)
 		{
 			value.ThrowIfNullOrEmpty ("value");
@@ -87,7 +82,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			this.values.RemoveAt (index);
 		}
-
 
 		public void RemoveAt(int index)
 		{
@@ -103,7 +97,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		public void Swap(string value1, string value2)
 		{
 			value1.ThrowIfNullOrEmpty ("value1");
@@ -118,7 +111,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.SwapAt (index1, index2);
 		}
 
-
 		public void SwapAt(int index1, int index2)
 		{
 			index1.ThrowIf (i => i < 0 || i >= this.values.Count, "Index1 is out of range.");
@@ -131,14 +123,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.values[index2] = value1;
 		}
 
-
 		public override bool Contains(string value)
 		{
 			value.ThrowIfNullOrEmpty ("value");
 			
 			return this.values.Contains (value);
 		}
-
 
 		public override bool IsValueRoundable(string value)
 		{
@@ -147,7 +137,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return this.Contains (value);
 		}
 
-
 		public override string GetRoundedValue(string value)
 		{
 			value.ThrowIfNullOrEmpty ("value");
@@ -155,7 +144,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			return value;
 		}
-		
 
 		public override int GetIndexOf(string value)
 		{
@@ -164,7 +152,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			return this.values.IndexOf (value);
 		}
-
 
 		public override string GetValueAt(int index)
 		{
@@ -186,7 +173,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return StringPacker.Pack (this.values, CodeDimension.separatorChar, CodeDimension.escapeChar);
 		}
 
-
 		/// <summary>
 		/// Builds a new instance of <see cref="CodeDimension"/> given a name and the serialized data
 		/// obtained by the <see cref="CodeDimension.GetStringData"/> method.
@@ -203,7 +189,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			code.ThrowIfNullOrEmpty ("code");
 			stringData.ThrowIfNullOrEmpty ("stringData");
 
-			var values = StringPacker.UnPack (stringData, CodeDimension.separatorChar, CodeDimension.escapeChar);
+			var values = StringPacker.Unpack (stringData, CodeDimension.separatorChar, CodeDimension.escapeChar);
 
 			return new CodeDimension (code, values);
 		}
@@ -214,29 +200,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			value.ThrowIf (v1 => this.values.Any (v2 => v1 == v2), "value is already in this instance.");
 		}
 
-
 		private void CheckValueIsInDimension(string value)
 		{
 			value.ThrowIf (v1 => this.values.All (v2 => v1 != v2), "value is already in this instance.");
 		}
 
 
-		/// <summary>
-		/// The codes that are the points of the current instance.
-		/// </summary>
-		private List<string> values;
-
-
-		/// <summary>
-		/// The separator used to separate the different codes in the serialized string data.
-		/// </summary>
+		private readonly List<string> values;
 		private static readonly char separatorChar = ';';
-
-
 		private static readonly char escapeChar = ':';
-
-
 	}
-
-
 }

@@ -1,16 +1,15 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
-
 using System.Linq;
 
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-
-
 	// TODO Comment this class.
 	// Marc
 
@@ -327,7 +326,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var splittedData = stringData.Split (NumericDimension.valueSeparator).ToList ();
 
 			var values = splittedData.Skip (1).Select (v => InvariantConverter.ConvertFromString<decimal> (v));
-			var mode = (RoundingMode) System.Enum.Parse (typeof (RoundingMode), splittedData.First ());
+			var mode = InvariantConverter.ToEnum<RoundingMode> (splittedData[0]);
 
 			return new NumericDimension (code, mode, values);
 		}
@@ -366,19 +365,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		/// <summary>
-		/// The set of values that defines the points of the current instance.
-		/// </summary>
-		private SortedSet<decimal> values;
-
-
-		/// <summary>
-		/// The separator used to separate the different values in the serialized string data.
-		/// </summary>
+		private readonly SortedSet<decimal> values;
 		private static readonly string valueSeparator = ";";
-
-
 	}
-
-
 }

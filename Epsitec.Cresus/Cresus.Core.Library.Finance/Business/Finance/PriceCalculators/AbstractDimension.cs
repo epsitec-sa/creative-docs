@@ -1,23 +1,20 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
-
 using System.Xml.Linq;
 
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-
-
 	// TODO Comment this class.
 	// Marc
 
-
 	public abstract class AbstractDimension
 	{
-
-
-		public AbstractDimension(string code)
+		protected AbstractDimension(string code)
 		{
 			this.Code = code;
 			this.DimensionTable = null;
@@ -38,12 +35,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		public abstract IEnumerable<string> Values
 		{
 			get;
 		}
-
 
 		public abstract int Count
 		{
@@ -68,7 +63,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.DimensionTable = dimensionTable;
 		}
 
-
 		internal void RemoveFromDimensionTable(DimensionTable dimensionTable)
 		{
 			if (this.DimensionTable == null)
@@ -82,21 +76,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		public abstract void Add(string value);
 
-
 		public abstract void Remove(string value);
-
 
 		public abstract bool Contains(string value);
 
-
 		public abstract bool IsValueRoundable(string value);
-
 
 		public abstract string GetRoundedValue(string value);
 
-
 		public abstract int GetIndexOf(string value);
-
 
 		public abstract string GetValueAt(int index);
 
@@ -109,7 +97,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// A <see cref="System.String"/> that can be used to build a clone of the current instance.
 		/// </returns>
 		public abstract string GetStringData();
-
 
 		/// <summary>
 		/// Builds an <see cref="XElement"/> that represents the current instance.
@@ -125,7 +112,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			return xDimension;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="System.String"/> value for the concrete type of this instance.
@@ -147,7 +133,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		/// <summary>
 		/// Creates a new concrete instance of <c>AbstractDimension</c> based on the data that has
 		/// been obtained with the <see cref="AbstractDimension.XmlExport"/> method.
@@ -168,7 +153,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return AbstractDimension.BuildDimension (code, typeName, data);
 		}
 
-
 		/// <summary>
 		/// Checks that the given <see cref="XElement"/> is a valid serialized dimension.
 		/// </summary>
@@ -181,7 +165,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		/// <summary>
 		/// Extracts the code of the serialized <c>AbstractDimension</c>.
 		/// </summary>
@@ -191,7 +174,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			return xDimension.Attribute (XmlConstants.CodeTag).Value;
 		}
-
 
 		/// <summary>
 		/// Extracts the name of the concrete type of the serialized <c>AbstractDimension</c>.
@@ -203,7 +185,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return xDimension.Attribute (XmlConstants.TypeTag).Value;
 		}
 
-
 		/// <summary>
 		/// Extracts the serialized data of the serialized <c>AbstractDimension</c> that will be used
 		/// to restore it.
@@ -214,7 +195,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			return xDimension.Attribute (XmlConstants.DataTag).Value;
 		}
-
 
 		/// <summary>
 		/// Creates a new concrete <see cref="AbstractDimension"/> of the appropriate type.
@@ -239,7 +219,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-
 		/// <summary>
 		/// Private class that contains the xml constants used for the xml serialization of instances
 		/// of <see cref="AbstractDimension"/>s.
@@ -256,9 +235,5 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 
 		private string code;
-
-       
 	}
-
-
 }

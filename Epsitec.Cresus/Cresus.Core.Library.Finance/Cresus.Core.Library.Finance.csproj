@@ -55,6 +55,11 @@
     <Compile Include="Business\Finance\CurrencyCode.cs" />
     <Compile Include="Business\Finance\ExchangeRateSourceType.cs" />
     <Compile Include="Business\Finance\PaymentDetailType.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Business\Finance\PriceDisplayModes.cs" />
     <Compile Include="Business\Finance\RoundingPolicy.cs" />
     <Compile Include="Business\Finance\Tax.cs" />

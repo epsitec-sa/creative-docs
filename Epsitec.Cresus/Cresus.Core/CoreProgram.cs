@@ -157,6 +157,9 @@ namespace Epsitec.Cresus.Core
 
 			app.DiscoverPlugIns ();
 			app.CreatePlugIns ();
+
+			Epsitec.Common.Types.TypeRosetta.InitializeResources ();
+
 			app.SetupData ();
 			app.CreateUI ();
 

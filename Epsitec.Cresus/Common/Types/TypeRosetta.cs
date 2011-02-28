@@ -24,6 +24,27 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static void InitializeResources()
+		{
+			var resTypes = TypeEnumerator.Instance.GetAllTypes ().Where (x => x.IsClass && x.IsAbstract && x.IsPublic && x.IsSealed && x.Name == "Res").ToList ();
+
+
+			foreach (var type in resTypes)
+			{
+				var methodInfo = type.GetMethod ("Initialize");
+				
+				if ((methodInfo != null) &&
+					(methodInfo.GetParameters ().Length == 0) &&
+					(methodInfo.IsPublic) &&
+					(methodInfo.IsStatic) &&
+					(methodInfo.ReturnType == typeof (void)))
+				{
+					methodInfo.Invoke (null, null);
+				}
+			}
+
+		}
+
 		/// <summary>
 		/// Gets the system type from type object.
 		/// </summary>

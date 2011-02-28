@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -46,7 +49,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			dimensions.ThrowIfNull ("dimensions");
 
 			this.dimensions = new List<AbstractDimension> ();
-			this.data = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
+			this.values = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
 
 			foreach (AbstractDimension dimension in dimensions)
 			{
@@ -95,7 +98,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			get
 			{
-				return this.data.Select (kvp => new KeyValuePair<string[], decimal> (this.GetExternalKey (kvp.Key), kvp.Value));
+				return this.values.Select (kvp => new KeyValuePair<string[], decimal> (this.GetExternalKey (kvp.Key), kvp.Value));
 			}
 		}
 
@@ -142,7 +145,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.dimensions.Insert (index, dimension);
 
 			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
-			this.data.Clear ();
+			this.values.Clear ();
 
 			dimension.AddToDimensionTable (this);
 		}
@@ -163,7 +166,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.dimensions.RemoveAt (index);
 
 			this.internalIndexes = Enumerable.Range (0, this.dimensions.Count).ToDictionary (i => this.dimensions[i], i => i);
-			this.data.Clear ();
+			this.values.Clear ();
 
 			dimension.RemoveFromDimensionTable (this);
 		}
@@ -223,7 +226,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			this.CheckKey (key);
 
-			return this.data.ContainsKey (key);
+			return this.values.ContainsKey (key);
 		}
 
 
@@ -321,13 +324,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			int internalIndexOfDimension = this.internalIndexes[dimension];
 
-			List<string[]> keysToRemove = this.data.Keys
+			List<string[]> keysToRemove = this.values.Keys
 				.Where (k => k[internalIndexOfDimension] == value)
 				.ToList ();
 
 			foreach (string[] key in keysToRemove)
 			{
-				this.data.Remove (key);
+				this.values.Remove (key);
 			}
 		}
 
@@ -432,7 +435,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			string[] internalKey = this.GetInternalKey (key);
 
-			bool found = this.data.TryGetValue (internalKey, out value);
+			bool found = this.values.TryGetValue (internalKey, out value);
 
 			if (found)
 			{
@@ -456,11 +459,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			
 			if (value.HasValue)
 			{
-				this.data[internalKey] = value.Value;
+				this.values[internalKey] = value.Value;
 			}
 			else
 			{
-				this.data.Remove (internalKey);
+				this.values.Remove (internalKey);
 			}
 		}
 		
@@ -675,23 +678,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		/// <summary>
-		/// The sequence of <see cref="AbstractDimension"/> that are the dimensions of this instance,
-		/// ordered by their name.
-		/// </summary>
-		private List<AbstractDimension> dimensions;
-
-
-		/// <summary>
-		/// The values of the current instance.
-		/// </summary>
-		private IDictionary<string[], decimal> data;
-
-
+		private readonly List<AbstractDimension> dimensions;
+		private readonly IDictionary<string[], decimal> values;
 		private IDictionary<AbstractDimension, int> internalIndexes;
-
-
 	}
-
-
 }

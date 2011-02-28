@@ -1,14 +1,14 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
-
 using System.Linq;
-
 
 namespace Epsitec.Common.Support
 {
-
-
 	/// <summary>
 	/// The <see cref="EscapeSplit"/> class provides methods to join several <see cref="System.String"/>
 	/// together with a separator and split them back afterwards.
@@ -25,8 +25,6 @@ namespace Epsitec.Common.Support
 	/// </remarks>
 	public static class StringPacker
 	{
-		
-
 		/// <summary>
 		/// Groups all the given <see cref="System.String"/> into a single <see cref="System.String"/>,
 		/// which can later be expanded with the <see cref="StringPacker.Unpack"/> method.
@@ -41,23 +39,17 @@ namespace Epsitec.Common.Support
 
 			var stringsCopy = strings.ToList ();
 
-			char prefix;
-			string data;
-
 			if (stringsCopy.Any ())
 			{
-				prefix = separatorChar;
-				data = StringPacker.Join (strings, separatorChar, escapeChar);
+				return separatorChar + StringPacker.Join (stringsCopy, separatorChar, escapeChar);
 			}
 			else
 			{
-				prefix = escapeChar;
-				data = "";
+				//	Encode the empty collection:
+
+				return escapeChar.ToString ();
 			}
-
-			return prefix + data;
 		}
-
 
 		/// <summary>
 		/// Expands the given <see cref="System.String"/> which is the result of the
@@ -67,7 +59,7 @@ namespace Epsitec.Common.Support
 		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="System.String"/>.</param>
 		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
 		/// <returns>The sequence of <see cref="System.String"/>.</returns>
-		public static IEnumerable<string> UnPack(string data, char separatorChar = ';', char escapeChar = '\\')
+		public static IEnumerable<string> Unpack(string data, char separatorChar = ';', char escapeChar = '\\')
 		{
 			data.ThrowIfNullOrEmpty ("data");
 			data.ThrowIf (s => s[0] != separatorChar && s[0] != escapeChar, "Invalid data");
@@ -77,18 +69,22 @@ namespace Epsitec.Common.Support
 
 			char prefix = data[0];
 
+			//	Prefix can either be the escape charater (the collection is empty) or the separator
+			//	(the collection contains at least one item) :
+
 			if (prefix == escapeChar)
 			{
-				strings = new List<string> ();
+				return EmptyEnumerable<string>.Instance;
 			}
-			else if (prefix == separatorChar)
+			
+			if (prefix == separatorChar)
 			{
-				strings = StringPacker.Split (data.Substring (1), separatorChar, escapeChar);
+				return StringPacker.Split (data.Substring (1), separatorChar, escapeChar)
+					.Select (s => StringPacker.Unescape (s, separatorChar, escapeChar));
 			}
 
-			return strings.Select (s => StringPacker.Unescape (s, separatorChar, escapeChar));
+			throw new System.ArgumentException ();
 		}
-
 
 		/// <summary>
 		/// Joins all the given <see cref="System.String"/> into a single <see cref="System.String"/>,
@@ -98,13 +94,12 @@ namespace Epsitec.Common.Support
 		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="System.String"/>.</param>
 		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
 		/// <returns>A single <see cref="System.String"/> that contains all the input ones.</returns>
-		private static string Join(IEnumerable<string> strings, char separatorChar, char escapeChar)
+		private static string Join(IList<string> strings, char separatorChar, char escapeChar)
 		{
 			var processedStrings = strings.Select (s => StringPacker.Escape (s, separatorChar, escapeChar)).ToArray ();
 
 			return string.Join ("" + separatorChar, processedStrings);
 		}
-
 
 		/// <summary>
 		/// Splits the given <see cref="System.String"/> into a sequence of
@@ -118,7 +113,7 @@ namespace Epsitec.Common.Support
 		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="System.String"/>.</param>
 		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
 		/// <returns>The sequence of <see cref="System.String"/>.</returns>
-		private static List<string> Split(string data, char separatorChar, char escapeChar)
+		private static IEnumerable<string> Split(string data, char separatorChar, char escapeChar)
 		{
 			List<int> separatorIndexes = new List<int> ();
 
@@ -150,20 +145,15 @@ namespace Epsitec.Common.Support
 
 			int segmentStart = 0;
 
-			List<string> strings = new List<string> ();
-
 			foreach (int separatorIndex in separatorIndexes)
 			{
-				strings.Add (data.Substring (segmentStart, separatorIndex - segmentStart));
+				yield return data.Substring (segmentStart, separatorIndex - segmentStart);
 
 				segmentStart = separatorIndex + 1;
 			}
 
-			strings.Add (data.Substring (segmentStart));
-
-			return strings;
+			yield return data.Substring (segmentStart);
 		}
-
 
 		/// <summary>
 		/// Escapes the occurrences of <paramref name="separatorChar"/> and <paramref name="escapeChar"/>
@@ -176,10 +166,9 @@ namespace Epsitec.Common.Support
 		private static string Escape(string s, char separatorChar, char escapeChar)
 		{
 			return s
-				.Replace ("" + escapeChar, "" + escapeChar + escapeChar)
-				.Replace ("" + separatorChar, "" + escapeChar + separatorChar);
+				.Replace (string.Format ("{0}", escapeChar),    string.Format ("{0}{1}", escapeChar, escapeChar))
+				.Replace (string.Format ("{0}", separatorChar), string.Format ("{0}{1}", escapeChar, separatorChar));
 		}
-		
 
 		/// <summary>
 		/// Unescapes a <see cref="System.String"/> escaped with the <see cref="StringPacker.Escape"/>
@@ -192,12 +181,8 @@ namespace Epsitec.Common.Support
 		private static string Unescape(string s, char separatorChar, char escapeChar)
 		{
 			return s
-				.Replace ("" + escapeChar + separatorChar, "" + separatorChar)
-				.Replace ("" + escapeChar + escapeChar, "" + escapeChar);
+				.Replace (string.Format ("{0}{1}", escapeChar, separatorChar), string.Format ("{0}", separatorChar))
+				.Replace (string.Format ("{0}{1}", escapeChar, escapeChar),    string.Format ("{0}", escapeChar));
 		}
-
-
 	}
-
-
 }

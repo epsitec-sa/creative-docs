@@ -93,11 +93,6 @@
     <Compile Include="Business\Actions\AffairActions.cs" />
     <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
