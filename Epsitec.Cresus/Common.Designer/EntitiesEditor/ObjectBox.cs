@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case ActiveElement.BoxParameters:
-					//?return Res.Strings.Entities.Action.BoxParameters;
+					return Res.Strings.Entities.Action.BoxParameters;
 
 				case ActiveElement.BoxClose:
 					if (this.isRoot)
@@ -2683,11 +2683,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des paramètres.
 			if (this.hilitedElement == ActiveElement.BoxParameters)
 			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, /*Res.Strings.Entities.Button.BoxParameters*/"P", true, false);
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, /*Res.Strings.Entities.Button.BoxParameters*/"P", false, false);
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
 			}
 
 			//	Dessine les noms des champs.

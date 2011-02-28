@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("EntityComment", 350, 250, true);
-				this.window.Text = "Commentaire";  // Res.Strings.Dialog.EntityComment.Title;
+				this.window.Text = Res.Strings.Dialog.EntityComment.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
