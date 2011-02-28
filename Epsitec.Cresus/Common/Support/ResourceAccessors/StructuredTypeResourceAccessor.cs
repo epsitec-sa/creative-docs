@@ -386,17 +386,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			if (base.IsEmptyCaption (data))
 			{
-				object                baseTypeValue   = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-				object                classValue      = data.GetValue (Res.Fields.ResourceStructuredType.Class);
-				IList<StructuredData> fields          = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-				IList<StructuredData> interfaceIds    = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-				string                designerLayouts = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+				object                 baseTypeValue   = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+				object                 classValue      = data.GetValue (Res.Fields.ResourceStructuredType.Class);
+				IList<StructuredData>  fields          = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				IList<StructuredData>  interfaceIds    = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+				string                 designerLayouts = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+				DataLifetimeExpectancy defaultLifetime = data.GetValueOrDefault<DataLifetimeExpectancy> (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+				StructuredTypeFlags    flags           = data.GetValueOrDefault<StructuredTypeFlags> (Res.Fields.ResourceStructuredType.Flags);
 
 				if ((UndefinedValue.IsUndefinedValue (baseTypeValue)) &&
 					/*(UndefinedValue.IsUndefinedValue (classValue)) && -- see ComputeDataDelta */
 					((fields == null) || (fields.Count == 0)) &&
 					((interfaceIds == null) || (interfaceIds.Count == 0)) &&
-					(string.IsNullOrEmpty (designerLayouts)))
+					(string.IsNullOrEmpty (designerLayouts)) &&
+					(defaultLifetime == DataLifetimeExpectancy.Unknown) &&
+					(flags == StructuredTypeFlags.None))
 				{
 					return true;
 				}
@@ -425,6 +429,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (rawLayout != refLayout)
 			{
 				AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
+			}
+
+			var rawLifetime = rawData.GetValueOrDefault<DataLifetimeExpectancy> (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			var refLifetime = refData.GetValueOrDefault<DataLifetimeExpectancy> (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+
+			if (rawLifetime != refLifetime)
+			{
+				AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			}
+
+			var rawFlags = rawData.GetValueOrDefault<StructuredTypeFlags> (Res.Fields.ResourceStructuredType.Flags);
+			var refFla	 = refData.GetValueOrDefault<StructuredTypeFlags> (Res.Fields.ResourceStructuredType.Flags);
+
+			if (rawFlags != refFla)
+			{
+				AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Flags);
 			}
 
 			//	The structured type class must be defined, or else we won't be able
@@ -623,9 +643,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return null;
 			}
 
-			StructuredTypeClass typeClass = StructuredTypeResourceAccessor.ToStructuredTypeClass (data.GetValue (Res.Fields.ResourceStructuredType.Class));
-			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
-			string              layouts   = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+			StructuredTypeClass    typeClass = StructuredTypeResourceAccessor.ToStructuredTypeClass (data.GetValue (Res.Fields.ResourceStructuredType.Class));
+			Druid                  baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+			string                 layouts   = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+			DataLifetimeExpectancy lifetime  = data.GetValueOrDefault<DataLifetimeExpectancy> (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			StructuredTypeFlags    flags     = data.GetValueOrDefault<StructuredTypeFlags> (Res.Fields.ResourceStructuredType.Flags);
 
 			StructuredType type = new StructuredType (typeClass, baseType);
 
@@ -635,6 +657,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			type.SerializedDesignerLayouts = layouts;
+			type.DefaultLifetimeExpectancy = lifetime;
+			type.Flags                     = flags;
 			type.FreezeInheritance ();
 
 			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
@@ -876,12 +900,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type.SerializedDesignerLayouts);
 				}
+
+				if (type.DefaultLifetimeExpectancy != DataLifetimeExpectancy.Unknown)
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, type.DefaultLifetimeExpectancy);
+				}
+				
+				if (type.Flags != StructuredTypeFlags.None)
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.Fields, type.Fields);
+				}
 			}
 			else
 			{
 				data.SetValue (Res.Fields.ResourceStructuredType.BaseType, Druid.Empty);
 				data.SetValue (Res.Fields.ResourceStructuredType.Class, StructuredTypeClass.None);
 				data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, "");
+				data.SetValue (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, DataLifetimeExpectancy.Unknown);
+				data.SetValue (Res.Fields.ResourceStructuredType.Fields, StructuredTypeFlags.None);
 			}
 
 			//	Record the fields and the interface ids collections into the

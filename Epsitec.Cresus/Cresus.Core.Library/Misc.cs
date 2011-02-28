@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core
 			//	1, "pce"		-> "1 pce"
 			//	2, "pce"		-> "2 pces"
 			//	3, "km"			-> "3 km"
-			//	1.5, "Litre"	-> "0.5 litre"
+			//	1.5, "Litre"	-> "1.5 litre"
 
 			//	Régle intéressante:
 			//	Un euro et soixante centimes : "1,60 euro" ? ou "euros" ?

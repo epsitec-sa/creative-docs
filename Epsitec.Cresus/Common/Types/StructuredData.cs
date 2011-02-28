@@ -435,6 +435,20 @@ namespace Epsitec.Common.Types
 		{
 			return base.GetHashCode ();
 		}
+
+		public T GetValueOrDefault<T>(Support.Druid id)
+		{
+			object value = this.GetValue (id);
+
+			if (UndefinedValue.IsUndefinedValue (value))
+			{
+				return default (T);
+			}
+			else
+			{
+				return (T) value;
+			}
+		}
 		
 		public object GetValue(Support.Druid id)
 		{

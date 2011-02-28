@@ -756,6 +756,7 @@
     <Compile Include="Types\Copier.cs" />
     <Compile Include="Types\CurrentChangingEventArgs.cs" />
     <Compile Include="Types\DataGraph.cs" />
+    <Compile Include="Types\DataLifetimeExpectancy.cs" />
     <Compile Include="Types\DataObject.cs" />
     <Compile Include="Types\DataSource.cs" />
     <Compile Include="Types\DataSourceMetadata.cs" />
@@ -891,6 +892,7 @@
     <Compile Include="Types\StructuredData.cs" />
     <Compile Include="Types\StructuredTree.cs" />
     <Compile Include="Types\StructuredType.cs" />
+    <Compile Include="Types\StructuredTypeFlags.cs" />
     <Compile Include="Types\StructuredTypeAttribute.cs" />
     <Compile Include="Types\StructuredTypeClass.cs" />
     <Compile Include="Types\StructuredTypeField.cs" />

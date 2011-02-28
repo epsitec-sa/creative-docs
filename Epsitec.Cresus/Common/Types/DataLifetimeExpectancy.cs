@@ -4,12 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Data
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>DataLifetimeExpectancy</c> enumeration defines how long data
 	/// is expected to live.
 	/// </summary>
+	[DesignerVisible]
 	public enum DataLifetimeExpectancy
 	{
 		/// <summary>

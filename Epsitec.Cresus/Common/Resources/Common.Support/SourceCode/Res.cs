@@ -12,6 +12,14 @@ namespace Epsitec.Common.Support
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
+			//	designer:cap/70A3
+			public static readonly Epsitec.Common.Types.EnumType DataLifetimeExpectancy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
+			//	designer:cap/70A8
+			public static readonly Epsitec.Common.Types.EnumType StructuredTypeFlags = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
 			//	designer:cap/70062
 			public static readonly Epsitec.Common.Types.StructuredType EnumValue = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 70));
 			//	designer:cap/70041
@@ -54,10 +62,86 @@ namespace Epsitec.Common.Support
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 26));
 		}
 		
+		public static class Values
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class DataLifetimeExpectancy
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/70A7
+				public static global::Epsitec.Common.Types.Caption Immutable
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
+					}
+				}
+				//	designer:cap/70A6
+				public static global::Epsitec.Common.Types.Caption Stable
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+					}
+				}
+				//	designer:cap/70A4
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+					}
+				}
+				//	designer:cap/70A5
+				public static global::Epsitec.Common.Types.Caption Volatile
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+					}
+				}
+			}
+			
+			public static class StructuredTypeFlags
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/70A9
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+					}
+				}
+				//	designer:cap/70AA
+				public static global::Epsitec.Common.Types.Caption PersistedEntity
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+					}
+				}
+			}
+			
+		}
+		
 		public static class Fields
 		{
 			public static class EnumValue
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700A2
 				public static readonly global::Epsitec.Common.Support.Druid CaptionId = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 74);
 				//	designer:cap/701D
@@ -66,6 +150,10 @@ namespace Epsitec.Common.Support
 			
 			public static class Field
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700E1
 				public static readonly global::Epsitec.Common.Support.Druid Caption = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 46);
 				//	designer:cap/70061
@@ -94,6 +182,10 @@ namespace Epsitec.Common.Support
 			
 			public static class InterfaceId
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/701A
 				public static readonly global::Epsitec.Common.Support.Druid CaptionId = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 10);
 				//	designer:cap/701C
@@ -102,6 +194,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceBase
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700A
 				public static readonly global::Epsitec.Common.Support.Druid Comment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 10);
 				//	designer:cap/70091
@@ -110,6 +206,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceBaseFile
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/701Q
 				public static readonly global::Epsitec.Common.Support.Druid Bundle = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 26);
 				//	designer:cap/70141
@@ -118,6 +218,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceBaseType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70001
 				public static readonly global::Epsitec.Common.Support.Druid DefaultController = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 32);
 				//	designer:cap/700B2
@@ -132,12 +236,20 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceBinaryType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70012
 				public static readonly global::Epsitec.Common.Support.Druid MimeType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 65);
 			}
 			
 			public static class ResourceCaption
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700C
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 12);
 				//	designer:cap/700D
@@ -148,12 +260,20 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceCollectionType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70082
 				public static readonly global::Epsitec.Common.Support.Druid ItemType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 72);
 			}
 			
 			public static class ResourceCommand
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700M
 				public static readonly global::Epsitec.Common.Support.Druid DefaultParameter = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 22);
 				//	designer:cap/700A1
@@ -166,6 +286,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceDateTimeType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700S1
 				public static readonly global::Epsitec.Common.Support.Druid DateStep = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 60);
 				//	designer:cap/700O1
@@ -184,6 +308,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceEnumType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700C2
 				public static readonly global::Epsitec.Common.Support.Druid SystemType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 76);
 				//	designer:cap/70092
@@ -192,6 +320,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceForm
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70101
 				public static readonly global::Epsitec.Common.Support.Druid DefaultSize = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 32);
 				//	designer:cap/70111
@@ -206,6 +338,10 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceNumericType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700L1
 				public static readonly global::Epsitec.Common.Support.Druid LargeStep = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 53);
 				//	designer:cap/700J1
@@ -218,12 +354,20 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceOtherType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70072
 				public static readonly global::Epsitec.Common.Support.Druid SystemType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 71);
 			}
 			
 			public static class ResourcePanel
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/701T
 				public static readonly global::Epsitec.Common.Support.Druid DefaultSize = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 29);
 				//	designer:cap/70121
@@ -234,12 +378,20 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceString
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/7008
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 8);
 			}
 			
 			public static class ResourceStringType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/70A1
 				public static readonly global::Epsitec.Common.Support.Druid DefaultComparisonBehavior = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
 				//	designer:cap/70A
@@ -256,12 +408,20 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceStructuredType
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700D1
 				public static readonly global::Epsitec.Common.Support.Druid BaseType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 45);
 				//	designer:cap/700C1
 				public static readonly global::Epsitec.Common.Support.Druid Class = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 44);
+				//	designer:cap/70AB
+				public static readonly global::Epsitec.Common.Support.Druid DefaultLifetimeExpectancy = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/70021
 				public static readonly global::Epsitec.Common.Support.Druid Fields = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 34);
+				//	designer:cap/70AC
+				public static readonly global::Epsitec.Common.Support.Druid Flags = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
 				//	designer:cap/700H2
 				public static readonly global::Epsitec.Common.Support.Druid InterfaceIds = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 81);
 				//	designer:cap/700F2
@@ -270,6 +430,10 @@ namespace Epsitec.Common.Support
 			
 			public static class Shortcut
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/700R
 				public static readonly global::Epsitec.Common.Support.Druid KeyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 27);
 			}
@@ -372,6 +536,30 @@ namespace Epsitec.Common.Support
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Support");
+			Types._Initialize ();
+			Values._Initialize ();
+			Values.DataLifetimeExpectancy._Initialize ();
+			Values.StructuredTypeFlags._Initialize ();
+			Fields.EnumValue._Initialize ();
+			Fields.Field._Initialize ();
+			Fields.InterfaceId._Initialize ();
+			Fields.ResourceBase._Initialize ();
+			Fields.ResourceBaseFile._Initialize ();
+			Fields.ResourceBaseType._Initialize ();
+			Fields.ResourceBinaryType._Initialize ();
+			Fields.ResourceCaption._Initialize ();
+			Fields.ResourceCollectionType._Initialize ();
+			Fields.ResourceCommand._Initialize ();
+			Fields.ResourceDateTimeType._Initialize ();
+			Fields.ResourceEnumType._Initialize ();
+			Fields.ResourceForm._Initialize ();
+			Fields.ResourceNumericType._Initialize ();
+			Fields.ResourceOtherType._Initialize ();
+			Fields.ResourcePanel._Initialize ();
+			Fields.ResourceString._Initialize ();
+			Fields.ResourceStringType._Initialize ();
+			Fields.ResourceStructuredType._Initialize ();
+			Fields.Shortcut._Initialize ();
 		}
 		
 		public static void Initialize()

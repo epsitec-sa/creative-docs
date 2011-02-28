@@ -584,6 +584,50 @@ namespace Epsitec.Common.Support.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DefaultLifetimeExpectancy</c> field.
+		///	designer:fld/700H/70AB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[70AB]")]
+		public global::Epsitec.Common.Types.DataLifetimeExpectancy DefaultLifetimeExpectancy
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.DataLifetimeExpectancy> ("[70AB]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.DataLifetimeExpectancy oldValue = this.DefaultLifetimeExpectancy;
+				if (oldValue != value || !this.IsFieldDefined("[70AB]"))
+				{
+					this.OnDefaultLifetimeExpectancyChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.DataLifetimeExpectancy> ("[70AB]", oldValue, value);
+					this.OnDefaultLifetimeExpectancyChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Flags</c> field.
+		///	designer:fld/700H/70AC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[70AC]")]
+		public global::Epsitec.Common.Types.StructuredTypeFlags Flags
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.StructuredTypeFlags> ("[70AC]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.StructuredTypeFlags oldValue = this.Flags;
+				if (oldValue != value || !this.IsFieldDefined("[70AC]"))
+				{
+					this.OnFlagsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.StructuredTypeFlags> ("[70AC]", oldValue, value);
+					this.OnFlagsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnClassChanging(global::Epsitec.Common.Types.StructuredTypeClass oldValue, global::Epsitec.Common.Types.StructuredTypeClass newValue);
 		partial void OnClassChanged(global::Epsitec.Common.Types.StructuredTypeClass oldValue, global::Epsitec.Common.Types.StructuredTypeClass newValue);
@@ -591,6 +635,10 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnBaseTypeChanged(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
 		partial void OnDesignerLayoutsChanging(string oldValue, string newValue);
 		partial void OnDesignerLayoutsChanged(string oldValue, string newValue);
+		partial void OnDefaultLifetimeExpectancyChanging(global::Epsitec.Common.Types.DataLifetimeExpectancy oldValue, global::Epsitec.Common.Types.DataLifetimeExpectancy newValue);
+		partial void OnDefaultLifetimeExpectancyChanged(global::Epsitec.Common.Types.DataLifetimeExpectancy oldValue, global::Epsitec.Common.Types.DataLifetimeExpectancy newValue);
+		partial void OnFlagsChanging(global::Epsitec.Common.Types.StructuredTypeFlags oldValue, global::Epsitec.Common.Types.StructuredTypeFlags newValue);
+		partial void OnFlagsChanged(global::Epsitec.Common.Types.StructuredTypeFlags oldValue, global::Epsitec.Common.Types.StructuredTypeFlags newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

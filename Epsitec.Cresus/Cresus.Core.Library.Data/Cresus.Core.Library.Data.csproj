@@ -54,7 +54,6 @@
     <Compile Include="Data\ConnectionUserIdentity.cs" />
     <Compile Include="Data\CoreDataBrowser.cs" />
     <Compile Include="Data\DatabaseTime.cs" />
-    <Compile Include="Data\DataLifetimeExpectancy.cs" />
     <Compile Include="Data\GlobalLock.cs" />
     <Compile Include="Data\GlobalLocks.cs" />
     <Compile Include="Data\ItemCode.cs" />

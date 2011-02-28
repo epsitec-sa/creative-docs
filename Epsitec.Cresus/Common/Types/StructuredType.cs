@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+
 	/// <summary>
 	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="StructuredData"/> class.
@@ -120,6 +121,62 @@ namespace Epsitec.Common.Types
 				else
 				{
 					return (Druid) value;
+				}
+			}
+		}
+
+		public StructuredTypeFlags Flags
+		{
+			get
+			{
+				object value = this.GetValue (StructuredType.FlagsProperty);
+
+				if (UndefinedValue.IsUndefinedValue (value))
+				{
+					return StructuredTypeFlags.None;
+				}
+				else
+				{
+					return (StructuredTypeFlags) value;
+				}
+			}
+			set
+			{
+				if (value == StructuredTypeFlags.None)
+				{
+					this.ClearValue (StructuredType.FlagsProperty);
+				}
+				else
+				{
+					this.SetValue (StructuredType.FlagsProperty, value);
+				}
+			}
+		}
+
+		public DataLifetimeExpectancy DefaultLifetimeExpectancy
+		{
+			get
+			{
+				object value = this.GetValue (StructuredType.DefaultLifetimeExpectancyProperty);
+
+				if (UndefinedValue.IsUndefinedValue (value))
+				{
+					return DataLifetimeExpectancy.Unknown;
+				}
+				else
+				{
+					return (DataLifetimeExpectancy) value;
+				}
+			}
+			set
+			{
+				if (value == DataLifetimeExpectancy.Unknown)
+				{
+					this.ClearValue (StructuredType.DefaultLifetimeExpectancyProperty);
+				}
+				else
+				{
+					this.SetValue (StructuredType.DefaultLifetimeExpectancyProperty, value);
 				}
 			}
 		}
@@ -1095,14 +1152,18 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty.Register ("SerializedDesignerLayouts", typeof (string), typeof (StructuredType));
-		public static readonly DependencyProperty InterfaceIdsProperty = DependencyProperty.RegisterReadOnly ("InterfaceIds", typeof (ICollection<Druid>), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetInterfaceIdsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty DebugDisableChecksProperty		= DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty FieldsProperty					= DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty ClassProperty						= DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty BaseTypeIdProperty				= DependencyProperty.Register ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty InterfaceIdsProperty				= DependencyProperty.RegisterReadOnly ("InterfaceIds", typeof (ICollection<Druid>), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetInterfaceIdsValue).MakeReadOnlySerializable ());
 
-		private Collections.HostedStructuredTypeFieldDictionary fields;
+		public static readonly DependencyProperty FlagsProperty						= DependencyProperty<StructuredType>.Register<StructuredTypeFlags> (x => x.Flags);
+		public static readonly DependencyProperty DefaultLifetimeExpectancyProperty = DependencyProperty<StructuredType>.Register<DataLifetimeExpectancy> (x => x.DefaultLifetimeExpectancy);
+		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty<StructuredType>.Register<string> (x => x.SerializedDesignerLayouts);
+
+		private readonly Collections.HostedStructuredTypeFieldDictionary fields;
+		
 		private InheritanceMode fieldInheritance;
 		private InheritanceMode interfaceInheritance;
 		private Collections.HostedList<Druid> interfaces;
