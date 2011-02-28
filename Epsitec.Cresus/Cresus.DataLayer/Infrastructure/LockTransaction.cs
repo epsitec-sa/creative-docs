@@ -99,7 +99,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		public void Dispose()
 		{
-			this.Dispose (true);	
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
 		}
 			
 		

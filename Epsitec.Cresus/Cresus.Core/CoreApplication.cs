@@ -273,6 +273,7 @@ namespace Epsitec.Cresus.Core
 
 		private void HandleAuthenticatedUserChanged(object sender)
 		{
+			this.data.SetActiveUser (this.UserManager.AuthenticatedUser);
 			this.data.ConnectionManager.ReopenConnection ();
 		}
 
