@@ -89,14 +89,15 @@
   <data name="Fld.ResourceStringType.DefaultSearchBehavior" id="A">&lt;s:data id="_0" f:Name="DefaultSearchBehavior" /&gt;</data>
   <data name="Fld.ResourceStringType.DefaultComparisonBehavior" id="A1">&lt;s:data id="_0" f:Name="DefaultComparisonBehavior" /&gt;</data>
   <data name="Fld.ResourceStringType.UseFormattedText" id="A2">&lt;s:data id="_0" f:Name="UseFormattedText" /&gt;</data>
-  <data name="Val.DataLifetimeExpectancy.Unknown" id="A4">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
-  <data name="Val.DataLifetimeExpectancy.Volatile" id="A5">&lt;s:data id="_0" f:Name="Volatile" /&gt;</data>
-  <data name="Val.DataLifetimeExpectancy.Stable" id="A6">&lt;s:data id="_0" f:Name="Stable" /&gt;</data>
-  <data name="Val.DataLifetimeExpectancy.Immutable" id="A7">&lt;s:data id="_0" f:Name="Immutable" /&gt;</data>
+  <data name="Val.DataLifetimeExpectancy.Unknown" id="A4">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Indéfini'}}" /&gt;</data>
+  <data name="Val.DataLifetimeExpectancy.Volatile" id="A5">&lt;s:data id="_0" f:Name="Volatile" f:Labels="{Collection {Text 'Volatile'}}" /&gt;</data>
+  <data name="Val.DataLifetimeExpectancy.Stable" id="A6">&lt;s:data id="_0" f:Name="Stable" f:Labels="{Collection {Text 'Stable'}}" /&gt;</data>
+  <data name="Val.DataLifetimeExpectancy.Immutable" id="A7">&lt;s:data id="_0" f:Name="Immutable" f:Labels="{Collection {Text 'Immuable'}}" /&gt;</data>
   <data name="Typ.DataLifetimeExpectancy" id="A3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DataLifetimeExpectancy" f:_1.SystemType="E:Epsitec.Common.Types.DataLifetimeExpectancy, Common" f:_2.EnumValues="{Collection {Text '0 [70A4]'}, {Text '1 [70A5]'}, {Text '2 [70A6]'}, {Text '3 [70A7]'}}" /&gt;</data>
-  <data name="Val.StructuredTypeFlags.None" id="A9">&lt;s:data id="_0" f:Name="None" /&gt;</data>
-  <data name="Val.StructuredTypeFlags.PersistedEntity" id="AA">&lt;s:data id="_0" f:Name="PersistedEntity" /&gt;</data>
-  <data name="Typ.StructuredTypeFlags" id="A8">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="StructuredTypeFlags" f:_1.SystemType="E:Epsitec.Common.Types.StructuredTypeFlags, Common" f:_2.EnumValues="{Collection {Text '0 [70A9]'}, {Text '1 [70AA]'}}" /&gt;</data>
+  <data name="Val.StructuredTypeFlags.None" id="A9">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Aucun fanion'}}" /&gt;</data>
+  <data name="Typ.StructuredTypeFlags" id="A8">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="StructuredTypeFlags" f:_1.SystemType="E:Epsitec.Common.Types.StructuredTypeFlags, Common" f:_2.EnumValues="{Collection {Text '0 [70A9]'}, {Text '1 [70AD]'}, {Text '2 [70AE]'}}" f:_1.DefaultValue="Epsitec.Common.Types.StructuredTypeFlags, Common/None" /&gt;</data>
   <data name="Fld.ResourceStructuredType.DefaultLifetimeExpectancy" id="AB">&lt;s:data id="_0" f:Name="DefaultLifetimeExpectancy" /&gt;</data>
   <data name="Fld.ResourceStructuredType.Flags" id="AC">&lt;s:data id="_0" f:Name="Flags" /&gt;</data>
+  <data name="Val.StructuredTypeFlags.GenerateSchema" id="AD">&lt;s:data id="_0" f:Name="GenerateSchema" f:Labels="{Collection {Text 'Génère le schéma pour la base de données'}}" /&gt;</data>
+  <data name="Val.StructuredTypeFlags.GenerateRepository" id="AE">&lt;s:data id="_0" f:Name="GenerateRepository" f:Labels="{Collection {Text 'Génère un Repository'}}" /&gt;</data>
 </bundle>

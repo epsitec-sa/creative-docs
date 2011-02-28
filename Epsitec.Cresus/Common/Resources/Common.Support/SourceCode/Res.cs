@@ -114,20 +114,28 @@ namespace Epsitec.Common.Support
 				{
 				}
 				
+				//	designer:cap/70AE
+				public static global::Epsitec.Common.Types.Caption GenerateRepository
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+					}
+				}
+				//	designer:cap/70AD
+				public static global::Epsitec.Common.Types.Caption GenerateSchema
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
+					}
+				}
 				//	designer:cap/70A9
 				public static global::Epsitec.Common.Types.Caption None
 				{
 					get
 					{
 						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
-					}
-				}
-				//	designer:cap/70AA
-				public static global::Epsitec.Common.Types.Caption PersistedEntity
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 					}
 				}
 			}

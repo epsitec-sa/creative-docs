@@ -9,6 +9,7 @@ namespace Epsitec.Common.Types
 	{
 		None = 0,
 
-		PersistedEntity	= 0x00000001,
+		GenerateSchema		= 0x00000001,
+		GenerateRepository	= 0x00000002,
 	}
 }
