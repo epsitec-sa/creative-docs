@@ -275,36 +275,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static FormattedText AppendLine(FormattedText current, FormattedText text)
-		{
-			current = TextFormatter.FormatText (current);
-			text    = TextFormatter.FormatText (text);
-
-			if (current.IsNullOrEmpty)
-			{
-				return text;
-			}
-			else
-			{
-				return FormattedText.Concat (current, FormattedText.HtmlBreak, text);
-			}
-		}
-
-
-		/// <summary>
-		/// Retourne les dimensions pour un bouton contenant une icône ou une image.
-		/// </summary>
-		/// <param name="large"></param>
-		/// <returns></returns>
-		public static double GetButtonWidth(bool large = true)
-		{
-			int dx = large ? Misc.buttonLargeWidth : Misc.buttonSmallWidth;
-			return 2 * ((dx + 1) / 2 + 5);
-		}
-
-		public static readonly int buttonSmallWidth = 14;
-		public static readonly int buttonLargeWidth = 31;
-
 
 		/// <summary>
 		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.

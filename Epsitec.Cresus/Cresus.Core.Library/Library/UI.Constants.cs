@@ -10,5 +10,11 @@ namespace Epsitec.Cresus.Core.Library
 		public static readonly double MarginUnderTextField		= 2;
 		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
 		public static readonly double ComboButtonWidth			= 14;
+
+		public const double ButtonLargeWidth	= 2 * ((UI.IconLargeWidth + 1) / 2 + 5);
+		public const double ButtonSmallWidth	= 2 * ((UI.IconSmallWidth + 1) / 2 + 5);
+
+		public const int IconSmallWidth		= 14;
+		public const int IconLargeWidth		= 31;
 	}
 }

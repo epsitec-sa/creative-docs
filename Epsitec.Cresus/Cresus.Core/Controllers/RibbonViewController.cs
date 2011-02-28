@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "User",
 				Title = "Identité",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 1,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 1,
 			};
 
 			{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = section,
 					Dock = DockStyle.StackBegin,
 					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = Misc.GetButtonWidth (large: true),
+					PreferredWidth = Library.UI.ButtonLargeWidth,
 				};
 
 				this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = frame,
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 					PreferredHeight = 12,
-					PreferredWidth = Misc.GetButtonWidth (large: true),
+					PreferredWidth = Library.UI.ButtonLargeWidth,
 					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, 0, -2, 0),
 				};
@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Edit",
 				Title = "Édition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 4 +
-								 Misc.GetButtonWidth (large: false) * 1,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 4 +
+								 Library.UI.ButtonSmallWidth * 1,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: false),
+				PreferredWidth = Library.UI.ButtonSmallWidth,
 			};
 
 			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.File.ImportV11, large: false));
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Clipboard",
 				Title = "Presse-papier",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: false) + Misc.GetButtonWidth (large: true),
+				PreferredWidth = Library.UI.ButtonSmallWidth + Library.UI.ButtonLargeWidth,
 			};
 
 			var frame = new FrameBox
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: false),
+				PreferredWidth = Library.UI.ButtonSmallWidth,
 			};
 
 			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Cut,  large: false));
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Font",
 				Title = "Police",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: false) * 3,
+				PreferredWidth = Library.UI.ButtonSmallWidth * 3,
 			};
 
 			var frame = new FrameBox
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Database",
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 3,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 3,
 				Dock = DockStyle.Fill,
 			};
 
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void CreateRibbonDatabaseSectionMenuButton(RibbonSection section)
 		{
 			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
-			double buttonWidth = Misc.GetButtonWidth (large: true);
+			double buttonWidth = Library.UI.ButtonLargeWidth;
 
 			var group = new FrameBox ()
 			{
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Name = "Navigation",
 				Title = "Navigation",
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 2,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 2,
 				Dock = DockStyle.Right,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = Misc.GetButtonWidth (large: true) * 4,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 4,
 			};
 
 			{
@@ -632,15 +632,15 @@ namespace Epsitec.Cresus.Core.Controllers
 				CoreProgram.Application.CommandDispatcher.Register (command, handler);
 			}
 
-			double buttonWidth = Misc.GetButtonWidth (large);
-			int width = large ? Misc.buttonLargeWidth : Misc.buttonSmallWidth;
-
+			double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
+			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
+			
 			if (isActivable)
 			{
 				return new IconButton
 				{
 					CommandObject       = command,
-					PreferredIconSize   = new Size (width, width),
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
 					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
@@ -654,7 +654,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return new RibbonIconButton
 				{
 					CommandObject       = command,
-					PreferredIconSize   = new Size (width, width),
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
 					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
@@ -667,7 +667,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static IconOrImageButton CreateIconOrImageButton(Command command)
 		{
-			double buttonWidth = Misc.GetButtonWidth (large: true);
+			double buttonWidth = Library.UI.ButtonLargeWidth;
 
 			var button = new IconOrImageButton
 			{

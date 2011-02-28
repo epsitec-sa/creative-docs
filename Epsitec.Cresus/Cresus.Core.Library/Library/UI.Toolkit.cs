@@ -33,7 +33,6 @@ namespace Epsitec.Cresus.Core.Library
 
 				return toolbar;
 			}
-
 		}
 	}
 }
