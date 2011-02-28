@@ -121,6 +121,11 @@ namespace Epsitec.Cresus.Core
 			return this.components.ContainsKey (componentName);
 		}
 
+		void ICoreComponentHost<CoreDataComponent>.RegisterComponent<T>(T component)
+		{
+			this.RegisterComponent (typeof (T).FullName, component);
+		}
+
 		#endregion
 
 		public DataContext GetDataContext(DataLifetimeExpectancy lifetimeExpectancy)

@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// The <c>CoreViewController</c> class is the base class for every view
 	/// controller in the application.
 	/// </summary>
-	public abstract class CoreViewController : CoreController, INavigationPathElementProvider
+	public abstract class CoreViewController : CoreController, INavigationPathElementProvider, ICoreComponent
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CoreViewController"/> class.

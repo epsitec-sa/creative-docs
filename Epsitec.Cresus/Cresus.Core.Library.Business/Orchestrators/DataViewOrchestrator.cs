@@ -30,9 +30,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
 		/// </summary>
-		/// <param name="mainViewController">The main view controller.</param>
-		public DataViewOrchestrator(CoreData data, CommandContext commandContext)
+		/// <param name="host">The host.</param>
+		/// <param name="data">The core data.</param>
+		/// <param name="commandContext">The command context.</param>
+		public DataViewOrchestrator(ICoreComponentHost<ICoreComponent> host, CoreData data, CommandContext commandContext)
 		{
+			this.host               = host;
 			this.data               = data;
 			this.commandContext     = commandContext;
 
@@ -46,6 +49,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.workflowController.AttachBusinessContext (this.businessContext);
 		}
 
+
+		public ICoreComponentHost<ICoreComponent> Host
+		{
+			get
+			{
+				return this.host;
+			}
+		}
 
 		public CoreData							Data
 		{
@@ -336,7 +347,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public event EventHandler<ActiveEntityCancelEventArgs> SettingActiveEntity;
 
-		
+		private readonly ICoreComponentHost<ICoreComponent> host;		
 		private readonly CoreData				data;
 		private readonly CommandContext			commandContext;
 		private readonly WorkflowController		workflowController;

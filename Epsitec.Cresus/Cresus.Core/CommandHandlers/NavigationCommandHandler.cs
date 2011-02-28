@@ -22,21 +22,21 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Core.Res.CommandIds.History.NavigateBackward)]
 		public void ProcessNavigateBackward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var navigator = NavigationCommandHandler.GetNavigator (e);
+			var navigator = this.GetNavigator (e);
 			navigator.History.NavigateBackward ();
 		}
 
 		[Command (Core.Res.CommandIds.History.NavigateForward)]
 		public void ProcessNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var navigator = NavigationCommandHandler.GetNavigator (e);
+			var navigator = this.GetNavigator (e);
 			navigator.History.NavigateForward ();
 		}
 
-		private static Epsitec.Cresus.Core.Orchestrators.NavigationOrchestrator GetNavigator(CommandEventArgs e)
+		private Epsitec.Cresus.Core.Orchestrators.NavigationOrchestrator GetNavigator(CommandEventArgs e)
 		{
 			var context    = e.CommandContext;
-			var controller = CoreApplication.GetController<MainViewController> (context);
+			var controller = this.commandDispatcher.GetApplicationComponent<MainViewController> ();
 			var navigator  = controller.Navigator;
 			
 			return navigator;

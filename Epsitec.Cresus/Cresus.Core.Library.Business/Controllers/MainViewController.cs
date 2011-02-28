@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base ("MainView", orchestrator)
 		{
 			this.commandContext = commandContext;
+			this.Orchestrator.Host.RegisterComponent (this);
 
 			this.actionViewController  = new ActionViewController (this.Orchestrator);
 //-			this.previewViewController = new PreviewViewController (this.Orchestrator);
@@ -33,6 +34,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserViewController = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
 
+			
+			
+			
 			//	TODO: check if following code is still meaningful
 
 			this.commandContext.AttachCommandHandler (this);

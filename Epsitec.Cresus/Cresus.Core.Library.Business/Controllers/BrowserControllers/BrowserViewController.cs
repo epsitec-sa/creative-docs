@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			: base ("Browser", orchestrator)
 		{
 			this.data = orchestrator.Data;
+			this.Orchestrator.Host.RegisterComponent (this);
 		}
 
 

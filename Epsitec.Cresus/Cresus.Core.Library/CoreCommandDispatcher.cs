@@ -6,6 +6,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core
@@ -40,6 +42,29 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		public Application Application
+		{
+			get
+			{
+				return this.application;
+			}
+		}
+
+		public T GetApplicationComponent<T>()
+			where T : class, ICoreComponent
+		{
+			var host = this.application as ICoreComponentHost<ICoreComponent>;
+			
+			if (host.ContainsComponent<T> ())
+			{
+				return host.GetComponent<T> ();
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		private void SetupDefaultCommandStates()
 		{

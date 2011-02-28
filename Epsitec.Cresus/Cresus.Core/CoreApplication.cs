@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
+			this.components = new Dictionary<string, ICoreComponent> ();
 			
 			this.persistenceManager = new PersistenceManager ();
 
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Core
 			this.commands = new CoreCommandDispatcher (this);
 			this.userManager = new Business.UserManagement.UserManager (this.data);
 
-			this.mainWindowOrchestrator = new DataViewOrchestrator (this.data, this.CommandContext);
+			this.mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
 			
 			var ribbonController = new RibbonViewController (this.mainWindowOrchestrator);
 			
@@ -169,7 +170,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
+#if false
 		public static T GetController<T>(CommandContext context)
 			where T : CoreController
 		{
@@ -182,6 +183,7 @@ namespace Epsitec.Cresus.Core
 
 			return root.GetAllSubControllers ().Where (item => item is T).FirstOrDefault () as T;
 		}
+#endif
 
 
 		#region Settings
@@ -316,19 +318,25 @@ namespace Epsitec.Cresus.Core
 		public T GetComponent<T>()
 			where T : ICoreComponent
 		{
-			throw new System.NotImplementedException ();
+			return (T) this.components[typeof (T).FullName];
 		}
 
 		public IEnumerable<ICoreComponent> GetComponents()
 		{
-			throw new System.NotImplementedException ();
+			return this.components.Select (x => x.Value);
 		}
 
 		public bool ContainsComponent<T>()
 			where T : ICoreComponent
 		{
-			throw new System.NotImplementedException ();
+			return this.components.ContainsKey (typeof (T).FullName);
 		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
+		{
+			this.components[component.GetType ().FullName] = component;
+		}
+
 
 		#endregion
 
@@ -538,6 +546,7 @@ namespace Epsitec.Cresus.Core
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 		private readonly List<Dialogs.IAttachedDialog>	attachedDialogs;
+		private readonly Dictionary<string, ICoreComponent> components;
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;

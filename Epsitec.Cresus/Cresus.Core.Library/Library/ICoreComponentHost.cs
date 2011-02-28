@@ -16,5 +16,8 @@ namespace Epsitec.Cresus.Core.Library
 
 		bool ContainsComponent<T>()
 			where T : TComponent;
+
+		void RegisterComponent<T>(T component)
+			where T : TComponent;
 	}
 }
