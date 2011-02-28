@@ -203,13 +203,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateWidgets()
 		{
-			this.unknownButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Unknown) ? ActiveState.Yes : ActiveState.No;
-			this.volatileButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile) ? ActiveState.Yes : ActiveState.No;
-			this.stableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Stable) ? ActiveState.Yes : ActiveState.No;
+			this.unknownButton.ActiveState   = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Unknown  ) ? ActiveState.Yes : ActiveState.No;
+			this.volatileButton.ActiveState  = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile ) ? ActiveState.Yes : ActiveState.No;
+			this.stableButton.ActiveState    = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Stable   ) ? ActiveState.Yes : ActiveState.No;
 			this.immutableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Immutable) ? ActiveState.Yes : ActiveState.No;
 
-			this.generateSchemaButton.ActiveState = (this.StructuredTypeFlags == Types.StructuredTypeFlags.GenerateSchema) ? ActiveState.Yes : ActiveState.No;
-			this.generateRepositoryButton.ActiveState = (this.StructuredTypeFlags == Types.StructuredTypeFlags.GenerateRepository) ? ActiveState.Yes : ActiveState.No;
+			this.generateSchemaButton.ActiveState     = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema    ) != 0) ? ActiveState.Yes : ActiveState.No;
+			this.generateRepositoryButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0) ? ActiveState.Yes : ActiveState.No;
 		}
 
 

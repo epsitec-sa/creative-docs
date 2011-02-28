@@ -2362,14 +2362,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
 			var dialog = this.editor.Module.DesignerApplication.GetDlgEntityParameters ();
 
-			dialog.DataLifetimeExpectancy = DataLifetimeExpectancy.Unknown;
-			dialog.StructuredTypeFlags = StructuredTypeFlags.None;
+			StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			dialog.DataLifetimeExpectancy = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			dialog.StructuredTypeFlags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
 
 			dialog.Show ();
 
 			if (dialog.IsEditOk)
 			{
-				// TODO:
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, dialog.DataLifetimeExpectancy);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     dialog.StructuredTypeFlags);
 			}
 		}
 
