@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 {
 	public static class PriceCalculator
 	{
-		public static void UpdatePrices(BusinessContext context, BusinessDocumentEntity document)
+		public static void UpdatePrices(IBusinessContext context, BusinessDocumentEntity document)
 		{
 			if (PriceCalculator.activeCalculator != null)
             {

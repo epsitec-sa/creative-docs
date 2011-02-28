@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Core
 
 		T GetLocalEntity<T>(T entity)
 			where T : AbstractEntity, new ();
+
+		T GetMasterEntity<T>()
+			where T : AbstractEntity, new ();
+
+		void Register(AbstractEntity entity);
 		
 		void SaveChanges();
 

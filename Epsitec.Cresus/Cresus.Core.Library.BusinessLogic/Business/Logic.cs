@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class Logic
 	{
-		public Logic(AbstractEntity entity, BusinessContext businessContext)
+		public Logic(AbstractEntity entity, IBusinessContext businessContext)
 		{
 			this.entity = entity;
 			this.entityType = entity.GetType ();
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Business
 		}
 #endif
 
-		public BusinessContext					BusinessContext
+		public IBusinessContext					BusinessContext
 		{
 			get
 			{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly AbstractEntity entity;
 		private readonly System.Type entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
-		private readonly BusinessContext businessContext;
+		private readonly IBusinessContext businessContext;
 		private Logic link;
 	}
 }

@@ -131,7 +131,6 @@
     <Compile Include="Business\Finance\PriceCalculators\GroupPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculator.cs" />
-    <Compile Include="Business\Finance\TaxCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
@@ -139,8 +138,6 @@
     <Compile Include="Business\Rules\BusinessBillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
-    <Compile Include="Business\Rules\SoftwareUserGroupBusinessRules.cs" />
-    <Compile Include="Business\Rules\SoftwareUserBusinessRules.cs" />
     <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
@@ -423,6 +420,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>

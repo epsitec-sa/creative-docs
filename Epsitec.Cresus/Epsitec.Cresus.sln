@@ -97,6 +97,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Workflo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Print", "Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj", "{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.BusinessLogic", "Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj", "{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -818,6 +820,24 @@ Global
 		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|Win32.ActiveCfg = Release|Any CPU
 		{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}.Release|x86.ActiveCfg = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Win32.ActiveCfg = Release|Any CPU
+		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

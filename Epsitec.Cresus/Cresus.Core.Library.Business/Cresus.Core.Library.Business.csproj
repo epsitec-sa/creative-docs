@@ -50,8 +50,6 @@
     <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
-    <Compile Include="Business\BusinessRuleAttribute.cs" />
-    <Compile Include="Business\CompositeBusinessRule.cs" />
     <Compile Include="Business\DocumentFlowDirection.cs" />
     <Compile Include="Business\DocumentSource.cs" />
     <Compile Include="Business\DocumentState.cs" />
@@ -59,11 +57,7 @@
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\EnumValueCardinality.cs" />
-    <Compile Include="Business\GenericBusinessRule.cs" />
-    <Compile Include="Business\GenericBusinessRule`1.cs" />
-    <Compile Include="Business\Logic.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
-    <Compile Include="Business\RuleType.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
@@ -135,7 +129,6 @@
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
-    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
@@ -172,6 +165,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>

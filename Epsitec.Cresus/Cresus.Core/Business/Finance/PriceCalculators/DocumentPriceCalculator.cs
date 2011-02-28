@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="context">The business context.</param>
 		/// <param name="document">The business document to work on.</param>
-		public DocumentPriceCalculator(BusinessContext context, BusinessDocumentEntity document)
+		public DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document)
 		{
 			this.context     = context;
 			this.document    = document;
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 		
-		private readonly BusinessContext				context;
+		private readonly IBusinessContext				context;
 		private readonly BusinessDocumentEntity			document;
 		private readonly List<AbstractPriceCalculator>	calculators;
 		private readonly Stack<GroupPriceCalculator>	groups;
