@@ -24,6 +24,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Initializes the resources by running the <c>Initialize</c> method of every <c>Res</c>
+		/// class found in the loaded assemblies. This will in turn register the types with the
+		/// <see cref="TypeRosetta"/>.
+		/// </summary>
 		public static void InitializeResources()
 		{
 			var resTypes = TypeEnumerator.Instance.GetAllTypes ().Where (x => x.IsClass && x.IsAbstract && x.IsPublic && x.IsSealed && x.Name == "Res").ToList ();
@@ -583,16 +588,8 @@ namespace Epsitec.Common.Types
 
 			lock (TypeRosetta.knownTypes)
 			{
-				foreach (AbstractType type in TypeRosetta.knownTypes.Values)
-				{
-					if (type.Name == name)
-					{
-						return type;
-					}
-				}
+				return TypeRosetta.knownTypes.Values.Where (x => x.Name == name).FirstOrDefault ();
 			}
-
-			return null;
 		}
 
 		/// <summary>
@@ -654,6 +651,17 @@ namespace Epsitec.Common.Types
 			}
 			
 			return type;
+		}
+
+		public static AbstractType GetTypeObject(System.Type systemType)
+		{
+			TypeRosetta.InitializeKnownTypes ();
+			TypeRosetta.InitializeResources ();
+
+			lock (TypeRosetta.knownTypes)
+			{
+				return TypeRosetta.knownTypes.Values.Where (x => x.SystemType == systemType).FirstOrDefault ();
+			}
 		}
 
 		/// <summary>
