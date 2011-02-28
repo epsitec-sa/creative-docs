@@ -74,6 +74,7 @@
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
+    <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Library\UI.Constants.cs" />
@@ -108,6 +109,9 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="Resources\Cresus.Core.Library\Captions.00.resource" />
+    <None Include="Resources\Cresus.Core.Library\module.info" />
+    <None Include="Resources\Cresus.Core.Library\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
