@@ -7840,19 +7840,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AOE/L0A2F
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A2F]")]
-		public global::Epsitec.Cresus.Core.Business.EnumValueCardinality Cardinality
+		public global::Epsitec.Cresus.Core.Library.EnumValueCardinality Cardinality
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0A2F]");
+				return this.GetField<global::Epsitec.Cresus.Core.Library.EnumValueCardinality> ("[L0A2F]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue = this.Cardinality;
+				global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue = this.Cardinality;
 				if (oldValue != value || !this.IsFieldDefined("[L0A2F]"))
 				{
 					this.OnCardinalityChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0A2F]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Library.EnumValueCardinality> ("[L0A2F]", oldValue, value);
 					this.OnCardinalityChanged (oldValue, value);
 				}
 			}
@@ -7945,9 +7945,9 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		
-		partial void OnCardinalityChanging(global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Business.EnumValueCardinality newValue);
-		partial void OnCardinalityChanged(global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Business.EnumValueCardinality newValue);
+
+		partial void OnCardinalityChanging(global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Library.EnumValueCardinality newValue);
+		partial void OnCardinalityChanged(global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Library.EnumValueCardinality newValue);
 		partial void OnDefaultValueChanging(string oldValue, string newValue);
 		partial void OnDefaultValueChanged(string oldValue, string newValue);
 		partial void OnValuesChanging(string oldValue, string newValue);
@@ -9577,19 +9577,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AEO/L0AFO
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AFO]")]
-		public global::Epsitec.Cresus.Core.Business.EnumValueCardinality Cardinality
+		public global::Epsitec.Cresus.Core.Library.EnumValueCardinality Cardinality
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0AFO]");
+				return this.GetField<global::Epsitec.Cresus.Core.Library.EnumValueCardinality> ("[L0AFO]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue = this.Cardinality;
+				global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue = this.Cardinality;
 				if (oldValue != value || !this.IsFieldDefined("[L0AFO]"))
 				{
 					this.OnCardinalityChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.EnumValueCardinality> ("[L0AFO]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Library.EnumValueCardinality> ("[L0AFO]", oldValue, value);
 					this.OnCardinalityChanged (oldValue, value);
 				}
 			}
@@ -9606,9 +9606,9 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OptionValueEntity> ("[L0AGO]");
 			}
 		}
-		
-		partial void OnCardinalityChanging(global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Business.EnumValueCardinality newValue);
-		partial void OnCardinalityChanged(global::Epsitec.Cresus.Core.Business.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Business.EnumValueCardinality newValue);
+
+		partial void OnCardinalityChanging(global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Library.EnumValueCardinality newValue);
+		partial void OnCardinalityChanged(global::Epsitec.Cresus.Core.Library.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.Library.EnumValueCardinality newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

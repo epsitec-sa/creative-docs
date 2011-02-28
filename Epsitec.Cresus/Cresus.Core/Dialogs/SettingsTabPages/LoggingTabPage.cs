@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = parent,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				FormattedText = Misc.FontColorize (Misc.FontSize (Misc.Bold ("Enregistrement en cours..."), 36), Color.FromBrightness (0.8)),
+				FormattedText = TextFormatter.FormatText ("Enregistrement en cours...").ApplyBold ().ApplyFontSize (36).ApplyFontColor (Color.FromBrightness (0.8)),
 				Anchor = AnchorStyles.All,
 			};
 
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			bool enable = !string.IsNullOrEmpty (this.searchField.Text);
 			bool empty = this.mainTable.Rows == 0;
 
-			this.startButton.FormattedText = Misc.Bold (record ? "Stopper" : "Démarrer");
+			this.startButton.FormattedText = TextFormatter.FormatText (record ? "Stopper" : "Démarrer").ApplyBold ();
 
 			this.recordLabel.Visibility = record;
 
@@ -843,7 +843,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var title = new StaticText
 			{
 				Parent = frame,
-				FormattedText = Misc.Bold ("Paramètres"),
+				FormattedText = TextFormatter.FormatText ("Paramètres").ApplyBold (),
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Top,
 			};
@@ -890,7 +890,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var title = new StaticText
 			{
 				Parent = frame,
-				FormattedText = Misc.Bold (table.Name),
+				FormattedText = TextFormatter.FormatText (table.Name).ApplyBold (),
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Dock = DockStyle.Top,
 			};

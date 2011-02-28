@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
+			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
 		}
 
 		private void CreateUIMain2(UIBuilder builder)

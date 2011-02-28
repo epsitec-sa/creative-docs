@@ -35,8 +35,10 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine un rectangle pointillé correspondant à un widget ayant le focus.
 			rect.Deflate(0.5);
-			Drawing.Path path = new Epsitec.Common.Drawing.Path(rect);
-			AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
+			using (Drawing.Path path = new Epsitec.Common.Drawing.Path (rect))
+			{
+				AbstractAdorner.DrawPathDash (graphics, path, 1, 0, 2, color);
+			}
 		}
 
 		protected static void DrawFocusedPath(Drawing.Graphics graphics, Drawing.Path path, Drawing.Color color)
@@ -47,24 +49,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected static void DrawPathDash(Drawing.Graphics graphics, Drawing.Path path, double width, double dash, double gap, Drawing.Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
-			if (path.IsEmpty)  return;
-
-			Drawing.DashedPath dp = new Drawing.DashedPath();
-			dp.Append(path);
-
-			if (dash == 0.0)  // juste un point ?
-			{
-				dash = 0.00001;
-				gap -= dash;
-			}
-			dp.AddDash(dash, gap);
-
-			using (Drawing.Path temp = dp.GenerateDashedPath())
-			{
-				graphics.Rasterizer.AddOutline(temp, width, Drawing.CapStyle.Square, Drawing.JoinStyle.Round, 5.0);
-				graphics.RenderSolid(color);
-			}
+			graphics.PaintDashedOutline (path, width, dash, gap, Drawing.CapStyle.Square, color);
 		}
 
 		protected static bool IsThreeState2(Widgets.WidgetPaintState state)

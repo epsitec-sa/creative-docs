@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				var gradientRect = new Rectangle (this.Client.Bounds.Right-Tiles.TileArrow.Breadth, this.Client.Bounds.Bottom, Tiles.TileArrow.Breadth*0.5, this.Client.Bounds.Height);
 
 				graphics.AddFilledRectangle (gradientRect);
-				Painter.PaintHorizontalGradient (graphics, gradientRect, Color.FromAlphaColor (0.3, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
+				graphics.PaintHorizontalGradient (gradientRect, Color.FromAlphaColor (0.3, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
 			}
 		}
 

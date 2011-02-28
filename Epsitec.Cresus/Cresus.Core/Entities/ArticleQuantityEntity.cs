@@ -31,7 +31,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			string type = null;
+			FormattedText type = FormattedText.Empty;
+
 			foreach (var q in Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
 			{
 				if (q.Key == this.QuantityType)

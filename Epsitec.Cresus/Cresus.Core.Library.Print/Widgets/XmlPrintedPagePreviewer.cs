@@ -76,8 +76,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			path.AppendRoundedRectangle (rectTitle.BottomLeft, new Size (rectTitle.Width, rectTitle.Height*2), rectTitle.Height*0.6);
 			graphics.Rasterizer.AddSurface (path);
 			var shadow = new Rectangle (rectTitle.Left, rectTitle.Top-8, rectTitle.Width, 8);
-			Misc.DrawVerticalGradient (graphics, shadow, Color.FromBrightness (0.6), Color.FromBrightness (0.1));
-
+			graphics.DrawVerticalGradient (shadow, Color.FromBrightness (0.6), Color.FromBrightness (0.1));
 			graphics.Rasterizer.AddOutline (path);
 			graphics.RenderSolid (Color.FromBrightness (0));
 

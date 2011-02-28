@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
-			var desc = Misc.FirstLine (Helpers.ArticleDocumentItemHelper.GetArticleDescription (this, shortDescription: true));
+			var desc = Helpers.ArticleDocumentItemHelper.GetArticleDescription (this, shortDescription: true).Lines.FirstOrDefault ();
 			var price = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
 
 			FormattedText text = TextFormatter.FormatText (quantity, desc, price);

@@ -94,6 +94,66 @@ namespace Epsitec.Common.Types
 		}
 
 
+		public IEnumerable<FormattedText> Lines
+		{
+			get
+			{
+				int pos = 0;
+				
+				while (pos < this.text.Length)
+				{
+					int br = this.text.IndexOf (FormattedText.HtmlBreak, pos);
+
+					if (br < 0)
+					{
+						yield return new FormattedText (this.text.Substring (pos));
+						break;
+					}
+
+					yield return new FormattedText (this.text.Substring (pos, br-pos));
+
+					pos = br + FormattedText.HtmlBreak.Length;
+				}
+			}
+		}
+
+		public FormattedText AppendLine(FormattedText line = default (FormattedText))
+		{
+			if (this.IsNullOrEmpty)
+			{
+				return line;
+			}
+
+			return FormattedText.Concat (this, FormattedText.HtmlBreak, line);
+		}
+
+
+		public FormattedText ApplyBold()
+		{
+			return this.ApplyElement ("<b>", "</b>");
+		}
+
+		public FormattedText ApplyItalic()
+		{
+			return this.ApplyElement ("<i>", "</i>");
+		}
+
+		public FormattedText ApplyFontSize(double size)
+		{
+			return this.ApplyElement (string.Concat ("<font size=\"", InvariantConverter.ToString (size), "\">"), "</font>");
+		}
+
+		public FormattedText ApplyFontColor(Drawing.Color color)
+		{
+			return this.ApplyElement (string.Concat ("<font color=\"#", Drawing.Color.ToHexa (color), "\">"), "</font>");
+		}
+
+		private FormattedText ApplyElement(string elementBegin, string elementEnd)
+		{
+			return FormattedText.Concat (elementBegin, this.text, elementEnd);
+		}
+
+
 		/// <summary>
 		/// If this text is null or empty, return the default text instead.
 		/// </summary>

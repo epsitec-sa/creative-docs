@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				values.Add ("");
 				values.Add ("");  // colonne pour le temps relatif
 				values.Add ("");
-				values.Add (Misc.Italic ("Données effacées"));
+				values.Add (TextFormatter.FormatText ("Données effacées").ApplyItalic ());
 				values.Add ("");
 				values.Add ("");
 				values.Add ("");
@@ -283,12 +283,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							text = text.Replace (parameter.Name, Misc.FontColorize (Misc.Bold (value), Color.FromName ("Green")).ToString ());
+							text = text.Replace (parameter.Name, TextFormatter.FormatText (value).ApplyBold ().ApplyFontColor (Color.FromName ("Green")).ToString ());
 						}
 					}
 					else
 					{
-						text = text.Replace (parameter.Name, Misc.FontColorize (Misc.Bold (parameter.Name), Color.FromName ("Green")).ToString ());
+						text = text.Replace (parameter.Name, TextFormatter.FormatText (parameter.Name).ApplyBold ().ApplyFontColor (Color.FromName ("Green")).ToString ());
 					}
 				}
 
@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					if (QueryAccessor.IsSqlWordSeparator (text, index-1) &&
 						QueryAccessor.IsSqlWordSeparator (text, index+word.Length))
 					{
-						string subst = Misc.FontColorize (Misc.Bold (word), Color.FromName ("Blue")).ToString ();
+						string subst = TextFormatter.FormatText (word).ApplyBold ().ApplyFontColor (Color.FromName ("Blue")).ToString ();
 
 						text = text.Remove (index, word.Length);
 						text = text.Insert (index, subst);

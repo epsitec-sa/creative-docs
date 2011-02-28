@@ -7,6 +7,7 @@ using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -73,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #if false
 			builder.CreateAutoCompleteTextField ("Unité", controller);
 #else
-			builder.CreateEditionDetailedItemPicker ("Unité", controller, Business.EnumValueCardinality.ExactlyOne);
+			builder.CreateEditionDetailedItemPicker ("Unité", controller, EnumValueCardinality.ExactlyOne);
 #endif
 		}
 

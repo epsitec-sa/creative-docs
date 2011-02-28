@@ -6,6 +6,7 @@ using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.DataLayer;
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 6);
+			builder.CreateEditionDetailedItemPicker ("Pictures", this.Entity, "Photographies du client", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 6);
 		}
 
 

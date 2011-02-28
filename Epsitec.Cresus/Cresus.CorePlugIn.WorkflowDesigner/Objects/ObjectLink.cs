@@ -728,7 +728,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				//	Dessine les contraintes utilisateur.
 				if (this.dstObject != null && (this.draggingMode == DraggingMode.MoveLinkCustomize || this.IsHilite))
 				{
-					Misc.DrawPathDash (graphics, this.CustomizeConstrainPath, 1, 1, 4, true, this.colorFactory.GetColorMain ());
+					graphics.PaintDashedOutline (this.CustomizeConstrainPath, 1, 1, 4, CapStyle.Round, this.colorFactory.GetColorMain ());
 				}
 
 				//	Dessine la connexion et la flèche.
@@ -736,17 +736,17 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 				if (this.draggingMode == DraggingMode.MoveLinkDst && this.hilitedDstObject == null)
 				{
-					Misc.DrawPathDash (graphics, this.Path, 2, 1, 4, true, color);
+					graphics.PaintDashedOutline (this.Path, 2, 1, 4, CapStyle.Round, color);
 				}
 				else
 				{
 					if (this.IsContinuation)
 					{
-						Misc.DrawPathDash (graphics, this.Path, 2, 0, 4, true, color);
+						graphics.PaintDashedOutline (this.Path, 2, 0, 4, CapStyle.Round, color);
 					}
 					else if (this.IsForkDash)
 					{
-						Misc.DrawPathDash (graphics, this.Path, 2, 5, 5, true, color);
+						graphics.PaintDashedOutline (this.Path, 2, 5, 5, CapStyle.Round, color);
 					}
 					else
 					{

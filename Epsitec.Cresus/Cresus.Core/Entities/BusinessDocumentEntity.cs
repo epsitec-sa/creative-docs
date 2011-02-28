@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return Misc.Italic ("Pas encore défini");
+				return TextFormatter.FormatText ("Pas encore défini").ApplyItalic ();
 			}
 		}
 

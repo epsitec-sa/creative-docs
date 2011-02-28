@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (Misc.FirstLine (this.Text));
+			return TextFormatter.FormatText (this.Text.Lines.FirstOrDefault ());
 		}
 
 		public override EntityStatus GetEntityStatus()

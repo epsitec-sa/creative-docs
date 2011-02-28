@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("ImageGroups", this.Entity, "Groupes auxquels l'image appartient", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 4);
+			builder.CreateEditionDetailedItemPicker ("ImageGroups", this.Entity, "Groupes auxquels l'image appartient", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 4);
 		}
 
 		private void CreateUICategory(UIBuilder builder)

@@ -340,7 +340,34 @@ namespace Epsitec.Common.Drawing
 			this.Rasterizer.AddSurface (path);
 			this.RenderSolid ();
 		}
-	
+
+		public void PaintDashedOutline(Path path, double width, double dash, double gap, CapStyle capStyle, Color color)
+		{
+			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			if (path.IsEmpty)
+			{
+				return;
+			}
+
+			using (var dp = new DashedPath ())
+			{
+				dp.Append (path);
+
+				if (dash == 0.0)  // juste un point ?
+				{
+					dash = 0.00001;
+					gap -= dash;
+				}
+				dp.AddDash (dash, gap);
+
+				using (Path temp = dp.GenerateDashedPath ())
+				{
+					this.Rasterizer.AddOutline (temp, width, capStyle, JoinStyle.Round, 5.0);
+					this.RenderSolid (color);
+				}
+			}
+		}
+
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
@@ -580,15 +607,32 @@ namespace Epsitec.Common.Drawing
 			this.ImageRenderer.BitmapImage = null;
 		}
 
+		public void DrawVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)
+		{
+			this.FillMode = FillMode.NonZero;
+			this.GradientRenderer.Fill = GradientFill.Y;
+			this.GradientRenderer.SetColors (bottomColor, topColor);
+			this.GradientRenderer.SetParameters (-100, 100);
+
+			Transform ot = this.GradientRenderer.Transform;
+			Transform t = Transform.Identity;
+			Point center = rect.Center;
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+			this.GradientRenderer.Transform = t;
+			this.RenderGradient ();
+			this.GradientRenderer.Transform = ot;
+		}
+
 
 		public void PaintHorizontalGradient(Rectangle rect, Color leftColor, Color rightColor)
 		{
-			Transform ot = this.GradientRenderer.Transform;
-
+			this.FillMode = FillMode.NonZero;
 			this.GradientRenderer.Fill = GradientFill.X;
 			this.GradientRenderer.SetParameters (-100, 100);
 			this.GradientRenderer.SetColors (leftColor, rightColor);
-
+			
+			Transform ot = this.GradientRenderer.Transform;
 			Transform t = Transform.Identity;
 			Point center = rect.Center;
 			t = t.Scale (rect.Width/100/2, rect.Height/100/2);

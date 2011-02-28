@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					if (string.IsNullOrEmpty (unit))
 					{
-						unit = Misc.Italic ("(aucune)").ToString ();
+						unit = "<i>(aucune)</i>";
 					}
 
 					builder.Append (pageType.ShortDescription);

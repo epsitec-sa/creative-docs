@@ -16,65 +16,6 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
-		public static void DrawHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
-		{
-			//	Peint la surface avec un dégradé horizontal.
-			graphics.FillMode = FillMode.NonZero;
-			graphics.GradientRenderer.Fill = GradientFill.X;
-			graphics.GradientRenderer.SetColors (leftColor, rightColor);
-			graphics.GradientRenderer.SetParameters (-100, 100);
-
-			Transform ot = graphics.GradientRenderer.Transform;
-			Transform t = Transform.Identity;
-			Point center = rect.Center;
-			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
-			t = t.Translate (center);
-			graphics.GradientRenderer.Transform = t;
-			graphics.RenderGradient ();
-			graphics.GradientRenderer.Transform = ot;
-		}
-
-		public static void DrawVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
-		{
-			//	Peint la surface avec un dégradé vertical.
-			graphics.FillMode = FillMode.NonZero;
-			graphics.GradientRenderer.Fill = GradientFill.Y;
-			graphics.GradientRenderer.SetColors (bottomColor, topColor);
-			graphics.GradientRenderer.SetParameters (-100, 100);
-
-			Transform ot = graphics.GradientRenderer.Transform;
-			Transform t = Transform.Identity;
-			Point center = rect.Center;
-			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
-			t = t.Translate (center);
-			graphics.GradientRenderer.Transform = t;
-			graphics.RenderGradient ();
-			graphics.GradientRenderer.Transform = ot;
-		}
-
-		public static void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, bool round, Color color)
-		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
-			if (path.IsEmpty)
-				return;
-
-			DashedPath dp = new DashedPath ();
-			dp.Append (path);
-
-			if (dash == 0.0)  // juste un point ?
-			{
-				dash = 0.00001;
-				gap -= dash;
-			}
-			dp.AddDash (dash, gap);
-
-			using (Path temp = dp.GenerateDashedPath ())
-			{
-				graphics.Rasterizer.AddOutline (temp, width, round ? CapStyle.Round : CapStyle.Square, JoinStyle.Round, 5.0);
-				graphics.RenderSolid (color);
-			}
-		}
-
 	
 		public static decimal? PriceConstrain(decimal? value, decimal resolution=0.01M)
 		{
@@ -333,49 +274,6 @@ namespace Epsitec.Cresus.Core
 			return lines.Length*lineHeight;
 		}
 
-
-		public static FormattedText FontSize(FormattedText text, double size)
-		{
-			return FormattedText.Concat ("<font size=\"", size.ToString (System.Globalization.CultureInfo.InvariantCulture), "\">", TextFormatter.FormatText (text), "</font>");
-		}
-
-		public static FormattedText FontColorize(FormattedText text, Color color)
-		{
-			return FormattedText.Concat ("<font color=\"#", Color.ToHexa (color), "\">", TextFormatter.FormatText (text), "</font>");
-		}
-
-		public static FormattedText Bold(FormattedText text)
-		{
-			return Misc.Tagged (text, "b");
-		}
-
-		public static FormattedText Italic(FormattedText text)
-		{
-			return Misc.Tagged (text, "i");
-		}
-
-		private static FormattedText Tagged(FormattedText text, string tag)
-		{
-			return FormattedText.Concat ("<", tag, ">", TextFormatter.FormatText (text), "</", tag, ">");
-		}
-
-
-		public static FormattedText FirstLine(FormattedText text)
-		{
-			string t = TextFormatter.FormatText (text).ToString ();
-
-			if (!string.IsNullOrEmpty (t))
-			{
-				int i = t.IndexOf (FormattedText.HtmlBreak);
-
-				if (i != -1)
-				{
-					return t.Substring (0, i);
-				}
-			}
-
-			return text;
-		}
 
 		public static FormattedText AppendLine(FormattedText current, FormattedText text)
 		{

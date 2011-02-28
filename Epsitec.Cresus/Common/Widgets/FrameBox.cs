@@ -102,7 +102,7 @@ namespace Epsitec.Common.Widgets
 			{
 				using (Path path = new Path (rect))
 				{
-					FrameBox.DrawPathDash (graphics, path, 1, 4, 4, adorner.ColorBorder);
+					graphics.PaintDashedOutline (path, 1, 4, 4, CapStyle.Square, adorner.ColorBorder);
 				}
 			}
 
@@ -152,35 +152,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		static protected void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
-		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
-
-			if (path.IsEmpty)
-			{
-				return;
-			}
-
-			using (DashedPath dp = new DashedPath ())
-			{
-				dp.Append (path);
-
-				if (dash == 0.0)  // juste un point ?
-				{
-					dash = 0.00001;
-					gap -= dash;
-				}
-				
-				dp.AddDash (dash, gap);
-
-				using (Path temp = dp.GenerateDashedPath ())
-				{
-					graphics.Rasterizer.AddOutline (temp, width, CapStyle.Square, JoinStyle.Round, 5.0);
-					graphics.RenderSolid (color);
-				}
-			}
-		}
-		
 		public static readonly DependencyProperty DrawFullFrameProperty = DependencyProperty.Register ("DrawFullFrame", typeof (bool), typeof (FrameBox), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty BestFitSizeProperty = DependencyProperty.Register ("BestFitSize", typeof (Drawing.Size), typeof (FrameBox), new VisualPropertyMetadata (Drawing.Size.Empty));
 	}

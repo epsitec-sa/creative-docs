@@ -372,12 +372,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			if (enumValue.IsEmpty)
 			{
 				icon = "Button.RadioNo";
-				text = Misc.Italic ("<i>Vide</i>");
+				text = TextFormatter.FormatText ("<i>Vide</i>");
 			}
 			else
 			{
 				icon = (enumValue.Value == this.parameterEntity.DefaultValue) ? "Button.RadioYes" : "Button.RadioNo";
-				text = TextFormatter.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")");
+				text = TextFormatter.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", enumValue.LongDescription.Lines.FirstOrDefault (), ")");
 			}
 
 			return string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text);

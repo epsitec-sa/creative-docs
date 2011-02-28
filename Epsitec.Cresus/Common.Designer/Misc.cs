@@ -170,24 +170,7 @@ namespace Epsitec.Common.Designer
 
 		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, bool round, Color color)
 		{
-			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
-			if (path.IsEmpty)  return;
-
-			DashedPath dp = new DashedPath();
-			dp.Append(path);
-
-			if (dash == 0.0)  // juste un point ?
-			{
-				dash = 0.00001;
-				gap -= dash;
-			}
-			dp.AddDash(dash, gap);
-
-			using (Path temp = dp.GenerateDashedPath())
-			{
-				graphics.Rasterizer.AddOutline(temp, width, round ? CapStyle.Round : CapStyle.Square, JoinStyle.Round, 5.0);
-				graphics.RenderSolid(color);
-			}
+			graphics.PaintDashedOutline (path, width, dash, gap, round ? CapStyle.Round : CapStyle.Square, color);
 		}
 
 		static public void AddSpring(Graphics graphics, Point p1, Point p2, double thickness, int loops)
