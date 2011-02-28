@@ -122,6 +122,7 @@
     <Compile Include="Proxies\ObjectManagerForm.cs" />
     <Compile Include="Proxies\ProxyManager.cs" />
     <Compile Include="Proxies\ValueNumeric.cs" />
+    <Compile Include="Resources\Common.Designer\SourceCode\Res.cs" />
     <Compile Include="Ribbons\Undo.cs" />
     <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />
@@ -182,7 +183,6 @@
     <Compile Include="MyWidgets\TextFieldLabel.cs" />
     <Compile Include="MyWidgets\PropertyPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
     <Compile Include="Ribbons\Align.cs" />
     <Compile Include="Ribbons\Clipboard.cs" />
