@@ -101,7 +101,8 @@ namespace Epsitec.Common.Designer
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
 				this.dlgEntityField      = new Dialogs.EntityField(this);
 				this.dlgLabelReplacement = new Dialogs.LabelReplacement(this);
-				this.dlgEntityComment    = new Dialogs.EntityComment(this);
+				this.dlgEntityComment    = new Dialogs.EntityComment (this);
+				this.dlgEntityParameters = new Dialogs.EntityParameters (this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
 
@@ -2471,9 +2472,17 @@ namespace Epsitec.Common.Designer
 		public string DlgEntityComment(string text)
 		{
 			//	Ouvre le dialogue pour choisir le texte d'un commentaire.
-			this.dlgEntityComment.Initialise(text);
-			this.dlgEntityComment.Show();  // choix dans le dialogue...
+			this.dlgEntityComment.Initialise (text);
+			this.dlgEntityComment.Show ();  // choix dans le dialogue...
 			return this.dlgEntityComment.SelectedText;
+		}
+
+		public string DlgEntityParameters(string text)
+		{
+			//	Ouvre le dialogue pour choisir les paramètres d'une entité.
+			this.dlgEntityParameters.Initialise (text);
+			this.dlgEntityParameters.Show ();  // choix dans le dialogue...
+			return this.dlgEntityParameters.SelectedText;
 		}
 
 		public bool DlgEntityExpression(bool isInterface, bool isPatchModule, string deepExpression, ref string expression)
@@ -2697,6 +2706,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.EntityField			dlgEntityField;
 		protected Dialogs.LabelReplacement		dlgLabelReplacement;
 		protected Dialogs.EntityComment			dlgEntityComment;
+		protected Dialogs.EntityParameters		dlgEntityParameters;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected Dialogs.InitialMessage		dlgInitialMessage;
 		protected PanelsContext					context;

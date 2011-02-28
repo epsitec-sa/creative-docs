@@ -533,12 +533,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case ActiveElement.BoxInfo:
 					if (this.info == null || !this.info.IsVisible)
 					{
-						return string.Format(Res.Strings.Entities.Action.BoxInfo1, this.GetInformations(true));
+						return string.Format (Res.Strings.Entities.Action.BoxInfo1, this.GetInformations (true));
 					}
 					else
 					{
 						return Res.Strings.Entities.Action.BoxInfo2;
 					}
+
+				case ActiveElement.BoxParameters:
+					//?return Res.Strings.Entities.Action.BoxParameters;
 
 				case ActiveElement.BoxClose:
 					if (this.isRoot)
@@ -824,7 +827,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxInfo)
 				{
-					this.AddInfo();
+					this.AddInfo ();
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxParameters)
+				{
+					this.ChangeParameters ();
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxColor5)
@@ -943,9 +951,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Souris dans le bouton des informations ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionInfoButton, pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionInfoButton, pos))
 				{
 					element = ActiveElement.BoxInfo;
+					return true;
+				}
+
+				//	Souris dans le bouton des paramètres ?
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos))
+				{
+					element = ActiveElement.BoxParameters;
 					return true;
 				}
 
@@ -2342,6 +2357,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
+		protected void ChangeParameters()
+		{
+			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
+			Module module = this.editor.Module;
+			module.DesignerApplication.DlgEntityParameters ("");
+		}
+
 		private Module SearchModule(Druid id)
 		{
 			return this.Application.SearchModule(id);
@@ -2651,11 +2673,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des informations.
 			if (this.hilitedElement == ActiveElement.BoxInfo)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, true, false);
+				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, false, false);
+				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, false, false);
+			}
+
+			//	Dessine le bouton des paramètres.
+			if (this.hilitedElement == ActiveElement.BoxParameters)
+			{
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, /*Res.Strings.Entities.Button.BoxParameters*/"P", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, /*Res.Strings.Entities.Button.BoxParameters*/"P", false, false);
 			}
 
 			//	Dessine les noms des champs.
@@ -3138,6 +3170,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.BoxSources ||
 						this.hilitedElement == ActiveElement.BoxComment ||
 						this.hilitedElement == ActiveElement.BoxInfo ||
+						this.hilitedElement == ActiveElement.BoxParameters ||
 						this.hilitedElement == ActiveElement.BoxColor1 ||
 						this.hilitedElement == ActiveElement.BoxColor2 ||
 						this.hilitedElement == ActiveElement.BoxColor3 ||
@@ -3368,7 +3401,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour montrer les informations.
 			get
 			{
-				return new Point(this.bounds.Left+AbstractObject.buttonRadius*5+10, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Left+AbstractObject.buttonRadius*5+10, this.bounds.Top-AbstractObject.headerHeight/2);
+			}
+		}
+
+		protected Point PositionParametersButton
+		{
+			//	Retourne la position du bouton des paramètres.
+			get
+			{
+				return new Point (this.bounds.Left+AbstractObject.buttonRadius*7+12, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 

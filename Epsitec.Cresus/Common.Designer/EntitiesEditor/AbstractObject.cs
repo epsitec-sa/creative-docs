@@ -21,6 +21,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxSources,
 			BoxComment,
 			BoxInfo,
+			BoxParameters,
 			BoxExtend,
 			BoxClose,
 			BoxHeader,
@@ -231,6 +232,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxInfo:
 					return Res.Strings.Entities.Action.BoxInfo;
+
+				case AbstractObject.ActiveElement.BoxParameters:
+					//?return Res.Strings.Entities.Action.BoxParameters;
 
 				case AbstractObject.ActiveElement.BoxColor1:
 					return Res.Strings.Entities.Action.BoxColor1;

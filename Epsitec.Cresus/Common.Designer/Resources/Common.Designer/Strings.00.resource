@@ -582,4 +582,8 @@
   <data name="Entities.Action.BoxColor5" id="K23">Entité jaune</data>
   <data name="Entities.Action.BoxColor6" id="K33">Entité orange</data>
   <data name="Entities.Action.BoxColor7" id="K43">Entité lilas</data>
+  <data name="Entities.Action.BoxParameters" id="K53">Modifie les paramètres de l&amp;apos;entité</data>
+  <data name="Entities.Button.BoxParameters" id="K63">P</data>
+  <data name="Dialog.EntityComment.Title" id="K73">Commentaire</data>
+  <data name="Dialog.EntityParameters.Title" id="K83">Paramètres de l&amp;apos;entité</data>
 </bundle>
