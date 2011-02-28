@@ -45,14 +45,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			LoggingTabPage.globalAutoBreak  = true;
 		}
 
-		public LoggingTabPage(CoreApplication application)
-			: base (application)
+		public LoggingTabPage(ISettingsDialog container)
+			: base (container)
 		{
 			this.taggedText = new TaggedText ();
 		}
 
 
-		public override void AcceptChangings()
+		public override void AcceptChanges()
+		{
+		}
+
+		public override void RejectChanges()
 		{
 		}
 
@@ -1095,13 +1099,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			get
 			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+				var db = this.Container.Data.DataInfrastructure.DbInfrastructure;
 
 				return db.QueryLog != null;
 			}
 			set
 			{
-				var db = this.application.Data.DataInfrastructure.DbInfrastructure;
+				var db = this.Container.Data.DataInfrastructure.DbInfrastructure;
 
 				if (value)  // démarre l'enregistrement ?
 				{

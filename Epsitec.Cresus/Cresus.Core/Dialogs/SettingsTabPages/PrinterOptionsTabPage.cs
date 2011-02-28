@@ -24,15 +24,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class PrinterOptionsTabPage : AbstractSettingsTabPage
 	{
-		public PrinterOptionsTabPage(CoreApplication application)
-			: base (application)
+		public PrinterOptionsTabPage(ISettingsDialog container)
+			: base (container)
 		{
 			this.confirmationButtons = new List<ConfirmationButton> ();
 			this.optionButtons       = new List<AbstractButton> ();
 		}
 
 
-		public override void AcceptChangings()
+		public override void AcceptChanges()
+		{
+		}
+
+		public override void RejectChanges()
 		{
 		}
 

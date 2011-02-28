@@ -24,16 +24,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class MaintenanceTabPage : AbstractSettingsTabPage
 	{
-		public MaintenanceTabPage(CoreApplication application)
-			: base (application)
+		public MaintenanceTabPage(ISettingsDialog container)
+			: base (container)
 		{
 		}
 
 
-		public override void AcceptChangings()
+		public override void AcceptChanges()
 		{
 		}
 
+		public override void RejectChanges()
+		{
+		}
+		
 		public override void CreateUI(Widget parent)
 		{
 			var frame = new FrameBox
@@ -124,7 +128,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var fileInfo = new System.IO.FileInfo (filename);
 
-			this.application.Data.ExportDatabase (fileInfo, false);
+			this.Container.Data.ExportDatabase (fileInfo, false);
 		}
 
 		private void ActionImport()
@@ -138,7 +142,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var fileInfo = new System.IO.FileInfo (filename);
 
-			this.application.Data.ImportDatabase (fileInfo);
+			this.Container.Data.ImportDatabase (fileInfo);
 		}
 
 		private void ActionCreate()
@@ -152,7 +156,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var fileInfo = new System.IO.FileInfo (filename);
 
-			this.application.Data.CreateUserDatabase (fileInfo);
+			this.Container.Data.CreateUserDatabase (fileInfo);
 		}
 
 		private void ActionUpdate()
@@ -166,7 +170,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var fileInfo = new System.IO.FileInfo (filename);
 
-			this.application.Data.ImportSharedData (fileInfo);
+			this.Container.Data.ImportSharedData (fileInfo);
 		}
 
 

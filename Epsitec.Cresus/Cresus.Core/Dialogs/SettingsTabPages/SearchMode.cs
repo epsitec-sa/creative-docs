@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 {
-	public struct SearchMode
+	internal struct SearchMode
 	{
 		public bool CaseSensitive;
 		public bool SearchInQuery;

@@ -26,19 +26,23 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class PrintingUnitsTabPage : AbstractSettingsTabPage
 	{
-		public PrintingUnitsTabPage(CoreApplication application)
-			: base (application)
+		public PrintingUnitsTabPage(ISettingsDialog container)
+			: base (container)
 		{
 			this.optionButtons = new List<CheckButton> ();
 			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList ();
 		}
 
 
-		public override void AcceptChangings()
+		public override void AcceptChanges()
 		{
 			PrinterApplicationSettings.SetPrintingUnitList (this.printingUnitList);
 		}
 
+		public override void RejectChanges()
+		{
+		}
+		
 		public override void CreateUI(Widget parent)
 		{
 			int tabIndex = 0;

@@ -1,21 +1,15 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Dialogs.SettingsTabPages;
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
@@ -23,7 +17,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour l'ensemble du debug.
 	/// </summary>
-	public class DebugDialog : AbstractDialog
+	public class DebugDialog : AbstractDialog, ISettingsDialog
 	{
 		public DebugDialog(CoreApplication application)
 		{
@@ -34,6 +28,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
 
+		
 
 		protected override Window CreateWindow()
 		{
@@ -47,6 +42,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			return this.window;
 		}
+
+		#region ISettingsTabBook Members
+
+		CoreData ISettingsDialog.Data
+		{
+			get
+			{
+				return this.application.Data;
+			}
+		}
+
+		#endregion
 
 		private void SetupWindow()
 		{
@@ -138,14 +145,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Rempli les onglets.
 			if (devel)
 			{
-				var loggingSettings = new SettingsTabPages.LoggingTabPage (this.application);
+				var loggingSettings = new SettingsTabPages.LoggingTabPage (this);
 				loggingSettings.CreateUI (loggingPage);
 				this.settingsTabPages.Add (loggingSettings);
 			}
 
 			if (devel)
 			{
-				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this.application);
+				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this);
 				maintenanceSettings.CreateUI (maintenancePage);
 				this.settingsTabPages.Add (maintenanceSettings);
 			}
@@ -168,7 +175,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var tab in this.settingsTabPages)
 			{
-				tab.AcceptChangings ();
+				tab.AcceptChanges ();
 			}
 
 			this.Result = DialogResult.Accept;
@@ -182,7 +189,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var tab in this.settingsTabPages)
 			{
-				tab.RejectChangings ();
+				tab.RejectChanges ();
 			}
 
 			this.Result = DialogResult.Cancel;
@@ -224,7 +231,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 		}
 
-
 		private void ActiveLastPage()
 		{
 			string name = DebugDialog.lastActivedPageName;
@@ -247,7 +253,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static string									lastActivedPageName;
 
 		private readonly CoreApplication						application;
-		private List<SettingsTabPages.AbstractSettingsTabPage>	settingsTabPages;
+		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
 		private Window											window;
 		private TabBook											tabBook;

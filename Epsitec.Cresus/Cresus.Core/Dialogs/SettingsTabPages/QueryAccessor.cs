@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// <summary>
 	/// Classe d'extension pour Epsitec.Cresus.Database.Logging.Query.
 	/// </summary>
-	public static class QueryAccessor
+	internal static class QueryAccessor
 	{
 		public static int Count(this Query query, string search, SearchMode mode)
 		{
