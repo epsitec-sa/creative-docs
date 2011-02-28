@@ -12,10 +12,16 @@ namespace Epsitec.Common.Types
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/100G
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
 			//	designer:cap/1011
 			public static readonly Epsitec.Common.Types.EnumType CultureMapSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 1));
+			//	designer:cap/10K
+			public static readonly Epsitec.Common.Types.EnumType DataLifetimeExpectancy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/100T
 			public static readonly Epsitec.Common.Types.EnumType FieldMembership = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 29));
 			//	designer:cap/101
@@ -30,12 +36,18 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType StringSearchBehavior = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/10011
 			public static readonly Epsitec.Common.Types.EnumType StructuredTypeClass = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 33));
+			//	designer:cap/10K5
+			public static readonly Epsitec.Common.Types.EnumType StructuredTypeFlags = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 			//	designer:cap/100B1
 			public static readonly Epsitec.Common.Types.EnumType TimeResolution = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 43));
 			//	designer:cap/100V1
 			public static readonly Epsitec.Common.Types.EnumType TypeCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 63));
 			public static class Default
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/1003
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (global::Epsitec.Common.Types.BooleanType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 3));
 				//	designer:cap/10AI
@@ -83,8 +95,16 @@ namespace Epsitec.Common.Types
 		
 		public static class Values
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class BindingMode
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100B
 				public static global::Epsitec.Common.Types.Caption None
 				{
@@ -129,6 +149,10 @@ namespace Epsitec.Common.Types
 			
 			public static class CultureMapSource
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/1014
 				public static global::Epsitec.Common.Types.Caption DynamicMerge
 				{
@@ -155,8 +179,52 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
+			public static class DataLifetimeExpectancy
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/10K4
+				public static global::Epsitec.Common.Types.Caption Immutable
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+					}
+				}
+				//	designer:cap/10K3
+				public static global::Epsitec.Common.Types.Caption Stable
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+					}
+				}
+				//	designer:cap/10K1
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+					}
+				}
+				//	designer:cap/10K2
+				public static global::Epsitec.Common.Types.Caption Volatile
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
+					}
+				}
+			}
+			
 			public static class FieldMembership
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100S
 				public static global::Epsitec.Common.Types.Caption Inherited
 				{
@@ -185,6 +253,10 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldOptions
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100P
 				public static global::Epsitec.Common.Types.Caption None
 				{
@@ -213,6 +285,10 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldRelation
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100Q
 				public static global::Epsitec.Common.Types.Caption Collection
 				{
@@ -241,6 +317,10 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldSource
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/10022
 				public static global::Epsitec.Common.Types.Caption Expression
 				{
@@ -261,6 +341,10 @@ namespace Epsitec.Common.Types
 			
 			public static class StringComparisonBehavior
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/10A7
 				public static global::Epsitec.Common.Types.Caption CurrentCulture
 				{
@@ -313,6 +397,10 @@ namespace Epsitec.Common.Types
 			
 			public static class StringSearchBehavior
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/10A1
 				public static global::Epsitec.Common.Types.Caption ExactMatch
 				{
@@ -357,6 +445,10 @@ namespace Epsitec.Common.Types
 			
 			public static class StructuredTypeClass
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100V
 				public static global::Epsitec.Common.Types.Caption Entity
 				{
@@ -383,8 +475,44 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
+			public static class StructuredTypeFlags
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/10K8
+				public static global::Epsitec.Common.Types.Caption GenerateRepository
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+					}
+				}
+				//	designer:cap/10K7
+				public static global::Epsitec.Common.Types.Caption GenerateSchema
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
+					}
+				}
+				//	designer:cap/10K6
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
+					}
+				}
+			}
+			
 			public static class TimeResolution
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/10071
 				public static global::Epsitec.Common.Types.Caption Days
 				{
@@ -461,6 +589,10 @@ namespace Epsitec.Common.Types
 			
 			public static class TypeCode
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/100O1
 				public static global::Epsitec.Common.Types.Caption Binary
 				{
@@ -658,6 +790,22 @@ namespace Epsitec.Common.Types
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Types");
+			Types._Initialize ();
+			Types.Default._Initialize ();
+			Values._Initialize ();
+			Values.BindingMode._Initialize ();
+			Values.CultureMapSource._Initialize ();
+			Values.DataLifetimeExpectancy._Initialize ();
+			Values.FieldMembership._Initialize ();
+			Values.FieldOptions._Initialize ();
+			Values.FieldRelation._Initialize ();
+			Values.FieldSource._Initialize ();
+			Values.StringComparisonBehavior._Initialize ();
+			Values.StringSearchBehavior._Initialize ();
+			Values.StructuredTypeClass._Initialize ();
+			Values.StructuredTypeFlags._Initialize ();
+			Values.TimeResolution._Initialize ();
+			Values.TypeCode._Initialize ();
 		}
 		
 		public static void Initialize()

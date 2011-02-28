@@ -2253,7 +2253,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			return builder.ToString();
+			if (this.cultureMap != null)
+			{
+				StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				var lifetime = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+				var flags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
+
+				builder.Append ("<br/>----------<br/>");
+
+				builder.Append ("Espérance de vie: ");
+				builder.Append (lifetime.ToString ());
+				
+				builder.Append ("<br/>");
+				
+				builder.Append ("Fanions: ");
+				builder.Append (flags.ToString ());
+			}
+
+			return builder.ToString ();
 		}
 
 		protected void UpdateFieldsLink()
@@ -2372,6 +2389,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, dialog.DataLifetimeExpectancy);
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     dialog.StructuredTypeFlags);
+
+				this.UpdateInformations ();
+				this.editor.Module.AccessEntities.SetLocalDirty ();
 			}
 		}
 

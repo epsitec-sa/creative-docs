@@ -3444,6 +3444,18 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
+				public static class EntityComment
+				{
+					//	designer:str/30K73
+					public static global::System.String Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544423));
+						}
+					}
+				}
+				
 				public static class EntityField
 				{
 					//	designer:str/30KR2
@@ -3452,6 +3464,18 @@ namespace Epsitec.Common.Designer
 						get
 						{
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544411));
+						}
+					}
+				}
+				
+				public static class EntityParameters
+				{
+					//	designer:str/30K83
+					public static global::System.String Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544424));
 						}
 					}
 				}
@@ -4658,6 +4682,14 @@ namespace Epsitec.Common.Designer
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554488));
 						}
 					}
+					//	designer:str/30K53
+					public static global::System.String BoxParameters
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544421));
+						}
+					}
 					//	designer:str/30201
 					public static global::System.String BoxSources
 					{
@@ -4975,6 +5007,14 @@ namespace Epsitec.Common.Designer
 						get
 						{
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554531));
+						}
+					}
+					//	designer:str/30K63
+					public static global::System.String BoxParameters
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544422));
 						}
 					}
 					//	designer:str/30KM2
