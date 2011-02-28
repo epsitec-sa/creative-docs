@@ -122,10 +122,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public static IEnumerable<EnumKeyValues<EnumValueCardinality>> GetAllPossibleValueCardinalities()
 		{
-			yield return EnumKeyValues.Create (EnumValueCardinality.Any,        "Zéro, un ou plusieurs");
-			yield return EnumKeyValues.Create (EnumValueCardinality.AtLeastOne, "Au moins un");
-			yield return EnumKeyValues.Create (EnumValueCardinality.ExactlyOne, "Exactement un");
-			yield return EnumKeyValues.Create (EnumValueCardinality.ZeroOrOne,  "Un ou aucun");
+			return EnumKeyValues.FromEnum<EnumValueCardinality> ();
 		}
 
 		public static IEnumerable<EnumKeyValues<ArticleQuantityType>> GetAllPossibleValueArticleQuantityType()

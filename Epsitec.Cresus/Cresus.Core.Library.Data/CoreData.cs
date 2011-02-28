@@ -123,14 +123,14 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
+		public DataContext GetDataContext(DataLifetimeExpectancy lifetimeExpectancy)
 		{
 			switch (lifetimeExpectancy)
 			{
-				case Data.DataLifetimeExpectancy.Stable:
+				case DataLifetimeExpectancy.Stable:
 					return this.EnsureDataContext (ref this.stableDataContext, lifetimeExpectancy.ToString ());
 
-				case Data.DataLifetimeExpectancy.Immutable:
+				case DataLifetimeExpectancy.Immutable:
 					return this.EnsureDataContext (ref this.immutableDataContext, lifetimeExpectancy.ToString ());
 			}
 
