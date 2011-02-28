@@ -5,17 +5,16 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Validators;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Widgets;
+
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers
 {

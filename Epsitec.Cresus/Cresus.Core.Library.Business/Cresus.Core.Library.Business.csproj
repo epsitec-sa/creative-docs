@@ -56,7 +56,6 @@
     <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
-    <Compile Include="Business\EnumValueCardinality.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
@@ -94,14 +93,10 @@
     <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
-    <Compile Include="Controllers\EnumController.cs" />
-    <Compile Include="Controllers\EnumKeyValues.cs" />
-    <Compile Include="Controllers\EnumValueController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Controllers\IGroupedItem.cs" />
     <Compile Include="Controllers\IGroupedItemPosition.cs" />
     <Compile Include="Controllers\ITileController.cs" />
-    <Compile Include="Controllers\IWidgetUpdater.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
@@ -131,10 +126,7 @@
     <Compile Include="Res.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="UIBuilder.cs" />
-    <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
-    <Compile Include="Widgets\ItemPicker.cs" />
-    <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\Miniature.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />

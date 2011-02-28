@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -113,24 +114,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetAllPossibleVatCodes()
 		{
-			yield return EnumKeyValues.Create (Finance.VatCode.Excluded, "EXCLU", "Exclu de l'impôt");
-			yield return EnumKeyValues.Create (Finance.VatCode.ZeroRated, "EXPORT", "Exporté (exonéré)");
-
-//-			yield return EnumKeyValues.Create (Finance.VatCode.StandardTax, "NORM", "Taux normal");  // TODO: ces 3 codes sont des inventions !
-//-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedTax, "RED", "Taux réduit");
-//-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialTax, "HEB", "Taux spécial");
-
-			yield return EnumKeyValues.Create (Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses, "IPM", "Taux normal, matériel ou service");
-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses, "IPMRED", "Taux réduit, matériel ou service");
-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialInputTaxOnMaterialOrServiceExpenses, "IPMHEB", "Taux spécial, matériel ou service");
-
-			yield return EnumKeyValues.Create (Finance.VatCode.StandardInputTaxOnInvestementOrOperatingExpenses, "IPI", "Taux normal, investissement ou exploitation");
-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses, "IPIRED", "Taux réduit, investissement ou exploitation");
-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses, "IP(I)HEB", "Taux spécial, investissement ou exploitation");
-
-			yield return EnumKeyValues.Create (Finance.VatCode.StandardTaxOnTurnover, "TVA", "Taux normal, chiffre d'affaires");
-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedTaxOnTurnover, "TVARED", "Taux réduit, chiffre d'affaires");
-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialTaxOnTurnover, "TVAHEB", "Taux spécial, chiffre d'affaires");
+			return EnumKeyValues.FromEnum<Finance.VatCode> ();
 		}
 
 		public static IEnumerable<EnumKeyValues<ArticleType>> GetAllPossibleArticleTypes()

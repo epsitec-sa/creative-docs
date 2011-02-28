@@ -51,9 +51,14 @@
     <Compile Include="Binders\IFieldBinder.cs" />
     <Compile Include="Binders\IFieldBinderProvider.cs" />
     <Compile Include="CommandHandlerStack.cs" />
+    <Compile Include="Controllers\EnumController.cs" />
+    <Compile Include="Controllers\EnumValueController.cs" />
+    <Compile Include="EnumKeyValues`1.cs" />
     <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dispatcher.cs" />
+    <Compile Include="EnumKeyValues.cs" />
+    <Compile Include="EnumValueCardinality.cs" />
     <Compile Include="ICoreComponent.cs" />
     <Compile Include="ICoreComponentHost.cs" />
     <Compile Include="Misc.cs" />
@@ -79,7 +84,11 @@
     <Compile Include="UI.Toolkit.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
+    <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
+    <Compile Include="Widgets\ItemPicker.cs" />
+    <Compile Include="Widgets\ItemPickerCombo.cs" />
+    <Compile Include="Widgets\IWidgetUpdater.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\Tiles\FrameTile.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />

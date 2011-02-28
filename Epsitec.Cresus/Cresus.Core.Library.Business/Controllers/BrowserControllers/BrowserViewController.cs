@@ -10,6 +10,8 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets;
+
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 

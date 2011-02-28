@@ -6,7 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
-using Epsitec.Cresus.DataLayer;
+
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.ValueToDescriptionConverter (e.Values);
 			};
 
-			widget.Cardinality = Business.EnumValueCardinality.ExactlyOne;
+			widget.Cardinality = EnumValueCardinality.ExactlyOne;
 			widget.RefreshContents ();
 
 			this.Update ();

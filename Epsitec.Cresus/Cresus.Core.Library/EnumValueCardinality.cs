@@ -2,9 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
-using Epsitec.Cresus.Core.Entities;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
 	/// The <c>EnumValueCardinality</c> defines how many values can be used for

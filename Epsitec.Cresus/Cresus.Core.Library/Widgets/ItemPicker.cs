@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public ItemPicker()
 		{
-			this.Cardinality = Business.EnumValueCardinality.ExactlyOne;
+			this.Cardinality = EnumValueCardinality.ExactlyOne;
 
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.items.AcceptsRichText = true;
@@ -30,7 +32,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Business.EnumValueCardinality Cardinality
+		public EnumValueCardinality Cardinality
 		{
 			// TODO: Le mode EnumValueCardinality.AtLeastOne n'est pas encore supporté !
 			get;
@@ -58,7 +60,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			AbstractButton button;
 			int tabIndex = 1;
 
-			if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
+			if (this.Cardinality == EnumValueCardinality.ZeroOrOne)
 			{
 				button = new RadioButton
 				{
@@ -72,8 +74,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			for (int i = 0; i < this.items.Count; i++)
 			{
-				if (this.Cardinality == Business.EnumValueCardinality.ExactlyOne ||
-					this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
+				if (this.Cardinality == EnumValueCardinality.ExactlyOne ||
+					this.Cardinality == EnumValueCardinality.ZeroOrOne)
 				{
 					button = new RadioButton
 					{

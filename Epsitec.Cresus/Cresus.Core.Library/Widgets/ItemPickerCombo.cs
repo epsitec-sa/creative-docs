@@ -7,6 +7,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +23,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		public ItemPicketCombo()
 		{
 			this.IsReadOnly = true;
-			this.Cardinality = Business.EnumValueCardinality.Any;
+			this.Cardinality = EnumValueCardinality.Any;
 			this.MultipleSelectionTextSeparator = ", ";
 
 			this.selection = new HashSet<int> ();
@@ -45,7 +47,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Business.EnumValueCardinality Cardinality
+		public EnumValueCardinality Cardinality
 		{
 			get;
 			set;
@@ -275,7 +277,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (index >= 0)
 			{
-				if (this.Cardinality == Business.EnumValueCardinality.Any)
+				if (this.Cardinality == EnumValueCardinality.Any)
 				{
 					if (sels.Contains (index))
 					{
@@ -286,7 +288,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						this.AddSelection (new int[] { index });
 					}
 				}
-				else if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
+				else if (this.Cardinality == EnumValueCardinality.ZeroOrOne)
 				{
 					if (index == 0)
 					{
@@ -307,7 +309,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						}
 					}
 				}
-				else if (this.Cardinality == Business.EnumValueCardinality.AtLeastOne)
+				else if (this.Cardinality == EnumValueCardinality.AtLeastOne)
 				{
 					if (sels.Contains (index))
 					{
@@ -321,7 +323,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						this.AddSelection (new int[] { index });
 					}
 				}
-				else if (this.Cardinality == Business.EnumValueCardinality.ExactlyOne)
+				else if (this.Cardinality == EnumValueCardinality.ExactlyOne)
 				{
 					this.ClearSelection ();
 					this.AddSelection (new int[] { index });
@@ -335,7 +337,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			var sel = this.GetSortedSelection ();
 
-			if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
+			if (this.Cardinality == EnumValueCardinality.ZeroOrOne)
 			{
 				string icon;
 
@@ -363,8 +365,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				string icon;
 
-				if (this.Cardinality == Business.EnumValueCardinality.ExactlyOne ||
-					this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
+				if (this.Cardinality == EnumValueCardinality.ExactlyOne ||
+					this.Cardinality == EnumValueCardinality.ZeroOrOne)
 				{
 					if (sel.Contains (i))
 					{
@@ -401,7 +403,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				list.Add (this.items[sel]);
 			}
 
-			if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne && list.Count == 0)
+			if (this.Cardinality == EnumValueCardinality.ZeroOrOne && list.Count == 0)
 			{
 				list.Add ("Aucun");
 			}

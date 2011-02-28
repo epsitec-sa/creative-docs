@@ -1184,7 +1184,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, Business.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity, new ()
 		{
@@ -1192,7 +1192,7 @@ namespace Epsitec.Cresus.Core
 			return this.CreateEditionDetailedItemPicker (tile, name, entity, label, controller, cardinality, mode, controllerSubType);
 		}
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, Business.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity, new ()
 		{
@@ -1201,8 +1201,8 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (picker);
 
-			if (cardinality == Business.EnumValueCardinality.ExactlyOne ||
-				cardinality == Business.EnumValueCardinality.AtLeastOne)
+			if (cardinality == EnumValueCardinality.ExactlyOne ||
+				cardinality == EnumValueCardinality.AtLeastOne)
 			{
 				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
@@ -1266,14 +1266,14 @@ namespace Epsitec.Cresus.Core
 			return tileButton;
 		}
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, Business.EnumValueCardinality cardinality)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, EnumValueCardinality cardinality)
 			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
 			return this.CreateEditionDetailedItemPicker (tile, label, controller, cardinality);
 		}
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(EditionTile tile, string label, SelectionController<T> controller, Business.EnumValueCardinality cardinality)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(EditionTile tile, string label, SelectionController<T> controller, EnumValueCardinality cardinality)
 			where T : AbstractEntity, new ()
 		{
 			Button tileButton;
@@ -1281,8 +1281,8 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (picker);
 
-			if (cardinality == Business.EnumValueCardinality.ExactlyOne ||
-				cardinality == Business.EnumValueCardinality.AtLeastOne)
+			if (cardinality == EnumValueCardinality.ExactlyOne ||
+				cardinality == EnumValueCardinality.AtLeastOne)
 			{
 				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
@@ -1526,7 +1526,7 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, Business.EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
+		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
 		{
 			tile.AllowSelection = true;
 
