@@ -131,7 +131,8 @@ namespace Epsitec.Common.Types
 			{
 				object value = this.GetValue (StructuredType.FlagsProperty);
 
-				if (UndefinedValue.IsUndefinedValue (value))
+				if ((UndefinedValue.IsUndefinedValue (value)) ||
+					(value == null))
 				{
 					return StructuredTypeFlags.None;
 				}
@@ -159,7 +160,8 @@ namespace Epsitec.Common.Types
 			{
 				object value = this.GetValue (StructuredType.DefaultLifetimeExpectancyProperty);
 
-				if (UndefinedValue.IsUndefinedValue (value))
+				if ((UndefinedValue.IsUndefinedValue (value)) ||
+					(value == null))
 				{
 					return DataLifetimeExpectancy.Unknown;
 				}

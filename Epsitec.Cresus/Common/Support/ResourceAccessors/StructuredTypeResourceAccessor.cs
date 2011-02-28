@@ -908,7 +908,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				
 				if (type.Flags != StructuredTypeFlags.None)
 				{
-					data.SetValue (Res.Fields.ResourceStructuredType.Fields, type.Fields);
+					data.SetValue (Res.Fields.ResourceStructuredType.Flags, type.Flags);
 				}
 			}
 			else
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.ResourceStructuredType.Class, StructuredTypeClass.None);
 				data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, "");
 				data.SetValue (Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, DataLifetimeExpectancy.Unknown);
-				data.SetValue (Res.Fields.ResourceStructuredType.Fields, StructuredTypeFlags.None);
+				data.SetValue (Res.Fields.ResourceStructuredType.Flags, StructuredTypeFlags.None);
 			}
 
 			//	Record the fields and the interface ids collections into the
