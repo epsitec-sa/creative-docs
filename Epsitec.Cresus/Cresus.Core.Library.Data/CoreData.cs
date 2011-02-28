@@ -139,7 +139,9 @@ namespace Epsitec.Cresus.Core
 					return this.EnsureDataContext (ref this.immutableDataContext, lifetimeExpectancy.ToString ());
 			}
 
-			return this.activeDataContext;
+			throw new System.NotImplementedException ();
+
+//-			return this.activeDataContext;
 		}
 
 		internal bool ContainsComponent(string name)

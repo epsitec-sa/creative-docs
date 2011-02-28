@@ -158,6 +158,10 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
+      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
+      <Name>Cresus.Core.Library.Address</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
       <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
       <Name>Cresus.Core.Library.BusinessLogic</Name>

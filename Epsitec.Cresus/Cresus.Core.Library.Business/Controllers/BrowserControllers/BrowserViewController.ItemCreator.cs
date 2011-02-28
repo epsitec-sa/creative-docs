@@ -121,12 +121,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private AbstractEntity CreateRealEntity(System.Action<BusinessContext, AbstractEntity> initializer)
 			{
-				throw new System.NotImplementedException ();
-#if false
 				var rootEntityId = this.GetRootEntityId ();
 				
 				CoreData        data    = this.orchestrator.Data;
-				BusinessContext context = data.CreateBusinessContext ();
+				BusinessContext context = BusinessContext.Create (data);
 
 				//	Create a real entity which will immediately be persisted to the database,
 				//	so that it has an entity key. Saving an empty entity would do nothing, so
@@ -151,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var localEntityKey  = businessContext.DataContext.GetNormalizedEntityKey (localEntity);
 				var browserEntity   = this.browser.browserDataContext.ResolveEntity (localEntityKey);
 
-				data.DisposeBusinessContext (context);
+				context.Dispose ();
 
 				this.browser.InsertIntoCollection (browserEntity);
 				this.browser.SetActiveEntityKey (localEntityKey);
@@ -159,7 +157,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.browser.RefreshScrollList ();
 
 				return localEntity;
-#endif
 			}
 
 			private Druid GetRootEntityId()

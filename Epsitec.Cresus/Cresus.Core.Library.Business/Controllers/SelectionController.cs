@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.PossibleItemsGetter == null)
 			{
-				return this.businessContext.Data.GetAllEntities<T> (DataExtractionMode.Sorted);
+				return this.businessContext.Data.GetAllEntities<T> (DataExtractionMode.Sorted, this.businessContext.DataContext);
 			}
 			else
 			{

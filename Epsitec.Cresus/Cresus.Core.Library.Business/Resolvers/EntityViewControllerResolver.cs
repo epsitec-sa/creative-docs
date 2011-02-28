@@ -73,11 +73,10 @@ namespace Epsitec.Cresus.Core.Resolvers
 			//	generic EditionViewController base classes, which match the entity type (usually,
 			//	there should be exactly one such type).
 
-			var controllerTypes = from type in typeof (EntityViewController).Assembly.GetTypes ()
-								  where type.IsClass && !type.IsAbstract
-								  let baseType = type.BaseType
-								  where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
-								  let baseEntityType = baseType.GetGenericArguments ()[0]
+			var controllerTypes = from type in Epsitec.Common.Types.TypeEnumerator.Instance.GetAllTypes ()
+								  where type.IsClass && !type.IsAbstract && type.BaseType != null
+								     && type.BaseType.IsGenericType && type.BaseType.Name.StartsWith (baseTypeName)
+								  let baseEntityType = type.BaseType.GetGenericArguments ()[0]
 								  select new { Type = type, BaseEntityType = baseEntityType };
 
 			var types = from type in controllerTypes
