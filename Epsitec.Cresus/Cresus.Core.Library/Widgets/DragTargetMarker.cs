@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			linePath.Close ();
 
 			graphics.Rasterizer.AddSurface (linePath);
-			Painter.PaintLeftToRightGradient (graphics, lineRect, Color.FromAlphaColor (1.0, this.markerColor), Color.FromAlphaColor (0.0, this.markerColor));
+			graphics.PaintHorizontalGradient (lineRect, Color.FromAlphaColor (1.0, this.markerColor), Color.FromAlphaColor (0.0, this.markerColor));
 		}
 
 

@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var result = Widgets.HintComparerResult.NoMatch;
 
-			foreach (var text in value.Values)
+			foreach (var text in value.Values.Select (x => x.ToSimpleText ()))
 			{
 				var itemText = TextConverter.ConvertToLowerAndStripAccents (text);
 				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (itemText, userText));

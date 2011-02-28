@@ -134,11 +134,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					{
 						if (this.MouseHilite)
 						{
-							Painter.PaintCircleGradient (graphics, bounds, this.surfaceColors[1], this.surfaceColors[0]);
+							graphics.PaintCircularGradient (bounds, this.surfaceColors[1], this.surfaceColors[0]);
 						}
 						else
 						{
-							Painter.PaintLeftToRightGradient (graphics, bounds, this.surfaceColors[0], this.surfaceColors[1]);
+							graphics.PaintHorizontalGradient (bounds, this.surfaceColors[0], this.surfaceColors[1]);
 						}
 					}
 				}

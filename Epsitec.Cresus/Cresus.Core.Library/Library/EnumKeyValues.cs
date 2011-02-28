@@ -1,6 +1,8 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +20,27 @@ namespace Epsitec.Cresus.Core.Library
 			return new EnumKeyValues<T> (key, values);
 		}
 
-		public abstract string[] Values
+		public static IEnumerable<EnumKeyValues<T>> FromEnum<T>()
+			where T : struct
+		{
+			var typeObject = TypeRosetta.GetTypeObject (typeof (T));
+			var enumType   = typeObject as EnumType;
+
+			if (enumType == null)
+			{
+				yield break;
+			}
+
+			foreach (var item in enumType.Values)
+			{
+				var enumKey = (T) (object) item.Value;
+				var caption = item.Caption;
+
+				yield return EnumKeyValues.Create<T> (enumKey, caption.Labels.ToArray ());
+			}
+		}
+
+		public abstract FormattedText[] Values
 		{
 			get;
 		}

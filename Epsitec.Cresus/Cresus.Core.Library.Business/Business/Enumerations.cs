@@ -54,19 +54,12 @@ namespace Epsitec.Cresus.Core.Business
 
 		public static IEnumerable<EnumKeyValues<Finance.TaxMode>> GetAllPossibleTaxModes()
 		{
-			yield return EnumKeyValues.Create (Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");
-			yield return EnumKeyValues.Create (Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
-			yield return EnumKeyValues.Create (Finance.TaxMode.ExemptFromVat,   "Exonéré");
+			return EnumKeyValues.FromEnum<Finance.TaxMode> ();
 		}
 
 		public static IEnumerable<EnumKeyValues<Finance.CurrencyCode>> GetAllPossibleCurrencyCodes()
 		{
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Eur, "EUR", "Euro");
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Usd, "USD", "Dollar américain");
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
-			yield return EnumKeyValues.Create (Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
+			return EnumKeyValues.FromEnum<Finance.CurrencyCode> ();
 		}
 
 		public static IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> GetAllPossibleUnitOfMeasureCategories()

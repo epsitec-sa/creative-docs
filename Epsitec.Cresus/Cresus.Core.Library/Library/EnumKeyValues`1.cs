@@ -1,6 +1,8 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +18,7 @@ namespace Epsitec.Cresus.Core.Library
 		public EnumKeyValues(T key, params string[] values)
 		{
 			this.key = key;
-			this.values = values;
+			this.values = values.Select (x => new FormattedText (x)).ToArray ();
 		}
 
 
@@ -36,7 +38,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// Gets the values for the key.
 		/// </summary>
 		/// <value>The values.</value>
-		public override string[] Values
+		public override FormattedText[] Values
 		{
 			get
 			{
@@ -46,6 +48,6 @@ namespace Epsitec.Cresus.Core.Library
 
 
 		private readonly T key;
-		private readonly string[] values;
+		private readonly FormattedText[] values;
 	}
 }

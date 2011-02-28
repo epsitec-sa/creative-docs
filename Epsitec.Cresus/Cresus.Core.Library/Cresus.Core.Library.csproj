@@ -53,20 +53,19 @@
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
-    <Compile Include="EnumKeyValues`1.cs" />
+    <Compile Include="Library\EnumKeyValues`1.cs" />
     <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
-    <Compile Include="Dispatcher.cs" />
-    <Compile Include="EnumKeyValues.cs" />
-    <Compile Include="EnumValueCardinality.cs" />
-    <Compile Include="ICoreComponent.cs" />
-    <Compile Include="ICoreComponentHost.cs" />
+    <Compile Include="Library\Dispatcher.cs" />
+    <Compile Include="Library\EnumKeyValues.cs" />
+    <Compile Include="Library\EnumValueCardinality.cs" />
+    <Compile Include="Library\ICoreComponent.cs" />
+    <Compile Include="Library\ICoreComponentHost.cs" />
     <Compile Include="Misc.cs" />
-    <Compile Include="Painter.cs" />
-    <Compile Include="PersistenceManagerBinding`1.cs" />
-    <Compile Include="ExceptionManager.cs" />
-    <Compile Include="PersistenceManager.cs" />
-    <Compile Include="PersistenceManagerBinding.cs" />
+    <Compile Include="Library\PersistenceManagerBinding`1.cs" />
+    <Compile Include="Library\ExceptionManager.cs" />
+    <Compile Include="Library\PersistenceManager.cs" />
+    <Compile Include="Library\PersistenceManagerBinding.cs" />
     <Compile Include="PlugIns\ICorePlugIn.cs" />
     <Compile Include="PlugIns\PlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
@@ -77,12 +76,12 @@
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="TextFormatter.cs" />
-    <Compile Include="UI.Constants.cs" />
-    <Compile Include="UI.cs" />
-    <Compile Include="UI.CultureSettings.cs" />
-    <Compile Include="UI.Properties.cs" />
-    <Compile Include="UI.Toolkit.cs" />
-    <Compile Include="UI.WindowPlacementHint.cs" />
+    <Compile Include="Library\UI.Constants.cs" />
+    <Compile Include="Library\UI.cs" />
+    <Compile Include="Library\UI.CultureSettings.cs" />
+    <Compile Include="Library\UI.Properties.cs" />
+    <Compile Include="Library\UI.Toolkit.cs" />
+    <Compile Include="Library\UI.WindowPlacementHint.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
@@ -107,9 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -340,7 +340,7 @@ namespace Epsitec.Common.Drawing
 			this.Rasterizer.AddSurface (path);
 			this.RenderSolid ();
 		}
-		
+	
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
@@ -579,8 +579,45 @@ namespace Epsitec.Common.Drawing
 			this.RenderImage ();
 			this.ImageRenderer.BitmapImage = null;
 		}
-		
-		
+
+
+		public void PaintHorizontalGradient(Rectangle rect, Color leftColor, Color rightColor)
+		{
+			Transform ot = this.GradientRenderer.Transform;
+
+			this.GradientRenderer.Fill = GradientFill.X;
+			this.GradientRenderer.SetParameters (-100, 100);
+			this.GradientRenderer.SetColors (leftColor, rightColor);
+
+			Transform t = Transform.Identity;
+			Point center = rect.Center;
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+			this.GradientRenderer.Transform = t;
+			this.RenderGradient ();  // dégradé de gauche à droite
+			this.GradientRenderer.Transform = ot;
+		}
+
+		public void PaintCircularGradient(Rectangle rect, Color borderColor, Color centerColor)
+		{
+			Transform ot = this.GradientRenderer.Transform;
+
+			this.GradientRenderer.Fill = GradientFill.Circle;
+			this.GradientRenderer.SetParameters (0, 100);
+			this.GradientRenderer.SetColors (borderColor, centerColor);
+
+			Transform t = Transform.Identity;
+			Point center = rect.Center;
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+			this.GradientRenderer.Transform = t;
+			this.RenderGradient ();  // dégradé circulaire
+			this.GradientRenderer.Transform = ot;
+		}
+
+
+
+
 		public void AddLine(Point p1, Point p2)
 		{
 			this.AddLine (p1.X, p1.Y, p2.X, p2.Y);

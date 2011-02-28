@@ -65,8 +65,6 @@ namespace Epsitec.Common.Support
 			data.ThrowIf (s => s[0] != separatorChar && s[0] != escapeChar, "Invalid data");
 			separatorChar.ThrowIf (c => c == escapeChar, "Escape and separator char are the same.");
 
-			List<string> strings = null;
-
 			char prefix = data[0];
 
 			//	Prefix can either be the escape charater (the collection is empty) or the separator
