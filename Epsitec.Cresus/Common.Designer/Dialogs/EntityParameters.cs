@@ -19,14 +19,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.
-			if ( this.window == null )
+			this.isEditOk = false;
+
+			if (this.window == null)
 			{
 				this.window = new Window();
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("EntityParameters", 350, 250, true);
-				this.window.Text = Res.Strings.Dialog.EntityComment.Title;
+				this.WindowInit ("EntityParameters", 500, 150, true);
+				this.window.Text = Res.Strings.Dialog.EntityParameters.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
@@ -37,6 +39,115 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
+				var mainPane = new FrameBox
+				{
+					Parent = this.window.Root,
+					Dock = DockStyle.Fill,
+					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				};
+
+				var leftPane = new GroupBox
+				{
+					Parent = mainPane,
+					Text = "Espérance de vie des données",
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 8, 0, 0),
+					Padding = new Margins (8),
+				};
+
+				var rightPane = new GroupBox
+				{
+					Parent = mainPane,
+					Text = "Fanions",
+					Dock = DockStyle.Fill,
+					Padding = new Margins (8),
+				};
+
+				//	Rempli la colonne de gauche.
+				this.unknownButton = new RadioButton
+				{
+					Parent = leftPane,
+					Text = "Inconnue",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.unknownButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Unknown;
+					this.UpdateWidgets ();
+				};
+
+				this.volatileButton = new RadioButton
+				{
+					Parent = leftPane,
+					Text = "Volatile",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.volatileButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Volatile;
+					this.UpdateWidgets ();
+				};
+
+				this.stableButton = new RadioButton
+				{
+					Parent = leftPane,
+					Text = "Stable",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.stableButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Stable;
+					this.UpdateWidgets();
+				};
+
+				this.immutableButton = new RadioButton
+				{
+					Parent = leftPane,
+					Text = "Immuable",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.immutableButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
+					this.UpdateWidgets();
+				};
+
+				//	Rempli la colonne de droite.
+				this.generateSchemaButton = new CheckButton
+				{
+					Parent = rightPane,
+					Text = "Entité dans la base de données",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.generateSchemaButton.Clicked += delegate
+				{
+					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateSchema;
+					this.UpdateWidgets ();
+				};
+
+				this.generateRepositoryButton = new CheckButton
+				{
+					Parent = rightPane,
+					Text = "Génère automatiquement un \"repository\"",
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.generateRepositoryButton.Clicked += delegate
+				{
+					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateRepository;
+					this.UpdateWidgets ();
+				};
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -69,21 +180,36 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(string name)
-		{
-		}
-
-		public string SelectedText
+		public bool IsEditOk
 		{
 			get
 			{
-				return null;
+				return this.isEditOk;
 			}
 		}
 
-
-		protected void UpdateWidgets()
+		public DataLifetimeExpectancy DataLifetimeExpectancy
 		{
+			get;
+			set;
+		}
+
+		public StructuredTypeFlags StructuredTypeFlags
+		{
+			get;
+			set;
+		}
+
+
+		private void UpdateWidgets()
+		{
+			this.unknownButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Unknown) ? ActiveState.Yes : ActiveState.No;
+			this.volatileButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile) ? ActiveState.Yes : ActiveState.No;
+			this.stableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Stable) ? ActiveState.Yes : ActiveState.No;
+			this.immutableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Immutable) ? ActiveState.Yes : ActiveState.No;
+
+			this.generateSchemaButton.ActiveState = (this.StructuredTypeFlags == Types.StructuredTypeFlags.GenerateSchema) ? ActiveState.Yes : ActiveState.No;
+			this.generateRepositoryButton.ActiveState = (this.StructuredTypeFlags == Types.StructuredTypeFlags.GenerateRepository) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -107,10 +233,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			// TODO:
+			this.isEditOk = true;
 		}
 
-		protected Button						buttonOk;
-		protected Button						buttonCancel;
+
+		private bool						isEditOk;
+
+		private RadioButton					unknownButton;
+		private RadioButton					volatileButton;
+		private RadioButton					stableButton;
+		private RadioButton					immutableButton;
+
+		private CheckButton					generateSchemaButton;
+		private CheckButton					generateRepositoryButton;
+
+		private Button						buttonOk;
+		private Button						buttonCancel;
 	}
 }

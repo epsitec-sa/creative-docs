@@ -2477,12 +2477,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityComment.SelectedText;
 		}
 
-		public string DlgEntityParameters(string text)
+		public Dialogs.EntityParameters GetDlgEntityParameters()
 		{
-			//	Ouvre le dialogue pour choisir les paramètres d'une entité.
-			this.dlgEntityParameters.Initialise (text);
-			this.dlgEntityParameters.Show ();  // choix dans le dialogue...
-			return this.dlgEntityParameters.SelectedText;
+			//	Retourne le dialogue permettant de choisir les paramètres d'une entité.
+			return this.dlgEntityParameters;
 		}
 
 		public bool DlgEntityExpression(bool isInterface, bool isPatchModule, string deepExpression, ref string expression)

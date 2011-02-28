@@ -2360,8 +2360,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ChangeParameters()
 		{
 			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
-			Module module = this.editor.Module;
-			module.DesignerApplication.DlgEntityParameters ("");
+			var dialog = this.editor.Module.DesignerApplication.GetDlgEntityParameters ();
+
+			dialog.DataLifetimeExpectancy = DataLifetimeExpectancy.Unknown;
+			dialog.StructuredTypeFlags = StructuredTypeFlags.None;
+
+			dialog.Show ();
+
+			if (dialog.IsEditOk)
+			{
+				// TODO:
+			}
 		}
 
 		private Module SearchModule(Druid id)
