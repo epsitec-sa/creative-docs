@@ -2260,13 +2260,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				var flags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
 
 				builder.Append ("<br/>----------<br/>");
-
-				builder.Append ("Espérance de vie: ");
+				builder.Append (Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel);
+				builder.Append (": ");
 				builder.Append (lifetime.ToString ());
 				
 				builder.Append ("<br/>");
-				
-				builder.Append ("Fanions: ");
+				builder.Append (Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel);
+				builder.Append (": ");
 				builder.Append (flags.ToString ());
 			}
 

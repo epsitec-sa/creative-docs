@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				var leftPane = new GroupBox
 				{
 					Parent = mainPane,
-					Text = "Espérance de vie des données",
+					Text = Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 8, 0, 0),
 					Padding = new Margins (8),
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				var rightPane = new GroupBox
 				{
 					Parent = mainPane,
-					Text = "Fanions",
+					Text = Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
 					Padding = new Margins (8),
 				};
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.unknownButton = new RadioButton
 				{
 					Parent = leftPane,
-					Text = "Inconnue",
+					Text = Types.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.volatileButton = new RadioButton
 				{
 					Parent = leftPane,
-					Text = "Volatile",
+					Text = Types.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.stableButton = new RadioButton
 				{
 					Parent = leftPane,
-					Text = "Stable",
+					Text = Types.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.immutableButton = new RadioButton
 				{
 					Parent = leftPane,
-					Text = "Immuable",
+					Text = Types.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.generateSchemaButton = new CheckButton
 				{
 					Parent = rightPane,
-					Text = "Entité dans la base de données",
+					Text = Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.generateRepositoryButton = new CheckButton
 				{
 					Parent = rightPane,
-					Text = "Génère automatiquement un \"repository\"",
+					Text = Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
