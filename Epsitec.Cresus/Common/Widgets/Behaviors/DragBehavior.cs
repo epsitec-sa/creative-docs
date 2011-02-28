@@ -54,11 +54,20 @@ namespace Epsitec.Common.Widgets.Behaviors
 				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
-						if ((message.Button == MouseButtons.Left) &&
-							(message.ButtonDownCount == 1))
+						if (this.isDragging)
 						{
-							this.StartDragging (message, pos);
-							this.HandleDragging (message, pos);
+							message.Captured = true;
+							message.Consumer = this.widget;
+							message.Swallowed = true;
+						}
+						else
+						{
+							if (message.Button == MouseButtons.Left &&
+								message.ButtonDownCount == 1)
+							{
+								this.StartDragging (message, pos);
+								this.HandleDragging (message, pos);
+							}
 						}
 						break;
 					
@@ -78,9 +87,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 					
 					case MessageType.KeyDown:
 					case MessageType.KeyUp:
-						if ((message.KeyCode == KeyCode.AltKey) ||
-							(message.KeyCode == KeyCode.ShiftKey) ||
-							(message.KeyCode == KeyCode.ControlKey))
+						if (message.KeyCode == KeyCode.AltKey ||
+							message.KeyCode == KeyCode.ShiftKey ||
+							message.KeyCode == KeyCode.ControlKey)
 						{
 							this.HandleDragging (message, pos);
 						}

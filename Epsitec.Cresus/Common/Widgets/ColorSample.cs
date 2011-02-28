@@ -161,8 +161,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.dragInfo.Target != this)
 				{
-					if ((Message.CurrentState.IsShiftPressed) || 
-						(Message.CurrentState.IsControlPressed))
+					if (Message.CurrentState.IsShiftPressed || 
+						Message.CurrentState.IsControlPressed)
 					{
 						Drawing.RichColor temp = this.Color;
 						this.Color = this.dragInfo.Target.Color;
@@ -216,10 +216,10 @@ namespace Epsitec.Common.Widgets
 			//	If this sample is inside a color palette, we let the selected
 			//	sample of the palette handle the event instead :
 
-			if ((palette != null) &&
-				(sample != null) &&
-				(sample != this) &&
-				(mode == TabNavigationMode.ActivateOnTab))
+			if (palette != null &&
+				sample != null &&
+				sample != this &&
+				mode == TabNavigationMode.ActivateOnTab)
 			{
 				//	Avoid recursive calls to self (sample != this)...
 
@@ -244,8 +244,8 @@ namespace Epsitec.Common.Widgets
 			{
 				ColorSample sample = widget as ColorSample;
 
-				if ((sample != null) &&
-					(sample != this))
+				if (sample != null &&
+					sample != this)
 				{
 					//	Samples which are in the same group must be skipped;
 					//	they cannot be reached through the TAB key.
@@ -267,8 +267,8 @@ namespace Epsitec.Common.Widgets
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
 			//	clavier change quand on montre le DragWindow.
 
-			if ((dragHost != null) &&
-				(message.IsKeyType))
+			if (dragHost != null &&
+				message.IsKeyType)
 			{
 				//	Signalons l'événement clavier à l'auteur du drag :
 
@@ -280,15 +280,15 @@ namespace Epsitec.Common.Widgets
 				{
 					case MessageType.KeyDown:
 					case MessageType.KeyUp:
-						if ((message.MessageType == MessageType.KeyDown) &&
-							(this.ProcessKeyDown (message.KeyCode)))
+						if (message.MessageType == MessageType.KeyDown &&
+							this.ProcessKeyDown (message.KeyCode))
 						{
 							message.Consumer = this;
 							return;
 						}
 
-						if ((message.KeyCode == KeyCode.ShiftKey) ||
-							(message.KeyCode == KeyCode.ControlKey))
+						if (message.KeyCode == KeyCode.ShiftKey ||
+							message.KeyCode == KeyCode.ControlKey)
 						{
 							if (this.dragInfo != null)
 							{
@@ -300,8 +300,8 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 
-				if ((this.DragSourceEnable == false) ||
-					(!this.dragBehavior.ProcessMessage (message, pos)))
+				if (this.DragSourceEnable == false ||
+					!this.dragBehavior.ProcessMessage (message, pos))
 				{
 					base.ProcessMessage (message, pos);
 				}

@@ -951,6 +951,11 @@ namespace Epsitec.Common.Widgets
 			{
 				get { return this.buttons; }
 			}
+
+			public int							ButtonDownCount
+			{
+				get { return this.buttonDownCount; }
+			}
 			
 			public ModifierKeys					ModifierKeys
 			{
