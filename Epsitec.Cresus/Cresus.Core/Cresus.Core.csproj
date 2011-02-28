@@ -183,7 +183,6 @@
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
-    <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
@@ -199,7 +198,6 @@
     <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
-    <Compile Include="Entities\IDataHashExtension.cs" />
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
@@ -224,9 +222,6 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
-    <Compile Include="PlugIns\ICorePlugIn.cs" />
-    <Compile Include="PlugIns\PlugInAttribute.cs" />
-    <Compile Include="PlugIns\PlugInFactory.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
     <Compile Include="Repositories\DocumentCategoryRepository.cs" />
@@ -264,7 +259,6 @@
     <Compile Include="TableDesigner\TableController.cs" />
     <Compile Include="TableDesigner\TableDesignerController.cs" />
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
-    <Compile Include="V11\ImportFile.cs" />
     <Compile Include="Repositories\AffairRepository.cs" />
     <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
@@ -580,10 +574,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Widgets\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

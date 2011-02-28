@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class V11ImportDialog : AbstractDialog
 	{
-		public V11ImportDialog(CoreApplication application, List<V11.V11AbstractLine> records)
+		public V11ImportDialog(Application application, List<V11.V11AbstractLine> records)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		private readonly CoreApplication				application;
+		private readonly Application					application;
 		private readonly List<V11.V11AbstractLine>		records;
 
 		private CellTable								table;

@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed partial class CoreData : System.IDisposable
+	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>
 	{
 		public CoreData(bool forceDatabaseCreation, bool allowDatabaseUpdate)
 		{
@@ -88,6 +88,9 @@ namespace Epsitec.Cresus.Core
 			private set;
 		}
 
+
+		#region ICoreComponentHost Interface
+
 		public T GetComponent<T>()
 			where T : CoreDataComponent
 		{
@@ -111,6 +114,15 @@ namespace Epsitec.Cresus.Core
 			return this.registeredComponents;
 		}
 
+		public bool ContainsComponent<T>()
+			where T : CoreDataComponent
+		{
+			string componentName = typeof (T).FullName;
+			return this.components.ContainsKey (componentName);
+		}
+
+		#endregion
+
 		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
 		{
 			switch (lifetimeExpectancy)
@@ -123,13 +135,6 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return this.activeDataContext;
-		}
-
-		private bool ContainsComponent<T>()
-			where T : CoreDataComponent
-		{
-			string componentName = typeof (T).FullName;
-			return this.components.ContainsKey (componentName);
 		}
 
 		internal bool ContainsComponent(string name)

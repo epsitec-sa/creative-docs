@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.V11
 		/// </summary>
 		/// <param name="application"></param>
 		/// <returns></returns>
-		public V11Message Import(CoreApplication application)
+		public V11Message Import(Application application)
 		{
 			string filename = this.OpenFileDialog (application);
 
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.V11
 				FormattedText description = TextFormatter.FormatText ("Importation réussie de", this.records.Count.ToString(), "lignes");
 				MessageDialog.CreateOk ("Terminé", DialogIcon.Question, description.ToString ()).OpenDialog ();
 #else
-				var dialog = new Dialogs.V11ImportDialog (CoreProgram.Application, this.records);
+				var dialog = new Dialogs.V11ImportDialog (application, this.records);
 				dialog.IsModal = true;
 				dialog.OpenDialog ();
 #endif
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.V11
 		}
 
 
-		private string OpenFileDialog(CoreApplication application)
+		private string OpenFileDialog(Application application)
 		{
 			var dialog = new FileOpenDialog ();
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.V11
 			return dialog.FileName;
 		}
 
-		private void ReadFile(CoreApplication application, string filename)
+		private void ReadFile(Application application, string filename)
 		{
 			this.records.Clear ();
 			this.errors.Clear ();

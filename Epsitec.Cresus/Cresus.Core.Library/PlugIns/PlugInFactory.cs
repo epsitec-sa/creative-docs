@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +16,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 	/// </summary>
 	public class PlugInFactory
 	{
-		public PlugInFactory(CoreApplication application)
+		public PlugInFactory(ICoreComponentHost<ICoreComponent> application)
 		{
 			this.records = new List<PlugInRecord> ();
 			this.application = application;
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 		}
 
 
-		public CoreApplication Application
+		public ICoreComponentHost<ICoreComponent> Application
 		{
 			get
 			{
@@ -102,6 +104,6 @@ namespace Epsitec.Cresus.Core.PlugIns
 		#endregion
 
 		private readonly List<PlugInRecord>		records;
-		private readonly CoreApplication		application;
+		private readonly ICoreComponentHost<ICoreComponent>	application;
 	}
 }

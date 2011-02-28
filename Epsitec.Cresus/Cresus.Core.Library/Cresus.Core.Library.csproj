@@ -54,12 +54,17 @@
     <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Dispatcher.cs" />
+    <Compile Include="ICoreComponent.cs" />
+    <Compile Include="ICoreComponentHost.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="PersistenceManagerBinding`1.cs" />
     <Compile Include="ExceptionManager.cs" />
     <Compile Include="PersistenceManager.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
+    <Compile Include="PlugIns\ICorePlugIn.cs" />
+    <Compile Include="PlugIns\PlugInAttribute.cs" />
+    <Compile Include="PlugIns\PlugInFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />

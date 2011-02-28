@@ -1,12 +1,14 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public abstract class CoreDataComponent
+	public abstract class CoreDataComponent : ICoreComponent
 	{
 		protected CoreDataComponent(CoreData data)
 		{

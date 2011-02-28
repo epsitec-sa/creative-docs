@@ -65,6 +65,7 @@
     <Compile Include="Business\Finance\VatCode.cs" />
     <Compile Include="Business\Finance\VatCodeRate.cs" />
     <Compile Include="Business\IsrHelper.cs" />
+    <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Business\IsrType.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Res.cs" />
+    <Compile Include="V11\ImportFile.cs" />
     <Compile Include="V11\V11AbstractLine.cs" />
     <Compile Include="V11\V11Error.cs" />
     <Compile Include="V11\V11LineBVRTransaction.cs" />

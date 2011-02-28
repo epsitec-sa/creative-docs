@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core
 	/// The <c>CoreApplication</c> class implements the central application
 	/// logic.
 	/// </summary>
-	public partial class CoreApplication : Application
+	public partial class CoreApplication : Application, ICoreComponentHost<ICoreComponent>
 	{
 		public CoreApplication()
 		{
@@ -310,6 +310,27 @@ namespace Epsitec.Cresus.Core
 		}
 		#endregion
 
+
+		#region ICoreComponentHost<ICoreComponent> Members
+
+		public T GetComponent<T>()
+			where T : ICoreComponent
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public IEnumerable<ICoreComponent> GetComponents()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public bool ContainsComponent<T>()
+			where T : ICoreComponent
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
 
 		internal void CreateUI()
 		{
