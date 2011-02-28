@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIBirthDate(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
-			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
+			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.DateOfBirth, x => this.Entity.DateOfBirth = x));
 		}
 
 		private void CreateUIPictures(UIBuilder builder)

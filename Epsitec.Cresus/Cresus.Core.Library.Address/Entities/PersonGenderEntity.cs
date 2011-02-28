@@ -4,32 +4,26 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class CountryEntity
+	public partial class PersonGenderEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					"Pays: ", this.Name, "\n",
-					"Code: ", this.Code
-				);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "(", this.Code, ")");
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Name.ToSimpleText (), this.Code };
+			return new string[] { this.Name.ToSimpleText () };
 		}
 
 		public override EntityStatus GetEntityStatus()

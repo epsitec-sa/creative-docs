@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Print",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.BusinessLogic", "Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj", "{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Address", "Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj", "{5D9704AF-69C1-4E71-8DF3-4455DC41D731}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -838,6 +840,24 @@ Global
 		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|Win32.ActiveCfg = Release|Any CPU
 		{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}.Release|x86.ActiveCfg = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5D9704AF-69C1-4E71-8DF3-4455DC41D731}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

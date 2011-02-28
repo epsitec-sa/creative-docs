@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateWarning   (tile);
 			builder.CreateTextField (tile,  0, "Pays",                    Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
-			builder.CreateTextField (tile, 80, "Code ISO à deux lettres", Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
+			builder.CreateTextField (tile, 80, "Code ISO à deux lettres", Marshaler.Create (() => this.Entity.CountryCode, x => this.Entity.CountryCode = x));
 		}
 	}
 }

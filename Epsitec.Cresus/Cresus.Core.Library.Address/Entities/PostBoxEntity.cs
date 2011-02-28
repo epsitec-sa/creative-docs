@@ -4,24 +4,16 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class StreetEntity
+	public partial class PostBoxEntity
 	{
 		public override EntityStatus GetEntityStatus()
 		{
-			using (var a = new EntityStatusAccumulator ())
-			{
-				a.Accumulate (this.StreetName.GetEntityStatus ());
-				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
-
-				return a.EntityStatus;
-			}
+			return this.Number.GetEntityStatus ();
 		}
 	}
 }

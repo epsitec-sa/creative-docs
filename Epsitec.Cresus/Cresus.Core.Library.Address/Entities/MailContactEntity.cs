@@ -4,8 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,7 +28,7 @@ namespace Epsitec.Cresus.Core.Entities
 					this.Address.Street.Complement, "\n",
 					this.Address.PostBox.Number, "\n",
 					TextFormatter.Mark,
-					this.Address.Location.Country.Code, "~-", this.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
+					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
 					TextFormatter.Mark,
 					this.Address.Location.Name
 				);

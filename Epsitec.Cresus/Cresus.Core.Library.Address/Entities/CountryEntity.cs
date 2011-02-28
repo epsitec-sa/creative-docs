@@ -4,41 +4,38 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class AddressEntity
+	public partial class CountryEntity
 	{
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
 				(
-					this.Street.StreetName, "\n",
-					this.Location.PostalCode, this.Location.Name
+					"Pays: ", this.Name, "\n",
+					"Code: ", this.CountryCode
 				);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Street.StreetName, ", ", this.Location.Country.Code, "-", this.Location.PostalCode, this.Location.Name);
+			return TextFormatter.FormatText (this.Name, "(", this.CountryCode, ")");
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Street.StreetName.ToSimpleText (), this.Location.Country.Code, this.Location.PostalCode.ToSimpleText (), this.Location.Name.ToSimpleText () };
+			return new string[] { this.Name.ToSimpleText (), this.CountryCode };
 		}
 
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Street.GetEntityStatus ());
-				a.Accumulate (this.PostBox.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.Location.GetEntityStatus ());
+				a.Accumulate (this.CountryCode.GetEntityStatus ());
+				a.Accumulate (this.Name.GetEntityStatus ());
 
 				return a.EntityStatus;
 			}

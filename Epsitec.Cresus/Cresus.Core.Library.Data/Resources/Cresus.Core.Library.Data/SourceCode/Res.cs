@@ -12,8 +12,16 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+			}
+			
+			//	designer:cap/8VAQ
+			public static readonly Epsitec.Common.Types.StructuredType Comment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
 			//	designer:cap/8VAM
 			public static readonly Epsitec.Common.Types.StructuredType ICategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
+			//	designer:cap/8VAS
+			public static readonly Epsitec.Common.Types.StructuredType IComments = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
 			//	designer:cap/8VAB
 			public static readonly Epsitec.Common.Types.StructuredType IDataHash = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 			//	designer:cap/8VA9
@@ -32,12 +40,38 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType ILifetime = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 			//	designer:cap/8VA6
 			public static readonly Epsitec.Common.Types.StructuredType INameDescription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+			//	designer:cap/8VAU
+			public static readonly Epsitec.Common.Types.StructuredType Language = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 		}
 		
 		public static class Fields
 		{
+			public static class Comment
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAR
+				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+			}
+			
+			public static class IComments
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAT
+				public static readonly global::Epsitec.Common.Support.Druid Comments = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
+			}
+			
 			public static class IDataHash
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VAD
 				public static readonly global::Epsitec.Common.Support.Druid StrongHash = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 				//	designer:cap/8VAC
@@ -46,6 +80,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class IDateMetadata
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VAH
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
 				//	designer:cap/8VAI
@@ -54,6 +92,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class IDateRange
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VAO
 				public static readonly global::Epsitec.Common.Support.Druid BeginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
 				//	designer:cap/8VAP
@@ -62,6 +104,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class IDateTimeRange
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VAK
 				public static readonly global::Epsitec.Common.Support.Druid BeginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
 				//	designer:cap/8VAL
@@ -70,6 +116,10 @@ namespace Epsitec.Cresus.Core
 			
 			public static class IFileMetadata
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VAG
 				public static readonly global::Epsitec.Common.Support.Druid FileMimeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
 				//	designer:cap/8VAE
@@ -80,28 +130,54 @@ namespace Epsitec.Cresus.Core
 			
 			public static class IItemCode
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VA5
 				public static readonly global::Epsitec.Common.Support.Druid Code = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5);
 			}
 			
 			public static class IItemRank
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VA1
 				public static readonly global::Epsitec.Common.Support.Druid Rank = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
 			}
 			
 			public static class ILifetime
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VA3
 				public static readonly global::Epsitec.Common.Support.Druid IsArchive = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 			}
 			
 			public static class INameDescription
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/8VA8
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/8VA7
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+			}
+			
+			public static class Language
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAV
+				public static readonly global::Epsitec.Common.Support.Druid IsoLanguageCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
 			}
 		}
 		
@@ -196,6 +272,19 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Data");
+			Types._Initialize ();
+			Fields.Comment._Initialize ();
+			Fields.IComments._Initialize ();
+			Fields.IDataHash._Initialize ();
+			Fields.IDateMetadata._Initialize ();
+			Fields.IDateRange._Initialize ();
+			Fields.IDateTimeRange._Initialize ();
+			Fields.IFileMetadata._Initialize ();
+			Fields.IItemCode._Initialize ();
+			Fields.IItemRank._Initialize ();
+			Fields.ILifetime._Initialize ();
+			Fields.INameDescription._Initialize ();
+			Fields.Language._Initialize ();
 		}
 		
 		public static void Initialize()

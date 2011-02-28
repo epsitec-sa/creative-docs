@@ -717,7 +717,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				}
 				else
 				{
-					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext).Where (x => x.Country.Code == this.selectedCountry.Code);
+					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext).Where (x => x.Country.CountryCode == this.selectedCountry.CountryCode);
 				}
 			}
 		}
@@ -740,11 +740,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void InitializeDefaultCountry()
 		{
-			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.Code))  // pays indéfini ?
+			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.CountryCode))  // pays indéfini ?
 			{
 				foreach (var country in this.Data.GetAllEntities<CountryEntity> ().ToList ())
 				{
-					if (country.Code == "CH")
+					if (country.CountryCode == "CH")
 					{
 						var localCountry = this.BusinessContext.GetLocalEntity (country);
 

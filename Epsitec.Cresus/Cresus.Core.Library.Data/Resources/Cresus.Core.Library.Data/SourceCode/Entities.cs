@@ -4,6 +4,8 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VAQ]", typeof (Epsitec.Cresus.Core.Entities.CommentEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VAU]", typeof (Epsitec.Cresus.Core.Entities.LanguageEntity))]
 #region Epsitec.Cresus.Core.IItemRank Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -608,6 +610,186 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnEndDateChanged(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		static partial void OnEndDateChanging(global::Epsitec.Cresus.Core.Entities.IDateRange obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.Comment Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>Comment</c> entity.
+	///	designer:cap/8VAQ
+	///	</summary>
+	public partial class CommentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Text</c> field.
+		///	designer:fld/8VAQ/8VAR
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAR]")]
+		public global::Epsitec.Common.Types.FormattedText Text
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[8VAR]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
+				if (oldValue != value || !this.IsFieldDefined("[8VAR]"))
+				{
+					this.OnTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[8VAR]", oldValue, value);
+					this.OnTextChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CommentEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CommentEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 26);	// [8VAQ]
+		public static readonly new string EntityStructuredTypeKey = "[8VAQ]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IComments Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IComments</c> entity.
+	///	designer:cap/8VAS
+	///	</summary>
+	public interface IComments
+	{
+		///	<summary>
+		///	The <c>Comments</c> field.
+		///	designer:fld/8VAS/8VAT
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAT]")]
+		global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
+		{
+			get;
+		}
+	}
+	public static partial class ICommentsInterfaceImplementation
+	{
+		public static global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> GetComments(global::Epsitec.Cresus.Core.Entities.IComments obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[8VAT]");
+		}
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.Language Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>Language</c> entity.
+	///	designer:cap/8VAU
+	///	</summary>
+	public partial class LanguageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/8VAU/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/8VAU/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/8VAU/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>IsoLanguageCode</c> field.
+		///	designer:fld/8VAU/8VAV
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAV]")]
+		public string IsoLanguageCode
+		{
+			get
+			{
+				return this.GetField<string> ("[8VAV]");
+			}
+			set
+			{
+				string oldValue = this.IsoLanguageCode;
+				if (oldValue != value || !this.IsFieldDefined("[8VAV]"))
+				{
+					this.OnIsoLanguageCodeChanging (oldValue, value);
+					this.SetField<string> ("[8VAV]", oldValue, value);
+					this.OnIsoLanguageCodeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnIsoLanguageCodeChanging(string oldValue, string newValue);
+		partial void OnIsoLanguageCodeChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.LanguageEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.LanguageEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 30);	// [8VAU]
+		public static readonly new string EntityStructuredTypeKey = "[8VAU]";
 	}
 }
 #endregion

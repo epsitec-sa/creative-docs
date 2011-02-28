@@ -178,17 +178,13 @@
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Dialogs\TableDesignerFileExportDialog.cs" />
     <Compile Include="Dialogs\TableDesignerFileImportDialog.cs" />
-    <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
-    <Compile Include="Entities\ContactGroupEntity.cs" />
     <Compile Include="Entities\ArticleGroupEntity.cs" />
     <Compile Include="Entities\ArticleDefinitionEntity.cs" />
     <Compile Include="Entities\ArticleCategoryEntity.cs" />
     <Compile Include="Entities\BusinessSettingsEntity.cs" />
     <Compile Include="Entities\ArticleQuantityEntity.cs" />
-    <Compile Include="Entities\AddressEntity.cs" />
-    <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
     <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
@@ -198,24 +194,15 @@
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
-    <Compile Include="Entities\PostBoxEntity.cs" />
-    <Compile Include="Entities\StreetEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
-    <Compile Include="Entities\PersonGenderEntity.cs" />
     <Compile Include="Entities\DocumentMetadataEntity.cs" />
-    <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\BusinessDocumentEntity.cs" />
-    <Compile Include="Entities\LocationEntity.cs" />
     <Compile Include="Entities\RelationEntity.cs" />
-    <Compile Include="Entities\PersonTitleEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureEntity.cs" />
     <Compile Include="Entities\UriContactEntity.cs" />
     <Compile Include="Entities\TelecomContactEntity.cs" />
-    <Compile Include="Entities\MailContactEntity.cs" />
-    <Compile Include="Entities\LegalPersonEntity.cs" />
-    <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
@@ -409,6 +396,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
+      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
+      <Name>Cresus.Core.Library.Address</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
       <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>

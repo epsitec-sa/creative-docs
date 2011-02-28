@@ -4,39 +4,35 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PersonTitleEntity
+	public partial class LocationEntity
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					"Abrégé: ", this.ShortName, "\n",
-					"Complet: ", this.Name
-				);
+			return TextFormatter.FormatText ("Pays: ", this.Country.Name, "\n", "Numéro postal: ", this.PostalCode, "\n", "Ville: ", this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "(", this.ShortName, ")");
+			return TextFormatter.FormatText (this.Country.CountryCode, "-", this.PostalCode, this.Name);
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Name.ToSimpleText (), this.ShortName.ToSimpleText () };
+			return new string[] { this.Country.CountryCode, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus GetEntityStatus()
+		public override EntityStatus GetEntityStatus ()
 		{
+			//	We consider a location to be empty if it has neither postal code, nor
+			//	location name; a location with just a coutry or region is still empty.
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.ShortName.GetEntityStatus ());
+				a.Accumulate (this.PostalCode.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
 
 				return a.EntityStatus;
