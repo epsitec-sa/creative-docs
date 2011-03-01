@@ -2256,19 +2256,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			if (this.cultureMap != null)
-			{
-				builder.Append ("<br/>----------<br/>");
-				builder.Append (Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel);
-				builder.Append (": ");
-				builder.Append (this.dataLifetimeExpectancy.ToString ());
-				
-				builder.Append ("<br/>");
-				builder.Append (Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel);
-				builder.Append (": ");
-				builder.Append (this.structuredTypeFlags.ToString ());
-			}
-
 			return builder.ToString ();
 		}
 
@@ -3821,6 +3808,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 			this.fields = newFields;  // la nouvelle liste propre remplace la liste désérialisée
+
+			this.dataLifetimeExpectancy = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			this.structuredTypeFlags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
 
 			this.UpdateFieldsContent();
 			this.UpdateSources();
