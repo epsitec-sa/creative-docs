@@ -11,5 +11,7 @@ namespace Epsitec.Common.Types
 
 		GenerateSchema		= 0x00000001,
 		GenerateRepository	= 0x00000002,
+
+		AbstractClass		= 0x00000100,
 	}
 }

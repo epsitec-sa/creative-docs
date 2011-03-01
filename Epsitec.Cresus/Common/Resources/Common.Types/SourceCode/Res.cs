@@ -481,6 +481,14 @@ namespace Epsitec.Common.Types
 				{
 				}
 				
+				//	designer:cap/10AK
+				public static global::Epsitec.Common.Types.Caption AbstractClass
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
+					}
+				}
 				//	designer:cap/10K8
 				public static global::Epsitec.Common.Types.Caption GenerateRepository
 				{

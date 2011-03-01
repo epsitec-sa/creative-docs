@@ -80,4 +80,5 @@
   <data id="K6">&lt;s:data id="_0" f:Labels="{Collection {Text 'None'}}" /&gt;</data>
   <data id="K7">&lt;s:data id="_0" f:Labels="{Collection {Text 'Generate schema'}}" /&gt;</data>
   <data id="K8">&lt;s:data id="_0" f:Labels="{Collection {Text 'Generate repository'}}" /&gt;</data>
+  <data id="AK">&lt;s:data id="_0" /&gt;</data>
 </bundle>
