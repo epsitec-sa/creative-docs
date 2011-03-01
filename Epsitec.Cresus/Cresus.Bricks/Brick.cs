@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Bricks
 			this.properties.Add (property);
 		}
 
-		public void DebugDump(string prefix = "")
+		internal void DebugDump(string prefix = "")
 		{
 			foreach (var property in this.properties)
 			{

@@ -45,11 +45,16 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="InputBrick.cs" />
     <Compile Include="InternalBaseBrick.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />
     <Compile Include="BrickPropertyKey.cs" />
+    <Compile Include="InternalInputBrick.cs" />
     <Compile Include="InternalSimpleBrick.cs" />
+    <Compile Include="Mortar.cs" />
+    <Compile Include="Mortar`1.cs" />
+    <Compile Include="Mortar`2.cs" />
     <Compile Include="TemplateBrick.cs" />
     <Compile Include="SimpleBrick.cs" />
     <Compile Include="BrickWall`1.cs" />

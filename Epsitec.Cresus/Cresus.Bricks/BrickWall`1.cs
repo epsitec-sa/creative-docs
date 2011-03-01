@@ -14,6 +14,15 @@ namespace Epsitec.Cresus.Bricks
 			this.bricks = new List<Brick> ();
 		}
 
+		public SimpleBrick<T, T> AddBrick()
+		{
+			var brick = new SimpleBrick<T, T> ();
+
+			this.bricks.Add (brick);
+
+			return brick;
+		}
+
 		public SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
 		{
 			var brick = new SimpleBrick<T, TField> ();
@@ -23,6 +32,17 @@ namespace Epsitec.Cresus.Bricks
 			return brick;
 		}
 
-		private List<Brick> bricks;
+		public SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
+		{
+			var brick = new SimpleBrick<T, TField> ();
+
+			brick.AddProperty (new BrickProperty (BrickPropertyKey.CollectionAnnotation, typeof (TField).FullName));
+
+			this.bricks.Add (brick);
+
+			return brick;
+		}
+
+		private readonly List<Brick> bricks;
 	}
 }

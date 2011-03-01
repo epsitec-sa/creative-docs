@@ -53,47 +53,60 @@ namespace Epsitec.Cresus.Bricks
 		[TestMethod]
 		public void CheckSyntax()
 		{
-			var wall = new BrickWall<Foo> ();
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			watch.Start ();
 
-			wall.AddBrick (x => x.Name)
-				.Name ("name")
-				.Icon ("icon")
-				.Title ("title")
-				.Template ()
-				.Title ("template title")
-				.Text ("template text")
-				.End ()
-				.DebugDump ();
+			for (int i = -1; i < 1000; i++)
+			{
+				var wall = new BrickWall<Foo> ();
 
-			wall.AddBrick (x => x.Bar)
-				.Name ("name")
-				.Icon ("icon")
-				.Title ("title")
-				.Template ()
-				.Title ("template title")
-				.Title (x => string.Format ("{0}", x.Value))
-				.Title (x => x.Value)
-				.Text ("template text")
-				.End ()
-				.DebugDump ();
+				wall.AddBrick (x => x.Name)
+					.Name ("name")
+					.Icon ("icon")
+					.Title ("title")
+					.Template ()
+					.Title ("template title")
+					.Text ("template text")
+					.End ();
 
-			wall.AddBrick (x => x)
-				.Title ("Article")
-				.Icon ("Data.Article")
+				wall.AddBrick (x => x.Bars)
+					.Name ("name")
+					.Icon ("icon")
+					.Title ("title")
+					.Template ()
+					.Title ("template title")
+					.Title (x => string.Format ("{0}", x.Value))
+					.Title (x => x.Value)
+					.Text ("template text")
+					.End ();
 
-				.Input ()
-				 .Title ("N° d'article")
-				 .Field (x => x.Id).Width (74)
-				.End ()
+				wall.AddBrick ()
+					.Title ("Article")
+					.Icon ("Data.Article")
 
-				.Separator ()
+					.Input ()
+					 .Title ("N° d'article")
+					 .Field (x => x.Id).Width (74)
+					.End ()
 
-				.Input ()
-				 .Title ("Nom de l'article")
-				 .Field (x => x.Name)
-				.End ()
+					.Separator ()
 
-				.DebugDump ();
+					.Input ()
+					 .Title ("Nom de l'article")
+					 .Field (x => x.Name)
+					.End ();
+				
+				if (i < 0)
+				{
+					watch.Stop ();
+					System.Diagnostics.Debug.WriteLine (string.Format ("First iteration took {0} ms", watch.ElapsedMilliseconds));
+					watch.Reset ();
+					watch.Start ();
+				}
+			}
+
+			watch.Stop ();
+			System.Diagnostics.Debug.WriteLine (string.Format ("Executed loop in {0} ms", watch.ElapsedMilliseconds));
 		}
 
 		class Foo
@@ -108,8 +121,7 @@ namespace Epsitec.Cresus.Bricks
 				get;
 				set;
 			}
-
-			public Bar Bar
+			public IList<Bar> Bars
 			{
 				get;
 				set;

@@ -26,8 +26,9 @@ namespace Epsitec.Cresus.Bricks
 
 		public TSelf Title<TResult>(Expression<System.Func<TSource, TResult>> expression)
 		{
-			return this.Title (new Mortar<TSource> (expression));
+			return this.Title (new Mortar<TSource, TResult> (expression));
 		}
+		
 		public TSelf Title(Mortar<TSource> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value.ToString ()));
@@ -36,36 +37,8 @@ namespace Epsitec.Cresus.Bricks
 		
 		public TSelf Separator()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Separator, ""));
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Separator));
 			return this as TSelf;
 		}
-	}
-
-	public class Mortar<T>
-	{
-		public Mortar(Expression expression)
-		{
-			this.textValue = expression.ToString ();
-		}
-
-		public Mortar(string value)
-		{
-			this.textValue = value;
-		}
-		public static implicit operator Mortar<T>(string value)
-		{
-			return new Mortar<T> (value);
-		}
-		public static implicit operator Mortar<T>(FormattedText value)
-		{
-			return new Mortar<T> (value.ToString ());
-		}
-
-		public override string ToString()
-		{
-			return this.textValue;
-		}
-
-		private readonly string textValue;
 	}
 }

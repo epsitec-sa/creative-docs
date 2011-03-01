@@ -8,6 +8,11 @@ namespace Epsitec.Cresus.Bricks
 {
 	public struct BrickProperty
 	{
+		public BrickProperty(BrickPropertyKey key)
+			: this (key, "")
+		{
+		}
+
 		public BrickProperty(BrickPropertyKey key, string value)
 		{
 			this.key = key;
@@ -26,15 +31,7 @@ namespace Epsitec.Cresus.Bricks
 			this.value = value;
 		}
 
-		public Brick Brick
-		{
-			get
-			{
-				return this.value as Brick;
-			}
-		}
-
-		public BrickPropertyKey Key
+		public BrickPropertyKey					Key
 		{
 			get
 			{
@@ -42,6 +39,14 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 		
+		public Brick							Brick
+		{
+			get
+			{
+				return this.value as Brick;
+			}
+		}
+
 		public override string ToString()
 		{
 			return string.Format ("{0} = {1}", this.key, this.value ?? "<null>");
