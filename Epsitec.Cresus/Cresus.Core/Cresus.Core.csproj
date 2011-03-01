@@ -93,7 +93,6 @@
     <Compile Include="Business\Actions\AffairActions.cs" />
     <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
-    <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
