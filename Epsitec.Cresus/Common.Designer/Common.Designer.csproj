@@ -90,6 +90,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\EntityCreation.cs" />
     <Compile Include="Dialogs\EntityParameters.cs" />
     <Compile Include="Dialogs\FileSaveImageDialog.cs" />
     <Compile Include="Dialogs\LabelReplacement.cs" />

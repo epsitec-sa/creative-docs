@@ -46,112 +46,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Titre supérieur.
-				Widget header = new Widget(this.window.Root);
-				header.PreferredHeight = 34;
-				header.Dock = DockStyle.Top;
-
-				this.title = new StaticText(header);
-				this.title.ContentAlignment = ContentAlignment.TopLeft;
-				this.title.Dock = DockStyle.Fill;
-
-				this.radioEntities = new RadioButton(header);
-				this.radioEntities.Text = "Entités";
-				this.radioEntities.Name = "Entities";
-				this.radioEntities.PreferredWidth = 70;
-				this.radioEntities.Dock = DockStyle.Right;
-				this.radioEntities.Clicked += this.HandleRadioClicked;
-
-				this.radioTypes = new RadioButton(header);
-				this.radioTypes.Text = "Types";
-				this.radioTypes.Name = "Types";
-				this.radioTypes.PreferredWidth = 70;
-				this.radioTypes.Dock = DockStyle.Right;
-				this.radioTypes.Clicked += this.HandleRadioClicked;
-
-				this.checkInterface = new CheckButton(header);
-				this.checkInterface.AutoToggle = false;
-				this.checkInterface.Text = "<font size=\"130%\"><b>Interface</b></font>";
-				this.checkInterface.Name = "Interface";
-				this.checkInterface.PreferredWidth = 110;
-				this.checkInterface.Dock = DockStyle.Left;
-				this.checkInterface.Clicked += this.HandleRadioClicked;
-
-				this.radioAlone = new RadioButton(header);
-				this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
-				this.radioAlone.Name = "Alone";
-				this.radioAlone.PreferredWidth = 130;
-				this.radioAlone.Dock = DockStyle.Left;
-				this.radioAlone.Clicked += this.HandleRadioClicked;
-
-				this.radioInherit = new RadioButton(header);
-				this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
-				this.radioInherit.Name = "Inherit";
-				this.radioInherit.PreferredWidth = 240;
-				this.radioInherit.Dock = DockStyle.Left;
-				this.radioInherit.Clicked += this.HandleRadioClicked;
-
-				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
-				sep.PreferredHeight = 1;
-				sep.Dock = DockStyle.Top;
-
-				//	Corps principal.
-				Widget body = new Widget(this.window.Root);
-				body.Dock = DockStyle.Fill;
-
-				Widget left = new Widget(body);
-				left.MinWidth = 150;
-				left.MinHeight = 100;
-				left.Dock = DockStyle.Left;
-
-				this.splitter = new VSplitter(body);
-				this.splitter.Dock = DockStyle.Left;
-				this.splitter.Margins = new Margins(8, 8, 0, 0);
-
-				Widget right = new Widget(body);
-				right.MinWidth = 150;
-				right.MinHeight = 100;
-				right.Dock = DockStyle.Fill;
-
-				//	Partie gauche.
-				this.header1 = new StaticText(left);
-				this.header1.Text = "Modules";
-				this.header1.Dock = DockStyle.Top;
-				this.header1.Margins = new Margins(0, 0, 5, 5);
-
-				this.listModules = new ScrollList(left);
-				this.listModules.Dock = DockStyle.Fill;
-				this.listModules.Margins = new Margins(0, 0, 0, 8);
-				this.listModules.TabIndex = 1;
-				this.listModules.SelectedItemChanged += this.HandleListModulesSelected;
-
-				//	Partie droite.
-				this.header2 = new StaticText(right);
-				this.header2.Text = "Ressources";
-				this.header2.Dock = DockStyle.Top;
-				this.header2.Margins = new Margins(0, 0, 5, 5);
-
-				this.listResources = new ScrollList(right);
-				this.listResources.Dock = DockStyle.Fill;
-				this.listResources.Margins = new Margins(0, 0, 0, 8);
-				this.listResources.TabIndex = 2;
-				this.listResources.SelectedItemChanged += this.HandleListResourcesSelected;
-				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
+				this.CreateUI (this.window.Root);
 
 				//	Boutons de fermeture.
-				Widget footer = new Widget(this.window.Root);
+				var footer = new Widget (this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Margins = new Margins (0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonIsNullable = new CheckButton(footer);
-				this.buttonIsNullable.Text = "Accepte d'être nul";
-				this.buttonIsNullable.PreferredWidth = 140;
-				this.buttonIsNullable.Dock = DockStyle.Left;
-				this.buttonIsNullable.TabIndex = 10;
-				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.buttonCancel = new Button(footer);
+				this.buttonCancel = new Button (footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
@@ -160,28 +63,142 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = 12;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonUse = new Button(footer);
+				this.buttonUse = new Button (footer);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
-				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
+				this.buttonUse.Margins = new Margins (0, 6, 0, 0);
 				this.buttonUse.Clicked += this.HandleButtonUseClicked;
 				this.buttonUse.TabIndex = 11;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				sep = new Separator(this.window.Root);  // trait horizontal de séparation
-				sep.PreferredHeight = 1;
-				sep.Dock = DockStyle.Bottom;
 			}
 
-			this.UpdateTitle();
-			this.UpdateArray();
-			this.UpdateButtons();
-			this.UpdateRadios();
-			this.UpdateInherit();
+			this.Update ();
 
 			this.window.ShowDialog();
+		}
+
+		public void CreateUI(Widget parent)
+		{
+			//	Titre supérieur.
+			var mainPane = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+			};
+
+			Widget header = new Widget (mainPane);
+			header.PreferredHeight = 34;
+			header.Dock = DockStyle.Top;
+
+			this.title = new StaticText (header);
+			this.title.ContentAlignment = ContentAlignment.TopLeft;
+			this.title.Dock = DockStyle.Fill;
+
+			this.radioEntities = new RadioButton (header);
+			this.radioEntities.Text = "Entités";
+			this.radioEntities.Name = "Entities";
+			this.radioEntities.PreferredWidth = 70;
+			this.radioEntities.Dock = DockStyle.Right;
+			this.radioEntities.Clicked += this.HandleRadioClicked;
+
+			this.radioTypes = new RadioButton (header);
+			this.radioTypes.Text = "Types";
+			this.radioTypes.Name = "Types";
+			this.radioTypes.PreferredWidth = 70;
+			this.radioTypes.Dock = DockStyle.Right;
+			this.radioTypes.Clicked += this.HandleRadioClicked;
+
+			this.checkInterface = new CheckButton (header);
+			this.checkInterface.AutoToggle = false;
+			this.checkInterface.Text = "<font size=\"130%\"><b>Interface</b></font>";
+			this.checkInterface.Name = "Interface";
+			this.checkInterface.PreferredWidth = 110;
+			this.checkInterface.Dock = DockStyle.Left;
+			this.checkInterface.Clicked += this.HandleRadioClicked;
+
+			this.radioAlone = new RadioButton (header);
+			this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
+			this.radioAlone.Name = "Alone";
+			this.radioAlone.PreferredWidth = 130;
+			this.radioAlone.Dock = DockStyle.Left;
+			this.radioAlone.Clicked += this.HandleRadioClicked;
+
+			this.radioInherit = new RadioButton (header);
+			this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
+			this.radioInherit.Name = "Inherit";
+			this.radioInherit.PreferredWidth = 240;
+			this.radioInherit.Dock = DockStyle.Left;
+			this.radioInherit.Clicked += this.HandleRadioClicked;
+
+			Separator sep = new Separator (mainPane);  // trait horizontal de séparation
+			sep.PreferredHeight = 1;
+			sep.Dock = DockStyle.Top;
+
+			//	Corps principal.
+			Widget body = new Widget (mainPane);
+			body.Dock = DockStyle.Fill;
+
+			Widget left = new Widget (body);
+			left.MinWidth = 150;
+			left.MinHeight = 100;
+			left.Dock = DockStyle.Left;
+
+			this.splitter = new VSplitter (body);
+			this.splitter.Dock = DockStyle.Left;
+			this.splitter.Margins = new Margins (8, 8, 0, 0);
+
+			Widget right = new Widget (body);
+			right.MinWidth = 150;
+			right.MinHeight = 100;
+			right.Dock = DockStyle.Fill;
+
+			//	Partie gauche.
+			this.header1 = new StaticText (left);
+			this.header1.Text = "Modules";
+			this.header1.Dock = DockStyle.Top;
+			this.header1.Margins = new Margins (0, 0, 5, 5);
+
+			this.listModules = new ScrollList (left);
+			this.listModules.Dock = DockStyle.Fill;
+			this.listModules.Margins = new Margins (0, 0, 0, 8);
+			this.listModules.TabIndex = 1;
+			this.listModules.SelectedItemChanged += this.HandleListModulesSelected;
+
+			//	Partie droite.
+			this.header2 = new StaticText (right);
+			this.header2.Text = "Ressources";
+			this.header2.Dock = DockStyle.Top;
+			this.header2.Margins = new Margins (0, 0, 5, 5);
+
+			this.listResources = new ScrollList (right);
+			this.listResources.Dock = DockStyle.Fill;
+			this.listResources.Margins = new Margins (0, 0, 0, 8);
+			this.listResources.TabIndex = 2;
+			this.listResources.SelectedItemChanged += this.HandleListResourcesSelected;
+			this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
+
+			//	Pied.
+			this.buttonIsNullable = new CheckButton (mainPane);
+			this.buttonIsNullable.Text = "Accepte d'être nul";
+			this.buttonIsNullable.Dock = DockStyle.Bottom;
+			this.buttonIsNullable.Margins = new Margins (0, 0, 5, 0);
+			this.buttonIsNullable.TabIndex = 10;
+			this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			sep = new Separator (mainPane);  // trait horizontal de séparation
+			sep.PreferredHeight = 1;
+			sep.Dock = DockStyle.Bottom;
+		}
+
+		public void Update()
+		{
+			this.UpdateTitle ();
+			this.UpdateArray ();
+			this.UpdateButtons ();
+			this.UpdateRadios ();
+			this.UpdateInherit ();
 		}
 
 
@@ -278,6 +295,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				return this.buttonIsNullable.ActiveState == ActiveState.Yes;
+			}
+		}
+
+		public Druid Resource
+		{
+			get
+			{
+				return this.resource;
 			}
 		}
 
@@ -394,10 +419,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			return true;
 		}
 			
-		public Common.Dialogs.DialogResult AccessClose(out Druid resource)
+		public Common.Dialogs.DialogResult AccessClose()
 		{
 			//	Fin de l'accès aux ressources pour le dialogue.
-			resource = this.resource;
 			return this.result;
 		}
 
@@ -468,13 +492,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
-			if (this.operation == Operation.InheritEntities)
+			if (this.buttonUse != null)
 			{
-				this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1 || !this.IsInherit);
-			}
-			else
-			{
-				this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1);
+				if (this.operation == Operation.InheritEntities)
+				{
+					this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1 || !this.IsInherit);
+				}
+				else
+				{
+					this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1);
+				}
 			}
 		}
 
@@ -493,7 +520,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.Visibility = true;
 				this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
 
-				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				if (this.buttonUse != null)
+				{
+					this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				}
 
 				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 				this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
@@ -508,7 +538,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioInherit.Visibility = true;
 				this.buttonIsNullable.Visibility = false;
 
-				this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
+				if (this.buttonUse != null)
+				{
+					this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
+				}
 			}
 			else
 			{
@@ -520,7 +553,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioInherit.Visibility = false;
 				this.buttonIsNullable.Visibility = false;
 
-				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				if (this.buttonUse != null)
+				{
+					this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				}
 			}
 		}
 

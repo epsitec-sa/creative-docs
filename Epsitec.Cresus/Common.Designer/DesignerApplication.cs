@@ -103,6 +103,7 @@ namespace Epsitec.Common.Designer
 				this.dlgLabelReplacement = new Dialogs.LabelReplacement(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment (this);
 				this.dlgEntityParameters = new Dialogs.EntityParameters (this);
+				this.dlgEntityCreation   = new Dialogs.EntityCreation (this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
 
@@ -2397,8 +2398,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
 			this.dlgBindingSelector.Initialise(baseModule, type, objectType, binding);
+
 			this.dlgBindingSelector.Show();  // choix dans le dialogue...
+			
 			binding = this.dlgBindingSelector.SelectedBinding;
+			
 			return this.dlgBindingSelector.IsOk;
 		}
 
@@ -2407,10 +2411,14 @@ namespace Epsitec.Common.Designer
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid) d'un type à choix.
 			this.dlgResourceSelector.AccessOpen(operation, baseModule, type, resource, isNullable, exclude, typeId);
 			this.dlgResourceSelector.StructuredTypeClass = typeClass;
+
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
+			
 			typeClass = this.dlgResourceSelector.StructuredTypeClass;
+			resource = this.dlgResourceSelector.Resource;
 			isNullable = this.dlgResourceSelector.IsNullable;
-			return this.dlgResourceSelector.AccessClose(out resource);
+			
+			return this.dlgResourceSelector.AccessClose();
 		}
 
 		public string DlgIcon(ResourceManager manager, string icon)
@@ -2419,7 +2427,9 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 			this.dlgIcon.SetResourceManager(manager, mi.Module.ModuleId.Name);
 			this.dlgIcon.IconValue = icon;
+
 			this.dlgIcon.Show();
+			
 			return this.dlgIcon.IconValue;
 		}
 
@@ -2436,7 +2446,9 @@ namespace Epsitec.Common.Designer
 			//	Ouvre le dialogue pour choisir le type d'un Caption.Type.
 			this.dlgResourceTypeCode.ResourceAccess = access;
 			this.dlgResourceTypeCode.ContentType = type;
+
 			this.dlgResourceTypeCode.Show();
+			
 			type = this.dlgResourceTypeCode.ContentType;
 			stype = this.dlgResourceTypeCode.SystemType;
 		}
@@ -2445,7 +2457,9 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour choisir le nom d'un champ.
 			this.dlgFieldName.Initialise(operation, type, name);
+
 			this.dlgFieldName.Show();  // choix dans le dialogue...
+			
 			return this.dlgFieldName.SelectedName;
 		}
 
@@ -2453,11 +2467,14 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour choisir les paramètres d'un champ d'une entité.
 			this.dlgEntityField.AccessOpen(baseModule, type, prefix, fieldName, resource, isNullable, isCollection, isPrivate);
+
 			this.dlgEntityField.Show();  // choix dans le dialogue...
+			
 			fieldName = this.dlgEntityField.FieldName;
 			isNullable = this.dlgEntityField.IsNullable;
 			isCollection = this.dlgEntityField.IsCollection;
 			isPrivate = this.dlgEntityField.IsPrivate;
+			
 			return this.dlgEntityField.AccessClose(out resource);
 		}
 
@@ -2489,6 +2506,37 @@ namespace Epsitec.Common.Designer
 			{
 				lifetime = this.dlgEntityParameters.DataLifetimeExpectancy;
 				flags    = this.dlgEntityParameters.StructuredTypeFlags;
+
+				return Common.Dialogs.DialogResult.Accept;
+			}
+			else
+			{
+				return Common.Dialogs.DialogResult.Cancel;
+			}
+		}
+
+		public Common.Dialogs.DialogResult DlgEntityCreation(Module module, ref string name, ref StructuredTypeClass typeClass, ref Druid resource, ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
+		{
+			//	Ouvre le dialogue pour créer une entité.
+			this.dlgEntityCreation.ResourceName.Initialise (Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, name);
+
+			this.dlgEntityCreation.ResourceSelector.AccessOpen (Dialogs.ResourceSelector.Operation.InheritEntities, module, Common.Designer.ResourceAccess.Type.Entities, resource, false, null, Druid.Empty);
+			this.dlgEntityCreation.ResourceSelector.StructuredTypeClass = typeClass;
+
+			this.dlgEntityCreation.EntityParameters.DataLifetimeExpectancy = lifetime;
+			this.dlgEntityCreation.EntityParameters.StructuredTypeFlags    = flags;
+
+			this.dlgEntityCreation.Show ();  // choix dans le dialogue...
+
+			if (this.dlgEntityCreation.IsEditOk)
+			{
+				name = this.dlgEntityCreation.ResourceName.SelectedName;
+
+				typeClass  = this.dlgEntityCreation.ResourceSelector.StructuredTypeClass;
+				resource   = this.dlgEntityCreation.ResourceSelector.Resource;
+
+				lifetime = this.dlgEntityCreation.EntityParameters.DataLifetimeExpectancy;
+				flags    = this.dlgEntityCreation.EntityParameters.StructuredTypeFlags;
 
 				return Common.Dialogs.DialogResult.Accept;
 			}
@@ -2720,6 +2768,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.LabelReplacement		dlgLabelReplacement;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityParameters		dlgEntityParameters;
+		protected Dialogs.EntityCreation		dlgEntityCreation;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected Dialogs.InitialMessage		dlgInitialMessage;
 		protected PanelsContext					context;

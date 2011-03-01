@@ -104,6 +104,9 @@ namespace Epsitec.Common.Designer
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
 			this.collectionView.Filter = this.CollectionViewFilter;
+
+			this.lastLifetime = DataLifetimeExpectancy.Stable;
+			this.lastFlags = StructuredTypeFlags.None;
 		}
 
 
@@ -578,6 +581,38 @@ namespace Epsitec.Common.Designer
 			}
 			else if (this.type == Type.Entities && !duplicateContent)
 			{
+#if true
+				var typeClass = StructuredTypeClass.Entity;
+				var druid     = Druid.Empty;
+				var lifetime  = this.lastLifetime;
+				var flags     = this.lastFlags;
+
+				var result = this.designerApplication.DlgEntityCreation (this.ownerModule, ref newName, ref typeClass, ref druid, ref lifetime, ref flags);
+
+				if (result != Common.Dialogs.DialogResult.Accept)
+				{
+					return false;
+				}
+
+				if (!Misc.IsValidLabel (ref newName, true))
+				{
+					this.designerApplication.DialogError (Res.Strings.Error.Name.Invalid);
+					return false;
+				}
+
+				newItem = this.accessor.CreateItem ();
+				newItem.Name = newName;
+
+				StructuredData data = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Class, typeClass);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.BaseType, druid);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags, flags);
+
+				this.lastLifetime = lifetime;
+				this.lastFlags    = flags;
+#else
 				//	Demande le nom.
 				newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
 				if (string.IsNullOrEmpty(newName))
@@ -621,6 +656,7 @@ namespace Epsitec.Common.Designer
 
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     flags);
+#endif
 			}
 			else if (this.type == Type.Forms && !duplicateContent)
 			{
@@ -2795,5 +2831,8 @@ namespace Epsitec.Common.Designer
 		protected System.Globalization.CultureInfo			primaryCulture;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
 		protected System.Type								lastTypeCodeSystem = null;
+
+		protected DataLifetimeExpectancy					lastLifetime;
+		protected StructuredTypeFlags						lastFlags;
 	}
 }

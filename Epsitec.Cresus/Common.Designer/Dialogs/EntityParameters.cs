@@ -39,130 +39,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				var mainPane = new FrameBox
-				{
-					Parent = this.window.Root,
-					Dock = DockStyle.Fill,
-					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				};
-
-				var leftPane = new GroupBox
-				{
-					Parent = mainPane,
-					Text = Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (0, 4, 0, 0),
-					Padding = new Margins (8),
-				};
-
-				var rightPane = new GroupBox
-				{
-					Parent = mainPane,
-					Text = Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 0, 0, 0),
-					Padding = new Margins (8),
-				};
-
-				//	Rempli la colonne de gauche.
-				this.abstractClassButton = new CheckButton
-				{
-					Parent = leftPane,
-					Text = Support.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.abstractClassButton.Clicked += delegate
-				{
-					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.AbstractClass;
-					this.UpdateWidgets ();
-				};
-
-				this.generateSchemaButton = new CheckButton
-				{
-					Parent = leftPane,
-					Text = Support.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.generateSchemaButton.Clicked += delegate
-				{
-					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateSchema;
-					this.UpdateWidgets ();
-				};
-
-				this.generateRepositoryButton = new CheckButton
-				{
-					Parent = leftPane,
-					Text = Support.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.generateRepositoryButton.Clicked += delegate
-				{
-					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateRepository;
-					this.UpdateWidgets ();
-				};
-
-				//	Rempli la colonne de droite.
-				this.unknownButton = new RadioButton
-				{
-					Parent = rightPane,
-					Text = Support.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.unknownButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Unknown;
-					this.UpdateWidgets ();
-				};
-
-				this.volatileButton = new RadioButton
-				{
-					Parent = rightPane,
-					Text = Support.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.volatileButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Volatile;
-					this.UpdateWidgets ();
-				};
-
-				this.stableButton = new RadioButton
-				{
-					Parent = rightPane,
-					Text = Support.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.stableButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Stable;
-					this.UpdateWidgets ();
-				};
-
-				this.immutableButton = new RadioButton
-				{
-					Parent = rightPane,
-					Text = Support.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.immutableButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
-					this.UpdateWidgets ();
-				};
+				this.CreateUI (this.window.Root);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -190,9 +67,142 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateWidgets ();
+			this.Update ();
 
 			this.window.ShowDialog();
+		}
+
+		public void CreateUI(Widget parent)
+		{
+			var mainPane = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var leftPane = new GroupBox
+			{
+				Parent = mainPane,
+				Text = Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 4, 0, 0),
+				Padding = new Margins (8),
+			};
+
+			var rightPane = new GroupBox
+			{
+				Parent = mainPane,
+				Text = Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (4, 0, 0, 0),
+				Padding = new Margins (8),
+			};
+
+			//	Rempli la colonne de gauche.
+			this.abstractClassButton = new CheckButton
+			{
+				Parent = leftPane,
+				Text = Support.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.abstractClassButton.Clicked += delegate
+			{
+				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.AbstractClass;
+				this.UpdateWidgets ();
+			};
+
+			this.generateSchemaButton = new CheckButton
+			{
+				Parent = leftPane,
+				Text = Support.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.generateSchemaButton.Clicked += delegate
+			{
+				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateSchema;
+				this.UpdateWidgets ();
+			};
+
+			this.generateRepositoryButton = new CheckButton
+			{
+				Parent = leftPane,
+				Text = Support.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.generateRepositoryButton.Clicked += delegate
+			{
+				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateRepository;
+				this.UpdateWidgets ();
+			};
+
+			//	Rempli la colonne de droite.
+			this.unknownButton = new RadioButton
+			{
+				Parent = rightPane,
+				Text = Support.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.unknownButton.Clicked += delegate
+			{
+				this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Unknown;
+				this.UpdateWidgets ();
+			};
+
+			this.volatileButton = new RadioButton
+			{
+				Parent = rightPane,
+				Text = Support.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.volatileButton.Clicked += delegate
+			{
+				this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Volatile;
+				this.UpdateWidgets ();
+			};
+
+			this.stableButton = new RadioButton
+			{
+				Parent = rightPane,
+				Text = Support.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.stableButton.Clicked += delegate
+			{
+				this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Stable;
+				this.UpdateWidgets ();
+			};
+
+			this.immutableButton = new RadioButton
+			{
+				Parent = rightPane,
+				Text = Support.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.immutableButton.Clicked += delegate
+			{
+				this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
+				this.UpdateWidgets ();
+			};
+		}
+
+		public void Update()
+		{
+			this.UpdateWidgets ();
 		}
 
 		public bool IsEditOk

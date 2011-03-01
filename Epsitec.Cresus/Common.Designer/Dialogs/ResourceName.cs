@@ -32,7 +32,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.
-			if ( this.window == null )
+			this.isEditOk = false;
+
+			if (this.window == null)
 			{
 				this.window = new Window();
 				this.window.Icon = this.designerApplication.Icon;
@@ -45,31 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
-				//	Titre supérieur.
-				this.title = new StaticText(this.window.Root);
-				this.title.ContentAlignment = ContentAlignment.TopLeft;
-				this.title.PreferredHeight = 34;
-				this.title.Dock = DockStyle.Top;
-
-				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
-				sep.PreferredHeight = 1;
-				sep.Dock = DockStyle.Top;
-
-				//	Partie principale.
-				Widget band = new Widget(this.window.Root);
-				band.Margins = new Margins(0, 0, 20, 0);
-				band.Dock = DockStyle.Top;
-
-				StaticText label = new StaticText(band);
-				label.Text = "Nom";
-				label.ContentAlignment = ContentAlignment.MiddleRight;
-				label.PreferredWidth = 40;
-				label.Margins = new Margins(0, 8, 0, 0);
-				label.Dock = DockStyle.Left;
-
-				this.resourceName = new TextField(band);
-				this.resourceName.Dock = DockStyle.Fill;
-				this.resourceName.TabIndex = 1;
+				this.CreateUI (this.window.Root);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -97,10 +75,52 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateTitle();
-			this.UpdateName();
+			this.Update ();
 
 			this.window.ShowDialog();
+		}
+
+		public void CreateUI(Widget parent)
+		{
+			//	Titre supérieur.
+			this.title = new StaticText (parent);
+			this.title.ContentAlignment = ContentAlignment.TopLeft;
+			this.title.PreferredHeight = 34;
+			this.title.Dock = DockStyle.Top;
+
+			Separator sep = new Separator (parent);  // trait horizontal de séparation
+			sep.PreferredHeight = 1;
+			sep.Dock = DockStyle.Top;
+
+			//	Partie principale.
+			Widget band = new Widget (parent);
+			band.Margins = new Margins (0, 0, 20, 0);
+			band.Dock = DockStyle.Top;
+
+			StaticText label = new StaticText (band);
+			label.Text = "Nom";
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.PreferredWidth = 40;
+			label.Margins = new Margins (0, 8, 0, 0);
+			label.Dock = DockStyle.Left;
+
+			this.resourceName = new TextField (band);
+			this.resourceName.Dock = DockStyle.Fill;
+			this.resourceName.TabIndex = 1;
+		}
+
+		public void Update()
+		{
+			this.UpdateTitle ();
+			this.UpdateName ();
+		}
+
+		public bool IsEditOk
+		{
+			get
+			{
+				return this.isEditOk;
+			}
 		}
 
 		public void Initialise(Operation operation, Type type, string name)
@@ -108,14 +128,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.operation = operation;
 			this.type = type;
 			this.initialName = name;
-			this.selectedName = null;
 		}
 
 		public string SelectedName
 		{
 			get
 			{
-				return this.selectedName;
+				return this.resourceName.Text;
 			}
 		}
 
@@ -166,7 +185,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			text = string.Concat("<font size=\"200%\"><b>", string.Format(text, type), "</b></font>");
 			this.title.Text = text;
 
-			this.buttonOk.Text = ok;
+			if (this.buttonOk != null)
+			{
+				this.buttonOk.Text = ok;
+			}
 		}
 
 		protected void UpdateName()
@@ -197,14 +219,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedName = this.resourceName.Text;
+			this.isEditOk = true;
 		}
 
 
+		private bool							isEditOk;
 		protected Operation						operation;
 		protected Type							type;
 		protected string						initialName;
-		protected string						selectedName;
 		protected StaticText					title;
 		protected TextField						resourceName;
 		protected Button						buttonOk;
