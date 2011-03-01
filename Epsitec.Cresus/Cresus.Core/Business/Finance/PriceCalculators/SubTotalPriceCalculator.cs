@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		
 		private readonly BusinessDocumentEntity		document;
 		private readonly SubTotalDocumentItemEntity	totalItem;
-		private readonly DiscountEntity				discount;
+		private readonly PriceDiscountEntity				discount;
 		private readonly CurrencyCode				currencyCode;
 
 		private GroupPriceCalculator				group;

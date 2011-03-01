@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		private decimal ApplyDiscount(decimal price, DiscountEntity discount)
+		private decimal ApplyDiscount(decimal price, PriceDiscountEntity discount)
 		{
 			if (discount.IsNull ())
 			{
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private decimal ApplyDiscountRatio(DiscountEntity discount, decimal priceBeforeTax, decimal tax, decimal discountRatio)
+		private decimal ApplyDiscountRatio(PriceDiscountEntity discount, decimal priceBeforeTax, decimal tax, decimal discountRatio)
 		{
 			if (discount.ValueIncludesTaxes)
 			{
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		private decimal ApplyDiscountFixed(DiscountEntity discount, decimal price, decimal tax, decimal discountAmount)
+		private decimal ApplyDiscountFixed(PriceDiscountEntity discount, decimal price, decimal tax, decimal discountAmount)
 		{
 			if (discount.ValueIncludesTaxes)
 			{

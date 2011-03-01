@@ -8,11 +8,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 
@@ -98,7 +95,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns>The <see cref="DimensionTable"/>.</returns>
 		private DimensionTable DeserializePriceTable(byte[] tableDataAsByteArray)
 		{
-			string tableDataAsXmlString = Encoding.UTF8.GetString (tableDataAsByteArray);
+			string tableDataAsXmlString = System.Text.Encoding.UTF8.GetString (tableDataAsByteArray);
 			XElement xTable = XElement.Parse (tableDataAsXmlString);
 			DimensionTable table = DimensionTable.XmlImport (xTable);
 
@@ -115,7 +112,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			XElement xTable = table.XmlExport ();
 			string tableDataAsXmlString = xTable.ToString (SaveOptions.DisableFormatting);
-			byte[] tableDataAsByteArray = Encoding.UTF8.GetBytes (tableDataAsXmlString);
+			byte[] tableDataAsByteArray = System.Text.Encoding.UTF8.GetBytes (tableDataAsXmlString);
 
 			return tableDataAsByteArray;
 		}

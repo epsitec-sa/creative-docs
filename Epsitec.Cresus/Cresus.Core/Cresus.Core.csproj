@@ -188,8 +188,6 @@
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
-    <Compile Include="Entities\PriceCalculatorEntity.cs" />
-    <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />

@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (this.Entity.Discounts.Count == 0)
 				{
-					var discount = this.DataContext.CreateEntity<DiscountEntity> ();
+					var discount = this.DataContext.CreateEntity<PriceDiscountEntity> ();
 					this.Entity.Discounts.Add (discount);
 				}
 

@@ -66,6 +66,12 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 			//	designer:cap/CVA22
 			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
+			//	designer:cap/CVAF4
+			public static readonly Epsitec.Common.Types.StructuredType PriceCalculator = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 143));
+			//	designer:cap/CVA44
+			public static readonly Epsitec.Common.Types.StructuredType PriceDiscount = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 132));
+			//	designer:cap/CVAA4
+			public static readonly Epsitec.Common.Types.StructuredType PriceGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 138));
 			//	designer:cap/CVA24
 			public static readonly Epsitec.Common.Types.StructuredType PriceRoundingMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 130));
 			//	designer:cap/CVAP3
@@ -757,6 +763,52 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid ExtraPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 			}
 			
+			public static class PriceCalculator
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAH4
+				public static readonly global::Epsitec.Common.Support.Druid Informations = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 145);
+				//	designer:cap/CVAG4
+				public static readonly global::Epsitec.Common.Support.Druid SerializedData = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 144);
+			}
+			
+			public static class PriceDiscount
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVA64
+				public static readonly global::Epsitec.Common.Support.Druid DiscountRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134);
+				//	designer:cap/CVA94
+				public static readonly global::Epsitec.Common.Support.Druid RoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
+				//	designer:cap/CVA54
+				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133);
+				//	designer:cap/CVA74
+				public static readonly global::Epsitec.Common.Support.Druid Value = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 135);
+				//	designer:cap/CVA84
+				public static readonly global::Epsitec.Common.Support.Druid ValueIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 136);
+			}
+			
+			public static class PriceGroup
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAC4
+				public static readonly global::Epsitec.Common.Support.Druid DefaultDivideRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 140);
+				//	designer:cap/CVAD4
+				public static readonly global::Epsitec.Common.Support.Druid DefaultMultiplyRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 141);
+				//	designer:cap/CVAE4
+				public static readonly global::Epsitec.Common.Support.Druid DefaultRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 142);
+				//	designer:cap/CVAB4
+				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 139);
+			}
+			
 			public static class PriceRoundingMode
 			{
 				internal static void _Initialize()
@@ -864,6 +916,9 @@ namespace Epsitec.Cresus.Core
 			Fields.PaymentDetail._Initialize ();
 			Fields.PaymentMode._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
+			Fields.PriceCalculator._Initialize ();
+			Fields.PriceDiscount._Initialize ();
+			Fields.PriceGroup._Initialize ();
 			Fields.PriceRoundingMode._Initialize ();
 			Fields.TaxSettings._Initialize ();
 			Fields.VatDefinition._Initialize ();

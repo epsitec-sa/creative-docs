@@ -15,6 +15,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAP3]", typeof (Epsitec.Cresus.Core.Entities.TaxSettingsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAT3]", typeof (Epsitec.Cresus.Core.Entities.FinanceSettingsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA24]", typeof (Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVA44]", typeof (Epsitec.Cresus.Core.Entities.PriceDiscountEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAA4]", typeof (Epsitec.Cresus.Core.Entities.PriceGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAF4]", typeof (Epsitec.Cresus.Core.Entities.PriceCalculatorEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1742,6 +1745,467 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 130);	// [CVA24]
 		public static readonly new string EntityStructuredTypeKey = "[CVA24]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PriceDiscount Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PriceDiscount</c> entity.
+	///	designer:cap/CVA44
+	///	</summary>
+	public partial class PriceDiscountEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Text</c> field.
+		///	designer:fld/CVA44/CVA54
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA54]")]
+		public global::Epsitec.Common.Types.FormattedText Text
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[CVA54]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
+				if (oldValue != value || !this.IsFieldDefined("[CVA54]"))
+				{
+					this.OnTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[CVA54]", oldValue, value);
+					this.OnTextChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DiscountRate</c> field.
+		///	designer:fld/CVA44/CVA64
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA64]")]
+		public global::System.Decimal? DiscountRate
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[CVA64]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.DiscountRate;
+				if (oldValue != value || !this.IsFieldDefined("[CVA64]"))
+				{
+					this.OnDiscountRateChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVA64]", oldValue, value);
+					this.OnDiscountRateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Value</c> field.
+		///	designer:fld/CVA44/CVA74
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA74]")]
+		public global::System.Decimal? Value
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[CVA74]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.Value;
+				if (oldValue != value || !this.IsFieldDefined("[CVA74]"))
+				{
+					this.OnValueChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVA74]", oldValue, value);
+					this.OnValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ValueIncludesTaxes</c> field.
+		///	designer:fld/CVA44/CVA84
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA84]")]
+		public bool ValueIncludesTaxes
+		{
+			get
+			{
+				return this.GetField<bool> ("[CVA84]");
+			}
+			set
+			{
+				bool oldValue = this.ValueIncludesTaxes;
+				if (oldValue != value || !this.IsFieldDefined("[CVA84]"))
+				{
+					this.OnValueIncludesTaxesChanging (oldValue, value);
+					this.SetField<bool> ("[CVA84]", oldValue, value);
+					this.OnValueIncludesTaxesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RoundingMode</c> field.
+		///	designer:fld/CVA44/CVA94
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA94]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity RoundingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVA94]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
+				if (oldValue != value || !this.IsFieldDefined("[CVA94]"))
+				{
+					this.OnRoundingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVA94]", oldValue, value);
+					this.OnRoundingModeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDiscountRateChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDiscountRateChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnValueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnValueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnValueIncludesTaxesChanging(bool oldValue, bool newValue);
+		partial void OnValueIncludesTaxesChanged(bool oldValue, bool newValue);
+		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 132);	// [CVA44]
+		public static readonly new string EntityStructuredTypeKey = "[CVA44]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PriceGroup Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PriceGroup</c> entity.
+	///	designer:cap/CVAA4
+	///	</summary>
+	public partial class PriceGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVAA4/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVAA4/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVAA4/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>NeverApplyDiscount</c> field.
+		///	designer:fld/CVAA4/CVAB4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAB4]")]
+		public bool NeverApplyDiscount
+		{
+			get
+			{
+				return this.GetField<bool> ("[CVAB4]");
+			}
+			set
+			{
+				bool oldValue = this.NeverApplyDiscount;
+				if (oldValue != value || !this.IsFieldDefined("[CVAB4]"))
+				{
+					this.OnNeverApplyDiscountChanging (oldValue, value);
+					this.SetField<bool> ("[CVAB4]", oldValue, value);
+					this.OnNeverApplyDiscountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultDivideRatio</c> field.
+		///	designer:fld/CVAA4/CVAC4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAC4]")]
+		public global::System.Decimal? DefaultDivideRatio
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[CVAC4]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.DefaultDivideRatio;
+				if (oldValue != value || !this.IsFieldDefined("[CVAC4]"))
+				{
+					this.OnDefaultDivideRatioChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVAC4]", oldValue, value);
+					this.OnDefaultDivideRatioChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultMultiplyRatio</c> field.
+		///	designer:fld/CVAA4/CVAD4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAD4]")]
+		public global::System.Decimal? DefaultMultiplyRatio
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[CVAD4]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.DefaultMultiplyRatio;
+				if (oldValue != value || !this.IsFieldDefined("[CVAD4]"))
+				{
+					this.OnDefaultMultiplyRatioChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVAD4]", oldValue, value);
+					this.OnDefaultMultiplyRatioChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultRoundingMode</c> field.
+		///	designer:fld/CVAA4/CVAE4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAE4]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity DefaultRoundingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVAE4]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultRoundingMode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAE4]"))
+				{
+					this.OnDefaultRoundingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVAE4]", oldValue, value);
+					this.OnDefaultRoundingModeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
+		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
+		partial void OnDefaultDivideRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultDivideRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultMultiplyRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnDefaultRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 138);	// [CVAA4]
+		public static readonly new string EntityStructuredTypeKey = "[CVAA4]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PriceCalculator Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PriceCalculator</c> entity.
+	///	designer:cap/CVAF4
+	///	</summary>
+	public partial class PriceCalculatorEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVAF4/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/CVAF4/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVAF4/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVAF4/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>SerializedData</c> field.
+		///	designer:fld/CVAF4/CVAG4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAG4]")]
+		public global::System.Byte[] SerializedData
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[CVAG4]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.SerializedData;
+				if (oldValue != value || !this.IsFieldDefined("[CVAG4]"))
+				{
+					this.OnSerializedDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[CVAG4]", oldValue, value);
+					this.OnSerializedDataChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Informations</c> field.
+		///	designer:fld/CVAF4/CVAH4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAH4]")]
+		public string Informations
+		{
+			get
+			{
+				return this.GetField<string> ("[CVAH4]");
+			}
+			set
+			{
+				string oldValue = this.Informations;
+				if (oldValue != value || !this.IsFieldDefined("[CVAH4]"))
+				{
+					this.OnInformationsChanging (oldValue, value);
+					this.SetField<string> ("[CVAH4]", oldValue, value);
+					this.OnInformationsChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnInformationsChanging(string oldValue, string newValue);
+		partial void OnInformationsChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 143);	// [CVAF4]
+		public static readonly new string EntityStructuredTypeKey = "[CVAF4]";
 	}
 }
 #endregion
