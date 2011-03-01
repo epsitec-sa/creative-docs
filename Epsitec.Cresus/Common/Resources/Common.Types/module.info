@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1" name="Common.Types" layer="s" textMode="FormattedText" assemblies="" namespace="Epsitec.Common.Types">
   <Versions>
-    <Version id="2" build="3" date="2011-02-28T17:45:24.7114999Z" />
     <Version id="1" build="28" date="2011-03-01T15:10:31.4107797Z" />
+    <Version id="2" build="5" date="2011-03-01T17:12:58.0897813Z" />
   </Versions>
 </ModuleInfo>

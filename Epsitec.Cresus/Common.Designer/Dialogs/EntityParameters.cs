@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			var leftPane = new GroupBox
 			{
 				Parent = mainPane,
-				Text = Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
+				Text = Common.Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 4, 0, 0),
 				Padding = new Margins (8),
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			var rightPane = new GroupBox
 			{
 				Parent = mainPane,
-				Text = Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
+				Text = Common.Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (4, 0, 0, 0),
 				Padding = new Margins (8),
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.abstractClassButton = new CheckButton
 			{
 				Parent = leftPane,
-				Text = Support.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
+				Text = Common.Types.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.generateSchemaButton = new CheckButton
 			{
 				Parent = leftPane,
-				Text = Support.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
+				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.generateRepositoryButton = new CheckButton
 			{
 				Parent = leftPane,
-				Text = Support.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
+				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.unknownButton = new RadioButton
 			{
 				Parent = rightPane,
-				Text = Support.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
+				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.volatileButton = new RadioButton
 			{
 				Parent = rightPane,
-				Text = Support.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
+				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.stableButton = new RadioButton
 			{
 				Parent = rightPane,
-				Text = Support.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
+				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.immutableButton = new RadioButton
 			{
 				Parent = rightPane,
-				Text = Support.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
+				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
 			};
