@@ -124,6 +124,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			this.dataLifetimeExpectancy = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
+			this.structuredTypeFlags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
+
 			this.UpdateFieldsContent();
 			this.UpdateSources();
 		}
@@ -2255,19 +2258,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.cultureMap != null)
 			{
-				StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				var lifetime = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
-				var flags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
-
 				builder.Append ("<br/>----------<br/>");
-				builder.Append (Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel);
+				builder.Append (Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel);
 				builder.Append (": ");
-				builder.Append (lifetime.ToString ());
+				builder.Append (this.dataLifetimeExpectancy.ToString ());
 				
 				builder.Append ("<br/>");
-				builder.Append (Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel);
+				builder.Append (Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel);
 				builder.Append (": ");
-				builder.Append (flags.ToString ());
+				builder.Append (this.structuredTypeFlags.ToString ());
 			}
 
 			return builder.ToString ();
@@ -2379,21 +2378,52 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
 			var dialog = this.editor.Module.DesignerApplication.GetDlgEntityParameters ();
 
-			StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			dialog.DataLifetimeExpectancy = data.GetValueOrDefault<DataLifetimeExpectancy> (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy);
-			dialog.StructuredTypeFlags    = data.GetValueOrDefault<StructuredTypeFlags>    (Support.Res.Fields.ResourceStructuredType.Flags);
+			dialog.DataLifetimeExpectancy = this.dataLifetimeExpectancy;
+			dialog.StructuredTypeFlags    = this.structuredTypeFlags;
 
 			dialog.Show ();
 
 			if (dialog.IsEditOk)
 			{
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, dialog.DataLifetimeExpectancy);
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     dialog.StructuredTypeFlags);
+				this.DataLifetimeExpectancy = dialog.DataLifetimeExpectancy;
+				this.StructuredTypeFlags    = dialog.StructuredTypeFlags;
 
 				this.UpdateInformations ();
 				this.editor.Module.AccessEntities.SetLocalDirty ();
 			}
 		}
+
+
+		private DataLifetimeExpectancy DataLifetimeExpectancy
+		{
+			get
+			{
+				return this.dataLifetimeExpectancy;
+			}
+			set
+			{
+				this.dataLifetimeExpectancy = value;
+
+				StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, value);
+			}
+		}
+
+		private StructuredTypeFlags StructuredTypeFlags
+		{
+			get
+			{
+				return this.structuredTypeFlags;
+			}
+			set
+			{
+				this.structuredTypeFlags = value;
+
+				StructuredData data = this.cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags, value);
+			}
+		}
+
 
 		private Module SearchModule(Druid id)
 		{
@@ -3001,12 +3031,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Dessine le lifetime.
-			//?this.DrawLifetime (this.PositionParametersButton);
-
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
 			graphics.RenderSolid(frameColor);
+
+			//	Dessine les paramètres en bas à droite.
+			this.DrawParameters (graphics, frameColor);
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
@@ -3378,6 +3408,62 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.GetColorMain());
 		}
+
+		protected void DrawParameters(Graphics graphics, Color color)
+		{
+			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
+			Point center = this.PositionParametersButton;
+			double radius = 5.5;
+			double angle = 0;
+
+			graphics.AddFilledCircle (center, radius);
+			graphics.RenderSolid (this.GetColor (1));
+
+			graphics.AddCircle (center, radius);
+			graphics.RenderSolid (color);
+
+			switch (this.dataLifetimeExpectancy)
+			{
+				case Types.DataLifetimeExpectancy.Volatile:
+					angle = 45;
+					break;
+
+				case Types.DataLifetimeExpectancy.Stable:
+					angle = -90;
+					break;
+
+				case Types.DataLifetimeExpectancy.Immutable:
+					angle = 90;
+					break;
+			}
+
+			if (angle != 0)
+			{
+				var path = new Path ();
+				path.MoveTo (center);
+				path.ArcDeg (center, radius, radius, 90, angle, false);
+				path.LineTo (center);
+				path.Close ();
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (color);
+			}
+
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
+			{
+				graphics.PaintText (center.X-30, center.Y-4, "A", Font.DefaultFont, 11.0);
+			}
+
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				graphics.PaintText (center.X-22, center.Y-4, "S", Font.DefaultFont, 11.0);
+			}
+
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0)
+			{
+				graphics.PaintText (center.X-15, center.Y-4, "R", Font.DefaultFont, 11.0);
+			}
+		}
+
 
 		protected Point PositionCloseButton
 		{
@@ -3817,5 +3903,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool isSourcesMenu;
 		protected int sourcesMenuSelected;
+
+		protected DataLifetimeExpectancy dataLifetimeExpectancy;
+		protected StructuredTypeFlags structuredTypeFlags;
 	}
 }

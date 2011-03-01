@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("EntityParameters", 500, 150, true);
+				this.WindowInit ("EntityParameters", 400, 150, true);
 				this.window.Text = Res.Strings.Dialog.EntityParameters.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				var leftPane = new GroupBox
 				{
 					Parent = mainPane,
-					Text = Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
+					Text = Support.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 4, 0, 0),
 					Padding = new Margins (8),
@@ -58,74 +58,31 @@ namespace Epsitec.Common.Designer.Dialogs
 				var rightPane = new GroupBox
 				{
 					Parent = mainPane,
-					Text = Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
+					Text = Support.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (4, 0, 0, 0),
 					Padding = new Margins (8),
 				};
 
 				//	Rempli la colonne de gauche.
-				this.unknownButton = new RadioButton
+				this.abstractClassButton = new CheckButton
 				{
 					Parent = leftPane,
-					Text = Types.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
+					Text = Support.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
 
-				this.unknownButton.Clicked += delegate
+				this.abstractClassButton.Clicked += delegate
 				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Unknown;
+					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.AbstractClass;
 					this.UpdateWidgets ();
 				};
 
-				this.volatileButton = new RadioButton
-				{
-					Parent = leftPane,
-					Text = Types.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.volatileButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Volatile;
-					this.UpdateWidgets ();
-				};
-
-				this.stableButton = new RadioButton
-				{
-					Parent = leftPane,
-					Text = Types.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.stableButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Stable;
-					this.UpdateWidgets();
-				};
-
-				this.immutableButton = new RadioButton
-				{
-					Parent = leftPane,
-					Text = Types.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
-					AutoToggle = false,
-					Dock = DockStyle.Top,
-				};
-
-				this.immutableButton.Clicked += delegate
-				{
-					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
-					this.UpdateWidgets();
-				};
-
-				//	Rempli la colonne de droite.
 				this.generateSchemaButton = new CheckButton
 				{
-					Parent = rightPane,
-					Text = Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
+					Parent = leftPane,
+					Text = Support.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -138,8 +95,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.generateRepositoryButton = new CheckButton
 				{
-					Parent = rightPane,
-					Text = Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
+					Parent = leftPane,
+					Text = Support.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
 					AutoToggle = false,
 					Dock = DockStyle.Top,
 				};
@@ -147,6 +104,63 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.generateRepositoryButton.Clicked += delegate
 				{
 					this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateRepository;
+					this.UpdateWidgets ();
+				};
+
+				//	Rempli la colonne de droite.
+				this.unknownButton = new RadioButton
+				{
+					Parent = rightPane,
+					Text = Support.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.unknownButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Unknown;
+					this.UpdateWidgets ();
+				};
+
+				this.volatileButton = new RadioButton
+				{
+					Parent = rightPane,
+					Text = Support.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.volatileButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Volatile;
+					this.UpdateWidgets ();
+				};
+
+				this.stableButton = new RadioButton
+				{
+					Parent = rightPane,
+					Text = Support.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.stableButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Stable;
+					this.UpdateWidgets ();
+				};
+
+				this.immutableButton = new RadioButton
+				{
+					Parent = rightPane,
+					Text = Support.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
+					AutoToggle = false,
+					Dock = DockStyle.Top,
+				};
+
+				this.immutableButton.Clicked += delegate
+				{
+					this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
 					this.UpdateWidgets ();
 				};
 
@@ -204,13 +218,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateWidgets()
 		{
+			this.abstractClassButton.ActiveState      = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.AbstractClass     ) != 0) ? ActiveState.Yes : ActiveState.No;
+			this.generateSchemaButton.ActiveState     = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema    ) != 0) ? ActiveState.Yes : ActiveState.No;
+			this.generateRepositoryButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0) ? ActiveState.Yes : ActiveState.No;
+
 			this.unknownButton.ActiveState   = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Unknown  ) ? ActiveState.Yes : ActiveState.No;
 			this.volatileButton.ActiveState  = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile ) ? ActiveState.Yes : ActiveState.No;
 			this.stableButton.ActiveState    = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Stable   ) ? ActiveState.Yes : ActiveState.No;
 			this.immutableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Immutable) ? ActiveState.Yes : ActiveState.No;
-
-			this.generateSchemaButton.ActiveState     = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema    ) != 0) ? ActiveState.Yes : ActiveState.No;
-			this.generateRepositoryButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -240,13 +255,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool						isEditOk;
 
+		private CheckButton					abstractClassButton;
+		private CheckButton					generateSchemaButton;
+		private CheckButton					generateRepositoryButton;
+
 		private RadioButton					unknownButton;
 		private RadioButton					volatileButton;
 		private RadioButton					stableButton;
 		private RadioButton					immutableButton;
-
-		private CheckButton					generateSchemaButton;
-		private CheckButton					generateRepositoryButton;
 
 		private Button						buttonOk;
 		private Button						buttonCancel;
