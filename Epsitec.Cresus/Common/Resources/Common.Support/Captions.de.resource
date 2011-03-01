@@ -55,14 +55,4 @@
   <data id="0B1">&lt;s:data id="_0" /&gt;</data>
   <data id="0G">&lt;s:data id="_0" /&gt;</data>
   <data id="0E1">&lt;s:data id="_0" /&gt;</data>
-  <data id="A3">&lt;s:data id="_0" f:Description="Lifetime expectancy" f:Labels="{Collection {Text 'Lifetime expectancy'}}" /&gt;</data>
-  <data id="A8">&lt;s:data id="_0" f:Description="Structured type" f:Labels="{Collection {Text 'Structured type'}}" /&gt;</data>
-  <data id="A9">&lt;s:data id="_0" /&gt;</data>
-  <data id="AE">&lt;s:data id="_0" /&gt;</data>
-  <data id="AD">&lt;s:data id="_0" /&gt;</data>
-  <data id="A5">&lt;s:data id="_0" /&gt;</data>
-  <data id="A4">&lt;s:data id="_0" /&gt;</data>
-  <data id="A6">&lt;s:data id="_0" /&gt;</data>
-  <data id="A7">&lt;s:data id="_0" /&gt;</data>
-  <data id="AF">&lt;s:data id="_0" /&gt;</data>
 </bundle>

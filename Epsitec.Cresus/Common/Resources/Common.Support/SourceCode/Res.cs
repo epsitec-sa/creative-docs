@@ -16,10 +16,6 @@ namespace Epsitec.Common.Support
 			{
 			}
 			
-			//	designer:cap/70A3
-			public static readonly Epsitec.Common.Types.EnumType DataLifetimeExpectancy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
-			//	designer:cap/70A8
-			public static readonly Epsitec.Common.Types.EnumType StructuredTypeFlags = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
 			//	designer:cap/70062
 			public static readonly Epsitec.Common.Types.StructuredType EnumValue = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 70));
 			//	designer:cap/70041
