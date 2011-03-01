@@ -1560,8 +1560,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = false;
 			bool isPrivate = false;
 			bool isCollection = false;
+			bool isIndexAscending = false;
+			bool isIndexDescending = false;
 
-			var result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isIndexAscending, ref isIndexDescending);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1635,7 +1637,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				fieldOptions &= ~FieldOptions.PrivateRelation;
 			}
 
-			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
+			if (isIndexAscending)
+			{
+				fieldOptions |= FieldOptions.IndexAscending;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.IndexAscending;
+			}
+
+			if (isIndexDescending)
+			{
+				fieldOptions |= FieldOptions.IndexDescending;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.IndexDescending;
+			}
+
+			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank+1].Initialize(this, dataField);
 
@@ -1927,9 +1947,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
 			bool isPrivate = (options & FieldOptions.PrivateRelation) != 0;
 			bool isCollection = (rel == FieldRelation.Collection);
+			bool isIndexAscending = (options & FieldOptions.IndexAscending) != 0;
+			bool isIndexDescending = (options & FieldOptions.IndexDescending) != 0;
 			Module module = this.editor.Module;
 
-			var result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isIndexAscending, ref isIndexDescending);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1978,7 +2000,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				fieldOptions &= ~FieldOptions.Nullable;
 			}
-			
+
 			if (isPrivate)
 			{
 				fieldOptions |= FieldOptions.PrivateRelation;
@@ -1988,7 +2010,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				fieldOptions &= ~FieldOptions.PrivateRelation;
 			}
 
-			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
+			if (isIndexAscending)
+			{
+				fieldOptions |= FieldOptions.IndexAscending;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.IndexAscending;
+			}
+
+			if (isIndexDescending)
+			{
+				fieldOptions |= FieldOptions.IndexDescending;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.IndexDescending;
+			}
+
+			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();

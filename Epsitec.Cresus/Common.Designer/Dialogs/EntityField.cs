@@ -137,17 +137,35 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsNullable.Clicked += this.HandleRadioClicked;
 
-				this.buttonIsPrivate = new CheckButton(leftFooter);
+				this.buttonIsPrivate = new CheckButton (leftFooter);
 				this.buttonIsPrivate.AutoToggle = false;
 				this.buttonIsPrivate.Text = "Relation privée";
 				this.buttonIsPrivate.PreferredWidth = 140;
-				this.buttonIsPrivate.Margins = new Margins(0, 0, 0, 4);
+				this.buttonIsPrivate.Margins = new Margins (0, 0, 0, 4);
 				this.buttonIsPrivate.Dock = DockStyle.Top;
 				this.buttonIsPrivate.TabIndex = 11;
 				this.buttonIsPrivate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsPrivate.Clicked += this.HandleRadioClicked;
 
-				Widget middleFooter = new Widget(footer);
+				this.buttonIndexAscending = new CheckButton (leftFooter);
+				this.buttonIndexAscending.AutoToggle = false;
+				this.buttonIndexAscending.Text = "Index ascendant";
+				this.buttonIndexAscending.PreferredWidth = 140;
+				this.buttonIndexAscending.Dock = DockStyle.Top;
+				this.buttonIndexAscending.TabIndex = 12;
+				this.buttonIndexAscending.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIndexAscending.Clicked += this.HandleRadioClicked;
+
+				this.buttonIndexDescending = new CheckButton (leftFooter);
+				this.buttonIndexDescending.AutoToggle = false;
+				this.buttonIndexDescending.Text = "Index descendant";
+				this.buttonIndexDescending.PreferredWidth = 140;
+				this.buttonIndexDescending.Dock = DockStyle.Top;
+				this.buttonIndexDescending.TabIndex = 13;
+				this.buttonIndexDescending.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIndexDescending.Clicked += this.HandleRadioClicked;
+
+				Widget middleFooter = new Widget (footer);
 				middleFooter.Margins = new Margins(0, 0, 0, 0);
 				middleFooter.Dock = DockStyle.Left;
 
@@ -156,7 +174,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsReference.Text = "Référence";
 				this.buttonIsReference.PreferredWidth = 90;
 				this.buttonIsReference.Dock = DockStyle.Top;
-				this.buttonIsReference.TabIndex = 12;
+				this.buttonIsReference.TabIndex = 14;
 				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsReference.Clicked += this.HandleRadioClicked;
 
@@ -165,13 +183,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsCollection.Text = "Collection";
 				this.buttonIsCollection.PreferredWidth = 90;
 				this.buttonIsCollection.Dock = DockStyle.Top;
-				this.buttonIsCollection.TabIndex = 13;
+				this.buttonIsCollection.TabIndex = 15;
 				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsCollection.Clicked += this.HandleRadioClicked;
 
 				this.relationSample = new MyWidgets.RelationSample(footer);
 				this.relationSample.PreferredWidth = 40;
-				this.relationSample.Margins = new Margins(0, 20, 0, 0);
+				this.relationSample.Margins = new Margins(0, 20, 0, 20);
 				this.relationSample.Dock = DockStyle.Left;
 
 				Widget rightFooter = new Widget(footer);
@@ -218,7 +236,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate, bool isIndexAscending, bool isIndexDescending)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
@@ -231,6 +249,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.isNullable = isNullable;
 			this.isCollection = isCollection;
 			this.isPrivate = isPrivate;
+			this.isIndexAscending = isIndexAscending;
+			this.isIndexDescending = isIndexDescending;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -303,6 +323,22 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				return this.isPrivate;
+			}
+		}
+
+		public bool IsIndexAscending
+		{
+			get
+			{
+				return this.isIndexAscending;
+			}
+		}
+
+		public bool IsIndexDescending
+		{
+			get
+			{
+				return this.isIndexDescending;
 			}
 		}
 
@@ -475,6 +511,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
 			this.buttonIsPrivate.ActiveState = this.isPrivate ? ActiveState.Yes : ActiveState.No;
+			this.buttonIndexAscending.ActiveState = this.isIndexAscending ? ActiveState.Yes : ActiveState.No;
+			this.buttonIndexDescending.ActiveState = this.isIndexDescending ? ActiveState.Yes : ActiveState.No;
 			this.buttonIsReference.ActiveState = this.isCollection ? ActiveState.No : ActiveState.Yes;
 			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
 
@@ -564,8 +602,22 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (button == this.buttonIsPrivate)
 			{
 				this.isPrivate = !this.isPrivate;
-				this.UpdateRadios();
-				this.UpdateRelationSample();
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
+			}
+
+			if (button == this.buttonIndexAscending)
+			{
+				this.isIndexAscending = !this.isIndexAscending;
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
+			}
+
+			if (button == this.buttonIndexDescending)
+			{
+				this.isIndexDescending = !this.isIndexDescending;
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
 			}
 
 			if (button == this.buttonIsReference)
@@ -667,6 +719,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isNullable;
 		protected bool							isCollection;
 		protected bool							isPrivate;
+		protected bool							isIndexAscending;
+		protected bool							isIndexDescending;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
@@ -680,9 +734,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected StaticText					header2;
 		protected ScrollList					listResources;
 		protected CheckButton					buttonIsNullable;
+		protected CheckButton					buttonIsPrivate;
+		protected CheckButton					buttonIndexAscending;
+		protected CheckButton					buttonIndexDescending;
 		protected RadioButton					buttonIsReference;
 		protected RadioButton					buttonIsCollection;
-		protected CheckButton					buttonIsPrivate;
 		protected MyWidgets.RelationSample		relationSample;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;

@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'éditer les paramètres d'une entité.
+	/// Dialogue en 3 volets permettant de créer une entité.
 	/// </summary>
 	public class EntityCreation : Abstract
 	{
