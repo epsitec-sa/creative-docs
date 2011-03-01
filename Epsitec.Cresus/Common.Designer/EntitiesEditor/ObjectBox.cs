@@ -2583,13 +2583,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color c2 = this.GetColorMain(dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-			Color colorLine = this.GetColor(0.9);
+			Color lineColor = this.GetColor(0.9);
 			if (dragging)
 			{
-				colorLine = this.GetColorMain(0.3);
+				lineColor = this.GetColorMain(0.3);
 			}
 
-			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
+			Color frameColor = dragging ? this.GetColorMain() : this.GetColor(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
@@ -2607,13 +2607,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					double posx = this.ColumnsSeparatorAbsolute(0)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(colorLine);
+					graphics.RenderSolid(lineColor);
 				}
 
 				{
 					double posx = this.ColumnsSeparatorAbsolute(1)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(colorLine);
+					graphics.RenderSolid(lineColor);
 				}
 
 				//	Ombre supérieure.
@@ -2623,7 +2623,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			Color titleColor = dragging ? this.GetColor(1) : this.GetColor(0);
+			Color titleColor = dragging ? this.GetColor (1) : this.GetColor (0, text: true);
 
 			if (string.IsNullOrEmpty(this.subtitleString))
 			{
@@ -2678,7 +2678,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(p1, p2);
 				AbstractObject.DrawEndingArrow(graphics, p1, p2, FieldRelation.Reference, false);
 				graphics.LineWidth = 1;
-				graphics.RenderSolid(colorFrame);
+				graphics.RenderSolid(frameColor);
 			}
 
 			//	Dessine le bouton des sources.
@@ -2711,28 +2711,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawRoundButton (graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, false, false);
 			}
 
-			//	Dessine le bouton des paramètres.
-			if (this.hilitedElement == ActiveElement.BoxParameters)
-			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
-			}
-
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
-				graphics.RenderSolid(colorFrame);
+				graphics.RenderSolid(frameColor);
 
 				//	Dessine le glyph 'o--' pour les interfaces.
 				if (this.IsInterface)
 				{
 					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+10, 25, 8);
-					this.DrawGlyphInterface(graphics, rect, 2, colorFrame);
+					this.DrawGlyphInterface(graphics, rect, 2, frameColor);
 				}
 
 				//	Dessine toutes les lignes, titres ou simples champs.
@@ -2774,13 +2764,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = this.GetFieldBounds(i);
 						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-						graphics.RenderSolid(colorLine);
+						graphics.RenderSolid(lineColor);
 					}
 					else
 					{
-						Color colorName = this.GetColor(0);
-						Color colorType = this.GetColor(0);
-						Color colorExpr = this.GetColor(0);
+						Color nameColor = this.GetColor (0, text: true);
+						Color typeColor = this.GetColor (0, text: true);
+						Color exprColor = this.GetColor (0, text: true);
 
 						if (this.hilitedElement == ActiveElement.BoxFieldName && this.hilitedFieldRank == i)
 						{
@@ -2789,7 +2779,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.AddFilledRectangle(rect);
 							graphics.RenderSolid(this.GetColorMain());
 
-							colorName = this.GetColor(1);
+							nameColor = this.GetColor(1);
 						}
 
 						if (this.hilitedElement == ActiveElement.BoxFieldType && this.hilitedFieldRank == i)
@@ -2799,7 +2789,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.AddFilledRectangle(rect);
 							graphics.RenderSolid(this.GetColorMain());
 
-							colorType = this.GetColor(1);
+							typeColor = this.GetColor(1);
 						}
 
 						if (this.hilitedElement == ActiveElement.BoxFieldExpression && this.hilitedFieldRank == i)
@@ -2809,7 +2799,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.AddFilledRectangle(rect);
 							graphics.RenderSolid(this.GetColorMain());
 
-							colorExpr = this.GetColor(1);
+							exprColor = this.GetColor(1);
 						}
 
 						if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)
@@ -2832,7 +2822,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldNameBounds(i);
 						rect.Right -= 2;
 						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
-						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
+						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, nameColor, GlyphPaintStyle.Normal);
 
 						//	Affiche le type du champ.
 						rect = this.GetFieldTypeBounds(i);
@@ -2840,7 +2830,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (rect.Width > 10)
 						{
 							this.fields[i].TextLayoutType.LayoutSize = rect.Size;
-							this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
+							this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, typeColor, GlyphPaintStyle.Normal);
 						}
 
 						//	Affiche l'expression du champ.
@@ -2849,7 +2839,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.Expression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
-							graphics.RenderSolid(colorExpr);
+							graphics.RenderSolid(exprColor);
 						}
 						else if (this.fields[i].LocalExpression != "" && !string.IsNullOrEmpty(this.fields[i].InheritedExpression))
 						{
@@ -2859,12 +2849,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.DeepExpression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
-							graphics.RenderSolid(colorExpr);
+							graphics.RenderSolid(exprColor);
 						}
 
 						rect = this.GetFieldBounds(i);
 						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-						graphics.RenderSolid(colorLine);
+						graphics.RenderSolid(lineColor);
 					}
 				}
 
@@ -3011,9 +3001,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Dessine le lifetime.
+			//?this.DrawLifetime (this.PositionParametersButton);
+
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-			graphics.RenderSolid(colorFrame);
+			graphics.RenderSolid(frameColor);
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
@@ -3155,6 +3148,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
+			}
+
+			//	Dessine le bouton des paramètres.
+			if (this.hilitedElement == ActiveElement.BoxParameters)
+			{
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
 			}
 
 			if (this.isExtended)
@@ -3441,7 +3444,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton des paramètres.
 			get
 			{
-				return new Point (this.bounds.Left+AbstractObject.buttonRadius*7+12, this.bounds.Top-AbstractObject.headerHeight/2);
+				return new Point (this.bounds.Right-AbstractObject.buttonRadius*2-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 			}
 		}
 

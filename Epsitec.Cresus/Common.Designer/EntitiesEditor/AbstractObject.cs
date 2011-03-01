@@ -774,14 +774,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return color;
 		}
 
-		protected Color GetColor(double brightness)
+		protected Color GetColor(double brightness, bool text = false)
 		{
 			//	Retourne un niveau de gris.
 			Color color = Color.FromBrightness(brightness);
 
 			if (this.isDimmed)
 			{
-				color = this.GetColorLighter(color, 0.3);
+				color = this.GetColorLighter(color, text ? 0.7 : 0.3);
 			}
 
 			return color;

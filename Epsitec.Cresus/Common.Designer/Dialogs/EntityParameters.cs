@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					Parent = mainPane,
 					Text = Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
-					Margins = new Margins (0, 8, 0, 0),
+					Margins = new Margins (0, 4, 0, 0),
 					Padding = new Margins (8),
 				};
 
@@ -60,6 +60,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					Parent = mainPane,
 					Text = Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
 					Dock = DockStyle.Fill,
+					Margins = new Margins (4, 0, 0, 0),
 					Padding = new Margins (8),
 				};
 
