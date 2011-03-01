@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -27,5 +27,15 @@ namespace Epsitec.Common.Types
 		/// The field relation points to a private (i.e. not shared) target.
 		/// </summary>
 		PrivateRelation=0x02,
+
+		/// <summary>
+		/// The field should be used to generate an ascending index (0..n).
+		/// </summary>
+		IndexAscending=0x04,
+		
+		/// <summary>
+		/// The field should be used to generate a descending index (n..0).
+		/// </summary>
+		IndexDescending=0x08,
 	}
 }

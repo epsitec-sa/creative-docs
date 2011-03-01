@@ -2,6 +2,6 @@
 <ModuleInfo id="1" name="Common.Types" layer="s" textMode="FormattedText" assemblies="" namespace="Epsitec.Common.Types">
   <Versions>
     <Version id="2" build="3" date="2011-02-28T17:45:24.7114999Z" />
-    <Version id="1" build="27" date="2011-03-01T07:08:52.8206875Z" />
+    <Version id="1" build="28" date="2011-03-01T15:10:31.4107797Z" />
   </Versions>
 </ModuleInfo>
