@@ -832,7 +832,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Supprime la culture courante.
 			System.Globalization.CultureInfo culture = this.access.GetCulture(this.secondaryCulture);
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(culture));
-			Common.Dialogs.DialogResult result = this.designerApplication.DialogQuestion(question);
+			var result = this.designerApplication.DialogQuestion (question);
 			if (result != Epsitec.Common.Dialogs.DialogResult.Yes)  return;
 
 			this.access.DeleteCulture(this.secondaryCulture);

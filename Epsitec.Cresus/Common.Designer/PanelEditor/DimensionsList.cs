@@ -256,7 +256,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				if (this.dragging.DimensionType == Dimension.Type.GridColumnAddBefore||
 					this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter)
 				{
-					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridColumnAdd);
+					var result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridColumnAdd);
 					if (result == Common.Dialogs.DialogResult.Yes)
 					{
 						Widget obj = this.dragging.Object;
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnRemove)
 				{
-					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridColumnRemove);
+					var result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridColumnRemove);
 					if (result == Common.Dialogs.DialogResult.Yes)
 					{
 						Widget obj = this.dragging.Object;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowAddBefore||
 						 this.dragging.DimensionType == Dimension.Type.GridRowAddAfter)
 				{
-					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridRowAdd);
+					var result = this.editor.Module.DesignerApplication.DialogQuestion (Res.Strings.Panel.Question.GridRowAdd);
 					if (result == Common.Dialogs.DialogResult.Yes)
 					{
 						Widget obj = this.dragging.Object;
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowRemove)
 				{
-					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion(Res.Strings.Panel.Question.GridRowRemove);
+					var result = this.editor.Module.DesignerApplication.DialogQuestion (Res.Strings.Panel.Question.GridRowRemove);
 					if (result == Common.Dialogs.DialogResult.Yes)
 					{
 						Widget obj = this.dragging.Object;

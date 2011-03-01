@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Appelé lorsque le bouton caption "Choisir" est cliqué.
 			Druid druid = (Druid) this.value;
-			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(this.nameToCreate, ref druid);
+			var result = this.application.DlgLabelReplacement(this.nameToCreate, ref druid);
 
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{

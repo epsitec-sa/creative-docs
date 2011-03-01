@@ -629,8 +629,8 @@ namespace Epsitec.Common.Designer
 				List<string> questions = new List<string>();
 				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Normal, Res.Strings.Forms.Question.Create.Long.Normal));
 				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Delta, Res.Strings.Forms.Question.Create.Long.Delta));
-				
-				Common.Dialogs.DialogResult result = this.designerApplication.DialogConfirmation(header, questions, true);
+
+				var result = this.designerApplication.DialogConfirmation (header, questions, true);
 				if (result == Epsitec.Common.Dialogs.DialogResult.Cancel)
 				{
 					return false;
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Designer
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
+					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;
@@ -668,7 +668,7 @@ namespace Epsitec.Common.Designer
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, null, Druid.Empty);
+					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;

@@ -1561,7 +1561,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isPrivate = false;
 			bool isCollection = false;
 
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			var result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			var accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
 			fieldCultureMap.Name = fieldName;
 
@@ -1663,7 +1663,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
+			var result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1929,7 +1929,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isCollection = (rel == FieldRelation.Collection);
 			Module module = this.editor.Module;
 
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			var result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

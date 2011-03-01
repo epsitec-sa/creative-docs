@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			System.Diagnostics.Debug.Assert(sel != -1);
 			string name = this.array.GetLineString(0, sel);
 			string question = string.Format(Res.Strings.Viewers.Types.Enum.Question.Delete, name);
-			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
+			var result = this.module.DesignerApplication.DialogQuestion(question);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

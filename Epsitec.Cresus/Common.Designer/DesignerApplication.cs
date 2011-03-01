@@ -2267,7 +2267,7 @@ namespace Epsitec.Common.Designer
 			//	Fait tout ce qu'il faut pour éventuellement sauvegarder les ressources
 			//	avant de passer à autre chose.
 			//	Retourne false si on ne peut pas continuer.
-			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			var result = this.DialogSave(dispatcher);
 			if (result == Common.Dialogs.DialogResult.Yes)
 			{
 				this.CurrentModule.Save();
