@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(BusinessDocumentEntity entity)
 		{
-			var businessContext = Logic.Current.BusinessContext;
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			entity.CurrencyCode = Finance.CurrencyCode.Chf;
 			entity.BillingDate = Date.Today;
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public override void ApplyUpdateRule(BusinessDocumentEntity entity)
 		{
-			var businessContext = Logic.Current.BusinessContext;
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (businessContext, entity);
 		}

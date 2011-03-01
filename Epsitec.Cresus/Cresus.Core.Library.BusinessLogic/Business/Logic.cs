@@ -3,8 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Entities;
-
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -12,59 +11,18 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class Logic
+	public sealed class Logic : ICoreComponentHost<ICoreComponent>
 	{
-		public Logic(AbstractEntity entity, IBusinessContext businessContext)
+		public Logic(AbstractEntity entity, params ICoreComponent[] components)
 		{
 			this.entity = entity;
 			this.entityType = entity.GetType ();
 			this.rules = new Dictionary<RuleType, GenericBusinessRule> ();
-			this.businessContext = businessContext;
+			this.components = new CoreComponentHostImplementation<ICoreComponent> ();
+			this.components.RegisterComponents (components);
 		}
 
-		public CoreData							Data
-		{
-			get
-			{
-				return this.BusinessContext.Data;
-			}
-		}
 
-#if false
-		public CoreApplication					Application
-		{
-			get
-			{
-				return CoreProgram.Application;
-			}
-		}
-
-		public BusinessSettingsEntity			BusinessSettings
-		{
-			get
-			{
-				return this.Application.BusinessSettings;
-			}
-		}
-#endif
-
-		public IBusinessContext					BusinessContext
-		{
-			get
-			{
-				return this.businessContext;
-			}
-		}
-
-		public DataContext						DataContext
-		{
-			get
-			{
-				return this.businessContext.DataContext;
-			}
-		}
-
-		
 		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
 		{
 			var rule = this.ResolveRule (ruleType);
@@ -84,12 +42,6 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		public IEnumerable<T> GetAllEntities<T>(DataExtractionMode extraction = DataExtractionMode.Default)
-			where T : AbstractEntity, new ()
-		{
-			return this.Data.GetAllEntities<T> (extraction);
-		}
-
 		public IEnumerable<T> Find<T>()
 			where T : AbstractEntity
 		{
@@ -106,6 +58,30 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+
+		#region ICoreComponentHost<ICoreComponent> Members
+
+		public T GetComponent<T>() where T : ICoreComponent
+		{
+			return this.components.GetComponent<T> ();
+		}
+
+		public IEnumerable<ICoreComponent> GetComponents()
+		{
+			return this.components.GetComponents ();
+		}
+
+		public bool ContainsComponent<T>() where T : ICoreComponent
+		{
+			return this.components.ContainsComponent<T> ();
+		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
+		{
+			this.components.RegisterComponent<T> (component);
+		}
+
+		#endregion
 
 		private GenericBusinessRule ResolveRule(RuleType ruleType)
 		{
@@ -138,7 +114,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly AbstractEntity entity;
 		private readonly System.Type entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
-		private readonly IBusinessContext businessContext;
+		private readonly CoreComponentHostImplementation<ICoreComponent> components;
 		private Logic link;
 	}
 }

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
-			this.components = new Dictionary<string, ICoreComponent> ();
+			this.components = new CoreComponentHostImplementation<ICoreComponent> ();
 			
 			this.persistenceManager = new PersistenceManager ();
 
@@ -318,23 +318,23 @@ namespace Epsitec.Cresus.Core
 		public T GetComponent<T>()
 			where T : ICoreComponent
 		{
-			return (T) this.components[typeof (T).FullName];
+			return this.components.GetComponent<T> ();
 		}
 
 		public IEnumerable<ICoreComponent> GetComponents()
 		{
-			return this.components.Select (x => x.Value);
+			return this.components.GetComponents ();
 		}
 
 		public bool ContainsComponent<T>()
 			where T : ICoreComponent
 		{
-			return this.components.ContainsKey (typeof (T).FullName);
+			return this.components.ContainsComponent<T> ();
 		}
 
 		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
 		{
-			this.components[component.GetType ().FullName] = component;
+			this.components.RegisterComponent<T> (component);
 		}
 
 
@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.Core
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 		private readonly List<Dialogs.IAttachedDialog>	attachedDialogs;
-		private readonly Dictionary<string, ICoreComponent> components;
+		private readonly CoreComponentHostImplementation<ICoreComponent> components;
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;

@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		#region ICoreComponentHost Interface
+		#region ICoreComponentHost Interface#endif
 
 		public T GetComponent<T>()
 			where T : CoreDataComponent

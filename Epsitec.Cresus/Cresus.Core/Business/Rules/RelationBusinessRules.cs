@@ -16,13 +16,16 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplyBindRule(RelationEntity relation)
 		{
-			Logic.Current.BusinessContext.Register (relation.Person);
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			businessContext.Register (relation.Person);
 		}
 		
 		public override void ApplySetupRule(RelationEntity relation)
 		{
-			var pool      = Logic.Current.Data.GetComponent<RefIdGeneratorPool> ();
-			var generator = pool.GetGenerator<RelationEntity> ();
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+			
+			var generator = generatorPool.GetGenerator<RelationEntity> ();
 			var nextId    = generator.GetNextId ();
 
 			relation.IdA = string.Format ("{0:000000}", nextId);

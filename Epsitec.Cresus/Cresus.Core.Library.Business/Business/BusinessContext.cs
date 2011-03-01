@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class BusinessContext : IIsDisposed, IBusinessContext
+	public sealed class BusinessContext : IIsDisposed, IBusinessContext, ICoreComponent
 	{
 		public BusinessContext(CoreData data)
 			: this (data.GetComponent<BusinessContextPool> ())
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.Core.Business
 		
 		private Logic CreateLogic(AbstractEntity entity)
 		{
-			return new Logic (entity, this);
+			return new Logic (entity, this, this.data.GetComponent<RefIdGeneratorPool> ());
 		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)

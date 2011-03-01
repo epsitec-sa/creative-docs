@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(AffairEntity affair)
 		{
-			var generatorPool   = Logic.Current.Data.GetComponent<RefIdGeneratorPool> ();
-			var businessContext = Logic.Current.BusinessContext;
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
 
 			var generator = generatorPool.GetGenerator<AffairEntity> ();
 			var nextId    = generator.GetNextId ();
