@@ -20,8 +20,6 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
 			//	designer:cap/1011
 			public static readonly Epsitec.Common.Types.EnumType CultureMapSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 1));
-			//	designer:cap/10K
-			public static readonly Epsitec.Common.Types.EnumType DataLifetimeExpectancy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/100T
 			public static readonly Epsitec.Common.Types.EnumType FieldMembership = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 29));
 			//	designer:cap/101
@@ -36,8 +34,6 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType StringSearchBehavior = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/10011
 			public static readonly Epsitec.Common.Types.EnumType StructuredTypeClass = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 33));
-			//	designer:cap/10K5
-			public static readonly Epsitec.Common.Types.EnumType StructuredTypeFlags = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 			//	designer:cap/100B1
 			public static readonly Epsitec.Common.Types.EnumType TimeResolution = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 43));
 			//	designer:cap/100V1
@@ -175,46 +171,6 @@ namespace Epsitec.Common.Types
 					get
 					{
 						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 2));
-					}
-				}
-			}
-			
-			public static class DataLifetimeExpectancy
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/10K4
-				public static global::Epsitec.Common.Types.Caption Immutable
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
-					}
-				}
-				//	designer:cap/10K3
-				public static global::Epsitec.Common.Types.Caption Stable
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
-					}
-				}
-				//	designer:cap/10K1
-				public static global::Epsitec.Common.Types.Caption Unknown
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
-					}
-				}
-				//	designer:cap/10K2
-				public static global::Epsitec.Common.Types.Caption Volatile
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
 					}
 				}
 			}
@@ -471,46 +427,6 @@ namespace Epsitec.Common.Types
 					get
 					{
 						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 30));
-					}
-				}
-			}
-			
-			public static class StructuredTypeFlags
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/10AK
-				public static global::Epsitec.Common.Types.Caption AbstractClass
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
-					}
-				}
-				//	designer:cap/10K8
-				public static global::Epsitec.Common.Types.Caption GenerateRepository
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
-					}
-				}
-				//	designer:cap/10K7
-				public static global::Epsitec.Common.Types.Caption GenerateSchema
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
-					}
-				}
-				//	designer:cap/10K6
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
-					{
-						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
 					}
 				}
 			}
@@ -803,7 +719,6 @@ namespace Epsitec.Common.Types
 			Values._Initialize ();
 			Values.BindingMode._Initialize ();
 			Values.CultureMapSource._Initialize ();
-			Values.DataLifetimeExpectancy._Initialize ();
 			Values.FieldMembership._Initialize ();
 			Values.FieldOptions._Initialize ();
 			Values.FieldRelation._Initialize ();
@@ -811,7 +726,6 @@ namespace Epsitec.Common.Types
 			Values.StringComparisonBehavior._Initialize ();
 			Values.StringSearchBehavior._Initialize ();
 			Values.StructuredTypeClass._Initialize ();
-			Values.StructuredTypeFlags._Initialize ();
 			Values.TimeResolution._Initialize ();
 			Values.TypeCode._Initialize ();
 		}

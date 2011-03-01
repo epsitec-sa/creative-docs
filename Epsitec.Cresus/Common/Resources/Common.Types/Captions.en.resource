@@ -71,14 +71,4 @@
   <data id="AH">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text (multiline)'}}" /&gt;</data>
   <data id="AI">&lt;s:data id="_0" f:Labels="{Collection {Text 'Byte array type'}}" /&gt;</data>
   <data id="AJ">&lt;s:data id="_0" f:Labels="{Collection {Text 'String Type (.NET, native)'}}" /&gt;</data>
-  <data id="K">&lt;s:data id="_0" f:Description="Data lifetime expectancy" f:Labels="{Collection {Text 'Data lifetime expectancy'}}" /&gt;</data>
-  <data id="K1">&lt;s:data id="_0" f:Labels="{Collection {Text 'Unknown'}}" /&gt;</data>
-  <data id="K2">&lt;s:data id="_0" f:Labels="{Collection {Text 'Volatile'}}" /&gt;</data>
-  <data id="K3">&lt;s:data id="_0" f:Labels="{Collection {Text 'Stable'}}" /&gt;</data>
-  <data id="K4">&lt;s:data id="_0" f:Labels="{Collection {Text 'Immutable'}}" /&gt;</data>
-  <data id="K5">&lt;s:data id="_0" f:Description="Structured type flags" f:Labels="{Collection {Text 'Structured type flags'}}" /&gt;</data>
-  <data id="K6">&lt;s:data id="_0" f:Labels="{Collection {Text 'None'}}" /&gt;</data>
-  <data id="K7">&lt;s:data id="_0" f:Labels="{Collection {Text 'Generate schema'}}" /&gt;</data>
-  <data id="K8">&lt;s:data id="_0" f:Labels="{Collection {Text 'Generate repository'}}" /&gt;</data>
-  <data id="AK">&lt;s:data id="_0" /&gt;</data>
 </bundle>
