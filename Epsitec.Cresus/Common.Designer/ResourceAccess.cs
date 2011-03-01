@@ -578,6 +578,7 @@ namespace Epsitec.Common.Designer
 			}
 			else if (this.type == Type.Entities && !duplicateContent)
 			{
+				//	Demande le nom.
 				newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
 				if (string.IsNullOrEmpty(newName))
 				{
@@ -594,6 +595,7 @@ namespace Epsitec.Common.Designer
 				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
+				//	Demande le type (interface, héritage, etc.).
 				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
@@ -606,6 +608,18 @@ namespace Epsitec.Common.Designer
 				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
+
+				//	Demande les paramètres (fanions et espérance de vie).
+				var parametersDialog = this.designerApplication.GetDlgEntityParameters ();
+				parametersDialog.Show ();  // montre les derniers choix effectués
+
+				if (!parametersDialog.IsEditOk)
+				{
+					return false;
+				}
+
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, parametersDialog.DataLifetimeExpectancy);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     parametersDialog.StructuredTypeFlags);
 			}
 			else if (this.type == Type.Forms && !duplicateContent)
 			{

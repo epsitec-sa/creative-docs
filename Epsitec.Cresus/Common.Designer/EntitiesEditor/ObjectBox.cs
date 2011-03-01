@@ -3460,7 +3460,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid (color);
 			}
 
-#if false
+#if false  // Pas nécessaire, c'est redondant avec les cadres !!!
 			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
 			{
 				graphics.PaintText (center.X-30, center.Y-4, "A", Font.DefaultFont, 11.0);
