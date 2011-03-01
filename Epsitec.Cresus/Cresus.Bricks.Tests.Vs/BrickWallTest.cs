@@ -72,13 +72,37 @@ namespace Epsitec.Cresus.Bricks
 				.Template ()
 				.Title ("template title")
 				.Title (x => string.Format ("{0}", x.Value))
+				.Title (x => x.Value)
 				.Text ("template text")
 				.End ()
+				.DebugDump ();
+
+			wall.AddBrick (x => x)
+				.Title ("Article")
+				.Icon ("Data.Article")
+
+				.Input ()
+				 .Title ("N° d'article")
+				 .Field (x => x.Id).Width (74)
+				.End ()
+
+				.Separator ()
+
+				.Input ()
+				 .Title ("Nom de l'article")
+				 .Field (x => x.Name)
+				.End ()
+
 				.DebugDump ();
 		}
 
 		class Foo
 		{
+			public int Id
+			{
+				get;
+				set;
+			}
 			public string Name
 			{
 				get;

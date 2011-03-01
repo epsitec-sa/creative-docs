@@ -24,20 +24,30 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public TSelf Title(Expression<System.Func<TSource, string>> func)
+		public TSelf Title<TResult>(Expression<System.Func<TSource, TResult>> expression)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, func.ToString ()));
-			return this as TSelf;
+			return this.Title (new Mortar<TSource> (expression));
 		}
 		public TSelf Title(Mortar<TSource> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value.ToString ()));
 			return this as TSelf;
 		}
+		
+		public TSelf Separator()
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Separator, ""));
+			return this as TSelf;
+		}
 	}
 
 	public class Mortar<T>
 	{
+		public Mortar(Expression expression)
+		{
+			this.textValue = expression.ToString ();
+		}
+
 		public Mortar(string value)
 		{
 			this.textValue = value;

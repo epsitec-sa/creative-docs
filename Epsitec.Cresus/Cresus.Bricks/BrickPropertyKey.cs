@@ -14,5 +14,8 @@ namespace Epsitec.Cresus.Bricks
 		Text,
 
 		Template,
+		Input,
+		Width,
+		Separator,
 	}
 }

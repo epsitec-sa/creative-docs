@@ -45,16 +45,16 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="InternalBaseBrick`3.cs" />
+    <Compile Include="InternalBaseBrick.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />
     <Compile Include="BrickPropertyKey.cs" />
-    <Compile Include="InternalSimpleBrick`3.cs" />
-    <Compile Include="TemplateBrick`3.cs" />
-    <Compile Include="SimpleBrick`2.cs" />
+    <Compile Include="InternalSimpleBrick.cs" />
+    <Compile Include="TemplateBrick.cs" />
+    <Compile Include="SimpleBrick.cs" />
     <Compile Include="BrickWall`1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="InternalTemplateBrick`4.cs" />
+    <Compile Include="InternalTemplateBrick.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

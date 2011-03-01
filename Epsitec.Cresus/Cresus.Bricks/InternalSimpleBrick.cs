@@ -19,5 +19,9 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return new TemplateBrick<TField, TField, TSelf> (this as TSelf);
 		}
+		public InputBrick<TField, TField, TSelf> Input()
+		{
+			return new InputBrick<TField, TField, TSelf> (this as TSelf);
+		}
 	}
 }

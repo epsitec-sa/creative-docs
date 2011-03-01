@@ -13,7 +13,13 @@ namespace Epsitec.Cresus.Bricks
 			this.key = key;
 			this.value = value;
 		}
-		
+
+		public BrickProperty(BrickPropertyKey key, int value)
+		{
+			this.key = key;
+			this.value = value;
+		}
+
 		public BrickProperty(BrickPropertyKey key, Brick value)
 		{
 			this.key = key;
