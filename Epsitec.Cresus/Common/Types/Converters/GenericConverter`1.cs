@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -12,6 +12,16 @@ namespace Epsitec.Common.Types.Converters
 	/// <typeparam name="T">The type on which the converter operates.</typeparam>
 	public abstract class GenericConverter<T> : GenericConverter
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GenericConverter&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="culture">The culture which must be used; if <c>null</c>, uses the
+		/// current thread culture whenever a conversion takes place.</param>
+		protected GenericConverter(System.Globalization.CultureInfo culture)
+		{
+			this.culture = culture;
+		}
+
 		public abstract string ConvertToString(T value);
 
 		public abstract ConversionResult<T> ConvertFromString(string text);
@@ -44,6 +54,11 @@ namespace Epsitec.Common.Types.Converters
 			return this.ConvertToString ((T) value);
 		}
 
+		protected System.Globalization.CultureInfo GetCurrentCulture()
+		{
+			return this.culture ?? System.Threading.Thread.CurrentThread.CurrentCulture;
+		}
+
 		static GenericConverter()
 		{
 			var converterType = GenericConverter.FindConverterType<T> ();
@@ -57,5 +72,7 @@ namespace Epsitec.Common.Types.Converters
 				GenericConverter<T>.Instance = new EnumConverter<T> (typeof (T));
 			}
 		}
+
+		private  System.Globalization.CultureInfo culture;
 	}
 }

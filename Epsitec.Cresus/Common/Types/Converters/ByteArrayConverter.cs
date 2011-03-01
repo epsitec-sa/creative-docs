@@ -8,6 +8,12 @@ namespace Epsitec.Common.Types.Converters
 {
 	internal class ByteArrayConverter : GenericConverter<byte[]>
 	{
+		public ByteArrayConverter()
+			: base (System.Globalization.CultureInfo.InvariantCulture)
+		{
+
+		}
+
 		public override string ConvertToString(byte[] value)
 		{
 			if (value == null)

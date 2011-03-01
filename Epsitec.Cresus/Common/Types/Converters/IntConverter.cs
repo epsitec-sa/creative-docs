@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 
@@ -15,9 +15,14 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	public class IntConverter : GenericConverter<int>
 	{
+		public IntConverter(System.Globalization.CultureInfo culture = null)
+			: base (culture)
+		{
+		}
+
 		public override string ConvertToString(int value)
 		{
-			return value.ToString ();
+			return value.ToString (this.GetCurrentCulture ());
 		}
 
 		public override ConversionResult<int> ConvertFromString(string text)
@@ -32,7 +37,7 @@ namespace Epsitec.Common.Types.Converters
 
 			int result;
 
-			if (int.TryParse (text, out result))
+			if (int.TryParse (text, System.Globalization.NumberStyles.Integer, this.GetCurrentCulture (), out result))
 			{
 				return new ConversionResult<int>
 				{
@@ -53,7 +58,7 @@ namespace Epsitec.Common.Types.Converters
 		{
 			int result;
 
-			if (int.TryParse (text, out result))
+			if (int.TryParse (text, System.Globalization.NumberStyles.Integer, this.GetCurrentCulture (), out result))
 			{
 				return true;
 			}

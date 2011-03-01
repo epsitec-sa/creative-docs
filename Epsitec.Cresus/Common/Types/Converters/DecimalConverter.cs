@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 
@@ -15,9 +15,14 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	public class DecimalConverter : GenericConverter<decimal>
 	{
+		public DecimalConverter(System.Globalization.CultureInfo culture = null)
+			: base (culture)
+		{
+		}
+
 		public override string ConvertToString(decimal value)
 		{
-			return value.ToString ();
+			return value.ToString (this.GetCurrentCulture ());
 		}
 
 		public override ConversionResult<decimal> ConvertFromString(string text)
@@ -32,7 +37,7 @@ namespace Epsitec.Common.Types.Converters
 
 			decimal result;
 
-			if (decimal.TryParse (text, out result))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, this.GetCurrentCulture (), out result))
 			{
 				return new ConversionResult<decimal>
 				{
@@ -53,7 +58,7 @@ namespace Epsitec.Common.Types.Converters
 		{
 			decimal result;
 
-			if (decimal.TryParse (text, out result))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, this.GetCurrentCulture (), out result))
 			{
 				return true;
 			}

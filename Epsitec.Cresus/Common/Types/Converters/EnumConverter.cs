@@ -11,6 +11,7 @@ namespace Epsitec.Common.Types.Converters
 	public class EnumConverter<T> : GenericConverter<T>
 	{
 		public EnumConverter(System.Type systemType)
+			: base (System.Globalization.CultureInfo.InvariantCulture)
 		{
 			this.enumType = EnumType.GetDefault (systemType);
 		}

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -14,9 +14,14 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	public class DateTimeConverter : GenericConverter<System.DateTime>
 	{
+		public DateTimeConverter(System.Globalization.CultureInfo culture = null)
+			: base (culture)
+		{
+		}
+
 		public override string ConvertToString(System.DateTime date)
 		{
-			return date == null ? null : date.ToString ();
+			return date == null ? null : date.ToString (this.GetCurrentCulture ());
 		}
 
 		public override ConversionResult<System.DateTime> ConvertFromString(string text)
@@ -31,7 +36,7 @@ namespace Epsitec.Common.Types.Converters
 			
 			System.DateTime result;
 
-			if (System.DateTime.TryParse (text, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out result))
+			if (System.DateTime.TryParse (text, this.GetCurrentCulture (), System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out result))
 			{
 				return new ConversionResult<System.DateTime>
 				{
@@ -52,7 +57,7 @@ namespace Epsitec.Common.Types.Converters
 		{
 			System.DateTime result;
 
-			if (System.DateTime.TryParse (text, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out result))
+			if (System.DateTime.TryParse (text, this.GetCurrentCulture (), System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out result))
 			{
 				return true;
 			}

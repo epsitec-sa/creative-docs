@@ -751,6 +751,7 @@
     <Compile Include="Types\Converters\Marshalers\NonNullableMarshaler.cs" />
     <Compile Include="Types\Converters\Marshalers\NullableMarshaler.cs" />
     <Compile Include="Types\Converters\Marshaler`1.cs" />
+    <Compile Include="Types\Converters\NullableDateConverter.cs" />
     <Compile Include="Types\Converters\StringConverter.cs" />
     <Compile Include="Types\Converters\TextConverter.cs" />
     <Compile Include="Types\Copier.cs" />
