@@ -1,8 +1,6 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Cresus.Core.Business.Accounting;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -16,22 +14,41 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				string content = XmlBlobEntity.ByteArrayToString (this.Data);
+				if ((this.xmlCache == null) &&
+					(this.Data != null) && (this.Data.Length > 0))
+				{
+					string content = XmlBlobEntity.ByteArrayToString (this.Data);
 
-				try
-				{
-					return XElement.Parse (content);
+					try
+					{
+						this.xmlSourceCache = content;
+						this.xmlCache = XElement.Parse (content);
+					}
+					catch
+					{
+						this.xmlSourceCache = null;
+						this.xmlCache = null;
+					}
 				}
-				catch
-				{
-					return null;
-				}
+				
+				return this.xmlCache;
 			}
 			set
 			{
 				string content = value.ToString ();
-				this.Data = XmlBlobEntity.StringToByteArray (content);
+
+				if (content != this.xmlSourceCache)
+				{
+					this.Data = XmlBlobEntity.StringToByteArray (content);
+					this.xmlSourceCache = content;
+				}
 			}
+		}
+
+		partial void OnDataChanged(byte[] oldValue, byte[] newValue)
+		{
+			this.xmlCache       = null;
+			this.xmlSourceCache = null;
 		}
 
 		private static byte[] StringToByteArray(string str)
@@ -45,5 +62,8 @@ namespace Epsitec.Cresus.Core.Entities
 			var encoding = new System.Text.UTF8Encoding ();
 			return encoding.GetString (data);
 		}
+
+		private XElement xmlCache;
+		private string xmlSourceCache;
 	}
 }

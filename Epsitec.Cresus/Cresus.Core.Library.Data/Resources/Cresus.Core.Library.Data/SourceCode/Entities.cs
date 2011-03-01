@@ -6,6 +6,7 @@
 
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VAQ]", typeof (Epsitec.Cresus.Core.Entities.CommentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VAU]", typeof (Epsitec.Cresus.Core.Entities.LanguageEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VA41]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 #region Epsitec.Cresus.Core.IItemRank Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -790,6 +791,173 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 30);	// [8VAU]
 		public static readonly new string EntityStructuredTypeKey = "[8VAU]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IReferenceNumber Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IReferenceNumber</c> entity.
+	///	designer:cap/8VA01
+	///	</summary>
+	public interface IReferenceNumber
+	{
+		///	<summary>
+		///	The <c>IdA</c> field.
+		///	designer:fld/8VA01/8VA11
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA11]")]
+		string IdA
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>IdB</c> field.
+		///	designer:fld/8VA01/8VA21
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA21]")]
+		string IdB
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>IdC</c> field.
+		///	designer:fld/8VA01/8VA31
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA31]")]
+		string IdC
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IReferenceNumberInterfaceImplementation
+	{
+		public static string GetIdA(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VA11]");
+		}
+		public static void SetIdA(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.IdA;
+			if (oldValue != value || !entity.IsFieldDefined("[8VA11]"))
+			{
+				IReferenceNumberInterfaceImplementation.OnIdAChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VA11]", oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdAChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnIdAChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdAChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		public static string GetIdB(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VA21]");
+		}
+		public static void SetIdB(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.IdB;
+			if (oldValue != value || !entity.IsFieldDefined("[8VA21]"))
+			{
+				IReferenceNumberInterfaceImplementation.OnIdBChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VA21]", oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdBChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnIdBChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdBChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		public static string GetIdC(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VA31]");
+		}
+		public static void SetIdC(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.IdC;
+			if (oldValue != value || !entity.IsFieldDefined("[8VA31]"))
+			{
+				IReferenceNumberInterfaceImplementation.OnIdCChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VA31]", oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdCChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnIdCChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdCChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.XmlBlob Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>XmlBlob</c> entity.
+	///	designer:cap/8VA41
+	///	</summary>
+	public partial class XmlBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/8VA41/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Data</c> field.
+		///	designer:fld/8VA41/8VA51
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA51]")]
+		public global::System.Byte[] Data
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[8VA51]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.Data;
+				if (oldValue != value || !this.IsFieldDefined("[8VA51]"))
+				{
+					this.OnDataChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[8VA51]", oldValue, value);
+					this.OnDataChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.XmlBlobEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.XmlBlobEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 36);	// [8VA41]
+		public static readonly new string EntityStructuredTypeKey = "[8VA41]";
 	}
 }
 #endregion

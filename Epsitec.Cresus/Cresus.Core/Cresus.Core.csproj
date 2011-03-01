@@ -186,7 +186,6 @@
     <Compile Include="Entities\BusinessSettingsEntity.cs" />
     <Compile Include="Entities\ArticleQuantityEntity.cs" />
     <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
-    <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Entities\OptionValueEntity.cs" />
     <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceCalculatorEntity.cs" />

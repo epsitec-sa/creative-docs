@@ -40,8 +40,12 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType ILifetime = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 			//	designer:cap/8VA6
 			public static readonly Epsitec.Common.Types.StructuredType INameDescription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+			//	designer:cap/8VA01
+			public static readonly Epsitec.Common.Types.StructuredType IReferenceNumber = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
 			//	designer:cap/8VAU
 			public static readonly Epsitec.Common.Types.StructuredType Language = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+			//	designer:cap/8VA41
+			public static readonly Epsitec.Common.Types.StructuredType XmlBlob = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 		}
 		
 		public static class Fields
@@ -170,6 +174,20 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
 			}
 			
+			public static class IReferenceNumber
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VA11
+				public static readonly global::Epsitec.Common.Support.Druid IdA = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
+				//	designer:cap/8VA21
+				public static readonly global::Epsitec.Common.Support.Druid IdB = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34);
+				//	designer:cap/8VA31
+				public static readonly global::Epsitec.Common.Support.Druid IdC = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35);
+			}
+			
 			public static class Language
 			{
 				internal static void _Initialize()
@@ -178,6 +196,16 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/8VAV
 				public static readonly global::Epsitec.Common.Support.Druid IsoLanguageCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
+			}
+			
+			public static class XmlBlob
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VA51
+				public static readonly global::Epsitec.Common.Support.Druid Data = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37);
 			}
 		}
 		
@@ -284,7 +312,9 @@ namespace Epsitec.Cresus.Core
 			Fields.IItemRank._Initialize ();
 			Fields.ILifetime._Initialize ();
 			Fields.INameDescription._Initialize ();
+			Fields.IReferenceNumber._Initialize ();
 			Fields.Language._Initialize ();
+			Fields.XmlBlob._Initialize ();
 		}
 		
 		public static void Initialize()

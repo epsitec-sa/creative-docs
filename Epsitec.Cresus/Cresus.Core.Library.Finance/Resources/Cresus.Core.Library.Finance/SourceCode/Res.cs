@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
 			public static readonly Epsitec.Common.Types.StructuredType ExchangeRateSource = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+			//	designer:cap/CVAM3
+			public static readonly Epsitec.Common.Types.StructuredType IRoundingMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 118));
 			//	designer:cap/CVA9
 			public static readonly Epsitec.Common.Types.StructuredType IsrDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
 			//	designer:cap/CVA21
@@ -653,6 +655,18 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 45);
 			}
 			
+			public static class IRoundingMode
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAO3
+				public static readonly global::Epsitec.Common.Support.Druid AddBeforeModulo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 120);
+				//	designer:cap/CVAN3
+				public static readonly global::Epsitec.Common.Support.Druid Modulo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 119);
+			}
+			
 			public static class IsrDefinition
 			{
 				internal static void _Initialize()
@@ -798,6 +812,7 @@ namespace Epsitec.Cresus.Core
 			Fields.BillingDetail._Initialize ();
 			Fields.Currency._Initialize ();
 			Fields.ExchangeRateSource._Initialize ();
+			Fields.IRoundingMode._Initialize ();
 			Fields.IsrDefinition._Initialize ();
 			Fields.PaymentDetail._Initialize ();
 			Fields.PaymentMode._Initialize ();

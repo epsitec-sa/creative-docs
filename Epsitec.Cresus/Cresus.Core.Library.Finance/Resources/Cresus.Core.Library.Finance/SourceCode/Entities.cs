@@ -1392,3 +1392,75 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
+#region Epsitec.Cresus.Core.IRoundingMode Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IRoundingMode</c> entity.
+	///	designer:cap/CVAM3
+	///	</summary>
+	public interface IRoundingMode
+	{
+		///	<summary>
+		///	The <c>Modulo</c> field.
+		///	designer:fld/CVAM3/CVAN3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAN3]")]
+		global::System.Decimal Modulo
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>AddBeforeModulo</c> field.
+		///	designer:fld/CVAM3/CVAO3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAO3]")]
+		global::System.Decimal AddBeforeModulo
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IRoundingModeInterfaceImplementation
+	{
+		public static global::System.Decimal GetModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.Decimal> ("[CVAN3]");
+		}
+		public static void SetModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.Decimal oldValue = obj.Modulo;
+			if (oldValue != value || !entity.IsFieldDefined("[CVAN3]"))
+			{
+				IRoundingModeInterfaceImplementation.OnModuloChanging (obj, oldValue, value);
+				entity.SetField<global::System.Decimal> ("[CVAN3]", oldValue, value);
+				IRoundingModeInterfaceImplementation.OnModuloChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		static partial void OnModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		public static global::System.Decimal GetAddBeforeModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.Decimal> ("[CVAO3]");
+		}
+		public static void SetAddBeforeModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.Decimal oldValue = obj.AddBeforeModulo;
+			if (oldValue != value || !entity.IsFieldDefined("[CVAO3]"))
+			{
+				IRoundingModeInterfaceImplementation.OnAddBeforeModuloChanging (obj, oldValue, value);
+				entity.SetField<global::System.Decimal> ("[CVAO3]", oldValue, value);
+				IRoundingModeInterfaceImplementation.OnAddBeforeModuloChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnAddBeforeModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		static partial void OnAddBeforeModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+	}
+}
+#endregion
+
