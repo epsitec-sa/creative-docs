@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				{
 					Modulo = 0.05M,
 					AddBeforeModulo = 0.025M,
-					PriceRoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
+					RoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
 				};
 			}
 		}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		
 		public void ComputePrice()
 		{
-			var roundingPolicy = this.priceRoundingMode.PriceRoundingPolicy;
+			var roundingPolicy = this.priceRoundingMode.RoundingPolicy;
 			var quantity       = this.GetTotalQuantity ();
 			var articlePrice   = this.GetArticlePrices (quantity).FirstOrDefault ();
 
@@ -243,9 +243,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				linePriceBeforeTax = this.ApplyDiscount (linePriceBeforeTax, discount);
 				
 				if ((discount.RoundingMode.IsNotNull ()) &&
-					(discount.RoundingMode.PriceRoundingPolicy != RoundingPolicy.None))
+					(discount.RoundingMode.RoundingPolicy != RoundingPolicy.None))
 				{
-					roundingPolicy = discount.RoundingMode.PriceRoundingPolicy;
+					roundingPolicy = discount.RoundingMode.RoundingPolicy;
 				}
 			}
 

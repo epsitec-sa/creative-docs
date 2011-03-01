@@ -12,6 +12,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA21]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA22]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAR2]", typeof (Epsitec.Cresus.Core.Entities.VatDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAP3]", typeof (Epsitec.Cresus.Core.Entities.TaxSettingsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAT3]", typeof (Epsitec.Cresus.Core.Entities.FinanceSettingsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVA24]", typeof (Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1460,6 +1463,285 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnAddBeforeModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
 		static partial void OnAddBeforeModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.TaxSettings Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>TaxSettings</c> entity.
+	///	designer:cap/CVAP3
+	///	</summary>
+	public partial class TaxSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>VatNumber</c> field.
+		///	designer:fld/CVAP3/CVAQ3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAQ3]")]
+		public string VatNumber
+		{
+			get
+			{
+				return this.GetField<string> ("[CVAQ3]");
+			}
+			set
+			{
+				string oldValue = this.VatNumber;
+				if (oldValue != value || !this.IsFieldDefined("[CVAQ3]"))
+				{
+					this.OnVatNumberChanging (oldValue, value);
+					this.SetField<string> ("[CVAQ3]", oldValue, value);
+					this.OnVatNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TaxMode</c> field.
+		///	designer:fld/CVAP3/CVAR3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAR3]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.TaxMode TaxMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[CVAR3]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue = this.TaxMode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAR3]"))
+				{
+					this.OnTaxModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.TaxMode> ("[CVAR3]", oldValue, value);
+					this.OnTaxModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>VatDefinitions</c> field.
+		///	designer:fld/CVAP3/CVAS3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAS3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity> VatDefinitions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity> ("[CVAS3]");
+			}
+		}
+		
+		partial void OnVatNumberChanging(string oldValue, string newValue);
+		partial void OnVatNumberChanged(string oldValue, string newValue);
+		partial void OnTaxModeChanging(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
+		partial void OnTaxModeChanged(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 121);	// [CVAP3]
+		public static readonly new string EntityStructuredTypeKey = "[CVAP3]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.FinanceSettings Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>FinanceSettings</c> entity.
+	///	designer:cap/CVAT3
+	///	</summary>
+	public partial class FinanceSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>IsrDefs</c> field.
+		///	designer:fld/CVAT3/CVAU3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAU3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> IsrDefs
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAU3]");
+			}
+		}
+		///	<summary>
+		///	The <c>PaymentReminderDefs</c> field.
+		///	designer:fld/CVAT3/CVAV3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAV3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> PaymentReminderDefs
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> ("[CVAV3]");
+			}
+		}
+		///	<summary>
+		///	The <c>PaymentModes</c> field.
+		///	designer:fld/CVAT3/CVA04
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA04]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> PaymentModes
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[CVA04]");
+			}
+		}
+		///	<summary>
+		///	The <c>SerializedChartsOfAccounts</c> field.
+		///	designer:fld/CVAT3/CVA14
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA14]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> SerializedChartsOfAccounts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[CVA14]");
+			}
+		}
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 125);	// [CVAT3]
+		public static readonly new string EntityStructuredTypeKey = "[CVAT3]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PriceRoundingMode Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PriceRoundingMode</c> entity.
+	///	designer:cap/CVA24
+	///	</summary>
+	public partial class PriceRoundingModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IRoundingMode, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVA24/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		#endregion
+		#region IRoundingMode Members
+		///	<summary>
+		///	The <c>Modulo</c> field.
+		///	designer:fld/CVA24/CVAN3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAN3]")]
+		public global::System.Decimal Modulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetModulo (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVA24/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		#region IRoundingMode Members
+		///	<summary>
+		///	The <c>AddBeforeModulo</c> field.
+		///	designer:fld/CVA24/CVAO3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAO3]")]
+		public global::System.Decimal AddBeforeModulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetAddBeforeModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetAddBeforeModulo (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>RoundingPolicy</c> field.
+		///	designer:fld/CVA24/CVA34
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA34]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy RoundingPolicy
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy> ("[CVA34]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue = this.RoundingPolicy;
+				if (oldValue != value || !this.IsFieldDefined("[CVA34]"))
+				{
+					this.OnRoundingPolicyChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy> ("[CVA34]", oldValue, value);
+					this.OnRoundingPolicyChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnRoundingPolicyChanging(global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy newValue);
+		partial void OnRoundingPolicyChanged(global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 130);	// [CVA24]
+		public static readonly new string EntityStructuredTypeKey = "[CVA24]";
 	}
 }
 #endregion

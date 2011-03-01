@@ -2,9 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Repositories;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
@@ -28,10 +32,15 @@ namespace Epsitec.Cresus.Core
 		T CreateEntity<T>()
 			where T : AbstractEntity, new ();
 
+		void DeleteEntity(AbstractEntity entity);
+
 		T GetLocalEntity<T>(T entity)
 			where T : AbstractEntity, new ();
 
 		T GetMasterEntity<T>()
+			where T : AbstractEntity, new ();
+
+		Repository<T> GetRepository<T>()
 			where T : AbstractEntity, new ();
 
 		void Register(AbstractEntity entity);

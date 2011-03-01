@@ -191,8 +191,6 @@
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
-    <Compile Include="Entities\PriceRoundingModeEntity.cs" />
-    <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\DocumentMetadataEntity.cs" />

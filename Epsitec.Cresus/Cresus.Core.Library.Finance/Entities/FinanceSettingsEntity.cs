@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business.Accounting;
 using Epsitec.Cresus.DataLayer.Context;
@@ -11,6 +12,7 @@ using Epsitec.Cresus.Core.Business;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.chartsOfAccounts.AsReadOnly ();
 		}
 
-
+#if false
 		public CresusChartOfAccounts GetRecentChartOfAccounts(BusinessContext businessContext)
 		{
 			//	Retourne le plan comptable correspondant à la date de référence de la transaction 'business'
@@ -32,8 +34,9 @@ namespace Epsitec.Cresus.Core.Entities
 			var date = businessContext.GetReferenceDate ();
 			return this.GetRecentChartOfAccounts (date);
 		}
+#endif
 
-		private CresusChartOfAccounts GetRecentChartOfAccounts(Date date)
+		public CresusChartOfAccounts GetRecentChartOfAccounts(Date date)
 		{
 			//	Retourne le plan comptable correspondant à une date, ou le plan comptable le plus récent.
 			//	Retourne null s'il n'existe aucun plan comptable.
@@ -56,6 +59,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return chart;
 		}
 
+		/// <summary>
+		/// Gets the chart of accounts.
+		/// </summary>
+		/// <param name="date">The date.</param>
+		/// <returns></returns>
 		private CresusChartOfAccounts GetChartOfAccounts(Date date)
 		{
 			//	Retourne le plan comptable correspondant à une date.
@@ -65,37 +73,37 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.GetChartsOfAccounts ().Where (chart => date >= chart.BeginDate && date <= chart.EndDate).FirstOrDefault ();
 		}
 
-
-		public void AddChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
+		public void AddChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
 		{
-			businessContext.AcquireLock ();
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
-			string chartId = chart.Id.ToString ("D");
-			var xml = chart.SerializeToXml ("chartOfAccounts");
+			string chartId  = ItemCodeGenerator.FromGuid (chart.Id);
+			var    chartXml = chart.SerializeToXml ("chartOfAccounts");
 
-			var blob = businessContext.DataContext.CreateEntity<XmlBlobEntity> ();
-			blob.Code = chartId;
-			blob.XmlData = xml;
+			var blob = businessContext.CreateEntity<XmlBlobEntity> ();
+			
+			blob.Code    = chartId;
+			blob.XmlData = chartXml;
 
 			this.SerializedChartsOfAccounts.Add (blob);
 		}
 
-		public void RemoveChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
+		public void RemoveChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
 		{
-			businessContext.AcquireLock ();
 			this.EnsureThatChartsOfAccountsAreDeserialized ();
 
 			string chartId = chart.Id.ToString ("D");
 
-			var repository = new XmlBlobRepository (businessContext.Data, businessContext.DataContext);
-			var blob = repository.GetByCode (chartId).FirstOrDefault ();
-			if (blob != null)
-			{
-				businessContext.DataContext.DeleteEntity (blob);
-			}
+			var repository = businessContext.GetRepository<XmlBlobEntity> ();
+			var example    = repository.CreateExample ();
 
-			this.SerializedChartsOfAccounts.Remove (blob);
+			example.Code = chartId;
+
+			foreach (var blob in repository.GetByExample (example))
+			{
+				businessContext.DeleteEntity (blob);
+				this.SerializedChartsOfAccounts.Remove (blob);
+			}
 		}
 
 
@@ -114,15 +122,9 @@ namespace Epsitec.Cresus.Core.Entities
 
 			if (!this.HasSameCodes)  // y a-t-il eu un changement de plan comptable ?
 			{
-				this.CopyCodes ();
-
 				this.chartsOfAccounts.Clear ();
-
-				foreach (var blob in this.SerializedChartsOfAccounts)
-				{
-					var cresusChartOfAccounts = CresusChartOfAccounts.DeserializeFromXml (blob.XmlData);
-					this.chartsOfAccounts.Add (cresusChartOfAccounts);
-				}
+				this.chartsOfAccounts.AddRange (this.SerializedChartsOfAccounts.Select (blob => CresusChartOfAccounts.DeserializeFromXml (blob.XmlData)));
+				this.CopyCodes ();
 			}
 		}
 
@@ -135,50 +137,14 @@ namespace Epsitec.Cresus.Core.Entities
 					return false;
 				}
 
-				for (int i = 0; i < this.lastCodes.Count; i++)
-				{
-					if (this.lastCodes[i] != this.SerializedChartsOfAccounts[i].Code)
-					{
-						return false;
-					}
-				}
-
-				return true;
+				return Comparer.EqualObjects (this.lastCodes, this.SerializedChartsOfAccounts.Select (x => x.Code));
 			}
 		}
 
 		private void CopyCodes()
 		{
 			this.lastCodes.Clear ();
-
-			foreach (var blob in this.SerializedChartsOfAccounts)
-			{
-				this.lastCodes.Add (blob.Code);
-			}
-		}
-
-		private string CurrentHash
-		{
-			//	Retourne une chaîne de longueur quelconque représentant un checksum unique des plans comptables
-			//	actuellement sérialisés.
-			get
-			{
-				if (this.SerializedChartsOfAccounts.Count == 0)
-				{
-					return "empty";
-				}
-
-				var builder = new System.Text.StringBuilder ();
-
-				foreach (var blob in this.SerializedChartsOfAccounts)
-				{
-					string md5 = Common.IO.Checksum.ComputeMd5Hash (blob.Data);
-					builder.Append (md5);
-					builder.Append ("+");
-				}
-
-				return builder.ToString ();
-			}
+			this.lastCodes.AddRange (this.SerializedChartsOfAccounts.Select (x => x.Code));
 		}
 
 

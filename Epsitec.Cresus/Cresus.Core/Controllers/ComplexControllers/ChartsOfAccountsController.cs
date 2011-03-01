@@ -271,24 +271,31 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 			if (filenames != null)
 			{
-				foreach (var filename in filenames)
+				if (this.businessContext.AcquireLock ())
 				{
-					CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
-
-					string err = this.CheckChart (chart);
-
-					if (string.IsNullOrEmpty (err))  // ok ?
+					foreach (var filename in filenames)
 					{
-						this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
+						CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
 
-						this.UpdateTable (this.ChartOfAccounts.Count-1);
-						this.UpdateWidgets ();
+						string err = this.CheckChart (chart);
+
+						if (string.IsNullOrEmpty (err))  // ok ?
+						{
+							this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
+
+							this.UpdateTable (this.ChartOfAccounts.Count-1);
+							this.UpdateWidgets ();
+						}
+						else  // erreur ?
+						{
+							MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
+							break;
+						}
 					}
-					else  // erreur ?
-					{
-						MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, err).OpenDialog ();
-						break;
-					}
+				}
+				else
+				{
+					//	TODO: lock n'a pas pu être obtenu...
 				}
 			}
 		}
@@ -298,13 +305,20 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			//	Bouton [-] cliqué.
 			int sel = this.table.SelectedRow;
 
-			if (sel >= 0 && sel < this.ChartOfAccounts.Count)
+			if (this.businessContext.AcquireLock ())
 			{
-				var chart = this.ChartOfAccounts[sel];
-				this.financeSettingsEntity.RemoveChartOfAccounts (this.businessContext, chart);
+				if (sel >= 0 && sel < this.ChartOfAccounts.Count)
+				{
+					var chart = this.ChartOfAccounts[sel];
+					this.financeSettingsEntity.RemoveChartOfAccounts (this.businessContext, chart);
 
-				this.UpdateTable ();
-				this.UpdateWidgets ();
+					this.UpdateTable ();
+					this.UpdateWidgets ();
+				}
+			}
+			else
+			{
+				//	TODO: lock n'a pas pu être obtenu...
 			}
 		}
 

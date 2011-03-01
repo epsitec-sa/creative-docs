@@ -7,6 +7,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VAQ]", typeof (Epsitec.Cresus.Core.Entities.CommentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VAU]", typeof (Epsitec.Cresus.Core.Entities.LanguageEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA41]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VA61]", typeof (Epsitec.Cresus.Core.Entities.DateRangeEntity))]
 #region Epsitec.Cresus.Core.IItemRank Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -958,6 +959,65 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 36);	// [8VA41]
 		public static readonly new string EntityStructuredTypeKey = "[8VA41]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.DateRange Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>DateRange</c> entity.
+	///	designer:cap/8VA61
+	///	</summary>
+	public partial class DateRangeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
+	{
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/8VA61/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/8VA61/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DateRangeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DateRangeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 38);	// [8VA61]
+		public static readonly new string EntityStructuredTypeKey = "[8VA61]";
 	}
 }
 #endregion

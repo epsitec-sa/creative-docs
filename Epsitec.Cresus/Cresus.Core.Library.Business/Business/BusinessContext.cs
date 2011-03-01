@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Core.Business
 		public Repositories.Repository<T> GetRepository<T>()
 			where T : AbstractEntity, new ()
 		{
-			var repository = this.Data.GetRepository<T> ();
+			var repository = this.Data.GetRepository<T> (this.dataContext);
 			return repository.DefineMapper (x => this.GetLocalEntity (x)) as Repositories.Repository<T>;
 		}
 		
@@ -607,6 +607,10 @@ namespace Epsitec.Cresus.Core.Business
 			throw new System.InvalidOperationException ("ArchiveEntity not possible on this entity type");
 		}
 
+		public void DeleteEntity(AbstractEntity entity)
+		{
+			this.DataContext.DeleteEntity (entity);
+		}
 
 		#region IDisposable Members
 

@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Core
 			
 			//	designer:cap/8VAQ
 			public static readonly Epsitec.Common.Types.StructuredType Comment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
+			//	designer:cap/8VA61
+			public static readonly Epsitec.Common.Types.StructuredType DateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
 			//	designer:cap/8VAM
 			public static readonly Epsitec.Common.Types.StructuredType ICategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/8VAS

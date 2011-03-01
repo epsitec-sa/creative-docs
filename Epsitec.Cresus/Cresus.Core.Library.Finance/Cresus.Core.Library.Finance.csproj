@@ -72,9 +72,11 @@
     <Compile Include="Business\IsrHelper.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
+    <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Factories\TaxContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Business\Isr.cs" />

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 
-		public string AccountNumber
+		public string							AccountNumber
 		{
 			get
 			{
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 			}
 		}
 
-		public FormattedText Caption
+		public FormattedText					Caption
 		{
 			get
 			{
@@ -43,22 +43,21 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public XElement SerializeToXml(string xmlNodeName)
 		{
-			var xml = new XElement (xmlNodeName);
-
-			xml.Add (new XAttribute ("number",  this.accountNumber));
-			xml.Add (new XAttribute ("caption", this.caption.ToSimpleText ()));
-
-			return xml;
+			return new XElement (xmlNodeName,
+				new XAttribute (BookAccountDefinition.XmlNumber, this.accountNumber),
+				new XAttribute (BookAccountDefinition.XmlCaption, this.caption.ToSimpleText ()));
 		}
 
 		public static BookAccountDefinition DeserializeFromXml(XElement xml)
 		{
-			string number  = (string) xml.Attribute ("number");
-			string caption = (string) xml.Attribute ("caption");
+			string number  = (string) xml.Attribute (BookAccountDefinition.XmlNumber);
+			string caption = (string) xml.Attribute (BookAccountDefinition.XmlCaption);
 
 			return new BookAccountDefinition (number, FormattedText.FromSimpleText (caption));
 		}
 
+		private const string XmlNumber	= "n";
+		private const string XmlCaption	= "c";
 	
 		private readonly string				accountNumber;
 		private readonly FormattedText		caption;
