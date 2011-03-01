@@ -2582,8 +2582,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				rect.Inflate(2);
 			}
-			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				rect.Inflate (2.5);
+			}
+			rect.Offset (ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
 			this.DrawShadow(graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+
+			//	Dessine le sur-cadre.
+			Color frameColor = dragging ? this.GetColorMain () : this.GetColor (0);
+
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				rect = this.bounds;
+				rect.Inflate (this.isRoot ? 4.5 : 2.5);
+				var surPath = this.PathRoundRectangle (rect, ObjectBox.roundFrameRadius+(this.isRoot ? 5 : 3));
+
+				graphics.Rasterizer.AddSurface (surPath);
+				graphics.RenderSolid (this.GetColor (1));
+
+				graphics.Rasterizer.AddOutline (surPath, 1);
+				graphics.RenderSolid (frameColor);
+			}
 
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
@@ -2605,8 +2625,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				lineColor = this.GetColorMain(0.3);
 			}
-
-			Color frameColor = dragging ? this.GetColorMain() : this.GetColor(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
@@ -3019,8 +3037,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-			graphics.RenderSolid(frameColor);
+			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
+			{
+				Misc.DrawPathDash (graphics, path, this.isRoot ? 6 : 2, 5, this.isRoot ? 8 : 4, false, frameColor);
+			}
+			else
+			{
+				graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
+				graphics.RenderSolid (frameColor);
+			}
 
 			//	Dessine les paramètres en bas à droite.
 			this.DrawParameters (graphics, frameColor);
@@ -3435,6 +3460,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid (color);
 			}
 
+#if false
 			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
 			{
 				graphics.PaintText (center.X-30, center.Y-4, "A", Font.DefaultFont, 11.0);
@@ -3444,6 +3470,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				graphics.PaintText (center.X-22, center.Y-4, "S", Font.DefaultFont, 11.0);
 			}
+#endif
 
 			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0)
 			{
