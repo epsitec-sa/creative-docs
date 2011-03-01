@@ -2363,17 +2363,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ChangeParameters()
 		{
 			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
-			var dialog = this.editor.Module.DesignerApplication.GetDlgEntityParameters ();
+			var lifetime = this.dataLifetimeExpectancy;
+			var flags    = this.structuredTypeFlags;
 
-			dialog.DataLifetimeExpectancy = this.dataLifetimeExpectancy;
-			dialog.StructuredTypeFlags    = this.structuredTypeFlags;
+			var result = this.editor.Module.DesignerApplication.DlgEntityParameters (ref lifetime, ref flags);
 
-			dialog.Show ();
-
-			if (dialog.IsEditOk)
+			if (result == Common.Dialogs.DialogResult.Accept)
 			{
-				this.DataLifetimeExpectancy = dialog.DataLifetimeExpectancy;
-				this.StructuredTypeFlags    = dialog.StructuredTypeFlags;
+				this.DataLifetimeExpectancy = lifetime;
+				this.StructuredTypeFlags    = flags;
 
 				this.UpdateInformations ();
 				this.editor.Module.AccessEntities.SetLocalDirty ();

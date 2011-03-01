@@ -596,7 +596,7 @@ namespace Epsitec.Common.Designer
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
 				//	Demande le type (interface, héritage, etc.).
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+				var result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return false;
@@ -610,16 +610,17 @@ namespace Epsitec.Common.Designer
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 
 				//	Demande les paramètres (fanions et espérance de vie).
-				var parametersDialog = this.designerApplication.GetDlgEntityParameters ();
-				parametersDialog.Show ();  // montre les derniers choix effectués
+				var lifetime = DataLifetimeExpectancy.Stable;
+				var flags    = StructuredTypeFlags.None;
+				result = this.designerApplication.DlgEntityParameters (ref lifetime, ref flags);
 
-				if (!parametersDialog.IsEditOk)
+				if (result != Common.Dialogs.DialogResult.Accept)
 				{
 					return false;
 				}
 
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, parametersDialog.DataLifetimeExpectancy);
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     parametersDialog.StructuredTypeFlags);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
+				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags,                     flags);
 			}
 			else if (this.type == Type.Forms && !duplicateContent)
 			{
