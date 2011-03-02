@@ -166,6 +166,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.levelLabel.Text = string.Format ("{0} / {1}", (this.selectedFrameBox+1).ToString (), this.frameBoxes.Count.ToString ());
 			this.buttonPrev.Enable = (this.selectedFrameBox != 0);
 			this.buttonNext.Text = (this.selectedFrameBox < this.frameBoxes.Count-1) ? "Suivant &gt;" : "Créer";
+
+			if (this.selectedFrameBox == 2)
+			{
+				this.EntityParameters.TitleEntity = this.resourceName.SelectedName;
+			}
 		}
 
 

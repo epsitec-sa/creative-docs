@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public EntityParameters(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
+			this.titleEntity = "Exemple";
 		}
 
 		public override void Show()
@@ -27,7 +28,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("EntityParameters", 400, 150, true);
+				this.WindowInit ("EntityParameters", 400, 300, true);
 				this.window.Text = Res.Strings.Dialog.EntityParameters.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -74,35 +75,42 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void CreateUI(Widget parent)
 		{
-			var mainPane = new FrameBox
+			var container = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			var leftPane = new GroupBox
+			var mainPane = new FrameBox
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Margins = new Margins (0, 0, 2, 10),
+			};
+
+			var topPane = new GroupBox
 			{
 				Parent = mainPane,
 				Text = Common.Types.Res.Types.StructuredTypeFlags.Caption.DefaultLabel,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 4, 0, 0),
+				Margins = new Margins (0, 0, 0, 4),
 				Padding = new Margins (8),
 			};
 
-			var rightPane = new GroupBox
+			var bottomPane = new GroupBox
 			{
 				Parent = mainPane,
 				Text = Common.Types.Res.Types.DataLifetimeExpectancy.Caption.DefaultLabel,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (4, 0, 0, 0),
+				Margins = new Margins (0, 0, 4, 0),
 				Padding = new Margins (8),
 			};
 
 			//	Rempli la colonne de gauche.
 			this.abstractClassButton = new CheckButton
 			{
-				Parent = leftPane,
+				Parent = topPane,
 				Text = Common.Types.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -116,7 +124,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.generateSchemaButton = new CheckButton
 			{
-				Parent = leftPane,
+				Parent = topPane,
 				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -130,7 +138,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.generateRepositoryButton = new CheckButton
 			{
-				Parent = leftPane,
+				Parent = topPane,
 				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -145,7 +153,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Rempli la colonne de droite.
 			this.unknownButton = new RadioButton
 			{
-				Parent = rightPane,
+				Parent = bottomPane,
 				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Unknown.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -159,7 +167,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.volatileButton = new RadioButton
 			{
-				Parent = rightPane,
+				Parent = bottomPane,
 				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Volatile.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -173,7 +181,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.stableButton = new RadioButton
 			{
-				Parent = rightPane,
+				Parent = bottomPane,
 				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Stable.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -187,7 +195,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.immutableButton = new RadioButton
 			{
-				Parent = rightPane,
+				Parent = bottomPane,
 				Text = Common.Types.Res.Values.DataLifetimeExpectancy.Immutable.DefaultLabel,
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -198,11 +206,32 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.DataLifetimeExpectancy = Types.DataLifetimeExpectancy.Immutable;
 				this.UpdateWidgets ();
 			};
+
+			//	Crée l'exemple.
+			this.entitySample = new MyWidgets.EntitySample
+			{
+				Parent = container,
+				PreferredWidth = 200,
+				Dock = DockStyle.Right,
+			};
 		}
 
 		public void Update()
 		{
 			this.UpdateWidgets ();
+		}
+
+		public string TitleEntity
+		{
+			get
+			{
+				return this.titleEntity;
+			}
+			set
+			{
+				this.titleEntity = value;
+				this.UpdateSample ();
+			}
 		}
 
 		public bool IsEditOk
@@ -211,6 +240,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				return this.isEditOk;
 			}
+		}
+
+		public EntitiesEditor.ObjectBox ObjectBox
+		{
+			get;
+			set;
 		}
 
 		public DataLifetimeExpectancy DataLifetimeExpectancy
@@ -236,6 +271,25 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.volatileButton.ActiveState  = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile ) ? ActiveState.Yes : ActiveState.No;
 			this.stableButton.ActiveState    = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Stable   ) ? ActiveState.Yes : ActiveState.No;
 			this.immutableButton.ActiveState = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Immutable) ? ActiveState.Yes : ActiveState.No;
+
+			this.UpdateSample ();
+		}
+
+		private void UpdateSample()
+		{
+			if (this.ObjectBox == null)
+			{
+				this.entitySample.Title = this.titleEntity;
+			}
+			else
+			{
+				this.entitySample.Title     = this.ObjectBox.Title;
+				this.entitySample.Subtitle  = this.ObjectBox.Subtitle;
+				this.entitySample.MainColor = this.ObjectBox.BackgroundMainColor;
+			}
+
+			this.entitySample.DataLifetimeExpectancy = this.DataLifetimeExpectancy;
+			this.entitySample.StructuredTypeFlags    = this.StructuredTypeFlags;
 		}
 
 
@@ -264,6 +318,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		private bool						isEditOk;
+		private string						titleEntity;
 
 		private CheckButton					abstractClassButton;
 		private CheckButton					generateSchemaButton;
@@ -273,6 +328,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private RadioButton					volatileButton;
 		private RadioButton					stableButton;
 		private RadioButton					immutableButton;
+
+		private MyWidgets.EntitySample		entitySample;
 
 		private Button						buttonOk;
 		private Button						buttonCancel;

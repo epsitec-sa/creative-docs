@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected string Subtitle
+		public string Subtitle
 		{
 			//	Sous-titre au sommet de la boîte, juste sous le titre (nom du module).
 			get
@@ -2406,7 +2406,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			var lifetime = this.dataLifetimeExpectancy;
 			var flags    = this.structuredTypeFlags;
 
-			var result = this.editor.Module.DesignerApplication.DlgEntityParameters (ref lifetime, ref flags);
+			var result = this.editor.Module.DesignerApplication.DlgEntityParameters (this, ref lifetime, ref flags);
 
 			if (result == Common.Dialogs.DialogResult.Accept)
 			{
@@ -2610,113 +2610,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le fond de l'objet.
 			//	Héritage	->	Traitillé
 			//	Interface	->	Trait plein avec o---
-			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
+			ObjectBox.DrawFrame1 (graphics, this.bounds, this.boxColor, this.isRoot, this.isExtended, this.isDimmed, dragging,
+				this.dataLifetimeExpectancy, this.structuredTypeFlags,
+				this.title, this.subtitle,
+				this.columnsSeparatorRelative1, this.ColumnsSeparatorAbsolute (0), this.ColumnsSeparatorAbsolute (1));
 
-			//	Dessine l'ombre.
-			rect = this.bounds;
-			if (this.isRoot)
-			{
-				rect.Inflate(2);
-			}
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
-			{
-				rect.Inflate (2.5);
-			}
-			rect.Offset (ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+			var frameColor = dragging ? this.GetColorMain (1.0) : this.GetColor (0);
 
-			//	Dessine le sur-cadre.
-			Color frameColor = dragging ? this.GetColorMain () : this.GetColor (0);
-
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
-			{
-				rect = this.bounds;
-				rect.Inflate (this.isRoot ? 4.5 : 2.5);
-				var surPath = this.PathRoundRectangle (rect, ObjectBox.roundFrameRadius+(this.isRoot ? 5 : 3));
-
-				graphics.Rasterizer.AddSurface (surPath);
-				graphics.RenderSolid (this.GetColor (1));
-
-				graphics.Rasterizer.AddOutline (surPath, 1);
-				graphics.RenderSolid (frameColor);
-			}
-
-			//	Construit le chemin du cadre arrondi.
-			rect = this.bounds;
-			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, ObjectBox.roundFrameRadius);
-
-			//	Dessine l'intérieur en blanc.
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.GetColor(1));
-
-			//	Dessine l'intérieur en dégradé.
-			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.GetColorMain(dragging ? 0.8 : 0.4);
-			Color c2 = this.GetColorMain(dragging ? 0.4 : 0.1);
-			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
-
-			Color lineColor = this.GetColor(0.9);
+			var lineColor = this.GetColor (0.9);
 			if (dragging)
 			{
-				lineColor = this.GetColorMain(0.3);
+				lineColor = this.GetColorMain (0.3);
 			}
 
-			//	Dessine en blanc la zone pour les champs.
-			if (this.isExtended)
-			{
-				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
-				graphics.AddFilledRectangle(inside);
-				graphics.RenderSolid(this.GetColor(1));
-				graphics.AddFilledRectangle(inside);
-				Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
-				Color ci2 = this.GetColorMain(0.0);
-				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
-
-				//	Trait vertical de séparation.
-				if (this.columnsSeparatorRelative1 < 1.0)
-				{
-					double posx = this.ColumnsSeparatorAbsolute(0)+0.5;
-					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(lineColor);
-				}
-
-				{
-					double posx = this.ColumnsSeparatorAbsolute(1)+0.5;
-					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
-					graphics.RenderSolid(lineColor);
-				}
-
-				//	Ombre supérieure.
-				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
-				graphics.AddFilledRectangle(shadow);
-				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
-			}
-
-			//	Dessine le titre.
-			Color titleColor = dragging ? this.GetColor (1) : this.GetColor (0, text: true);
-
-			if (string.IsNullOrEmpty(this.subtitleString))
-			{
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-				rect.Deflate(4, 2);
-				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-			}
-			else
-			{
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
-				rect.Deflate(4, 0);
-				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-				
-				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
-				rect.Deflate(4, 0);
-				this.subtitle.LayoutSize = rect.Size;
-				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
-			}
+			Rectangle rect;
 
 			//	Dessine le bouton compact/étendu.
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
@@ -2787,10 +2696,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
-				graphics.RenderSolid(frameColor);
-
 				//	Dessine le glyph 'o--' pour les interfaces.
 				if (this.IsInterface)
 				{
@@ -2809,7 +2714,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.0, 0.0);
 							rect.Bottom += 1.0;
-							Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, this.fields[i].IsGroupTop, this.fields[i].IsGroupBottom);
+							Path roundedPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundInsideRadius, this.fields[i].IsGroupTop, this.fields[i].IsGroupBottom);
 							graphics.Rasterizer.AddSurface(roundedPath);
 							graphics.RenderSolid(sourceColor);
 						}
@@ -2824,11 +2729,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							rect.Top -= 1.0;
 						}
-						Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, true, false);
+						Path roundedPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundInsideRadius, true, false);
 						graphics.Rasterizer.AddSurface(roundedPath);
 						Color ci1 = this.GetColorMain(hilite ? 0.5 : (dragging ? 0.2 : 0.1));
 						Color ci2 = this.GetColorMain(hilite ? 0.3 : (dragging ? 0.1 : 0.0));
-						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
+						AbstractObject.RenderVerticalGradient (graphics, rect, ci1, ci2);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(ObjectBox.textMargin, 2);
@@ -2941,7 +2846,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
 						rect.Top += 1.0;
-						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
+						Path dashedPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -2975,7 +2880,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
-						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
+						Path dashedPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -3038,7 +2943,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect = this.GetFieldGroupBounds(this.hilitedFieldRank);
 					rect.Deflate(1.5);
 					rect.Bottom += 1.0;
-					Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, false, true);
+					Path roundedPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundInsideRadius, false, true);
 
 					graphics.Rasterizer.AddSurface(roundedPath);
 					graphics.RenderSolid(this.GetColorMain(0.1));
@@ -3075,18 +2980,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le cadre en noir.
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
-			{
-				Misc.DrawPathDash (graphics, path, this.isRoot ? 6 : 2, 5, this.isRoot ? 8 : 4, false, frameColor);
-			}
-			else
-			{
-				graphics.Rasterizer.AddOutline (path, this.isRoot ? 6 : 2);
-				graphics.RenderSolid (frameColor);
-			}
-
-			//	Dessine les paramètres en bas à droite.
-			this.DrawParameters (graphics, frameColor);
+			ObjectBox.DrawFrame2 (graphics, this.bounds, this.boxColor, this.isRoot, this.isExtended, this.isDimmed, dragging, this.dataLifetimeExpectancy, this.structuredTypeFlags);
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
@@ -3270,6 +3164,231 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+
+		public static void DrawFrame(
+			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, string title, string subtitle,
+			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
+		{
+			TextLayout titleLayout    = null;
+			TextLayout subtitleLayout = null;
+
+			if (!string.IsNullOrEmpty (title))
+			{
+				titleLayout = new TextLayout ();
+				titleLayout.DefaultFontSize = 12;
+				titleLayout.Alignment = ContentAlignment.MiddleCenter;
+				titleLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				titleLayout.Text = Misc.Bold (title);
+			}
+
+			if (!string.IsNullOrEmpty (subtitle))
+			{
+				subtitleLayout = new TextLayout ();
+				subtitleLayout.DefaultFontSize = 9;
+				subtitleLayout.Alignment = ContentAlignment.MiddleCenter;
+				subtitleLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				subtitleLayout.Text = Misc.Italic (subtitle);
+			}
+
+			ObjectBox.DrawFrame1 (graphics, bounds, mainColor, isRoot, isExtended, false, false, lifetime, flags, titleLayout, subtitleLayout, 0.5, bounds.Left+bounds.Width*0.5, bounds.Left+bounds.Width*0.9);
+			ObjectBox.DrawFrame2 (graphics, bounds, mainColor, isRoot, isExtended, false, false, lifetime, flags);
+		}
+
+		private static void DrawFrame1(
+			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, bool isDimmed, bool dragging,
+			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags,
+			TextLayout title, TextLayout subtitle,
+			double columnsSeparatorRelative1, double columnsSeparatorAbsolute0, double columnsSeparatorAbsolute1)
+		{
+			//	Dessine l'ombre.
+			var rect = bounds;
+			if (isRoot)
+			{
+				rect.Inflate (2);
+			}
+			if ((flags & Types.StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				rect.Inflate (2.5);
+			}
+			rect.Offset (ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
+			AbstractObject.DrawShadow (graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int) ObjectBox.shadowOffset, 0.2);
+
+			//	Dessine le sur-cadre.
+			var frameColor = dragging ? AbstractObject.GetColorMain (mainColor, 1.0, isDimmed) : AbstractObject.GetColor (0, isDimmed, false);
+			var whiteColor = AbstractObject.GetColor (1, isDimmed, false);
+
+			if ((flags & Types.StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				rect = bounds;
+				rect.Inflate (isRoot ? 4.5 : 2.5);
+				var surPath = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundFrameRadius+(isRoot ? 5 : 3));
+
+				graphics.Rasterizer.AddSurface (surPath);
+				graphics.RenderSolid (whiteColor);
+
+				graphics.Rasterizer.AddOutline (surPath, 1);
+				graphics.RenderSolid (frameColor);
+			}
+
+			//	Construit le chemin du cadre arrondi.
+			rect = bounds;
+			rect.Deflate (1);
+			var path = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundFrameRadius);
+
+			//	Dessine l'intérieur en blanc.
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (whiteColor);
+
+			//	Dessine l'intérieur en dégradé.
+			graphics.Rasterizer.AddSurface (path);
+			var c1 = AbstractObject.GetColorMain (mainColor, dragging ? 0.8 : 0.4, isDimmed);
+			var c2 = AbstractObject.GetColorMain (mainColor, dragging ? 0.4 : 0.1, isDimmed);
+			AbstractObject.RenderHorizontalGradient (graphics, bounds, c1, c2);
+
+			var lineColor = AbstractObject.GetColor (0.9, isDimmed, false);
+			if (dragging)
+			{
+				lineColor = AbstractObject.GetColorMain (mainColor, 0.3, isDimmed);
+			}
+
+			//	Dessine en blanc la zone pour les champs.
+			if (isExtended)
+			{
+				Rectangle inside = new Rectangle (bounds.Left+1, bounds.Bottom+AbstractObject.footerHeight, bounds.Width-2, bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
+				graphics.AddFilledRectangle (inside);
+				graphics.RenderSolid (whiteColor);
+				graphics.AddFilledRectangle (inside);
+				Color ci1 = AbstractObject.GetColorMain (mainColor, dragging ? 0.2 : 0.1, isDimmed);
+				Color ci2 = AbstractObject.GetColorMain (mainColor, 0.0, isDimmed);
+				AbstractObject.RenderHorizontalGradient (graphics, inside, ci1, ci2);
+
+				//	Trait vertical de séparation.
+				if (columnsSeparatorRelative1 < 1.0)
+				{
+					double posx = columnsSeparatorAbsolute0+0.5;
+					graphics.AddLine (posx, bounds.Bottom+AbstractObject.footerHeight+0.5, posx, bounds.Top-AbstractObject.headerHeight-0.5);
+					graphics.RenderSolid (lineColor);
+				}
+
+				{
+					double posx = columnsSeparatorAbsolute1+0.5;
+					graphics.AddLine (posx, bounds.Bottom+AbstractObject.footerHeight+0.5, posx, bounds.Top-AbstractObject.headerHeight-0.5);
+					graphics.RenderSolid (lineColor);
+				}
+
+				//	Ombre supérieure.
+				Rectangle shadow = new Rectangle (bounds.Left+1, bounds.Top-AbstractObject.headerHeight-8, bounds.Width-2, 8);
+				graphics.AddFilledRectangle (shadow);
+				AbstractObject.RenderVerticalGradient (graphics, shadow, Color.FromAlphaRgb (0.0, 0, 0, 0), Color.FromAlphaRgb (0.3, 0, 0, 0));
+
+				graphics.AddLine (bounds.Left+2, bounds.Top-AbstractObject.headerHeight-0.5, bounds.Right-2, bounds.Top-AbstractObject.headerHeight-0.5);
+				graphics.AddLine (bounds.Left+2, bounds.Bottom+AbstractObject.footerHeight+0.5, bounds.Right-2, bounds.Bottom+AbstractObject.footerHeight+0.5);
+				graphics.RenderSolid (frameColor);
+			}
+
+			//	Dessine le titre.
+			if (title != null)
+			{
+				Color titleColor = dragging ? AbstractObject.GetColor (1, isDimmed, true) : AbstractObject.GetColor (0, isDimmed, true);
+
+				if (subtitle == null || string.IsNullOrEmpty (subtitle.Text))
+				{
+					rect = new Rectangle (bounds.Left, bounds.Top-AbstractObject.headerHeight, bounds.Width, AbstractObject.headerHeight);
+					rect.Deflate (4, 2);
+					title.LayoutSize = rect.Size;
+					title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+				}
+				else
+				{
+					rect = new Rectangle (bounds.Left, bounds.Top-AbstractObject.headerHeight+10, bounds.Width, AbstractObject.headerHeight-10);
+					rect.Deflate (4, 0);
+					title.LayoutSize = rect.Size;
+					title.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+
+					rect = new Rectangle (bounds.Left, bounds.Top-AbstractObject.headerHeight+4, bounds.Width, 10);
+					rect.Deflate (4, 0);
+					subtitle.LayoutSize = rect.Size;
+					subtitle.Paint (rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+				}
+			}
+		}
+
+		private static void DrawFrame2(
+			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, bool isDimmed, bool dragging,
+			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
+		{
+			var frameColor = dragging ? AbstractObject.GetColorMain (mainColor, 1.0, isDimmed) : AbstractObject.GetColor (0, isDimmed, false);
+
+			var rect = bounds;
+			rect.Deflate (1);
+			var path = AbstractObject.PathRoundRectangle (rect, ObjectBox.roundFrameRadius);
+
+			//	Dessine le cadre en noir.
+			if ((flags & Types.StructuredTypeFlags.AbstractClass) != 0)
+			{
+				Misc.DrawPathDash (graphics, path, isRoot ? 6 : 2, 5, isRoot ? 8 : 4, false, frameColor);
+			}
+			else
+			{
+				graphics.Rasterizer.AddOutline (path, isRoot ? 6 : 2);
+				graphics.RenderSolid (frameColor);
+			}
+
+			//	Dessine les paramètres en bas à droite.
+			var center = new Point (bounds.Right-AbstractObject.buttonRadius*2-1, bounds.Bottom+AbstractObject.footerHeight/2+1);
+			ObjectBox.DrawParameters (graphics, center, frameColor, isDimmed, lifetime, flags);
+		}
+
+		protected static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
+		{
+			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
+			var whiteColor = AbstractObject.GetColor (1, isDimmed, false);
+
+			if (lifetime != Types.DataLifetimeExpectancy.Unknown)
+			{
+				double radius = 5.5;
+				double angle = 0;
+
+				graphics.AddFilledCircle (center, radius);
+				graphics.RenderSolid (whiteColor);
+
+				graphics.AddCircle (center, radius);
+				graphics.RenderSolid (frameColor);
+
+				switch (lifetime)
+				{
+					case Types.DataLifetimeExpectancy.Volatile:
+						angle = 45;
+						break;
+
+					case Types.DataLifetimeExpectancy.Stable:
+						angle = -90;
+						break;
+
+					case Types.DataLifetimeExpectancy.Immutable:
+						angle = 90;
+						break;
+				}
+
+				if (angle != 0)
+				{
+					var path = new Path ();
+					path.MoveTo (center);
+					path.ArcDeg (center, radius, radius, 90, angle, false);
+					path.LineTo (center);
+					path.Close ();
+					graphics.Rasterizer.AddSurface (path);
+					graphics.RenderSolid (frameColor);
+				}
+			}
+
+			if ((flags & Types.StructuredTypeFlags.GenerateRepository) != 0)
+			{
+				graphics.PaintText (center.X-15, center.Y-4, "R", Font.DefaultFont, 11.0);
+			}
+		}
+
+
 		protected bool IsHeaderHilite
 		{
 			//	Indique si la souris est dans l'en-tête.
@@ -3321,13 +3440,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rs = big;
 			rs.Inflate(2);
 			rs.Offset(8, -8);
-			this.DrawShadow(graphics, rs, 18, 10, 0.6);
+			AbstractObject.DrawShadow (graphics, rs, 18, 10, 0.6);
 
-			Path path = this.PathRoundRectangle(big, 10);
+			Path path = AbstractObject.PathRoundRectangle (big, 10);
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.GetColor(1));
 			graphics.Rasterizer.AddSurface(path);
-			this.RenderHorizontalGradient(graphics, big, this.GetColorMain(0.6), this.GetColorMain(0.2));
+			AbstractObject.RenderHorizontalGradient (graphics, big, this.GetColorMain (0.6), this.GetColorMain (0.2));
 
 			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(this.GetColor(0));
@@ -3415,9 +3534,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
 			Rectangle rect = new Rectangle(p1, p2);
 			rect.Inflate(2.5+6);
-			this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
+			AbstractObject.DrawShadow (graphics, rect, rect.Width/2, 6, 0.2);
 			rect.Deflate(6);
-			Path path = this.PathRoundRectangle(rect, rect.Width/2);
+			Path path = AbstractObject.PathRoundRectangle (rect, rect.Width/2);
 
 			Color hiliteColor = this.GetColor(1);
 			if (hilited)
@@ -3457,63 +3576,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.GetColorMain());
-		}
-
-		protected void DrawParameters(Graphics graphics, Color color)
-		{
-			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
-			Point center = this.PositionParametersButton;
-			double radius = 5.5;
-			double angle = 0;
-
-			graphics.AddFilledCircle (center, radius);
-			graphics.RenderSolid (this.GetColor (1));
-
-			graphics.AddCircle (center, radius);
-			graphics.RenderSolid (color);
-
-			switch (this.dataLifetimeExpectancy)
-			{
-				case Types.DataLifetimeExpectancy.Volatile:
-					angle = 45;
-					break;
-
-				case Types.DataLifetimeExpectancy.Stable:
-					angle = -90;
-					break;
-
-				case Types.DataLifetimeExpectancy.Immutable:
-					angle = 90;
-					break;
-			}
-
-			if (angle != 0)
-			{
-				var path = new Path ();
-				path.MoveTo (center);
-				path.ArcDeg (center, radius, radius, 90, angle, false);
-				path.LineTo (center);
-				path.Close ();
-				graphics.Rasterizer.AddSurface (path);
-				graphics.RenderSolid (color);
-			}
-
-#if false  // Pas nécessaire, c'est redondant avec les cadres !!!
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.AbstractClass) != 0)
-			{
-				graphics.PaintText (center.X-30, center.Y-4, "A", Font.DefaultFont, 11.0);
-			}
-
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema) != 0)
-			{
-				graphics.PaintText (center.X-22, center.Y-4, "S", Font.DefaultFont, 11.0);
-			}
-#endif
-
-			if ((this.structuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0)
-			{
-				graphics.PaintText (center.X-15, center.Y-4, "R", Font.DefaultFont, 11.0);
-			}
 		}
 
 

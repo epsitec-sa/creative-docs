@@ -349,7 +349,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			rect.Inflate(2);
 			rect.Offset(ObjectInfo.shadowOffset, -(ObjectInfo.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int)ObjectInfo.shadowOffset, 0.2);
+			AbstractObject.DrawShadow (graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int) ObjectInfo.shadowOffset, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
-			Path path = this.PathRoundRectangle(bounds, ObjectInfo.roundFrameRadius);
+			Path path = AbstractObject.PathRoundRectangle (bounds, ObjectInfo.roundFrameRadius);
 
 			if (himself.X == other.X)
 			{
@@ -747,11 +747,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			if (hilited)
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.3);
+				return this.GetColorAdjusted (this.GetColorMain (), 0.3);
 			}
 			else
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.2);
+				return this.GetColorAdjusted (this.GetColorMain (), 0.2);
 			}
 		}
 
@@ -763,11 +763,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else if (hilited)
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.9);
+				return this.GetColorAdjusted (this.GetColorMain (), 0.9);
 			}
 			else
 			{
-				return this.GetColorAdjusted(this.GetColorMain(), 0.7);
+				return this.GetColorAdjusted (this.GetColorMain (), 0.7);
 			}
 		}
 

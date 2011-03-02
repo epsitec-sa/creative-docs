@@ -598,7 +598,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 				rect.Inflate(radius*0.2);
 				rect.Offset(0, -radius*0.7);
-				this.DrawShadow(graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
+				AbstractObject.DrawShadow (graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
 			}
 
 			Color colorSurface;
@@ -626,14 +626,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 		
-		protected void DrawShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
+		protected static void DrawShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce.
 			alpha /= smooth;
 
 			for (int i=0; i<smooth; i++)
 			{
-				Path path = this.PathRoundRectangle(rect, radius);
+				Path path = AbstractObject.PathRoundRectangle (rect, radius);
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(Color.FromAlphaRgb(alpha, 0, 0, 0));
 
@@ -700,8 +700,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si la couleur pour les mises en évidence est foncée.
 			get
 			{
-				return this.boxColor == MainColor.DarkGrey;
+				return AbstractObject.StaticIsDarkColorMain (this.boxColor);
 			}
+		}
+
+		protected static bool StaticIsDarkColorMain(MainColor boxColor)
+		{
+			//	Indique si la couleur pour les mises en évidence est foncée.
+			return boxColor == MainColor.DarkGrey;
 		}
 
 		protected Color GetColorMain()
@@ -723,6 +729,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 		protected Color GetColorMain(MainColor boxColor, double alpha)
+		{
+			//	Retourne la couleur pour les mises en évidence.
+			return AbstractObject.GetColorMain (boxColor, alpha, this.isDimmed);
+		}
+
+		protected static Color GetColorMain(MainColor boxColor, double alpha, bool isDimmed)
 		{
 			//	Retourne la couleur pour les mises en évidence.
 			Color color = Color.FromAlphaRgb(alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
@@ -766,9 +778,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					break;
 			}
 
-			if (this.isDimmed)
+			if (isDimmed)
 			{
-				color = this.GetColorLighter(color, 0.3);
+				color = AbstractObject.GetColorLighter (color, 0.3);
 			}
 
 			return color;
@@ -776,12 +788,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Color GetColor(double brightness, bool text = false)
 		{
+			return AbstractObject.GetColor (brightness, this.isDimmed, text);
+		}
+
+		protected static Color GetColor(double brightness, bool isDimmed, bool text)
+		{
 			//	Retourne un niveau de gris.
 			Color color = Color.FromBrightness(brightness);
 
-			if (this.isDimmed)
+			if (isDimmed)
 			{
-				color = this.GetColorLighter(color, text ? 0.7 : 0.3);
+				color = AbstractObject.GetColorLighter (color, text ? 0.7 : 0.3);
 			}
 
 			return color;
@@ -792,21 +809,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne une couleur ajustée, sans changer la transparence.
 			if (this.IsDarkColorMain)
 			{
-				return this.GetColorDarker(color, factor);
+				return AbstractObject.GetColorDarker(color, factor);
 			}
 			else
 			{
-				return this.GetColorLighter(color, factor);
+				return AbstractObject.GetColorLighter (color, factor);
 			}
 		}
 
-		private Color GetColorLighter(Color color, double factor)
+		private static Color GetColorLighter(Color color, double factor)
 		{
 			//	Retourne une couleur éclaircie, sans changer la transparence.
 			return Color.FromAlphaRgb(color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
 		}
 
-		private Color GetColorDarker(Color color, double factor)
+		private static Color GetColorDarker(Color color, double factor)
 		{
 			//	Retourne une couleur assombrie, sans changer la transparence.
 			factor = 0.5+(factor*0.5);
@@ -814,7 +831,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
+		protected static void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
 			//	Peint la surface avec un dégradé horizontal.
 			graphics.FillMode = FillMode.NonZero;
@@ -832,7 +849,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.GradientRenderer.Transform = ot;
 		}
 
-		protected void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
+		protected static void RenderVerticalGradient(Graphics graphics, Rectangle rect, Color bottomColor, Color topColor)
 		{
 			//	Peint la surface avec un dégradé vertical.
 			graphics.FillMode = FillMode.NonZero;
@@ -850,13 +867,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.GradientRenderer.Transform = ot;
 		}
 
-		protected Path PathRoundRectangle(Rectangle rect, double radius)
+		protected static Path PathRoundRectangle(Rectangle rect, double radius)
 		{
 			//	Retourne le chemin d'un rectangle à coins arrondis.
-			return this.PathRoundRectangle(rect, radius, true, true);  // coins arrondis partout
+			return AbstractObject.PathRoundRectangle(rect, radius, true, true);  // coins arrondis partout
 		}
 
-		protected Path PathRoundRectangle(Rectangle rect, double radius, bool isTopRounded, bool isBottomRounded)
+		protected static Path PathRoundRectangle(Rectangle rect, double radius, bool isTopRounded, bool isBottomRounded)
 		{
 			//	Retourne le chemin d'un rectangle, avec des coins arrondis en haut et/ou en bas.
 			double ox = rect.Left;

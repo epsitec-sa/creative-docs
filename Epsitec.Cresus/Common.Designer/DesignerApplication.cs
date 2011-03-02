@@ -2496,9 +2496,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityComment.SelectedText;
 		}
 
-		public Common.Dialogs.DialogResult DlgEntityParameters(ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
+		public Common.Dialogs.DialogResult DlgEntityParameters(EntitiesEditor.ObjectBox objectBox, ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
 		{
 			//	Ouvre le dialogue pour choisir les paramètres d'une entité.
+			this.dlgEntityParameters.ObjectBox              = objectBox;
 			this.dlgEntityParameters.DataLifetimeExpectancy = lifetime;
 			this.dlgEntityParameters.StructuredTypeFlags    = flags;
 
