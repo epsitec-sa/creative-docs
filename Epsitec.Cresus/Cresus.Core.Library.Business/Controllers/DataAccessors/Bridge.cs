@@ -65,6 +65,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
+			if ((!item.Title.IsNullOrEmpty) &&
+				(item.CompactTitle.IsNull))
+			{
+				item.CompactTitle = item.Title;
+			}
+
 			this.ProcessProperty (brick, BrickPropertyKey.Title, x => item.TitleAccessor = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);

@@ -159,17 +159,34 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		public FormattedText					DefaultTitle
+		public FormattedText					DisplayedTitle
+		{
+			get
+			{
+				return this.displayedTitle.IsNullOrEmpty ? this.Title : this.displayedTitle;
+			}
+		}
+
+		public FormattedText					DisplayedCompactTitle
+		{
+			get
+			{
+				return this.displayedCompactTitle.IsNull ? this.CompactTitle : this.displayedCompactTitle;
+			}
+		}
+
+
+		public FormattedText					DisplayedDefaultTitle
 		{
 			get
 			{
 				if (this.AutoGroup)
 				{
-					return this.CompactTitle;
+					return this.DisplayedCompactTitle;
 				}
 				else
 				{
-					return this.Title;
+					return this.DisplayedTitle;
 				}
 			}
 		}
@@ -279,7 +296,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.Title, x => this.Title = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedTitle, x => this.displayedTitle = x));
 				}
 			}
 		}
@@ -301,7 +318,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.CompactTitle, x => this.CompactTitle = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedCompactTitle, x => this.displayedCompactTitle = x));
 				}
 			}
 		}
@@ -520,5 +537,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private readonly HashSet<AccessorBinding>	bindings;
 
 		private TitleTile							titleTile;
+
+		private FormattedText						displayedTitle;
+		private FormattedText						displayedCompactTitle;
 	}
 }

@@ -636,11 +636,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (item.IsCompact)
 			{
-				item.TitleTile.Title = item.CompactTitle.ToString ();
+				item.TitleTile.Title = item.DisplayedCompactTitle.ToString ();
 			}
 			else
 			{
-				item.TitleTile.Title = item.DefaultTitle.ToString ();
+				item.TitleTile.Title = item.DisplayedDefaultTitle.ToString ();
 			}
 
 			if (item.Tile is SummaryTile)
