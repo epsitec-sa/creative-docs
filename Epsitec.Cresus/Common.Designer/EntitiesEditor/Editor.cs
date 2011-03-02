@@ -1784,13 +1784,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Cartridge
-		private static double CartridgeMargin       = 10;
-		private static double CartridgeSampleWidth  = 100;
-		private static double CartridgeSampleHeight = 80;
+		public Size CartridgeSize
+		{
+			//	Retourne la taille nécessaire pour la cartouche.
+			get
+			{
+				double w = Editor.CartridgeMargin*10 + Editor.CartridgeSampleWidth*9;
+				double h = Editor.CartridgeMargin*2 + Editor.CartridgeSampleHeight;
 
-		public static double CartridgeWidth  = Editor.CartridgeMargin*10 + Editor.CartridgeSampleWidth*9;
-		public static double CartridgeHeight = Editor.CartridgeMargin*2 + Editor.CartridgeSampleHeight;
-		public static double CartridgeZoom   = 0.5;
+				return new Size (w*Editor.CartridgeZoom, h*Editor.CartridgeZoom);
+			}
+		}
 
 		public void PaintCartridge(Graphics graphics)
 		{
@@ -1800,14 +1804,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Rectangle rect;
 
-			rect = new Rectangle (2, 1, Editor.CartridgeWidth, Editor.CartridgeHeight);
+			var size = this.CartridgeSize;
+			rect = new Rectangle (1, 1, size.Width/Editor.CartridgeZoom, size.Height/Editor.CartridgeZoom);
 			rect.Inflate (0.5);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromHexa ("fff6e0"));  // beige pâle
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
-			rect = new Rectangle (2+Editor.CartridgeMargin, 1+Editor.CartridgeMargin, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
+			rect = new Rectangle (1+Editor.CartridgeMargin, 1+Editor.CartridgeMargin, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
 
 			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
@@ -1860,6 +1865,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid (Color.FromBrightness (0));
 			graphics.LineWidth = 1;
 		}
+
+		private static double CartridgeMargin       = 10;
+		private static double CartridgeSampleWidth  = 100;
+		private static double CartridgeSampleHeight = 80;
+		private static double CartridgeZoom         = 0.5;
 		#endregion
 
 
