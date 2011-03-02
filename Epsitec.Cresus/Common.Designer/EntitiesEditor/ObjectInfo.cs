@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public class ObjectInfo : AbstractObject
 	{
-		protected enum AttachMode
+		private enum AttachMode
 		{
 			None,
 			Left,
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void DrawColorButton(Graphics graphics, ActiveElement activeElement, int rank, MainColor color)
+		private void DrawColorButton(Graphics graphics, ActiveElement activeElement, int rank, MainColor color)
 		{
 			//	Dessine un bouton pour choisir une couleur.
 			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected bool IsHeaderHilite
+		private bool IsHeaderHilite
 		{
 			//	Indique si la souris est dans l'en-tête.
 			get
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected Path GetFramePath()
+		private Path GetFramePath()
 		{
 			//	Retourne le chemin du cadre du commentaire.
 			AttachMode mode = this.GetAttachMode();
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return path;
 		}
 
-		protected Point GetAttachHimself(AttachMode mode)
+		private Point GetAttachHimself(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur les informations.
 			Point pos = Point.Zero;
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected Point GetAttachOther(AttachMode mode)
+		private Point GetAttachOther(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur l'objet lié (boîte).
 			Point pos = Point.Zero;
@@ -629,7 +629,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected AttachMode GetAttachMode()
+		private AttachMode GetAttachMode()
 		{
 			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
 			if (this.attachObject is ObjectBox)
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected Rectangle HeaderRectangle
+		private Rectangle HeaderRectangle
 		{
 			get
 			{
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionCloseButton
+		private Point PositionCloseButton
 		{
 			//	Retourne la position du bouton de fermeture.
 			get
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionWidthButton
+		private Point PositionWidthButton
 		{
 			//	Retourne la position du bouton pour modifier la largeur.
 			get
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionAttachToConnectionButton
+		private Point PositionAttachToConnectionButton
 		{
 			//	Retourne la position du bouton pour modifier l'attache à la connection.
 			get
@@ -737,13 +737,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionColorButton(int rank)
+		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
 			return new Point(this.bounds.Left+AbstractObject.buttonSquare+(AbstractObject.buttonSquare+0.5)*rank*2, this.bounds.Bottom-1-AbstractObject.buttonSquare);
 		}
 
-		protected Color ColorComment(bool hilited)
+		private Color ColorComment(bool hilited)
 		{
 			if (hilited)
 			{
@@ -755,7 +755,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Color ColorCommentHeader(bool hilited, bool dragging)
+		private Color ColorCommentHeader(bool hilited, bool dragging)
 		{
 			if (dragging)
 			{
@@ -772,7 +772,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void UpdateFieldColor()
+		private void UpdateFieldColor()
 		{
 			//	Met à jour l'information de couleur dans le champ associé.
 			if (this.attachObject is ObjectConnection)
@@ -840,21 +840,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#endregion
 
 
-		protected static readonly double infoHeaderHeight = 24;
-		protected static readonly double textMargin = 5;
-		protected static readonly double queueThickness = 5;
-		protected static readonly double roundFrameRadius = 12;
-		protected static readonly double shadowOffset = 8;
+		private static readonly double infoHeaderHeight = 24;
+		private static readonly double textMargin = 5;
+		private static readonly double queueThickness = 5;
+		private static readonly double roundFrameRadius = 12;
+		private static readonly double shadowOffset = 8;
 
-		protected Rectangle bounds;
-		protected AbstractObject attachObject;
-		protected bool isVisible;
-		protected TextLayout textLayoutTitle;
-		protected TextLayout textLayoutInfo;
+		private Rectangle bounds;
+		private AbstractObject attachObject;
+		private bool isVisible;
+		private TextLayout textLayoutTitle;
+		private TextLayout textLayoutInfo;
 
-		protected bool isDraggingMove;
-		protected bool isDraggingWidth;
-		protected bool isDraggingAttach;
-		protected Point draggingPos;
+		private bool isDraggingMove;
+		private bool isDraggingWidth;
+		private bool isDraggingAttach;
+		private Point draggingPos;
 	}
 }

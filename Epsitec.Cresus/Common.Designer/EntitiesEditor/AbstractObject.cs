@@ -700,14 +700,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si la couleur pour les mises en évidence est foncée.
 			get
 			{
-				return AbstractObject.StaticIsDarkColorMain (this.boxColor);
+				return this.boxColor == MainColor.DarkGrey;
 			}
-		}
-
-		protected static bool StaticIsDarkColorMain(MainColor boxColor)
-		{
-			//	Indique si la couleur pour les mises en évidence est foncée.
-			return boxColor == MainColor.DarkGrey;
 		}
 
 		protected Color GetColorMain()

@@ -348,7 +348,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		protected bool DetectOver(Point pos, double margin)
+		private bool DetectOver(Point pos, double margin)
 		{
 			//	Détecte si la souris est le long de la connection.
 			if (this.points.Count >= 2 && this.field.IsExplored)
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void AddComment()
+		private void AddComment()
 		{
 			//	Ajoute un commentaire à la connection.
 			if (this.comment == null)
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected bool IsConnectionCommentButton
+		private bool IsConnectionCommentButton
 		{
 			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
 			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point AttachToPoint(double d)
+		private Point AttachToPoint(double d)
 		{
 			//	Conversion d'une distance le long de la connection en position.
 			//	Une distance positive commence depuis le début de la connection.
@@ -706,7 +706,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected Point PositionRouteMove1
+		private Point PositionRouteMove1
 		{
 			//	Retourne la position du bouton pour modifier le routage.
 			get
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionRouteMove2
+		private Point PositionRouteMove2
 		{
 			//	Retourne la position du bouton pour modifier le routage.
 			get
@@ -791,7 +791,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void RouteMove(Point pos)
+		private void RouteMove(Point pos)
 		{
 			//	Modifie le routage en fonction du choix de l'utilisateur.
 			if (pos.IsZero)
@@ -995,12 +995,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected static readonly double arrowMinimalLength = 25;
+		private static readonly double arrowMinimalLength = 25;
 
-		protected Field field;
-		protected List<Point> points;
-		protected bool isSrcHilited;
-		protected bool isDraggingRoute;
-		protected ObjectComment comment;
+		private Field field;
+		private List<Point> points;
+		private bool isSrcHilited;
+		private bool isDraggingRoute;
+		private ObjectComment comment;
 	}
 }

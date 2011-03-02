@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return Point.Zero;
 		}
 
-		protected bool IsVerticalPositionFree(double posv, bool right)
+		private bool IsVerticalPositionFree(double posv, bool right)
 		{
 			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
 			if (!right && this.isExtended && this.sourcesClosedCount > 0)
@@ -1220,7 +1220,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return true;
 		}
 
-		protected void SetConnectionsHilited(bool isHilited)
+		private void SetConnectionsHilited(bool isHilited)
 		{
 			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
 			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
@@ -1238,7 +1238,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected bool IsConnectionReadyForOpen()
+		private bool IsConnectionReadyForOpen()
 		{
 			//	Indique si l'une des connections qui partent de l'objet est en mode ConnectionOpen*.
 			foreach (Field field in this.fields)
@@ -1257,7 +1257,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		protected Rectangle GetFieldRemoveBounds(int rank)
+		private Rectangle GetFieldRemoveBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1267,7 +1267,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldAddBounds(int rank)
+		private Rectangle GetFieldAddBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldMovableBounds(int rank)
+		private Rectangle GetFieldMovableBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1289,7 +1289,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldMovingBounds(int rank)
+		private Rectangle GetFieldMovingBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1300,7 +1300,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldInterfaceBounds()
+		private Rectangle GetFieldInterfaceBounds()
 		{
 			//	Retourne le rectangle occupé par le bouton interface.
 			Rectangle rect = this.GetFieldBounds(this.skippedField-1);
@@ -1312,7 +1312,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldNameBounds(int rank)
+		private Rectangle GetFieldNameBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le nom d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1323,7 +1323,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldTypeBounds(int rank)
+		private Rectangle GetFieldTypeBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par le type d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1335,7 +1335,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldExpressionBounds(int rank)
+		private Rectangle GetFieldExpressionBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par l'expression d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
@@ -1346,7 +1346,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected Rectangle GetFieldGroupBounds(int rank)
+		private Rectangle GetFieldGroupBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par un groupe, c'est-à-dire un ensemble de champs IsReadOnly
 			//	ayant le même DeepDefiningTypeId.
@@ -1376,7 +1376,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
-		protected bool IsSameGroup(int i, int j)
+		private bool IsSameGroup(int i, int j)
 		{
 			return !this.fields[i].IsTitle && !this.fields[j].IsTitle &&
 					this.fields[i].IsInherited == this.fields[j].IsInherited &&
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.fields[i].DefiningRootEntityId == this.fields[j].DefiningRootEntityId;
 		}
 
-		protected Rectangle GetFieldBounds(int rank)
+		private Rectangle GetFieldBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par un champ, en tenant compte du niveau.
 			Rectangle rect = this.bounds;
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected bool IsInterface
+		private bool IsInterface
 		{
 			//	Indique si l'entité est une interface.
 			get
@@ -1412,7 +1412,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void LocateEntity()
+		private void LocateEntity()
 		{
 			//	Montre l'entité cliquée avec le bouton de droite.
 			Module module = this.SearchModule(this.cultureMap.Id);
@@ -1423,7 +1423,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void LocateTitle(int rank)
+		private void LocateTitle(int rank)
 		{
 			//	Montre l'entité héritée ou l'interface cliquée avec le bouton de droite.
 			System.Diagnostics.Debug.Assert(this.fields[rank].IsTitle || this.fields[rank].IsSubtitle);
@@ -1438,7 +1438,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void LocateField(int rank)
+		private void LocateField(int rank)
 		{
 			//	Montre le champ cliqué avec le bouton de droite.
 			int fieldRank = this.fields[rank].Rank;
@@ -1461,7 +1461,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void LocateType(int rank)
+		private void LocateType(int rank)
 		{
 			//	Montre le type cliqué avec le bouton de droite.
 			int fieldRank = this.fields[rank].Rank;
@@ -1487,7 +1487,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void MoveField(int srcRank, int dstRank)
+		private void MoveField(int srcRank, int dstRank)
 		{
 			//	Déplace un champ.
 			if (dstRank != srcRank && dstRank != srcRank-1)
@@ -1519,7 +1519,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected void RemoveField(int rank)
+		private void RemoveField(int rank)
 		{
 			//	Supprime un champ.
 			string question = string.Format(Res.Strings.Entities.Question.RemoveField.Base, this.fields[rank].FieldName);
@@ -1551,7 +1551,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected void AddField(int rank)
+		private void AddField(int rank)
 		{
 			//	Ajoute un nouveau champ.
 			Module module = this.editor.Module;
@@ -1666,7 +1666,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected void AddInterface()
+		private void AddInterface()
 		{
 			//	Ajoute une interface à l'entité.
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -1701,7 +1701,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected void RemoveInterface(int rank)
+		private void RemoveInterface(int rank)
 		{
 			//	Supprime une interface de l'entité.
 			string question = string.Format(Res.Strings.Entities.Question.RemoveInterface.Base, this.fields[rank].FieldName);
@@ -1754,7 +1754,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return true;
 		}
 
-		protected void EditExpression(int rank)
+		private void EditExpression(int rank)
 		{
 			//	Edite l'expresion associée à un champ.
 
@@ -1920,7 +1920,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
-		protected void ChangeFieldType(int rank)
+		private void ChangeFieldType(int rank)
 		{
 			//	Choix du type pour un champ.
 			int fieldRank = this.fields[rank].Rank;
@@ -2035,7 +2035,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
-		protected void UpdateFieldsContent()
+		private void UpdateFieldsContent()
 		{
 			//	Crée tous les champs de titrage.
 			this.skippedField = 0;
@@ -2154,7 +2154,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateFieldsLink();
 		}
 
-		protected void UpdateInformations()
+		private void UpdateInformations()
 		{
 			//	Met à jour les informations de l'éventuel ObjectInfo lié.
 			if (this.info != null)  // existe un ObjectInfo lié ?
@@ -2164,7 +2164,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected string GetInformations(bool resume)
+		private string GetInformations(bool resume)
 		{
 			//	Retourne les informations pour l'ObjectInfo lié.
 			List<string> listInherited = new List<string>();
@@ -2299,7 +2299,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return builder.ToString ();
 		}
 
-		protected void UpdateFieldsLink()
+		private void UpdateFieldsLink()
 		{
 			//	Met à jour toutes les liaisons des champs.
 			int rank = 0;
@@ -2315,7 +2315,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected string GetNewName()
+		private string GetNewName()
 		{
 			//	Cherche un nouveau nom jamais utilisé.
 			for (int i=1; i<10000; i++)
@@ -2329,7 +2329,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;
 		}
 
-		protected bool IsExistingName(string name)
+		private bool IsExistingName(string name)
 		{
 			//	Indique si un nom existe.
 			for (int i=0; i<this.fields.Count; i++)
@@ -2344,7 +2344,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void AddComment()
+		private void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.
 			if (this.comment == null)
@@ -2371,7 +2371,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
-		protected void AddInfo()
+		private void AddInfo()
 		{
 			//	Ajoute une information à la boîte.
 			if (this.info == null)
@@ -2400,7 +2400,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
-		protected void ChangeParameters()
+		private void ChangeParameters()
 		{
 			//	Ouvre le dialogue pour modifier les paramètres de l'entité.
 			var lifetime = this.dataLifetimeExpectancy;
@@ -2472,7 +2472,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		/// <summary>
 		/// Informations sur une entité source, ouverte ou fermée.
 		/// </summary>
-		protected class SourceInfo
+		private class SourceInfo
 		{
 			public string ModuleName;
 			public string FieldName;
@@ -2506,7 +2506,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void UpdateSources()
+		private void UpdateSources()
 		{
 			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
 			this.sourcesList = new List<SourceInfo>();
@@ -2550,7 +2550,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.sourcesClosedCount = this.sourcesList.Count;
 		}
 
-		protected bool IsExistingSourceInfo(CultureMap cultureMap)
+		private bool IsExistingSourceInfo(CultureMap cultureMap)
 		{
 			foreach (SourceInfo info in this.sourcesList)
 			{
@@ -2562,7 +2562,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		protected void OpenSource(CultureMap cultureMap, int rank)
+		private void OpenSource(CultureMap cultureMap, int rank)
 		{
 			//	Ouvre une entité source.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
@@ -3339,7 +3339,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ObjectBox.DrawParameters (graphics, center, frameColor, isDimmed, lifetime, flags);
 		}
 
-		protected static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
+		private static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
 		{
 			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
 			var whiteColor = AbstractObject.GetColor (1, isDimmed, false);
@@ -3389,7 +3389,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected bool IsHeaderHilite
+		private bool IsHeaderHilite
 		{
 			//	Indique si la souris est dans l'en-tête.
 			get
@@ -3426,7 +3426,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void DrawSourcesMenu(Graphics graphics, Point pos)
+		private void DrawSourcesMenu(Graphics graphics, Point pos)
 		{
 			//	Dessine le menu pour choisir une entité source.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -3502,7 +3502,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColor(0));
 		}
 
-		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
+		private void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
 		{
 			//	Dessine le glyph 'o--' d'une interface.
 			double y = System.Math.Floor(rect.Center.Y)+(lineWidth%2)/2;
@@ -3520,7 +3520,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.LineWidth = 1;
 		}
 
-		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
+		private void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
 		{
 			//	Dessine un large traitillé.
 			Path path = new Path();
@@ -3529,7 +3529,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Misc.DrawPathDash(graphics, path, 3, 5, 5, false, color);
 		}
 
-		protected void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
+		private void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
 		{
 			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
 			Rectangle rect = new Rectangle(p1, p2);
@@ -3552,7 +3552,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColor(0));
 		}
 
-		protected void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
+		private void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
 			//	Dessine une flèche pendant le déplacement d'un champ.
 			if (System.Math.Abs(p1.Y-p2.Y) < ObjectBox.fieldHeight)
@@ -3579,7 +3579,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected Point PositionCloseButton
+		private Point PositionCloseButton
 		{
 			//	Retourne la position du bouton pour fermer.
 			get
@@ -3588,7 +3588,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionExtendButton
+		private Point PositionExtendButton
 		{
 			//	Retourne la position du bouton pour étendre.
 			get
@@ -3597,7 +3597,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionChangeWidthButton
+		private Point PositionChangeWidthButton
 		{
 			//	Retourne la position du bouton pour changer la largeur.
 			get
@@ -3606,13 +3606,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionMoveColumnsButton(int rank)
+		private Point PositionMoveColumnsButton(int rank)
 		{
 			//	Retourne la position du bouton pour déplacer le séparateur des colonnes.
 			return new Point(this.ColumnsSeparatorAbsolute(rank), this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 		}
 
-		protected Point PositionSourcesButton
+		private Point PositionSourcesButton
 		{
 			//	Retourne la position du bouton pour montrer les sources.
 			get
@@ -3621,7 +3621,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionCommentButton
+		private Point PositionCommentButton
 		{
 			//	Retourne la position du bouton pour montrer le commentaire.
 			get
@@ -3630,7 +3630,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionInfoButton
+		private Point PositionInfoButton
 		{
 			//	Retourne la position du bouton pour montrer les informations.
 			get
@@ -3639,7 +3639,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionParametersButton
+		private Point PositionParametersButton
 		{
 			//	Retourne la position du bouton des paramètres.
 			get
@@ -3648,7 +3648,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionColorButton(int rank)
+		private Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
 			if (this.IsExtended)
@@ -3661,7 +3661,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionSourcesMenu
+		private Point PositionSourcesMenu
 		{
 			//	Retourne la position du menu pour montrer les sources.
 			get
@@ -3673,7 +3673,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Rectangle RectangleSourcesMenu
+		private Rectangle RectangleSourcesMenu
 		{
 			//	Retourne le rectangle du menu pour montrer les sources.
 			get
@@ -3686,7 +3686,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected int GroupLineCount(int titleRank)
+		private int GroupLineCount(int titleRank)
 		{
 			//	Retourne le nombre de ligne d'un groupe (héritage ou interface) d'après le rang de son titre.
 			for (int i=titleRank+1; i<this.fields.Count; i++)
@@ -3705,7 +3705,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return this.fields.Count-titleRank-1;
 		}
 
-		protected int SubgroupLineCount(int subtitleRank)
+		private int SubgroupLineCount(int subtitleRank)
 		{
 			//	Retourne le nombre de ligne d'un sous-groupe (héritage ou interface) d'après le rang de son sous-titre.
 			Druid druid = this.fields[subtitleRank+1].DefiningRootEntityId;
@@ -3721,7 +3721,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return this.fields.Count-subtitleRank-1;
 		}
 
-		protected string GetGroupTooltip(int rank)
+		private string GetGroupTooltip(int rank)
 		{
 			//	Retourne le tooltip à afficher pour un groupe.
 			if (this.fields[rank].DefiningEntityClass == StructuredTypeClass.Interface)
@@ -3737,7 +3737,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;  // pas de tooltip
 		}
 
-		protected double ColumnsSeparatorAbsolute(int rank)
+		private double ColumnsSeparatorAbsolute(int rank)
 		{
 			//	Retourne la position absolue du séparateur des colonnes.
 			Rectangle rect = this.bounds;
@@ -3757,7 +3757,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void UpdateSubtitle()
+		private void UpdateSubtitle()
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
 			Module module = this.SearchModule(this.cultureMap.Id);
@@ -3947,7 +3947,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		//		destination entre la sérialisation et la présente désérialisation. Le Editor.CloseBox()
 		//		fermera les entités que plus personne ne pointe (field.IsExplored = false dans ce cas).
 
-		protected Field AdjustAfterReadSearchField(Druid druid)
+		private Field AdjustAfterReadSearchField(Druid druid)
 		{
 			foreach (Field field in this.fields)
 			{
@@ -3960,7 +3960,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;
 		}
 
-		protected ObjectBox AdjustAfterReadSearchBox(Druid druid)
+		private ObjectBox AdjustAfterReadSearchBox(Druid druid)
 		{
 			foreach (ObjectBox box in this.editor.Boxes)
 			{
@@ -3976,52 +3976,52 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		public static readonly double roundFrameRadius = 12;
-		protected static readonly double roundInsideRadius = 8;
-		protected static readonly double shadowOffset = 6;
-		protected static readonly double textMargin = 13;
-		protected static readonly double expressionWidth = 20;
-		protected static readonly double fieldHeight = 20;
-		protected static readonly double sourcesMenuHeight = 20;
-		protected static readonly double indentWidth = 2;
+		private static readonly double roundInsideRadius = 8;
+		private static readonly double shadowOffset = 6;
+		private static readonly double textMargin = 13;
+		private static readonly double expressionWidth = 20;
+		private static readonly double fieldHeight = 20;
+		private static readonly double sourcesMenuHeight = 20;
+		private static readonly double indentWidth = 2;
 
-		protected CultureMap cultureMap;
-		protected ObjectComment comment;
-		protected ObjectInfo info;
-		protected Rectangle bounds;
-		protected double columnsSeparatorRelative1;
-		protected bool isRoot;
-		protected bool isExtended;
-		protected bool isConnectedToRoot;
-		protected string titleString;
-		protected string subtitleString;
-		protected TextLayout title;
-		protected TextLayout subtitle;
-		protected List<Field> fields;
-		protected int skippedField;
-		protected List<SourceInfo> sourcesList;
-		protected int sourcesClosedCount;
-		protected List<ObjectConnection> connectionListBt;
-		protected List<ObjectConnection> connectionListBb;
-		protected List<ObjectConnection> connectionListC;
-		protected List<ObjectConnection> connectionListD;
-		protected List<ObjectBox> parents;
+		private CultureMap cultureMap;
+		private ObjectComment comment;
+		private ObjectInfo info;
+		private Rectangle bounds;
+		private double columnsSeparatorRelative1;
+		private bool isRoot;
+		private bool isExtended;
+		private bool isConnectedToRoot;
+		private string titleString;
+		private string subtitleString;
+		private TextLayout title;
+		private TextLayout subtitle;
+		private List<Field> fields;
+		private int skippedField;
+		private List<SourceInfo> sourcesList;
+		private int sourcesClosedCount;
+		private List<ObjectConnection> connectionListBt;
+		private List<ObjectConnection> connectionListBb;
+		private List<ObjectConnection> connectionListC;
+		private List<ObjectConnection> connectionListD;
+		private List<ObjectBox> parents;
 
-		protected bool isDragging;
-		protected Point draggingOffset;
+		private bool isDragging;
+		private Point draggingOffset;
 
-		protected bool isFieldMoving;
-		protected int fieldInitialRank;
+		private bool isFieldMoving;
+		private int fieldInitialRank;
 
-		protected bool isChangeWidth;
-		protected double changeWidthPos;
-		protected double changeWidthInitial;
+		private bool isChangeWidth;
+		private double changeWidthPos;
+		private double changeWidthInitial;
 
-		protected bool isMoveColumnsSeparator1;
+		private bool isMoveColumnsSeparator1;
 
-		protected bool isSourcesMenu;
-		protected int sourcesMenuSelected;
+		private bool isSourcesMenu;
+		private int sourcesMenuSelected;
 
-		protected DataLifetimeExpectancy dataLifetimeExpectancy;
-		protected StructuredTypeFlags structuredTypeFlags;
+		private DataLifetimeExpectancy dataLifetimeExpectancy;
+		private StructuredTypeFlags structuredTypeFlags;
 	}
 }

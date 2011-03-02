@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Unlocked,
 		}
 
-		protected enum MouseCursorType
+		private enum MouseCursorType
 		{
 			Unknown,
 			Arrow,
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Locate,
 		}
 
-		protected enum PushDirection
+		private enum PushDirection
 		{
 			Automatic,
 			Left,
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateDimmed();
 		}
 
-		protected void UpdateBoxes()
+		private void UpdateBoxes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
 			foreach (ObjectBox box in this.boxes)
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.Invalidate();
 		}
 
-		protected void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst)
+		private void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst)
 		{
 			//	Met à jour la géométrie d'une liaison.
 			Rectangle srcBounds = src.Bounds;
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
 
-		protected void ShiftConnectionsB(ObjectBox box, List<ObjectConnection> connections)
+		private void ShiftConnectionsB(ObjectBox box, List<ObjectConnection> connections)
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -640,7 +640,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void ShiftConnectionsC(ObjectBox box, List<ObjectConnection> connections)
+		private void ShiftConnectionsC(ObjectBox box, List<ObjectConnection> connections)
 		{
 			//	Met à jour une liste de connections de type C, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -664,7 +664,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void ShiftConnectionsD(ObjectBox box, List<ObjectConnection> connections)
+		private void ShiftConnectionsD(ObjectBox box, List<ObjectConnection> connections)
 		{
 			//	Met à jour une liste de connections de type D, afin qu'aucune connection
 			//	n'arrive au même endroit.
@@ -756,7 +756,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.Invalidate();
 		}
 
-		protected void CommentsMemorize()
+		private void CommentsMemorize()
 		{
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectConnection connection in this.connections)
@@ -788,7 +788,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void UpdateDimmed()
+		private void UpdateDimmed()
 		{
 			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
 			foreach (ObjectConnection connection in this.connections)
@@ -954,7 +954,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void CloseOneBox(ObjectBox box)
+		private void CloseOneBox(ObjectBox box)
 		{
 			if (box.Comment != null)
 			{
@@ -971,7 +971,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes.Remove(box);  // supprime la boîte demandée
 		}
 
-		protected void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
+		private void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
 		{
 			//	Cherche récursivement tous les objets depuis 'root'.
 			foreach (Field field in root.Fields)
@@ -997,7 +997,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void CloseConnections(ObjectBox removedBox)
+		private void CloseConnections(ObjectBox removedBox)
 		{
 			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
 			//	les connections sur la boîte supprimée.
@@ -1014,7 +1014,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void UpdateAfterOpenOrCloseBox()
+		private void UpdateAfterOpenOrCloseBox()
 		{
 			//	Appelé après avoir ajouté ou supprimé une boîte.
 			foreach (ObjectBox box in this.boxes)
@@ -1024,7 +1024,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void PushLayout(ObjectBox exclude, PushDirection direction, double margin)
+		private void PushLayout(ObjectBox exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
 			//	Une boîte peut être poussée hors de la surface de dessin.
@@ -1052,7 +1052,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected ObjectBox PushSearch(ObjectBox box, ObjectBox exclude, double margin)
+		private ObjectBox PushSearch(ObjectBox box, ObjectBox exclude, double margin)
 		{
 			//	Cherche une boîte qui chevauche 'box'.
 			Rectangle rect = box.Bounds;
@@ -1074,7 +1074,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;
 		}
 
-		protected void PushAction(ObjectBox box, ObjectBox inter, PushDirection direction, double margin)
+		private void PushAction(ObjectBox box, ObjectBox inter, PushDirection direction, double margin)
 		{
 			//	Pousse 'inter' pour venir après 'box' selon la direction choisie.
 			Rectangle rect = inter.Bounds;
@@ -1118,7 +1118,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void RedimArea()
+		private void RedimArea()
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
@@ -1135,7 +1135,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.OnAreaSizeChanged();
 		}
 
-		protected Rectangle ComputeObjectsBounds()
+		private Rectangle ComputeObjectsBounds()
 		{
 			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
@@ -1163,7 +1163,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return bounds;
 		}
 
-		protected void MoveObjects(double dx, double dy)
+		private void MoveObjects(double dx, double dy)
 		{
 			//	Déplace tous les objets.
 			if (dx == 0 && dy == 0)  // immobile ?
@@ -1253,7 +1253,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point ConvWidgetToEditor(Point pos)
+		private Point ConvWidgetToEditor(Point pos)
 		{
 			//	Conversion d'une coordonnée dans l'espace normal des widgets vers l'espace de l'éditeur,
 			//	qui varie selon les ascenseurs (AreaOffset) et le zoom.
@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected Point ConvEditorToWidget(Point pos)
+		private Point ConvEditorToWidget(Point pos)
 		{
 			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
 			pos.Y = this.areaSize.Height-pos.Y;
@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected new void MouseMove(Message message, Point pos)
+		private new void MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1445,7 +1445,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void MouseDown(Message message, Point pos)
+		private void MouseDown(Message message, Point pos)
 		{
 			//	Début du déplacement d'une boîte.
 			if (this.lastCursor == MouseCursorType.Hand)
@@ -1464,7 +1464,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void MouseUp(Message message, Point pos)
+		private void MouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
 			if (this.isAreaMoving)
@@ -1574,7 +1574,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.lockObject = obj;
 		}
 
-		protected AbstractObject DetectObject(Point pos)
+		private AbstractObject DetectObject(Point pos)
 		{
 			//	Détecte l'objet visé par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1810,7 +1810,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			reader.Close();
 		}
 
-		protected void WriteXml(XmlWriter writer)
+		private void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toutes les boîtes.
 			writer.WriteStartDocument();
@@ -1825,7 +1825,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			writer.WriteEndDocument();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		private void ReadXml(XmlReader reader)
 		{
 			//	Désérialise toutes les boîtes.
 			this.Clear();
@@ -1881,7 +1881,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#endregion
 
 		#region MouseCursor
-		protected void ChangeMouseCursor(MouseCursorType cursor)
+		private void ChangeMouseCursor(MouseCursorType cursor)
 		{
 			//	Change le sprite de la souris.
 			if (cursor == this.lastCursor)
@@ -1928,7 +1928,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void SetMouseCursorImage(ref Image image, string name)
+		private void SetMouseCursorImage(ref Image image, string name)
 		{
 			//	Choix du sprite de la souris.
 			if (image == null)
@@ -2012,35 +2012,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public static readonly double defaultWidth = 200;
 		public static readonly double connectionDetour = 30;
 		public static readonly double pushMargin = 10;
-		protected static readonly double frameMargin = 40;
+		private static readonly double frameMargin = 40;
 
-		protected Module module;
-		protected Viewers.Entities entities;
-		protected List<ObjectBox> boxes;
-		protected List<ObjectConnection> connections;
-		protected List<ObjectComment> comments;
-		protected List<ObjectInfo> infos;
-		protected Size areaSize;
-		protected double zoom;
-		protected Point areaOffset;
-		protected AbstractObject lockObject;
-		protected bool isScrollerEnable;
-		protected Point brutPos;
-		protected MessageType lastMessageType;
-		protected Point lastMessagePos;
-		protected bool isAreaMoving;
-		protected Point areaMovingInitialPos;
-		protected Point areaMovingInitialOffset;
-		protected MouseCursorType lastCursor = MouseCursorType.Unknown;
-		protected Image mouseCursorFinger;
-		protected Image mouseCursorHand;
-		protected Image mouseCursorGrid;
-		protected Image mouseCursorLocate;
-		protected VScroller vscroller;
-		protected AbstractObject hilitedObject;
-		protected bool dirtySerialization;
-		protected bool grid;
-		protected double gridStep;
-		protected double gridSubdiv;
+		private Module module;
+		private Viewers.Entities entities;
+		private List<ObjectBox> boxes;
+		private List<ObjectConnection> connections;
+		private List<ObjectComment> comments;
+		private List<ObjectInfo> infos;
+		private Size areaSize;
+		private double zoom;
+		private Point areaOffset;
+		private AbstractObject lockObject;
+		private bool isScrollerEnable;
+		private Point brutPos;
+		private MessageType lastMessageType;
+		private Point lastMessagePos;
+		private bool isAreaMoving;
+		private Point areaMovingInitialPos;
+		private Point areaMovingInitialOffset;
+		private MouseCursorType lastCursor = MouseCursorType.Unknown;
+		private Image mouseCursorFinger;
+		private Image mouseCursorHand;
+		private Image mouseCursorGrid;
+		private Image mouseCursorLocate;
+		private VScroller vscroller;
+		private AbstractObject hilitedObject;
+		private bool grid;
+		private double gridStep;
+		private double gridSubdiv;
 	}
 }
