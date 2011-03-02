@@ -89,7 +89,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : TelecomContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, businessContext.DataContext)
-				.DefineTitle		(x => x.GetTitle ())
 				.DefineText			(x => x.GetSummary ())
 				.DefineCompactText  (x => x.GetCompactSummary ());
 

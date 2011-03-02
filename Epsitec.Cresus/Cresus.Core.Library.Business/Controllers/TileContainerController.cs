@@ -634,13 +634,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			item.TitleTile.TitleIconUri = item.IconUri;
 
-			if (item.IsCompact)
+			if (item.IsCompact || item.AutoGroup)
 			{
 				item.TitleTile.Title = item.DisplayedCompactTitle.ToString ();
 			}
 			else
 			{
-				item.TitleTile.Title = item.DisplayedDefaultTitle.ToString ();
+				item.TitleTile.Title = item.DisplayedTitle.ToString ();
 			}
 
 			if (item.Tile is SummaryTile)
@@ -649,11 +649,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (item.IsCompact)
 				{
-					summaryTile.Summary = item.CompactText.ToString ();
+					summaryTile.Summary = item.DisplayedCompactText.ToString ();
 				}
 				else
 				{
-					summaryTile.Summary = item.Text.ToString ();
+					summaryTile.Summary = item.DisplayedText.ToString ();
 				}
 			}
 		}

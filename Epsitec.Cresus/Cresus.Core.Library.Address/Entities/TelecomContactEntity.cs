@@ -11,11 +11,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class TelecomContactEntity
 	{
-		public FormattedText GetTitle()
-		{
-			return TextFormatter.FormatText (this.TelecomType.Name);
-		}
-
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Number, "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");

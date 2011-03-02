@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf AutoGroup()
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.AutoGroup));
+			return this as TSelf;
+		}
+
 		public TemplateBrick<TField, TField, TSelf> Template()
 		{
 			return new TemplateBrick<TField, TField, TSelf> (this as TSelf);

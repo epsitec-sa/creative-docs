@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Bricks
 		Text,
 		TextCompact,
 
+		AutoGroup,
+
 		Template,
 		AsType,
 

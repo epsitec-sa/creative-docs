@@ -65,6 +65,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
+			this.ProcessProperty (brick, BrickPropertyKey.AutoGroup, x => item.AutoGroup = x);
+
 			if ((!item.Title.IsNullOrEmpty) &&
 				(item.CompactTitle.IsNull))
 			{
@@ -203,6 +205,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var accessor = accessorFactory.CollectionAccessor;
 
 			data.Add (accessor);
+		}
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
+		{
+			if (Brick.ContainsProperty (brick, key))
+			{
+				setter (true);
+			}
 		}
 
 		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)

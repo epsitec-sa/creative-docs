@@ -163,7 +163,44 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.displayedTitle.IsNullOrEmpty ? this.Title : this.displayedTitle;
+				if (this.displayedTitle.IsNullOrEmpty)
+				{
+					return this.Title;
+				}
+				else
+				{
+					return this.displayedTitle;
+				}
+			}
+		}
+
+		public FormattedText					DisplayedText
+		{
+			get
+			{
+				if (this.displayedText.IsNullOrEmpty)
+				{
+					return this.Text;
+				}
+				else
+				{
+					return this.displayedText;
+				}
+			}
+		}
+
+		public FormattedText					DisplayedCompactText
+		{
+			get
+			{
+				if (this.displayedCompactText.IsNullOrEmpty)
+				{
+					return this.CompactText;
+				}
+				else
+				{
+					return this.displayedCompactText;
+				}
 			}
 		}
 
@@ -171,25 +208,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.displayedCompactTitle.IsNull ? this.CompactTitle : this.displayedCompactTitle;
-			}
-		}
-
-
-		public FormattedText					DisplayedDefaultTitle
-		{
-			get
-			{
-				if (this.AutoGroup)
+				if (this.displayedCompactTitle.IsNullOrEmpty)
 				{
-					return this.DisplayedCompactTitle;
+					return this.CompactTitle;
 				}
 				else
 				{
-					return this.DisplayedTitle;
+					return this.displayedCompactTitle;
 				}
 			}
 		}
+
 
 		public ViewControllerMode				DefaultMode
 		{
@@ -307,7 +336,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.Text, x => this.Text = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedText, x => this.displayedText = x));
 				}
 			}
 		}
@@ -329,7 +358,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (value != null)
 				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.CompactText, x => this.CompactText = x));
+					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedCompactText, x => this.displayedCompactText = x));
 				}
 			}
 		}
@@ -539,6 +568,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private TitleTile							titleTile;
 
 		private FormattedText						displayedTitle;
+		private FormattedText						displayedText;
 		private FormattedText						displayedCompactTitle;
+		private FormattedText						displayedCompactText;
 	}
 }
