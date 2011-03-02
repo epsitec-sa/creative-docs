@@ -1798,11 +1798,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			PrivateCollection = 0x0800,
 		}
 
-		public Size CartridgeSize
+		public Size CartridgeSize(bool generateUserCartridge, bool generateDateCartridge, bool generateSamplesCartridge)
 		{
 			//	Retourne la taille nécessaire pour le cartouche.
 			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin sont comptés.
-			get
+			double width  = 0;
+			double height = 0;
+
+			if (generateUserCartridge || generateDateCartridge)
+			{
+				width += generateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
+				width += generateDateCartridge ? Editor.CartridgeHeaderDateWidth : 0;
+				width--;
+				height = Editor.CartridgeHeaderHeight;
+			}
+
+			if (generateSamplesCartridge)
 			{
 				var samples = this.GetCartridgeSamplesUsed ();
 				var count = 0;
@@ -1815,98 +1826,135 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				if (count == 0)
+				if (count != 0)
 				{
-					return Size.Zero;
-				}
-				else
-				{
-					double w = Editor.CartridgeMargin*(count+1) + Editor.CartridgeSampleWidth*count;
-					double h = Editor.CartridgeMargin*2 + Editor.CartridgeSampleHeight;
+					double w = Editor.CartridgeSampleMargin*(count+1) + Editor.CartridgeSampleWidth*count;
+					double h = Editor.CartridgeSampleMargin*2 + Editor.CartridgeSampleHeight;
 
-					return new Size (w*Editor.CartridgeZoom, h*Editor.CartridgeZoom);
+					width = System.Math.Max (width, w);
+					height += h;
 				}
 			}
+
+			return new Size (width*Editor.CartridgeZoom, height*Editor.CartridgeZoom);
 		}
 
-		public void PaintCartridge(Graphics graphics)
+		public void PaintCartridge(Graphics graphics, bool generateUserCartridge, bool generateDateCartridge, bool generateSamplesCartridge)
 		{
 			//	Dessine le cartouche avec les légendes explicatives.
 			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin y figurent.
 			Transform initialTransform = graphics.Transform;
 			graphics.ScaleTransform (Editor.CartridgeZoom, Editor.CartridgeZoom, 0, 0);
 
-			Rectangle rect;
+			Rectangle bounds, rect;
 
-			var size = this.CartridgeSize;
-			rect = new Rectangle (1, 1, size.Width/Editor.CartridgeZoom, size.Height/Editor.CartridgeZoom);
-			rect.Inflate (0.5);
-			graphics.AddFilledRectangle (rect);
+			var size = this.CartridgeSize (generateUserCartridge, generateDateCartridge, generateSamplesCartridge);
+			bounds = new Rectangle (1, 1, size.Width/Editor.CartridgeZoom, size.Height/Editor.CartridgeZoom);
+			bounds.Inflate (0.5);
+			graphics.AddFilledRectangle (bounds);
 			graphics.RenderSolid (Color.FromHexa ("fff6e0"));  // beige pâle
-			graphics.AddRectangle (rect);
+			graphics.AddRectangle (bounds);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
-			rect = new Rectangle (1+Editor.CartridgeMargin, 1+Editor.CartridgeMargin, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
-			var samples = this.GetCartridgeSamplesUsed ();
-
-			if ((samples & CartridgeSamples.Abstract) != 0)
+			if ((generateUserCartridge || generateDateCartridge) && generateSamplesCartridge)
 			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
+				graphics.AddLine (bounds.Left, bounds.Top-Editor.CartridgeHeaderHeight-1, bounds.Right, bounds.Top-Editor.CartridgeHeaderHeight-1);
+				graphics.RenderSolid (Color.FromBrightness (0));
 			}
 
-			if ((samples & CartridgeSamples.Schema) != 0)
+			if (generateUserCartridge)
 			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
+				rect = new Rectangle (bounds.Left, bounds.Top-Editor.CartridgeHeaderHeight-1, Editor.CartridgeHeaderUserWidth, Editor.CartridgeHeaderHeight+1);
+
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Color.FromBrightness (0));
+
+				string name = "Inconnu";
+				if (this.module.DesignerApplication.Settings.IdentityCard != null)
+				{
+					name = this.module.DesignerApplication.Settings.IdentityCard.UserName;
+				}
+
+				graphics.PaintText (rect.Left, rect.Bottom+1, rect.Width, rect.Height-1, name, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 			}
 
-			if ((samples & CartridgeSamples.Repository) != 0)
+			if (generateDateCartridge)
 			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
+				var offset = generateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
+				rect = new Rectangle (bounds.Left+offset, bounds.Top-Editor.CartridgeHeaderHeight-1, Editor.CartridgeHeaderDateWidth, Editor.CartridgeHeaderHeight+1);
+
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Color.FromBrightness (0));
+
+				var date = System.DateTime.Now;
+				var text = date.ToString ("dd.MM.yyyy");
+				graphics.PaintText (rect.Left, rect.Bottom+1, rect.Width, rect.Height-1, text, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 			}
 
-			if ((samples & CartridgeSamples.Volatile) != 0)
+			if (generateSamplesCartridge)
 			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				rect = new Rectangle (bounds.Left+Editor.CartridgeSampleMargin+0.5, bounds.Bottom+Editor.CartridgeSampleMargin+0.5, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
+				var samples = this.GetCartridgeSamplesUsed ();
 
-			if ((samples & CartridgeSamples.Stable) != 0)
-			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				if ((samples & CartridgeSamples.Abstract) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 
-			if ((samples & CartridgeSamples.Immutable) != 0)
-			{
-				ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				if ((samples & CartridgeSamples.Schema) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 
-			if ((samples & CartridgeSamples.PublicRelation) != 0)
-			{
-				Editor.PaintRelation (graphics, rect, "Relation publique", "Référence", FieldRelation.Reference, false);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				if ((samples & CartridgeSamples.Repository) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 
-			if ((samples & CartridgeSamples.PublicCollection) != 0)
-			{
-				Editor.PaintRelation (graphics, rect, "Relation publique", "Collection", FieldRelation.Collection, false);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				if ((samples & CartridgeSamples.Volatile) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 
-			if ((samples & CartridgeSamples.PrivateRelation) != 0)
-			{
-				Editor.PaintRelation (graphics, rect, "Relation privée", "Référence", FieldRelation.Reference, true);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			}
+				if ((samples & CartridgeSamples.Stable) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 
-			if ((samples & CartridgeSamples.PrivateCollection) != 0)
-			{
-				Editor.PaintRelation (graphics, rect, "Relation privée", "Collection", FieldRelation.Collection, true);
-				rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
+				if ((samples & CartridgeSamples.Immutable) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.PublicRelation) != 0)
+				{
+					Editor.PaintRelation (graphics, rect, "Relation publique", "de type référence", FieldRelation.Reference, false);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.PublicCollection) != 0)
+				{
+					Editor.PaintRelation (graphics, rect, "Relation publique", "de type collection", FieldRelation.Collection, false);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.PrivateRelation) != 0)
+				{
+					Editor.PaintRelation (graphics, rect, "Relation privée", "de type référence", FieldRelation.Reference, true);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.PrivateCollection) != 0)
+				{
+					Editor.PaintRelation (graphics, rect, "Relation privée", "de type collection", FieldRelation.Collection, true);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
 			}
 
 			graphics.Transform = initialTransform;
@@ -1928,9 +1976,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			var start     = new Point (arrowRect.Left+20,  arrowRect.Bottom+arrowRect.Height/2);
 			var end       = new Point (arrowRect.Right-20, arrowRect.Bottom+arrowRect.Height/2);
 
-			var font = Font.GetFont (Font.DefaultFontFamily, "Bold");
-			graphics.PaintText (textRect1.Left, textRect1.Bottom, textRect1.Width, textRect1.Height, title1, font, 10, ContentAlignment.MiddleCenter);
-			graphics.PaintText (textRect2.Left, textRect2.Bottom, textRect2.Width, textRect2.Height, title2, font, 10, ContentAlignment.MiddleCenter);
+			graphics.PaintText (textRect1.Left, textRect1.Bottom, textRect1.Width, textRect1.Height, title1, Font.DefaultFont, 10.5, ContentAlignment.MiddleCenter);
+			graphics.PaintText (textRect2.Left, textRect2.Bottom, textRect2.Width, textRect2.Height, title2, Font.DefaultFont, 10.5, ContentAlignment.MiddleCenter);
 
 			graphics.LineWidth = 2;
 			graphics.AddLine (start, end);
@@ -1956,19 +2003,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static void AddCartridgeSamplesUsed(ref CartridgeSamples samples, ObjectBox box)
 		{
 			//	Ajoute tous les exemples utilisés par un objet.
-			switch (box.StructuredTypeFlags)
+			if ((box.StructuredTypeFlags & StructuredTypeFlags.AbstractClass) != 0)
 			{
-				case StructuredTypeFlags.AbstractClass:
-					samples |= CartridgeSamples.Abstract;
-					break;
+				samples |= CartridgeSamples.Abstract;
+			}
 
-				case StructuredTypeFlags.GenerateSchema:
-					samples |= CartridgeSamples.Schema;
-					break;
+			if ((box.StructuredTypeFlags & StructuredTypeFlags.GenerateSchema) != 0)
+			{
+				samples |= CartridgeSamples.Schema;
+			}
 
-				case StructuredTypeFlags.GenerateRepository:
-					samples |= CartridgeSamples.Repository;
-					break;
+			if ((box.StructuredTypeFlags & StructuredTypeFlags.GenerateRepository) != 0)
+			{
+				samples |= CartridgeSamples.Repository;
 			}
 
 			switch (box.DataLifetimeExpectancy)
@@ -2021,10 +2068,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		private static double CartridgeMargin       = 10;
-		private static double CartridgeSampleWidth  = 100;
-		private static double CartridgeSampleHeight = 80;
-		private static double CartridgeZoom         = 0.5;
+		private static double CartridgeHeaderUserWidth = 200;
+		private static double CartridgeHeaderDateWidth = 100;
+		private static double CartridgeHeaderHeight    = 24;
+
+		private static double CartridgeSampleMargin    = 10;
+		private static double CartridgeSampleWidth     = 100;
+		private static double CartridgeSampleHeight    = 80;
+		
+		private static double CartridgeZoom            = 0.5;
 		#endregion
 
 
