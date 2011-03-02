@@ -1789,7 +1789,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la taille nécessaire pour la cartouche.
 			get
 			{
-				double w = Editor.CartridgeMargin*10 + Editor.CartridgeSampleWidth*9;
+				double w = Editor.CartridgeMargin*11 + Editor.CartridgeSampleWidth*10;
 				double h = Editor.CartridgeMargin*2 + Editor.CartridgeSampleHeight;
 
 				return new Size (w*Editor.CartridgeZoom, h*Editor.CartridgeZoom);
@@ -1831,18 +1831,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
 
 			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			Editor.PaintRelation (graphics, rect, "Référence", FieldRelation.Reference, false);
+			Editor.PaintRelation (graphics, rect, "Référence", "Relation publique", FieldRelation.Reference, false);
 
 			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			Editor.PaintRelation (graphics, rect, "Collection", FieldRelation.Collection, false);
+			Editor.PaintRelation (graphics, rect, "Collection", "Relation publique", FieldRelation.Collection, false);
 
 			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
-			Editor.PaintRelation (graphics, rect, "Privé", FieldRelation.Reference, true);
+			Editor.PaintRelation (graphics, rect, "Référence", "Relation privée", FieldRelation.Reference, true);
+
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
+			Editor.PaintRelation (graphics, rect, "Collection", "Relation privée", FieldRelation.Collection, true);
 
 			graphics.Transform = initialTransform;
 		}
 
-		private static void PaintRelation(Graphics graphics, Rectangle bounds, string title, FieldRelation relation, bool isPrivateRelation)
+		private static void PaintRelation(Graphics graphics, Rectangle bounds, string title1, string title2, FieldRelation relation, bool isPrivateRelation)
 		{
 			bounds.Deflate (1.5);
 			graphics.AddFilledRectangle (bounds);
@@ -1850,14 +1853,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddRectangle (bounds);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
-			double titleHeight = 30;
-			var textRect  = new Rectangle (bounds.Left, bounds.Top-titleHeight, bounds.Width, titleHeight);
-			var arrowRect = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight);
+			double titleHeight = 15;
+			var textRect1 = new Rectangle (bounds.Left, bounds.Top-titleHeight, bounds.Width, titleHeight);
+			var textRect2 = new Rectangle (bounds.Left, bounds.Top-titleHeight*2, bounds.Width, titleHeight);
+			var arrowRect = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight*2);
 			var start     = new Point (arrowRect.Left+20,  arrowRect.Bottom+arrowRect.Height/2);
 			var end       = new Point (arrowRect.Right-20, arrowRect.Bottom+arrowRect.Height/2);
 
 			var font = Font.GetFont (Font.DefaultFontFamily, "Bold");
-			graphics.PaintText (textRect.Left, textRect.Bottom, textRect.Width, textRect.Height, title, font, 12, ContentAlignment.MiddleCenter);
+			graphics.PaintText (textRect1.Left, textRect1.Bottom, textRect1.Width, textRect1.Height, title1, font, 10, ContentAlignment.MiddleCenter);
+			graphics.PaintText (textRect2.Left, textRect2.Bottom, textRect2.Width, textRect2.Height, title2, font, 10, ContentAlignment.MiddleCenter);
 
 			graphics.LineWidth = 2;
 			graphics.AddLine (start, end);
