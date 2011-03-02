@@ -2,8 +2,13 @@
 //	Responsable: Michael WALZ
 
 using NUnit.Framework;
+using Epsitec.Common.Text;
+using Epsitec.Common.Text.Properties;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Text.Exchange;
+using Epsitec.Common.Text.Wrappers;
 
-namespace Epsitec.Common.Text.Exchange
+namespace Epsitec.Common.Tests.Text.Exchange
 {
 	[TestFixture] 
 	public class RosettaTest
@@ -20,18 +25,18 @@ namespace Epsitec.Common.Text.Exchange
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
-			string black = Drawing.RichColor.ToString (Drawing.RichColor.FromBrightness (0));
+			string black = RichColor.ToString (RichColor.FromBrightness (0));
 			
-			properties.Add (new Properties.FontProperty ("Arial", "Regular", "kern", "liga"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points, 0.0));
-			properties.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.True, 0, null));
-			properties.Add (new Properties.FontColorProperty (black));
-			properties.Add (new Properties.LanguageProperty (System.Globalization.CultureInfo.CurrentCulture.Name, 1.0));
-			properties.Add (new Properties.LeadingProperty (1.0, Properties.SizeUnits.PercentNotCombining, 0.0, Properties.SizeUnits.Points, 0.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
-			properties.Add (new Properties.KeepProperty (2, 2, Properties.ParagraphStartMode.Anywhere, Properties.ThreeState.False, Properties.ThreeState.False));
+			properties.Add (new FontProperty ("Arial", "Regular", "kern", "liga"));
+			properties.Add (new FontSizeProperty (12.0, SizeUnits.Points, 0.0));
+			properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.True, 0, null));
+			properties.Add (new FontColorProperty (black));
+			properties.Add (new LanguageProperty (System.Globalization.CultureInfo.CurrentCulture.Name, 1.0));
+			properties.Add (new LeadingProperty (1.0, SizeUnits.PercentNotCombining, 0.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
+			properties.Add (new KeepProperty (2, 2, ParagraphStartMode.Anywhere, ThreeState.False, ThreeState.False));
 			
-			TextStyle paraStyle = context.StyleList.NewTextStyle (null, "Default", TextStyleClass.Paragraph, properties);
-			TextStyle charStyle = context.StyleList.NewTextStyle (null, "Default", TextStyleClass.Text);
+			Epsitec.Common.Text.TextStyle paraStyle = context.StyleList.NewTextStyle (null, "Default", TextStyleClass.Paragraph, properties);
+			Epsitec.Common.Text.TextStyle charStyle = context.StyleList.NewTextStyle (null, "Default", TextStyleClass.Text);
 			
 			context.DefaultParagraphStyle = paraStyle;
 			context.StyleList.StyleMap.SetRank (null, paraStyle, 0);
@@ -66,8 +71,8 @@ namespace Epsitec.Common.Text.Exchange
 			TextStory       story;
 			TextNavigator   navigator;
 			
-			Wrappers.TextWrapper      textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+			TextWrapper      textWrapper = new TextWrapper ();
+			ParagraphWrapper paraWrapper = new ParagraphWrapper ();
 			
 			RosettaTest.CreateTextContext (out context);
 			RosettaTest.CreateEmptyTextStoryAndNavigator (context, out story, out navigator);
@@ -79,7 +84,7 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Defined.FontFace = "Times New Roman";
 			textWrapper.Defined.FontStyle = "Regular";
 			textWrapper.Defined.FontSize = 12.0;
-			textWrapper.Defined.Units = Properties.SizeUnits.Points;
+			textWrapper.Defined.Units = SizeUnits.Points;
 			textWrapper.ResumeSynchronizations ();
 			
 			navigator.Insert ("Hello you world !");
@@ -117,15 +122,15 @@ namespace Epsitec.Common.Text.Exchange
 				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 				
 				Property[]  runProperties = navigator.AccumulatedTextProperties;
-				TextStyle[] runStyles     = navigator.TextStyles;
+				Epsitec.Common.Text.TextStyle[] runStyles     = navigator.TextStyles;
 				
 				System.Console.Out.WriteLine ("Run: >>{0}<< with {1} properties", runText, runProperties.Length);
 				
 				foreach (Property p in runProperties)
 				{
-					if (p.WellKnownType == Properties.WellKnownType.Font)
+					if (p.WellKnownType == WellKnownType.Font)
 					{
-						Properties.FontProperty fontProperty = p as Properties.FontProperty;
+						FontProperty fontProperty = p as FontProperty;
 						
 						string fontFace = fontProperty.FaceName;
 						string fontStyle = fontProperty.StyleName;

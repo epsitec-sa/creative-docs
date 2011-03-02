@@ -130,6 +130,7 @@
     <Compile Include="Support\WeakEventListenersTest.cs" />
     <Compile Include="Support\WordBreakTest.cs" />
     <Compile Include="Support\XmlTest.cs" />
+    <Compile Include="Text\Exchange\RosettaTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

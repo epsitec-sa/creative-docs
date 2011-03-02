@@ -3,6 +3,9 @@ using NUnit.Framework;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Text;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text.Layout;
+using Epsitec.Common.Text.Properties;
+using Epsitec.Common.Text.Cursors;
 
 
 namespace Epsitec.Common.Tests.Drawing
@@ -199,19 +202,19 @@ namespace Epsitec.Common.Tests.Drawing
 					{
 						System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 						
-						properties.Add (new Text.Properties.FontProperty ("Verdana", "Italic"));
-						properties.Add (new Text.Properties.FontSizeProperty (32.0, Common.Text.Properties.SizeUnits.Points));
-						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Common.Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Common.Text.Properties.ThreeState.True));
-						properties.Add (new Text.Properties.FontColorProperty ("Black"));
-						properties.Add (new Text.Properties.LeadingProperty (double.NaN, Common.Text.Properties.SizeUnits.None, 5.0, Common.Text.Properties.SizeUnits.Points, 5.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
+						properties.Add (new FontProperty ("Verdana", "Italic"));
+						properties.Add (new FontSizeProperty (32.0, SizeUnits.Points));
+						properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, ThreeState.True));
+						properties.Add (new FontColorProperty ("Black"));
+						properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 						
-						Text.StyleList style_list    = this.story.TextContext.StyleList;
-						Text.TextStyle style_default = style_list.NewTextStyle (null, "Default", Common.Text.TextStyleClass.Paragraph, properties);
+						StyleList style_list    = this.story.TextContext.StyleList;
+						Epsitec.Common.Text.TextStyle style_default = style_list.NewTextStyle (null, "Default", Common.Text.TextStyleClass.Paragraph, properties);
 						
 						this.story.TextContext.DefaultParagraphStyle = style_default;
 					}
 					
-					Text.TextNavigator navigator = new Text.TextNavigator (this.fitter);
+					Epsitec.Common.Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.fitter);
 					
 					Common.Text.ITextFrame frame;
 					double cx, cy, ascender, descender, angle;
@@ -272,11 +275,11 @@ namespace Epsitec.Common.Tests.Drawing
 				return true;
 			}
 			
-			public void RenderStartParagraph(Text.Layout.Context context)
+			public void RenderStartParagraph(Context context)
 			{
 			}
 			
-			public void RenderStartLine(Text.Layout.Context context)
+			public void RenderStartLine(Context context)
 			{
 				ITextFrame frame = context.Frame;
 				
@@ -291,13 +294,13 @@ namespace Epsitec.Common.Tests.Drawing
 				context.DisableSimpleRendering ();
 			}
 			
-			public void RenderTab(Text.Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined, bool is_tab_auto)
+			public void RenderTab(Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined, bool is_tab_auto)
 			{
 			}
 			
-			public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			public void Render(Context layout, Epsitec.Common.OpenType.Font font, double size, string color, TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
-				Text.ITextFrame frame = layout.Frame;
+				ITextFrame frame = layout.Frame;
 				
 				System.Diagnostics.Debug.Assert (mapping != null);
 				
@@ -348,18 +351,18 @@ namespace Epsitec.Common.Tests.Drawing
 				}
 			}
 			
-			public void Render(Text.Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
+			public void Render(Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
 			{
 				glyph_renderer.RenderGlyph (layout.Frame, x, y);
 			}
 			
-			public void RenderEndLine(Text.Layout.Context context)
+			public void RenderEndLine(Context context)
 			{
 			}
 			
-			public void RenderEndParagraph(Text.Layout.Context context)
+			public void RenderEndParagraph(Context context)
 			{
-				Text.Layout.XlineRecord[] records = context.XlineRecords;
+				XlineRecord[] records = context.XlineRecords;
 				
 				double x1 = 0;
 				double y1 = 0;
@@ -480,37 +483,37 @@ namespace Epsitec.Common.Tests.Drawing
 			{
 				this.painter.ResetTextStory ();
 				
-				ICursor cursor = new Text.Cursors.SimpleCursor ();
+				ICursor cursor = new SimpleCursor ();
 				this.painter.TextStory.NewCursor (cursor);
 				
 				ulong[] text;
 				string words;
 				
-				Text.TextStyle[] no_styles = new Text.TextStyle[1];
+				Epsitec.Common.Text.TextStyle[] no_styles = new Epsitec.Common.Text.TextStyle[1];
 
 				if (no_styles.Length > 0)
 				{
 					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
-					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					no_styles[0] = this.painter.TextStory.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties);
+					properties.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties.Add (new FontColorProperty ("Black"));
+					no_styles[0] = this.painter.TextStory.StyleList.NewTextStyle (null, "Default", TextStyleClass.Paragraph, properties);
 				}
 				
 				if (this.active_test == 0)
 				{
 					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 					
-					Text.Properties.FontProperty fp;
+					FontProperty fp;
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
+					fp = new FontProperty ("Arial", "Regular", this.features);
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-					properties.Add (new Text.Properties.LeadingProperty (10.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (60, 10, 10, 10, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LanguageProperty ("fr-ch", 1.0));
+					properties.Add (new LeadingProperty (10.0, SizeUnits.Points, 15.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 					
@@ -518,46 +521,46 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 #if true
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular", this.features);
+					fp = new FontProperty ("Palatino Linotype", "Regular", this.features);
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Blue"));
-					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.All));
-					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
+					properties.Add (new FontSizeProperty (24.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (10, 10, 10, 10, SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Blue"));
+					properties.Add (new LanguageProperty ("fr-ch", 1.0));
+					properties.Add (new LeadingProperty (24.0, SizeUnits.Points, AlignMode.All));
+					properties.Add (new KeepProperty (3, 2, ParagraphStartMode.Anywhere, ThreeState.False, ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					properties.Add (new Text.Properties.FontKernProperty (8, Text.Properties.SizeUnits.Points));
+					properties.Add (new FontKernProperty (8, SizeUnits.Points));
 					
 					this.painter.TextStory.ConvertToStyledText ("Titre sur deux lignes pour voir\n", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Times New Roman", "Italic", this.features);
+					fp = new FontProperty ("Times New Roman", "Italic", this.features);
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties.Add (new Text.Properties.FontColorProperty ("Red"));
-					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, 1.0, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.First));
-					properties.Add (new Text.Properties.KeepProperty (3, 3, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.True, Text.Properties.ThreeState.False));
+					properties.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, ThreeState.False));
+					properties.Add (new FontColorProperty ("Red"));
+					properties.Add (new LeadingProperty (4.0, SizeUnits.Millimeters, 1.0, SizeUnits.Points, 1.0, SizeUnits.Points, AlignMode.First));
+					properties.Add (new KeepProperty (3, 3, ParagraphStartMode.Anywhere, ThreeState.True, ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
+					fp = new FontProperty ("Arial", "Regular", this.features);
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.False));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.ConditionalProperty ("ShowTitle", true));
+					properties.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, ThreeState.False));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new ConditionalProperty ("ShowTitle", true));
 					
 					if (this.painter.Condition)
 					{
@@ -573,12 +576,12 @@ namespace Epsitec.Common.Tests.Drawing
 					
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
+					fp = new FontProperty ("Arial", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, ThreeState.False));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -587,19 +590,19 @@ namespace Epsitec.Common.Tests.Drawing
 					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (1.0, Text.Properties.SizeUnits.Percent, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (1.0, SizeUnits.Percent, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					Text.TextContext   context      = this.painter.TextStory.TextContext;
-					Text.StyleList style_list   = context.StyleList;
-					Text.TextStyle style_normal = style_list.NewTextStyle (null, "Normal", Text.TextStyleClass.Paragraph, properties);
+					TextContext   context      = this.painter.TextStory.TextContext;
+					StyleList style_list   = context.StyleList;
+					Epsitec.Common.Text.TextStyle style_normal = style_list.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 					
 					this.painter.TextStory.ConvertToStyledText ("Un petit texte juste avant l'image >", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -607,7 +610,7 @@ namespace Epsitec.Common.Tests.Drawing
 					context.DefineResource ("image1", new ImageRenderer (this.painter));
 					
 					properties.Clear ();
-					properties.Add (new Text.Properties.ImageProperty ("image1", context));
+					properties.Add (new ImageProperty ("image1", context));
 					
 					this.painter.TextStory.ConvertToStyledText ("\uFFFC", style_normal, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -621,96 +624,96 @@ namespace Epsitec.Common.Tests.Drawing
 					double disp = 0.0;
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("Un texte avec quelques ", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "underline", "Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new UnderlineProperty (double.NaN, SizeUnits.None, double.NaN, SizeUnits.None, "underline", "Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("passages soulignés", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText (" permettant de tester", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.FontSizeProperty (0.75, Text.Properties.SizeUnits.Percent));
-					properties.Add (new Text.Properties.FontOffsetProperty (0.80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new FontSizeProperty (0.75, SizeUnits.Percent));
+					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("(a)", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText (" le fonctionnement des divers ", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "wave", "Red"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new UnderlineProperty (double.NaN, SizeUnits.None, double.NaN, SizeUnits.None, "wave", "Red"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("algoritmes", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "wave", "Red"));
-					properties.Add (new Text.Properties.FontSizeProperty (0.75, Text.Properties.SizeUnits.Percent));
-					properties.Add (new Text.Properties.FontOffsetProperty (0.80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new UnderlineProperty (double.NaN, SizeUnits.None, double.NaN, SizeUnits.None, "wave", "Red"));
+					properties.Add (new FontSizeProperty (0.75, SizeUnits.Percent));
+					properties.Add (new FontOffsetProperty (0.80, SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("\u2060(b)", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+					fp = new FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+					properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, just, 0.0, disp, 15, 1, ThreeState.True));
+					properties.Add (new FontColorProperty ("Black"));
+					properties.Add (new LeadingProperty (double.NaN, SizeUnits.None, 5.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("...\n", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -724,25 +727,25 @@ namespace Epsitec.Common.Tests.Drawing
 						for (int i = 0; (i < 15) && (glyph < 205); i++)
 						{
 							properties.Clear ();
-							fp = new Text.Properties.FontProperty (symbol, "Regular", this.features);
+							fp = new FontProperty (symbol, "Regular", this.features);
 							properties.Add (fp);
-							properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
-							properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-							properties.Add (new Text.Properties.FontColorProperty (Drawing.Color.FromName ("Black")));
-							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-							properties.Add (new Text.Properties.OpenTypeProperty (symbol, glyph++));
+							properties.Add (new FontSizeProperty (24.0, SizeUnits.Points));
+							properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+							properties.Add (new FontColorProperty (Drawing.Color.FromName ("Black")));
+							properties.Add (new LeadingProperty (28.0, SizeUnits.Points, 0.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
+							properties.Add (new OpenTypeProperty (symbol, glyph++));
 							
 							this.painter.TextStory.ConvertToStyledText ("X", no_styles, properties, out text);
 							this.painter.TextStory.InsertText (cursor, text);
 						}
 						
 						properties.Clear ();
-						fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
+						fp = new FontProperty ("Verdana", "Regular", this.features);
 						properties.Add (fp);
-						properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-						properties.Add (new Text.Properties.FontColorProperty (Drawing.Color.FromName ("Black")));
-						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+						properties.Add (new FontSizeProperty (16.0, SizeUnits.Points));
+						properties.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+						properties.Add (new FontColorProperty (Drawing.Color.FromName ("Black")));
+						properties.Add (new LeadingProperty (16.0, SizeUnits.Points, 0.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
 						
 						this.painter.TextStory.ConvertToStyledText ("\n", no_styles, properties, out text);
 						this.painter.TextStory.InsertText (cursor, text);
@@ -763,20 +766,20 @@ namespace Epsitec.Common.Tests.Drawing
 					System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 					System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 					
-					Text.TabList tabs = this.painter.TextStory.TextContext.TabList;
+					TabList tabs = this.painter.TextStory.TextContext.TabList;
 #if true
-					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (tabs.NewTab ("T1", tab, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties_1.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties_1.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+					properties_1.Add (tabs.NewTab ("T1", tab, SizeUnits.Points, 0, null, TabPositionMode.Absolute));
+					properties_1.Add (new FontColorProperty ("Black"));
+					properties_1.Add (new LeadingProperty (18.0, SizeUnits.Points, 10.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
 					
-					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_2.Add (new Text.Properties.FontColorProperty ("Red"));
-					properties_2.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties_2.Add (new FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_2.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+					properties_2.Add (new FontColorProperty ("Red"));
+					properties_2.Add (new LeadingProperty (18.0, SizeUnits.Points, 10.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText ("Tabulateurs en folie\nTest:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -791,16 +794,16 @@ namespace Epsitec.Common.Tests.Drawing
 					properties_1.Clear ();
 					properties_2.Clear ();
 					
-					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (tabs.NewTab ("T2", tab, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
+					properties_1.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+					properties_1.Add (tabs.NewTab ("T2", tab, SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
+					properties_1.Add (new FontColorProperty ("Black"));
 					
-					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_2.Add (new Text.Properties.FontColorProperty ("Red"));
+					properties_2.Add (new FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_2.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.False));
+					properties_2.Add (new FontColorProperty ("Red"));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -815,17 +818,17 @@ namespace Epsitec.Common.Tests.Drawing
 					properties_1.Clear ();
 					properties_2.Clear ();
 					
-					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-					properties_1.Add (tabs.NewTab ("T3", tab, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
-					properties_1.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
+					properties_1.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, ThreeState.True));
+					properties_1.Add (tabs.NewTab ("T3", tab, SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+					properties_1.Add (new FontColorProperty ("Black"));
+					properties_1.Add (new LanguageProperty ("fr-ch", 1.0));
 					
-					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_2.Add (new Text.Properties.FontColorProperty ("Red"));
+					properties_2.Add (new FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_2.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, ThreeState.False));
+					properties_2.Add (new FontColorProperty ("Red"));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -841,16 +844,16 @@ namespace Epsitec.Common.Tests.Drawing
 					properties_1.Clear ();
 					properties_2.Clear ();
 					
-					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (tabs.NewTab ("T4", tab, Text.Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
+					properties_1.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, ThreeState.False));
+					properties_1.Add (tabs.NewTab ("T4", tab, SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+					properties_1.Add (new FontColorProperty ("Black"));
 					
-					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_2.Add (new Text.Properties.FontColorProperty ("Red"));
+					properties_2.Add (new FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_2.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, ThreeState.False));
+					properties_2.Add (new FontColorProperty ("Red"));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -865,16 +868,16 @@ namespace Epsitec.Common.Tests.Drawing
 					properties_1.Clear ();
 					properties_2.Clear ();
 					
-					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (tabs.NewTab ("T5", tab, Text.Properties.SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
+					properties_1.Add (new FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, ThreeState.False));
+					properties_1.Add (tabs.NewTab ("T5", tab, SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
+					properties_1.Add (new FontColorProperty ("Black"));
 					
-					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_2.Add (new Text.Properties.FontColorProperty ("Red"));
+					properties_2.Add (new FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_2.Add (new MarginsProperty (0, 0, 0, 0, SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, ThreeState.False));
+					properties_2.Add (new FontColorProperty ("Red"));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -886,54 +889,54 @@ namespace Epsitec.Common.Tests.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 					properties_1.Clear ();
-					properties_1.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-					properties_1.Add (new Text.Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.True));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Black"));
+					properties_1.Add (new FontProperty ("Verdana", "Regular"));
+					properties_1.Add (new FontSizeProperty (12.0, SizeUnits.Points));
+					properties_1.Add (new LeadingProperty (18.0, SizeUnits.Points, 10.0, SizeUnits.Points, 0.0, SizeUnits.Points, AlignMode.None));
+					properties_1.Add (new MarginsProperty (5.0, 5.0, 5.0, 5.0, SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, ThreeState.True));
+					properties_1.Add (new FontColorProperty ("Black"));
 					
-					Text.TextStyle style1 = this.painter.TextStory.StyleList.NewTextStyle (null, "Normal", Text.TextStyleClass.Paragraph, properties_1);
+					Epsitec.Common.Text.TextStyle style1 = this.painter.TextStory.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties_1);
 					
-					Text.Generator generator = this.painter.TextStory.TextContext.GeneratorList.NewGenerator ("liste");
+					Generator generator = this.painter.TextStory.TextContext.GeneratorList.NewGenerator ("liste");
 					
-					generator.Add (Text.Generator.CreateSequence (Text.Generator.SequenceType.Alphabetic, "", ")"));
+					generator.Add (Generator.CreateSequence (Generator.SequenceType.Alphabetic, "", ")"));
 					
-					Text.ParagraphManagers.ItemListManager.Parameters items = new Text.ParagraphManagers.ItemListManager.Parameters ();
+					Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters items = new Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters ();
 					
 					items.Generator = generator;
-					items.TabItem   = tabs.NewTab ("T10-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
-					items.TabBody   = tabs.NewTab ("T10-body", tab, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+					items.TabItem   = tabs.NewTab ("T10-item", 10.0, SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+					items.TabBody   = tabs.NewTab ("T10-body", tab, SizeUnits.Points, 0, null, TabPositionMode.Absolute);
 					
-					Text.Properties.ManagedParagraphProperty mp = new Text.Properties.ManagedParagraphProperty ("ItemList", items.Save ());
+					ManagedParagraphProperty mp = new ManagedParagraphProperty ("ItemList", items.Save ());
 					
 					properties_1.Clear ();
 					properties_1.Add (mp);
-					properties_1.Add (new Text.Properties.MarginsProperty (0, tab, double.NaN, double.NaN, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.Undefined));
-					properties_1.Add (new Text.Properties.FontColorProperty ("Navy"));
+					properties_1.Add (new MarginsProperty (0, tab, double.NaN, double.NaN, SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, ThreeState.Undefined));
+					properties_1.Add (new FontColorProperty ("Navy"));
 					
-					Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle (null, "Puces", Text.TextStyleClass.Paragraph, properties_1);
+					Epsitec.Common.Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle (null, "Puces", TextStyleClass.Paragraph, properties_1);
 					
 					words = "Voici une liste à puces pour faire un test.\n";
 					
 					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextFitter);
+					Epsitec.Common.Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextFitter);
 					
-					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextEnd, 1);
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
 					navigator.SetParagraphStyles (style1, style2);
 					navigator.Insert ("..\nComplément 1.\nComplément 2.");
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
 					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte normal.\n");
-					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
 					navigator.StartSelection ();
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 3);		//	sélectionne ".\nT"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 3);		//	sélectionne ".\nT"
 					navigator.EndSelection ();
 					navigator.Delete ();
-					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextEnd, 1);
 					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("aaa\nbbb\n");
 					navigator.Insert ("ccc");
@@ -942,17 +945,17 @@ namespace Epsitec.Common.Tests.Drawing
 					navigator.Insert ("ddd\neee\nfff\n");
 					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte final.\n");
-					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 5);		//	au début de "ccc"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphStart, 5);		//	au début de "ccc"
 					navigator.StartSelection ();
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	après "bb" et avant "b\n"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 2);	//	après "bb" et avant "b\n"
 //-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 4);	//	avant "bbb\n"
 					navigator.EndSelection ();
 					navigator.Delete ();
-					navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ccc"
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	entre "e)" et "ddd"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ccc"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	entre "e)" et "ddd"
 					navigator.StartSelection ();
-					navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ddd" (sans la marque de fin de paragraphe)
-					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	y compris le "\n"
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ddd" (sans la marque de fin de paragraphe)
+					navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);		//	y compris le "\n"
 					navigator.EndSelection ();
 					navigator.Delete ();
 //					this.painter.TextStory.OpletQueue.UndoAction ();					//	remet 'ddd' tel quel
@@ -1046,7 +1049,7 @@ namespace Epsitec.Common.Tests.Drawing
 			}
 		}
 
-		public class ImageRenderer : Text.IGlyphRenderer
+		public class ImageRenderer : IGlyphRenderer
 		{
 			public ImageRenderer(Painter painter)
 			{
