@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!rect.IsSurfaceZero)
 			{
-				ObjectBox.DrawFrame (graphics, rect, this.mainColor, false, true, this.title, this.subtitle, this.dataLifetimeExpectancy, this.structuredTypeFlags);
+				ObjectBox.DrawFrame (graphics, rect, this.mainColor, false, true, false, this.title, this.subtitle, this.dataLifetimeExpectancy, this.structuredTypeFlags);
 			}
 		}
 

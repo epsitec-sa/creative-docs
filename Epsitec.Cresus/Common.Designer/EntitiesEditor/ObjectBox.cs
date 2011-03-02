@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		private bool IsInterface
+		public bool IsInterface
 		{
 			//	Indique si l'entité est une interface.
 			get
@@ -2613,7 +2613,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
 			ObjectBox.DrawFrame1 (graphics, this.bounds, this.boxColor, this.isRoot, this.isExtended, this.isDimmed, dragging,
-				this.dataLifetimeExpectancy, this.structuredTypeFlags,
+				this.dataLifetimeExpectancy, this.structuredTypeFlags, this.IsInterface,
 				this.title, this.subtitle,
 				this.columnsSeparatorRelative1, this.ColumnsSeparatorAbsolute (0), this.ColumnsSeparatorAbsolute (1));
 
@@ -2696,13 +2696,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
-				//	Dessine le glyph 'o--' pour les interfaces.
-				if (this.IsInterface)
-				{
-					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+10, 25, 8);
-					this.DrawGlyphInterface(graphics, rect, 2, frameColor);
-				}
-
 				//	Dessine toutes les lignes, titres ou simples champs.
 				for (int i=0; i<this.fields.Count; i++)
 				{
@@ -2870,7 +2863,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
 							rect = new Rectangle(rect.Left-25, rect.Center.Y-5, 25, 6);
-							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
+							ObjectBox.DrawGlyphInterface (graphics, rect, 1, this.GetColorMain (0.8), this.isDimmed);
 						}
 					}
 					else if (this.fields[i].IsSubtitle)
@@ -2904,7 +2897,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
 							rect = new Rectangle(rect.Left-25-indent, rect.Center.Y-5, 25+indent, 6);
-							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
+							ObjectBox.DrawGlyphInterface (graphics, rect, 1, this.GetColorMain (0.8), this.isDimmed);
 						}
 					}
 					else
@@ -2995,7 +2988,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
+					ObjectBox.DrawDashLine (graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain ());
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
@@ -3011,7 +3004,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
+					ObjectBox.DrawDashLine (graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain ());
 				}
 
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
@@ -3166,7 +3159,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		public static void DrawFrame(
-			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, string title, string subtitle,
+			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, bool isInterface, string title, string subtitle,
 			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
 		{
 			TextLayout titleLayout    = null;
@@ -3190,13 +3183,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				subtitleLayout.Text = Misc.Italic (subtitle);
 			}
 
-			ObjectBox.DrawFrame1 (graphics, bounds, mainColor, isRoot, isExtended, false, false, lifetime, flags, titleLayout, subtitleLayout, 0.5, bounds.Left+bounds.Width*0.5, bounds.Left+bounds.Width*0.9);
+			ObjectBox.DrawFrame1 (graphics, bounds, mainColor, isRoot, isExtended, false, false, lifetime, flags, isInterface, titleLayout, subtitleLayout, 0.5, bounds.Left+bounds.Width*0.5, bounds.Left+bounds.Width*0.9);
 			ObjectBox.DrawFrame2 (graphics, bounds, mainColor, isRoot, isExtended, false, false, lifetime, flags);
 		}
 
 		private static void DrawFrame1(
 			Graphics graphics, Rectangle bounds, MainColor mainColor, bool isRoot, bool isExtended, bool isDimmed, bool dragging,
-			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags,
+			DataLifetimeExpectancy lifetime, StructuredTypeFlags flags, bool isInterface,
 			TextLayout title, TextLayout subtitle,
 			double columnsSeparatorRelative1, double columnsSeparatorAbsolute0, double columnsSeparatorAbsolute1)
 		{
@@ -3254,6 +3247,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine en blanc la zone pour les champs.
 			if (isExtended)
 			{
+				//	Dessine le glyph 'o--' pour les interfaces.
+				if (isInterface)
+				{
+					rect = new Rectangle (bounds.Left-25, bounds.Top-AbstractObject.headerHeight+10, 25, 8);
+					ObjectBox.DrawGlyphInterface (graphics, rect, 2, frameColor, isDimmed);
+				}
+
 				Rectangle inside = new Rectangle (bounds.Left+1, bounds.Bottom+AbstractObject.footerHeight, bounds.Width-2, bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
 				graphics.AddFilledRectangle (inside);
 				graphics.RenderSolid (whiteColor);
@@ -3502,7 +3502,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColor(0));
 		}
 
-		private void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
+		private static void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color, bool isDimmed)
 		{
 			//	Dessine le glyph 'o--' d'une interface.
 			double y = System.Math.Floor(rect.Center.Y)+(lineWidth%2)/2;
@@ -3511,7 +3511,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.LineWidth = lineWidth;
 
 			graphics.AddFilledCircle(rect.Left+radius, y, radius);
-			graphics.RenderSolid(this.GetColor(1));
+			graphics.RenderSolid(AbstractObject.GetColor(1, isDimmed, false));
 
 			graphics.AddCircle(rect.Left+radius, y, radius);
 			graphics.AddLine(rect.Left+radius*2, y, rect.Right, y);
@@ -3520,7 +3520,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.LineWidth = 1;
 		}
 
-		private void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
+		private static void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
 		{
 			//	Dessine un large traitillé.
 			Path path = new Path();

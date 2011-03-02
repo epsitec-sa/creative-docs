@@ -1796,6 +1796,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			PublicCollection  = 0x0200,
 			PrivateRelation   = 0x0400,
 			PrivateCollection = 0x0800,
+			Interface         = 0x1000,
 		}
 
 		public Size CartridgeSize(bool generateUserCartridge, bool generateDateCartridge, bool generateSamplesCartridge)
@@ -1898,37 +1899,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((samples & CartridgeSamples.Abstract) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.Schema) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.Repository) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.Volatile) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.Stable) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
 				if ((samples & CartridgeSamples.Immutable) != 0)
 				{
-					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.Interface) != 0)
+				{
+					var r = rect;
+					r.Left += 25;
+					ObjectBox.DrawFrame (graphics, r, AbstractObject.MainColor.Grey, false, true, true, "Interface", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.None);
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
@@ -2003,6 +2012,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static void AddCartridgeSamplesUsed(ref CartridgeSamples samples, ObjectBox box)
 		{
 			//	Ajoute tous les exemples utilisés par un objet.
+			if (box.IsInterface)
+			{
+				samples |= CartridgeSamples.Interface;
+			}
+
 			if ((box.StructuredTypeFlags & StructuredTypeFlags.AbstractClass) != 0)
 			{
 				samples |= CartridgeSamples.Abstract;
@@ -2042,6 +2056,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static void AddCartridgeSamplesUsed(ref CartridgeSamples samples, Field field)
 		{
 			//	Ajoute tous les exemples utilisés par un champ.
+			if (field.IsInterfaceLocal)
+			{
+				samples |= CartridgeSamples.Interface;
+			}
+
 			switch (field.Relation)
 			{
 				case FieldRelation.Reference:
