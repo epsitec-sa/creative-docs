@@ -252,7 +252,7 @@ namespace Epsitec.Common.Dialogs
 
 			try
 			{
-				Adobe.AcrobatDistiller.PdfDistiller distiller = new Adobe.AcrobatDistiller.PdfDistillerClass ();
+				Adobe.AcrobatDistiller.PdfDistiller distiller = new Adobe.AcrobatDistiller.PdfDistiller ();
 				distiller.bShowWindow = 0;
 				distiller.OnJobStart += PrintDialogTest.HandleDistillerOnJobStart;
 				distiller.OnJobDone  += PrintDialogTest.HandleDistillerOnJobDone;

@@ -118,6 +118,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity.Tests", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests.Vs", "Common.Tests.Vs\Common.Tests.Vs.csproj", "{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "Common.Tests\Common.Tests.csproj", "{1E921F71-7F6A-4130-84A6-A0180659F1D9}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
@@ -1004,6 +1006,24 @@ Global
 		{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}.Release|Win32.ActiveCfg = Release|Any CPU
 		{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1031,5 +1051,6 @@ Global
 		{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68} = {11A63789-C3A1-4BFF-AC27-3B5F7FD7EADE}
 		{99212AC6-9A4B-419C-91FC-F3079C19D1B9} = {11A63789-C3A1-4BFF-AC27-3B5F7FD7EADE}
 		{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124} = {11A63789-C3A1-4BFF-AC27-3B5F7FD7EADE}
+		{1E921F71-7F6A-4130-84A6-A0180659F1D9} = {11A63789-C3A1-4BFF-AC27-3B5F7FD7EADE}
 	EndGlobalSection
 EndGlobal

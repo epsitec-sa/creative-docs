@@ -9,7 +9,7 @@
     <ProjectGuid>{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common.Tests.Vs</RootNamespace>
+    <RootNamespace>Epsitec.Common.Tests.Vs</RootNamespace>
     <AssemblyName>Common.Tests.Vs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
