@@ -647,7 +647,7 @@ namespace Epsitec.Common.Designer
 				//	Demande les paramètres (fanions et espérance de vie).
 				var lifetime = DataLifetimeExpectancy.Stable;
 				var flags    = StructuredTypeFlags.None;
-				result = this.designerApplication.DlgEntityParameters (ref lifetime, ref flags);
+				result = this.designerApplication.DlgEntityParameters (null, ref lifetime, ref flags);
 
 				if (result != Common.Dialogs.DialogResult.Accept)
 				{

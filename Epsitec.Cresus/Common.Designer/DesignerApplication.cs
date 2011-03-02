@@ -2415,7 +2415,7 @@ namespace Epsitec.Common.Designer
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			
 			typeClass = this.dlgResourceSelector.StructuredTypeClass;
-			resource = this.dlgResourceSelector.Resource;
+			resource = this.dlgResourceSelector.SelectedResource;
 			isNullable = this.dlgResourceSelector.IsNullable;
 			
 			return this.dlgResourceSelector.AccessClose();
@@ -2536,7 +2536,7 @@ namespace Epsitec.Common.Designer
 				name = this.dlgEntityCreation.ResourceName.SelectedName;
 
 				typeClass  = this.dlgEntityCreation.ResourceSelector.StructuredTypeClass;
-				resource   = this.dlgEntityCreation.ResourceSelector.Resource;
+				resource   = this.dlgEntityCreation.ResourceSelector.SelectedResource;
 
 				lifetime = this.dlgEntityCreation.EntityParameters.DataLifetimeExpectancy;
 				flags    = this.dlgEntityCreation.EntityParameters.StructuredTypeFlags;

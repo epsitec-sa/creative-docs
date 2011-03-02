@@ -298,14 +298,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public Druid Resource
-		{
-			get
-			{
-				return this.resource;
-			}
-		}
-
 		protected void AccessChange(Module module)
 		{
 			//	Change l'accès aux ressources dans un autre module.
@@ -607,7 +599,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected Druid SelectedResource
+		public Druid SelectedResource
 		{
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
@@ -752,10 +744,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	La liste des ressources a été double-cliquée.
-			this.resource = this.SelectedResource;
-			this.result = Common.Dialogs.DialogResult.Yes;
-
-			this.Close();
+			if (this.buttonUse != null)  // mode "dialogue" (par opposition au mode "volet") ?
+			{
+				this.result = Common.Dialogs.DialogResult.Yes;
+				this.Close ();
+			}
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -765,17 +758,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.resource = Druid.Empty;
 			this.result = Common.Dialogs.DialogResult.Cancel;
-
 			this.Close();
 		}
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
-			this.resource = this.SelectedResource;
 			this.result = Common.Dialogs.DialogResult.Yes;
-
 			this.Close();
 		}
 
