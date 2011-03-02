@@ -1,9 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Epsitec.Common.Types;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
 
-namespace Epsitec.Common.Types.UnitTests
+namespace Epsitec.Common.Tests.Vs.Types
 {
 
 

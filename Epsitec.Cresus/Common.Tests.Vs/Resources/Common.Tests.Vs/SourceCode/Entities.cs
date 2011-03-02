@@ -4,11 +4,11 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A]", typeof (Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A3]", typeof (Epsitec.Common.Support.UnitTests.Entities.ReferenceDataEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A5]", typeof (Epsitec.Common.Support.UnitTests.Entities.CollectionDataEntity))]
-#region Epsitec.Common.Support.UnitTests.ValueData Entity
-namespace Epsitec.Common.Support.UnitTests.Entities
+[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A]", typeof (Epsitec.Common.Tests.Vs.Entities.ValueDataEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A3]", typeof (Epsitec.Common.Tests.Vs.Entities.ReferenceDataEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[I1A5]", typeof (Epsitec.Common.Tests.Vs.Entities.CollectionDataEntity))]
+#region Epsitec.Common.Tests.Vs.ValueData Entity
+namespace Epsitec.Common.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>ValueData</c> entity.
@@ -68,11 +68,11 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeId;
+			return global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 0);	// [I1A]
 		public static readonly new string EntityStructuredTypeKey = "[I1A]";
@@ -80,8 +80,8 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Common.Support.UnitTests.ReferenceData Entity
-namespace Epsitec.Common.Support.UnitTests.Entities
+#region Epsitec.Common.Tests.Vs.ReferenceData Entity
+namespace Epsitec.Common.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>ReferenceData</c> entity.
@@ -94,34 +94,34 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 		///	designer:fld/I1A3/I1A4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[I1A4]")]
-		public global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity Reference
+		public global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity Reference
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity> ("[I1A4]");
+				return this.GetField<global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity> ("[I1A4]");
 			}
 			set
 			{
-				global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity oldValue = this.Reference;
+				global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity oldValue = this.Reference;
 				if (oldValue != value || !this.IsFieldDefined("[I1A4]"))
 				{
 					this.OnReferenceChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity> ("[I1A4]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity> ("[I1A4]", oldValue, value);
 					this.OnReferenceChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnReferenceChanging(global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity newValue);
-		partial void OnReferenceChanged(global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity newValue);
+		partial void OnReferenceChanging(global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity newValue);
+		partial void OnReferenceChanged(global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.ReferenceDataEntity.EntityStructuredTypeId;
+			return global::Epsitec.Common.Tests.Vs.Entities.ReferenceDataEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.ReferenceDataEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Common.Tests.Vs.Entities.ReferenceDataEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 3);	// [I1A3]
 		public static readonly new string EntityStructuredTypeKey = "[I1A3]";
@@ -129,8 +129,8 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Common.Support.UnitTests.CollectionData Entity
-namespace Epsitec.Common.Support.UnitTests.Entities
+#region Epsitec.Common.Tests.Vs.CollectionData Entity
+namespace Epsitec.Common.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>CollectionData</c> entity.
@@ -143,22 +143,22 @@ namespace Epsitec.Common.Support.UnitTests.Entities
 		///	designer:fld/I1A5/I1A6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[I1A6]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity> Collection
+		public global::System.Collections.Generic.IList<global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity> Collection
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Common.Support.UnitTests.Entities.ValueDataEntity> ("[I1A6]");
+				return this.GetFieldCollection<global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity> ("[I1A6]");
 			}
 		}
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.CollectionDataEntity.EntityStructuredTypeId;
+			return global::Epsitec.Common.Tests.Vs.Entities.CollectionDataEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Common.Support.UnitTests.Entities.CollectionDataEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Common.Tests.Vs.Entities.CollectionDataEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 5);	// [I1A5]
 		public static readonly new string EntityStructuredTypeKey = "[I1A5]";

@@ -6,11 +6,11 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5450D6C2-4B74-4227-87E2-98E5DB2A5311}</ProjectGuid>
+    <ProjectGuid>{9342B41E-28E0-4FC2-B2CB-28BB9A0D0124}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Common.Types.UnitTests</RootNamespace>
-    <AssemblyName>Common.Types.UnitTests</AssemblyName>
+    <RootNamespace>Common.Tests.Vs</RootNamespace>
+    <AssemblyName>Common.Tests.Vs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -32,6 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -45,18 +51,40 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Common.Tests.Vs\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Common.Tests.Vs\SourceCode\Res.cs" />
+    <Compile Include="Support\EntityEngine\UnitTestEntities.cs" />
+    <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
+    <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
+    <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
-    <Compile Include="UnitTestINameComparer.cs" />
+    <Compile Include="Support\TestHelper.cs" />
+    <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
+    <Compile Include="Support\UnitTestStringPacker.cs" />
+    <Compile Include="Types\Collections\UnitTestCircularBuffer.cs" />
+    <Compile Include="Types\UnitTestINameComparer.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.UnitTesting\Common.UnitTesting.csproj">
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
+    <Content Include="Resources\Common.Tests.Vs\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Tests.Vs\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Tests.Vs\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>

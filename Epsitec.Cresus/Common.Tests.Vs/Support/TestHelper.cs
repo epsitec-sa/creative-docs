@@ -5,7 +5,7 @@
 using Epsitec.Common.Support;
 
 
-namespace Epsitec.Common.Support.UnitTests
+namespace Epsitec.Common.Tests.Vs.Support
 {
 
 
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support.UnitTests
 			//	for migration tips, from nUnit to MSTest.
 
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
-			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Common.Support.UnitTests");
+			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Common.Tests.Vs");
 		}
 
 

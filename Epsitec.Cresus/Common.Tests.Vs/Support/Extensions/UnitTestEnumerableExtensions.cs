@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Common.Support.UnitTests.Extensions
+namespace Epsitec.Common.Tests.Vs.Support.Extensions
 {
 
 

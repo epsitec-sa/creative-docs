@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 
 
-namespace Epsitec.Common.Types.UnitTests.Support.Extensions
+namespace Epsitec.Common.Tests.Vs.Support.Extensions
 {
 
 

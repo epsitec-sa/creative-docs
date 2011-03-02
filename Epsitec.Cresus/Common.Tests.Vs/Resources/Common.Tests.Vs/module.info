@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="50" name="Common.Tests.Vs" layer="s" textMode="String" assemblies="" namespace="Epsitec.Common.Tests.Vs">
+  <Versions>
+    <Version id="1" build="88" date="2011-02-08T13:15:35.4831292Z" />
+    <Version id="8" build="15" date="2011-03-02T10:13:42.9484270Z" />
+  </Versions>
+</ModuleInfo>

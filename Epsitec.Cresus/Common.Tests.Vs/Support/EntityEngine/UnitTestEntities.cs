@@ -1,11 +1,13 @@
-﻿using Epsitec.Common.Support.UnitTests.Entities;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Common.Tests.Vs.Entities;
 
 using Epsitec.Common.Types;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Common.Support.UnitTests.EntityEngine
+namespace Epsitec.Common.Tests.Vs.Support.EntityEngine
 {
 
 

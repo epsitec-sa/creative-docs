@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Common.UnitTesting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Common.Support.UnitTests
+namespace Epsitec.Common.Tests.Vs.Support
 {
 	
 	
@@ -36,22 +38,22 @@ namespace Epsitec.Common.Support.UnitTests
 		{
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => StringPacker.UnPack (null, 'a', 'b')
+				() => StringPacker.Unpack (null, 'a', 'b')
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => StringPacker.UnPack ("", 'a', 'b')
+				() => StringPacker.Unpack ("", 'a', 'b')
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => StringPacker.UnPack ("c", 'a', 'b')
+				() => StringPacker.Unpack ("c", 'a', 'b')
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => StringPacker.UnPack ("a", 'a', 'a')
+				() => StringPacker.Unpack ("a", 'a', 'a')
 			);
 		}
 
@@ -90,7 +92,7 @@ namespace Epsitec.Common.Support.UnitTests
 			foreach (var item in data)
 			{
 				var s = StringPacker.Pack (item, separator, escaper);
-				var result = StringPacker.UnPack (s, separator, escaper).ToList ();
+				var result = StringPacker.Unpack (s, separator, escaper).ToList ();
 
 				CollectionAssert.AreEqual (item, result);
 			}

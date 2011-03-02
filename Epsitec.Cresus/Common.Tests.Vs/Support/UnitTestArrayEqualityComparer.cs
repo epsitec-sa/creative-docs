@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Common.Support.UnitTests
+namespace Epsitec.Common.Tests.Vs.Support
 {
 
 
