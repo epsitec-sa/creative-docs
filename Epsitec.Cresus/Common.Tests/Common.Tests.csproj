@@ -93,6 +93,43 @@
     <Compile Include="Resources\Demo5juin\SourceCode\Entities.cs" />
     <Compile Include="Resources\Demo5juin\SourceCode\Forms.cs" />
     <Compile Include="Resources\Demo5juin\SourceCode\Res.cs" />
+    <Compile Include="Support\CaptionCacheTest.cs" />
+    <Compile Include="Support\ClipboardTest.cs" />
+    <Compile Include="Support\CodeCompilerTest.cs" />
+    <Compile Include="Support\CodeFormatterTest.cs" />
+    <Compile Include="Support\CodeGeneratorTest.cs" />
+    <Compile Include="Support\CommandDispatcherTest.cs" />
+    <Compile Include="Support\CommandTest.cs" />
+    <Compile Include="Support\CultureMapListTest.cs" />
+    <Compile Include="Support\DocumentTest.cs" />
+    <Compile Include="Support\DruidTest.cs" />
+    <Compile Include="Support\DynamicCodeTest.cs" />
+    <Compile Include="Support\EmptyEnumeratorTest.cs" />
+    <Compile Include="Support\EntityFieldPathTest.cs" />
+    <Compile Include="Support\EntityTest.cs" />
+    <Compile Include="Support\EventsTest.cs" />
+    <Compile Include="Support\FileInfoTest.cs" />
+    <Compile Include="Support\FileManagerTest.cs" />
+    <Compile Include="Support\GlobalsTest.cs" />
+    <Compile Include="Support\ImageProviderTest.cs" />
+    <Compile Include="Support\IOTest.cs" />
+    <Compile Include="Support\ObjectDictMapperTest.cs" />
+    <Compile Include="Support\OpletTest.cs" />
+    <Compile Include="Support\RegexConstraintTest.cs" />
+    <Compile Include="Support\RegexFactoryTest.cs" />
+    <Compile Include="Support\ResourceAccessorTest.cs" />
+    <Compile Include="Support\ResourceBundleTest.cs" />
+    <Compile Include="Support\ResourceManagerTest.cs" />
+    <Compile Include="Support\ResourceModuleTest.cs" />
+    <Compile Include="Support\ResourcesTest.cs" />
+    <Compile Include="Support\SerializationTest.cs" />
+    <Compile Include="Support\TestRes.cs" />
+    <Compile Include="Support\TextTest.cs" />
+    <Compile Include="Support\UtilitiesTest.cs" />
+    <Compile Include="Support\VersionCheckerTest.cs" />
+    <Compile Include="Support\WeakEventListenersTest.cs" />
+    <Compile Include="Support\WordBreakTest.cs" />
+    <Compile Include="Support\XmlTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
@@ -106,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\LineBreak-4.1.0.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\bitmap.resource.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -192,13 +232,75 @@
     <Content Include="Resources\LineBreak-4.1.0.compressed">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\About.icon">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Down.icon">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support.Patch\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support.Patch\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support.Patch\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Support.Patch\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\ab.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\bitmap.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\button.cancel.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\button.cancel.fr.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\complex.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\icon.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\image.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\recursive.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\simple_window.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\LowLevelTest\strings.fr.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\OtherModule\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\OtherModule\strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\picture.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\Customizations\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

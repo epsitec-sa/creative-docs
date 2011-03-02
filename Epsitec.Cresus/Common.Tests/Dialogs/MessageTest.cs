@@ -4,7 +4,7 @@ using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
-	using CommandAttribute = Support.CommandAttribute;
+	using CommandAttribute = Epsitec.Common.Support.CommandAttribute;
 		
 	[TestFixture] public class MessageTest
 	{

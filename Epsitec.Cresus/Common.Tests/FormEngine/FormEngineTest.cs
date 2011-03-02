@@ -329,7 +329,7 @@ namespace Epsitec.Common.Tests.FormEngine
 			this.manager = new ResourceManager(typeof(FormEngineTest));
 			this.manager.DefineDefaultModuleName("Demo5juin");
 
-			this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
+			this.accessor = new Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor();
 			this.accessor.Load(this.manager);
 
 			this.collection = new CollectionView(this.accessor.Collection);
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Tests.FormEngine
 
 
 		protected ResourceManager manager;
-		protected Support.ResourceAccessors.StructuredTypeResourceAccessor accessor;
+		protected Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor;
 		protected CollectionView collection;
 		protected Engine engine;
 

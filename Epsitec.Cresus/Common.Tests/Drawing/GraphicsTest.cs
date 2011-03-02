@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Common.Tests.Drawing
@@ -1296,7 +1297,7 @@ namespace Epsitec.Common.Tests.Drawing
 			
 			e.Graphics.FillMode = FillMode.NonZero;
 			
-			Image bitmapImage = Support.ImageProvider.Default.GetImage (@"file:Images/test.png", Support.Resources.DefaultManager);
+			Image bitmapImage = ImageProvider.Default.GetImage (@"file:Images/test.png", Resources.DefaultManager);
 
 			Assert.IsNotNull (bitmapImage);
 
@@ -1380,7 +1381,7 @@ namespace Epsitec.Common.Tests.Drawing
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/test.png", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = ImageProvider.Default.GetImage (@"file:Images/test.png", Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 115 x 102 pixels
 			
@@ -1418,7 +1419,7 @@ namespace Epsitec.Common.Tests.Drawing
 				e.Graphics.RenderSolid (Color.FromBrightness (0.5));
 			}
 
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/4x4-alpha.png", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = ImageProvider.Default.GetImage (@"file:Images/4x4-alpha.png", Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 2 x 2 pixels
 
@@ -1449,7 +1450,7 @@ namespace Epsitec.Common.Tests.Drawing
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/image1.tif", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = ImageProvider.Default.GetImage (@"file:Images/image1.tif", Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 96 x 96 pixels
 			
