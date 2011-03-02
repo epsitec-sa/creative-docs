@@ -118,7 +118,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void AddSelection(int selectedIndex)
 		{
-			this.AddSelection (new int[] { selectedIndex });
+			if (selectedIndex > -1)
+			{
+				this.AddSelection (new int[] { selectedIndex });
+			}
 		}
 
 

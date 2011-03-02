@@ -1284,7 +1284,8 @@ namespace Epsitec.Cresus.Core
 			if (cardinality == EnumValueCardinality.ExactlyOne ||
 				cardinality == EnumValueCardinality.AtLeastOne)
 			{
-				if (picker.SelectionCount == 0)  // aucune sélection ?
+				if ((picker.SelectionCount == 0) &&  // aucune sélection ?
+					(picker.Items.Count > 0))
 				{
 					picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
 				}
