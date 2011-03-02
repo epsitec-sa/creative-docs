@@ -2419,13 +2419,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		private DataLifetimeExpectancy DataLifetimeExpectancy
+		public DataLifetimeExpectancy DataLifetimeExpectancy
 		{
 			get
 			{
 				return this.dataLifetimeExpectancy;
 			}
-			set
+			private set
 			{
 				this.dataLifetimeExpectancy = value;
 
@@ -2434,13 +2434,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		private StructuredTypeFlags StructuredTypeFlags
+		public StructuredTypeFlags StructuredTypeFlags
 		{
 			get
 			{
 				return this.structuredTypeFlags;
 			}
-			set
+			private set
 			{
 				this.structuredTypeFlags = value;
 
