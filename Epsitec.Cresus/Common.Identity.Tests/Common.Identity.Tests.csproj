@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Epsitec.Common.Identity</RootNamespace>
     <AssemblyName>Common.Identity.Tests</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -85,22 +85,18 @@
     <Compile Include="Tool.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Identity\Common.Identity.csproj">
+    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="Common.Identity.Tests.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -132,11 +128,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
