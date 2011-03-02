@@ -1782,50 +1782,56 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+
+		#region Cartridge
+		private static double CartridgeMargin       = 10;
+		private static double CartridgeSampleWidth  = 100;
+		private static double CartridgeSampleHeight = 80;
+
+		public static double CartridgeWidth  = Editor.CartridgeMargin*10 + Editor.CartridgeSampleWidth*9;
+		public static double CartridgeHeight = Editor.CartridgeMargin*2 + Editor.CartridgeSampleHeight;
+		public static double CartridgeZoom   = 0.5;
+
 		public void PaintCartridge(Graphics graphics)
 		{
 			//	Dessine le cartouche avec les légendes explicatives.
 			Transform initialTransform = graphics.Transform;
-			graphics.ScaleTransform (0.5, 0.5, 0, 0);
-
-			double margin = 10;
-			double width  = 100;
-			double height = 80;
+			graphics.ScaleTransform (Editor.CartridgeZoom, Editor.CartridgeZoom, 0, 0);
 
 			Rectangle rect;
 
-			rect = new Rectangle (2, 1, margin*10+width*9, margin*2+height);
+			rect = new Rectangle (2, 1, Editor.CartridgeWidth, Editor.CartridgeHeight);
 			rect.Inflate (0.5);
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
+			graphics.RenderSolid (Color.FromHexa ("fff6e0"));  // beige pâle
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
-			rect = new Rectangle (2+margin, 1+margin, width, height);
+			rect = new Rectangle (2+Editor.CartridgeMargin, 1+Editor.CartridgeMargin, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			Editor.PaintRelation (graphics, rect, "Référence", FieldRelation.Reference, false);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			Editor.PaintRelation (graphics, rect, "Collection", FieldRelation.Collection, false);
 
-			rect.Offset (margin+width, 0);
+			rect.Offset (Editor.CartridgeMargin+Editor.CartridgeSampleWidth, 0);
 			Editor.PaintRelation (graphics, rect, "Privé", FieldRelation.Reference, true);
 
 			graphics.Transform = initialTransform;
@@ -1854,6 +1860,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid (Color.FromBrightness (0));
 			graphics.LineWidth = 1;
 		}
+		#endregion
 
 
 		#region Serialization

@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 
-			//	Options pour le zoom.
+			//	Options pour le zoom (groupe de droite).
 			var groupZoom = new GroupBox (this.optionsContainer);
 			groupZoom.Text = "Zoom de l'image à générer";
 			groupZoom.PreferredWidth = 200;
@@ -158,13 +158,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsZoom4.Dock = DockStyle.Top;
 			this.optionsZoom4.Clicked += this.HandleOptionsZoomClicked;
 
+			//	Options générale (groupe de gauche).
 			var groupFlags = new GroupBox (this.optionsContainer);
 			groupFlags.Text = "Options pour l'image à générer";
 			groupFlags.PreferredWidth = 210;
 			groupFlags.Padding = new Margins (10, 0, 0, 3);
 			groupFlags.Dock = DockStyle.StackEnd;
 			groupFlags.Margins = new Margins (0, 10, 0, 0);
-			groupFlags.Name = "ZoomOptions";
+			groupFlags.Name = "FlagsOptions";
 
 			this.cartridgeButton = new CheckButton (groupFlags);
 			this.cartridgeButton.Text = "Met une légende en bas à gauche";
