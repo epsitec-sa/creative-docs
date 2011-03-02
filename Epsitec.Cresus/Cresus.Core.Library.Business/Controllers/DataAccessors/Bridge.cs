@@ -25,8 +25,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var item = new TileDataItem ();
 			var root = brick;
 
-			item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
-
 		again:
 			this.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
 			this.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
@@ -49,13 +47,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				goto again;
 			}
 
-			data.Add (item);
-
 			Brick templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
 
 			if (templateBrick != null)
 			{
+				data.Add (item);
 				this.ProcessTemplate (data, item, root, templateBrick);
+			}
+			else
+			{
+				item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
+				data.Add (item);
 			}
 
 			return item;
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var genericCollectionTemplateTypeArg  = templateBrick.GetFieldType ();
 			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
 
-			object arg1 = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue;
+			object arg1 = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue ?? item.Name;
 			object arg2 = this.controller;
 			object arg3 = this.controller.BusinessContext.DataContext;
 			
