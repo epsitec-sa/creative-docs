@@ -3,7 +3,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Common.UnitTesting.UnitTests
+namespace Epsitec.Common.UnitTesting.Tests.Vs
 {
 
 
