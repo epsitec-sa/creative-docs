@@ -7,18 +7,17 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class BrickWall<T>
+	public class BrickWall<T> : BrickWall
 	{
 		public BrickWall()
 		{
-			this.bricks = new List<Brick> ();
 		}
 
 		public SimpleBrick<T, T> AddBrick()
 		{
 			var brick = new SimpleBrick<T, T> ();
 
-			this.bricks.Add (brick);
+			this.Add (brick);
 
 			return brick;
 		}
@@ -27,7 +26,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			var brick = new SimpleBrick<T, TField> ();
 
-			this.bricks.Add (brick);
+			this.Add (brick);
 
 			return brick;
 		}
@@ -38,11 +37,9 @@ namespace Epsitec.Cresus.Bricks
 
 			brick.AddProperty (new BrickProperty (BrickPropertyKey.CollectionAnnotation, typeof (TField).FullName));
 
-			this.bricks.Add (brick);
+			this.Add (brick);
 
 			return brick;
 		}
-
-		private readonly List<Brick> bricks;
 	}
 }

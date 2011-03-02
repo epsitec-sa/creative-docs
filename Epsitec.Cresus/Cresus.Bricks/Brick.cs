@@ -33,6 +33,11 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		public static BrickProperty GetProperty(Brick brick, BrickPropertyKey key)
+		{
+			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();
+		}
+
 		private readonly List<BrickProperty> properties;
 	}
 }

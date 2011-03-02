@@ -24,9 +24,23 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
+			Cresus.Bricks.BrickWall<NaturalPersonEntity> wall = new Bricks.BrickWall<NaturalPersonEntity> ();
+
+			var brick1 = wall.AddBrick ()
+				.Name ("NaturalPerson")
+				.Icon ("Data.NaturalPerson")
+				.Title (TextFormatter.FormatText ("Personne physique"))
+				.TitleCompact (TextFormatter.FormatText ("Personne"))
+				.Text (x => x.GetSummary ())
+				.TextCompact (x => x.GetCompactSummary ());
+
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIPerson (data);
+				var bridge = new Bridge<NaturalPersonEntity> (this);
+
+				data.Add (bridge.CreateTileDataItem (brick1));
+
+//-				this.CreateUIPerson (data);
 				this.CreateUIMailContacts (data);
 				this.CreateUITelecomContacts (data);
 				this.CreateUIUriContacts (data);

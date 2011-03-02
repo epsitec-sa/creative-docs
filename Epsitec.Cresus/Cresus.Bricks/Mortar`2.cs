@@ -10,11 +10,22 @@ namespace Epsitec.Cresus.Bricks
 		public Mortar(Expression<System.Func<TSource, TValue>> expression)
 		{
 			this.textValue = expression.ToString ();
+			this.expression = expression;
 		}
 
 		public Mortar(string value)
 		{
 			this.textValue = value;
+		}
+
+		public override Expression GetExpression()
+		{
+			return this.expression;
+		}
+
+		public override string GetString()
+		{
+			return this.expression == null ? this.textValue : null;
 		}
 
 		public override string ToString()
@@ -23,5 +34,6 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 		private readonly string textValue;
+		private readonly Expression<System.Func<TSource, TValue>> expression;
 	}
 }

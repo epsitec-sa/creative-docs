@@ -3,6 +3,9 @@
 
 using Epsitec.Common.Types;
 
+using System.Linq;
+using System.Linq.Expressions;
+
 namespace Epsitec.Cresus.Bricks
 {
 	public abstract class Mortar<TSource> : Mortar
@@ -11,6 +14,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return new Mortar<TSource, string> (value);
 		}
+		
 		public static implicit operator Mortar<TSource>(FormattedText value)
 		{
 			return new Mortar<TSource, FormattedText> (value.ToString ());

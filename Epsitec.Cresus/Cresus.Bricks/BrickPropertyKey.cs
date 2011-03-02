@@ -15,7 +15,9 @@ namespace Epsitec.Cresus.Bricks
 		Name,
 		Icon,
 		Title,
+		TitleCompact,
 		Text,
+		TextCompact,
 
 		Template,
 		Input,

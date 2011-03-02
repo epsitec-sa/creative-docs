@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return Marshaler.Create (this.entity, x => x, null);
 		}
 		
-		protected Accessor<FormattedText> CreateAccessor(System.Func<T, FormattedText> formatter)
+		public Accessor<FormattedText> CreateAccessor(System.Func<T, FormattedText> formatter)
 		{
 			return Accessor.Create (this.EntityGetter, formatter);
 		}

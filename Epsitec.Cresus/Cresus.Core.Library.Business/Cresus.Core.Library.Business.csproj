@@ -76,6 +76,7 @@
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorWithDefaultValue.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
+    <Compile Include="Controllers\DataAccessors\Bridge.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
@@ -157,6 +158,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj">
+      <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
+      <Name>Cresus.Bricks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
       <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
