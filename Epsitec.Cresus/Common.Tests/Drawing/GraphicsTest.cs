@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Drawing
+
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class GraphicsTest
@@ -907,10 +909,10 @@ namespace Epsitec.Common.Drawing
 			path.LineTo (1027 - 600, 1512 - 800);
 			path.Close ();
 			
-			e.Graphics.Color = Drawing.Color.FromName ("Yellow");
+			e.Graphics.Color = Color.FromName ("Yellow");
 			e.Graphics.PaintSurface (path);
 			
-			e.Graphics.Color = Drawing.Color.FromName ("Black");
+			e.Graphics.Color = Color.FromName ("Black");
 			e.Graphics.LineWidth = 100;
 			e.Graphics.LineMiterLimit = 5;
 			e.Graphics.LineJoin = JoinStyle.MiterRevert;
@@ -939,14 +941,14 @@ namespace Epsitec.Common.Drawing
 				{
 					Path path = Widgets.Helpers.FontPreviewer.GetPath (fid, ox, oy, size);
 					
-					e.Graphics.Color = Drawing.Color.FromName ("Black");
+					e.Graphics.Color = Color.FromName ("Black");
 					e.Graphics.PaintSurface (path);
 					
 					path.Dispose ();
 					
 					path = Widgets.Helpers.FontPreviewer.GetPathAbc (fid, ox, oy + size*fonts.Length, size);
 					
-					e.Graphics.Color = Drawing.Color.FromName ("Black");
+					e.Graphics.Color = Color.FromName ("Black");
 					e.Graphics.PaintSurface (path);
 					
 					oy += size;
@@ -995,7 +997,7 @@ namespace Epsitec.Common.Drawing
 			path2.Close ();
 			
 			e.Graphics.FillMode = FillMode.NonZero;
-			e.Graphics.SetClippingRectangle (new Drawing.Rectangle (50, 50, root.Client.Size.Width - 100, 50));
+			e.Graphics.SetClippingRectangle (new Rectangle (50, 50, root.Client.Size.Width - 100, 50));
 			
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);
@@ -1294,7 +1296,7 @@ namespace Epsitec.Common.Drawing
 			
 			e.Graphics.FillMode = FillMode.NonZero;
 			
-			Image bitmapImage = Support.ImageProvider.Default.GetImage (@"file:images/test.png", Support.Resources.DefaultManager);
+			Image bitmapImage = Support.ImageProvider.Default.GetImage (@"file:Images/test.png", Support.Resources.DefaultManager);
 
 			Assert.IsNotNull (bitmapImage);
 
@@ -1378,7 +1380,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/test.png", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/test.png", Support.Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 115 x 102 pixels
 			
@@ -1416,7 +1418,7 @@ namespace Epsitec.Common.Drawing
 				e.Graphics.RenderSolid (Color.FromBrightness (0.5));
 			}
 
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/4x4-alpha.png", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/4x4-alpha.png", Support.Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 2 x 2 pixels
 
@@ -1447,7 +1449,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/image1.tif", Support.Resources.DefaultManager).BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:Images/image1.tif", Support.Resources.DefaultManager).BitmapImage;
 			
 			//	L'image fait 96 x 96 pixels
 			
@@ -1468,8 +1470,8 @@ namespace Epsitec.Common.Drawing
 			
 			//	L'image fait 200 x 200 pixels
 			
-			Bitmap bitmap_1 = Bitmap.FromFile ("..\\..\\images\\100-dpi.tif").BitmapImage;
-			Bitmap bitmap_2 = Bitmap.FromFile ("..\\..\\images\\200-dpi.tif").BitmapImage;
+			Bitmap bitmap_1 = Bitmap.FromFile ("..\\..\\Images\\100-dpi.tif").BitmapImage;
+			Bitmap bitmap_2 = Bitmap.FromFile ("..\\..\\Images\\200-dpi.tif").BitmapImage;
 			
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			

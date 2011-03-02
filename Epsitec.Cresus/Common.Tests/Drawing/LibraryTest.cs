@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class LibraryTest

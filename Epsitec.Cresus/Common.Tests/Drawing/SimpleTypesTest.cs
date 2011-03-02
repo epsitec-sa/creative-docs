@@ -1,8 +1,9 @@
 using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture] public class SimpleTypesTest
 	{

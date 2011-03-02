@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Drawing
+
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class BitmapTest
@@ -39,7 +41,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void CheckBitmapSave()
 		{
-			Bitmap bitmap = Bitmap.FromFile (@"..\..\images\picture.png").BitmapImage;
+			Bitmap bitmap = Bitmap.FromFile (@"..\..\Images\picture.png").BitmapImage;
 
 			byte[] data;
 			System.IO.FileStream stream;

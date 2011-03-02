@@ -7,7 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Printing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class PrintPortTest

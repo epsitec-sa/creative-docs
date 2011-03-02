@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using Epsitec.Common.OpenType;
 
-namespace Epsitec.Common.OpenType
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class OpenTypeTest

@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class TransformTest

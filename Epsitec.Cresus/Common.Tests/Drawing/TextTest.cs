@@ -2,9 +2,10 @@ using NUnit.Framework;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Text;
+using Epsitec.Common.Drawing;
 
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class TextTest
@@ -160,7 +161,7 @@ namespace Epsitec.Common.Drawing
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
 				graphics.AddFilledRectangle (0, 0, this.Client.Size.Width, this.Client.Size.Height);
-				graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
+				graphics.RenderSolid (Color.FromBrightness (1.0));
 				
 				System.Diagnostics.Debug.WriteLine ("Paint called.");
 				
@@ -181,14 +182,14 @@ namespace Epsitec.Common.Drawing
 				
 				graphics.LineWidth = 0.25;
 				graphics.AddLine (ox1, oy1, ox2, oy2);
-				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
+				graphics.RenderSolid (Color.FromName ("Blue"));
 				
 				ox1 = this.frame1.Width;
 				ox2 = ox1;
 				
 				graphics.LineWidth = 0.75;
 				graphics.AddLine (ox1, oy1, ox2, oy2);
-				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
+				graphics.RenderSolid (Color.FromName ("Blue"));
 				
 				if (this.show_cursors)
 				{
@@ -246,7 +247,7 @@ namespace Epsitec.Common.Drawing
 					
 					navigator.Dispose ();
 					
-					graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+					graphics.RenderSolid (Color.FromName ("Green"));
 				}
 			}
 			
@@ -285,7 +286,7 @@ namespace Epsitec.Common.Drawing
 				
 				this.graphics.LineWidth = 0.3;
 				this.graphics.AddLine (ox, oy, ox + dx, oy);
-				this.graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+				this.graphics.RenderSolid (Color.FromName ("Green"));
 				
 				context.DisableSimpleRendering ();
 			}
@@ -326,11 +327,11 @@ namespace Epsitec.Common.Drawing
 				
 				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{
-					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
+					NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, Color.FromName (color));
 				}
 				else
 				{
-					Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					Font drawing_font = Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
 					
 					if (drawing_font != null)
 					{
@@ -343,7 +344,7 @@ namespace Epsitec.Common.Drawing
 						}
 					}
 					
-					this.graphics.RenderSolid (Drawing.Color.FromName (color));
+					this.graphics.RenderSolid (Color.FromName (color));
 				}
 			}
 			
@@ -377,7 +378,7 @@ namespace Epsitec.Common.Drawing
 						{
 							this.graphics.LineWidth = 1.0;
 							this.graphics.AddLine (x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
-							this.graphics.RenderSolid (Drawing.Color.FromName (color));
+							this.graphics.RenderSolid (Color.FromName (color));
 						}
 						
 						x1 = records[i].X;
@@ -1074,7 +1075,7 @@ namespace Epsitec.Common.Drawing
 				Graphics graphics = this.painter.Graphics;
 				
 				graphics.AddFilledRectangle (x, y - 20, 100, 60);
-				graphics.RenderSolid (Drawing.Color.FromRgb (0, 1.0, 0.5));
+				graphics.RenderSolid (Color.FromRgb (0, 1.0, 0.5));
 			}
 			#endregion
 			

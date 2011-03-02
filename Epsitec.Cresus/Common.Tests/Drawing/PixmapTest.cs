@@ -2,8 +2,9 @@ using NUnit.Framework;
 
 using Epsitec.Common.Drawing.Platform;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture] public class PixmapTest
 	{
@@ -48,7 +49,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void CheckAllocatePixmapFromImageClient()
 		{
-			string path = @"..\..\images\picture.png";
+			string path = @"..\..\Images\picture.png";
 
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 			Pixmap pixmap0;
@@ -66,7 +67,7 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
 
-			path = @"..\..\images\photo.jpg";
+			path = @"..\..\Images\photo.jpg";
 
 			watch.Start ();
 			pixmap2 = PixmapTest.CreatePixmapUsingImageClient (path, 200, false);

@@ -4,7 +4,7 @@
 using Epsitec.Common.Drawing.Platform;
 using NUnit.Framework;
 
-namespace Epsitec.Common.Drawing
+namespace Epsitec.Common.Tests.Drawing
 {
 	[TestFixture]
 	public class NativeBitmapTest
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestRgbTiff()
 		{
-			NativeBitmap image = NativeBitmap.Load (@"..\..\images\rgb.tif");
+			NativeBitmap image = NativeBitmap.Load (@"..\..\Images\rgb.tif");
 
 			NativeBitmap imageR    = image.GetChannel (BitmapColorChannel.Red);
 			NativeBitmap imageG    = image.GetChannel (BitmapColorChannel.Green);
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestRgbAlphaTiff()
 		{
-			NativeBitmap image = NativeBitmap.Load (@"..\..\images\rgba.tif");
+			NativeBitmap image = NativeBitmap.Load (@"..\..\Images\rgba.tif");
 
 			NativeBitmap imageR = image.GetChannel (BitmapColorChannel.Red);
 			NativeBitmap imageG = image.GetChannel (BitmapColorChannel.Green);
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestCmykTiff()
 		{
-			NativeBitmap image = NativeBitmap.Load (@"..\..\images\cmyk.tif");
+			NativeBitmap image = NativeBitmap.Load (@"..\..\Images\cmyk.tif");
 
 			NativeBitmap imageC = image.GetChannel (BitmapColorChannel.Cyan);
 			NativeBitmap imageM = image.GetChannel (BitmapColorChannel.Magenta);
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestCmykAlphaTiff()
 		{
-			NativeBitmap image = NativeBitmap.Load (@"..\..\images\cmyka.tif");
+			NativeBitmap image = NativeBitmap.Load (@"..\..\Images\cmyka.tif");
 
 			NativeBitmap imageC = image.GetChannel (BitmapColorChannel.Cyan);
 			NativeBitmap imageM = image.GetChannel (BitmapColorChannel.Magenta);
