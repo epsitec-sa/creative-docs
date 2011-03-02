@@ -40,6 +40,11 @@ namespace Epsitec.Cresus.Bricks
 			return this.parent;
 		}
 
+		public override System.Type GetFieldType()
+		{
+			return typeof (TField);
+		}
+
 		readonly TParent parent;
 	}
 }

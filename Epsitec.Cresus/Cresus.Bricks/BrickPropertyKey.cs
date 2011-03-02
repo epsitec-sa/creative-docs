@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Bricks
 		TextCompact,
 
 		Template,
+		AsType,
+
 		Input,
 		Width,
 		Separator,

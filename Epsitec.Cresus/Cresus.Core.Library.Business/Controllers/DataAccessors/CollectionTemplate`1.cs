@@ -140,7 +140,27 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this;
 		}
 
-//-		public 
+		public override void GenericDefine(CollectionTemplateProperty property, object value)
+		{
+			switch (property)
+			{
+				case CollectionTemplateProperty.Title:
+					this.DefineTitle ((System.Func<T, FormattedText>) value);
+					break;
+
+				case CollectionTemplateProperty.Text:
+					this.DefineText ((System.Func<T, FormattedText>) value);
+					break;
+				
+				case CollectionTemplateProperty.CompactTitle:
+					this.DefineCompactTitle ((System.Func<T, FormattedText>) value);
+					break;
+				
+				case CollectionTemplateProperty.CompactText:
+					this.DefineCompactText ((System.Func<T, FormattedText>) value);
+					break;
+			}
+		}
 
 		public IndirectAccessor<T, FormattedText> TitleAccessor
 		{

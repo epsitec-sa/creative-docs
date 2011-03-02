@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
@@ -19,19 +20,120 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.controller = controller;
 		}
 
-		public TileDataItem CreateTileDataItem(Brick brick)
+		public TileDataItem CreateTileDataItem(TileDataItems data, Brick brick)
 		{
 			var item = new TileDataItem ();
+			var root = brick;
 
-			item.Name = Bricks.Brick.GetProperty (brick, Bricks.BrickPropertyKey.Name).StringValue;
-			item.IconUri = Bricks.Brick.GetProperty (brick, Bricks.BrickPropertyKey.Icon).StringValue;
-			item.Title = Bricks.Brick.GetProperty (brick, Bricks.BrickPropertyKey.Title).StringValue;
-			item.CompactTitle = Bricks.Brick.GetProperty (brick, Bricks.BrickPropertyKey.TitleCompact).StringValue;
-			item.TextAccessor = this.ToAccessor (Brick.GetProperty (brick, BrickPropertyKey.Text));
-			item.CompactTextAccessor = this.ToAccessor (Brick.GetProperty (brick, BrickPropertyKey.TextCompact));
 			item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
 
+		again:
+			this.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
+			this.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
+			
+			this.ProcessProperty (brick, BrickPropertyKey.Title, x => item.Title = x);
+			this.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
+			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+
+			this.ProcessProperty (brick, BrickPropertyKey.Title, x => item.TitleAccessor = x);
+			this.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
+			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
+			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
+
+			Brick parentAsTypeBrick = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
+
+			if (parentAsTypeBrick != null)
+			{
+				brick = parentAsTypeBrick;
+				goto again;
+			}
+
+			data.Add (item);
+
+			Brick templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
+
+			if (templateBrick != null)
+			{
+				this.ProcessTemplate (data, item, root, templateBrick);
+			}
+
 			return item;
+		}
+
+		private void ProcessTemplate(TileDataItems data, TileDataItem item, Brick root, Brick templateBrick)
+		{
+			var genericCollectionTemplateType     = typeof (CollectionTemplate<>);
+			var genericCollectionTemplateTypeArg  = templateBrick.GetFieldType ();
+			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
+
+			object arg1 = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue;
+			object arg2 = this.controller;
+			object arg3 = this.controller.BusinessContext.DataContext;
+			
+			var collectionTemplate = System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2, arg3) as CollectionTemplate;
+
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Title, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Title, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TitleCompact, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactTitle, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Text, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Text, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TextCompact, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactText, x));
+
+			var genericCollectionAccessorFactoryType = typeof (Zzz<,,>);
+			var genericCollectionAccessorFactoryTypeArg1 = typeof (T);
+			var genericCollectionAccessorFactoryTypeArg2 = root.GetFieldType ();
+			var genericCollectionAccessorFactoryTypeArg3 = genericCollectionTemplateTypeArg;
+			var constructedCollectionAccessorFactoryType = genericCollectionAccessorFactoryType.MakeGenericType (genericCollectionAccessorFactoryTypeArg1, genericCollectionAccessorFactoryTypeArg2, genericCollectionAccessorFactoryTypeArg3);
+			var accessorFactory = System.Activator.CreateInstance (constructedCollectionAccessorFactoryType) as Zzz;
+			var accessorFactoryCreateArgs = new object[]
+			{
+				this.controller, root.GetResolver (genericCollectionTemplateTypeArg), collectionTemplate
+			};
+
+
+			constructedCollectionAccessorFactoryType.InvokeMember ("Create", BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod, null, accessorFactory, accessorFactoryCreateArgs);
+			
+
+			var accessor = accessorFactory.CollectionAccessor;
+
+			data.Add (accessor);
+		}
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)
+		{
+			var value = Brick.GetProperty (brick, key).StringValue;
+
+			if (value != null)
+			{
+				setter (value);
+			}
+		}
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
+		{
+			var formatter = this.ToAccessor (Brick.GetProperty (brick, key));
+
+			if (formatter != null)
+			{
+				setter (formatter);
+			}
+		}
+
+		private void ProcessTemplateProperty(Brick brick, BrickPropertyKey key, System.Action<object> setter)
+		{
+			var expression = Brick.GetProperty (brick, key).ExpressionValue;
+
+			if (expression == null)
+			{
+				return;
+			}
+
+			var expressionType = expression.GetType ();
+			var function = expressionType.InvokeMember ("Compile", BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod, null, expression, null);
+
+			if (function != null)
+			{
+				setter (function);
+			}
 		}
 
 		private Accessor<FormattedText> ToAccessor(BrickProperty property)
@@ -51,4 +153,37 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly EntityViewController<T> controller;
 	}
+	
+	internal abstract class Zzz
+	{
+		protected Zzz()
+		{
+		}
+
+		public CollectionAccessor CollectionAccessor
+		{
+			get;
+			set;
+		}
+	}
+		
+	internal class Zzz<T1, T2, T3> : Zzz
+		where T1 : AbstractEntity, new ()
+		where T2 : AbstractEntity, new ()
+		where T3 : T2, new ()
+	{
+		public Zzz()
+		{
+		}
+		
+		public void Create(object arg1, object arg2, object arg3)
+		{
+			EntityViewController<T1> controller = (EntityViewController<T1>) arg1;
+			System.Func<T1, IList<T2>> collectionResolver = (System.Func<T1, IList<T2>>) arg2;
+			CollectionTemplate<T3> template = (CollectionTemplate<T3>) arg3;
+
+			this.CollectionAccessor = CollectionAccessor.Create (controller.EntityGetter, collectionResolver, template);
+		}
+	}
+
 }

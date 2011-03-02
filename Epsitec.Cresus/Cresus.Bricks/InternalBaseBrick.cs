@@ -62,5 +62,11 @@ namespace Epsitec.Cresus.Bricks
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Separator));
 			return this as TSelf;
 		}
+
+
+		public override System.Type GetFieldType()
+		{
+			return typeof (TField);
+		}
 	}
 }

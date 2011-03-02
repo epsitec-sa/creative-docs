@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public abstract void GenericDefine(CollectionTemplateProperty property, object value);
+
 		public abstract bool IsCompatible(AbstractEntity entity);
 
 		public abstract void BindTileData(TileDataItem data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
@@ -42,5 +44,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public static readonly FormattedText DefaultDefinitionInProgressText = TextFormatter.FormatText ("<i>définition en cours</i>");
 
 		private readonly string name;
+	}
+
+	public enum CollectionTemplateProperty
+	{
+		Title, CompactTitle,
+		Text, CompactText,
 	}
 }

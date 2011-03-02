@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Epsitec.Cresus.Bricks
 {
@@ -12,10 +14,63 @@ namespace Epsitec.Cresus.Bricks
 		{
 			this.properties = new List<BrickProperty> ();
 		}
+
+		public abstract System.Type GetFieldType();
+
+		public System.Delegate GetResolver(System.Type expectedReturnType)
+		{
+			var lambda = this.resolver as LambdaExpression;
+
+			if (lambda == null)
+			{
+				return null;
+			}
+
+#if false
+			var templateType     = typeof (Zzz<,,>);
+			var templateTypeArg1 = lambda.Parameters[0].Type;
+			var templateTypeArg2 = expectedReturnType;
+			var templateTypeArg3 = lambda.ReturnType;
+			var constructedTemplateType = templateType.MakeGenericType (templateTypeArg1, templateTypeArg2, templateTypeArg3);
+
+			var factory = System.Activator.CreateInstance (constructedTemplateType);
+
+			var result  = constructedTemplateType.InvokeMember ("CreateFunction",
+				BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod,
+				null,
+				factory,
+				new object[] { lambda });
+
+			return result as System.Delegate;
+#else
+			return lambda.Compile ();
+#endif
+		}
+
+#if false
+		class Zzz<T, TResult, TReal>
+			where TReal : TResult
+		{
+			public Zzz()
+			{
+			}
+			public System.Func<T, IList<TResult>> CreateFunction(LambdaExpression expression)
+			{
+				var source = Expression.Lambda<System.Func<T, IList<TReal>>> (expression.Body, expression.Parameters).Compile ();
+				System.Func<T, IList<TResult>> output = x => source (x);
+				return output;
+			}
+		}
+#endif
 		
 		internal void AddProperty(BrickProperty property)
 		{
 			this.properties.Add (property);
+		}
+
+		internal void DefineResolver(Expression resolver)
+		{
+			this.resolver = resolver;
 		}
 
 		internal void DebugDump(string prefix = "")
@@ -38,6 +93,9 @@ namespace Epsitec.Cresus.Bricks
 			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();
 		}
 
+		
+
 		private readonly List<BrickProperty> properties;
+		private Expression resolver;
 	}
 }

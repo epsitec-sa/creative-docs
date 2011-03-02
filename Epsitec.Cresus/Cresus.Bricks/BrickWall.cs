@@ -12,6 +12,14 @@ namespace Epsitec.Cresus.Bricks
 			this.bricks = new List<Brick> ();
 		}
 
+		public IEnumerable<Brick> Bricks
+		{
+			get
+			{
+				return this.bricks;
+			}
+		}
+
 		protected void Add(Brick brick)
 		{
 			this.bricks.Add (brick);

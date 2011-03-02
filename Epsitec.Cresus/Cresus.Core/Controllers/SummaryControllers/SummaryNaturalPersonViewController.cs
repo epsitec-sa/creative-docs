@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			Cresus.Bricks.BrickWall<NaturalPersonEntity> wall = new Bricks.BrickWall<NaturalPersonEntity> ();
 
-			var brick1 = wall.AddBrick ()
+			wall.AddBrick ()
 				.Name ("NaturalPerson")
 				.Icon ("Data.NaturalPerson")
 				.Title (TextFormatter.FormatText ("Personne physique"))
@@ -34,11 +34,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ());
 
+			wall.AddBrick (x => x.Contacts)
+				.AsType<MailContactEntity> ()
+				.Name ("MailContact")
+				.Icon ("Data.Mail")
+				.Title ("Adresses")
+				.TitleCompact ("Adresses")
+				.Text (CollectionTemplate.DefaultEmptyText)
+				.Template ()
+				.Title (x => x.GetTitle ())
+				.Text (x => x.GetSummary ())
+				.TextCompact (x => x.GetCompactSummary ());
+
 			using (var data = TileContainerController.Setup (this))
 			{
 				var bridge = new Bridge<NaturalPersonEntity> (this);
 
-				data.Add (bridge.CreateTileDataItem (brick1));
+				foreach (var brick in wall.Bricks)
+				{
+					bridge.CreateTileDataItem (data, brick);
+				}
 
 //-				this.CreateUIPerson (data);
 				this.CreateUIMailContacts (data);
@@ -64,7 +79,23 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIMailContacts(TileDataItems data)
 		{
-			Common.CreateUIMailContacts (this.BusinessContext, data, this.EntityGetter, x => x.Contacts);
+			var template = new CollectionTemplate<MailContactEntity> ("MailContact", data.Controller, this.BusinessContext.DataContext)
+				.DefineTitle (x => x.GetTitle ())
+				.DefineText (x => x.GetSummary ())
+				.DefineCompactText (x => x.GetCompactSummary ());
+
+
+			data.Add (
+				new TileDataItem
+				{
+					Name		 = "MailContact",
+					IconUri		 = "Data.Mail",
+					Title		 = TextFormatter.FormatText ("Adresses"),
+					CompactTitle = TextFormatter.FormatText ("Adresses"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
 		}
 
 		private void CreateUITelecomContacts(TileDataItems data)
