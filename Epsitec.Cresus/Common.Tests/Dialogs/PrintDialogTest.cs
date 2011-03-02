@@ -1,7 +1,8 @@
-
+using Epsitec.Common.Dialogs;
 using NUnit.Framework;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	/// <summary>
 	/// Summary description for PrintDialogTest.
@@ -167,7 +168,7 @@ namespace Epsitec.Common.Dialogs
 		[Ignore ("Crashes subsequent tests")]
 		public void CheckPort()
 		{
-			Drawing.Graphics preview = new Drawing.Graphics ();
+			Graphics preview = new Graphics ();
 			preview.SetPixmapSize (250, 120);
 			
 			PrintDialogTest.Helper.TestDocument (preview);
@@ -176,7 +177,7 @@ namespace Epsitec.Common.Dialogs
 			AggPreview     widget = new AggPreview (preview);
 			
 			window.Text = "CheckPort - AGG";
-			window.ClientSize = new Drawing.Size (250, 120);
+			window.ClientSize = new Size (250, 120);
 			widget.Dock       = Widgets.DockStyle.Fill;
 			widget.SetParent (window.Root);
 			
@@ -220,7 +221,7 @@ namespace Epsitec.Common.Dialogs
 				dialog.OpenDialog ();
 			}
 			
-			if (dialog.Result == Dialogs.DialogResult.Accept)
+			if (dialog.Result == DialogResult.Accept)
 			{
 				dialog.Document.Print (new PrintEngine ());
 			}
@@ -280,7 +281,7 @@ namespace Epsitec.Common.Dialogs
 		
 		protected class AggPreview : Widgets.Widget
 		{
-			public AggPreview(Drawing.Graphics port)
+			public AggPreview(Graphics port)
 			{
 				this.port = port;
 			}
@@ -291,8 +292,8 @@ namespace Epsitec.Common.Dialogs
 				
 				using (bitmap)
 				{
-					Drawing.Pixmap.RawData src = new Drawing.Pixmap.RawData (this.port.Pixmap);
-					Drawing.Pixmap.RawData dst = new Drawing.Pixmap.RawData (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+					Pixmap.RawData src = new Pixmap.RawData (this.port.Pixmap);
+					Pixmap.RawData dst = new Pixmap.RawData (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 					
 					using (src)
 					{
@@ -302,12 +303,12 @@ namespace Epsitec.Common.Dialogs
 						}
 					}
 					
-					graphics.PaintImage (Drawing.Bitmap.FromNativeBitmap (bitmap), 0, 0, 250, 120, 0, 0, 250, 120);
+					graphics.PaintImage (Bitmap.FromNativeBitmap (bitmap), 0, 0, 250, 120, 0, 0, 250, 120);
 				}
 			}
 
 			
-			Drawing.Graphics					port;
+			Graphics					port;
 		}
 		
 		protected class PrintEngine : Printing.IPrintEngine
@@ -315,7 +316,7 @@ namespace Epsitec.Common.Dialogs
 			#region IPrintEngine Members
 			public void PrepareNewPage(Epsitec.Common.Printing.PageSettings settings)
 			{
-				settings.Margins = new Drawing.Margins (0, 0, 0, 0);
+				settings.Margins = new Margins (0, 0, 0, 0);
 			}
 			
 			public void FinishingPrintJob()
@@ -329,10 +330,10 @@ namespace Epsitec.Common.Dialogs
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
 				//?Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
-				Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Italic");
+				Font font = Font.GetFont ("Tahoma", "Italic");
 				
 				port.LineWidth = 0.1;
-				port.Color     = Drawing.Color.FromRgb (0, 0, 0);
+				port.Color     = Color.FromRgb (0, 0, 0);
 				
 				for (int x = 0; x < 210; x++)
 				{
@@ -343,7 +344,7 @@ namespace Epsitec.Common.Dialogs
 						port.PaintText (x, 10, string.Format ("{0}", x), font, 1.2);
 					}
 					
-					port.PaintOutline (Drawing.Path.FromLine (x, 5, x, y));
+					port.PaintOutline (Path.FromLine (x, 5, x, y));
 				}
 				
 				for (int y = 0; y < 297; y++)
@@ -355,10 +356,10 @@ namespace Epsitec.Common.Dialogs
 						port.PaintText (10, y, string.Format ("{0}", y), font, 1.2);
 					}
 					
-					port.PaintOutline (Drawing.Path.FromLine (5, y, x, y));
+					port.PaintOutline (Path.FromLine (5, y, x, y));
 				}
 				
-				Drawing.Image bitmap = Drawing.Bitmap.FromFile (@"..\..\Images\picture.jpg");
+				Image bitmap = Bitmap.FromFile (@"..\..\Images\picture.jpg");
 				
 				port.PaintText (50, 145, "Image de Délos, définie à 300 dpi, 100mm x 100mm, codé au format JPEG.", font, 2.5);
 				port.PaintText (50, 141, "Imprimé avec les mécanismes de bas niveau de Crésus Réseau.", font, 2.5);
@@ -373,17 +374,17 @@ namespace Epsitec.Common.Dialogs
 		
 		private class Helper
 		{
-			public static void TestDocument(Drawing.IPaintPort port)
+			public static void TestDocument(IPaintPort port)
 			{
 #if true
-				Drawing.Font font_1 = Drawing.Font.GetFont ("Tahoma", "Regular");
+				Font font_1 = Font.GetFont ("Tahoma", "Regular");
 				//?Drawing.Font font_1 = Drawing.Font.GetFont ("Arial", "Regular");
-				Drawing.Font font_2 = Drawing.Font.GetFont ("Times New Roman", "Regular");
-				Drawing.Font font_3 = Drawing.Font.GetFont ("Times New Roman", "Italic");
+				Font font_2 = Font.GetFont ("Times New Roman", "Regular");
+				Font font_3 = Font.GetFont ("Times New Roman", "Italic");
 				
 				//			port.RotateTransform (15, 125, 60);
 				
-				Drawing.Path path = new Drawing.Path ();
+				Path path = new Path ();
 				
 				path.MoveTo (10, 10);
 				path.CurveTo (10, 20, 20, 30, 30, 30);
@@ -392,54 +393,54 @@ namespace Epsitec.Common.Dialogs
 				
 				for (int i = 0; i < 2; i++)
 				{
-					port.Color     = Drawing.Color.FromRgb (0, 0, 0);
-					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
+					port.Color     = Color.FromRgb (0, 0, 0);
+					port.LineCap   = CapStyle.Square;
+					port.LineJoin  = JoinStyle.MiterRevert;
 					port.LineWidth = 1.5;
 					
 					port.PaintOutline (path);
-					port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
-					port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+					port.PaintOutline (Path.FromLine (40, 10, 60, 20));
+					port.PaintOutline (Path.FromCircle (40, 30, 5));
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color     = Drawing.Color.FromRgb (0, 0, 0);
-					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
+					port.Color     = Color.FromRgb (0, 0, 0);
+					port.LineCap   = CapStyle.Square;
+					port.LineJoin  = JoinStyle.MiterRevert;
 					port.LineWidth = 0.5;
 					
 					port.PaintOutline (path);
-					port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
-					port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+					port.PaintOutline (Path.FromLine (40, 10, 60, 20));
+					port.PaintOutline (Path.FromCircle (40, 30, 5));
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color = Drawing.Color.FromRgb (0, 1, 0);
+					port.Color = Color.FromRgb (0, 1, 0);
 					
 					port.PaintSurface (path);
-					port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
-					port.PaintSurface (Drawing.Path.FromCircle (40, 30, 5));
+					port.PaintSurface (Path.FromLine (40, 10, 60, 20));
+					port.PaintSurface (Path.FromCircle (40, 30, 5));
 					
 					port.TranslateTransform (60, 0);
 					
-					port.Color = Drawing.Color.FromRgb (1, 1, 0);
+					port.Color = Color.FromRgb (1, 1, 0);
 					
 					port.PaintSurface (path);
-					port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
-					port.PaintSurface (Drawing.Path.FromCircle (40, 30, 5));
+					port.PaintSurface (Path.FromLine (40, 10, 60, 20));
+					port.PaintSurface (Path.FromCircle (40, 30, 5));
 					
-					port.Color     = Drawing.Color.FromRgb (1, 0, 0);
-					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
+					port.Color     = Color.FromRgb (1, 0, 0);
+					port.LineCap   = CapStyle.Square;
+					port.LineJoin  = JoinStyle.MiterRevert;
 					port.LineWidth = 1.0;
 					
 					port.PaintOutline (path);
-					port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
-					port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+					port.PaintOutline (Path.FromLine (40, 10, 60, 20));
+					port.PaintOutline (Path.FromCircle (40, 30, 5));
 					
 					port.TranslateTransform (-180, 0);
 					
-					port.Color = Drawing.Color.FromRgb (0, 0, 0);
+					port.Color = Color.FromRgb (0, 0, 0);
 					
 					double ox = 10;
 					
@@ -448,13 +449,13 @@ namespace Epsitec.Common.Dialogs
 					ox += port.PaintText (ox, 40, "Italic.", font_3, 12);
 
 					port.LineWidth = 0.2;
-					port.PaintOutline (Drawing.Path.FromLine ( 5, 40, 15, 40));
-					port.PaintOutline (Drawing.Path.FromLine (10, 35, 10, 45));
+					port.PaintOutline (Path.FromLine ( 5, 40, 15, 40));
+					port.PaintOutline (Path.FromLine (10, 35, 10, 45));
 					
 					if (i == 0)
 					{
 						port.TranslateTransform (0, 60);
-						port.SetClippingRectangle (new Drawing.Rectangle (40, 80, 160, 25));
+						port.SetClippingRectangle (new Rectangle (40, 80, 160, 25));
 					}
 				}
 #else

@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
@@ -10,7 +12,8 @@ using Epsitec.Cresus.AddressBook.Entities;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Dialogs
+
+namespace Epsitec.Common.Tests.Dialogs
 {
 	[TestFixture]
 	public class DialogTest
@@ -46,8 +49,8 @@ namespace Epsitec.Common.Dialogs
 					Button buttonCancel = new Button ();
 					Button buttonOk     = new Button ();
 					
-					buttonCancel.CommandObject = Res.Commands.Dialog.Generic.Cancel;
-					buttonOk.CommandObject     = Res.Commands.Dialog.Generic.Ok;
+					buttonCancel.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel;
+					buttonOk.CommandObject     = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
 
 					buttonCancel.Dock = DockStyle.Stacked;
 					buttonOk.Dock     = DockStyle.Stacked;
@@ -122,8 +125,8 @@ namespace Epsitec.Common.Dialogs
 					Button buttonClear  = new Button (frame);
 					Button buttonDump   = new Button (frame);
 
-					buttonOk.CommandObject     = Res.Commands.Dialog.Generic.Ok;
-					buttonCancel.CommandObject = Res.Commands.Dialog.Generic.Cancel;
+					buttonOk.CommandObject     = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok;
+					buttonCancel.CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel;
 					
 					buttonClear.Text = "Clear";
 					buttonClear.Clicked +=
@@ -150,7 +153,7 @@ namespace Epsitec.Common.Dialogs
 					frame.Dock = DockStyle.Bottom;
 
 					dialog.DialogWindow.Root.Children.Add (frame);
-					dialog.DialogWindow.Root.Padding = new Drawing.Margins (8, 8, 4, 4);
+					dialog.DialogWindow.Root.Padding = new Margins (8, 8, 4, 4);
 				};
 
 			Assert.IsNotNull (dialog);

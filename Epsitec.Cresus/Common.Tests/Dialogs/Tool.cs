@@ -3,7 +3,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	class Tool
 	{

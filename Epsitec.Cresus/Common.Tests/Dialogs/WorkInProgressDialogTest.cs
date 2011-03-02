@@ -3,8 +3,9 @@
 
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Dialogs;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	[TestFixture]
 	public class WorkInProgressDialogTest

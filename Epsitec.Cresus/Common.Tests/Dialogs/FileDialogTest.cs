@@ -2,10 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using NUnit.Framework;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	[TestFixture] public class FileDialogTest
 	{

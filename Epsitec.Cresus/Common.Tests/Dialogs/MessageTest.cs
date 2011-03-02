@@ -1,10 +1,11 @@
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Dialogs;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	using CommandAttribute = Support.CommandAttribute;
-	
+		
 	[TestFixture] public class MessageTest
 	{
 		[SetUp] public void Initialize()

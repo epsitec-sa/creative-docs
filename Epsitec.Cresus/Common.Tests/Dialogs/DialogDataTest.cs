@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using NUnit.Framework;
-
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 using Demo.Demo5juin.Entities;
 
-namespace Epsitec.Common.Dialogs
+namespace Epsitec.Common.Tests.Dialogs
 {
 	[TestFixture]
 	public class DialogDataTest
