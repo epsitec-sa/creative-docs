@@ -1122,7 +1122,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
 			Rectangle rect = this.ComputeObjectsBounds();
-			rect.Inflate(Editor.frameMargin);
+			rect.Inflate (Editor.frameMargin);
 
 			bool iGrid = this.grid;
 			this.grid = true;
@@ -1780,6 +1780,79 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				obj.DrawForeground (graphics);
 			}
+		}
+
+		public void PaintCartridge(Graphics graphics)
+		{
+			//	Dessine le cartouche avec les légendes explicatives.
+			Transform initialTransform = graphics.Transform;
+			graphics.ScaleTransform (0.5, 0.5, 0, 0);
+
+			double margin = 10;
+			double width  = 100;
+			double height = 80;
+
+			Rectangle rect;
+
+			rect = new Rectangle (2, 1, margin*10+width*9, margin*2+height);
+			rect.Inflate (0.5);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromBrightness (1));
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (Color.FromBrightness (0));
+
+			rect = new Rectangle (2+margin, 1+margin, width, height);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Abstrait", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.AbstractClass);
+
+			rect.Offset (margin+width, 0);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Schéma", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateSchema);
+
+			rect.Offset (margin+width, 0);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Repository", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.GenerateRepository);
+
+			rect.Offset (margin+width, 0);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
+
+			rect.Offset (margin+width, 0);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Stable", null, DataLifetimeExpectancy.Stable, StructuredTypeFlags.None);
+
+			rect.Offset (margin+width, 0);
+			ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, "Immuable", null, DataLifetimeExpectancy.Immutable, StructuredTypeFlags.None);
+
+			rect.Offset (margin+width, 0);
+			Editor.PaintRelation (graphics, rect, "Référence", FieldRelation.Reference, false);
+
+			rect.Offset (margin+width, 0);
+			Editor.PaintRelation (graphics, rect, "Collection", FieldRelation.Collection, false);
+
+			rect.Offset (margin+width, 0);
+			Editor.PaintRelation (graphics, rect, "Privé", FieldRelation.Reference, true);
+
+			graphics.Transform = initialTransform;
+		}
+
+		private static void PaintRelation(Graphics graphics, Rectangle bounds, string title, FieldRelation relation, bool isPrivateRelation)
+		{
+			bounds.Deflate (1.5);
+			graphics.AddFilledRectangle (bounds);
+			graphics.RenderSolid (Color.FromBrightness (0.9));
+			graphics.AddRectangle (bounds);
+			graphics.RenderSolid (Color.FromBrightness (0));
+
+			double titleHeight = 30;
+			var textRect  = new Rectangle (bounds.Left, bounds.Top-titleHeight, bounds.Width, titleHeight);
+			var arrowRect = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight);
+			var start     = new Point (arrowRect.Left+20,  arrowRect.Bottom+arrowRect.Height/2);
+			var end       = new Point (arrowRect.Right-20, arrowRect.Bottom+arrowRect.Height/2);
+
+			var font = Font.GetFont (Font.DefaultFontFamily, "Bold");
+			graphics.PaintText (textRect.Left, textRect.Bottom, textRect.Width, textRect.Height, title, font, 12, ContentAlignment.MiddleCenter);
+
+			graphics.LineWidth = 2;
+			graphics.AddLine (start, end);
+			AbstractObject.DrawEndingArrow (graphics, start, end, relation, isPrivateRelation);
+			graphics.RenderSolid (Color.FromBrightness (0));
+			graphics.LineWidth = 1;
 		}
 
 

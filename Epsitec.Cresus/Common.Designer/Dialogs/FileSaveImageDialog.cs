@@ -49,6 +49,22 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		public bool GenerateCartridge
+		{
+			get
+			{
+				return FileSaveImageDialog.generateCartridge;
+			}
+			set
+			{
+				if (FileSaveImageDialog.generateCartridge != value)
+				{
+					FileSaveImageDialog.generateCartridge = value;
+					this.UpdateZoom ();
+				}
+			}
+		}
+
 		public void PathMemorize()
 		{
 			FileSaveImageDialog.initialDirectory = System.IO.Path.GetDirectoryName (this.FileName);
@@ -114,7 +130,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsContainer.Name = "OptionsContainer";
 
 			//	Options pour le zoom.
-			GroupBox groupZoom = new GroupBox (this.optionsContainer);
+			var groupZoom = new GroupBox (this.optionsContainer);
 			groupZoom.Text = "Zoom de l'image à générer";
 			groupZoom.PreferredWidth = 200;
 			groupZoom.Padding = new Margins (10, 0, 0, 3);
@@ -141,6 +157,20 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsZoom4.Text = this.GetZoomDescription (4);
 			this.optionsZoom4.Dock = DockStyle.Top;
 			this.optionsZoom4.Clicked += this.HandleOptionsZoomClicked;
+
+			var groupFlags = new GroupBox (this.optionsContainer);
+			groupFlags.Text = "Options pour l'image à générer";
+			groupFlags.PreferredWidth = 210;
+			groupFlags.Padding = new Margins (10, 0, 0, 3);
+			groupFlags.Dock = DockStyle.StackEnd;
+			groupFlags.Margins = new Margins (0, 10, 0, 0);
+			groupFlags.Name = "ZoomOptions";
+
+			this.cartridgeButton = new CheckButton (groupFlags);
+			this.cartridgeButton.Text = "Met une légende en bas à gauche";
+			this.cartridgeButton.AutoToggle = false;
+			this.cartridgeButton.Dock = DockStyle.Top;
+			this.cartridgeButton.Clicked += this.HandleOptionsZoomClicked;
 		}
 
 		private string GetZoomDescription(double zoom)
@@ -186,6 +216,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.optionsZoom2.ActiveState = (FileSaveImageDialog.zoom == 2) ? ActiveState.Yes : ActiveState.No;
 				this.optionsZoom3.ActiveState = (FileSaveImageDialog.zoom == 3) ? ActiveState.Yes : ActiveState.No;
 				this.optionsZoom4.ActiveState = (FileSaveImageDialog.zoom == 4) ? ActiveState.Yes : ActiveState.No;
+
+				this.cartridgeButton.ActiveState = (FileSaveImageDialog.generateCartridge) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -218,6 +250,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (sender == this.optionsZoom4)
 			{
 				this.Zoom = 4;
+			}
+
+			if (sender == this.cartridgeButton)
+			{
+				this.GenerateCartridge = !this.GenerateCartridge;
 			}
 		}
 
@@ -268,6 +305,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private static string initialDirectory = null;
 		private static string initialFilename = null;
 		private static double zoom = 1;
+		private static bool generateCartridge = true;
 		private static bool showOptions = true;
 
 		private readonly DesignerApplication designerApplication;
@@ -278,5 +316,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		private RadioButton optionsZoom2;
 		private RadioButton optionsZoom3;
 		private RadioButton optionsZoom4;
+		private CheckButton cartridgeButton;
 	}
 }
