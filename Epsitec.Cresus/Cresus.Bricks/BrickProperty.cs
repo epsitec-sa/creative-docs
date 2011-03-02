@@ -22,6 +22,12 @@ namespace Epsitec.Cresus.Bricks
 			this.value = value;
 		}
 
+		public BrickProperty(BrickPropertyKey key, FormattedText value)
+		{
+			this.key = key;
+			this.value = value.IsNull ? null : value.ToString ();
+		}
+
 		public BrickProperty(BrickPropertyKey key, int value)
 		{
 			this.key = key;
@@ -91,12 +97,21 @@ namespace Epsitec.Cresus.Bricks
 
 		public System.Func<T, FormattedText> GetFormatter<T>()
 		{
-			var value = this.ExpressionValue;
+			var value = this.ExpressionValue as LambdaExpression;
 
-			if ((value != null) &&
-				(value is Expression<System.Func<T, FormattedText>>))
+			if (value != null)
 			{
-				var expression = value as Expression<System.Func<T, FormattedText>>;
+				Expression<System.Func<T, FormattedText>> expression = value as Expression<System.Func<T, FormattedText>>;
+
+				if (expression != null)
+				{
+					//	OK, expression is already what we need.
+				}
+				else
+				{
+					expression = Expression.Lambda<System.Func<T, FormattedText>> (value.Body, value.Parameters);
+				}
+				
 				return expression.Compile ();
 			}
 			else

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Bricks;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -35,7 +36,27 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var item = new TileDataItem ();
 			var root = brick;
 
+
 		again:
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.AsType))
+			{
+
+			}
+			else if (Brick.ContainsProperty (brick, BrickPropertyKey.Template))
+			{
+				//	Don't produce default text properties for bricks which contain AsType
+				//	or Template bricks.
+
+				if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
+				{
+					Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText));
+				}
+			}
+			else
+			{
+				Bridge<T>.CreateDefaultTextProperties (brick);
+			}
+
 			this.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
 			this.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
 			
@@ -49,11 +70,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
-			Brick parentAsTypeBrick = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
+			Brick asTypeBrick = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
 
-			if (parentAsTypeBrick != null)
+			if (asTypeBrick != null)
 			{
-				brick = parentAsTypeBrick;
+				brick = asTypeBrick;
 				goto again;
 			}
 
@@ -117,6 +138,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			Bridge<T>.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
 		}
 
+		private static void CreateDefaultTextProperties(Brick brick)
+		{
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
+			{
+				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetSummary ();
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, expression));
+			}
+
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.TextCompact))
+			{
+				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetCompactSummary ();
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
+			}
+		}
+		
 		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
 		{
 			if (i < labels.Count)

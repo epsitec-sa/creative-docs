@@ -114,6 +114,11 @@ namespace Epsitec.Cresus.Bricks
 			brick.AddProperty (property, notify: false);
 		}
 
+		public static bool ContainsProperty(Brick brick, BrickPropertyKey key)
+		{
+			return brick.properties.Any (x => x.Key == key);
+		}
+
 		public static BrickProperty GetProperty(Brick brick, BrickPropertyKey key)
 		{
 			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();

@@ -33,17 +33,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.Icon ("Data.NaturalPerson")
 //				.Title (TextFormatter.FormatText ("Personne physique"))
 //				.TitleCompact (TextFormatter.FormatText ("Personne"))
-				.Text (x => x.GetSummary ())
-				.TextCompact (x => x.GetCompactSummary ());
+//				.Text (x => x.GetSummary ())
+//				.TextCompact (x => x.GetCompactSummary ())
+			;
 
 			wall.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
 //				.Name ("MailContact")
 //				.Icon ("Data.MailContact")
 				
-				.Title ("Adresses")
-				.TitleCompact ("Adresses")
-				.Text (CollectionTemplate.DefaultEmptyText)
+//				.Title ("Adresses")
+//				.TitleCompact ("Adresses")
+//				.Text (CollectionTemplate.DefaultEmptyText)
 				
 				.Template ()
 				 .Title (x => x.GetTitle ())
@@ -55,9 +56,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.AsType<TelecomContactEntity> ()
 //				.Name ("TelecomContact")
 //				.Icon ("Data.TelecomContact")
-				.Title ("Téléphones")
-				.TitleCompact ("Téléphones")
-				.Text (CollectionTemplate.DefaultEmptyText)
+//				.Title ("Téléphones")
+//				.TitleCompact ("Téléphones")
+//				.Text (CollectionTemplate.DefaultEmptyText)
 				
 				.Template ()
 				 .Title (x => x.GetTitle ())
@@ -69,9 +70,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.AsType<UriContactEntity> ()
 //				.Name ("UriContact")
 //				.Icon ("Data.UriContact")
-				.Title ("E-mails")
-				.TitleCompact ("E-mails")
-				.Text (CollectionTemplate.DefaultEmptyText)
+//				.Title ("E-mails")
+//				.TitleCompact ("E-mails")
+//				.Text (CollectionTemplate.DefaultEmptyText)
 				
 				.Template ()
 				 .Text (x => x.GetSummary ())
