@@ -20,6 +20,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.controller = controller;
 		}
 
+		public BrickWall<T> CreateBrickWall()
+		{
+			var wall = new BrickWall<T> ();
+
+			wall.BrickAdded += this.HandleBrickWallBrickAdded;
+			wall.BrickPropertyAdded += this.HandleBrickWallBrickPropertyAdded;
+
+			return wall;
+		}
+		
 		public TileDataItem CreateTileDataItem(TileDataItems data, Brick brick)
 		{
 			var item = new TileDataItem ();
@@ -61,6 +71,55 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 
 			return item;
+		}
+
+		private void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
+		{
+			var brick    = e.Brick;
+			var type     = e.FieldType;
+			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
+
+			if ((typeInfo == null) ||
+				(typeInfo.Caption == null))
+			{
+				return;
+			}
+
+			var typeName = typeInfo.Caption.Name;
+			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
+
+			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
+			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
+
+			Brick.AddProperty (brick, nameProperty);
+			Brick.AddProperty (brick, iconProperty);
+		}
+
+		private void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
+		{
+			var brick    = e.Brick;
+			var property = e.Property;
+
+			if (property.Key == BrickPropertyKey.AsType)
+			{
+				var type     = property.Brick.GetFieldType ();
+				var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
+
+				if ((typeInfo == null) ||
+					(typeInfo.Caption == null))
+				{
+					return;
+				}
+
+				var typeName = typeInfo.Caption.Name;
+				var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
+
+				BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
+				BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
+
+				Brick.AddProperty (brick, nameProperty);
+				Brick.AddProperty (brick, iconProperty);
+			}
 		}
 
 		private void ProcessTemplate(TileDataItems data, TileDataItem item, Brick root, Brick templateBrick)

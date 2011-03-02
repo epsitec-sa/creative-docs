@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new TileDataItem
 				{
 					Name		 = "MailContact",
-					IconUri		 = "Data.Mail",
+					IconUri		 = "Data.MailContact",
 					Title		 = TextFormatter.FormatText ("Adresses"),
 					CompactTitle = TextFormatter.FormatText ("Adresses"),
 					Text		 = CollectionTemplate.DefaultEmptyText
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
-					IconUri		 = "Data.Telecom",
+					IconUri		 = "Data.TelecomContact",
 					Title		 = TextFormatter.FormatText ("Téléphones"),
 					CompactTitle = TextFormatter.FormatText ("Téléphones"),
 					Text		 = CollectionTemplate.DefaultEmptyText
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					AutoGroup    = true,
 					Name		 = "UriContact",
-					IconUri		 = "Data.Uri",
+					IconUri		 = "Data.UriContact",
 					Title		 = TextFormatter.FormatText ("Emails"),
 					CompactTitle = TextFormatter.FormatText ("Emails"),
 					Text		 = CollectionTemplate.DefaultEmptyText

@@ -15,6 +15,15 @@ namespace Epsitec.Cresus.Bricks
 			this.properties = new List<BrickProperty> ();
 		}
 
+
+		internal BrickWall BrickWall
+		{
+			get
+			{
+				return this.brickWall;
+			}
+		}
+
 		public abstract System.Type GetFieldType();
 
 		public System.Delegate GetResolver(System.Type expectedReturnType)
@@ -63,14 +72,25 @@ namespace Epsitec.Cresus.Bricks
 		}
 #endif
 		
-		internal void AddProperty(BrickProperty property)
+		internal void AddProperty(BrickProperty property, bool notify = true)
 		{
 			this.properties.Add (property);
+
+			if ((this.brickWall != null) &&
+				(notify))
+			{
+				this.brickWall.NotifyBrickPropertyAdded (this, property);
+			}
 		}
 
 		internal void DefineResolver(Expression resolver)
 		{
 			this.resolver = resolver;
+		}
+
+		internal void DefineBrickWall(BrickWall brickWall)
+		{
+			this.brickWall = brickWall;
 		}
 
 		internal void DebugDump(string prefix = "")
@@ -88,6 +108,12 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+
+		public static void AddProperty(Brick brick, BrickProperty property)
+		{
+			brick.AddProperty (property, notify: false);
+		}
+
 		public static BrickProperty GetProperty(Brick brick, BrickPropertyKey key)
 		{
 			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();
@@ -96,6 +122,7 @@ namespace Epsitec.Cresus.Bricks
 		
 
 		private readonly List<BrickProperty> properties;
+		private BrickWall brickWall;
 		private Expression resolver;
 	}
 }

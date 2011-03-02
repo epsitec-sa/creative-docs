@@ -478,9 +478,9 @@
     <Content Include="Resources\Cresus.Core\Strings.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Images\Data.Mail.icon" />
-    <EmbeddedResource Include="Images\Data.Telecom.icon" />
-    <EmbeddedResource Include="Images\Data.Uri.icon" />
+    <EmbeddedResource Include="Images\Data.MailContact.icon" />
+    <EmbeddedResource Include="Images\Data.TelecomContact.icon" />
+    <EmbeddedResource Include="Images\Data.UriContact.icon" />
     <EmbeddedResource Include="Images\Data.LegalPerson.icon" />
     <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
     <EmbeddedResource Include="Images\Data.Roles.icon" />

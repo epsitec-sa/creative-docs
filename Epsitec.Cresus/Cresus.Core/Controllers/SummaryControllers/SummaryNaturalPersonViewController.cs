@@ -24,11 +24,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
-			Cresus.Bricks.BrickWall<NaturalPersonEntity> wall = new Bricks.BrickWall<NaturalPersonEntity> ();
+			var bridge = new Bridge<NaturalPersonEntity> (this);
+
+			var wall = bridge.CreateBrickWall ();
 
 			wall.AddBrick ()
-				.Name ("NaturalPerson")
-				.Icon ("Data.NaturalPerson")
+//				.Name ("NaturalPerson")
+//				.Icon ("Data.NaturalPerson")
 				.Title (TextFormatter.FormatText ("Personne physique"))
 				.TitleCompact (TextFormatter.FormatText ("Personne"))
 				.Text (x => x.GetSummary ())
@@ -36,8 +38,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
-				.Name ("MailContact")
-				.Icon ("Data.Mail")
+//				.Name ("MailContact")
+//				.Icon ("Data.MailContact")
 				
 				.Title ("Adresses")
 				.TitleCompact ("Adresses")
@@ -51,8 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Contacts)
 				.AsType<TelecomContactEntity> ()
-				.Name ("TelecomContact")
-				.Icon ("Data.Telecom")
+//				.Name ("TelecomContact")
+//				.Icon ("Data.TelecomContact")
 				.Title ("Téléphones")
 				.TitleCompact ("Téléphones")
 				.Text (CollectionTemplate.DefaultEmptyText)
@@ -65,8 +67,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Contacts)
 				.AsType<UriContactEntity> ()
-				.Name ("UriContact")
-				.Icon ("Data.Uri")
+//				.Name ("UriContact")
+//				.Icon ("Data.UriContact")
 				.Title ("E-mails")
 				.TitleCompact ("E-mails")
 				.Text (CollectionTemplate.DefaultEmptyText)
@@ -78,8 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			using (var data = TileContainerController.Setup (this))
 			{
-				var bridge = new Bridge<NaturalPersonEntity> (this);
-
 				foreach (var brick in wall.Bricks)
 				{
 					bridge.CreateTileDataItem (data, brick);

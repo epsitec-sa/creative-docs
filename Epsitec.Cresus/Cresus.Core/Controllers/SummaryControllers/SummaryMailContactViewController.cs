@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new TileDataItem
 				{
 					Name				= "MailContact",
-					IconUri				= "Data.Mail",
+					IconUri				= "Data.MailContact",
 					Title				= TextFormatter.FormatText ("Adresse", "(", string.Join (", ", this.Entity.ContactGroups.Select (role => role.Name)), ")"),
 					CompactTitle		= TextFormatter.FormatText ("Adresse"),
 					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),

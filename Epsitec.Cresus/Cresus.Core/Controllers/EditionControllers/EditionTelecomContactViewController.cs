@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Telecom", "Téléphone");
+				builder.CreateEditionTitleTile ("Data.TelecomContact", "Téléphone");
 
 				this.CreateUIRoles (builder);
 				this.CreateUITelecomType (builder);
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tileData = new TileDataItem
 			{
 				Name            = "TelecomContactRoles",
-				IconUri	        = "Data.Telecom",
+				IconUri	        = "Data.TelecomContact",
 				Title	        = TextFormatter.FormatText ("Téléphone"),
 				CompactTitle    = TextFormatter.FormatText ("Téléphone"),
 				Frameless       = true,

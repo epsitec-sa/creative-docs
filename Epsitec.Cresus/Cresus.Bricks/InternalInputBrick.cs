@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			parent.AddProperty (new BrickProperty (BrickPropertyKey.Input, this));
 
+			this.DefineBrickWall (parent.BrickWall);
 			this.parent = parent;
 		}
 

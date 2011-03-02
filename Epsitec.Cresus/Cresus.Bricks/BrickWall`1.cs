@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Bricks
 			var brick = new SimpleBrick<T, T> ();
 
 			this.Add (brick);
+			this.NotifyBrickAdded (typeof (T), brick);
 
 			return brick;
 		}
@@ -29,6 +30,7 @@ namespace Epsitec.Cresus.Bricks
 			brick.DefineResolver (expression);
 
 			this.Add (brick);
+			this.NotifyBrickAdded (typeof (TField), brick);
 
 			return brick;
 		}
@@ -41,6 +43,7 @@ namespace Epsitec.Cresus.Bricks
 			brick.AddProperty (new BrickProperty (BrickPropertyKey.CollectionAnnotation, typeof (TField).FullName));
 
 			this.Add (brick);
+			this.NotifyBrickAdded (typeof (TField), brick);
 
 			return brick;
 		}

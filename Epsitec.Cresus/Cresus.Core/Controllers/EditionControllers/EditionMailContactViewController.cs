@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Mail", "Adresse");
+				builder.CreateEditionTitleTile ("Data.MailContact", "Adresse");
 
 				this.CreateUIRoles  (builder);
 				this.CreateUICommon (builder);
@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tileData = new TileDataItem
 			{
 				Name            = "MailContactRoles",
-				IconUri	        = "Data.Mail",
+				IconUri	        = "Data.MailContact",
 				Title	        = TextFormatter.FormatText ("Adresse"),
 				CompactTitle    = TextFormatter.FormatText ("Adresse"),
 				Frameless       = true,
