@@ -7,7 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Common.FormEngine
+namespace Epsitec.Common.Tests.FormEngine
 {
 	/// <summary>
 	/// Projet de test de Common.FormEngine.

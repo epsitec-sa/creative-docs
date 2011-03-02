@@ -85,6 +85,7 @@
     <Compile Include="Drawing\TextBreakTest.cs" />
     <Compile Include="Drawing\TextTest.cs" />
     <Compile Include="Drawing\TransformTest.cs" />
+    <Compile Include="FormEngine\FormEngineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.AddressBook\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.AddressBook\SourceCode\Forms.cs" />
