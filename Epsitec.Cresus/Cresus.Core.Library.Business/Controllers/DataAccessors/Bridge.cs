@@ -75,8 +75,26 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
 		{
+			var brick = e.Brick;
+			var type  = e.FieldType;
+			
+			Bridge<T>.CreateDefaultProperties (brick, type);
+		}
+
+		private void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
+		{
 			var brick    = e.Brick;
-			var type     = e.FieldType;
+			var property = e.Property;
+
+			if (property.Key == BrickPropertyKey.AsType)
+			{
+				var type = property.Brick.GetFieldType ();
+				Bridge<T>.CreateDefaultProperties (brick, type);
+			}
+		}
+
+		private static void CreateDefaultProperties(Brick brick, System.Type type)
+		{
 			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
 
 			if ((typeInfo == null) ||
@@ -87,38 +105,24 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			var typeName = typeInfo.Caption.Name;
 			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
+			var labels   = typeInfo.Caption.Labels;
 
 			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
 			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
 
 			Brick.AddProperty (brick, nameProperty);
 			Brick.AddProperty (brick, iconProperty);
+
+			Bridge<T>.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
+			Bridge<T>.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
 		}
 
-		private void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
+		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
 		{
-			var brick    = e.Brick;
-			var property = e.Property;
-
-			if (property.Key == BrickPropertyKey.AsType)
+			if (i < labels.Count)
 			{
-				var type     = property.Brick.GetFieldType ();
-				var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
-
-				if ((typeInfo == null) ||
-					(typeInfo.Caption == null))
-				{
-					return;
-				}
-
-				var typeName = typeInfo.Caption.Name;
-				var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
-
-				BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
-				BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
-
-				Brick.AddProperty (brick, nameProperty);
-				Brick.AddProperty (brick, iconProperty);
+				BrickProperty property = new BrickProperty (key, labels[i]);
+				Brick.AddProperty (brick, property);
 			}
 		}
 

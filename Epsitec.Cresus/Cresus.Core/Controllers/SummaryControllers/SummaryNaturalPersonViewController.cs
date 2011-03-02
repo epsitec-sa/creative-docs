@@ -31,8 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick ()
 //				.Name ("NaturalPerson")
 //				.Icon ("Data.NaturalPerson")
-				.Title (TextFormatter.FormatText ("Personne physique"))
-				.TitleCompact (TextFormatter.FormatText ("Personne"))
+//				.Title (TextFormatter.FormatText ("Personne physique"))
+//				.TitleCompact (TextFormatter.FormatText ("Personne"))
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ());
 
