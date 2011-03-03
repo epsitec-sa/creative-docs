@@ -1,7 +1,0 @@
-
-
-Prévoir de pouvoir gérer des colonnes multilingues; il faut que cela soit totalement
-transparent et visible comme un champ unique au haut niveau, avec un moyen de dire
-quelle langue on souhaite.
-
-- Cresus.Requests (ExecutionEngine.CreateSqlColumns)
