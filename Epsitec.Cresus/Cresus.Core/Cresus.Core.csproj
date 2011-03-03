@@ -157,10 +157,6 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
-    <Compile Include="DocumentPrintingUnitsEditor\DocumentOptionsEditorController.cs" />
-    <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
-    <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />
-    <Compile Include="DocumentPrintingUnitsEditor\ValuesController.cs" />
     <Compile Include="Hack.cs" />
     <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
@@ -548,7 +544,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DocumentPrintingUnitsEditor\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,7 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.DocumentPrintingUnitsEditor;
+using Epsitec.Cresus.Core.Print.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;

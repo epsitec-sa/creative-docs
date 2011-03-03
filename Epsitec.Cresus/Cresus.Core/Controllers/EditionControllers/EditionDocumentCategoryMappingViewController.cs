@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntityName, x => this.Entity.PrintableEntityName = x), Business.Enumerations.GetAllPrintableEntities (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntityName, x => this.Entity.PrintableEntityName = x), EnumKeyValues.FromEnum<PrintableEntities> (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
 		private void CreateUICategories(UIBuilder builder)

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 
-using Epsitec.Cresus.Core.Print.Verbose;
+using Epsitec.Cresus.Core.Documents.Verbose;
 
 using System.Collections.Generic;
 using System.Xml.Linq;

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static string GetCategory(Entities.UnitOfMeasureEntity unit)
 		{
-			foreach (var item in Enumerations.GetAllPossibleUnitOfMeasureCategories ())
+			foreach (var item in EnumKeyValues.FromEnum<UnitOfMeasureCategory> ())
 			{
 				if (item.Key == unit.Category)
 				{

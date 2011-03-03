@@ -8,6 +8,8 @@ using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -33,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			FormattedText type = FormattedText.Empty;
 
-			foreach (var q in Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			foreach (var q in EnumKeyValues.FromEnum<ArticleQuantityType> ())
 			{
 				if (q.Key == this.QuantityType)
 				{

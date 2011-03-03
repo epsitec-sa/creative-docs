@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentPrintingUnitsEditor
+namespace Epsitec.Cresus.Core.Print.Controllers
 {
 	public sealed class DocumentPrintingUnitsEditorController : System.IDisposable
 	{

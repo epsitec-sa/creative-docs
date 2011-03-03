@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIType(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new EnumController<Business.ArticleQuantityType> (Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			var controller = new EnumController<Business.ArticleQuantityType> (EnumKeyValues.FromEnum<ArticleQuantityType> ())
 			{
 				ValueGetter = () => this.Entity.QuantityType,
 				ValueSetter = x => this.Entity.QuantityType = x,

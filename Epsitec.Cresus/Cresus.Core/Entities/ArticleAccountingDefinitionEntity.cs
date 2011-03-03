@@ -8,6 +8,8 @@ using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -39,7 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			if (this.CurrencyCode.HasValue)
 			{
-				var c = Business.Enumerations.GetAllPossibleCurrencyCodes ().Where (x => x.Key == this.CurrencyCode).First ();
+				var c = EnumKeyValues.FromEnum<CurrencyCode> ().Where (x => x.Key == this.CurrencyCode).First ();
 				builder.Append (c.Values[0]);  // code de la monnaie, par exemple "CHF"
 			}
 

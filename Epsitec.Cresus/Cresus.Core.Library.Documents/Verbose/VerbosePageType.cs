@@ -2,12 +2,13 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 
-namespace Epsitec.Cresus.Core.Print.Verbose
+namespace Epsitec.Cresus.Core.Documents.Verbose
 {
 	public class VerbosePageType
 	{
@@ -84,7 +85,7 @@ namespace Epsitec.Cresus.Core.Print.Verbose
 		{
 			get
 			{
-				var types = Business.Enumerations.GetAllPossibleDocumentType ();
+				var types = EnumKeyValues.FromEnum<DocumentType> ();
 				var strings = new List<string> ();
 
 				foreach (Business.DocumentType type in this.DocumentTypes)
