@@ -110,6 +110,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
+      <Name>Common.Document</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
@@ -246,15 +250,7 @@
     <Exec Command="compile-rc.bat App" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-
-"$(SolutionDir)App.CreativeDocs\compile-rc.bat" App.rc</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)App.CreativeDocs\compile-rc.bat" App.rc</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 
