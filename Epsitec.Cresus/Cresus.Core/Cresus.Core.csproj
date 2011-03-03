@@ -245,8 +245,6 @@
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validators\PostalCodeValidator.cs" />
-    <Compile Include="Validators\StringValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
@@ -474,6 +472,7 @@
   <ItemGroup>
     <Folder Include="Business\Finance\" />
     <Folder Include="Business\Rules\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
