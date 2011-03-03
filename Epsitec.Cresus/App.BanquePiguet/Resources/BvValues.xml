@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<values>
+
+  <value>
+    <name>BankAddress</name>
+    <text>Banque Piguet &amp; Cie S.A.\n1400 Yverdon-les-Bains</text>
+  </value>
+
+  <value>
+    <name>BankAccount</name>
+    <text>10-664-6</text>
+  </value>
+
+  <value>
+    <name>LayoutCode</name>
+    <text>303</text>
+  </value>
+
+  <value>
+    <name>ReferenceClientNumber</name>
+    <text>0000000000</text>
+  </value>
+
+  <value>
+    <name>ClearingConstant</name>
+    <text>07</text>
+  </value>
+
+  <value>
+    <name>ClearingBank</name>
+    <text>08777</text>
+  </value>
+
+  <value>
+    <name>ClearingBankKey</name>
+    <text>7</text>
+  </value>
+
+  <value>
+    <name>CcpNumber</name>
+    <text>100006646</text>
+  </value>
+
+</values>
