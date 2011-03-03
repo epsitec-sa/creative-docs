@@ -24,17 +24,6 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
-        public void UpdateActiveCommandState(string databaseName)
-        {
-			var commandName  = string.Concat (DatabaseCommandHandler.showDatabaseCommandPrefix, databaseName);
-			var commandState = this.databaseCommandStates.Where (state => state.Command.Name == commandName).FirstOrDefault ();
-
-			if (commandState != null)
-            {
-				this.UpdateActiveCommandState (commandState);
-			}
-        }
-
 		public string SelectedDatabaseCommandName
 		{
 			get
@@ -100,6 +89,17 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.OnChanged ();
 		}
 
+		private void UpdateActiveCommandState(string dataSetName)
+		{
+			var commandName  = string.Concat (DatabaseCommandHandler.showDatabaseCommandPrefix, dataSetName);
+			var commandState = this.databaseCommandStates.Where (state => state.Command.Name == commandName).FirstOrDefault ();
+
+			if (commandState != null)
+			{
+				this.UpdateActiveCommandState (commandState);
+			}
+		}
+
 		private void UpdateActiveCommandState(CommandState activeState)
 		{
 			foreach (var state in this.databaseCommandStates)
@@ -123,6 +123,21 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				this.Changed (this);
 			}
 		}
+
+
+		#region ICommandHandler Members
+
+		void ICommandHandler.UpdateCommandStates(object sender)
+		{
+			var controller = sender as BrowserViewController;
+
+			if (controller != null)
+			{
+				this.UpdateActiveCommandState (controller.DataSetName);
+			}
+		}
+
+		#endregion
 
 		public event EventHandler Changed;
 

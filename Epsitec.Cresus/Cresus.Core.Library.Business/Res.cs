@@ -1,4 +1,5 @@
-﻿//  --------------------------------------------------------------------------- 
+﻿#if false
+//  --------------------------------------------------------------------------- 
 //  ATTENTION !
 //  Ce fichier a été généré automatiquement. Ne pas l'éditer manuellement, car 
 //  toute modification sera perdue. 
@@ -348,3 +349,4 @@ namespace Epsitec.Cresus.Core
 		private const int _moduleId = 21;
 	}
 }
+#endif

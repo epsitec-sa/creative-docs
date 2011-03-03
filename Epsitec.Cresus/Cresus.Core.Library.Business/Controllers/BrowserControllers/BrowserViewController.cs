@@ -312,8 +312,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void OnDataSetSelected()
 		{
-			var commandHandler = this.Orchestrator.MainViewController.CommandContext.GetCommandHandler<Epsitec.Cresus.Core.CommandHandlers.DatabaseCommandHandler> ();
-			commandHandler.UpdateActiveCommandState (this.dataSetName);
+			this.Orchestrator.MainViewController.CommandContext.UpdateCommandStates (this);
 
 			var handler = this.DataSetSelected;
 

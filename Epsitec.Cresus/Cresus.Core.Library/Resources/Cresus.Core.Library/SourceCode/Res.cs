@@ -4,11 +4,74 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library
 {
 	public static class Res
 	{
 		//	Code mapping for 'Caption' resources
+		
+		public static class Commands
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Edition
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVA8
+				public static readonly global::Epsitec.Common.Widgets.Command DiscardRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
+				//	designer:cap/EVA7
+				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
+			}
+			
+			public static class History
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVA5
+				public static readonly global::Epsitec.Common.Widgets.Command NavigateBackward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+				//	designer:cap/EVA6
+				public static readonly global::Epsitec.Common.Widgets.Command NavigateForward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+			}
+		}
+		
+		public static class CommandIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Edition
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVA8
+				public const long DiscardRecord = 0x3EE0000A000008L;
+				//	designer:cap/EVA7
+				public const long SaveRecord = 0x3EE0000A000007L;
+			}
+			
+			public static class History
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVA5
+				public const long NavigateBackward = 0x3EE0000A000005L;
+				//	designer:cap/EVA6
+				public const long NavigateForward = 0x3EE0000A000006L;
+			}
+			
+		}
 		
 		public static class Types
 		{
@@ -37,7 +100,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 					}
 				}
 				//	designer:cap/EVA3
@@ -45,7 +108,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
 					}
 				}
 				//	designer:cap/EVA2
@@ -53,7 +116,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 					}
 				}
 				//	designer:cap/EVA1
@@ -61,7 +124,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 					}
 				}
 			}
@@ -89,12 +152,12 @@ namespace Epsitec.Cresus.Core
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)
@@ -117,6 +180,12 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library");
+			Commands._Initialize ();
+			Commands.Edition._Initialize ();
+			Commands.History._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Edition._Initialize ();
+			CommandIds.History._Initialize ();
 			Types._Initialize ();
 			Values._Initialize ();
 			Values.EnumValueCardinality._Initialize ();

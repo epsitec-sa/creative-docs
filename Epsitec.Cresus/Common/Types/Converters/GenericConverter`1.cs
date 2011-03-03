@@ -65,6 +65,9 @@ namespace Epsitec.Common.Types.Converters
 
 			if (converterType != null)
 			{
+				//	We know for sure that converters implement a default constructor. See the
+				//	constraint of TSelf to new() on GenericConverter<T, TSelf>.
+
 				GenericConverter<T>.Instance = System.Activator.CreateInstance (converterType) as GenericConverter<T>;
 			}
 			else if (typeof (T).IsEnum)

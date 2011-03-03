@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		{
 			var commandContext = this.navigator.MainViewController.CommandContext;
 
-			commandContext.GetCommandState (Res.Commands.History.NavigateBackward).Enable = this.backwardHistory.Count > 0;
-			commandContext.GetCommandState (Res.Commands.History.NavigateForward).Enable  = this.forwardHistory.Count > 0;
+			commandContext.GetCommandState (Library.Res.Commands.History.NavigateBackward).Enable = this.backwardHistory.Count > 0;
+			commandContext.GetCommandState (Library.Res.Commands.History.NavigateForward).Enable  = this.forwardHistory.Count > 0;
 		}
 
 		private static bool RecordOnlyIfDifferent(Stack<NavigationPath> stack, NavigationPath item)

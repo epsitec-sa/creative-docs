@@ -323,13 +323,13 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if ((this.businessContext != null) &&
 				(this.businessContext.ContainsChanges ()))
 			{
-				Dispatcher.SetCommandEnable (Res.Commands.Edition.SaveRecord, true);
-				Dispatcher.SetCommandEnable (Res.Commands.Edition.DiscardRecord, true);
+				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.SaveRecord, true);
+				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.DiscardRecord, true);
 			}
 			else
 			{
-				Dispatcher.SetCommandEnable (Res.Commands.Edition.SaveRecord, false);
-				Dispatcher.SetCommandEnable (Res.Commands.Edition.DiscardRecord, false);
+				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.SaveRecord, false);
+				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.DiscardRecord, false);
 			}
 		}
 

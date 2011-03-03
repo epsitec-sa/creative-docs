@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="1008" name="Cresus.Core.Library.Business" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library.Business" namespace="Epsitec.Cresus.Core">
+  <Versions>
+    <Version id="1" build="3" date="2011-03-03T06:51:46.9436447Z" />
+  </Versions>
+</ModuleInfo>

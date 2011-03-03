@@ -372,6 +372,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		#region ICommandHandler Members
+
+		void ICommandHandler.UpdateCommandStates(object sender)
+		{
+		}
+
+		#endregion
+
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;

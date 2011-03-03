@@ -42,6 +42,14 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			return navigator;
 		}
 
+		#region ICommandHandler Members
+
+		void ICommandHandler.UpdateCommandStates(object sender)
+		{
+		}
+
+		#endregion
+
 		private readonly CoreCommandDispatcher commandDispatcher;
 	}
 }

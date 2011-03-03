@@ -185,8 +185,8 @@ namespace Epsitec.Cresus.Core.Controllers
 								 Library.UI.ButtonSmallWidth * 1,
 			};
 
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.DiscardRecord));
+			section.Children.Add (RibbonViewController.CreateButton (Library.Res.Commands.Edition.SaveRecord));
+			section.Children.Add (RibbonViewController.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Print));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Preview));
 

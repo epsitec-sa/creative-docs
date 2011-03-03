@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
-		[Command (Res.CommandIds.Edition.SaveRecord)]
+		[Command (Library.Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			e.Executed = true;
 		}
 
-		[Command (Res.CommandIds.Edition.DiscardRecord)]
+		[Command (Library.Res.CommandIds.Edition.DiscardRecord)]
 		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
@@ -128,6 +128,14 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		{
 			throw new System.Exception ("Crashing the application on purpose");
 		}
+
+		#region ICommandHandler Members
+
+		void ICommandHandler.UpdateCommandStates(object sender)
+		{
+		}
+
+		#endregion
 
 		private readonly CoreCommandDispatcher commandDispatcher;
 	}
