@@ -135,10 +135,13 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			ResourceModuleLayer moduleLayer = referenceModule.FullId.Layer;
 			ResourceModuleInfo  patchModule = new ResourceModuleInfo ()
 			{
-				FullId = new ResourceModuleId (moduleName, this.pool.GetRootAbsolutePath (modulePath), moduleId, moduleLayer),
-				PatchDepth = referenceModule.PatchDepth+1,
-				ReferenceModulePath = this.pool.GetRootRelativePath (referenceModule.FullId.Path),
-				SourceNamespace = referenceModule.SourceNamespace
+				FullId                  = new ResourceModuleId (moduleName, this.pool.GetRootAbsolutePath (modulePath), moduleId, moduleLayer),
+				PatchDepth              = referenceModule.PatchDepth+1,
+				ReferenceModulePath     = this.pool.GetRootRelativePath (referenceModule.FullId.Path),
+				SourceNamespaceDefault  = referenceModule.SourceNamespaceDefault,
+				SourceNamespaceEntities = referenceModule.SourceNamespaceEntities,
+				SourceNamespaceForms    = referenceModule.SourceNamespaceForms,
+				SourceNamespaceRes      = referenceModule.SourceNamespaceRes
 			};
 
 			if (System.IO.Directory.Exists (modulePath))

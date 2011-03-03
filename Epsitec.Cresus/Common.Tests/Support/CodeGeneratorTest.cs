@@ -39,7 +39,7 @@ namespace Epsitec.Common.Tests.Support
 			formatter.IndentationChars = "  ";
 			CodeGenerator generator = new CodeGenerator (formatter, manager);
 
-			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
+			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespaceRes);
 			
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBaseType);

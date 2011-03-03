@@ -497,7 +497,7 @@ namespace Epsitec.Common.Designer
 			{
 				actualModuleName = this.CurrentModuleInfo.Module.ModuleId.Name;
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
-				string[] namespaceElements = (info.SourceNamespace ?? "").Split ('.');
+				string[] namespaceElements = (info.SourceNamespaceRes ?? "").Split ('.');
 				sourceNamespace = string.Join(".", Common.Types.Collection.StripLast(namespaceElements));
 			}
 
@@ -1102,11 +1102,11 @@ namespace Epsitec.Common.Designer
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
-			this.editLockedState = this.CreateCommandState("EditLocked");
-			this.editOkState = this.CreateCommandState("EditOk");
+			this.editLockedState = this.CreateCommandState("EditLocked", KeyCode.ModifierControl|KeyCode.AlphaL);
+			this.editOkState = this.CreateCommandState("EditOk", KeyCode.FuncF12);
 			this.editCancelState = this.CreateCommandState("EditCancel");
-			this.deleteState = this.CreateCommandState("Delete");
-			this.createState = this.CreateCommandState("Create");
+			this.deleteState = this.CreateCommandState("Delete", KeyCode.ModifierControl|KeyCode.Delete);
+			this.createState = this.CreateCommandState("Create", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.AlphaN);
 			this.duplicateState = this.CreateCommandState("Duplicate");
 			this.copyToModuleState = this.CreateCommandState("CopyToModule", KeyCode.ModifierControl|KeyCode.AlphaM);
 
@@ -1117,9 +1117,9 @@ namespace Epsitec.Common.Designer
 			this.glyphsState = this.CreateCommandState("DesignerGlyphs");
 			this.filterState = this.CreateCommandState("Filter");
 			
-			this.searchState = this.CreateCommandState("Search");
-			this.searchPrevState = this.CreateCommandState("SearchPrev");
-			this.searchNextState = this.CreateCommandState("SearchNext");
+			this.searchState = this.CreateCommandState("Search", KeyCode.ModifierControl|KeyCode.AlphaE);
+			this.searchPrevState = this.CreateCommandState("SearchPrev", KeyCode.FuncF3|KeyCode.ModifierShift);
+			this.searchNextState = this.CreateCommandState("SearchNext", KeyCode.FuncF3);
 			
 			this.accessFirstState = this.CreateCommandState("AccessFirst");
 			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6|KeyCode.ModifierShift);

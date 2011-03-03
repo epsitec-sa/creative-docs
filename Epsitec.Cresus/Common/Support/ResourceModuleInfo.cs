@@ -72,20 +72,73 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets or sets the source namespace used when generating associated
-		/// code.
+		/// Gets or sets the source default namespace.
 		/// </summary>
 		/// <value>The source namespace.</value>
-		public string SourceNamespace
+		public string SourceNamespaceDefault
 		{
 			get
 			{
-				return this.sourceNamespace;
+				return this.sourceNamespaceDefault;
 			}
 			set
 			{
-				this.VerifyWritable ("SourceNamespace");
-				this.sourceNamespace = value;
+				this.VerifyWritable ("SourceNamespaceDefault");
+				this.sourceNamespaceDefault = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the source namespace used when generating associated
+		/// code ("Res.cs").
+		/// </summary>
+		/// <value>The source namespace.</value>
+		public string SourceNamespaceRes
+		{
+			get
+			{
+				return this.sourceNamespaceRes ?? this.sourceNamespaceDefault;
+			}
+			set
+			{
+				this.VerifyWritable ("SourceNamespaceRes");
+				this.sourceNamespaceRes = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the source namespace used when generating associated
+		/// code ("Entities.cs").
+		/// </summary>
+		/// <value>The source namespace.</value>
+		public string SourceNamespaceEntities
+		{
+			get
+			{
+				return this.sourceNamespaceEntities ?? this.sourceNamespaceDefault;
+			}
+			set
+			{
+				this.VerifyWritable ("SourceNamespaceEntities");
+				this.sourceNamespaceEntities = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the source namespace used when generating associated
+		/// code ("Forms.cs").
+		/// </summary>
+		/// <value>The source namespace.</value>
+		public string SourceNamespaceForms
+		{
+			get
+			{
+				return this.sourceNamespaceForms ?? this.sourceNamespaceDefault;
+			}
+			set
+			{
+				this.VerifyWritable ("SourceNamespaceForms");
+				this.sourceNamespaceForms = value;
 			}
 		}
 
@@ -272,8 +325,14 @@ namespace Epsitec.Common.Support
 			ResourceModuleInfo copy = new ResourceModuleInfo ();
 
 			copy.fullId = this.fullId;
-			copy.referenceModulePath = this.referenceModulePath;
-			copy.sourceNamespace = this.sourceNamespace;
+			
+			copy.referenceModulePath     = this.referenceModulePath;
+
+			copy.sourceNamespaceDefault  = this.sourceNamespaceDefault;
+			copy.sourceNamespaceRes      = this.sourceNamespaceRes;
+			copy.sourceNamespaceEntities = this.sourceNamespaceEntities;
+			copy.sourceNamespaceForms    = this.sourceNamespaceForms;
+			
 			copy.versions = this.versions == null ? null : new List<ResourceModuleVersion> (this.versions);
 			copy.textMode = this.textMode;
 			copy.assemblies = this.assemblies;
@@ -292,7 +351,11 @@ namespace Epsitec.Common.Support
 		private bool							isFrozen;
 		private ResourceModuleId				fullId;
 		private string							referenceModulePath;
-		private string							sourceNamespace;
+
+		private string							sourceNamespaceDefault;
+		private string							sourceNamespaceRes;
+		private string							sourceNamespaceEntities;
+		private string							sourceNamespaceForms;
 		private string							assemblies;
 		private ResourceTextMode				textMode;
 		private List<ResourceModuleVersion>		versions;

@@ -121,7 +121,7 @@ namespace Epsitec.ModuleRepository
 			ResourceModuleInfo info = new ResourceModuleInfo ();
 
 			info.FullId = new ResourceModuleId (record.ModuleName, "", record.ModuleId, ResourceModuleId.ConvertPrefixToLayer (moduleLayerPrefix));
-			info.SourceNamespace = sourceNamespace;
+			info.SourceNamespaceDefault = sourceNamespace;
 
 			this.CreateModuleInfo (directory, info);
 

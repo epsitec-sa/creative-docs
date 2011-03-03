@@ -83,7 +83,7 @@ namespace Epsitec.Common.Tests.Support
 
 			foreach (ResourceModuleInfo info in pool.FindModuleInfos ("Common.Support"))
 			{
-				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);
+				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespaceDefault);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Tests.Support
 
 			foreach (ResourceModuleInfo info in pool.Modules)
 			{
-				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);
+				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespaceDefault);
 			}
 		}
 

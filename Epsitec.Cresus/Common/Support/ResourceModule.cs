@@ -67,12 +67,15 @@ namespace Epsitec.Common.Support
 							//  - textMode, the mode used for the textual resources (string / formatted text).
 							//	- namespace, the namespace used when generating associated code
 
-							string idAttribute         = root.GetAttribute (ResourceModule.XmlAttributeId);
-							string layerAttribute      = root.GetAttribute (ResourceModule.XmlAttributeLayer);
-							string nameAttribute       = root.GetAttribute (ResourceModule.XmlAttributeName);
-							string namespaceAttribute  = root.GetAttribute (ResourceModule.XmlAttributeNamespace);
-							string textModeAttribute   = root.GetAttribute (ResourceModule.XmlAttributeTextMode);
-							string assembliesAttribute = root.GetAttribute (ResourceModule.XmlAttributeAssemblies);
+							string idAttribute                = root.GetAttribute (ResourceModule.XmlAttributeId);
+							string layerAttribute             = root.GetAttribute (ResourceModule.XmlAttributeLayer);
+							string nameAttribute              = root.GetAttribute (ResourceModule.XmlAttributeName);
+							string namespaceAttributeDefault  = root.GetAttribute (ResourceModule.XmlAttributeNamespaceDefault);
+							string namespaceAttributeEntities = root.GetAttribute (ResourceModule.XmlAttributeNamespaceEntities);
+							string namespaceAttributeForms    = root.GetAttribute (ResourceModule.XmlAttributeNamespaceForms);
+							string namespaceAttributeRes      = root.GetAttribute (ResourceModule.XmlAttributeNamespaceRes);
+							string textModeAttribute          = root.GetAttribute (ResourceModule.XmlAttributeTextMode);
+							string assembliesAttribute        = root.GetAttribute (ResourceModule.XmlAttributeAssemblies);
 
 							if (string.IsNullOrEmpty (idAttribute))
 							{
@@ -144,10 +147,13 @@ namespace Epsitec.Common.Support
 							}
 
 							
-							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
-							info.SourceNamespace = namespaceAttribute ?? "";
-							info.TextMode = textMode;
-							info.Assemblies = string.IsNullOrEmpty (assembliesAttribute) ? null : assembliesAttribute;
+							info.FullId                  = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
+							info.SourceNamespaceDefault  = string.IsNullOrEmpty (namespaceAttributeDefault)  ? null : namespaceAttributeDefault;
+							info.SourceNamespaceEntities = string.IsNullOrEmpty (namespaceAttributeEntities) ? null : namespaceAttributeEntities;
+							info.SourceNamespaceForms    = string.IsNullOrEmpty (namespaceAttributeForms)    ? null : namespaceAttributeForms;
+							info.SourceNamespaceRes      = string.IsNullOrEmpty (namespaceAttributeRes)      ? null : namespaceAttributeRes;
+							info.TextMode                = textMode;
+							info.Assemblies              = string.IsNullOrEmpty (assembliesAttribute) ? null : assembliesAttribute;
 							info.Freeze ();
 
 							return info;
@@ -187,22 +193,31 @@ namespace Epsitec.Common.Support
 			xml.Save (moduleInfoPath);
 		}
 
+		private static void SetAttribute(System.Xml.XmlElement root, string attribute, string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return;
+			}
+
+			root.SetAttribute (attribute, value);
+		}
+
 		public static System.Xml.XmlDocument CreateXmlManifest(ResourceModuleInfo info, string comment)
 		{
 			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
 
-			root.SetAttribute (ResourceModule.XmlAttributeId, InvariantConverter.ToString (info.FullId.Id));
-			root.SetAttribute (ResourceModule.XmlAttributeName, info.FullId.Name);
-			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
-			root.SetAttribute (ResourceModule.XmlAttributeTextMode, System.Enum.GetName (typeof (ResourceTextMode), info.TextMode));
-			root.SetAttribute (ResourceModule.XmlAttributeAssemblies, info.Assemblies ?? "");
-
-			if (!string.IsNullOrEmpty (info.SourceNamespace))
-			{
-				root.SetAttribute (ResourceModule.XmlAttributeNamespace, info.SourceNamespace);
-			}
-
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeId,                InvariantConverter.ToString (info.FullId.Id));
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeName,              info.FullId.Name);
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeLayer,             ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeTextMode,          System.Enum.GetName (typeof (ResourceTextMode), info.TextMode));
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeAssemblies,        info.Assemblies);
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeNamespaceDefault,  info.SourceNamespaceDefault);
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeNamespaceEntities, info.SourceNamespaceEntities == info.SourceNamespaceDefault ? null : info.SourceNamespaceEntities);
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeNamespaceForms,    info.SourceNamespaceForms    == info.SourceNamespaceDefault ? null : info.SourceNamespaceForms);
+			ResourceModule.SetAttribute (root, ResourceModule.XmlAttributeNamespaceRes,      info.SourceNamespaceRes      == info.SourceNamespaceDefault ? null : info.SourceNamespaceRes);
+			
 			if (info.HasVersions)
 			{
 				System.Xml.XmlElement versionsNode = xml.CreateElement (ResourceModule.XmlVersions);
@@ -353,7 +368,10 @@ namespace Epsitec.Common.Support
 		internal const string XmlAttributeId		= "id";
 		internal const string XmlAttributeLayer		= "layer";
 		internal const string XmlAttributeName		= "name";
-		internal const string XmlAttributeNamespace = "namespace";
+		internal const string XmlAttributeNamespaceDefault  = "namespace";
+		internal const string XmlAttributeNamespaceEntities = "namespaceEntities";
+		internal const string XmlAttributeNamespaceForms    = "namespaceForms";
+		internal const string XmlAttributeNamespaceRes      = "namespaceRes";
 		internal const string XmlAttributeTextMode	= "textMode";
 		internal const string XmlAttributeAssemblies= "assemblies";
 

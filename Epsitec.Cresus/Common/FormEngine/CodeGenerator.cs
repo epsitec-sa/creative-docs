@@ -28,7 +28,7 @@ namespace Epsitec.Common.FormEngine
 			this.resourceManager = resourceManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.resourceModuleInfo = this.resourceManagerPool.GetModuleInfo (this.resourceManager.DefaultModulePath);
-			this.sourceNamespace = this.resourceModuleInfo.SourceNamespace;
+			this.sourceNamespaceForms = this.resourceModuleInfo.SourceNamespaceForms;
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace Epsitec.Common.FormEngine
 		{
 			CodeHelper.EmitHeader (this.formatter);
 
-			this.formatter.WriteBeginNamespace (this.sourceNamespace);
+			this.formatter.WriteBeginNamespace (this.sourceNamespaceForms);
 			this.formatter.WriteBeginClass (CodeHelper.FormIdsClassAttributes, "FormIds");
 
 			foreach (ResourceBundle bundle in bundles)
@@ -81,6 +81,6 @@ namespace Epsitec.Common.FormEngine
 		private readonly ResourceManager resourceManager;
 		private readonly ResourceManagerPool resourceManagerPool;
 		private readonly ResourceModuleInfo resourceModuleInfo;
-		private readonly string sourceNamespace;
+		private readonly string sourceNamespaceForms;
 	}
 }

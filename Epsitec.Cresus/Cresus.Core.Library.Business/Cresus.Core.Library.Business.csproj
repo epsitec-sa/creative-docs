@@ -58,7 +58,6 @@
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
     <Compile Include="Business\UnitOfMeasureCategory.cs" />
-    <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
@@ -125,6 +124,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Res.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Widgets\CellTableHelper.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
@@ -152,6 +153,9 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="Resources\Cresus.Core.Library.Business\Captions.00.resource" />
+    <None Include="Resources\Cresus.Core.Library.Business\module.info" />
+    <None Include="Resources\Cresus.Core.Library.Business\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -203,7 +207,9 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CommandHandlers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

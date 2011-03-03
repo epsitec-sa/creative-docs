@@ -918,8 +918,9 @@ namespace Epsitec.Common.Designer
 					throw new System.NotSupportedException();
 			}
 
-			if (bundle.Type == Resources.CaptionTypeName &&
-				!string.IsNullOrEmpty(this.moduleInfo.SourceNamespace))
+			if ((bundle.Type == Resources.CaptionTypeName) &&
+				(!string.IsNullOrEmpty (this.moduleInfo.SourceNamespaceRes)) &&
+				(!string.IsNullOrEmpty (this.moduleInfo.SourceNamespaceEntities)))
 			{
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{

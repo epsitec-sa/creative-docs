@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 	{
 		public static CodeFormatter GenerateResFile(ResourceManager resourceManager, ResourceModuleInfo moduleInfo)
 		{
-			string sourceNamespace = moduleInfo.SourceNamespace;
+			string sourceNamespace = moduleInfo.SourceNamespaceRes;
 			string moduleName = moduleInfo.FullId.Name;
 			ResourceTextMode textMode = moduleInfo.TextMode;
 

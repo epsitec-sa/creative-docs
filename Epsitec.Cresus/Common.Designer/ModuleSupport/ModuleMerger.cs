@@ -78,9 +78,12 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			ResourceManager     dstManager = new ResourceManager (dstPool, dstModule);
 			ResourceModuleInfo  dstInfo    = new ResourceModuleInfo ();
 
-			dstInfo.FullId          = dstModule;
-			dstInfo.SourceNamespace = srcInfo.SourceNamespace;
-			dstInfo.PatchDepth      = srcInfo.PatchDepth;
+			dstInfo.FullId                  = dstModule;
+			dstInfo.SourceNamespaceDefault  = srcInfo.SourceNamespaceDefault;
+			dstInfo.SourceNamespaceEntities = srcInfo.SourceNamespaceEntities;
+			dstInfo.SourceNamespaceForms    = srcInfo.SourceNamespaceForms;
+			dstInfo.SourceNamespaceRes      = srcInfo.SourceNamespaceRes;
+			dstInfo.PatchDepth              = srcInfo.PatchDepth;
 			dstInfo.UpdateVersions (srcInfo.Versions);
 			
 			ResourceModule.SaveManifest (dstInfo, ModuleMerger.CreateModuleComment ("Copied"));
@@ -137,9 +140,12 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			ResourceManager     mergedManager = new ResourceManager (mergedPool, mergedModule);
 			ResourceModuleInfo  mergedInfo    = new ResourceModuleInfo ();
 
-			mergedInfo.FullId          = mergedModule;
-			mergedInfo.SourceNamespace = refInfo.SourceNamespace;
-			mergedInfo.PatchDepth      = refInfo.PatchDepth + 1;
+			mergedInfo.FullId                  = mergedModule;
+			mergedInfo.SourceNamespaceDefault  = refInfo.SourceNamespaceDefault;
+			mergedInfo.SourceNamespaceEntities = refInfo.SourceNamespaceEntities;
+			mergedInfo.SourceNamespaceForms    = refInfo.SourceNamespaceForms;
+			mergedInfo.SourceNamespaceRes      = refInfo.SourceNamespaceRes;
+			mergedInfo.PatchDepth              = refInfo.PatchDepth + 1;
 
 			mergedInfo.UpdateVersions (refInfo.Versions);
 			mergedInfo.UpdateVersions (patchInfo.Versions);

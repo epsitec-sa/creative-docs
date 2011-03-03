@@ -1507,7 +1507,7 @@ namespace Epsitec.Common.Designer.FormEditor
 						CultureMap cultureMap = module.AccessFields.Accessor.Collection[druid];
 						if (cultureMap != null)
 						{
-							prefix = string.Concat(module.ModuleInfo.SourceNamespace, ".", cultureMap.Prefix, ".");
+							prefix = string.Concat(module.ModuleInfo.SourceNamespaceDefault, ".", cultureMap.Prefix, ".");
 						}
 					}
 				}
