@@ -5,8 +5,11 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Tests.UI
 {
 	[TestFixture]
 	public class PanelTest
@@ -85,13 +88,13 @@ namespace Epsitec.Common.UI
 			Widgets.Window window = new Widgets.Window ();
 			
 			window.Text = "PanelTest.CheckInteractive";
-			window.ClientSize = new Drawing.Size (400, 300);
+			window.ClientSize = new Size (400, 300);
 
 			PanelStack panelStack = new PanelStack ();
 			
 			panelStack.Dock = Widgets.DockStyle.Fill;
-			panelStack.Margins = new Drawing.Margins (8, 8, 4, 4);
-			panelStack.BackColor = Drawing.Color.FromRgb (1, 0.8, 0.8);
+			panelStack.Margins = new Margins (8, 8, 4, 4);
+			panelStack.BackColor = Color.FromRgb (1, 0.8, 0.8);
 
 			Panel panel = new Panel ();
 
@@ -105,14 +108,14 @@ namespace Epsitec.Common.UI
 			static1.Name = "LastName";
 			static2.Name = "FirstName";
 			
-			panel.PreferredSize = new Drawing.Size (80, 40);
+			panel.PreferredSize = new Size (80, 40);
 			panel.Anchor = Widgets.AnchorStyles.TopRight;
-			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
-			panel.Padding = new Drawing.Margins (8, 8, 4, 4);
-			panel.BackColor = Drawing.Color.FromRgb (0.8, 1, 0.8);
+			panel.Margins = new Margins (4, 4, 4, 4);
+			panel.Padding = new Margins (8, 8, 4, 4);
+			panel.BackColor = Color.FromRgb (0.8, 1, 0.8);
 			panel.DrawFullFrame = true;
 
-			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 68);
+			panel.EditionPanel.PreferredSize = new Size (180, 68);
 			
 			Widgets.StaticText text1 = new Widgets.StaticText ();
 			Widgets.StaticText text2 = new Widgets.StaticText ();
@@ -147,7 +150,7 @@ namespace Epsitec.Common.UI
 			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
 			field2.Name = "FirstName";
 
-			panel.EditionPanel.Padding = new Drawing.Margins (2, 2, 2, 2);
+			panel.EditionPanel.Padding = new Margins (2, 2, 2, 2);
 			panel.EditionPanel.Children.Add (text1);
 			panel.EditionPanel.Children.Add (text2);
 			panel.EditionPanel.Children.Add (field1);
@@ -254,7 +257,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckSampleDataSourceWithBindingRealTypes()
 		{
-			Support.ResourceManager manager = new Support.ResourceManager ();
+			ResourceManager manager = new ResourceManager ();
 
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
@@ -324,7 +327,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckSerialization()
 		{
-			Support.ResourceManager manager = new Support.ResourceManager ();
+			ResourceManager manager = new ResourceManager ();
 
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
@@ -340,7 +343,7 @@ namespace Epsitec.Common.UI
 			panel.Children.Add (a);
 			panel.Children.Add (b);
 
-			panel.PreferredSize = new Drawing.Size (100, 80);
+			panel.PreferredSize = new Size (100, 80);
 
 			string xml;
 			Panel copy;
@@ -350,7 +353,7 @@ namespace Epsitec.Common.UI
 			copy = Panel.DeserializePanel (xml, null, manager);
 
 			panel.EditionPanel.Children.Add (c);
-			panel.EditionPanel.PreferredSize = new Drawing.Size (200, 96);
+			panel.EditionPanel.PreferredSize = new Size (200, 96);
 
 			xml = Panel.SerializePanel (panel);
 			System.Console.Out.WriteLine ("{0}", xml);
@@ -359,8 +362,8 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
 			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
-			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
-			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
+			Assert.AreEqual (new Size (100, 80), copy.PreferredSize);
+			Assert.AreEqual (new Size (200, 96), copy.EditionPanel.PreferredSize);
 		}
 	}
 }

@@ -8,10 +8,14 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using Epsitec.Common.UI.Controllers;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Tests.UI;
+using Epsitec.Common.Support;
 
 [assembly: Controller (typeof (PlaceholderTest.Test1Controller))]
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Tests.UI
 {
 	[TestFixture]
 	public class PlaceholderTest
@@ -32,8 +36,8 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckControllerCreation()
 		{
-			IController c1 = UI.Controllers.ControllerFactory.CreateController ("Test1", new Controllers.ControllerParameters ("x"));
-			IController c2 = UI.Controllers.ControllerFactory.CreateController ("Test1", new Controllers.ControllerParameters ("y"));
+			IController c1 = ControllerFactory.CreateController ("Test1", new ControllerParameters ("x"));
+			IController c2 = ControllerFactory.CreateController ("Test1", new ControllerParameters ("y"));
 
 			Assert.IsNotNull (c1);
 			Assert.IsNotNull (c2);
@@ -51,12 +55,12 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckControllerParameters()
 		{
-			Controllers.ControllerParameters parameters1 = new Controllers.ControllerParameters (null);
-			Controllers.ControllerParameters parameters2 = new Controllers.ControllerParameters ("");
-			Controllers.ControllerParameters parameters3 = new Controllers.ControllerParameters ("a");
-			Controllers.ControllerParameters parameters4 = new Controllers.ControllerParameters ("a=1 b=2 c=x=y");
-			Controllers.ControllerParameters parameters5 = new Controllers.ControllerParameters ("a=1 b=2 a=3");
-			Controllers.ControllerParameters parameters6 = new Controllers.ControllerParameters ("a=0  c=x=y b=2 a=1 ");
+			ControllerParameters parameters1 = new ControllerParameters (null);
+			ControllerParameters parameters2 = new ControllerParameters ("");
+			ControllerParameters parameters3 = new ControllerParameters ("a");
+			ControllerParameters parameters4 = new ControllerParameters ("a=1 b=2 c=x=y");
+			ControllerParameters parameters5 = new ControllerParameters ("a=1 b=2 a=3");
+			ControllerParameters parameters6 = new ControllerParameters ("a=0  c=x=y b=2 a=1 ");
 
 			Assert.AreEqual (parameters1, parameters2);
 			Assert.AreEqual (parameters4, parameters6);
@@ -132,7 +136,7 @@ namespace Epsitec.Common.UI
 			grid.RowDefinitions[2].TopBorder = -1;
 			grid.RowDefinitions[3].TopBorder = -1;
 
-			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+			Panel panel = new Epsitec.Common.UI.Panel ();
 
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
@@ -199,7 +203,7 @@ namespace Epsitec.Common.UI
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
-			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
+			panel.Padding = new Margins (8, 8, 5, 5);
 			panel.Dock = DockStyle.Fill;
 
 			panel.Children.Add (placeholder1);
@@ -213,9 +217,9 @@ namespace Epsitec.Common.UI
 			text.Text = "Label";
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
-			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 0, 0, 0);
-			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.BackColor = Color.FromBrightness (0.6);
+			text.Margins = new Margins (0, 0, 0, 0);
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
@@ -225,9 +229,9 @@ namespace Epsitec.Common.UI
 			text.Text = "Data fields";
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
-			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 0, 0, 0);
-			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.BackColor = Color.FromBrightness (0.6);
+			text.Margins = new Margins (0, 0, 0, 0);
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 1);
 			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
@@ -278,7 +282,7 @@ namespace Epsitec.Common.UI
 			grid.RowDefinitions[2].TopBorder = -1;
 			grid.RowDefinitions[3].TopBorder = -1;
 
-			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+			Panel panel = new Epsitec.Common.UI.Panel ();
 
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
@@ -367,7 +371,7 @@ namespace Epsitec.Common.UI
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
-			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
+			panel.Padding = new Margins (8, 8, 5, 5);
 			panel.Dock = DockStyle.Fill;
 
 			panel.Children.Add (placeholder1);
@@ -383,9 +387,9 @@ namespace Epsitec.Common.UI
 			text.Text = "Label";
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
-			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 0, 0, 0);
-			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.BackColor = Color.FromBrightness (0.6);
+			text.Margins = new Margins (0, 0, 0, 0);
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
@@ -395,9 +399,9 @@ namespace Epsitec.Common.UI
 			text.Text = "Data fields";
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
-			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 0, 0, 0);
-			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.BackColor = Color.FromBrightness (0.6);
+			text.Margins = new Margins (0, 0, 0, 0);
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 1);
 			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
@@ -464,8 +468,8 @@ namespace Epsitec.Common.UI
 			StructuredType staffType = new StructuredType ();
 			StructuredData staff = new StructuredData (staffType);
 
-			staffType.Fields.Add (new StructuredTypeField ("Boss", type, Support.Druid.Empty, 0, FieldRelation.Reference));
-			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Support.Druid.Empty, 0, FieldRelation.Collection));
+			staffType.Fields.Add (new StructuredTypeField ("Boss", type, Druid.Empty, 0, FieldRelation.Reference));
+			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Druid.Empty, 0, FieldRelation.Collection));
 
 			List<StructuredData> list = new List<StructuredData> ();
 			list.Add (data1);
@@ -527,12 +531,12 @@ namespace Epsitec.Common.UI
 
 			Panel panel = new Panel ();
 
-			panel.ResourceManager = Support.Resources.DefaultManager;
+			panel.ResourceManager = Epsitec.Common.Support.Resources.DefaultManager;
 			panel.Children.Add (placeholder);
 
 			string xml = Panel.SerializePanel (panel);
 
-			panel = Panel.DeserializePanel (xml, null, Support.Resources.DefaultManager);
+			panel = Panel.DeserializePanel (xml, null, Epsitec.Common.Support.Resources.DefaultManager);
 			placeholder = panel.Children[0] as TablePlaceholder;
 
 			Assert.AreEqual (3, placeholder.Columns.Count);
@@ -637,7 +641,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckValueTypeObjectAndValueName()
 		{
-			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+			Panel panel = new Epsitec.Common.UI.Panel ();
 
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
@@ -684,9 +688,9 @@ namespace Epsitec.Common.UI
 
 		#region TestController1 Class
 
-		internal class Test1Controller : UI.Controllers.AbstractController
+		internal class Test1Controller : AbstractController
 		{
-			public Test1Controller(Controllers.ControllerParameters parameters)
+			public Test1Controller(ControllerParameters parameters)
 				: base (parameters)
 			{
 			}

@@ -3,12 +3,14 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.UI;
 
 using NUnit.Framework;
 
 using System.Collections.Generic;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Tests.UI
 {
 	[TestFixture]
 	public class MetaButtonTest
@@ -33,22 +35,22 @@ namespace Epsitec.Common.UI
 			Widgets.Window window = new Widgets.Window ();
 
 			window.Text = "MetaButtonTest.Check01Variations";
-			window.ClientSize = new Drawing.Size (300, 600);
+			window.ClientSize = new Size (300, 600);
 
 			FrameBox box = new FrameBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Drawing.Margins (4, 4, 8, 8),
+				Margins = new Margins (4, 4, 8, 8),
 				Dock = DockStyle.Fill,
 				Embedder = window.Root
 			};
 
 			System.Action<MetaButton>[] modes = new System.Action<MetaButton>[]
 			{
-				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Drawing.Color.Empty; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.Left;  button.BulletColor = Drawing.Color.Empty; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.Below; button.BulletColor = Drawing.Color.Empty; button.PreferredHeight += button.MarkLength; },
-				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Drawing.Color.FromName ("Lime"); }
+				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Color.Empty; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.Left;  button.BulletColor = Color.Empty; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.Below; button.BulletColor = Color.Empty; button.PreferredHeight += button.MarkLength; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Color.FromName ("Lime"); }
 			};
 
 			foreach (System.Action<MetaButton> setup in modes)
@@ -59,7 +61,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text, DialogButton",
-					Margins = new Drawing.Margins (0, 0, 0, 2)
+					Margins = new Margins (0, 0, 0, 2)
 				};
 
 				MetaButton b2 = new MetaButton ()
@@ -69,7 +71,7 @@ namespace Epsitec.Common.UI
 					Embedder = box,
 					Text = "Text+Icon, DialogButton",
 					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Drawing.Margins (0, 0, 0, 2)
+					Margins = new Margins (0, 0, 0, 2)
 				};
 
 				MetaButton b3 = new MetaButton ()
@@ -78,7 +80,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text, RichDialogButton",
-					Margins = new Drawing.Margins (0, 0, 0, 2),
+					Margins = new Margins (0, 0, 0, 2),
 					PreferredHeight = 28
 				};
 
@@ -89,7 +91,7 @@ namespace Epsitec.Common.UI
 					Embedder = box,
 					Text = "Text+Icon, RichDialogButton",
 					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Drawing.Margins (0, 0, 0, 2),
+					Margins = new Margins (0, 0, 0, 2),
 					PreferredHeight = 28
 				};
 
@@ -99,7 +101,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text, FlatButton",
-					Margins = new Drawing.Margins (0, 0, 0, 2)
+					Margins = new Margins (0, 0, 0, 2)
 				};
 
 				MetaButton b6 = new MetaButton ()
@@ -109,7 +111,7 @@ namespace Epsitec.Common.UI
 					Embedder = box,
 					Text = "Text+Icon, FlatButton",
 					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
-					Margins = new Drawing.Margins (0, 0, 0, 2)
+					Margins = new Margins (0, 0, 0, 2)
 				};
 
 				setup (b1);
@@ -138,12 +140,12 @@ namespace Epsitec.Common.UI
 			Widgets.Window window = new Widgets.Window ();
 
 			window.Text = "MetaButtonTest.Check02CreateFromCommandId";
-			window.ClientSize = new Drawing.Size (400, 300);
+			window.ClientSize = new Size (400, 300);
 
 			FrameBox box = new FrameBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Drawing.Margins (4, 4, 8, 8),
+				Margins = new Margins (4, 4, 8, 8),
 				Dock = DockStyle.Fill,
 				Embedder = window.Root
 			};
@@ -154,7 +156,7 @@ namespace Epsitec.Common.UI
 				Dock = DockStyle.Stacked,
 				Embedder = box,
 				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Drawing.Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, 2),
 				PreferredHeight = 32
 			};
 
@@ -164,7 +166,7 @@ namespace Epsitec.Common.UI
 				Dock = DockStyle.Stacked,
 				Embedder = box,
 				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Drawing.Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, 2),
 				PreferredHeight = 32
 			};
 
@@ -174,7 +176,7 @@ namespace Epsitec.Common.UI
 				Dock = DockStyle.Stacked,
 				Embedder = box,
 				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Drawing.Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, 2),
 				PreferredHeight = 32
 			};
 
@@ -183,7 +185,7 @@ namespace Epsitec.Common.UI
 				Dock = DockStyle.Stacked,
 				Embedder = box,
 				PreferredHeight = 1,
-				Margins = new Drawing.Margins (0, 0, 0, 2)
+				Margins = new Margins (0, 0, 0, 2)
 			};
 
 			MetaButton b4 = new MetaButton ()
@@ -191,7 +193,7 @@ namespace Epsitec.Common.UI
 				Dock = DockStyle.Stacked,
 				Embedder = box,
 				CommandId = ApplicationCommands.Cut.Caption.Id,
-				Margins = new Drawing.Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, 2),
 				PreferredHeight = 32
 			};
 			

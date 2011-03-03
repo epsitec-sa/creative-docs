@@ -5,8 +5,11 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types.Serialization;
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Tests.UI
 {
 	[TestFixture]
 	public class DataSourceMetadataTest
@@ -43,7 +46,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelMetadata()
 		{
-			Support.ResourceManager manager = Support.Resources.DefaultManager;
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
@@ -93,7 +96,7 @@ namespace Epsitec.Common.UI
 		public void CheckSerializationWithPanel()
 		{
 			string xml;
-			Support.ResourceManager manager = Support.Resources.DefaultManager;
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
 			panel.DataSource = new DataSource ();
@@ -122,7 +125,7 @@ namespace Epsitec.Common.UI
 		public void CheckSerializationWithPanelAndNoDataSource()
 		{
 			string xml;
-			Support.ResourceManager manager = Support.Resources.DefaultManager;
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
@@ -150,12 +153,12 @@ namespace Epsitec.Common.UI
 
 		private static string SerializeToString(DataSourceMetadata metadata)
 		{
-			return Types.Serialization.SimpleSerialization.SerializeToString (metadata, "metadata", System.Xml.Formatting.Indented);
+			return SimpleSerialization.SerializeToString (metadata, "metadata", System.Xml.Formatting.Indented);
 		}
 
 		private static DataSourceMetadata DeserializeMetadataFromString(string xml)
 		{
-			return Types.Serialization.SimpleSerialization.DeserializeFromString (xml, "metadata") as DataSourceMetadata;
+			return SimpleSerialization.DeserializeFromString (xml, "metadata") as DataSourceMetadata;
 		}
 
 		#endregion

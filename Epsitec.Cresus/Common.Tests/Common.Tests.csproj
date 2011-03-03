@@ -145,6 +145,13 @@
     <Compile Include="Types\SerializationTest.cs" />
     <Compile Include="Types\StructuredTest.cs" />
     <Compile Include="Types\TypeRosettaTest.cs" />
+    <Compile Include="UI\DataSourceMetadataTest.cs" />
+    <Compile Include="UI\DataSourceTest.cs" />
+    <Compile Include="UI\ItemPanelTest.cs" />
+    <Compile Include="UI\MetaButtonTest.cs" />
+    <Compile Include="UI\PanelTest.cs" />
+    <Compile Include="UI\PlaceholderTest.cs" />
+    <Compile Include="Resources\Cresus.Tests\SourceCode\Res.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
@@ -323,6 +330,39 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\OtherModule\captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF01.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF02.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF03.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF04.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF05.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF06.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Tests\_KF07.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

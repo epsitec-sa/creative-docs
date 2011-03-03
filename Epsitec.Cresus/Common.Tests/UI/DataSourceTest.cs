@@ -5,8 +5,11 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types.Serialization;
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Tests.UI
 {
 	[TestFixture]
 	public class DataSourceTest
@@ -122,8 +125,8 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelSerializationContext()
 		{
-			Support.ResourceManager manager = new Support.ResourceManager ();
-			Panel panel = new UI.Panel ();
+			ResourceManager manager = new ResourceManager ();
+			Panel panel = new Panel ();
 			DataSource collection = new DataSource ();
 
 			panel.DataSource = collection;
@@ -140,9 +143,9 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (source1, StructuredTree.GetValue (collection, "A"));
 			Assert.AreEqual (source2, StructuredTree.GetValue (collection, "B"));
 
-			Types.Serialization.Context context = new Types.Serialization.Context ();
+			Context context = new Context ();
 
-			UI.Panel.FillSerializationContext (context, collection, manager);
+			Panel.FillSerializationContext (context, collection, manager);
 
 			Assert.AreEqual (2, context.ExternalMap.TagCount);
 			Assert.AreEqual ("_DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
@@ -177,12 +180,12 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelDataSourceBinding1()
 		{
-			Panel panel = new UI.Panel ();
+			Panel panel = new Panel ();
 			DataSource collection = new DataSource ();
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields.Add ("Label", Types.StringType.NativeDefault);
+			type.Fields.Add ("Label", StringType.NativeDefault);
 			data.SetValue ("Label", "Hello");
 
 			panel.DataSource = collection;
@@ -207,7 +210,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelDataSourceBinding2()
 		{
-			Panel panel = new UI.Panel ();
+			Panel panel = new Panel ();
 			DataSource source = new DataSource ();
 			
 			StructuredType type1 = new StructuredType ();
@@ -216,10 +219,10 @@ namespace Epsitec.Common.UI
 			StructuredData data1 = new StructuredData (type1);
 			StructuredData data2 = new StructuredData (type2);
 
-			type1.Fields.Add ("A", Types.StringType.NativeDefault);
+			type1.Fields.Add ("A", StringType.NativeDefault);
 			type1.Fields.Add ("R", type2);
 
-			type2.Fields.Add ("B", Types.StringType.NativeDefault);
+			type2.Fields.Add ("B", StringType.NativeDefault);
 			
 			data1.SetValue ("A", "a");
 			data1.SetValue ("R", data2);
@@ -280,11 +283,11 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "B.Name").Type.GetType ());
 			Assert.AreEqual (typeof (IntegerType), StructuredTree.GetField (type, "B.BirthDateYear").Type.GetType ());
 
-			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
-			Assert.AreEqual (null, Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B").Type));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A.Name").Type));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.Name").Type));
-			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.BirthDateYear").Type));
+			Assert.AreEqual (typeof (Widgets.Visual), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
+			Assert.AreEqual (null, TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B").Type));
+			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A.Name").Type));
+			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.Name").Type));
+			Assert.AreEqual (typeof (int), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.BirthDateYear").Type));
 		}
 
 		[Test]
