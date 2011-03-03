@@ -341,7 +341,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			if (metadoc == null)
 			{
 				DocumentMetadataEntity example = new DocumentMetadataEntity ();
+				throw new System.NotImplementedException ();
+#if false
 				example.BusinessDocument = this.Entity;
+#endif
 				example.IsArchive = false;
 
 				return this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();

@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 
+using Epsitec.Cresus.Core.Document;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Globalization;

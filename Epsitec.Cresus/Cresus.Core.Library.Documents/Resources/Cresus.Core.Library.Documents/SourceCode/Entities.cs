@@ -10,6 +10,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[HVA3]", typeof (Epsitec.Cresus.Core.Entities.DocumentPrintingUnitsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[HVA4]", typeof (Epsitec.Cresus.Core.Entities.AbstractDocumentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[HVAC]", typeof (Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[HVAM1]", typeof (Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity))]
 #region Epsitec.Cresus.Core.DocumentMetadata Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -290,6 +291,50 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DocumentState</c> field.
+		///	designer:fld/HVA/HVAI1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAI1]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentState DocumentState
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentState> ("[HVAI1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentState oldValue = this.DocumentState;
+				if (oldValue != value || !this.IsFieldDefined("[HVAI1]"))
+				{
+					this.OnDocumentStateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentState> ("[HVAI1]", oldValue, value);
+					this.OnDocumentStateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BusinessDocument</c> field.
+		///	designer:fld/HVA/HVAL1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAL1]")]
+		public global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity BusinessDocument
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity> ("[HVAL1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity oldValue = this.BusinessDocument;
+				if (oldValue != value || !this.IsFieldDefined("[HVAL1]"))
+				{
+					this.OnBusinessDocumentChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity> ("[HVAL1]", oldValue, value);
+					this.OnBusinessDocumentChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedDocumentVersions</c> field.
 		///	designer:fld/HVA/HVAE
 		///	</summary>
@@ -306,6 +351,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDocumentTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDocumentCategoryChanging(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
 		partial void OnDocumentCategoryChanged(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
+		partial void OnDocumentStateChanging(global::Epsitec.Cresus.Core.Business.DocumentState oldValue, global::Epsitec.Cresus.Core.Business.DocumentState newValue);
+		partial void OnDocumentStateChanged(global::Epsitec.Cresus.Core.Business.DocumentState oldValue, global::Epsitec.Cresus.Core.Business.DocumentState newValue);
+		partial void OnBusinessDocumentChanging(global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity newValue);
+		partial void OnBusinessDocumentChanged(global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -423,19 +472,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/HVA1/HVA7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[HVA7]")]
-		public global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity DocumentType
+		public global::Epsitec.Cresus.Core.Business.DocumentType DocumentType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> ("[HVA7]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentType> ("[HVA7]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue = this.DocumentType;
+				global::Epsitec.Cresus.Core.Business.DocumentType oldValue = this.DocumentType;
 				if (oldValue != value || !this.IsFieldDefined("[HVA7]"))
 				{
 					this.OnDocumentTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> ("[HVA7]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentType> ("[HVA7]", oldValue, value);
 					this.OnDocumentTypeChanged (oldValue, value);
 				}
 			}
@@ -464,9 +513,57 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentPrintingUnitsEntity> ("[HVA9]");
 			}
 		}
+		///	<summary>
+		///	The <c>DocumentFlowDirection</c> field.
+		///	designer:fld/HVA1/HVAJ1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAJ1]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentFlowDirection DocumentFlowDirection
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[HVAJ1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue = this.DocumentFlowDirection;
+				if (oldValue != value || !this.IsFieldDefined("[HVAJ1]"))
+				{
+					this.OnDocumentFlowDirectionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentFlowDirection> ("[HVAJ1]", oldValue, value);
+					this.OnDocumentFlowDirectionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DocumentSource</c> field.
+		///	designer:fld/HVA1/HVAK1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAK1]")]
+		public global::Epsitec.Cresus.Core.Business.DocumentSource DocumentSource
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[HVAK1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.DocumentSource oldValue = this.DocumentSource;
+				if (oldValue != value || !this.IsFieldDefined("[HVAK1]"))
+				{
+					this.OnDocumentSourceChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.DocumentSource> ("[HVAK1]", oldValue, value);
+					this.OnDocumentSourceChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnDocumentTypeChanging(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
-		partial void OnDocumentTypeChanged(global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity newValue);
+		partial void OnDocumentTypeChanging(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
+		partial void OnDocumentTypeChanged(global::Epsitec.Cresus.Core.Business.DocumentType oldValue, global::Epsitec.Cresus.Core.Business.DocumentType newValue);
+		partial void OnDocumentFlowDirectionChanging(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
+		partial void OnDocumentFlowDirectionChanged(global::Epsitec.Cresus.Core.Business.DocumentFlowDirection oldValue, global::Epsitec.Cresus.Core.Business.DocumentFlowDirection newValue);
+		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
+		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -808,6 +905,119 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 12);	// [HVAC]
 		public static readonly new string EntityStructuredTypeKey = "[HVAC]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.DocumentCategoryMapping Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>DocumentCategoryMapping</c> entity.
+	///	designer:cap/HVAM1
+	///	</summary>
+	public partial class DocumentCategoryMappingEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/HVAM1/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/HVAM1/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/HVAM1/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>PrintableEntityName</c> field.
+		///	designer:fld/HVAM1/HVAN1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAN1]")]
+		public string PrintableEntityName
+		{
+			get
+			{
+				return this.GetField<string> ("[HVAN1]");
+			}
+			set
+			{
+				string oldValue = this.PrintableEntityName;
+				if (oldValue != value || !this.IsFieldDefined("[HVAN1]"))
+				{
+					this.OnPrintableEntityNameChanging (oldValue, value);
+					this.SetField<string> ("[HVAN1]", oldValue, value);
+					this.OnPrintableEntityNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DocumentCategories</c> field.
+		///	designer:fld/HVAM1/HVAO1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVAO1]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> DocumentCategories
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity> ("[HVAO1]");
+			}
+		}
+		
+		partial void OnPrintableEntityNameChanging(string oldValue, string newValue);
+		partial void OnPrintableEntityNameChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 54);	// [HVAM1]
+		public static readonly new string EntityStructuredTypeKey = "[HVAM1]";
 	}
 }
 #endregion

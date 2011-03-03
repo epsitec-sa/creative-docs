@@ -9,6 +9,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Document;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.Verbose;
 using Epsitec.Cresus.Core.Print.Serialization;

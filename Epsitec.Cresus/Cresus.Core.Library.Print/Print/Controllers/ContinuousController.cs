@@ -1,14 +1,11 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
-using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Printing;
-using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Document;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print
+namespace Epsitec.Cresus.Core.Document
 {
 	public enum DocumentOption
 	{

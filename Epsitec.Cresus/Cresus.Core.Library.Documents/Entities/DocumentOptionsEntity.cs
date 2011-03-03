@@ -4,9 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Print;
-using Epsitec.Cresus.Core.Print.Verbose;
+using Epsitec.Cresus.Core.Document;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +16,8 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
-			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>", this.GetOptionsSummary ()));
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>"
+				/*, this.GetOptionsSummary ()*/));
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -37,7 +36,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-
+#if false
 		private FormattedText GetOptionsSummary()
 		{
 			var dict = this.GetOptions ();
@@ -98,6 +97,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return builder.ToString ();
 		}
+#endif
 
 		public OptionsDictionary GetOptions()
 		{
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var option = Print.Common.StringToDocumentOption (split[i]);
+						var option = OptionsDictionary.StringToDocumentOption (split[i]);
 						dict.Add (option, split[i+1]);
 					}
 				}

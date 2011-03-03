@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				Dock = DockStyle.Top,
 			};
 
-			var editor = new DocumentOptionsEditorController (this.Orchestrator, this.BusinessContext, this.Entity);
+			var editor = new DocumentOptionsEditorController (this.BusinessContext, this.Entity);
 
 			editor.CreateUI (box);
 		}

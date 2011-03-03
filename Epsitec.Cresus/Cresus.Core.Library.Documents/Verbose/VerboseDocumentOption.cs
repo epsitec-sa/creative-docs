@@ -1,12 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Cresus.Core.Print;
-
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print.Verbose
+namespace Epsitec.Cresus.Core.Document.Verbose
 {
 	public class VerboseDocumentOption
 	{
@@ -120,6 +118,8 @@ namespace Epsitec.Cresus.Core.Print.Verbose
 		{
 			get
 			{
+				throw new System.NotImplementedException ();
+#if false
 				var types = Business.Enumerations.GetAllPossibleDocumentType ();
 				var strings = new List<string> ();
 
@@ -139,6 +139,7 @@ namespace Epsitec.Cresus.Core.Print.Verbose
 				}
 
 				return string.Join ("<br/>", strings);
+#endif
 			}
 		}
 

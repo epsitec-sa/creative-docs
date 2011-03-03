@@ -15,6 +15,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(DocumentMetadataEntity entity)
 		{
+			throw new System.NotImplementedException ();
+#if false
+
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
 
@@ -22,6 +25,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var nextId    = generator.GetNextId ();
 
 			entity.IdA                   = string.Format ("{0:000000}", nextId);
+#endif
 			entity.DocumentTitle         = "";
 			entity.Description           = "";
 			entity.FileName              = null;
@@ -33,9 +37,12 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		public override void ApplyBindRule(DocumentMetadataEntity entity)
 		{
+			throw new System.NotImplementedException ();
+#if false
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			businessContext.Register (entity.BusinessDocument);
+#endif
 		}
 
 		public override void ApplyUpdateRule(DocumentMetadataEntity entity)

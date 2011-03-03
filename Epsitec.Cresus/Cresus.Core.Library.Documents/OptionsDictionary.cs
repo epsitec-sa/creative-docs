@@ -2,10 +2,9 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
-using System.Xml.Linq;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print
+namespace Epsitec.Cresus.Core.Document
 {
 	/// <summary>
 	/// Ce dictionnaire contient toutes les options permettant d'adapter l'impression d'un document.
@@ -19,6 +18,24 @@ namespace Epsitec.Cresus.Core.Print
 			this.dictionary = new Dictionary<DocumentOption, string> ();
 		}
 
+		public static string DocumentOptionToString(DocumentOption option)
+		{
+			return option.ToString ();
+		}
+
+		public static DocumentOption StringToDocumentOption(string name)
+		{
+			DocumentOption option;
+
+			if (System.Enum.TryParse (name, out option))
+			{
+				return option;
+			}
+			else
+			{
+				return DocumentOption.None;
+			}
+		}
 
 		public void Clear()
 		{
@@ -100,7 +117,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			foreach (var pair in this.dictionary)
 			{
-				list.Add (Common.DocumentOptionToString (pair.Key));
+				list.Add (OptionsDictionary.DocumentOptionToString (pair.Key));
 				list.Add (pair.Value);
 			}
 
@@ -118,7 +135,7 @@ namespace Epsitec.Cresus.Core.Print
 
 				for (int i = 0; i < list.Length-1; i+=2)
 				{
-					var option = Common.StringToDocumentOption (list[i]);
+					var option = OptionsDictionary.StringToDocumentOption (list[i]);
 					var value = list[i+1];
 
 					this.dictionary.Add (option, value);

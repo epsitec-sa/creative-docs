@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// <summary>
 	/// Classe d'extension pour Epsitec.Common.Widgets.CellTable.
 	/// </summary>
-	public static class CellTableHelper
+	public static class CellTableExtensions
 	{
 		public static void FillRow(this CellTable table, int row, params ContentAlignment[] alignments)
 		{

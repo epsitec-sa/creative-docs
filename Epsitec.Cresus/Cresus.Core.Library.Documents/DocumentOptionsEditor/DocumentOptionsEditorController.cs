@@ -8,7 +8,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.PlugIns;
 
 using System.Collections.Generic;
@@ -18,13 +17,11 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 {
 	public sealed class DocumentOptionsEditorController : System.IDisposable
 	{
-		public DocumentOptionsEditorController(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
+		public DocumentOptionsEditorController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
 		{
-			System.Diagnostics.Debug.Assert (orchestrator != null);
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentOptionsEntity.IsNotNull ());
 
-			this.orchestrator            = orchestrator;
 			this.businessContext         = businessContext;
 			this.documentOptionsEntity   = documentOptionsEntity;
 			
@@ -46,6 +43,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			this.mainController.CreateUI (box);
 		}
 
+#if false
 		public void NavigateTo(PriceCalculatorEntity entity)
 		{
 			var mainViewController    = this.orchestrator.MainViewController;
@@ -53,12 +51,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			
 			browserViewController.Select (entity);
 		}
-
+#endif
 
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.mainController.SaveDesign ();
-			this.businessContext.DataContext.SaveChanges ();
+			this.businessContext.SaveChanges ();
 		}
 
 
@@ -72,8 +70,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		#endregion
 
 
-		private readonly DataViewOrchestrator				orchestrator;
-		private readonly BusinessContext					businessContext;
+		private readonly IBusinessContext					businessContext;
 		private readonly DocumentOptionsEntity				documentOptionsEntity;
 
 		private MainController								mainController;

@@ -64,13 +64,11 @@
     <Compile Include="Print\Containers\PageContainer.cs" />
     <Compile Include="Print\Controllers\ContinuousController.cs" />
     <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
-    <Compile Include="Print\DocumentOption.cs" />
     <Compile Include="Print\EntityPrinters\AbstractPrinter.cs" />
     <Compile Include="Print\EntityPrinters\DocumentMetadataMailContactPrinter.cs" />
     <Compile Include="Print\EntityPrinters\DocumentMetadataPrinter.cs" />
     <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Print\JobToPrint.cs" />
-    <Compile Include="Print\OptionsDictionary.cs" />
     <Compile Include="Print\PageType.cs" />
     <Compile Include="Print\PreviewMode.cs" />
     <Compile Include="Print\PrintEngine.cs" />
@@ -82,8 +80,6 @@
     <Compile Include="Print\Serialization\DeserializedPage.cs" />
     <Compile Include="Print\Serialization\DeserializedSection.cs" />
     <Compile Include="Print\Serialization\SerializationEngine.cs" />
-    <Compile Include="Print\Verbose\DocumentOptionValueType.cs" />
-    <Compile Include="Print\Verbose\VerboseDocumentOption.cs" />
     <Compile Include="Print\Verbose\VerbosePageType.cs" />
     <Compile Include="Print\XmlJobPrintEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +103,10 @@
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
+      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
+      <Name>Cresus.Core.Library.Documents</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>

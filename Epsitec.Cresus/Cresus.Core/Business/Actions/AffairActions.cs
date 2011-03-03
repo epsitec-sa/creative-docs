@@ -24,7 +24,11 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var businessDocument = businessContext.CreateEntity<BusinessDocumentEntity> ();
 
 			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
+
+			throw new System.NotImplementedException ();
+#if false
 			documentMetadata.BusinessDocument = businessDocument;
+#endif
 			
 			documentMetadata.Workflow = WorkflowFactory.CreateDefaultWorkflow<DocumentMetadataEntity> (businessContext, "Document/SalesQuote");
 

@@ -1,19 +1,16 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Document;
+using Epsitec.Cresus.Core.Document.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print;
-using Epsitec.Cresus.Core.Print.Verbose;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -492,7 +489,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				foreach (var button in this.optionButtons)
 				{
-					var option = Print.Common.StringToDocumentOption (button.Name);
+					var option = OptionsDictionary.StringToDocumentOption (button.Name);
 
 					if (printingUnit.OptionsDictionary.ContainsOption (option))
 					{
@@ -607,7 +604,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					var check = new CheckButton
 					{
 						Parent = parent,
-						Name = Print.Common.DocumentOptionToString (documentOption.Option),
+						Name = OptionsDictionary.DocumentOptionToString (documentOption.Option),
 						Text = documentOption.Description,
 						AcceptThreeState = true,
 						ActiveState = ActiveState.Maybe,
@@ -619,7 +616,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					check.Clicked += delegate
 					{
 						PrintingUnit printingUnit = this.SelectedPrinter;
-						var option = Print.Common.StringToDocumentOption (check.Name);
+						var option = OptionsDictionary.StringToDocumentOption (check.Name);
 
 						if (check.ActiveState == ActiveState.Maybe)
 						{

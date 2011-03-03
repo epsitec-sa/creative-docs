@@ -132,7 +132,6 @@
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessBillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
-    <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageBlobViewController.cs" />
@@ -158,18 +157,10 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
-    <Compile Include="DocumentOptionsEditor\ValuesController.cs" />
-    <Compile Include="DocumentOptionsEditor\SelectController.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
-    <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\MainController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\SelectController.cs" />
     <Compile Include="DocumentPrintingUnitsEditor\ValuesController.cs" />
-    <Compile Include="Entities\DocumentCategoryMappingEntity.cs" />
-    <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
-    <Compile Include="Entities\DocumentCategoryEntity.cs" />
-    <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Hack.cs" />
     <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
     <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
@@ -191,7 +182,6 @@
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
-    <Compile Include="Entities\DocumentMetadataEntity.cs" />
     <Compile Include="Entities\BusinessDocumentEntity.cs" />
     <Compile Include="Entities\RelationEntity.cs" />
     <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
@@ -409,6 +399,10 @@
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
+      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
+      <Name>Cresus.Core.Library.Documents</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>

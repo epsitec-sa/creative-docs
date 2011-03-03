@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print.Verbose
+namespace Epsitec.Cresus.Core.Document.Verbose
 {
 	public enum DocumentOptionValueType
 	{

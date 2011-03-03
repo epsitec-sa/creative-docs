@@ -17,26 +17,6 @@ namespace Epsitec.Cresus.Core.Print
 {
 	public static class Common
 	{
-		public static string DocumentOptionToString(DocumentOption option)
-		{
-			return option.ToString ();
-		}
-
-		public static DocumentOption StringToDocumentOption(string name)
-		{
-			DocumentOption option;
-
-			if (System.Enum.TryParse (name, out option))
-			{
-				return option;
-			}
-			else
-			{
-				return DocumentOption.None;
-			}
-		}
-
-
 		public static string PageTypeToString(PageType type)
 		{
 			return type.ToString ();

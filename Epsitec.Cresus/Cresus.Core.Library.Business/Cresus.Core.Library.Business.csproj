@@ -50,10 +50,6 @@
     <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
-    <Compile Include="Business\DocumentFlowDirection.cs" />
-    <Compile Include="Business\DocumentSource.cs" />
-    <Compile Include="Business\DocumentState.cs" />
-    <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
@@ -127,7 +123,6 @@
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Res.cs" />
     <Compile Include="UIBuilder.cs" />
-    <Compile Include="Widgets\CellTableHelper.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\Miniature.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
@@ -183,6 +178,10 @@
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
       <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
+      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
+      <Name>Cresus.Core.Library.Documents</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>

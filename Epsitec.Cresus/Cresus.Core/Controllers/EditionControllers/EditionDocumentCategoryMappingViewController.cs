@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), Business.Enumerations.GetAllPrintableEntities (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntityName, x => this.Entity.PrintableEntityName = x), Business.Enumerations.GetAllPrintableEntities (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
 		private void CreateUICategories(UIBuilder builder)

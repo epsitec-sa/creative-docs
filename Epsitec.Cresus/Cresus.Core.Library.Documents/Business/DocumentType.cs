@@ -40,6 +40,6 @@ namespace Epsitec.Cresus.Core.Business
 		Summary					= 10000,			//	résumé générique
 
 		Debug1					= 80000,
-		Debug2					= 80000,
+		Debug2					= 80001,
 	}
 }

@@ -1,6 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Repositories;
@@ -54,5 +55,9 @@ namespace Epsitec.Cresus.Core
 			get;
 			set;
 		}
+
+		void NotifyExternalChanges();
+
+		event EventHandler<CancelEventArgs> SavingChanges;
 	}
 }
