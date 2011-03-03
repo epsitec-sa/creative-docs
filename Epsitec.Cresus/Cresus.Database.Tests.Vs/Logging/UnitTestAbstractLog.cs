@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database.Logging;
-using Epsitec.Cresus.Database.UnitTests.Helpers;
+using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using FirebirdSql.Data.FirebirdClient;
 
@@ -18,7 +18,7 @@ using System.Linq;
 
 
 
-namespace Epsitec.Cresus.Database.UnitTests.Logging
+namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 {
 
 

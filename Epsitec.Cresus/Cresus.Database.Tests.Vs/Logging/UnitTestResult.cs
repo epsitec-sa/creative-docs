@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database.UnitTests.Logging
+namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 {
 
 

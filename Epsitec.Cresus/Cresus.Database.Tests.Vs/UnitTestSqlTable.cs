@@ -2,12 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
-using Epsitec.Cresus.Database.UnitTests.Helpers;
+using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.Database.UnitTests
+namespace Epsitec.Cresus.Database.Tests.Vs
 {
 
 

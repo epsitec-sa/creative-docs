@@ -1,13 +1,13 @@
 using Epsitec.Common.UnitTesting;
 
-using Epsitec.Cresus.Database.UnitTests.Helpers;
+using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Data;
 
 
-namespace Epsitec.Cresus.Database.UnitTests
+namespace Epsitec.Cresus.Database.Tests.Vs
 {
 
 

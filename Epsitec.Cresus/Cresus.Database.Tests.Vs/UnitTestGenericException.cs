@@ -3,7 +3,7 @@
 
 
 using Epsitec.Cresus.Database.Exceptions;
-using Epsitec.Cresus.Database.UnitTests.Helpers;
+using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,7 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 
 
-namespace Epsitec.Cresus.Database.UnitTests
+namespace Epsitec.Cresus.Database.Tests.Vs
 {
 
 

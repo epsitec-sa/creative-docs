@@ -3,7 +3,7 @@
 using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.UnitTests.Helpers;
+using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database.UnitTests
+namespace Epsitec.Cresus.Database.Tests.Vs
 {
 	
 	

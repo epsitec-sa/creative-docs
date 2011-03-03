@@ -1,4 +1,4 @@
-﻿namespace Epsitec.Cresus.Database.UnitTests.Helpers
+﻿namespace Epsitec.Cresus.Database.Tests.Vs.Helpers
 {
 
 

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.Database.UnitTests.Logging
+namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 {
 
 
