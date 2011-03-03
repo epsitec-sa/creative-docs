@@ -174,18 +174,26 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		private void Close()
+		{
+			this.resourceName.Close ();
+			this.resourceSelector.Close ();
+			this.entityParameters.Close ();
+
+			this.parentWindow.MakeActive ();
+			this.window.Hide ();
+			this.OnClosed ();
+		}
+
+
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close ();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close ();
 		}
 
 		private void HandleButtonPrevClicked(object sender, MessageEventArgs e)
@@ -203,10 +211,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				this.parentWindow.MakeActive ();
-				this.window.Hide ();
-				this.OnClosed ();
-
+				this.Close ();
 				this.isEditOk = true;
 			}
 		}

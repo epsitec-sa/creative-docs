@@ -139,7 +139,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateTitle()
+		private void UpdateTitle()
 		{
 			//	Initialise le titre dans la partie supérieure du dialogue, qui explique
 			//	l'opération effectuée.
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void UpdateName()
+		private void UpdateName()
 		{
 			this.resourceName.Text = this.initialName;
 			this.resourceName.SelectAll();
@@ -199,37 +199,50 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		public void Close()
+		{
+			if (this.closed)
+			{
+				return;
+			}
+
+			if (this.buttonOk != null)  // mode "dialogue" (par opposition au mode "volet") ?
+			{
+				this.parentWindow.MakeActive ();
+				this.window.Hide ();
+				this.OnClosed ();
+			}
+
+			this.closed = true;
+		}
+
+
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close ();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close ();
 		}
 
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
+			this.Close ();
 			this.isEditOk = true;
 		}
 
 
 		private bool							isEditOk;
-		protected Operation						operation;
-		protected Type							type;
-		protected string						initialName;
-		protected StaticText					title;
-		protected TextField						resourceName;
-		protected Button						buttonOk;
-		protected Button						buttonCancel;
+		private bool							closed;
+		private Operation						operation;
+		private Type							type;
+		private string							initialName;
+
+		private StaticText						title;
+		private TextField						resourceName;
+		private Button							buttonOk;
+		private Button							buttonCancel;
 	}
 }

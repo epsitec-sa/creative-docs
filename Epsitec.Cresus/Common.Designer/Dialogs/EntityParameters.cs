@@ -293,45 +293,57 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		public void Close()
+		{
+			if (this.closed)
+			{
+				return;
+			}
+
+			if (this.buttonOk != null)  // mode "dialogue" (par opposition au mode "volet") ?
+			{
+				this.parentWindow.MakeActive ();
+				this.window.Hide ();
+				this.OnClosed ();
+			}
+
+			this.closed = true;
+		}
+
+
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close ();
 		}
 
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
+			this.Close ();
 			this.isEditOk = true;
 		}
 
 
-		private bool						isEditOk;
-		private string						titleEntity;
+		private bool							isEditOk;
+		private bool							closed;
+		private string							titleEntity;
 
-		private CheckButton					abstractClassButton;
-		private CheckButton					generateSchemaButton;
-		private CheckButton					generateRepositoryButton;
+		private CheckButton						abstractClassButton;
+		private CheckButton						generateSchemaButton;
+		private CheckButton						generateRepositoryButton;
 
-		private RadioButton					unknownButton;
-		private RadioButton					volatileButton;
-		private RadioButton					stableButton;
-		private RadioButton					immutableButton;
+		private RadioButton						unknownButton;
+		private RadioButton						volatileButton;
+		private RadioButton						stableButton;
+		private RadioButton						immutableButton;
 
-		private MyWidgets.EntitySample		entitySample;
+		private MyWidgets.EntitySample			entitySample;
 
-		private Button						buttonOk;
-		private Button						buttonCancel;
+		private Button							buttonOk;
+		private Button							buttonCancel;
 	}
 }

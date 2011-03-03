@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.
-			if ( this.window == null )
+			if (this.window == null)
 			{
 				this.window = new Window();
 				this.window.Icon = this.designerApplication.Icon;
@@ -278,6 +278,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		public Druid SelectedResource
+		{
+			get
+			{
+				return this.selectedResource;
+			}
+		}
+
 		public StructuredTypeClass StructuredTypeClass
 		{
 			get
@@ -298,7 +306,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void AccessChange(Module module)
+		private void AccessChange(Module module)
 		{
 			//	Change l'accès aux ressources dans un autre module.
 			this.module = module;
@@ -307,7 +315,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateAccess();
 		}
 
-		protected bool BestAccess()
+		private bool BestAccess()
 		{
 			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
 			//	bascule sur l'autre type (Types ou Entities). L'idée est d'anticiper sur l'utilisateur,
@@ -335,7 +343,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return false;
 		}
 
-		protected void UpdateAccess()
+		private void UpdateAccess()
 		{
 			if (this.resourceType == ResourceAccess.Type.Panels)
 			{
@@ -351,7 +359,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));
 		}
 
-		protected bool CollectionViewFilter(object obj)
+		private bool CollectionViewFilter(object obj)
 		{
 			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
@@ -418,7 +426,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateTitle()
+		private void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
 			string name = ResourceAccess.TypeDisplayName(this.resourceType);
@@ -457,7 +465,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.ignoreChanged = false;
 		}
 
-		protected void UpdateArray()
+		private void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau et sélectionne la ressource actuelle.
 			this.listResources.Items.Clear();
@@ -481,7 +489,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.ignoreChanged = false;
 		}
 
-		protected void UpdateButtons()
+		private void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
 			if (this.buttonUse != null)
@@ -497,7 +505,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void UpdateRadios()
+		private void UpdateRadios()
 		{
 			//	Met à jour les boutons radio pour changer le type.
 			if (this.operation == Operation.TypesOrEntities)
@@ -552,7 +560,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void UpdateInherit()
+		private void UpdateInherit()
 		{
 			//	Met à jour en fonction du bouton pour l'héritage.
 			if (this.operation == Operation.InheritEntities)
@@ -591,7 +599,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected bool IsInherit
+		private bool IsInherit
 		{
 			get
 			{
@@ -599,7 +607,35 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public Druid SelectedResource
+
+		public void Close()
+		{
+			//	Ferme proprement le dialogue.
+			if (this.closed)
+			{
+				return;
+			}
+
+			this.selectedResource = this.CurrentSelectedResource;
+
+			if (this.collectionView != null)
+			{
+				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
+				this.collectionView.Dispose ();
+				this.collectionView = null;
+			}
+
+			if (this.buttonUse != null)  // mode "dialogue" (par opposition au mode "volet") ?
+			{
+				this.parentWindow.MakeActive ();
+				this.window.Hide ();
+				this.OnClosed ();
+			}
+
+			this.closed = true;
+		}
+
+		private Druid CurrentSelectedResource
 		{
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
@@ -619,21 +655,6 @@ namespace Epsitec.Common.Designer.Dialogs
 					return cultureMap.Id;
 				}
 			}
-		}
-
-
-		protected void Close()
-		{
-			//	Ferme proprement le dialogue.
-			if (this.collectionView != null)
-			{
-				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
-				this.collectionView = null;
-			}
-
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
 		}
 
 
@@ -769,34 +790,36 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected Module						baseModule;
-		protected Module						lastModule;
-		protected Module						module;
-		protected Operation						operation;
-		protected ResourceAccess.Type			resourceType;
-		protected StructuredTypeClass			typeClass;
-		protected bool							isInherit;
-		protected ResourceAccess				access;
-		protected Druid							resource;
-		protected List<Druid>					typeIds;
-		protected bool							isNullable;
-		protected List<Druid>					exclude;
-		protected CollectionView				collectionView;
-		protected Common.Dialogs.DialogResult	result;
+		private Module							baseModule;
+		private Module							lastModule;
+		private Module							module;
+		private Operation						operation;
+		private ResourceAccess.Type				resourceType;
+		private StructuredTypeClass				typeClass;
+		private bool							isInherit;
+		private ResourceAccess					access;
+		private Druid							resource;
+		private Druid							selectedResource;
+		private List<Druid>						typeIds;
+		private bool							isNullable;
+		private List<Druid>						exclude;
+		private CollectionView					collectionView;
+		private Common.Dialogs.DialogResult		result;
+		private bool							closed;
 
-		protected StaticText					title;
-		protected RadioButton					radioTypes;
-		protected RadioButton					radioEntities;
-		protected CheckButton					checkInterface;
-		protected RadioButton					radioAlone;
-		protected RadioButton					radioInherit;
-		protected StaticText					header1;
-		protected ScrollList					listModules;
-		protected VSplitter						splitter;
-		protected StaticText					header2;
-		protected ScrollList					listResources;
-		protected CheckButton					buttonIsNullable;
-		protected Button						buttonUse;
-		protected Button						buttonCancel;
+		private StaticText						title;
+		private RadioButton						radioTypes;
+		private RadioButton						radioEntities;
+		private CheckButton						checkInterface;
+		private RadioButton						radioAlone;
+		private RadioButton						radioInherit;
+		private StaticText						header1;
+		private ScrollList						listModules;
+		private VSplitter						splitter;
+		private StaticText						header2;
+		private ScrollList						listResources;
+		private CheckButton						buttonIsNullable;
+		private Button							buttonUse;
+		private Button							buttonCancel;
 	}
 }

@@ -166,6 +166,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.srcBox = obj as ObjectBox;
 		}
 
+		public override string ToString()
+		{
+			return string.Format ("Entity={0} Root={1}", this.definingEntityId.ToString(), this.definingRootEntityId.ToString ());
+		}
+
 		public bool IsReadOnly
 		{
 			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
