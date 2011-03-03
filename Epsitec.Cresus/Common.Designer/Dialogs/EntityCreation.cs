@@ -166,6 +166,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (this.selectedFrameBox == 2 &&
 					this.resourceSelector.StructuredTypeClass == StructuredTypeClass.Interface)
 				{
+					//	Cela n'a pas de sens de choisir StructuredTypeFlags et DataLifetimeExpectancy
+					//	pour une interface. Donc, on cache le volet.
 					visibility = false;
 				}
 
@@ -178,6 +180,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (this.selectedFrameBox == 2)
 			{
+				//	Récupère le nom de l'entité à créer, choisi dans le premier volet.
 				this.EntityParameters.TitleEntity = this.resourceName.SelectedName;
 			}
 		}

@@ -608,6 +608,7 @@ namespace Epsitec.Common.Designer
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.BaseType, druid);
 
+				//	StructuredTypeFlags et DataLifetimeExpectancy n'ont pas de sens pour une interface.
 				if (typeClass != StructuredTypeClass.Interface)
 				{
 					data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
