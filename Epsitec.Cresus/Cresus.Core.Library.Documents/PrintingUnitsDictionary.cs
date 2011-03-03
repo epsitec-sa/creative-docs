@@ -2,10 +2,9 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
-using System.Xml.Linq;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print
+namespace Epsitec.Cresus.Core.Documents
 {
 	/// <summary>
 	/// Ce dictionnaire contient toutes les unités d'impression à utiliser pour l'impression d'un document.

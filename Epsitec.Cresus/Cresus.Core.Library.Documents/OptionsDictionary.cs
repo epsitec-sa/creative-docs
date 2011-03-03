@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Document
+namespace Epsitec.Cresus.Core.Documents
 {
 	/// <summary>
 	/// Ce dictionnaire contient toutes les options permettant d'adapter l'impression d'un document.

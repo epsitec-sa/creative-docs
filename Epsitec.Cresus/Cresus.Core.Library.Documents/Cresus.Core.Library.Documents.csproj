@@ -60,6 +60,9 @@
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="OptionsDictionary.cs" />
+    <Compile Include="PageType.cs" />
+    <Compile Include="PrintingUnit.cs" />
+    <Compile Include="PrintingUnitsDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Res.cs" />

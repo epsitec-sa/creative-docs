@@ -6,10 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.PlugIns;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +15,11 @@ namespace Epsitec.Cresus.Core.DocumentPrintingUnitsEditor
 {
 	public sealed class DocumentPrintingUnitsEditorController : System.IDisposable
 	{
-		public DocumentPrintingUnitsEditorController(DataViewOrchestrator orchestrator, Core.Business.BusinessContext businessContext, DocumentPrintingUnitsEntity documentPrintingUnitsEntity)
+		public DocumentPrintingUnitsEditorController(IBusinessContext businessContext, DocumentPrintingUnitsEntity documentPrintingUnitsEntity)
 		{
-			System.Diagnostics.Debug.Assert (orchestrator != null);
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentPrintingUnitsEntity.IsNotNull ());
 
-			this.orchestrator                = orchestrator;
 			this.businessContext             = businessContext;
 			this.documentPrintingUnitsEntity = documentPrintingUnitsEntity;
 			
@@ -46,15 +41,6 @@ namespace Epsitec.Cresus.Core.DocumentPrintingUnitsEditor
 			this.mainController.CreateUI (box);
 		}
 
-		public void NavigateTo(PriceCalculatorEntity entity)
-		{
-			var mainViewController    = this.orchestrator.MainViewController;
-			var browserViewController = mainViewController.BrowserViewController;
-			
-			browserViewController.Select (entity);
-		}
-
-
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.mainController.SaveDesign ();
@@ -72,8 +58,7 @@ namespace Epsitec.Cresus.Core.DocumentPrintingUnitsEditor
 		#endregion
 
 
-		private readonly DataViewOrchestrator				orchestrator;
-		private readonly BusinessContext					businessContext;
+		private readonly IBusinessContext					businessContext;
 		private readonly DocumentPrintingUnitsEntity		documentPrintingUnitsEntity;
 
 		private MainController								mainController;

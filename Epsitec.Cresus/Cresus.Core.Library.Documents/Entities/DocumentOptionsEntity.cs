@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Document;
+using Epsitec.Cresus.Core.Documents;
 
 using System.Collections.Generic;
 using System.Linq;

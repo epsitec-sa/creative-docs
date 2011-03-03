@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.Serialization;
 
 using System.Collections.Generic;

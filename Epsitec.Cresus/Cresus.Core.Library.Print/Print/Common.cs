@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.Serialization;
 
 using System.Collections.Generic;

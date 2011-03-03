@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Document.Verbose
+namespace Epsitec.Cresus.Core.Documents.Verbose
 {
 	public class VerboseDocumentOption
 	{

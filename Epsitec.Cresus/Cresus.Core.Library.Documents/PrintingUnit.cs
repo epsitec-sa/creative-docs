@@ -5,16 +5,11 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 
-using Epsitec.Cresus.Core.Document;
-
 using System.Collections.Generic;
-using System.IO;
-using System.Globalization;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
+using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Print
+namespace Epsitec.Cresus.Core.Documents
 {
 	/// <summary>
 	/// Une unité d'impression est un couple imprimante/bac.
@@ -140,13 +135,13 @@ namespace Epsitec.Cresus.Core.Print
 					                                    "LogicalName=",              this.LogicalName,
 					PrintingUnit.serializableSeparator, "PhysicalName=",             this.PhysicalPrinterName,
 					PrintingUnit.serializableSeparator, "Tray=",                     this.PhysicalPrinterTray,
-					PrintingUnit.serializableSeparator, "XOffset=",                  this.XOffset.ToString (CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "YOffset=",                  this.YOffset.ToString (CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "Copies=",                   this.Copies.ToString (CultureInfo.InvariantCulture),
+					PrintingUnit.serializableSeparator, "XOffset=",                  InvariantConverter.ToString (this.XOffset),
+					PrintingUnit.serializableSeparator, "YOffset=",					 InvariantConverter.ToString (this.YOffset),
+					PrintingUnit.serializableSeparator, "Copies=",                   InvariantConverter.ToString (this.Copies),
 					PrintingUnit.serializableSeparator, "Comment=",                  this.Comment,
 					PrintingUnit.serializableSeparator, "OptionsDictionary=",        this.optionsDictionary.GetSerializedData (),
-					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Width=",  this.PhysicalPaperSize.Width.ToString (CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Height=", this.PhysicalPaperSize.Height.ToString (CultureInfo.InvariantCulture),
+					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Width=",  InvariantConverter.ToString (this.PhysicalPaperSize.Width),
+					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Height=", InvariantConverter.ToString (this.PhysicalPaperSize.Height),
 					PrintingUnit.serializableSeparator, "PhysicalDuplexMode=",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
 					null  // pour permettre de terminer le dernier par une virgule !
 				);

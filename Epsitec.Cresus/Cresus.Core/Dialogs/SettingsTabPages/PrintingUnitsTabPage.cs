@@ -7,8 +7,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Document;
-using Epsitec.Cresus.Core.Document.Verbose;
+using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print;
 

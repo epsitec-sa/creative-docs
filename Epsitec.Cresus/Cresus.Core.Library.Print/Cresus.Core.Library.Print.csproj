@@ -69,12 +69,9 @@
     <Compile Include="Print\EntityPrinters\DocumentMetadataPrinter.cs" />
     <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Print\JobToPrint.cs" />
-    <Compile Include="Print\PageType.cs" />
     <Compile Include="Print\PreviewMode.cs" />
     <Compile Include="Print\PrintEngine.cs" />
     <Compile Include="Print\PrinterApplicationSettings.cs" />
-    <Compile Include="Print\PrintingUnit.cs" />
-    <Compile Include="Print\PrintingUnitsDictionary.cs" />
     <Compile Include="Print\SectionToPrint.cs" />
     <Compile Include="Print\Serialization\DeserializedJob.cs" />
     <Compile Include="Print\Serialization\DeserializedPage.cs" />

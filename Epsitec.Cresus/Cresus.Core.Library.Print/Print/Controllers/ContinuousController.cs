@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Document;
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 
