@@ -88,13 +88,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Cresus.Graph\Splash\SplashPhase.cs">
+    <Compile Include="..\App.CresusGraph\Splash\SplashPhase.cs">
       <Link>SplashPhase.cs</Link>
     </Compile>
-    <Compile Include="..\Cresus.Graph\Splash\SplashScreen.cs">
+    <Compile Include="..\App.CresusGraph\Splash\SplashScreen.cs">
       <Link>SplashScreen.cs</Link>
     </Compile>
-    <Compile Include="..\Cresus.Graph\Splash\Win32Api.cs">
+    <Compile Include="..\App.CresusGraph\Splash\Win32Api.cs">
       <Link>Win32Api.cs</Link>
     </Compile>
     <Compile Include="Application.cs" />
@@ -188,10 +188,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
