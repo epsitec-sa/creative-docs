@@ -18,7 +18,7 @@ namespace Epsitec.Common.Tests.Support
 		[SetUp]
 		public void SetUp()
 		{
-			this.manager = new ResourceManager (@"S:\Epsitec.Cresus\Common.Support.Tests");
+			this.manager = new ResourceManager (@"S:\Epsitec.Cresus\Common.Tests");
 			this.manager.DefineDefaultModuleName ("Test");
 			this.manager.ActivePrefix = "file";
 			this.manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("en");
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (31, modules[5].Id);
 			Assert.AreEqual (4, modules[6].Id);
 
-			Assert.AreEqual (@"%app%\common.support.tests\resources\test", this.manager.Pool.GetRootRelativePath (this.manager.DefaultModuleInfo.FullId.Path).ToLowerInvariant ());
+			Assert.AreEqual (@"%app%\Common.Tests\Resources\Test", this.manager.Pool.GetRootRelativePath (this.manager.DefaultModuleInfo.FullId.Path).ToLowerInvariant ());
 		}
 
 		[Test]
@@ -112,9 +112,9 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (null, this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Localized, Epsitec.Common.Support.Resources.FindCultureInfo ("de")));
 			Assert.AreEqual (null, this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Localized, Epsitec.Common.Support.Resources.FindCultureInfo ("en")));
 
-			Assert.AreEqual ("Cf. Common.Support.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Default)[Druid.Parse ("[7001]")].About);
+			Assert.AreEqual ("Cf. Common.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Default)[Druid.Parse ("[7001]")].About);
 			Assert.AreEqual ("Author muss nicht übersetzt werden", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("de"))[Druid.Parse ("[7001]")].About, "Incorrect override by 'de' over '00' of Field.About");
-			Assert.AreEqual ("Cf. Common.Support.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("en"))[Druid.Parse ("[7001]")].About, "Incorrect fallback from 'en' to '00' of Field.About");
+			Assert.AreEqual ("Cf. Common.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Epsitec.Common.Support.Resources.FindCultureInfo ("en"))[Druid.Parse ("[7001]")].About, "Incorrect fallback from 'en' to '00' of Field.About");
 
 			ResourceBundle bundle = this.manager.GetBundle (new Druid (4, 0, 0));
 

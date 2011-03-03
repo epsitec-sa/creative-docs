@@ -15,7 +15,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckCreateModuleInfo()
 		{
-			string root = @"S:\Epsitec.Cresus\Common.Support.Tests\Resources";
+			string root = @"S:\Epsitec.Cresus\Common.Tests\Resources";
 
 			ResourceModuleInfo info = new ResourceModuleInfo ();
 
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Tests.Support
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");
 
-			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Tests");
 			pool.ScanForModules ("%epsitec%");
 
 			Assert.AreEqual (10, Collection.Count (pool.Modules));
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Tests.Support
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");
 
-			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Tests");
 			pool.ScanForModules ("%epsitec%");
 
 			Assert.AreEqual (10, Collection.Count (pool.Modules));
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckGetVersionFingerprint()
 		{
-			string root = @"S:\Epsitec.Cresus\Common.Support.Tests\Resources";
+			string root = @"S:\Epsitec.Cresus\Common.Tests\Resources";
 
 			ResourceModuleInfo info = new ResourceModuleInfo ();
 
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Tests.Support
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");
 
 			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus");
-			pool.AddModuleRootPath ("%test%", @"S:\Epsitec.Cresus\Common.Support.Tests\Resources");
+			pool.AddModuleRootPath ("%test%", @"S:\Epsitec.Cresus\Common.Tests\Resources");
 
 			pool.ScanForModules ("%test%");
 
@@ -183,8 +183,8 @@ namespace Epsitec.Common.Tests.Support
 			ResourceModuleInfo info2 = pool.FindModuleInfo (@"%test%\Common.Support.Patch");
 
 			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info1.FullId.Path));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info1.FullId.Path));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support.Patch", pool.GetRootAbsolutePath (info2.FullId.Path));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info1.FullId.Path));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Tests\Resources\Common.Support.Patch", pool.GetRootAbsolutePath (info2.FullId.Path));
 			Assert.AreEqual (@"%epsitec%\Common.Support\Resources\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
 			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
 
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("Pierre Arnaud", ResourceModuleTest.GetText (stringAccessor1, 1, null));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 1, "de"));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 1, "en"));
-			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
+			Assert.AreEqual ("Cf. Common.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
 			Assert.AreEqual ("Author muss nicht übersetzt werden", ResourceModuleTest.GetComment (stringAccessor1, 1, "de"));
 			Assert.AreEqual (null, ResourceModuleTest.GetComment (stringAccessor1, 1, "en"));
 			
@@ -257,8 +257,8 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 3, "en"));											//	(no definition)
 			Assert.AreEqual ("Pierre Arnaud &amp; OPaC bright ideas", ResourceModuleTest.GetText (stringAccessor2, 3, "en"));		//	override
 			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 5, null));											//	local definition
-			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
-			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
+			Assert.AreEqual ("Cf. Common.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
+			Assert.AreEqual ("Cf. Common.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}
 
 		[Test]

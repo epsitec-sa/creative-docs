@@ -17,12 +17,12 @@ namespace Epsitec.Common.Tests.Support
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			
-			this.manager_en = new ResourceManager (@"S:\Epsitec.Cresus\Common.Support.Tests");
+			this.manager_en = new ResourceManager (@"S:\Epsitec.Cresus\Common.Tests");
 			this.manager_en.DefineDefaultModuleName ("Test");
 			this.manager_en.ActivePrefix = "file";
 			this.manager_en.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("en");
 
-			this.manager_fr = new ResourceManager (@"S:\Epsitec.Cresus\Common.Support.Tests");
+			this.manager_fr = new ResourceManager (@"S:\Epsitec.Cresus\Common.Tests");
 			this.manager_fr.DefineDefaultModuleName ("Test");
 			this.manager_fr.ActivePrefix = "file";
 			this.manager_fr.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("fr");

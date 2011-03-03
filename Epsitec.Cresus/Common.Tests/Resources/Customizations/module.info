@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="7" name="Common.Support" layer="s" textMode="String">
+  <Versions>
+    <Version id="1" build="1234" date="2011-03-03T09:32:14.9915503Z" />
+    <Version id="2" build="789" date="2007-08-19T08:11:12.0000000Z" />
+  </Versions>
+  <ReferenceModulePath>%test%\Common.Support</ReferenceModulePath>
+</ModuleInfo>
