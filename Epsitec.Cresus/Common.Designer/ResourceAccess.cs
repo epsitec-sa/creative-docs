@@ -923,7 +923,7 @@ namespace Epsitec.Common.Designer
 			return this.FormRelationEntity(entityId, druids, 0);
 		}
 
-		protected Druid FormRelationEntity(Druid entityId, string[] druids, int index)
+		private Druid FormRelationEntity(Druid entityId, string[] druids, int index)
 		{
 			IList<StructuredData> list = this.GetEntityDruidsPath(entityId);
 			Druid druid = Druid.Parse(druids[index]);
@@ -963,7 +963,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected CultureMap GetFormItem(Druid formId)
+		private CultureMap GetFormItem(Druid formId)
 		{
 			//	Retourne le CultureMap d'un masque.
 			Module module = this.designerApplication.SearchModule(formId);
@@ -1147,7 +1147,7 @@ namespace Epsitec.Common.Designer
 			return data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 		}
 
-		protected CultureMap GetEntityItem(Druid entityId)
+		private CultureMap GetEntityItem(Druid entityId)
 		{
 			//	Retourne le CultureMap d'une entité.
 			Module module = this.designerApplication.SearchModule(entityId);
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool CollectionViewFilter(object obj)
+		private bool CollectionViewFilter(object obj)
 		{
 			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Designer
 			return null;  // ok
 		}
 
-		protected static string CheckNames(string n1, string n2)
+		private static string CheckNames(string n1, string n2)
 		{
 			if (n1 == n2)
 			{
@@ -1400,7 +1400,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static bool CheckNamesOnce(string n1, string n2)
+		private static bool CheckNamesOnce(string n1, string n2)
 		{
 			if (n2.Length > n1.Length && n2.StartsWith(n1))
 			{
@@ -1771,7 +1771,7 @@ namespace Epsitec.Common.Designer
 			return (count != cultures.Count);
 		}
 
-		protected int GetModificationId(StructuredData data)
+		private int GetModificationId(StructuredData data)
 		{
 			if (data.IsEmpty)
 			{
@@ -2537,7 +2537,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void ClearFormMerge(CultureMap item)
+		private void ClearFormMerge(CultureMap item)
 		{
 			System.Diagnostics.Debug.Assert(this.accessor.BasedOnPatchModule);
 			System.Diagnostics.Debug.Assert(item.Source == CultureMapSource.DynamicMerge);
@@ -2577,7 +2577,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected string GetBundleName()
+		private string GetBundleName()
 		{
 			//	Retourne le nom du bundle (pour Common.Support & Cie) en fonction du type.
 			switch (this.type)
@@ -2602,7 +2602,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string GetBundleType()
+		private string GetBundleType()
 		{
 			//	Retourne le type du bundle (pour Common.Support & Cie) en fonction du type.
 			switch (this.type)
@@ -2630,7 +2630,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected static string LastName(string name)
+		private static string LastName(string name)
 		{
 			//	Retourne la dernière partie d'un nom séparé par des points.
 			//	"Toto.Titi.Tutu" retourne "Tutu".
@@ -2734,9 +2734,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			protected Shortcut			shortcut;
-			protected string			name;
-			protected string			culture;
+			private Shortcut			shortcut;
+			private string			name;
+			private string			culture;
 		}
 		#endregion
 
@@ -2793,9 +2793,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			protected Type type;
-			protected string									stringValue;
-			protected ICollection<string>						stringCollection;
+			private Type type;
+			private string									stringValue;
+			private ICollection<string>						stringCollection;
 		}
 		#endregion
 
@@ -2813,31 +2813,31 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected static string								filterPrefix = "Epsitec.Common.";
+		private static string								filterPrefix = "Epsitec.Common.";
 
 		private Module										ownerModule;
-		protected Type										type;
-		protected ResourceManager							resourceManager;
-		protected ResourceBundleBatchSaver					batchSaver;
-		protected ResourceModuleId							moduleInfo;
-		protected DesignerApplication						designerApplication;
-		protected bool										isGlobalDirty = false;
-		protected bool										isLocalDirty = false;
-		protected bool										isJustLoaded = false;
+		private Type										type;
+		private ResourceManager								resourceManager;
+		private ResourceBundleBatchSaver					batchSaver;
+		private ResourceModuleId							moduleInfo;
+		private DesignerApplication							designerApplication;
+		private bool										isGlobalDirty = false;
+		private bool										isLocalDirty = false;
+		private bool										isJustLoaded = false;
 
-		protected IResourceAccessor							accessor;
-		protected CollectionView							collectionView;
-		protected Searcher.SearchingMode					collectionViewMode;
-		protected string									collectionViewFilter;
-		protected Regex										collectionViewRegex;
-		protected Types.SortDescription[]					collectionViewInitialSorts;
+		private IResourceAccessor							accessor;
+		private CollectionView								collectionView;
+		private Searcher.SearchingMode						collectionViewMode;
+		private string										collectionViewFilter;
+		private Regex										collectionViewRegex;
+		private Types.SortDescription[]						collectionViewInitialSorts;
 
-		protected List<string>								cultures;
-		protected System.Globalization.CultureInfo			primaryCulture;
-		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
-		protected System.Type								lastTypeCodeSystem = null;
+		private List<string>								cultures;
+		private System.Globalization.CultureInfo			primaryCulture;
+		private TypeCode									lastTypeCodeCreatated = TypeCode.String;
+		private System.Type									lastTypeCodeSystem = null;
 
-		protected DataLifetimeExpectancy					lastLifetime;
-		protected StructuredTypeFlags						lastFlags;
+		private DataLifetimeExpectancy						lastLifetime;
+		private StructuredTypeFlags							lastFlags;
 	}
 }

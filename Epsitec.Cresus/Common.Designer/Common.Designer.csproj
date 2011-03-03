@@ -90,6 +90,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\ModuleInfo.cs" />
     <Compile Include="Dialogs\EntityCreation.cs" />
     <Compile Include="Dialogs\EntityParameters.cs" />
     <Compile Include="Dialogs\FileSaveImageDialog.cs" />
@@ -738,6 +739,7 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Info.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

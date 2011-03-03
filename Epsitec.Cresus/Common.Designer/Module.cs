@@ -451,6 +451,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void Info()
+		{
+			//	Edite les informations du module.
+			bool accept = this.designerApplication.DlgModuleInfo (this);
+
+			if (accept)
+			{
+				this.HandleAccessDirtyChanged (null);
+			}
+		}
+
 		public void RunPanel(int index)
 		{
 			//	Montre une ressource 'Panel' dans une fenêtre.

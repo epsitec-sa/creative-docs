@@ -105,7 +105,8 @@ namespace Epsitec.Common.Designer
 				this.dlgEntityParameters = new Dialogs.EntityParameters (this);
 				this.dlgEntityCreation   = new Dialogs.EntityCreation (this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
-				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
+				this.dlgInitialMessage   = new Dialogs.InitialMessage (this);
+				this.dlgModuleInfo       = new Dialogs.ModuleInfo (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgFilter.Closed         += this.HandleDlgClosed;
@@ -626,7 +627,18 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Check();
 		}
 
-		[Command("InitialMessage")]
+		[Command ("Info")]
+		void CommandInfo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.Terminate ())
+			{
+				return;
+			}
+
+			this.CurrentModule.Info ();
+		}
+
+		[Command ("InitialMessage")]
 		void CommandInitialMessage(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ShowInitialMessage();
@@ -1097,7 +1109,8 @@ namespace Epsitec.Common.Designer
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.initialMessageState = this.CreateCommandState("InitialMessage");
-			this.checkState = this.CreateCommandState("Check");
+			this.checkState = this.CreateCommandState ("Check");
+			this.infoState = this.CreateCommandState ("Info");
 			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
@@ -2183,6 +2196,7 @@ namespace Epsitec.Common.Designer
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
 				this.checkState.Enable = false;
+				this.infoState.Enable = false;
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
@@ -2558,6 +2572,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityExpression.IsEditOk;
 		}
 
+		public bool DlgModuleInfo(Module module)
+		{
+			//	Ouvre le dialogue pour éditer les informations d'un module.
+			this.dlgModuleInfo.Module = module;
+			this.dlgModuleInfo.Show ();
+			return this.dlgModuleInfo.IsEditOk;
+		}
+
 		public Dialogs.Search DialogSearch
 		{
 			get
@@ -2774,6 +2796,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.EntityCreation		dlgEntityCreation;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected Dialogs.InitialMessage		dlgInitialMessage;
+		protected Dialogs.ModuleInfo			dlgModuleInfo;
 		protected PanelsContext					context;
 		protected DisplayMode					displayMode;
 		protected Window						viewersWindow;
@@ -2800,6 +2823,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					saveAsState;
 		protected CommandState					initialMessageState;
 		protected CommandState					checkState;
+		protected CommandState					infoState;
 		protected CommandState					closeState;
 		protected CommandState					cutState;
 		protected CommandState					copyState;

@@ -391,11 +391,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
-			StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
-			if (typeClass == StructuredTypeClass.Interface)
+			if (this.resourceType == ResourceAccess.Type.Entities)
 			{
-				return false;  // ne liste pas les interfaces
+				StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+				if (typeClass == StructuredTypeClass.Interface)
+				{
+					return false;  // ne liste pas les interfaces
+				}
 			}
 
 			return true;
