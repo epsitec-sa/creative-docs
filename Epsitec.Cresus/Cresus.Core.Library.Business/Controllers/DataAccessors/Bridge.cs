@@ -172,41 +172,49 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void ProcessTemplate(TileDataItems data, TileDataItem item, Brick root, Brick templateBrick)
 		{
-			var genericCollectionTemplateType     = typeof (CollectionTemplate<>);
-			var genericCollectionTemplateTypeArg  = templateBrick.GetFieldType ();
-			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
+			var templateName      = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue ?? item.Name;
+			var templateFieldType = templateBrick.GetFieldType ();
 
-			object arg1 = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue ?? item.Name;
-			object arg2 = this.controller;
-			object arg3 = this.controller.BusinessContext.DataContext;
-			
-			var collectionTemplate = System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2, arg3) as CollectionTemplate;
+			CollectionTemplate collectionTemplate = this.DynamicCreateCollectionTemplate (templateName, templateFieldType);
 
-			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Title, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Title, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Title,        x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Title, x));
 			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TitleCompact, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactTitle, x));
-			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Text, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Text, x));
-			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TextCompact, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactText, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Text,         x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Text, x));
+			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TextCompact,  x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactText, x));
 
-			var genericCollectionAccessorFactoryType = typeof (Zzz<,,>);
-			var genericCollectionAccessorFactoryTypeArg1 = typeof (T);
-			var genericCollectionAccessorFactoryTypeArg2 = root.GetFieldType ();
-			var genericCollectionAccessorFactoryTypeArg3 = genericCollectionTemplateTypeArg;
-			var constructedCollectionAccessorFactoryType = genericCollectionAccessorFactoryType.MakeGenericType (genericCollectionAccessorFactoryTypeArg1, genericCollectionAccessorFactoryTypeArg2, genericCollectionAccessorFactoryTypeArg3);
-			var accessorFactory = System.Activator.CreateInstance (constructedCollectionAccessorFactoryType) as Zzz;
-			var accessorFactoryCreateArgs = new object[]
-			{
-				this.controller, root.GetResolver (genericCollectionTemplateTypeArg), collectionTemplate
-			};
-
-
-			constructedCollectionAccessorFactoryType.InvokeMember ("Create", BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod, null, accessorFactory, accessorFactoryCreateArgs);
+			CollectionAccessor accessor = this.DynamicCreateCollectionAccessor (root, templateFieldType, collectionTemplate);
 			
-
-			var accessor = accessorFactory.CollectionAccessor;
-
 			data.Add (accessor);
 		}
 
+		private CollectionTemplate DynamicCreateCollectionTemplate(string name, System.Type templateFieldType)
+		{
+			var genericCollectionTemplateType     = typeof (CollectionTemplate<>);
+			var genericCollectionTemplateTypeArg  = templateFieldType;
+			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
+
+			object arg1 = name;
+			object arg2 = this.controller;
+			object arg3 = this.controller.BusinessContext.DataContext;
+
+			return System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2, arg3) as CollectionTemplate;
+		}
+
+		private CollectionAccessor DynamicCreateCollectionAccessor(Brick root, System.Type templateFieldType, CollectionTemplate collectionTemplate)
+		{
+			var accessorFactoryType = typeof (DynamicAccessorFactory<,,>);
+			var accessorFactoryTypeArg1 = typeof (T);
+			var accessorFactoryTypeArg2 = root.GetFieldType ();
+			var accessorFactoryTypeArg3 = templateFieldType;
+			
+			var genericAccessorFactoryType = accessorFactoryType.MakeGenericType (accessorFactoryTypeArg1, accessorFactoryTypeArg2, accessorFactoryTypeArg3);
+			
+			var accessorFactory = System.Activator.CreateInstance (genericAccessorFactoryType,
+				/**/											   this.controller, root.GetResolver (templateFieldType), collectionTemplate) as DynamicAccessorFactory;
+
+			return accessorFactory.CollectionAccessor;
+		}
+		
 		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
 		{
 			if (Brick.ContainsProperty (brick, key))
@@ -268,39 +276,43 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
+		#region DynamicAccessorFactory Class
+
+		private abstract class DynamicAccessorFactory
+		{
+			protected DynamicAccessorFactory(CollectionAccessor accessor)
+			{
+				this.accessor = accessor;
+			}
+
+			public CollectionAccessor CollectionAccessor
+			{
+				get
+				{
+					return this.accessor;
+				}
+			}
+
+			private readonly CollectionAccessor accessor;
+		}
+
+		#endregion
+
+		#region DynamicAccessorFactory<T1, T2, T3> Class
+
+		private class DynamicAccessorFactory<T1, T2, T3> : DynamicAccessorFactory
+			where T1 : AbstractEntity, new ()
+			where T2 : AbstractEntity, new ()
+			where T3 : T2, new ()
+		{
+			public DynamicAccessorFactory(EntityViewController<T1> controller, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+				: base (CollectionAccessor.Create (controller.EntityGetter, collectionResolver, template))
+			{
+			}
+		}
+
+		#endregion
+
 		private readonly EntityViewController<T> controller;
 	}
-	
-	internal abstract class Zzz
-	{
-		protected Zzz()
-		{
-		}
-
-		public CollectionAccessor CollectionAccessor
-		{
-			get;
-			set;
-		}
-	}
-		
-	internal class Zzz<T1, T2, T3> : Zzz
-		where T1 : AbstractEntity, new ()
-		where T2 : AbstractEntity, new ()
-		where T3 : T2, new ()
-	{
-		public Zzz()
-		{
-		}
-		
-		public void Create(object arg1, object arg2, object arg3)
-		{
-			EntityViewController<T1> controller = (EntityViewController<T1>) arg1;
-			System.Func<T1, IList<T2>> collectionResolver = (System.Func<T1, IList<T2>>) arg2;
-			CollectionTemplate<T3> template = (CollectionTemplate<T3>) arg3;
-
-			this.CollectionAccessor = CollectionAccessor.Create (controller.EntityGetter, collectionResolver, template);
-		}
-	}
-
 }
