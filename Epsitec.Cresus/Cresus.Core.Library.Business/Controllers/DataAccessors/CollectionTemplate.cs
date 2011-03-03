@@ -45,10 +45,4 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly string name;
 	}
-
-	public enum CollectionTemplateProperty
-	{
-		Title, CompactTitle,
-		Text, CompactText,
-	}
 }

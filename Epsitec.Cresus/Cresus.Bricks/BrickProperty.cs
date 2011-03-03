@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+
 		public BrickPropertyKey					Key
 		{
 			get
@@ -95,6 +96,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		
 		public System.Func<T, FormattedText> GetFormatter<T>()
 		{
 			var value = this.ExpressionValue as LambdaExpression;
@@ -125,7 +127,7 @@ namespace Epsitec.Cresus.Bricks
 			return string.Format ("{0} = {1}", this.key, this.value ?? "<null>");
 		}
 
-		private readonly BrickPropertyKey key;
-		private readonly object value;
+		private readonly BrickPropertyKey		key;
+		private readonly object					value;
 	}
 }

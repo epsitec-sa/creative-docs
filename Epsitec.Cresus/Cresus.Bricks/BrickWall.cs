@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Bricks
 			this.bricks.Add (brick);
 		}
 
-		protected void NotifyBrickAdded(System.Type fieldType, Brick brick)
+		internal void NotifyBrickAdded(System.Type fieldType, Brick brick)
 		{
 			brick.DefineBrickWall (this);
 
@@ -49,65 +49,9 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		public event EventHandler<BrickAddedEventArgs> BrickAdded;
-		public event EventHandler<BrickPropertyAddedEventArgs> BrickPropertyAdded;
+		public event EventHandler<BrickAddedEventArgs>			BrickAdded;
+		public event EventHandler<BrickPropertyAddedEventArgs>	BrickPropertyAdded;
 
 		private readonly List<Brick> bricks;
-	}
-
-	public class BrickAddedEventArgs : EventArgs
-	{
-		public BrickAddedEventArgs(System.Type fieldType, Brick brick)
-		{
-			this.fieldType = fieldType;
-			this.brick = brick;
-		}
-
-		public System.Type FieldType
-		{
-			get
-			{
-				return this.fieldType;
-			}
-		}
-
-		public Brick Brick
-		{
-			get
-			{
-				return this.brick;
-			}
-		}
-
-		private readonly System.Type fieldType;
-		private readonly Brick brick;
-	}
-
-	public class BrickPropertyAddedEventArgs : EventArgs
-	{
-		public BrickPropertyAddedEventArgs(Brick brick, BrickProperty property)
-		{
-			this.brick = brick;
-			this.property = property;
-		}
-
-		public BrickProperty Property
-		{
-			get
-			{
-				return this.property;
-			}
-		}
-
-		public Brick Brick
-		{
-			get
-			{
-				return this.brick;
-			}
-		}
-
-		private readonly Brick brick;
-		private readonly BrickProperty property;
 	}
 }

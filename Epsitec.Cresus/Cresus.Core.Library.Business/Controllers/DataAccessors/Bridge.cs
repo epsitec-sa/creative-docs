@@ -276,43 +276,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		#region DynamicAccessorFactory Class
-
-		private abstract class DynamicAccessorFactory
-		{
-			protected DynamicAccessorFactory(CollectionAccessor accessor)
-			{
-				this.accessor = accessor;
-			}
-
-			public CollectionAccessor CollectionAccessor
-			{
-				get
-				{
-					return this.accessor;
-				}
-			}
-
-			private readonly CollectionAccessor accessor;
-		}
-
-		#endregion
-
-		#region DynamicAccessorFactory<T1, T2, T3> Class
-
-		private class DynamicAccessorFactory<T1, T2, T3> : DynamicAccessorFactory
-			where T1 : AbstractEntity, new ()
-			where T2 : AbstractEntity, new ()
-			where T3 : T2, new ()
-		{
-			public DynamicAccessorFactory(EntityViewController<T1> controller, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
-				: base (CollectionAccessor.Create (controller.EntityGetter, collectionResolver, template))
-			{
-			}
-		}
-
-		#endregion
-
 		private readonly EntityViewController<T> controller;
 	}
 }

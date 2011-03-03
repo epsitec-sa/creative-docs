@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.businessContext = null;
 			this.dataContextPool = dataContext.DataContextPool;
 
-			this.DefineCreateItem (() => CollectionTemplate<T>.CreateEmptyItem (dataContext));
+			this.DefineCreateItem (() => dataContext.CreateEntityAndRegisterAsEmpty<T> ());
 		}
 
 		public CollectionTemplate(string name, BusinessContext businessContext)
@@ -43,16 +43,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		public BusinessContext BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
 				return this.businessContext;
 			}
 		}
-
 		
-		public bool HasCreateItem
+		public bool								HasCreateItem
 		{
 			get
 			{
@@ -60,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public bool HasCreateGetIndex
+		public bool								HasCreateGetIndex
 		{
 			get
 			{
@@ -68,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public bool HasDeleteItem
+		public bool								HasDeleteItem
 		{
 			get
 			{
@@ -76,6 +75,39 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public System.Predicate<T>				Filter
+		{
+			get;
+			set;
+		}
+
+
+	
+		private IndirectAccessor<T, FormattedText>	TitleAccessor
+		{
+			get;
+			set;
+		}
+
+		private IndirectAccessor<T, FormattedText> TextAccessor
+		{
+			get;
+			set;
+		}
+
+		private IndirectAccessor<T, FormattedText> CompactTitleAccessor
+		{
+			get;
+			set;
+		}
+
+		private IndirectAccessor<T, FormattedText> CompactTextAccessor
+		{
+			get;
+			set;
+		}
+
+		
 		public CollectionTemplate<T> CreateItemsOfType<T1>()
 			where T1 : T, new ()
 		{
@@ -140,6 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this;
 		}
 
+		
 		public override void GenericDefine(CollectionTemplateProperty property, object value)
 		{
 			switch (property)
@@ -160,36 +193,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					this.DefineCompactText ((System.Func<T, FormattedText>) value);
 					break;
 			}
-		}
-
-		public IndirectAccessor<T, FormattedText> TitleAccessor
-		{
-			get;
-			set;
-		}
-
-		public IndirectAccessor<T, FormattedText> TextAccessor
-		{
-			get;
-			set;
-		}
-
-		public IndirectAccessor<T, FormattedText> CompactTitleAccessor
-		{
-			get;
-			set;
-		}
-
-		public IndirectAccessor<T, FormattedText> CompactTextAccessor
-		{
-			get;
-			set;
-		}
-
-		public System.Predicate<T> Filter
-		{
-			get;
-			set;
 		}
 
 		public override bool IsCompatible(AbstractEntity entity)
@@ -252,6 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		
 		private void CreateItem(TileDataItem data, ICollectionAccessor collectionAccessor)
 		{
 			//	Crée une nouvelle entité et insère-la au bon endroit.
@@ -278,7 +282,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			// Mémorise l'index de l'entité insérée, pour permettre de la sélectionner dans la tuile.
 			data.CreatedIndex = index;
 		}
-
 		
 		private void DeleteItem(TileDataItem data, T item, ICollectionAccessor collectionAccessor)
 		{
@@ -286,10 +289,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.GenericDeleteItem (item);
 		}
 
-		private static T CreateEmptyItem(DataContext dataContext)
-		{
-			return dataContext.CreateEntityAndRegisterAsEmpty<T> ();
-		}
 
 		private void BindEmptyEntityTileData(TileDataItem data, T source)
 		{
@@ -329,12 +328,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.deleteItem (item);
 		}
 
-		private readonly BusinessContext businessContext;
-		private readonly DataContextPool dataContextPool;
+		private readonly BusinessContext		businessContext;
+		private readonly DataContextPool		dataContextPool;
 
-		private System.Func<T> createItem;
-		private System.Func<int> createGetIndex;
-		private System.Action<T> deleteItem;
-		private System.Action<T> setupItem;
+		private System.Func<T>					createItem;
+		private System.Func<int>				createGetIndex;
+		private System.Action<T>				deleteItem;
+		private System.Action<T>				setupItem;
 	}
 }
