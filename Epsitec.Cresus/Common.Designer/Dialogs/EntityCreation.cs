@@ -161,7 +161,15 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			for (int i = 0; i < this.frameBoxes.Count; i++)
 			{
-				this.frameBoxes[i].Visibility = (i == this.selectedFrameBox);
+				bool visibility = (i == this.selectedFrameBox);
+
+				if (this.selectedFrameBox == 2 &&
+					this.resourceSelector.StructuredTypeClass == StructuredTypeClass.Interface)
+				{
+					visibility = false;
+				}
+
+				this.frameBoxes[i].Visibility = visibility;
 			}
 
 			this.levelLabel.Text = string.Format ("{0} / {1}", (this.selectedFrameBox+1).ToString (), this.frameBoxes.Count.ToString ());

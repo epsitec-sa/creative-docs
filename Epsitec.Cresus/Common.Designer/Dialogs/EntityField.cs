@@ -389,6 +389,15 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
+			CultureMap cultureMap = obj as CultureMap;
+
+			StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+			if (typeClass == StructuredTypeClass.Interface)
+			{
+				return false;  // ne liste pas les interfaces
+			}
+
 			return true;
 		}
 			
@@ -544,6 +553,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Ferme proprement le dialogue.
 			if (this.collectionView != null)
 			{
+				this.collectionView.Dispose ();
 				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
 				this.collectionView = null;
 			}

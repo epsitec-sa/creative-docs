@@ -607,8 +607,12 @@ namespace Epsitec.Common.Designer
 
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 				data.SetValue (Support.Res.Fields.ResourceStructuredType.BaseType, druid);
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
-				data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags, flags);
+
+				if (typeClass != StructuredTypeClass.Interface)
+				{
+					data.SetValue (Support.Res.Fields.ResourceStructuredType.DefaultLifetimeExpectancy, lifetime);
+					data.SetValue (Support.Res.Fields.ResourceStructuredType.Flags, flags);
+				}
 
 				this.lastLifetime = lifetime;
 				this.lastFlags    = flags;
