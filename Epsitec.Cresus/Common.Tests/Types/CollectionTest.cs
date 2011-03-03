@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NUnit.Framework;
+using Epsitec.Common.Types.Internal;
+using Epsitec.Common.Types.Converters;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture]
 	public class CollectionTest
@@ -18,7 +20,7 @@ namespace Epsitec.Common.Types
 		public void CheckCollectionViewAutoUpdate()
 		{
 			List<Record> source1;
-			Collections.ObservableList<Record> source2;
+			ObservableList<Record> source2;
 
 			CollectionView view;
 
@@ -38,7 +40,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (6, view.Count);
 			Assert.AreEqual (6, view.Items.Count);
 
-			source2 = new Collections.ObservableList<Record> ();
+			source2 = new ObservableList<Record> ();
 			view    = new CollectionView (source2);
 
 			Assert.AreEqual (0, view.Count);
@@ -49,7 +51,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (6, view.Count);
 			Assert.AreEqual (6, view.Items.Count);
 
-			source2 = new Collections.ObservableList<Record> ();
+			source2 = new ObservableList<Record> ();
 			view    = new CollectionView (source2);
 			
 			Assert.AreEqual (0, view.Count);
@@ -474,7 +476,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckInternalCollectionViewResolver()
 		{
-			Internal.CollectionViewResolver resolver = Internal.CollectionViewResolver.Default;
+			CollectionViewResolver resolver = CollectionViewResolver.Default;
 
 			Binding binding1 = new Binding ();
 			Binding binding2 = new Binding ();
@@ -482,7 +484,7 @@ namespace Epsitec.Common.Types
 			Assert.IsNull (resolver.GetCollectionView (binding1, null));
 
 			List<DependencyObject> list1 = new List<DependencyObject> ();
-			Collections.ObservableList<DependencyObject> list2 = new Collections.ObservableList<DependencyObject> ();
+			ObservableList<DependencyObject> list2 = new ObservableList<DependencyObject> ();
 
 			Assert.IsNull (resolver.GetCollectionView (binding1, list1, false));
 			Assert.IsNull (resolver.GetCollectionView (binding1, list2, false));
@@ -576,7 +578,7 @@ namespace Epsitec.Common.Types
 			
 			DataObject.SetDataContext (ui, context);
 
-			ICollectionView cv = Internal.CollectionViewResolver.Default.GetCollectionView (context, list);
+			ICollectionView cv = CollectionViewResolver.Default.GetCollectionView (context, list);
 
 			Assert.IsNotNull (cv);
 			Assert.AreEqual (cv, ui.GetValue (UserInterface.ArticlesProperty));
@@ -798,7 +800,7 @@ namespace Epsitec.Common.Types
 			PropertyGroupDescription group = new PropertyGroupDescription ();
 
 			group.PropertyName = null;
-			group.Converter = Converters.AutomaticValueConverter.Instance;
+			group.Converter = AutomaticValueConverter.Instance;
 
 			//	Convert simple types to string
 
@@ -1136,7 +1138,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckMapper1()
 		{
-			using (var mapper = new Collections.Mapper<int, string> (x => x.Select (v => v.ToString ())))
+			using (var mapper = new Mapper<int, string> (x => x.Select (v => v.ToString ())))
 			{
 				Assert.AreEqual ("1", mapper.Map (1));
 				Assert.AreEqual ("2", mapper.Map (2));
@@ -1272,7 +1274,7 @@ namespace Epsitec.Common.Types
 			public static readonly DependencyProperty ArticlesProperty		= DependencyProperty.Register ("Articles", typeof (ICollectionView), typeof (UserInterface));
 		}
 
-		private class ArticleList : Collections.ObservableList<Article>
+		private class ArticleList : ObservableList<Article>
 		{
 		}
 		

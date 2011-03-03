@@ -2,10 +2,12 @@
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
+using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.CaptionTest.Stuff))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Tests.Types.CaptionTest.Stuff))]
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class CaptionTest
 	{
@@ -24,20 +26,20 @@ namespace Epsitec.Common.Types
 			target.SetBinding (Stuff.EnumProperty, bindingEnum);
 
 			Assert.AreEqual ("Name", target.GetBindingExpression (Stuff.NameProperty).GetSourceName ());
-			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Druid.Empty, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
 			Assert.AreEqual ("Default.String", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().Name);
 			Assert.AreEqual ("StringType", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().GetType ().Name);
 
 			Assert.AreEqual ("Text", target.GetBindingExpression (Stuff.TextProperty).GetSourceName ());
-			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000004L), target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Druid.FromLong (0x0000400000000004L), target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
 			Assert.AreEqual ("Default.String", target.GetBindingExpression (Stuff.TextProperty).GetSourceNamedType ().Name);
 
 			Assert.AreEqual ("Enum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceName ());
-			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Druid.Empty, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
 			Assert.IsNotNull (target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ());
 			Assert.AreEqual ("EnumType", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().GetType ().Name);
 			Assert.AreEqual ("OneOfThree", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
-			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000005L), target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
+			Assert.AreEqual (Druid.FromLong (0x0000400000000005L), target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
 		}
 
 		[Test]
@@ -74,7 +76,7 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 
-			caption.DefineId (Support.Druid.Parse ("[4005]"));
+			caption.DefineId (Druid.Parse ("[4005]"));
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
@@ -86,15 +88,15 @@ namespace Epsitec.Common.Types
 			Caption captionV2 = new Caption ();
 			Caption captionV3 = new Caption ();
 
-			captionV1.DefineId (Support.Druid.Parse ("[4007]"));
+			captionV1.DefineId (Druid.Parse ("[4007]"));
 			captionV1.Name = "Value1";
 			captionV1.Description = "First value";
 
-			captionV2.DefineId (Support.Druid.Parse ("[4008]"));
+			captionV2.DefineId (Druid.Parse ("[4008]"));
 			captionV2.Name = "Value2";
 			captionV2.Description = "Middle value";
 
-			captionV3.DefineId (Support.Druid.Parse ("[4009]"));
+			captionV3.DefineId (Druid.Parse ("[4009]"));
 			captionV3.Name = "Value3";
 			captionV3.Description = "Last value";
 
@@ -110,7 +112,7 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 
-			caption.DefineId (Support.Druid.Parse ("[4005]"));
+			caption.DefineId (Druid.Parse ("[4005]"));
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
@@ -131,15 +133,15 @@ namespace Epsitec.Common.Types
 			Caption captionV2 = new Caption ();
 			Caption captionV3 = new Caption ();
 
-			captionV1.DefineId (Support.Druid.Parse ("[4007]"));
+			captionV1.DefineId (Druid.Parse ("[4007]"));
 			captionV1.Name = "Value1";
 			captionV1.Description = "First value";
 
-			captionV2.DefineId (Support.Druid.Parse ("[4008]"));
+			captionV2.DefineId (Druid.Parse ("[4008]"));
 			captionV2.Name = "Value2";
 			captionV2.Description = "Middle value";
 
-			captionV3.DefineId (Support.Druid.Parse ("[4009]"));
+			captionV3.DefineId (Druid.Parse ("[4009]"));
 			captionV3.Name = "Value3";
 			captionV3.Description = "Last value";
 
@@ -322,7 +324,7 @@ namespace Epsitec.Common.Types
 				DependencyPropertyMetadata metadataText = Stuff.TextProperty.GetMetadata (typeof (Stuff));
 				DependencyPropertyMetadata metadataEnum = Stuff.EnumProperty.GetMetadata (typeof (Stuff));
 
-				metadataText.DefineCaptionId (Support.Druid.FromLong (0x0000400000000004L));
+				metadataText.DefineCaptionId (Druid.FromLong (0x0000400000000004L));
 				metadataEnum.DefineNamedType (CaptionTest.GetMyEnumEnumType ());
 			}
 
@@ -334,7 +336,7 @@ namespace Epsitec.Common.Types
 
 		private static EnumType GetMyEnumEnumType()
 		{
-			Caption caption = Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000005L));
+			Caption caption = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.FromLong (0x0000400000000005L));
 			
 			EnumType enumType = new EnumType (typeof (MyEnum), caption);
 
@@ -342,10 +344,10 @@ namespace Epsitec.Common.Types
 
 			if (enumType.EnumValues[0].CaptionId.IsEmpty)
 			{
-				enumType[MyEnum.None].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000006L)));
-				enumType[MyEnum.First].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000007L)));
-				enumType[MyEnum.Second].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000008L)));
-				enumType[MyEnum.Third].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000009L)));
+				enumType[MyEnum.None].DefineCaption (Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.FromLong (0x0000400000000006L)));
+				enumType[MyEnum.First].DefineCaption (Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.FromLong (0x0000400000000007L)));
+				enumType[MyEnum.Second].DefineCaption (Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.FromLong (0x0000400000000008L)));
+				enumType[MyEnum.Third].DefineCaption (Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.FromLong (0x0000400000000009L)));
 			}
 
 			return enumType;

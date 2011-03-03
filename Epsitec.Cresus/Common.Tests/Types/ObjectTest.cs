@@ -2,8 +2,12 @@ using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Types.Exceptions;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class ObjectTest
 	{
@@ -375,7 +379,7 @@ namespace Epsitec.Common.Types
 			sibling2.Xyz = 2;
 			
 			Binding binding = new Binding (BindingMode.TwoWay, root, "Parent.Sibling.Xyz");
-			binding.Converter = Converters.AutomaticValueConverter.Instance;
+			binding.Converter = AutomaticValueConverter.Instance;
 			
 			MyObject myData = new MyObject ();
 			
@@ -426,8 +430,8 @@ namespace Epsitec.Common.Types
 			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Xyz");
 			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
 
-			binding1.Converter = Converters.AutomaticValueConverter.Instance;
-			binding2.Converter = Converters.AutomaticValueConverter.Instance;
+			binding1.Converter = AutomaticValueConverter.Instance;
+			binding2.Converter = AutomaticValueConverter.Instance;
 
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Xyz --> Data3.Foo
 			myData4.SetBinding (MyObject.XyzProperty, binding2);	//	Data2.Foo --> Data4.Xyz
@@ -471,8 +475,8 @@ namespace Epsitec.Common.Types
 			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Abc");
 			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
 
-			binding1.Converter = Converters.AutomaticValueConverter.Instance;
-			binding2.Converter = Converters.AutomaticValueConverter.Instance;
+			binding1.Converter = AutomaticValueConverter.Instance;
+			binding2.Converter = AutomaticValueConverter.Instance;
 
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Abc --> Data3.Foo
 			myData4.SetBinding (MyObject.AbcProperty, binding2);	//	Data2.Foo --> Data4.Abc
@@ -690,7 +694,7 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (MyObject.XyzProperty.IsReadOnly);
 			Assert.IsFalse (MyObject.ReadOnlyProperty.IsReadWrite);
 			
-			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (Types.DependencyObject)).Name);
+			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (DependencyObject)).Name);
 			Assert.AreEqual ("MyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).Name);
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
 			
@@ -744,7 +748,7 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
 		}
 		[Test]
-		[ExpectedException (typeof (Exceptions.WrongBaseTypeException))]
+		[ExpectedException (typeof (WrongBaseTypeException))]
 		public void CheckObjectTypeEx1()
 		{
 			DependencyObjectType.FromSystemType (typeof (ObjectTest));
@@ -1142,7 +1146,7 @@ namespace Epsitec.Common.Types
 			}
 			catch (System.Exception ex)
 			{
-				Assert.AreEqual (typeof (Exceptions.WrongBaseTypeException), ex.InnerException.GetType ());
+				Assert.AreEqual (typeof (WrongBaseTypeException), ex.InnerException.GetType ());
 				throw;
 			}
 		}
@@ -1174,8 +1178,8 @@ namespace Epsitec.Common.Types
 				//	Les types sont créés à la demande s'ils ne sont pas encore
 				//	connus; c'est le cas de ot1 :
 
-				Types.DependencyObjectType ot1 = Types.DependencyObjectType.FromSystemType (typeof (Test1));
-				Types.DependencyObjectType ot2 = Types.DependencyObjectType.FromSystemType (typeof (Test2));
+				DependencyObjectType ot1 = DependencyObjectType.FromSystemType (typeof (Test1));
+				DependencyObjectType ot2 = DependencyObjectType.FromSystemType (typeof (Test2));
 
 				Assert.IsNotNull (ot1);
 				Assert.IsNotNull (ot2);
@@ -1244,7 +1248,7 @@ namespace Epsitec.Common.Types
 
 		private static string log = null;
 
-		private static void HandleTest1AttachedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private static void HandleTest1AttachedChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			ObjectTest.log = string.Format ("DependencyProperty '{2}' changed from '{0}' to '{1}'", e.OldValue, e.NewValue, e.PropertyName);
 		}
@@ -1487,7 +1491,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#region MyObject Class
-		private class MyObject : Types.DependencyObject, Types.IListHost<MyObject>
+		private class MyObject : DependencyObject, IListHost<MyObject>
 		{
 			public MyObject()
 			{
@@ -1689,7 +1693,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region SlowObject Class
-		private class SlowObject : Types.DependencyObject
+		private class SlowObject : DependencyObject
 		{
 			public SlowObject()
 			{
@@ -1780,13 +1784,13 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region ObjectA, ObjectB and ObjectX Classes
-		private class ObjectA : Types.DependencyObject
+		private class ObjectA : DependencyObject
 		{
 		}
 		private class ObjectB : ObjectA
 		{
 		}
-		private class ObjectX : Types.DependencyObject
+		private class ObjectX : DependencyObject
 		{
 			public static DependencyProperty AProperty = DependencyProperty.Register ("A", typeof (ObjectA), typeof (ObjectX));
 			public static DependencyProperty BProperty = DependencyProperty.Register ("B", typeof (ObjectB), typeof (ObjectX));
@@ -1819,7 +1823,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region Test1, Test2... and Test3... Classes
-		public class Test1 : Types.DependencyObject
+		public class Test1 : DependencyObject
 		{
 			public Test1()
 			{
@@ -1861,7 +1865,7 @@ namespace Epsitec.Common.Types
 			public static new DependencyProperty AttachedProperty = DependencyProperty.Register ("Attached", typeof (string), typeof (Test1c));
 			public static new DependencyProperty StandardProperty = DependencyProperty.RegisterAttached ("Standard", typeof (string), typeof (Test1c));
 		}
-		public class Test2 : Types.DependencyObject
+		public class Test2 : DependencyObject
 		{
 			public Test2()
 			{
@@ -1892,7 +1896,7 @@ namespace Epsitec.Common.Types
 		{
 			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("_Invalid", typeof (string), typeof (Test3c));
 		}
-		public class Test4 : Types.DependencyObject
+		public class Test4 : DependencyObject
 		{
 			public Test4()
 			{
@@ -1947,7 +1951,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region MyObjectChildren Class
-		class MyObjectChildren : Collections.HostedDependencyObjectList<MyObject>
+		class MyObjectChildren : HostedDependencyObjectList<MyObject>
 		{
 			public MyObjectChildren(MyObject host)
 				: base (host)

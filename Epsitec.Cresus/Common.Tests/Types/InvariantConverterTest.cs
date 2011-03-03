@@ -2,8 +2,12 @@ using System;
 using System.Globalization; 
 
 using NUnit.Framework;
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture]
 	public class InvariantConverterTest
@@ -104,7 +108,7 @@ namespace Epsitec.Common.Types
 		public void CheckToDecimalEx2()
 		{
 			decimal result;
-			InvariantConverter.Convert (new Drawing.Rectangle (10, 20, 30, 40), out result);
+			InvariantConverter.Convert (new Rectangle (10, 20, 30, 40), out result);
 		}
 
 		[Test]
@@ -157,8 +161,8 @@ namespace Epsitec.Common.Types
 			object e = 10.0;
 			object f = 10.00M;
 			object g = true;
-			object h = new Drawing.Color (0.1, 0.2, 0.3, 0.4);
-			object i = new Drawing.Rectangle (10, 20, 30, 40);
+			object h = new Color (0.1, 0.2, 0.3, 0.4);
+			object i = new Rectangle (10, 20, 30, 40);
 			object j = new System.DateTime (2004, 11, 3, 10, 30, 5, 123, DateTimeKind.Utc);
 
 			string result;
@@ -194,8 +198,8 @@ namespace Epsitec.Common.Types
 			ISerializationConverter convE = InvariantConverter.GetSerializationConverter (typeof (double));
 			ISerializationConverter convF = InvariantConverter.GetSerializationConverter (typeof (decimal));
 			ISerializationConverter convG = InvariantConverter.GetSerializationConverter (typeof (bool));
-			ISerializationConverter convH = InvariantConverter.GetSerializationConverter (typeof (Drawing.Color));
-			ISerializationConverter convI = InvariantConverter.GetSerializationConverter (typeof (Drawing.Rectangle));
+			ISerializationConverter convH = InvariantConverter.GetSerializationConverter (typeof (Color));
+			ISerializationConverter convI = InvariantConverter.GetSerializationConverter (typeof (Rectangle));
 			ISerializationConverter convJ = InvariantConverter.GetSerializationConverter (typeof (System.DateTime));
 			ISerializationConverter convK = InvariantConverter.GetSerializationConverter (typeof (DecimalRange));
 
@@ -204,8 +208,8 @@ namespace Epsitec.Common.Types
 			object e = 10.0;
 			object f = 10.00M;
 			object g = true;
-			object h = new Drawing.Color (0.1, 0.2, 0.3, 0.4);
-			object i = new Drawing.Rectangle (10, 20, 30, 40);
+			object h = new Color (0.1, 0.2, 0.3, 0.4);
+			object i = new Rectangle (10, 20, 30, 40);
 			object j = new System.DateTime (2004, 11, 3, 10, 30, 5, 123);
 			object k = new DecimalRange (1, 100, 0.10M);
 
@@ -228,27 +232,27 @@ namespace Epsitec.Common.Types
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
-			Assert.AreEqual ("Abc", Converters.AutomaticValueConverter.Instance.Convert (new FormattedText ("Abc"), typeof (string), null, culture));
-			Assert.AreEqual (new FormattedText ("B&amp;B"), Converters.AutomaticValueConverter.Instance.Convert ("B&amp;B", typeof (FormattedText), null, culture));
+			Assert.AreEqual ("Abc", AutomaticValueConverter.Instance.Convert (new FormattedText ("Abc"), typeof (string), null, culture));
+			Assert.AreEqual (new FormattedText ("B&amp;B"), AutomaticValueConverter.Instance.Convert ("B&amp;B", typeof (FormattedText), null, culture));
 			
-			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
-			Assert.AreEqual (10, Converters.AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));
-			Assert.AreEqual ("10", Converters.AutomaticValueConverter.Instance.ConvertBack (10, typeof (string), null, culture));
+			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
+			Assert.AreEqual (10, AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));
+			Assert.AreEqual ("10", AutomaticValueConverter.Instance.ConvertBack (10, typeof (string), null, culture));
 
-			Assert.AreEqual ("First", Converters.AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (string), null, culture));
-			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (MyEnum), null, culture));
-			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert ("First", typeof (MyEnum), null, culture));
-			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert (1, typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("XXX", typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1, typeof (MyEnum), null, culture));
-			Assert.AreEqual (1.0, Converters.AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (double), null, culture));
-			Assert.AreEqual (3, Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (int), null, culture));
-			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, Converters.AutomaticValueConverter.Instance.Convert (3, typeof (MyFlags), null, culture));
-			Assert.AreEqual ("Flag1, Flag2", Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (string), null, culture));
-			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, Converters.AutomaticValueConverter.Instance.Convert ("Flag2, Flag1", typeof (MyFlags), null, culture));
-			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
-			Assert.AreEqual ("", Converters.AutomaticValueConverter.Instance.Convert ("", typeof (string), null, culture));
-			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
+			Assert.AreEqual ("First", AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (string), null, culture));
+			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (MyEnum), null, culture));
+			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert ("First", typeof (MyEnum), null, culture));
+			Assert.AreEqual (MyEnum.First, AutomaticValueConverter.Instance.Convert (1, typeof (MyEnum), null, culture));
+			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("XXX", typeof (MyEnum), null, culture));
+			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert (MyFlags.Flag1, typeof (MyEnum), null, culture));
+			Assert.AreEqual (1.0, AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (double), null, culture));
+			Assert.AreEqual (3, AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (int), null, culture));
+			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert (3, typeof (MyFlags), null, culture));
+			Assert.AreEqual ("Flag1, Flag2", AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (string), null, culture));
+			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, AutomaticValueConverter.Instance.Convert ("Flag2, Flag1", typeof (MyFlags), null, culture));
+			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
+			Assert.AreEqual ("", AutomaticValueConverter.Instance.Convert ("", typeof (string), null, culture));
+			Assert.AreEqual (InvalidValue.Value, AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
 		}
 
 		[Test]
@@ -259,20 +263,20 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("10", InvariantConverter.ConvertToString (10.0));
 			Assert.AreEqual ("10.00", InvariantConverter.ConvertToString (10.00M));
 			Assert.AreEqual ("True", InvariantConverter.ConvertToString (true));
-			Assert.AreEqual ("#199A;#3;#4CCD;#6", InvariantConverter.ConvertToString (Drawing.Color.FromAlphaRgb (0.1, 0.2, 0.3, 0.4)));
-			Assert.AreEqual ("10;20;30;40", InvariantConverter.ConvertToString (new Drawing.Rectangle (10, 20, 30, 40)));
+			Assert.AreEqual ("#199A;#3;#4CCD;#6", InvariantConverter.ConvertToString (Color.FromAlphaRgb (0.1, 0.2, 0.3, 0.4)));
+			Assert.AreEqual ("10;20;30;40", InvariantConverter.ConvertToString (new Rectangle (10, 20, 30, 40)));
 			Assert.AreEqual ("2004-11-03T10:30:05.1230000Z", InvariantConverter.ConvertToString (new System.DateTime (2004, 11, 3, 10, 30, 5, 123, DateTimeKind.Utc)));
-			Assert.AreEqual (@"Test;123;C:\foo\bar\Test;A", InvariantConverter.ConvertToString (new Support.ResourceModuleId ("Test", @"C:\foo\bar\Test", 123, Epsitec.Common.Support.ResourceModuleLayer.Application)));
+			Assert.AreEqual (@"Test;123;C:\foo\bar\Test;A", InvariantConverter.ConvertToString (new ResourceModuleId ("Test", @"C:\foo\bar\Test", 123, Epsitec.Common.Support.ResourceModuleLayer.Application)));
 			
 			Assert.AreEqual ("test", InvariantConverter.ConvertFromString<string> ("test"));
 			Assert.AreEqual (10, InvariantConverter.ConvertFromString<int> ("10"));
 			Assert.AreEqual (10, InvariantConverter.ConvertFromString<double> ("10"));
 			Assert.AreEqual (10.00M, InvariantConverter.ConvertFromString<decimal> ("10.00"));
 			Assert.AreEqual (true, InvariantConverter.ConvertFromString<bool> ("True"));
-			Assert.AreEqual (Drawing.Color.FromAlphaRgb (0.1, 0.2, 0.3, 0.4), InvariantConverter.ConvertFromString<Drawing.Color> ("#199A;#3;#4CCD;#6"));
-			Assert.AreEqual (new Drawing.Rectangle (10, 20, 30, 40), InvariantConverter.ConvertFromString<Drawing.Rectangle> ("10;20;30;40"));
+			Assert.AreEqual (Color.FromAlphaRgb (0.1, 0.2, 0.3, 0.4), InvariantConverter.ConvertFromString<Color> ("#199A;#3;#4CCD;#6"));
+			Assert.AreEqual (new Rectangle (10, 20, 30, 40), InvariantConverter.ConvertFromString<Rectangle> ("10;20;30;40"));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123, DateTimeKind.Utc), InvariantConverter.ConvertFromString<System.DateTime> ("2004-11-03T10:30:05.1230000Z"));
-			Assert.AreEqual (new Support.ResourceModuleId ("Test", @"C:\foo\bar\Test", 123, Epsitec.Common.Support.ResourceModuleLayer.Application), InvariantConverter.ConvertFromString<Support.ResourceModuleId> (@"Test;123;C:\foo\bar\Test;A"));
+			Assert.AreEqual (new ResourceModuleId ("Test", @"C:\foo\bar\Test", 123, Epsitec.Common.Support.ResourceModuleLayer.Application), InvariantConverter.ConvertFromString<ResourceModuleId> (@"Test;123;C:\foo\bar\Test;A"));
 		}
 
 		[Test]

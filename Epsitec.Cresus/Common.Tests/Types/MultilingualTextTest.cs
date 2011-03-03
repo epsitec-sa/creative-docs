@@ -8,7 +8,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture]
 	public class MultilingualTextTest

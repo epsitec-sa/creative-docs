@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class DataGraphTest
 	{
@@ -295,11 +297,11 @@ namespace Epsitec.Common.Types
 			#endregion
 			
 			#region INameCaption Members
-			public Support.Druid				CaptionId
+			public Druid				CaptionId
 			{
 				get
 				{
-					return Support.Druid.Empty;
+					return Druid.Empty;
 				}
 			}
 
@@ -371,7 +373,7 @@ namespace Epsitec.Common.Types
 			}
 			
 			
-			public event Support.EventHandler	Changed;
+			public event EventHandler	Changed;
 			#endregion
 
 			#region IDataItem Members
@@ -385,11 +387,11 @@ namespace Epsitec.Common.Types
 			#endregion
 
 			#region INameCaption Members
-			public Support.Druid				CaptionId
+			public Druid				CaptionId
 			{
 				get
 				{
-					return Support.Druid.Empty;
+					return Druid.Empty;
 				}
 			}
 

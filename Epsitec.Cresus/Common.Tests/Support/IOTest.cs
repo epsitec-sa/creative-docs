@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -217,7 +218,7 @@ namespace Epsitec.Common.Tests.Support
 			
 			System.Console.Out.WriteLine ("Raw data length: {0}, compressed: {1}, decompressed: {2}", data.Length, compressed.Length, decompressed.Length);
 			
-			Assert.IsTrue (Types.Comparer.Equal (data, decompressed), "Original Data != Decompressed Data");
+			Assert.IsTrue (Comparer.Equal (data, decompressed), "Original Data != Decompressed Data");
 		}
 
 		[Test]
@@ -238,8 +239,8 @@ namespace Epsitec.Common.Tests.Support
 
 			read.LoadFile ("t1.zip");
 
-			string[] entryNames = Types.Collection.ToArray (read.EntryNames);
-			string[] directoryNames = Types.Collection.ToArray (read.DirectoryNames);
+			string[] entryNames = Collection.ToArray (read.EntryNames);
+			string[] directoryNames = Collection.ToArray (read.DirectoryNames);
 
 			Assert.AreEqual (5, entryNames.Length);
 			Assert.AreEqual ("file 1.txt", entryNames[0]);

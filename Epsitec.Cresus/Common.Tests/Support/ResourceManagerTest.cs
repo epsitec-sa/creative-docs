@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.Types.Serialization.IO;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -31,7 +33,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckGetModuleInfos()
 		{
-			ResourceModuleId[] modules = Types.Collection.ToArray (this.manager.GetModuleInfos ("file"));
+			ResourceModuleId[] modules = Collection.ToArray (this.manager.GetModuleInfos ("file"));
 			
 			Assert.AreEqual (7, modules.Length);
 			
@@ -306,7 +308,7 @@ namespace Epsitec.Common.Tests.Support
 			manager.Bind (visual, Widgets.Visual.NameProperty, "[4]");
 
 			Assert.IsTrue (visual.IsBound (Widgets.Visual.NameProperty));
-			Assert.AreEqual (Types.DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			Assert.AreEqual (DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
 
 			Assert.AreEqual ("Druid - Bonjour", visual.Name);
 
@@ -458,10 +460,10 @@ namespace Epsitec.Common.Tests.Support
 					break;
 				}
 			}
-
-			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
 			
-			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.manager);
+			Context context = new DeserializerContext (new XmlReader (xmlReader));
+			
+			context.ExternalMap.Record (Context.WellKnownTagResourceManager, this.manager);
 
 			Widgets.Widget root = Storage.Deserialize (context) as Widgets.Widget;
 
@@ -490,9 +492,9 @@ namespace Epsitec.Common.Tests.Support
 			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
-			Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter));
+			Context context = new SerializerContext (new XmlWriter (xmlWriter));
 
-			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.manager);
+			context.ExternalMap.Record (Context.WellKnownTagResourceManager, this.manager);
 
 			Widgets.Widget root = new Widgets.Widget ();
 			Widgets.Button button = new Widgets.Button ();

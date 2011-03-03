@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Tests.Drawing
 {
@@ -28,8 +29,8 @@ namespace Epsitec.Common.Tests.Drawing
 			Assert.AreEqual (a, b);
 			Assert.AreEqual (sa, conv.ConvertToString (b));
 
-			Assert.AreEqual ("10;20", Types.InvariantConverter.ConvertToString (a));
-			Assert.AreEqual (a, Types.InvariantConverter.ConvertFromString<Size> ("10;20"));
+			Assert.AreEqual ("10;20", InvariantConverter.ConvertToString (a));
+			Assert.AreEqual (a, InvariantConverter.ConvertFromString<Size> ("10;20"));
 		}
 		
 		[Test] public void CheckRectangle()

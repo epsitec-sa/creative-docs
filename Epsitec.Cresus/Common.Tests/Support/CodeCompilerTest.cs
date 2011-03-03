@@ -9,6 +9,7 @@ using Epsitec.Common.Support.EntityEngine;
 using NUnit.Framework;
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -40,7 +41,7 @@ namespace Epsitec.Common.Tests.Support
 
 				Assert.IsFalse (driver.Compile (new CodeProject (settings)));
 
-				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+				messages = Collection.ToList (driver.GetBuildMessages ());
 
 				Assert.AreEqual (1, messages.Count);
 				Assert.AreEqual ("x.cs(5,40): error CS0103: The name 'élémentaire' does not exist in the current context", messages[0]);
@@ -58,7 +59,7 @@ namespace Epsitec.Common.Tests.Support
 
 				Assert.IsTrue (driver.Compile (new CodeProject (settings)));
 
-				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+				messages = Collection.ToList (driver.GetBuildMessages ());
 
 				Assert.AreEqual (0, messages.Count);
 				Assert.IsNotNull (driver.GetCompiledAssemblyPath ());
@@ -152,7 +153,7 @@ namespace Epsitec.Common.Tests.Support
 
 				bool result = driver.Compile (new CodeProject (settings));
 
-				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+				messages = Collection.ToList (driver.GetBuildMessages ());
 
 				foreach (string message in messages)
 				{

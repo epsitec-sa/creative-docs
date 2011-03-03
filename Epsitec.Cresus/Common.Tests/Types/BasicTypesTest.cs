@@ -1,8 +1,10 @@
 using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class BasicTypesTest
 	{
@@ -40,19 +42,19 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (DateTimeType.Default);
 			Assert.IsNotNull (TimeType.Default);
 
-			Assert.IsNotNull (DruidType.Default);
-			Assert.AreEqual ("Default.Druid", DruidType.Default.Name);
-			Assert.IsFalse (DruidType.Default.IsNullable);
-			Assert.AreEqual (typeof (Support.Druid), DruidType.Default.SystemType);
+			Assert.IsNotNull (Epsitec.Common.Types.DruidType.Default);
+			Assert.AreEqual ("Default.Druid", Epsitec.Common.Types.DruidType.Default.Name);
+			Assert.IsFalse (Epsitec.Common.Types.DruidType.Default.IsNullable);
+			Assert.AreEqual (typeof (Druid), Epsitec.Common.Types.DruidType.Default.SystemType);
 		}
 
 		[Test]
 		public void CheckStringType()
 		{
-			StringType typeString = Res.Types.Default.String;
-			StringType typeStringMulti = Res.Types.Default.StringMultiline;
-			StringType typeText = Res.Types.Default.Text;
-			StringType typeTextMulti = Res.Types.Default.TextMultiline;
+			StringType typeString = Epsitec.Common.Types.Res.Types.Default.String;
+			StringType typeStringMulti = Epsitec.Common.Types.Res.Types.Default.StringMultiline;
+			StringType typeText = Epsitec.Common.Types.Res.Types.Default.Text;
+			StringType typeTextMulti = Epsitec.Common.Types.Res.Types.Default.TextMultiline;
 
 			Assert.AreEqual (false, typeString.UseFormattedText);
 			Assert.AreEqual (null, typeString.DefaultControllerParameters);
@@ -87,7 +89,7 @@ namespace Epsitec.Common.Types
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 
 			Assert.AreEqual ("Enumeration MyEnum", et.Name);
-			Assert.AreEqual (Support.Druid.Empty, et.CaptionId);
+			Assert.AreEqual (Druid.Empty, et.CaptionId);
 			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsFalse (et.IsCustomizable);
@@ -232,7 +234,7 @@ namespace Epsitec.Common.Types
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 
 			Assert.AreEqual ("Enumeration MyEnum", et.Name);
-			Assert.AreEqual (Support.Druid.Empty, et.CaptionId);
+			Assert.AreEqual (Druid.Empty, et.CaptionId);
 			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsTrue (et.IsCustomizable);
@@ -729,8 +731,8 @@ namespace Epsitec.Common.Types
 			
 			protected DateUser(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : this()
 			{
-				this.time = new Types.Time (info.GetInt64 ("time"));
-				this.date = new Types.Date (info.GetInt64 ("date"));
+				this.time = new Time (info.GetInt64 ("time"));
+				this.date = new Date (info.GetInt64 ("date"));
 			}
 			
 			#region ISerializable Members

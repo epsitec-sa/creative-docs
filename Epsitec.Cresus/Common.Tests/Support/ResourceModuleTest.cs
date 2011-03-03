@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual (789, info1.Versions[1].BuildNumber);
 			Assert.AreEqual (new System.DateTime (2007, 8, 19, 8, 11, 12, System.DateTimeKind.Utc), info1.Versions[1].BuildDate);
 
-			Assert.IsTrue (pool.FindReferenceModules ().Count < Types.Collection.Count (pool.Modules));
+			Assert.IsTrue (pool.FindReferenceModules ().Count < Collection.Count (pool.Modules));
 
 			ResourceManager manager1 = new ResourceManager (pool, info1);
 			ResourceManager manager2 = manager1.GetManagerForReferenceModule ();
@@ -76,7 +77,7 @@ namespace Epsitec.Common.Tests.Support
 
 			pool.ScanForModules ("%epsitec%");
 
-			Assert.IsTrue (Types.Collection.Count (pool.Modules) > 80);
+			Assert.IsTrue (Collection.Count (pool.Modules) > 80);
 
 			Assert.IsTrue (pool.FindModuleInfos ("Common.Support").Count > 4);
 			Assert.AreEqual (pool.FindModuleInfos ("Common.Support").Count, pool.FindModuleInfos (7).Count);
@@ -95,7 +96,7 @@ namespace Epsitec.Common.Tests.Support
 			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
 			pool.ScanForModules ("%epsitec%");
 
-			Assert.AreEqual (10, Types.Collection.Count (pool.Modules));
+			Assert.AreEqual (10, Collection.Count (pool.Modules));
 
 			foreach (ResourceModuleInfo info in pool.Modules)
 			{
@@ -111,8 +112,8 @@ namespace Epsitec.Common.Tests.Support
 			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
 			pool.ScanForModules ("%epsitec%");
 
-			Assert.AreEqual (10, Types.Collection.Count (pool.Modules));
-			Assert.AreEqual (3, Types.Collection.Count (pool.FindPatchModuleInfos ()));
+			Assert.AreEqual (10, Collection.Count (pool.Modules));
+			Assert.AreEqual (3, Collection.Count (pool.FindPatchModuleInfos ()));
 
 			System.Console.Out.WriteLine ("Patch modules: ");
 
@@ -288,17 +289,17 @@ namespace Epsitec.Common.Tests.Support
 
 		private static string GetText(Epsitec.Common.Support.ResourceAccessors.StringResourceAccessor accessor, int index, string culture)
 		{
-			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceString.Text) as string;
+			return accessor.Collection[index].GetCultureData (culture ?? Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceString.Text) as string;
 		}
 
 		private static string GetComment(IResourceAccessor accessor, int index, string culture)
 		{
-			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.Comment) as string;
+			return accessor.Collection[index].GetCultureData (culture ?? Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.Comment) as string;
 		}
 		
 		private static int GetModificationId(IResourceAccessor accessor, int index, string culture)
 		{
-			return (int) accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.ModificationId);
+			return (int) accessor.Collection[index].GetCultureData (culture ?? Epsitec.Common.Support.Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.ModificationId);
 		}
 	}
 }

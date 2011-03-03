@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Tests.Support
 	{
 		[Test] public void CheckCopyFromDict()
 		{
-			Types.StringDict dict = new Types.StringDict ();
+			StringDict dict = new StringDict ();
 			
 			dict.Add ("NumValue", "15");
 			dict.Add ("StringValue", "Hello");
@@ -27,7 +28,7 @@ namespace Epsitec.Common.Tests.Support
 		
 		[Test] public void CheckCopyToDict()
 		{
-			Types.StringDict dict = new Types.StringDict ();
+			StringDict dict = new StringDict ();
 			MyObject data = new MyObject ();
 			
 			data.NumValue      = 15;
@@ -44,14 +45,14 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("123.456", dict["DecimalValue"]);
 			
 			System.DateTime date;
-			Types.InvariantConverter.Convert (dict["DateTimeValue"], out date);
+			InvariantConverter.Convert (dict["DateTimeValue"], out date);
 			
 			Assert.AreEqual (data.DateTimeValue, date);
 		}
 		
 		[Test] public void CheckUpdateToDict()
 		{
-			Types.StringDict dict = new Types.StringDict ();
+			StringDict dict = new StringDict ();
 			
 			dict.Add ("XYZ", "123");
 			dict.Add ("StringValue", "Abc");

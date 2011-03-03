@@ -5,8 +5,10 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Exceptions;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class TypeRosettaTest
 	{
@@ -71,7 +73,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (t1, t2);
 			Assert.AreNotEqual (t3, t4);
 
-			Caption caption = Resources.DefaultManager.GetCaption (Druid.Parse ("[1003]"));
+			Caption caption = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.Parse ("[1003]"));
 
 			AbstractType t5 = TypeRosetta.GetTypeObject (caption);
 			AbstractType t6 = TypeRosetta.GetTypeObject (caption);
@@ -135,7 +137,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		[Test]
-		[ExpectedException (typeof (Exceptions.InvalidTypeObjectException))]
+		[ExpectedException (typeof (InvalidTypeObjectException))]
 		public void CheckObjectTypeToNamedTypeEx1()
 		{
 			INamedType type;
@@ -252,9 +254,9 @@ namespace Epsitec.Common.Types
 			StructuredData dataA = new StructuredData (typeA);
 			StructuredData dataB = new StructuredData (typeB);
 
-			Assert.IsTrue (TypeRosetta.IsValidValue (10, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None)));
-			Assert.IsFalse (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, FieldRelation.None)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, FieldRelation.Collection)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Druid.Empty, 0, FieldRelation.None)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Druid.Empty, 0, FieldRelation.Collection)));
 
 			List<StructuredData> listA = new List<StructuredData> ();
 			List<StructuredData> listB = new List<StructuredData> ();
@@ -262,8 +264,8 @@ namespace Epsitec.Common.Types
 			listA.Add (dataA);
 			listB.Add (dataB);
 
-			Assert.IsTrue (TypeRosetta.IsValidValue (listA, new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, FieldRelation.Collection)));
-			Assert.IsFalse (TypeRosetta.IsValidValue (listB, new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, FieldRelation.Collection)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (listA, new StructuredTypeField ("X", typeA, Druid.Empty, 0, FieldRelation.Collection)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (listB, new StructuredTypeField ("X", typeA, Druid.Empty, 0, FieldRelation.Collection)));
 		}
 
 		[Test]
@@ -272,23 +274,23 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (StringType.NativeDefault.IsNullable);
 			Assert.IsFalse (IntegerType.Default.IsNullable);
 
-			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.NativeDefault, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
 
 			int? numNull = null;
 			int? num1234 = 1234;
 			
-			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsFalse (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
 			
-			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsFalse (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
 		}
 
 		#region A Class

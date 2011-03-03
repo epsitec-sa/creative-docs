@@ -1,7 +1,8 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class ComparerTest
 	{

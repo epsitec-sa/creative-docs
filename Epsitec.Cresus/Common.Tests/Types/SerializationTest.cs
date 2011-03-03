@@ -2,12 +2,18 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.Types.Serialization.Generic;
+using Epsitec.Common.Types.Serialization.IO;
+using Epsitec.Common.Support;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.ContainerX))]
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MyItem))]
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MySimpleObject))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Tests.Types.SerializationTest.ContainerX))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Tests.Types.SerializationTest.MyItem))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Tests.Types.SerializationTest.MySimpleObject))]
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	public delegate object MyAllocator();
 	
@@ -16,7 +22,7 @@ namespace Epsitec.Common.Types
 		[SetUp]
 		public void Initialize()
 		{
-			Serialization.DependencyClassManager.Setup ();
+			DependencyClassManager.Setup ();
 		}
 
 		[Test]
@@ -93,8 +99,8 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckDependencyClassManager()
 		{
-			DependencyObjectType t1 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MyItem");
-			DependencyObjectType t2 = Serialization.DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MySimpleObject");
+			DependencyObjectType t1 = DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MyItem");
+			DependencyObjectType t2 = DependencyClassManager.Current.FindObjectType ("Epsitec.Common.Types.SerializationTest+MySimpleObject");
 
 			Assert.AreEqual (typeof (MyItem), t1.SystemType);
 			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
@@ -109,11 +115,11 @@ namespace Epsitec.Common.Types
 			a.Type = StringType.NativeDefault;
 			b.Type = IntegerType.Default;
 
-			string xmlA = Serialization.SimpleSerialization.SerializeToString (a);
-			string xmlB = Serialization.SimpleSerialization.SerializeToString (b);
+			string xmlA = SimpleSerialization.SerializeToString (a);
+			string xmlB = SimpleSerialization.SerializeToString (b);
 
-			ContainerX a1 = Serialization.SimpleSerialization.DeserializeFromString (xmlA) as ContainerX;
-			ContainerX b1 = Serialization.SimpleSerialization.DeserializeFromString (xmlB) as ContainerX;
+			ContainerX a1 = SimpleSerialization.DeserializeFromString (xmlA) as ContainerX;
+			ContainerX b1 = SimpleSerialization.DeserializeFromString (xmlB) as ContainerX;
 
 			Assert.AreSame (a.Type, a1.Type);
 			Assert.AreSame (b.Type, b1.Type);
@@ -128,8 +134,8 @@ namespace Epsitec.Common.Types
 			CollectionType type = new CollectionType ();
 			type.DefineItemType (StringType.NativeDefault);
 
-			string  xml     = Serialization.SimpleSerialization.SerializeToString (type.Caption);
-			Caption caption = Serialization.SimpleSerialization.DeserializeFromString (xml) as Caption;
+			string  xml     = SimpleSerialization.SerializeToString (type.Caption);
+			Caption caption = SimpleSerialization.DeserializeFromString (xml) as Caption;
 
 			Assert.AreSame (type.ItemType, caption.GetValue (CollectionType.ItemTypeProperty));
 			
@@ -161,7 +167,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckMapId()
 		{
-			Serialization.Generic.MapId<DependencyObject> map = new Serialization.Generic.MapId<DependencyObject> ();
+			MapId<DependencyObject> map = new MapId<DependencyObject> ();
 
 			Assert.AreEqual (0, map.GetNullId ());
 			Assert.AreEqual (0, map.GetId (null));
@@ -233,7 +239,7 @@ namespace Epsitec.Common.Types
 		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
 		public void CheckMapIdEx1()
 		{
-			Serialization.Generic.MapId<DependencyObject> map = new Serialization.Generic.MapId<DependencyObject> ();
+			MapId<DependencyObject> map = new MapId<DependencyObject> ();
 			
 			map.GetValue (1);
 		}
@@ -241,7 +247,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckMapTag()
 		{
-			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+			MapTag<DependencyObject> map = new MapTag<DependencyObject> ();
 
 			Assert.AreEqual (0, map.TagCount);
 			Assert.AreEqual (0, map.ValueCount);
@@ -312,7 +318,7 @@ namespace Epsitec.Common.Types
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckMapTagEx1()
 		{
-			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+			MapTag<DependencyObject> map = new MapTag<DependencyObject> ();
 
 			MyItem a = new MyItem ();
 			MyItem b = new MyItem ();
@@ -325,7 +331,7 @@ namespace Epsitec.Common.Types
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckMapTagEx2()
 		{
-			Serialization.Generic.MapTag<DependencyObject> map = new Serialization.Generic.MapTag<DependencyObject> ();
+			MapTag<DependencyObject> map = new MapTag<DependencyObject> ();
 
 			MyItem x = new MyItem ();
 			
@@ -338,114 +344,114 @@ namespace Epsitec.Common.Types
 		{
 			string[] args;
 
-			args = Serialization.MarkupExtension.Explode ("{abc}");
+			args = MarkupExtension.Explode ("{abc}");
 
 			Assert.AreEqual (1, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc   }");
+			args = MarkupExtension.Explode ("{abc   }");
 
 			Assert.AreEqual (1, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 
-			args = Serialization.MarkupExtension.Explode ("{   abc}");
+			args = MarkupExtension.Explode ("{   abc}");
 
 			Assert.AreEqual (1, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc,def}");
+			args = MarkupExtension.Explode ("{abc,def}");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("def", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc, def}");
+			args = MarkupExtension.Explode ("{abc, def}");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("def", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc ,def}");
+			args = MarkupExtension.Explode ("{abc ,def}");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("def", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{  abc  ,  def  }");
+			args = MarkupExtension.Explode ("{  abc  ,  def  }");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("def", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc,}");
+			args = MarkupExtension.Explode ("{abc,}");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc  ,  }");
+			args = MarkupExtension.Explode ("{abc  ,  }");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{,abc}");
+			args = MarkupExtension.Explode ("{,abc}");
 
 			Assert.AreEqual (2, args.Length);
 			Assert.AreEqual ("", args[0]);
 			Assert.AreEqual ("abc", args[1]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc,,def}");
+			args = MarkupExtension.Explode ("{abc,,def}");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("def", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc , , def}");
+			args = MarkupExtension.Explode ("{abc , , def}");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("def", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc,,}");
+			args = MarkupExtension.Explode ("{abc,,}");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{abc , ,  }");
+			args = MarkupExtension.Explode ("{abc , ,  }");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("abc", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{,,}");
+			args = MarkupExtension.Explode ("{,,}");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{ , , }");
+			args = MarkupExtension.Explode ("{ , , }");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("", args[0]);
 			Assert.AreEqual ("", args[1]);
 			Assert.AreEqual ("", args[2]);
 
-			args = Serialization.MarkupExtension.Explode ("{   }");
+			args = MarkupExtension.Explode ("{   }");
 
 			Assert.AreEqual (0, args.Length);
 
-			args = Serialization.MarkupExtension.Explode ("{}");
+			args = MarkupExtension.Explode ("{}");
 
 			Assert.AreEqual (0, args.Length);
 			
-			args = Serialization.MarkupExtension.Explode ("{ {x}, {}, x={a{b}c} }");
+			args = MarkupExtension.Explode ("{ {x}, {}, x={a{b}c} }");
 
 			Assert.AreEqual (3, args.Length);
 			Assert.AreEqual ("{x}", args[0]);
@@ -484,10 +490,10 @@ namespace Epsitec.Common.Types
 			//	    |        +--> c2
 			//	    +--> q
 
-			Serialization.Context context = new Serialization.Context ();
-			Serialization.Generic.MapId<DependencyObject> objectMap = context.ObjectMap;
+			Context context = new Context ();
+			MapId<DependencyObject> objectMap = context.ObjectMap;
 			
-			Serialization.GraphVisitor.VisitSerializableNodes (a, context);
+			GraphVisitor.VisitSerializableNodes (a, context);
 
 			List<DependencyObject> objects = Collection.ToList (objectMap.RecordedValues);
 			List<System.Type> types = Collection.ToList (objectMap.RecordedTypes);
@@ -518,9 +524,9 @@ namespace Epsitec.Common.Types
 
 			c1.SetBinding (MyItem.FriendProperty, binding);
 
-			context = new Serialization.Context ();
+			context = new Context ();
 
-			Serialization.GraphVisitor.VisitSerializableNodes (a, context);
+			GraphVisitor.VisitSerializableNodes (a, context);
 
 			Assert.AreEqual (2, context.UnknownMap.ValueCount);
 			Assert.AreEqual (xxx, context.UnknownMap.GetValue (1));
@@ -542,7 +548,7 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
-			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+			Context context = new SerializerContext (new XmlWriter (xmlWriter));
 
 			context.ExternalMap.Record ("ext", ext);
 
@@ -587,7 +593,7 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
-			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+			Context context = new SerializerContext (new XmlWriter (xmlWriter));
 
 			context.ExternalMap.Record ("ext", ext);
 
@@ -620,7 +626,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+			context = new DeserializerContext (new XmlReader (xmlReader));
 
 			context.ExternalMap.Record ("ext", ext);
 
@@ -705,7 +711,7 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartDocument (true);
 			xmlWriter.WriteStartElement ("root");
 
-			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+			Context context = new SerializerContext (new XmlWriter (xmlWriter));
 
 			Storage.Serialize (st, context);
 
@@ -728,7 +734,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+			context = new DeserializerContext (new XmlReader (xmlReader));
 
 			StructuredType readSt = Storage.Deserialize (context) as StructuredType;
 
@@ -748,7 +754,7 @@ namespace Epsitec.Common.Types
 			StructuredType st = new StructuredType ();
 
 			st.Fields.Add ("Name", StringType.NativeDefault);
-			st.Fields.Add ("Angle", IntegerType.Default, Support.Druid.Parse ("[4002]"));
+			st.Fields.Add ("Angle", IntegerType.Default, Druid.Parse ("[4002]"));
 
 			string serial = st.Caption.SerializeToString ();
 			
@@ -841,7 +847,7 @@ namespace Epsitec.Common.Types
 			
 			Assert.IsNotNull (et.EnumValues[0].Caption);
 
-			Caption caption = Support.Resources.DefaultManager.GetCaption (Support.Druid.Parse ("[400B]"));
+			Caption caption = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.Parse ("[400B]"));
 			
 			et.EnumValues[0].DefineCaption (caption);
 
@@ -872,7 +878,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckXmlReader()
 		{
-			Support.Druid druid = Support.Druid.FromLong (Support.Druid.FromIds (20, 0, 2));
+			Druid druid = Druid.FromLong (Druid.FromIds (20, 0, 2));
 			System.Console.Out.WriteLine (druid);
 			
 			string xml = @"<books><book price=""58.00"">The Firebird Book</book><magazine price=""10.00"">MSDN</magazine><type id=""abc""/></books>";
@@ -1058,7 +1064,7 @@ namespace Epsitec.Common.Types
 
 		#region MyItem Class
 
-		public class MyItem : DependencyObject, Types.IListHost<MyItem>
+		public class MyItem : DependencyObject, IListHost<MyItem>
 		{
 			public MyItem()
 			{
@@ -1325,7 +1331,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#region ChildrenCollection Class
-		public class ChildrenCollection : Collections.HostedDependencyObjectList<MyItem>
+		public class ChildrenCollection : HostedDependencyObjectList<MyItem>
 		{
 			public ChildrenCollection(MyItem host)
 				: base (host)

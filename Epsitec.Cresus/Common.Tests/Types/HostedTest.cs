@@ -3,8 +3,10 @@
 
 using NUnit.Framework;
 using System.Collections.Generic;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class HostedTest
 	{
@@ -100,10 +102,10 @@ namespace Epsitec.Common.Types
 		{
 			public ListHost()
 			{
-				this.list = new Collections.HostedList<T> (this);
+				this.list = new HostedList<T> (this);
 			}
 
-			public Collections.HostedList<T> Items
+			public HostedList<T> Items
 			{
 				get
 				{
@@ -157,7 +159,7 @@ namespace Epsitec.Common.Types
 
 			#endregion
 
-			private Collections.HostedList<T> list;
+			private HostedList<T> list;
 			private Queue<T> expectedInsertions = new Queue<T> ();
 			private Queue<T> expectedRemovals = new Queue<T> ();
 		}
@@ -166,7 +168,7 @@ namespace Epsitec.Common.Types
 		{
 			public DictHost()
 			{
-				this.dict = new Collections.HostedDictionary<K, V> (this);
+				this.dict = new HostedDictionary<K, V> (this);
 			}
 
 			public void SetExpectedInsertions(params KeyValuePair<K, V>[] pairs)
@@ -187,7 +189,7 @@ namespace Epsitec.Common.Types
 
 			#region IDictionaryHost<K,V> Members
 
-			public Collections.HostedDictionary<K, V> Items
+			public HostedDictionary<K, V> Items
 			{
 				get
 				{
@@ -211,7 +213,7 @@ namespace Epsitec.Common.Types
 
 			#endregion
 
-			private Collections.HostedDictionary<K, V> dict;
+			private HostedDictionary<K, V> dict;
 			private Queue<KeyValuePair<K, V>> expectedInsertions = new Queue<KeyValuePair<K, V>> ();
 			private Queue<KeyValuePair<K, V>> expectedRemovals = new Queue<KeyValuePair<K, V>> ();
 		}

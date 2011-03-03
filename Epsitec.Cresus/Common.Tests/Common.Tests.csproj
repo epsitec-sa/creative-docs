@@ -131,6 +131,20 @@
     <Compile Include="Support\WordBreakTest.cs" />
     <Compile Include="Support\XmlTest.cs" />
     <Compile Include="Text\Exchange\RosettaTest.cs" />
+    <Compile Include="Types\BasicTypesTest.cs" />
+    <Compile Include="Types\CaptionTest.cs" />
+    <Compile Include="Types\CollectionTest.cs" />
+    <Compile Include="Types\ComparerTest.cs" />
+    <Compile Include="Types\DataGraphTest.cs" />
+    <Compile Include="Types\DecimalRangeTest.cs" />
+    <Compile Include="Types\FormattedTextTest.cs" />
+    <Compile Include="Types\HostedTest.cs" />
+    <Compile Include="Types\InvariantConverterTest.cs" />
+    <Compile Include="Types\MultilingualTextTest.cs" />
+    <Compile Include="Types\ObjectTest.cs" />
+    <Compile Include="Types\SerializationTest.cs" />
+    <Compile Include="Types\StructuredTest.cs" />
+    <Compile Include="Types\TypeRosettaTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
@@ -292,6 +306,24 @@
     </Content>
     <Content Include="Resources\OtherModule\strings.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Test\captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Test\captions.fr.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Test\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Test\strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Test\strings.fr.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\OtherModule\captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Tests.Types
 {
 	[TestFixture] public class DecimalRangeTest
 	{

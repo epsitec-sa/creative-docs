@@ -44,20 +44,20 @@ namespace Epsitec.Common.Tests.Support
 
 			chain = CommandContextChain.BuildChain (v1);
 
-			Assert.AreEqual (1, Types.Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[0]);
+			Assert.AreEqual (1, Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[0]);
 
 			chain = CommandContextChain.BuildChain (v2);
 
-			Assert.AreEqual (2, Types.Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextB, Types.Collection.ToArray (chain.Contexts)[0]);
-			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[1]);
+			Assert.AreEqual (2, Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextB, Collection.ToArray (chain.Contexts)[0]);
+			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[1]);
 
 			chain = CommandContextChain.BuildChain (v3);
 
-			Assert.AreEqual (2, Types.Collection.Count (chain.Contexts));
-			Assert.AreEqual (contextB, Types.Collection.ToArray (chain.Contexts)[0]);
-			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[1]);
+			Assert.AreEqual (2, Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextB, Collection.ToArray (chain.Contexts)[0]);
+			Assert.AreEqual (contextA, Collection.ToArray (chain.Contexts)[1]);
 
 			v3.CommandObject = command;
 
