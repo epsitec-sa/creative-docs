@@ -2075,6 +2075,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Ajoute les titres des interfaces, si elles existent.
 			Druid last = Druid.Empty;
+			Druid lastRoot = Druid.Empty;
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsTitle)
@@ -2084,12 +2085,46 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.fields[i].DefiningRootEntityId.IsValid)  // champ d'une interface ?
 				{
-					if (last != this.fields[i].DefiningRootEntityId && this.fields[i].DefiningRootEntityId != title)
+					//	Génère le titre d'une interface d'interface(s).
+					if (this.fields[i].DefiningEntityId != title &&
+						this.fields[i].DefiningEntityId != this.fields[i].DefiningRootEntityId)
 					{
-						last = this.fields[i].DefiningRootEntityId;
+						if (last != this.fields[i].DefiningEntityId)
+						{
+							last = this.fields[i].DefiningEntityId;
 
-						Module module = this.SearchModule(last);
-						CultureMap entity = module.AccessEntities.Accessor.Collection[last];
+							Module module = this.SearchModule (last);
+							CultureMap entity = module.AccessEntities.Accessor.Collection[last];
+
+							StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+							StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+
+							if (entityTypeClass == StructuredTypeClass.Interface)
+							{
+								Field field = new Field (this.editor);
+								field.IsTitle = true;  // interface ajoutée à cette entitié
+								field.IsInterfaceOrInterfaceTitle = true;
+								field.CaptionId = last;
+								field.FieldName = Misc.Bold (entity.Name);
+
+								this.fields.Insert (i, field);
+								this.skippedField++;  // compte le titre lui-même
+								i++;
+							}
+						}
+					}
+					else
+					{
+						last = Druid.Empty;
+					}
+
+					//	Génère le titre d'une interface.
+					if (lastRoot != this.fields[i].DefiningRootEntityId && this.fields[i].DefiningRootEntityId != title)
+					{
+						lastRoot = this.fields[i].DefiningRootEntityId;
+
+						Module module = this.SearchModule(lastRoot);
+						CultureMap entity = module.AccessEntities.Accessor.Collection[lastRoot];
 
 						StructuredData entityData = entity.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 						StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
@@ -2097,17 +2132,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (entityTypeClass == StructuredTypeClass.Interface)
 						{
 							Field field = new Field(this.editor);
-							if (this.fields[i].Membership == FieldMembership.Local)
+							if (this.fields[i].Membership == FieldMembership.Local && !last.IsValid)
 							{
 								field.IsTitle = true;  // interface ajoutée à cette entitié
-								field.IsInterfaceOrInterfaceTitle = true;
 							}
 							else
 							{
-								field.IsSubtitle = true;  // interface héritée
-								field.IsInterfaceOrInterfaceTitle = true;
+								field.IsSubtitle = true;  // interface héritée ou interface dans une interface
 							}
-							field.CaptionId = last;
+							field.IsInterfaceOrInterfaceTitle = true;
+							field.CaptionId = lastRoot;
 							field.FieldName = Misc.Bold(entity.Name);
 
 							this.fields.Insert(i, field);
@@ -2938,6 +2972,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
+#if false
 						if (i < this.fields.Count-1 &&
 							this.fields[i].IsInherited == this.fields[i+1].IsInherited &&
 							this.fields[i].IsInterfaceOrInterfaceTitle == this.fields[i+1].IsInterfaceOrInterfaceTitle &&
@@ -2959,10 +2994,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								dashedPath.MoveTo(rect.Left, rect.Bottom);
 								dashedPath.LineTo(rect.Right, rect.Bottom);
-								graphics.Rasterizer.AddOutline(dashedPath);
-								graphics.RenderSolid(this.GetColorMain(0.8));
+								//?graphics.Rasterizer.AddOutline(dashedPath);
+								//?graphics.RenderSolid(this.GetColorMain(0.8));
 							}
 						}
+#endif
 					}
 				}
 
@@ -3052,7 +3088,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
-						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterfaceOrInterfaceTitle) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
+						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterfaceOrInterfaceTitle && !this.fields[this.hilitedFieldRank].IsSubtitle) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
