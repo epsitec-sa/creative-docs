@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Core
 			
 			//	designer:cap/GVA1
 			public static readonly Epsitec.Common.Types.StructuredType Affair = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+			//	designer:cap/GVA4
+			public static readonly Epsitec.Common.Types.StructuredType IBusinessLink = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/GVA
 			public static readonly Epsitec.Common.Types.StructuredType Relation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 		}
@@ -30,8 +32,28 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/GVA8
+				public static readonly global::Epsitec.Common.Support.Druid ActiveAffairOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
+				//	designer:cap/GVA7
+				public static readonly global::Epsitec.Common.Support.Druid ActiveSalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+				//	designer:cap/GVA6
+				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
+				//	designer:cap/GVAA
+				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/GVA2
 				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
+				//	designer:cap/GVA9
+				public static readonly global::Epsitec.Common.Support.Druid SubAffairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
+			}
+			
+			public static class IBusinessLink
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVA5
+				public static readonly global::Epsitec.Common.Support.Druid BusinessCodeVector = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5);
 			}
 			
 			public static class Relation
@@ -96,6 +118,7 @@ namespace Epsitec.Cresus.Core
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Business");
 			Types._Initialize ();
 			Fields.Affair._Initialize ();
+			Fields.IBusinessLink._Initialize ();
 			Fields.Relation._Initialize ();
 		}
 		

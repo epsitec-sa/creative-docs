@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F2955C92-B208-498B-8ED4-E7B033AD284B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
+    <AssemblyName>Cresus.Core.Library.Documents</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Res.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
+      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
+      <Name>Cresus.Core.Library.Address</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Workflows\Cresus.Core.Library.Workflows.csproj">
+      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
+      <Name>Cresus.Core.Library.Workflows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
