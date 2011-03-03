@@ -2,13 +2,13 @@
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Context
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 {
 
 

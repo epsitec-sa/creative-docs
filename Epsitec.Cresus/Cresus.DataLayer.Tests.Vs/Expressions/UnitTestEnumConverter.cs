@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 {
 
 	

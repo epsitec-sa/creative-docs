@@ -9,8 +9,8 @@
     <ProjectGuid>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.DataLayer.UnitTests</RootNamespace>
-    <AssemblyName>Cresus.DataLayer.UnitTests</AssemblyName>
+    <RootNamespace>Cresus.DataLayer.Tests.Vs</RootNamespace>
+    <AssemblyName>Cresus.DataLayer.Tests.Vs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -36,7 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -95,8 +95,8 @@
     <Compile Include="Loader\UnitTestSqlContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\TestStore.cs" />
-    <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.DataLayer.Tests.Vs\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.DataLayer.Tests.Vs\SourceCode\Res.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="Proxies\UnitTestReferenceFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestCollectionFieldProxy.cs" />
@@ -150,41 +150,41 @@
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common.UnitTesting\Common.UnitTesting.csproj">
+    <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
       <Project>{24FD1EF5-9080-4D20-9C4F-1C0CAFEA26D8}</Project>
       <Name>Common.UnitTesting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Name>Cresus.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Cresus.DataLayer.UnitTests\Captions.00.resource">
+    <Content Include="Resources\Cresus.DataLayer.Tests.Vs\Captions.00.resource">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Cresus.DataLayer.UnitTests\Strings.00.resource">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\Cresus.DataLayer.Tests.Vs\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Cresus.DataLayer.UnitTests\module.info">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\Cresus.DataLayer.Tests.Vs\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +194,10 @@
     <Shadow Include="Test References\Cresus.Database.accessor" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini

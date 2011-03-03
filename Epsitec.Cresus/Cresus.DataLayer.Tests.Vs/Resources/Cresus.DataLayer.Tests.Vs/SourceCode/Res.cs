@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.Tests.Vs
 {
 	public static class Res
 	{
@@ -34,12 +34,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.DataLayer.UnitTests.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.DataLayer.Tests.Vs.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.DataLayer.UnitTests.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.DataLayer.Tests.Vs.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
-			Res._manager.DefineDefaultModuleName ("Cresus.DataLayer.UnitTests");
+			Res._manager.DefineDefaultModuleName ("Cresus.DataLayer.Tests.Vs");
 		}
 		
 		public static void Initialize()

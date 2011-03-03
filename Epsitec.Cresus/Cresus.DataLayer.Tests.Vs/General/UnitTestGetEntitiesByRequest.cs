@@ -8,8 +8,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
-using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,7 +17,7 @@ using System.Linq;
 
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.General
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 {
 
 

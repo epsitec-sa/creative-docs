@@ -84,6 +84,6 @@
   <data name="Val.SimpleEnum.Value1" id="AI2">&lt;s:data id="_0" f:Name="Value1" /&gt;</data>
   <data name="Val.SimpleEnum.Value2" id="AJ2">&lt;s:data id="_0" f:Name="Value2" /&gt;</data>
   <data name="Val.SimpleEnum.Value3" id="AK2">&lt;s:data id="_0" f:Name="Value3" /&gt;</data>
-  <data name="Typ.SimpleEnum" id="AH2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="SimpleEnum" f:_1.SystemType="E:Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum, Cresus.DataLayer.UnitTests" f:_2.EnumValues="{Collection {Text '0 [J1AI2]'}, {Text '1 [J1AJ2]'}, {Text '2 [J1AK2]'}}" /&gt;</data>
+  <data name="Typ.SimpleEnum" id="AH2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="SimpleEnum" f:_1.SystemType="E:Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum, Cresus.DataLayer.Tests.Vs" f:_2.EnumValues="{Collection {Text '0 [J1AI2]'}, {Text '1 [J1AJ2]'}, {Text '2 [J1AK2]'}}" /&gt;</data>
   <data name="Fld.ValueData.EnumValue" id="AL2">&lt;s:data id="_0" f:Name="EnumValue" /&gt;</data>
 </bundle>

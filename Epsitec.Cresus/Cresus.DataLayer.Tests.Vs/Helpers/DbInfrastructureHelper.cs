@@ -4,7 +4,7 @@
 using Epsitec.Cresus.Database;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 {
 
 

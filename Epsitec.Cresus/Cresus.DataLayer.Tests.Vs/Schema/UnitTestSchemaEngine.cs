@@ -5,7 +5,7 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Schema;
-using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 {
 
 

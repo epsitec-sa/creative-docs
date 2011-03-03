@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.SynchronizationJobs
 {
 
 

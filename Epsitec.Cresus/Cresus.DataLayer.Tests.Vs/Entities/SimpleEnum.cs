@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.Types;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 
 

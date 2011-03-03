@@ -6,7 +6,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Implementation;
 using Epsitec.Common.IO;
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 {
 
 
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 		public static void Initialize()
 		{
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
-			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests");
+			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.Tests.Vs");
 		}
 
 		

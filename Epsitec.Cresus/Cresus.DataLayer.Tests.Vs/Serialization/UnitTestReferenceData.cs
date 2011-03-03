@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 {
 
 

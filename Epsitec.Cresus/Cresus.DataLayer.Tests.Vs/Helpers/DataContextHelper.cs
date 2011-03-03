@@ -5,10 +5,10 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 {
 
 

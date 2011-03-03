@@ -4,8 +4,8 @@ using Epsitec.Cresus.Database.Services;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
-using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.ImportExport
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 {
 
 

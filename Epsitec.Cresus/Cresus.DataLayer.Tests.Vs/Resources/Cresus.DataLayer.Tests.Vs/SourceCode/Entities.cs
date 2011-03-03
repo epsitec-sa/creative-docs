@@ -4,30 +4,30 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A4]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A6]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A9]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AE]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AG]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AJ]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AN]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AQ]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AT]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AV]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.ContactRoleEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A11]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A41]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.CommentEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A61]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A81]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AA1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AB1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractPersonEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AE1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AJ1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AT1]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.MailContactEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A02]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomContactEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A42]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.UriContactEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A72]", typeof (Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity))]
-#region Epsitec.Cresus.DataLayer.UnitTests.IItemRank Interface
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A4]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A6]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A9]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AE]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AG]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AJ]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AN]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AQ]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AT]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AV]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A11]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A41]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A61]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A81]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AA1]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AB1]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AE1]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AJ1]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1AT1]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.MailContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A02]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A42]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[J1A72]", typeof (Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ValueDataEntity))]
+#region Epsitec.Cresus.DataLayer.Tests.Vs.IItemRank Interface
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>IItemRank</c> entity.
@@ -48,12 +48,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 	}
 	public static partial class IItemRankInterfaceImplementation
 	{
-		public static int? GetRank(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank obj)
+		public static int? GetRank(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<int?> ("[J1A1]");
 		}
-		public static void SetRank(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank obj, int? value)
+		public static void SetRank(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank obj, int? value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			int? oldValue = obj.Rank;
@@ -64,14 +64,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 				IItemRankInterfaceImplementation.OnRankChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnRankChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank obj, int? oldValue, int? newValue);
-		static partial void OnRankChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank obj, int? oldValue, int? newValue);
+		static partial void OnRankChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank obj, int? oldValue, int? newValue);
+		static partial void OnRankChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank obj, int? oldValue, int? newValue);
 	}
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.IItemCode Interface
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.IItemCode Interface
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>IItemCode</c> entity.
@@ -92,12 +92,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 	}
 	public static partial class IItemCodeInterfaceImplementation
 	{
-		public static string GetCode(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj)
+		public static string GetCode(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[J1A3]");
 		}
-		public static void SetCode(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj, string value)
+		public static void SetCode(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.Code;
@@ -108,20 +108,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 				IItemCodeInterfaceImplementation.OnCodeChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnCodeChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj, string oldValue, string newValue);
-		static partial void OnCodeChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode obj, string oldValue, string newValue);
+		static partial void OnCodeChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode obj, string oldValue, string newValue);
+		static partial void OnCodeChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode obj, string oldValue, string newValue);
 	}
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Country Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Country Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Country</c> entity.
 	///	designer:cap/J1A4
 	///	</summary>
-	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode
+	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode
 	{
 		#region IItemCode Members
 		///	<summary>
@@ -133,11 +133,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -169,11 +169,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 4);	// [J1A4]
 		public static readonly new string EntityStructuredTypeKey = "[J1A4]";
@@ -181,14 +181,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Region Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Region Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Region</c> entity.
 	///	designer:cap/J1A6
 	///	</summary>
-	public partial class RegionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode
+	public partial class RegionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode
 	{
 		#region IItemCode Members
 		///	<summary>
@@ -200,11 +200,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -235,19 +235,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1A6/J1A8
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1A8]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity Country
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity Country
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[J1A8]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity> ("[J1A8]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue = this.Country;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue = this.Country;
 				if (oldValue != value || !this.IsFieldDefined("[J1A8]"))
 				{
 					this.OnCountryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[J1A8]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity> ("[J1A8]", oldValue, value);
 					this.OnCountryChanged (oldValue, value);
 				}
 			}
@@ -255,16 +255,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnCountryChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity newValue);
-		partial void OnCountryChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity newValue);
+		partial void OnCountryChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
+		partial void OnCountryChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 6);	// [J1A6]
 		public static readonly new string EntityStructuredTypeKey = "[J1A6]";
@@ -272,8 +272,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Location Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Location Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Location</c> entity.
@@ -330,19 +330,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1A9/J1AC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AC]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity Country
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity Country
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[J1AC]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity> ("[J1AC]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue = this.Country;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue = this.Country;
 				if (oldValue != value || !this.IsFieldDefined("[J1AC]"))
 				{
 					this.OnCountryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity> ("[J1AC]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity> ("[J1AC]", oldValue, value);
 					this.OnCountryChanged (oldValue, value);
 				}
 			}
@@ -352,19 +352,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1A9/J1AD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AD]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity Region
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity Region
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity> ("[J1AD]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity> ("[J1AD]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity oldValue = this.Region;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity oldValue = this.Region;
 				if (oldValue != value || !this.IsFieldDefined("[J1AD]"))
 				{
 					this.OnRegionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity> ("[J1AD]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity> ("[J1AD]", oldValue, value);
 					this.OnRegionChanged (oldValue, value);
 				}
 			}
@@ -374,18 +374,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		partial void OnPostalCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnCountryChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity newValue);
-		partial void OnCountryChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CountryEntity newValue);
-		partial void OnRegionChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity newValue);
-		partial void OnRegionChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.RegionEntity newValue);
+		partial void OnCountryChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
+		partial void OnCountryChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
+		partial void OnRegionChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity newValue);
+		partial void OnRegionChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 9);	// [J1A9]
 		public static readonly new string EntityStructuredTypeKey = "[J1A9]";
@@ -393,8 +393,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.PostBox Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.PostBox Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>PostBox</c> entity.
@@ -430,11 +430,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 14);	// [J1AE]
 		public static readonly new string EntityStructuredTypeKey = "[J1AE]";
@@ -442,8 +442,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Street Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Street Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Street</c> entity.
@@ -503,11 +503,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 16);	// [J1AG]
 		public static readonly new string EntityStructuredTypeKey = "[J1AG]";
@@ -515,8 +515,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Address Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Address Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Address</c> entity.
@@ -529,19 +529,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AJ/J1AK
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AK]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity Street
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity Street
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity> ("[J1AK]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity> ("[J1AK]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity oldValue = this.Street;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity oldValue = this.Street;
 				if (oldValue != value || !this.IsFieldDefined("[J1AK]"))
 				{
 					this.OnStreetChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity> ("[J1AK]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity> ("[J1AK]", oldValue, value);
 					this.OnStreetChanged (oldValue, value);
 				}
 			}
@@ -551,19 +551,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AJ/J1AL
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AL]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity PostBox
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity PostBox
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity> ("[J1AL]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity> ("[J1AL]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity oldValue = this.PostBox;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity oldValue = this.PostBox;
 				if (oldValue != value || !this.IsFieldDefined("[J1AL]"))
 				{
 					this.OnPostBoxChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity> ("[J1AL]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity> ("[J1AL]", oldValue, value);
 					this.OnPostBoxChanged (oldValue, value);
 				}
 			}
@@ -573,38 +573,38 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AJ/J1AM
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AM]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity Location
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity Location
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity> ("[J1AM]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity> ("[J1AM]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity oldValue = this.Location;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity oldValue = this.Location;
 				if (oldValue != value || !this.IsFieldDefined("[J1AM]"))
 				{
 					this.OnLocationChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity> ("[J1AM]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity> ("[J1AM]", oldValue, value);
 					this.OnLocationChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnStreetChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity newValue);
-		partial void OnStreetChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.StreetEntity newValue);
-		partial void OnPostBoxChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity newValue);
-		partial void OnPostBoxChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PostBoxEntity newValue);
-		partial void OnLocationChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity newValue);
-		partial void OnLocationChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LocationEntity newValue);
+		partial void OnStreetChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity newValue);
+		partial void OnStreetChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity newValue);
+		partial void OnPostBoxChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity newValue);
+		partial void OnPostBoxChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity newValue);
+		partial void OnLocationChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity newValue);
+		partial void OnLocationChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 19);	// [J1AJ]
 		public static readonly new string EntityStructuredTypeKey = "[J1AJ]";
@@ -612,14 +612,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.PersonTitle Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.PersonTitle Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>PersonTitle</c> entity.
 	///	designer:cap/J1AN
 	///	</summary>
-	public partial class PersonTitleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank
+	public partial class PersonTitleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -631,11 +631,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -688,11 +688,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AN/J1AS
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AS]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity> ComptatibleGenders
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity> ComptatibleGenders
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity> ("[J1AS]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity> ("[J1AS]");
 			}
 		}
 		
@@ -703,11 +703,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 23);	// [J1AN]
 		public static readonly new string EntityStructuredTypeKey = "[J1AN]";
@@ -715,14 +715,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.PersonGender Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.PersonGender Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>PersonGender</c> entity.
 	///	designer:cap/J1AQ
 	///	</summary>
-	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode
+	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -734,11 +734,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -752,11 +752,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -788,11 +788,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 26);	// [J1AQ]
 		public static readonly new string EntityStructuredTypeKey = "[J1AQ]";
@@ -800,14 +800,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Language Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Language Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Language</c> entity.
 	///	designer:cap/J1AT
 	///	</summary>
-	public partial class LanguageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode
+	public partial class LanguageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode
 	{
 		#region IItemCode Members
 		///	<summary>
@@ -819,11 +819,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -855,11 +855,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 29);	// [J1AT]
 		public static readonly new string EntityStructuredTypeKey = "[J1AT]";
@@ -867,14 +867,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.ContactRole Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.ContactRole Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>ContactRole</c> entity.
 	///	designer:cap/J1AV
 	///	</summary>
-	public partial class ContactRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank
+	public partial class ContactRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -886,11 +886,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -922,11 +922,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ContactRoleEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ContactRoleEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 31);	// [J1AV]
 		public static readonly new string EntityStructuredTypeKey = "[J1AV]";
@@ -934,14 +934,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.LegalPersonType Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.LegalPersonType Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>LegalPersonType</c> entity.
 	///	designer:cap/J1A11
 	///	</summary>
-	public partial class LegalPersonTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank
+	public partial class LegalPersonTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -953,11 +953,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -1013,11 +1013,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 33);	// [J1A11]
 		public static readonly new string EntityStructuredTypeKey = "[J1A11]";
@@ -1025,8 +1025,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.Comment Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.Comment Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>Comment</c> entity.
@@ -1062,11 +1062,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CommentEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CommentEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 36);	// [J1A41]
 		public static readonly new string EntityStructuredTypeKey = "[J1A41]";
@@ -1074,14 +1074,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.TelecomType Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.TelecomType Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>TelecomType</c> entity.
 	///	designer:cap/J1A61
 	///	</summary>
-	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode
+	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -1093,11 +1093,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -1111,11 +1111,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -1147,11 +1147,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 38);	// [J1A61]
 		public static readonly new string EntityStructuredTypeKey = "[J1A61]";
@@ -1159,14 +1159,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.UriScheme Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.UriScheme Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>UriScheme</c> entity.
 	///	designer:cap/J1A81
 	///	</summary>
-	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCode, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRank
+	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCode, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRank
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -1178,11 +1178,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.GetRank (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.GetRank (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
 			}
 		}
 		#endregion
@@ -1196,11 +1196,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		{
 			get
 			{
-				return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -1232,11 +1232,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 40);	// [J1A81]
 		public static readonly new string EntityStructuredTypeKey = "[J1A81]";
@@ -1244,8 +1244,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.AbstractContact Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.AbstractContact Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>AbstractContact</c> entity.
@@ -1258,11 +1258,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AA1/J1AP1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AP1]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ContactRoleEntity> Roles
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity> Roles
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ContactRoleEntity> ("[J1AP1]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity> ("[J1AP1]");
 			}
 		}
 		///	<summary>
@@ -1270,11 +1270,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AA1/J1AQ1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AQ1]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CommentEntity> Comments
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity> Comments
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.CommentEntity> ("[J1AQ1]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity> ("[J1AQ1]");
 			}
 		}
 		///	<summary>
@@ -1282,19 +1282,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AA1/J1AR1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AR1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity NaturalPerson
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity NaturalPerson
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity> ("[J1AR1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> ("[J1AR1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
 				if (oldValue != value || !this.IsFieldDefined("[J1AR1]"))
 				{
 					this.OnNaturalPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity> ("[J1AR1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> ("[J1AR1]", oldValue, value);
 					this.OnNaturalPersonChanged (oldValue, value);
 				}
 			}
@@ -1304,36 +1304,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AA1/J1AS1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AS1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity LegalPerson
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity LegalPerson
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity> ("[J1AS1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity> ("[J1AS1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity oldValue = this.LegalPerson;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity oldValue = this.LegalPerson;
 				if (oldValue != value || !this.IsFieldDefined("[J1AS1]"))
 				{
 					this.OnLegalPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity> ("[J1AS1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity> ("[J1AS1]", oldValue, value);
 					this.OnLegalPersonChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity newValue);
-		partial void OnNaturalPersonChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity newValue);
-		partial void OnLegalPersonChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity newValue);
-		partial void OnLegalPersonChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity newValue);
+		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity newValue);
+		partial void OnNaturalPersonChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity newValue);
+		partial void OnLegalPersonChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity newValue);
+		partial void OnLegalPersonChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 42);	// [J1AA1]
 		public static readonly new string EntityStructuredTypeKey = "[J1AA1]";
@@ -1341,8 +1341,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.AbstractPerson Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.AbstractPerson Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>AbstractPerson</c> entity.
@@ -1355,11 +1355,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AB1/J1AC1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AC1]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity> Contacts
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity> Contacts
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity> ("[J1AC1]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity> ("[J1AC1]");
 			}
 		}
 		///	<summary>
@@ -1367,34 +1367,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AB1/J1AD1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AD1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity PreferredLanguage
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity PreferredLanguage
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity> ("[J1AD1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity> ("[J1AD1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity oldValue = this.PreferredLanguage;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity oldValue = this.PreferredLanguage;
 				if (oldValue != value || !this.IsFieldDefined("[J1AD1]"))
 				{
 					this.OnPreferredLanguageChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity> ("[J1AD1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity> ("[J1AD1]", oldValue, value);
 					this.OnPreferredLanguageChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity newValue);
-		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LanguageEntity newValue);
+		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity newValue);
+		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractPersonEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractPersonEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 43);	// [J1AB1]
 		public static readonly new string EntityStructuredTypeKey = "[J1AB1]";
@@ -1402,33 +1402,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.LegalPerson Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.LegalPerson Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>LegalPerson</c> entity.
 	///	designer:cap/J1AE1
 	///	</summary>
-	public partial class LegalPersonEntity : global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractPersonEntity
+	public partial class LegalPersonEntity : global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity
 	{
 		///	<summary>
 		///	The <c>LegalPersonType</c> field.
 		///	designer:fld/J1AE1/J1AF1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AF1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity LegalPersonType
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity LegalPersonType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity> ("[J1AF1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity> ("[J1AF1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity oldValue = this.LegalPersonType;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity oldValue = this.LegalPersonType;
 				if (oldValue != value || !this.IsFieldDefined("[J1AF1]"))
 				{
 					this.OnLegalPersonTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity> ("[J1AF1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity> ("[J1AF1]", oldValue, value);
 					this.OnLegalPersonTypeChanged (oldValue, value);
 				}
 			}
@@ -1500,8 +1500,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			}
 		}
 		
-		partial void OnLegalPersonTypeChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity newValue);
-		partial void OnLegalPersonTypeChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonTypeEntity newValue);
+		partial void OnLegalPersonTypeChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity newValue);
+		partial void OnLegalPersonTypeChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnShortNameChanging(string oldValue, string newValue);
@@ -1511,11 +1511,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.LegalPersonEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 46);	// [J1AE1]
 		public static readonly new string EntityStructuredTypeKey = "[J1AE1]";
@@ -1523,33 +1523,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.NaturalPerson Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.NaturalPerson Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>NaturalPerson</c> entity.
 	///	designer:cap/J1AJ1
 	///	</summary>
-	public partial class NaturalPersonEntity : global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractPersonEntity
+	public partial class NaturalPersonEntity : global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity
 	{
 		///	<summary>
 		///	The <c>Title</c> field.
 		///	designer:fld/J1AJ1/J1AK1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AK1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity Title
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity Title
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity> ("[J1AK1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity> ("[J1AK1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity oldValue = this.Title;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity oldValue = this.Title;
 				if (oldValue != value || !this.IsFieldDefined("[J1AK1]"))
 				{
 					this.OnTitleChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity> ("[J1AK1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity> ("[J1AK1]", oldValue, value);
 					this.OnTitleChanged (oldValue, value);
 				}
 			}
@@ -1603,19 +1603,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AJ1/J1AN1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AN1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity Gender
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity Gender
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity> ("[J1AN1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity> ("[J1AN1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity oldValue = this.Gender;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity oldValue = this.Gender;
 				if (oldValue != value || !this.IsFieldDefined("[J1AN1]"))
 				{
 					this.OnGenderChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity> ("[J1AN1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity> ("[J1AN1]", oldValue, value);
 					this.OnGenderChanged (oldValue, value);
 				}
 			}
@@ -1643,24 +1643,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			}
 		}
 		
-		partial void OnTitleChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity newValue);
-		partial void OnTitleChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonTitleEntity newValue);
+		partial void OnTitleChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity newValue);
+		partial void OnTitleChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity newValue);
 		partial void OnFirstnameChanging(string oldValue, string newValue);
 		partial void OnFirstnameChanged(string oldValue, string newValue);
 		partial void OnLastnameChanging(string oldValue, string newValue);
 		partial void OnLastnameChanged(string oldValue, string newValue);
-		partial void OnGenderChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity newValue);
-		partial void OnGenderChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.PersonGenderEntity newValue);
+		partial void OnGenderChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity newValue);
+		partial void OnGenderChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.NaturalPersonEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 51);	// [J1AJ1]
 		public static readonly new string EntityStructuredTypeKey = "[J1AJ1]";
@@ -1668,14 +1668,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.MailContact Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.MailContact Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>MailContact</c> entity.
 	///	designer:cap/J1AT1
 	///	</summary>
-	public partial class MailContactEntity : global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity
+	public partial class MailContactEntity : global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity
 	{
 		///	<summary>
 		///	The <c>Complement</c> field.
@@ -1704,19 +1704,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1AT1/J1AV1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AV1]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity Address
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity Address
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity> ("[J1AV1]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity> ("[J1AV1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity oldValue = this.Address;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity oldValue = this.Address;
 				if (oldValue != value || !this.IsFieldDefined("[J1AV1]"))
 				{
 					this.OnAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity> ("[J1AV1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity> ("[J1AV1]", oldValue, value);
 					this.OnAddressChanged (oldValue, value);
 				}
 			}
@@ -1724,16 +1724,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		partial void OnComplementChanging(string oldValue, string newValue);
 		partial void OnComplementChanged(string oldValue, string newValue);
-		partial void OnAddressChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity newValue);
-		partial void OnAddressChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AddressEntity newValue);
+		partial void OnAddressChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity newValue);
+		partial void OnAddressChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.MailContactEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.MailContactEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.MailContactEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.MailContactEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 61);	// [J1AT1]
 		public static readonly new string EntityStructuredTypeKey = "[J1AT1]";
@@ -1741,33 +1741,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.TelecomContact Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.TelecomContact Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>TelecomContact</c> entity.
 	///	designer:cap/J1A02
 	///	</summary>
-	public partial class TelecomContactEntity : global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity
+	public partial class TelecomContactEntity : global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity
 	{
 		///	<summary>
 		///	The <c>TelecomType</c> field.
 		///	designer:fld/J1A02/J1A12
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1A12]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity TelecomType
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity TelecomType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity> ("[J1A12]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity> ("[J1A12]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity oldValue = this.TelecomType;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity oldValue = this.TelecomType;
 				if (oldValue != value || !this.IsFieldDefined("[J1A12]"))
 				{
 					this.OnTelecomTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity> ("[J1A12]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity> ("[J1A12]", oldValue, value);
 					this.OnTelecomTypeChanged (oldValue, value);
 				}
 			}
@@ -1817,8 +1817,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			}
 		}
 		
-		partial void OnTelecomTypeChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity newValue);
-		partial void OnTelecomTypeChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomTypeEntity newValue);
+		partial void OnTelecomTypeChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity newValue);
+		partial void OnTelecomTypeChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity newValue);
 		partial void OnNumberChanging(string oldValue, string newValue);
 		partial void OnNumberChanged(string oldValue, string newValue);
 		partial void OnExtensionChanging(string oldValue, string newValue);
@@ -1826,11 +1826,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomContactEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomContactEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.TelecomContactEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomContactEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 64);	// [J1A02]
 		public static readonly new string EntityStructuredTypeKey = "[J1A02]";
@@ -1838,33 +1838,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.UriContact Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.UriContact Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>UriContact</c> entity.
 	///	designer:cap/J1A42
 	///	</summary>
-	public partial class UriContactEntity : global::Epsitec.Cresus.DataLayer.UnitTests.Entities.AbstractContactEntity
+	public partial class UriContactEntity : global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity
 	{
 		///	<summary>
 		///	The <c>UriScheme</c> field.
 		///	designer:fld/J1A42/J1A52
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1A52]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity UriScheme
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity UriScheme
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity> ("[J1A52]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity> ("[J1A52]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity oldValue = this.UriScheme;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity oldValue = this.UriScheme;
 				if (oldValue != value || !this.IsFieldDefined("[J1A52]"))
 				{
 					this.OnUriSchemeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity> ("[J1A52]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity> ("[J1A52]", oldValue, value);
 					this.OnUriSchemeChanged (oldValue, value);
 				}
 			}
@@ -1892,18 +1892,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 			}
 		}
 		
-		partial void OnUriSchemeChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity newValue);
-		partial void OnUriSchemeChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriSchemeEntity newValue);
+		partial void OnUriSchemeChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity newValue);
+		partial void OnUriSchemeChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity newValue);
 		partial void OnUriChanging(string oldValue, string newValue);
 		partial void OnUriChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriContactEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriContactEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.UriContactEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriContactEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 68);	// [J1A42]
 		public static readonly new string EntityStructuredTypeKey = "[J1A42]";
@@ -1911,8 +1911,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.DataLayer.UnitTests.ValueData Entity
-namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
+#region Epsitec.Cresus.DataLayer.Tests.Vs.ValueData Entity
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 {
 	///	<summary>
 	///	The <c>ValueData</c> entity.
@@ -2035,19 +2035,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		///	designer:fld/J1A72/J1AL2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AL2]")]
-		public global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum EnumValue
+		public global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum EnumValue
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum> ("[J1AL2]");
+				return this.GetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum> ("[J1AL2]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue = this.EnumValue;
+				global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum oldValue = this.EnumValue;
 				if (oldValue != value || !this.IsFieldDefined("[J1AL2]"))
 				{
 					this.OnEnumValueChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum> ("[J1AL2]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum> ("[J1AL2]", oldValue, value);
 					this.OnEnumValueChanged (oldValue, value);
 				}
 			}
@@ -2151,8 +2151,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		partial void OnDateValueChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDecimalValueChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDecimalValueChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnEnumValueChanging(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum newValue);
-		partial void OnEnumValueChanged(global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.UnitTests.Entities.SimpleEnum newValue);
+		partial void OnEnumValueChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum newValue);
+		partial void OnEnumValueChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum newValue);
 		partial void OnIntegerValueChanging(int oldValue, int newValue);
 		partial void OnIntegerValueChanged(int oldValue, int newValue);
 		partial void OnLongIntegerValueChanging(long oldValue, long newValue);
@@ -2164,11 +2164,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.DataLayer.UnitTests.Entities.ValueDataEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 71);	// [J1A72]
 		public static readonly new string EntityStructuredTypeKey = "[J1A72]";

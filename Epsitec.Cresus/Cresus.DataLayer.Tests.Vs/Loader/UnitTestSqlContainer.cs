@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 {
 
 

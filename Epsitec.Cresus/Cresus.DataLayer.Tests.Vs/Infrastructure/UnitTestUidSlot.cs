@@ -5,7 +5,7 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
