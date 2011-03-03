@@ -1,0 +1,51 @@
+﻿Lors du passage à la branche vs2010.1, j'ai combiné plusieurs projets de tests dans le nouveau
+projet CommonTests. Une partie des tests dans ce projet ne fonctionnaient déjà plus, mais ce passage
+a cassé certains tests. Les causes possibles sont les suivantes:
+
+- Je n'ai passé que les resources qui me semblaient utiles et j'ai laissé tombé celles qui ne me
+  paraissaient pas utilisées.
+
+- Certains fichiers (images, fichiers texte, etc) on été déplacés, de même que toutes les sources et
+  le projet n'est évidemment plus dans le même dossier.
+
+- Le numéro de module des resources Cresus.AddressBook a été modifié de 1000 à 100 parce qu'il y
+  avait conflit avec un autre module de resource dans un autre projet.
+
+- Certains tests faisaient référence à des resources du projet Common et ces resources n'étaient
+  utiles que pour ces tests et elles ont été supprimées. En particulier il y avait des resources
+  Fields.TestInterface et Fields.TestInterfaceUser.
+
+- Certaines resources étaient définies dans plusieurs projets et je n'en ai gardé qu'une version. Il
+  se peut que les différentes versions étaient différentes d'une manière ou d'une autre.
+
+Si un jour ces tests sont remis à jour, il faut probablement chercher la solution à quelques
+erreures de ce côté là, sachant que les tests suivants ne fonctionnaient déjà pas (Error ou Failure)
+sous l'ancienne branche:
+
+FileDialogTest.CheckFileSave1
+FileDialogTest.CheckFileSave2
+
+BitmapTest.CheckBitmapSave
+NativeBitmapTest.TestCmykAlphaTiff
+NativeBitmapTest.TestCmykTiff
+PixmapTest.CheckAllocatePixmalFromImageClient
+OpenTypeTest.CheckFeatures
+PrintPortTest.CheckPrintToMetafile
+
+CodeCompilerTest.CheckCodeProjectReference
+CodeCompilerTest.CheckCompileEntities
+EntityTest.CheckBasicAccess
+EntityTest.CheckCollections1
+EntityTest.CheckCollections2
+
+BasicTypesTest.CheckDefaultTypes
+CaptionTest.CheckBindingCaptionExtraction
+FormattedTextTest.CheckSplit2
+SerializationTest.CheckStructuredTypeSerialization
+SerializationTest.CheckStructuredTypeSerializationUsingCaption
+TypeRosettaTest.CheckObjectTypeToNamedType
+TypeRosettaTest.CheckObjectTypeToStructuredType
+
+ItemPanelTest.CheckVerticalLayout
+
+Marc Bettex
